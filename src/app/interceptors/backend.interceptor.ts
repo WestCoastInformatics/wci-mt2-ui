@@ -32,6 +32,13 @@ const conceptData = [
     { conceptId: '00000009', description: 'Test Concept 9', descriptionType: 'PT', status: 'Inactive', feedback: '' },
 ];
 
+const refsetData = [
+    { id: '1001', name: 'Refset 1', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true},
+    { id: '1002', name: 'Refset 2', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '< 56265001', versionDate: '2020-01-15', status: 'active', type: 'intensional', private: false, canDownload: true, canSeeFeedback: true},
+    { id: '1003', name: 'Refset 3', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Beta', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true},
+    { id: '1004', name: 'Refset 4', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true},
+];
+
 @Injectable()
 export class BackendInterceptor implements HttpInterceptor {
 
@@ -52,6 +59,8 @@ export class BackendInterceptor implements HttpInterceptor {
                     return authenticate();
                 case url.endsWith('/concepts') && method === 'GET':
                     return concepts();
+                case url.endsWith('/refsets') && method === 'GET':
+                    return refsets();
                 case url.match(/\/users\/\d+$/) && method === 'GET':
                     return getUserById();
                 default:
@@ -81,6 +90,14 @@ export class BackendInterceptor implements HttpInterceptor {
                 totalKnown: true,
                 totalResults: conceptData.length,
                 data: conceptData
+            });
+        }
+
+        function refsets() {
+            return ok({
+                totalKnown: true,
+                totalResults: conceptData.length,
+                data: refsetData
             });
         }
 
