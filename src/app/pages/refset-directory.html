@@ -1,0 +1,53 @@
+<!-- Page Title -->
+<div class="container-fluid">
+    Refset Directory
+</div>
+
+<!-- Search Bar -->
+<div class="container-fluid">
+    <div class="row justify-content-end">
+
+        <div class="col-md-auto">
+            <mat-form-field>
+                <mat-label>Search</mat-label>
+                <input matInput #directorySearchInput [(ngModel)]="searchInput">
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-auto">
+            <mat-form-field appearance="fill">
+                <mat-label>Refset Filter</mat-label>
+                <mat-select #directoryViewSelect [(value)]="selectedView">
+                    <mat-option *ngFor="let option of viewOptions" [value]="option.value">
+                        {{option.display}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+    </div>
+</div>
+
+<!-- Refset Table -->
+<div class="container-fluid">
+    
+    <ag-grid-angular #refsetTable style="height: 500px;" class="ag-theme-alpine"
+            [columnDefs]="columnDefs" [gridOptions] ="refsetGridOptions">
+        </ag-grid-angular>
+
+        <mat-paginator *ngIf=false #paginator showFirstLastButtons
+            [length]="conceptGridPaging.length"
+            [pageIndex]="conceptGridPaging.pageIndex"
+            [pageSize]="conceptGridPaging.pageSize"
+            [pageSizeOptions]="conceptGridPaging.pageSizeOptions"
+            (page)="onConceptGridPageChange($event)"
+        ></mat-paginator>
+
+        <ng-template #agFeedbackSection let-params>
+            <span (click)="openFeedback(params.data.id)">
+                <mat-icon aria-hidden="false" aria-label="edit" style="top: 7px; position: relative;">create</mat-icon>
+                {{params.value}}
+            </span>
+        </ng-template>
+
+</div>

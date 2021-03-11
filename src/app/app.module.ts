@@ -10,6 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule  } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { AppComponent } from './app.component';
@@ -27,6 +28,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { TaxonomyTreeComponent } from './components/taxonomy-tree/taxonomy-tree.component';
 import { ConceptFeedbackRenderer } from './components/cellRenderers/concept-feedback.renderer';
+import { TemplateComponent } from './pages/template.component';
+import { RefsetDirectory } from './pages/refset-directory';
 
 // SERVICE IMPORTS
 import { AuthenticationService } from './services/authentication/authentication.service';
@@ -36,6 +39,7 @@ import { AuthoringService } from './services/authoring/authoring.service';
 import { EnvServiceProvider } from './providers/env.service.provider';
 import { RestApiCallService } from './services/rest/rest-api-call.service';
 import { ConceptsService } from './services/rest/concepts.service';
+import { RefsetService } from './services/rest/refset.service';
 
 @NgModule({
     declarations: [
@@ -43,7 +47,9 @@ import { ConceptsService } from './services/rest/concepts.service';
         NavbarComponent,
         FooterComponent,
         TaxonomyTreeComponent,
-        ConceptFeedbackRenderer
+        ConceptFeedbackRenderer,
+        TemplateComponent,
+        RefsetDirectory
     ],
     imports: [
         BrowserModule,
@@ -56,6 +62,7 @@ import { ConceptsService } from './services/rest/concepts.service';
         MatSortModule,
         MatExpansionModule, 
         MatInputModule,
+        MatSelectModule,
         MatFormFieldModule,
         MatIconModule,
         DialogModule,
@@ -69,6 +76,7 @@ import { ConceptsService } from './services/rest/concepts.service';
         EnvServiceProvider,
         RestApiCallService,
         ConceptsService,
+        RefsetService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HeaderInterceptor,

@@ -1,0 +1,59 @@
+// Main Layout Styles
+main{
+
+    &.container{
+        min-width: 100%;
+    }
+}
+.refset-tool-inline{
+    display: inline;
+}
+.refset-tool-flex-column{
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+}
+.refset-tool-flex-row{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+}
+.refset-tool-padding{
+    padding: 5px;
+}
+.refset-tool-margin-left{
+    margin-left: 5px;
+}
+.refset-tool-margin-right{
+    margin-right: 5px;
+}
+.refset-tool-margin-sides{
+    margin: 0px 5px;
+}
+.refset-tool-margin-top{
+    margin-top: 5px;
+}
+.refset-tool-margin-bottom{
+    margin-bottom: 5px;
+}
+.refset-tool-margin-top-bottom{
+    margin: 5px 0px;
+}
+.refset-tool-no-margins{
+    margin: 0px;
+}
+.refset-tool-flex-no-wrap{
+    flex-wrap: nowrap;
+}
+.refset-tool-flex-right{
+    flex: 1 1 auto;
+    text-align: right;
+    justify-content: flex-end;
+    display: flex;
+}
+
+// General Page Styles
+.refset-tool-page-title-section{
+    @extend .refset-tool-flex-row
+}
