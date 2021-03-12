@@ -7,7 +7,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <ag-grid-angular #agGridConceptsTable style="height: 500px;" class="ag-theme-alpine"
+        <ag-grid-angular *ngIf="showAgGridTable" #agGridConceptsTable style="height: 500px;" class="ag-theme-alpine"
             [columnDefs]="columnDefs" [gridOptions] ="conceptGridOptions">
         </ag-grid-angular>
 

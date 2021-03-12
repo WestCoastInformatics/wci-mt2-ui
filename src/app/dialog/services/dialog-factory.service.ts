@@ -33,6 +33,7 @@ export class DialogFactoryService<T = undefined> {
             }
         };
 
+        // only items in configData.data get passed into the dialog constructor
         const dialogRef = this.dialog.open<DialogComponent<T>, DialogData>(DialogComponent, configData);
 
         dialogRef.afterClosed().pipe(first());

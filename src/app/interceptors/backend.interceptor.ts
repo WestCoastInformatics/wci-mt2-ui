@@ -33,10 +33,10 @@ const conceptData = [
 ];
 
 const refsetData = [
-    { id: '1001', name: 'Refset 1', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true},
-    { id: '1002', name: 'Refset 2', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '< 56265001', versionDate: '2020-01-15', status: 'active', type: 'intensional', private: false, canDownload: true, canSeeFeedback: true},
-    { id: '1003', name: 'Refset 3', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Beta', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true},
-    { id: '1004', name: 'Refset 4', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true},
+    { id: '1001', name: 'Refset 1', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true, feedback: ''},
+    { id: '1002', name: 'Refset 2', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '< 56265001', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'intensional', private: false, canDownload: true, canSeeFeedback: true, feedback: ''},
+    { id: '1003', name: 'Refset 3', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Beta', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true, feedback: ''},
+    { id: '1004', name: 'Refset 4', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: ''},
 ];
 
 @Injectable()
@@ -108,7 +108,89 @@ export class BackendInterceptor implements HttpInterceptor {
             return ok(user);
         }
 
-        // helper functions
+        //***** Sort and Filter Function *****/
+        // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+        // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+        function sortAndFilter(allOfTheData, sortModel, filterModel) {
+            return this.sortData(sortModel, this.filterData(filterModel, allOfTheData));
+        }
+    
+        function sortData(sortModel, data) {
+    
+            var sortPresent = sortModel && sortModel.length > 0;
+    
+            if (!sortPresent) {
+                return data;
+            }
+    
+            var resultOfSort = data.slice();
+    
+            resultOfSort.sort(function (a, b) {
+    
+                for (var k = 0; k < sortModel.length; k++) {
+    
+                    var sortColModel = sortModel[k];
+                    var valueA = a[sortColModel.colId];
+                    var valueB = b[sortColModel.colId];
+    
+                    if (valueA == valueB) {
+                        continue;
+                    }
+    
+                    var sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
+    
+                    if (valueA > valueB) {
+                        return sortDirection;
+                    } else {
+                        return sortDirection * -1;
+                    }
+                }
+    
+                return 0;
+            });
+    
+            return resultOfSort;
+        }
+    
+        function filterData(filterModel, data) {
+    
+            var filterPresent = filterModel && Object.keys(filterModel).length > 0;
+    
+            if (!filterPresent) {
+                return data;
+            }
+    
+            var resultOfFilter = [];
+    
+            for (var i = 0; i < data.length; i++) {
+    
+                var item = data[i];
+                let rowValid = true;
+    
+                // loop thru each column with a search term
+                for (const column in filterModel) {
+    
+                    // test each word in the term
+                    filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
+    
+                        // the search word must be present in the data and the row must still be valid
+                        if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
+                            rowValid = true;
+                        } else {
+                            rowValid = false;
+                        }
+                    });
+                }
+    
+                if (rowValid) {
+                    resultOfFilter.push(item);
+                }
+            }
+    
+            return resultOfFilter;
+        }
+
+        //***** Helper Function *****/
         function ok(body?) {
             return of(new HttpResponse({ status: 200, body }))
         }

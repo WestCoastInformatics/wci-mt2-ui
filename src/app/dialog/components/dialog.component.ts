@@ -8,14 +8,14 @@ import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 @Component({
     selector: 'app-dialog',
     template: `
-        <h1 mat-dialog-title>{{config.headerText}}</h1>
+        <h1 mat-dialog-title id="{{id}}Title"> {{config.headerText}}</h1>
         <div mat-dialog-content>
             <ng-container [ngTemplateOutlet]="config.template" [ngTemplateOutletContext]="{$implicit: data}"></ng-container> 
         </div>
         
-        <div mat-dialog-actions>
-            <button mat-button (click)="cancel()">{{config.cancelText}}</button>
-            <button mat-button (click)="confirm()">{{config.confirmText}}</button>
+        <div mat-dialog-actions id="{{id}}Actions">
+            <button *ngIf="config.showCancel" id="{{id}}Cancel" mat-button (click)="cancel()">{{config.cancelText}}</button>
+            <button mat-button id="{{id}}Confirm" (click)="confirm()">{{config.confirmText}}</button>
         </div>
     `
 })
@@ -25,11 +25,13 @@ export class DialogComponent<T> {
     title: string;
     config: any;
     data: any;
+    id: string;
 
     constructor(
         private dialogRef: MatDialogRef<DialogComponent<T>>,
-        @Inject(MAT_DIALOG_DATA) private configData: any) 
-    {
+        @Inject(MAT_DIALOG_DATA) private configData) {
+        // make sure the data here doesn't leak changes back to the original object
+        this.id = dialogRef.id;
         this.config = configData;
         this.data = JSON.parse(JSON.stringify(configData.data));
         delete this.config.data;

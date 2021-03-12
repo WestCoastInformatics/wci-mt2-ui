@@ -4,7 +4,7 @@ import { DialogService } from '../dialog/services/dialog.service';
 import { DialogFactoryService } from '../dialog/services/dialog-factory.service';
 import { Observable } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ConceptFeedbackRenderer } from '../components/cellRenderers/concept-feedback.renderer';
+import { TemplateRenderer } from '../components/cellRenderers/template.renderer';
 import { RefsetService } from '../services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 
@@ -33,8 +33,15 @@ export class RefsetDirectory {
         pageSizeOptions: [10, 25, 50]
     };
     pageEvent: PageEvent;
+    showTable = false
+    refsetData: any;
+    dialog: DialogService;
 
-    @ViewChild('feedbackSection') feedbackSection: TemplateRef<any>;
+    @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
+    @ViewChild('directoryDownloadDialog') downloadDialog: TemplateRef<any>;
+    @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
+    @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
+    @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     
 
@@ -43,15 +50,25 @@ export class RefsetDirectory {
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService
     ) { 
+    }
+
+    //***** Framework Functions *****/
+    ngOnInit() {
+        this.titleService.setTitle('Refset Tool - Refset Directory');
+    }
+
+    ngAfterViewInit() {
 
         this.columnDefs = [
-            { field: 'id', headerName: 'ID' },
-            { field: 'name', headerName: 'Name' },
+            { field: 'information', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
+            { field: 'id', headerName: 'Refset ID' },
+            { field: 'name', headerName: 'Refset Name' },
             { field: 'edition', headerName: 'Edition/Extension' },
             { field: 'organization', headerName: 'Organization/Owner' },
             { field: 'versionStatus', headerName: 'Version Status' },
             { field: 'versionDate', headerName: 'Version Date' },
-            { field: 'narrative', headerName: 'Narrative', contentTemplate: 'feedbackSection', cellRenderer: 'conceptFeedbackRenderer', cellRendererParams: { template: 'agFeedbackSection' } }
+            { field: 'modifiedDate', headerName: 'Last Modified Date' },
+            { field: 'actions', headerName: '', contentTemplate: 'actionSection', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
@@ -65,7 +82,7 @@ export class RefsetDirectory {
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             frameworkComponents: {
-                'conceptFeedbackRenderer': ConceptFeedbackRenderer
+                'templateRenderer': TemplateRenderer
             },
             defaultColDef: {
                 sortable: true,
@@ -75,17 +92,13 @@ export class RefsetDirectory {
                 floatingFilterComponentParams: { suppressFilterButton: true }
             }
         };
-    }
 
-    //***** Framework Functions *****/
-    ngOnInit() {
-
-        this.titleService.setTitle('Refset Tool - Refset Directory');
+        this.showTable = true
     }
 
     //***** AG Grid Functions *****/
     onGridReady = (params) => {
-
+        console.log("In onGridReady", this.actionSection);
         this.refsetGridApi = params.api;
         this.refsetGridColumnApi = params.columnApi;
 
@@ -131,6 +144,8 @@ export class RefsetDirectory {
                         if (dataAfterSortingAndFiltering.length <= params.endRow) {
                             lastRow = dataAfterSortingAndFiltering.length;
                         }
+
+                        this.refsetData = rowsThisPage;
 
                         this.refsetGridPaging.length = totalRowCount;
                         params.successCallback(this.pagingIterator(rowsThisPage), lastRow);
@@ -253,6 +268,90 @@ export class RefsetDirectory {
         }
 
         return resultOfFilter;
+    }
+
+    //***** General Functions *****/
+    getRefsetRow(refsetId: string) {
+
+        let refset;
+
+        for (let i = 0; i < this.refsetData.length; i++) {
+
+            if (this.refsetData[i].id == refsetId) {
+
+                refset = this.refsetData[i];
+                break;
+            }
+        }
+
+        return refset;
+    }
+
+    openInformation(refsetId: string) {
+
+        let refset = this.getRefsetRow(refsetId);
+        const dialogId = 'directoryInfoDialog';
+
+        const dialogData = {
+            dialogId: dialogId,
+            headerText: `Refset Metadata for ${refset.name} (${refset.id})`,
+            showCancel: false,
+            template: this.infoDialog,
+            data: refset
+        }
+
+        const dialogOptions = {
+            id: dialogId,
+            disableClose: false
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+    }
+
+    openDownload(refsetId: string) {
+
+        let refset = this.getRefsetRow(refsetId);
+        const dialogId = 'directoryInfoDialog';
+
+        const dialogData = {
+            dialogId: dialogId,
+            headerText: `Download Refset ${refset.name} (${refset.id})`,
+            showCancel: false,
+            template: this.downloadDialog,
+            data: refset
+        }
+
+        const dialogOptions = {
+            id: dialogId,
+            disableClose: false
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+    }
+
+    openFeedback(refsetId: string) {
+
+        let refset = this.getRefsetRow(refsetId);
+        const dialogId = 'directoryFeedbackDialog';
+
+        const dialogData = {
+            headerText: `Refset Feedback for ${refset.name} (${refset.id})`,
+            template: this.feedbackDialog,
+            data: refset
+        }
+
+        const dialogOptions = {
+            id: dialogId
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe(data => {
+
+            if (data) {
+                refset.feedback = data.feedback;
+            }
+        });
     }
     
 }

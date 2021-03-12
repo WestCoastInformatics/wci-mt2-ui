@@ -27,7 +27,7 @@ import { DialogModule } from './dialog/dialog.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { TaxonomyTreeComponent } from './components/taxonomy-tree/taxonomy-tree.component';
-import { ConceptFeedbackRenderer } from './components/cellRenderers/concept-feedback.renderer';
+import { TemplateRenderer } from './components/cellRenderers/template.renderer';
 import { TemplateComponent } from './pages/template.component';
 import { RefsetDirectory } from './pages/refset-directory';
 
@@ -47,7 +47,7 @@ import { RefsetService } from './services/rest/refset.service';
         NavbarComponent,
         FooterComponent,
         TaxonomyTreeComponent,
-        ConceptFeedbackRenderer,
+        TemplateRenderer,
         TemplateComponent,
         RefsetDirectory
     ],
@@ -67,7 +67,7 @@ import { RefsetService } from './services/rest/refset.service';
         MatIconModule,
         DialogModule,
         TreeModule,
-        AgGridModule.withComponents([ConceptFeedbackRenderer])
+        AgGridModule.withComponents([TemplateRenderer])
     ],
     entryComponents: [],
     providers: [

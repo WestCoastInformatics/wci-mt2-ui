@@ -6,7 +6,7 @@ import { EnvService } from './services/environment/env.service';
 import { TemplateComponent } from './pages/template.component';
 import { Observable } from 'rxjs';
 
-import { ConceptFeedbackRenderer } from './components/cellRenderers/concept-feedback.renderer';
+import { TemplateRenderer } from './components/cellRenderers/template.renderer';
 
 @Component({
     selector: 'app-root',

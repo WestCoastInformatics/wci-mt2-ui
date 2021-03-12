@@ -10,7 +10,7 @@ import { DialogFactoryService } from '../dialog/services/dialog-factory.service'
 import { Observable } from 'rxjs';
 import { ConceptsService } from '../services/rest/concepts.service';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ConceptFeedbackRenderer } from '../components/cellRenderers/concept-feedback.renderer';
+import { TemplateRenderer } from '../components/cellRenderers/template.renderer';
 
 @Component({
     selector: 'app-template',
@@ -45,42 +45,13 @@ export class TemplateComponent implements OnInit {
     agGridConceptsApi: any;
     agGridConceptsColumnApi: any;
     dialog: DialogService;
+    showAgGridTable = false;
 
 
     constructor(
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private conceptsService: ConceptsService) {
-
-        this.columnDefs = [
-            { field: 'conceptId', headerName: 'Concept ID' },
-            { field: 'description', headerName: 'Description' },
-            { field: 'descriptionType', headerName: 'Description Type' },
-            { field: 'status', headerName: 'Status' },
-            { field: 'feedback', headerName: 'Feedback', contentTemplate: 'feedbackSection', cellRenderer: 'conceptFeedbackRenderer', cellRendererParams: { template: 'agFeedbackSection' } }
-        ];
-
-        this.conceptGridOptions = {
-            context: { componentParent: this },
-            pagination: true,
-            paginationPageSize: 10,
-            cacheBlockSize: 10,
-            loadingCellRenderer: 'agLoadingOverlay',
-            rowModelType: 'infinite',
-            rowSelection: 'single',
-            onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady,
-            frameworkComponents: {
-                'conceptFeedbackRenderer': ConceptFeedbackRenderer
-            },
-            defaultColDef: {
-                sortable: true,
-                resizable: true,
-                filter: true,
-                floatingFilter: true,
-                floatingFilterComponentParams: { suppressFilterButton: true }
-            }
-        };
     }
 
     //***** Framework Functions *****/
@@ -104,6 +75,38 @@ export class TemplateComponent implements OnInit {
 
         this.conceptMaterialDatasource.paginator = this.paginator;
         this.conceptMaterialDatasource.sort = this.sort;
+
+        this.columnDefs = [
+            { field: 'conceptId', headerName: 'Concept ID' },
+            { field: 'description', headerName: 'Description' },
+            { field: 'descriptionType', headerName: 'Description Type' },
+            { field: 'status', headerName: 'Status' },
+            { field: 'feedback', headerName: 'Feedback', contentTemplate: 'feedbackSection', cellRenderer: 'conceptFeedbackRenderer', cellRendererParams: { template: 'agFeedbackSection' } }
+        ];
+
+        this.conceptGridOptions = {
+            context: { componentParent: this },
+            pagination: true,
+            paginationPageSize: 10,
+            cacheBlockSize: 10,
+            loadingCellRenderer: 'agLoadingOverlay',
+            rowModelType: 'infinite',
+            rowSelection: 'single',
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                'conceptFeedbackRenderer': TemplateRenderer
+            },
+            defaultColDef: {
+                sortable: true,
+                resizable: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { suppressFilterButton: true }
+            }
+        };
+
+        this.showAgGridTable = true;
     }
 
     //***** AG Grid Functions *****/
