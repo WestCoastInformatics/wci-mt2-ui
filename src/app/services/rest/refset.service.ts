@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Concept } from '../../models/concept';
+import { Refset } from 'src/app/models/refset';
 import { Observable } from 'rxjs';
-import { RestApiCallService, RestWrapper } from './rest-api-call.service';
+import { RestService, RestWrapper } from './rest.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class RefsetService {
+export class RefsetService extends RestService {
 
-    constructor(private httpClient: HttpClient,
-        private restService: RestApiCallService) {
+    constructor(http: HttpClient) {
+        super(http);
     }
 
-    getRefsets(): Observable<RestWrapper<Concept>> {
-        return this.restService.makeCall('/refsets');
+    getRefsets(params: any): Observable<any> {
+        return this.get('/refsets', params);
     }
+
+    
 }

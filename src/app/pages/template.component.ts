@@ -5,16 +5,16 @@ import { Title } from '@angular/platform-browser';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DialogService } from '../dialog/services/dialog.service';
-import { DialogFactoryService } from '../dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { Observable } from 'rxjs';
-import { ConceptsService } from '../services/rest/concepts.service';
+import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { AgGridAngular } from 'ag-grid-angular';
-import { TemplateRenderer } from '../components/cellRenderers/template.renderer';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 
 @Component({
     selector: 'app-template',
-    templateUrl: './template.component.html'
+    templateUrl: 'template.component.html'
 })
 
 export class TemplateComponent implements OnInit {

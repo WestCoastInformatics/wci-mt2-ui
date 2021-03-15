@@ -118,10 +118,22 @@ main{
     position: relative;
     color: $standard_link_color;
     overflow: hidden;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 // AG Grid Styles
 .refset-tool-ag-grid{
     height: 500px;
+}
+
+// Directory Page Styles
+#refsetDirectoryPage{
+    padding: 0px;
+
+    .refset-tool-directory-column-information{
+        
+    }
+    
 }
 

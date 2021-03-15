@@ -13,33 +13,33 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { AppComponent } from './app.component';
-import { BackendInterceptor } from './interceptors/backend.interceptor';
-import { HeaderInterceptor } from './interceptors/header.interceptor';
+import { AppComponent } from 'src/app/app.component';
+import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
+import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
 
 // MODULE IMPORTS
-import { DialogModule } from './dialog/dialog.module';
+import { DialogModule } from 'src/app/dialog/dialog.module';
 
 // COMPONENT IMPORTS
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { TaxonomyTreeComponent } from './components/taxonomy-tree/taxonomy-tree.component';
-import { TemplateRenderer } from './components/cellRenderers/template.renderer';
-import { TemplateComponent } from './pages/template.component';
-import { RefsetDirectory } from './pages/refset-directory';
+import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { FooterComponent } from 'src/app/components/footer/footer.component';
+import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateComponent } from 'src/app/pages/template.component';
+import { RefsetDirectory } from 'src/app/pages/refset-directory';
 
 // SERVICE IMPORTS
-import { AuthenticationService } from './services/authentication/authentication.service';
-import { AuthoringService } from './services/authoring/authoring.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { AuthoringService } from 'src/app/services/authoring/authoring.service';
+import { RestService } from 'src/app/services/rest/rest.service';
+import { ConceptsService } from 'src/app/services/rest/concepts.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
 
 // PROVIDER IMPORTS
-import { EnvServiceProvider } from './providers/env.service.provider';
-import { RestApiCallService } from './services/rest/rest-api-call.service';
-import { ConceptsService } from './services/rest/concepts.service';
-import { RefsetService } from './services/rest/refset.service';
+import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 
 @NgModule({
     declarations: [
@@ -74,7 +74,7 @@ import { RefsetService } from './services/rest/refset.service';
         AuthenticationService,
         AuthoringService,
         EnvServiceProvider,
-        RestApiCallService,
+        RestService,
         ConceptsService,
         RefsetService,
         {

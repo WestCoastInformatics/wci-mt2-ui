@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Concept } from '../../models/concept';
+import { Concept } from 'src/app/models/concept';
 import { Observable } from 'rxjs';
-import { RestApiCallService, RestWrapper } from './rest-api-call.service';
+import { RestService, RestWrapper } from './rest.service';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ import { RestApiCallService, RestWrapper } from './rest-api-call.service';
 export class ConceptsService {
 
     constructor(private httpClient: HttpClient,
-        private restService: RestApiCallService) {
+        private restService: RestService) {
     }
 
     getConcepts(): Observable<RestWrapper<Concept>> {

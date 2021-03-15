@@ -8,12 +8,13 @@ import {
 import { Injectable, Injector } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { Concept } from '../models/concept';
-import { User } from '../models/user';
+import { Concept } from 'src/app/models/concept';
+import { User } from 'src/app/models/user';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 const userData: User[] = [
-    { firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', username: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith'},
-    { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', username: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew'}
+    { firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', username: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith' },
+    { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', username: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
 ];
 
 const conceptData = [
@@ -33,10 +34,23 @@ const conceptData = [
 ];
 
 const refsetData = [
-    { id: '1001', name: 'Refset 1', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true, feedback: ''},
-    { id: '1002', name: 'Refset 2', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '< 56265001', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'intensional', private: false, canDownload: true, canSeeFeedback: true, feedback: ''},
-    { id: '1003', name: 'Refset 3', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Beta', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true, feedback: ''},
-    { id: '1004', name: 'Refset 4', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: ''},
+    { id: '1001', name: 'Refset 1', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1002', name: 'Refset 2', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Published', narrative: '', tags: '', url: '', definition: '< 56265001', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'intensional', private: false, canDownload: false, canSeeFeedback: true, feedback: '' },
+    { id: '1003', name: 'Refset 3', edition: 'US', organization: 'SNOMED INT', versionStatus: 'Beta', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: false, canDownload: true, canSeeFeedback: false, feedback: '' },
+    { id: '1004', name: 'Refset 4', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1005', name: 'Refset 1005', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1006', name: 'Refset 1006', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1007', name: 'Refset 1007', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1008', name: 'Refset 1008', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1009', name: 'Refset 1009', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1010', name: 'Refset 1010', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1011', name: 'Refset 1011', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1012', name: 'Refset 1012', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1013', name: 'Refset 1013', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1014', name: 'Refset 1014', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1015', name: 'Refset 1015', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1016', name: 'Refset 1016', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
+    { id: '1017', name: 'Refset 1017', edition: 'US', organization: 'SNOMED INT', versionStatus: 'In Development', narrative: '', tags: '', url: '', definition: '', versionDate: '2020-01-15', modifiedDate: '2020-01-15', status: 'active', type: 'extensional', private: true, canDownload: true, canSeeFeedback: true, feedback: '' },
 ];
 
 @Injectable()
@@ -59,14 +73,14 @@ export class BackendInterceptor implements HttpInterceptor {
                     return authenticate();
                 case url.endsWith('/concepts') && method === 'GET':
                     return concepts();
-                case url.endsWith('/refsets') && method === 'GET':
+                case url.includes('/refsets') && method === 'GET':
                     return refsets();
                 case url.match(/\/users\/\d+$/) && method === 'GET':
                     return getUserById();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
-            }    
+            }
         }
 
         // route functions
@@ -94,10 +108,39 @@ export class BackendInterceptor implements HttpInterceptor {
         }
 
         function refsets() {
+
+            //let queryString = request.url.substr(request.url.indexOf('?') + 1);
+            let params: any = CodeUtility.getParamsAsObject(request.url);
+            let pageNumber = Number.parseInt(params.pageNumber);
+            let rowsPerPage = Number.parseInt(params.rowsPerPage);
+            let sortModel = params.sortModel;
+            let filterModel = params.filterModel;
+            let startRow = (pageNumber - 1) * rowsPerPage;
+            let endRow = startRow + rowsPerPage;
+
+            if (sortModel) {
+                sortModel = Object.values(sortModel);
+            }
+            // let pageNumber = Number.parseInt(request.params.get("pageNumber"));
+            // let rowsPerPage = Number.parseInt(request.params.get("rowsPerPage"));
+            // let sortModel = request.params.get("sortModel");
+            // let filterModel = request.params.get("filterModel");
+
+            var dataAfterSortingAndFiltering = sortAndFilter(
+                refsetData,
+                sortModel,
+                filterModel
+            );
+
+            var rowsThisPage = dataAfterSortingAndFiltering.slice(
+                startRow,
+                endRow
+            );
+
             return ok({
                 totalKnown: true,
-                totalResults: conceptData.length,
-                data: refsetData
+                totalResults: dataAfterSortingAndFiltering.length,
+                data: rowsThisPage
             });
         }
 
@@ -112,67 +155,67 @@ export class BackendInterceptor implements HttpInterceptor {
         // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
         // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
         function sortAndFilter(allOfTheData, sortModel, filterModel) {
-            return this.sortData(sortModel, this.filterData(filterModel, allOfTheData));
+            return sortData(sortModel, filterData(filterModel, allOfTheData));
         }
-    
+
         function sortData(sortModel, data) {
-    
+
             var sortPresent = sortModel && sortModel.length > 0;
-    
+
             if (!sortPresent) {
                 return data;
             }
-    
+
             var resultOfSort = data.slice();
-    
+
             resultOfSort.sort(function (a, b) {
-    
+
                 for (var k = 0; k < sortModel.length; k++) {
-    
+
                     var sortColModel = sortModel[k];
                     var valueA = a[sortColModel.colId];
                     var valueB = b[sortColModel.colId];
-    
+
                     if (valueA == valueB) {
                         continue;
                     }
-    
+
                     var sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
-    
+
                     if (valueA > valueB) {
                         return sortDirection;
                     } else {
                         return sortDirection * -1;
                     }
                 }
-    
+
                 return 0;
             });
-    
+
             return resultOfSort;
         }
-    
+
         function filterData(filterModel, data) {
-    
+
             var filterPresent = filterModel && Object.keys(filterModel).length > 0;
-    
+
             if (!filterPresent) {
                 return data;
             }
-    
+
             var resultOfFilter = [];
-    
+
             for (var i = 0; i < data.length; i++) {
-    
+
                 var item = data[i];
                 let rowValid = true;
-    
+
                 // loop thru each column with a search term
                 for (const column in filterModel) {
-    
+
                     // test each word in the term
                     filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
-    
+
                         // the search word must be present in the data and the row must still be valid
                         if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
                             rowValid = true;
@@ -181,12 +224,12 @@ export class BackendInterceptor implements HttpInterceptor {
                         }
                     });
                 }
-    
+
                 if (rowValid) {
                     resultOfFilter.push(item);
                 }
             }
-    
+
             return resultOfFilter;
         }
 

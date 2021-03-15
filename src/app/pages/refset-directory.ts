@@ -1,12 +1,15 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { DialogService } from '../dialog/services/dialog.service';
-import { DialogFactoryService } from '../dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { Observable } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
-import { TemplateRenderer } from '../components/cellRenderers/template.renderer';
-import { RefsetService } from '../services/rest/refset.service';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { RestService } from 'src/app/services/rest/rest.service';
 import { Title } from '@angular/platform-browser';
+import { Refset } from 'src/app/models/refset';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 
 /**
@@ -14,14 +17,14 @@ import { Title } from '@angular/platform-browser';
  */
 @Component({
     selector: 'app-refset-directory',
-    templateUrl: './refset-directory.html'
+    templateUrl: 'refset-directory.html'
 })
 
 export class RefsetDirectory {
 
-    searchInput: String;
+    searchInput: string;
     viewOptions= [{value: 'all', display: 'All Refsets'}, {value: 'public', display: 'Public Refsets'}, {value: 'private', display: 'My Private Refsets'}];
-    selectedView: String = 'all';
+    selectedView: string = 'all';
     refsetGridApi: any;
     refsetGridColumnApi: any;  
     columnDefs = [];
@@ -33,7 +36,7 @@ export class RefsetDirectory {
         pageSizeOptions: [10, 25, 50]
     };
     pageEvent: PageEvent;
-    showTable = false
+    showTable: boolean;
     refsetData: any;
     dialog: DialogService;
 
@@ -48,27 +51,30 @@ export class RefsetDirectory {
     constructor(
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
-        private refsetService: RefsetService
+        private refsetService: RefsetService,
+        private changeDetectorRef : ChangeDetectorRef
     ) { 
     }
 
     //***** Framework Functions *****/
     ngOnInit() {
+
         this.titleService.setTitle('Refset Tool - Refset Directory');
+        this.showTable = false;
     }
 
     ngAfterViewInit() {
 
         this.columnDefs = [
-            { field: 'information', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
-            { field: 'id', headerName: 'Refset ID' },
-            { field: 'name', headerName: 'Refset Name' },
-            { field: 'edition', headerName: 'Edition/Extension' },
-            { field: 'organization', headerName: 'Organization/Owner' },
-            { field: 'versionStatus', headerName: 'Version Status' },
-            { field: 'versionDate', headerName: 'Version Date' },
-            { field: 'modifiedDate', headerName: 'Last Modified Date' },
-            { field: 'actions', headerName: '', contentTemplate: 'actionSection', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'information', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', width: '70', cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
+            { field: 'id', headerName: 'Refset ID', class: 'refset-tool-directory-column-id' },
+            { field: 'name', headerName: 'Refset Name', class: 'refset-tool-directory-column-name' },
+            { field: 'edition', headerName: 'Edition/Extension', class: 'refset-tool-directory-column-edition' },
+            { field: 'organization', headerName: 'Organization/Owner', class: 'refset-tool-directory-column-organization' },
+            { field: 'versionStatus', headerName: 'Version Status', class: 'refset-tool-directory-column-version-status' },
+            { field: 'versionDate', headerName: 'Version Date', class: 'refset-tool-directory-column-version-date' },
+            { field: 'modifiedDate', headerName: 'Last Modified Date', class: 'refset-tool-directory-column-modified-date' },
+            { field: 'actions', headerName: '', contentTemplate: 'actionSection', cellRenderer: 'templateRenderer', width: '70', class: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
@@ -76,6 +82,7 @@ export class RefsetDirectory {
             pagination: true,
             paginationPageSize: 10,
             cacheBlockSize: 10,
+            maxBlocksInCache: 1,
             loadingCellRenderer: 'agLoadingOverlay',
             rowModelType: 'infinite',
             rowSelection: 'single',
@@ -94,78 +101,70 @@ export class RefsetDirectory {
         };
 
         this.showTable = true
+        this.changeDetectorRef.detectChanges();
     }
 
     //***** AG Grid Functions *****/
-    onGridReady = (params) => {
+    onGridReady = (gridReadyParams) => {
         console.log("In onGridReady", this.actionSection);
-        this.refsetGridApi = params.api;
-        this.refsetGridColumnApi = params.columnApi;
+        this.refsetGridApi = gridReadyParams.api;
+        this.refsetGridColumnApi = gridReadyParams.columnApi;
 
-        this.refsetService.getRefsets().subscribe(results => {
+        
 
-            var dataSource = {
+            let dataSource = {
                 rowCount: null,
-                getRows: (params) => {
+                getRows: (rowParams) => {
 
-                    let data = results.data;
+                    this.refsetGridApi.showLoadingOverlay();
 
-                    //params.api.showLoadingOverlay();
+                    let pageNumber = rowParams.endRow / this.refsetGridPaging.pageSize;
+                    let rowsPerPage = 10;
 
-                    var pageNumber = params.endRow / this.refsetGridPaging.pageSize;
-
-                    if (data.length > 0) {
-
-                        //params.api.hideOverlay();
-                        var totalRowCount = null;
-
-                        if (results.totalKnown || data.length < this.refsetGridPaging.pageSize) {
-
-                            if (results.totalKnown) {
-                                totalRowCount = results.totalResults;
-                            } else {
-                                totalRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
-                            }
-                        }
-
-                        var dataAfterSortingAndFiltering = this.sortAndFilter(
-                            data,
-                            params.sortModel,
-                            params.filterModel
-                        );
-
-                        var rowsThisPage = dataAfterSortingAndFiltering.slice(
-                            params.startRow,
-                            params.endRow
-                        );
-
-                        var lastRow = -1;
-
-                        if (dataAfterSortingAndFiltering.length <= params.endRow) {
-                            lastRow = dataAfterSortingAndFiltering.length;
-                        }
-
-                        this.refsetData = rowsThisPage;
-
-                        this.refsetGridPaging.length = totalRowCount;
-                        params.successCallback(this.pagingIterator(rowsThisPage), lastRow);
-                    } else {
-
-                        this.refsetGridApi.api.showNoRowsOverlay();
-                        params.successCallback(data, 0);
+                    let restParams = {
+                        sortModel: rowParams.sortModel,
+                        filterModel: rowParams.filterModel,
+                        rowsPerPage: rowsPerPage,
+                        pageNumber: pageNumber
                     }
+                                
+                    this.refsetService.getRefsets(restParams).subscribe(results => {
+
+                        let data = results.data;
+
+                        if (data.length > 0) {
+
+                            this.refsetGridApi.hideOverlay();
+                            let currentRowCount = null;
+                            let lastRow = -1;
+
+                            if (results.totalKnown || data.length < this.refsetGridPaging.pageSize) {
+
+                                if (results.totalKnown) {
+
+                                    lastRow = results.totalResults;
+                                } else {
+
+                                    currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
+                                    lastRow = currentRowCount;
+                                }
+                            } else {
+                                currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
+                            }
+
+                            //this.refsetGridPaging.length = totalRowCount;
+                            rowParams.successCallback(data, lastRow);
+                        } else {
+
+                            this.refsetGridApi.showNoRowsOverlay();
+                            rowParams.successCallback(data, 0);
+                        }
+                    });
                 }
             };
 
-            params.api.setDatasource(dataSource);
-        });
-    }
-
-    private pagingIterator(data: any[]) {
-
-        const end = (this.refsetGridPaging.pageIndex + 1) * this.refsetGridPaging.pageSize;
-        const start = this.refsetGridPaging.pageIndex * this.refsetGridPaging.pageSize;
-        return data.slice(start, end);
+            gridReadyParams.api.setDatasource(dataSource);
+        
     }
 
     onGridCellClick = (event) => {
@@ -189,85 +188,6 @@ export class RefsetDirectory {
         this.refsetGridPaging.length = event.length;
         this.refsetGridPaging.pageSize = event.pageSize;
         this.refsetGridPaging.pageIndex = event.pageIndex;
-    }
-
-    sortAndFilter(allOfTheData, sortModel, filterModel) {
-        return this.sortData(sortModel, this.filterData(filterModel, allOfTheData));
-    }
-
-    sortData(sortModel, data) {
-
-        var sortPresent = sortModel && sortModel.length > 0;
-
-        if (!sortPresent) {
-            return data;
-        }
-
-        var resultOfSort = data.slice();
-
-        resultOfSort.sort(function (a, b) {
-
-            for (var k = 0; k < sortModel.length; k++) {
-
-                var sortColModel = sortModel[k];
-                var valueA = a[sortColModel.colId];
-                var valueB = b[sortColModel.colId];
-
-                if (valueA == valueB) {
-                    continue;
-                }
-
-                var sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
-
-                if (valueA > valueB) {
-                    return sortDirection;
-                } else {
-                    return sortDirection * -1;
-                }
-            }
-
-            return 0;
-        });
-
-        return resultOfSort;
-    }
-
-    filterData(filterModel, data) {
-
-        var filterPresent = filterModel && Object.keys(filterModel).length > 0;
-
-        if (!filterPresent) {
-            return data;
-        }
-
-        var resultOfFilter = [];
-
-        for (var i = 0; i < data.length; i++) {
-
-            var item = data[i];
-            let rowValid = true;
-
-            // loop thru each column with a search term
-            for (const column in filterModel) {
-
-                // test each word in the term
-                filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
-
-                    // the search word must be present in the data and the row must still be valid
-                    if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
-                        rowValid = true;
-                    } else {
-                        rowValid = false;
-                    }
-                });
-            }
-
-            if (rowValid) {
-                resultOfFilter.push(item);
-            }
-        }
-
-        return resultOfFilter;
     }
 
     //***** General Functions *****/
