@@ -39,7 +39,6 @@ export class RestService {
             }
         }
 
-        console.log("******* RestService queryString: " + queryString);
         let httpParams = new HttpParams({fromString: queryString});
 
         return this.http.get<any>(url + '?' + queryString, {params: httpParams});

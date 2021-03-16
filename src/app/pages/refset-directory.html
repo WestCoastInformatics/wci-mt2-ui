@@ -19,7 +19,7 @@
             <div class="col-md-auto">
                 <mat-form-field appearance="fill">
                     <mat-label>Refset Filter</mat-label>
-                    <mat-select #directoryViewSelect [(value)]="selectedView">
+                    <mat-select #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
                         <mat-option *ngFor="let option of viewOptions" [value]="option.value">
                             {{option.display}}
                         </mat-option>
@@ -45,13 +45,13 @@
         <!-- Infomation Templates -->
         <ng-template #directoryInfoSection let-params>
 
+            
             <mat-icon aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon"
                 aria-label="View All Refset Metadata" title="View All Refset Metadata"
                 (click)="openInformation(params.data.id)">
                 information</mat-icon>
 
-
-            <mat-icon *ngIf="params.data && params.data.private" aria-hidden="false" #directoryPrivateIcon
+            <mat-icon *ngIf="params?.data?.private" aria-hidden="false" #directoryPrivateIcon
                 class="refset-tool-table-action-icon" aria-label="Private Refset" title="Private Refset">
                 lock</mat-icon>
 
@@ -64,11 +64,11 @@
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
 
-            <mat-icon *ngIf="params.data && params.data.canDownload" (click)="openDownload(params.data.id)"
+            <mat-icon *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.id)"
                 aria-hidden="false" #directoryDownloadIcon class="refset-tool-table-action-icon"
                 aria-label="Download Refset" title="Download Refset">download</mat-icon>
 
-            <mat-icon *ngIf="params.data && params.data.canSeeFeedback" (click)="openFeedback(params.data.id)"
+            <mat-icon *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.id)"
                 aria-hidden="false" #directoryFeedbackIcon class="refset-tool-table-action-icon"
                 aria-label="Open Feedback" title="Open Feedback">comment-processing-outline</mat-icon>
 

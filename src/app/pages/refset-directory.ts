@@ -23,10 +23,10 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 export class RefsetDirectory {
 
     searchInput: string;
-    viewOptions= [{value: 'all', display: 'All Refsets'}, {value: 'public', display: 'Public Refsets'}, {value: 'private', display: 'My Private Refsets'}];
+    viewOptions = [{ value: 'all', display: 'All Refsets' }, { value: 'public', display: 'Public Refsets' }, { value: 'private', display: 'My Private Refsets' }];
     selectedView: string = 'all';
     refsetGridApi: any;
-    refsetGridColumnApi: any;  
+    refsetGridColumnApi: any;
     columnDefs = [];
     refsetGridOptions: any;
     refsetGridPaging = {
@@ -46,14 +46,14 @@ export class RefsetDirectory {
     @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    
+
 
     constructor(
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
-        private changeDetectorRef : ChangeDetectorRef
-    ) { 
+        private changeDetectorRef: ChangeDetectorRef
+    ) {
     }
 
     //***** Framework Functions *****/
@@ -66,7 +66,7 @@ export class RefsetDirectory {
     ngAfterViewInit() {
 
         this.columnDefs = [
-            { field: 'information', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', width: '70', cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
+            { field: 'private', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', width: '70', cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'id', headerName: 'Refset ID', class: 'refset-tool-directory-column-id' },
             { field: 'name', headerName: 'Refset Name', class: 'refset-tool-directory-column-name' },
             { field: 'edition', headerName: 'Edition/Extension', class: 'refset-tool-directory-column-edition' },
@@ -74,12 +74,13 @@ export class RefsetDirectory {
             { field: 'versionStatus', headerName: 'Version Status', class: 'refset-tool-directory-column-version-status' },
             { field: 'versionDate', headerName: 'Version Date', class: 'refset-tool-directory-column-version-date' },
             { field: 'modifiedDate', headerName: 'Last Modified Date', class: 'refset-tool-directory-column-modified-date' },
-            { field: 'actions', headerName: '', contentTemplate: 'actionSection', cellRenderer: 'templateRenderer', width: '70', class: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'canDownload', headerName: '', contentTemplate: 'actionSection', cellRenderer: 'templateRenderer', width: '70', class: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
             context: { componentParent: this },
             pagination: true,
+            suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             paginationPageSize: 10,
             cacheBlockSize: 10,
             maxBlocksInCache: 1,
@@ -110,61 +111,62 @@ export class RefsetDirectory {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
 
-        
 
-            let dataSource = {
-                rowCount: null,
-                getRows: (rowParams) => {
 
-                    this.refsetGridApi.showLoadingOverlay();
+        let dataSource = {
+            rowCount: null,
+            getRows: (rowParams) => {
 
-                    let pageNumber = rowParams.endRow / this.refsetGridPaging.pageSize;
-                    let rowsPerPage = 10;
+                this.refsetGridApi.showLoadingOverlay();
 
-                    let restParams = {
-                        sortModel: rowParams.sortModel,
-                        filterModel: rowParams.filterModel,
-                        rowsPerPage: rowsPerPage,
-                        pageNumber: pageNumber
-                    }
-                                
-                    this.refsetService.getRefsets(restParams).subscribe(results => {
+                let pageNumber = rowParams.endRow / this.refsetGridPaging.pageSize;
+                let rowsPerPage = 10;
 
-                        let data = results.data;
-
-                        if (data.length > 0) {
-
-                            this.refsetGridApi.hideOverlay();
-                            let currentRowCount = null;
-                            let lastRow = -1;
-
-                            if (results.totalKnown || data.length < this.refsetGridPaging.pageSize) {
-
-                                if (results.totalKnown) {
-
-                                    lastRow = results.totalResults;
-                                } else {
-
-                                    currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
-                                    lastRow = currentRowCount;
-                                }
-                            } else {
-                                currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
-                            }
-
-                            //this.refsetGridPaging.length = totalRowCount;
-                            rowParams.successCallback(data, lastRow);
-                        } else {
-
-                            this.refsetGridApi.showNoRowsOverlay();
-                            rowParams.successCallback(data, 0);
-                        }
-                    });
+                let restParams = {
+                    viewFilter: this.selectedView,
+                    sortModel: rowParams.sortModel,
+                    filterModel: rowParams.filterModel,
+                    rowsPerPage: rowsPerPage,
+                    pageNumber: pageNumber
                 }
-            };
 
-            gridReadyParams.api.setDatasource(dataSource);
-        
+                this.refsetService.getRefsets(restParams).subscribe(results => {
+
+                    let data = results.data;
+
+                    if (data.length > 0) {
+
+                        this.refsetGridApi.hideOverlay();
+                        let currentRowCount = null;
+                        let lastRow = -1;
+
+                        if (results.totalKnown || data.length < this.refsetGridPaging.pageSize) {
+
+                            if (results.totalKnown) {
+
+                                lastRow = results.totalResults;
+                            } else {
+
+                                currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
+                                lastRow = currentRowCount;
+                            }
+                        } else {
+                            currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
+                        }
+
+                        //this.refsetGridPaging.length = totalRowCount;
+                        rowParams.successCallback(data, lastRow);
+                    } else {
+
+                        this.refsetGridApi.showNoRowsOverlay();
+                        rowParams.successCallback(data, 0);
+                    }
+                });
+            }
+        };
+
+        gridReadyParams.api.setDatasource(dataSource);
+
     }
 
     onGridCellClick = (event) => {
@@ -182,12 +184,8 @@ export class RefsetDirectory {
         }
     }
 
-    onConceptGridPageChange(event: PageEvent) {
-
-        console.log("********* event: ", event);
-        this.refsetGridPaging.length = event.length;
-        this.refsetGridPaging.pageSize = event.pageSize;
-        this.refsetGridPaging.pageIndex = event.pageIndex;
+    changedViewFilter() {
+        this.refsetGridApi.purgeInfiniteCache();
     }
 
     //***** General Functions *****/
@@ -273,5 +271,5 @@ export class RefsetDirectory {
             }
         });
     }
-    
+
 }

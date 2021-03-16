@@ -115,6 +115,7 @@ export class BackendInterceptor implements HttpInterceptor {
             let rowsPerPage = Number.parseInt(params.rowsPerPage);
             let sortModel = params.sortModel;
             let filterModel = params.filterModel;
+            let viewFilter = params.viewFilter;
             let startRow = (pageNumber - 1) * rowsPerPage;
             let endRow = startRow + rowsPerPage;
 
@@ -126,13 +127,24 @@ export class BackendInterceptor implements HttpInterceptor {
             // let sortModel = request.params.get("sortModel");
             // let filterModel = request.params.get("filterModel");
 
-            var dataAfterSortingAndFiltering = sortAndFilter(
-                refsetData,
+            let dataAfterViewFilter = refsetData.filter(row => {
+
+                let rowValid = true;
+
+                if (viewFilter !== 'all' && (viewFilter === 'public' && row.private == true) || (viewFilter === 'private' && row.private == false)){
+                    rowValid = false;
+                }
+
+                return rowValid;
+            });
+
+            let dataAfterSortingAndFiltering = sortAndFilter(
+                dataAfterViewFilter,
                 sortModel,
                 filterModel
             );
 
-            var rowsThisPage = dataAfterSortingAndFiltering.slice(
+            let rowsThisPage = dataAfterSortingAndFiltering.slice(
                 startRow,
                 endRow
             );
@@ -160,27 +172,27 @@ export class BackendInterceptor implements HttpInterceptor {
 
         function sortData(sortModel, data) {
 
-            var sortPresent = sortModel && sortModel.length > 0;
+            let sortPresent = sortModel && sortModel.length > 0;
 
             if (!sortPresent) {
                 return data;
             }
 
-            var resultOfSort = data.slice();
+            let resultOfSort = data.slice();
 
             resultOfSort.sort(function (a, b) {
 
-                for (var k = 0; k < sortModel.length; k++) {
+                for (let k = 0; k < sortModel.length; k++) {
 
-                    var sortColModel = sortModel[k];
-                    var valueA = a[sortColModel.colId];
-                    var valueB = b[sortColModel.colId];
+                    let sortColModel = sortModel[k];
+                    let valueA = a[sortColModel.colId];
+                    let valueB = b[sortColModel.colId];
 
                     if (valueA == valueB) {
                         continue;
                     }
 
-                    var sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
+                    let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
 
                     if (valueA > valueB) {
                         return sortDirection;
@@ -197,17 +209,17 @@ export class BackendInterceptor implements HttpInterceptor {
 
         function filterData(filterModel, data) {
 
-            var filterPresent = filterModel && Object.keys(filterModel).length > 0;
+            let filterPresent = filterModel && Object.keys(filterModel).length > 0;
 
             if (!filterPresent) {
                 return data;
             }
 
-            var resultOfFilter = [];
+            let resultOfFilter = [];
 
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
 
-                var item = data[i];
+                let item = data[i];
                 let rowValid = true;
 
                 // loop thru each column with a search term
