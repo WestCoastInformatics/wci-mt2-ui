@@ -153,3 +153,35 @@ main{
         margin: 0 5px;
     }
 }
+
+
+// Global 3-17-21 SW
+.nav-title {
+    font-family: $header_font_family;
+}
+
+.page-title {
+    color: #9B9B9B;
+    font-family: $header_font_family;
+    font-size: 2em; //1.5em? 24px
+}
+
+.ag-theme-alpine .ag-header-row{
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.ag-theme-alpine .ag-header{
+    border: 0px solid $ghost-grey;
+}
+
+.ag-theme-alpine .ag-icon {
+    color: #666;
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-infix {
+    padding: .88em 0;
+}
