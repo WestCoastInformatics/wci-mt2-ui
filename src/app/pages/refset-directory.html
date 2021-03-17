@@ -37,15 +37,20 @@
             [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
         </ag-grid-angular>
 
-        <mat-paginator *ngIf=false #directoryPaginator showFirstLastButtons [length]="conceptGridPaging.length"
-            [pageIndex]="conceptGridPaging.pageIndex" [pageSize]="conceptGridPaging.pageSize"
-            [pageSizeOptions]="conceptGridPaging.pageSizeOptions" (page)="onConceptGridPageChange($event)">
+        <app-pagination [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions"
+            [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
+            [pageSizeOptions]="refsetGridPaging.pageSizeOptions">
+        </app-pagination>
+
+        <mat-paginator *ngIf=false #directoryPaginator [length]="refsetGridPaging.length"
+            [pageIndex]="refsetGridPaging.pageIndex" [pageSize]="refsetGridPaging.pageSize"
+            [pageSizeOptions]="refsetGridPaging.pageSizeOptions" (page)="onGridPageChange($event)"
+            [showFirstLastButtons]="refsetGridPaging.showFirstLastButtons">
         </mat-paginator>
 
         <!-- Infomation Templates -->
         <ng-template #directoryInfoSection let-params>
 
-            
             <mat-icon aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon"
                 aria-label="View All Refset Metadata" title="View All Refset Metadata"
                 (click)="openInformation(params.data.id)">
@@ -64,18 +69,19 @@
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
 
-            <mat-icon *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.id)"
-                aria-hidden="false" #directoryDownloadIcon class="refset-tool-table-action-icon"
-                aria-label="Download Refset" title="Download Refset">download</mat-icon>
+            <mat-icon *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.id)" aria-hidden="false"
+                #directoryDownloadIcon class="refset-tool-table-action-icon" aria-label="Download Refset"
+                title="Download Refset">download</mat-icon>
 
-            <mat-icon *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.id)"
-                aria-hidden="false" #directoryFeedbackIcon class="refset-tool-table-action-icon"
-                aria-label="Open Feedback" title="Open Feedback">comment-processing-outline</mat-icon>
+            <mat-icon *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.id)" aria-hidden="false"
+                #directoryFeedbackIcon class="refset-tool-table-action-icon" aria-label="Open Feedback"
+                title="Open Feedback">comment-processing-outline</mat-icon>
 
         </ng-template>
 
         <ng-template #directoryFeedbackDialog let-data>
-            <mat-form-field>
+            To be implemented later.
+            <mat-form-field *ngIf="false">
                 <mat-label>Feedback</mat-label>
                 <input matInput [(ngModel)]="data.feedback">
             </mat-form-field>

@@ -7,12 +7,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule  } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
 import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
@@ -28,6 +29,9 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+
+// PAGE IMPORTS
 import { TemplateComponent } from 'src/app/pages/template.component';
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
 
@@ -37,6 +41,7 @@ import { AuthoringService } from 'src/app/services/authoring/authoring.service';
 import { RestService } from 'src/app/services/rest/rest.service';
 import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
@@ -48,6 +53,7 @@ import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
         FooterComponent,
         TaxonomyTreeComponent,
         TemplateRenderer,
+        PaginationComponent,
         TemplateComponent,
         RefsetDirectory
     ],
@@ -60,10 +66,11 @@ import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        MatExpansionModule, 
+        MatExpansionModule,
         MatInputModule,
         MatSelectModule,
         MatFormFieldModule,
+        MatButtonModule,
         MatIconModule,
         DialogModule,
         TreeModule,
@@ -77,6 +84,7 @@ import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
         RestService,
         ConceptsService,
         RefsetService,
+        PaginationService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HeaderInterceptor,

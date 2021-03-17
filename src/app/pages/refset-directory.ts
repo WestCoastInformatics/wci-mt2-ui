@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { RestService } from 'src/app/services/rest/rest.service';
 import { Title } from '@angular/platform-browser';
 import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -30,10 +29,8 @@ export class RefsetDirectory {
     columnDefs = [];
     refsetGridOptions: any;
     refsetGridPaging = {
-        length: 0,
-        pageIndex: 0,
         pageSize: 10,
-        pageSizeOptions: [10, 25, 50]
+        pageSizeOptions: [10, 25, 50, 100, 250, 500]
     };
     pageEvent: PageEvent;
     showTable: boolean;
@@ -81,8 +78,9 @@ export class RefsetDirectory {
             context: { componentParent: this },
             pagination: true,
             suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-            paginationPageSize: 10,
-            cacheBlockSize: 10,
+            suppressPaginationPanel: true,
+            paginationPageSize: this.refsetGridPaging.pageSize,
+            cacheBlockSize: this.refsetGridPaging.pageSize,
             maxBlocksInCache: 1,
             loadingCellRenderer: 'agLoadingOverlay',
             rowModelType: 'infinite',
@@ -107,11 +105,10 @@ export class RefsetDirectory {
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
+
         console.log("In onGridReady", this.actionSection);
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
-
-
 
         let dataSource = {
             rowCount: null,
@@ -119,20 +116,20 @@ export class RefsetDirectory {
 
                 this.refsetGridApi.showLoadingOverlay();
 
-                let pageNumber = rowParams.endRow / this.refsetGridPaging.pageSize;
-                let rowsPerPage = 10;
+                let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
 
                 let restParams = {
                     viewFilter: this.selectedView,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
-                    rowsPerPage: rowsPerPage,
+                    rowsPerPage: this.refsetGridApi.paginationGetPageSize(),
                     pageNumber: pageNumber
                 }
 
                 this.refsetService.getRefsets(restParams).subscribe(results => {
 
                     let data = results.data;
+                    this.refsetData = data;
 
                     if (data.length > 0) {
 
@@ -140,21 +137,20 @@ export class RefsetDirectory {
                         let currentRowCount = null;
                         let lastRow = -1;
 
-                        if (results.totalKnown || data.length < this.refsetGridPaging.pageSize) {
+                        if (results.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize()) {
 
                             if (results.totalKnown) {
 
                                 lastRow = results.totalResults;
                             } else {
 
-                                currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
+                                currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
                                 lastRow = currentRowCount;
                             }
                         } else {
-                            currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridPaging.pageSize);
+                            currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
                         }
-
-                        //this.refsetGridPaging.length = totalRowCount;
+                        
                         rowParams.successCallback(data, lastRow);
                     } else {
 
@@ -171,13 +167,14 @@ export class RefsetDirectory {
 
     onGridCellClick = (event) => {
 
-        if (event.column.colId === 'feedback') {
+        if (event.column.colId === 'private' || event.column.colId === 'canDownload') {
 
 
         } else {
 
             let selectedRows = this.refsetGridApi.getSelectedRows();
             console.log(selectedRows);
+
             selectedRows.forEach(function (selectedRow, index) {
                 console.log('Selected Row: ' + selectedRow.id);
             });

@@ -54,6 +54,7 @@ main{
         min-width: 100%;
     }
 }
+// not using these now, if don't want remove - START --->
 .refset-tool-inline{
     display: inline;
 }
@@ -101,6 +102,7 @@ main{
     justify-content: flex-end;
     display: flex;
 }
+// <--- END - not using these now, if don't want remove
 
 // Material Dialog Override Styles
 .mat-dialog-actions{
@@ -132,8 +134,22 @@ main{
     padding: 0px;
 
     .refset-tool-directory-column-information{
-        
-    }
-    
+        justify-content: center;
+    }    
 }
 
+// Pagination Styles
+.refset-tool-pagination-container{
+    padding: 30px;
+    //display: flex;
+    justify-content: center;
+
+    .row {
+        justify-content: center;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    button {
+        margin: 0 5px;
+    }
+}
