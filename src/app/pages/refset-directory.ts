@@ -41,6 +41,7 @@ export class RefsetDirectory {
     @ViewChild('directoryDownloadDialog') downloadDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
     @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
+    @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -65,7 +66,7 @@ export class RefsetDirectory {
         this.columnDefs = [
             { field: 'private', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', width: '70', cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'id', headerName: 'Refset ID', class: 'refset-tool-directory-column-id' },
-            { field: 'name', headerName: 'Refset Name', class: 'refset-tool-directory-column-name' },
+            { field: 'name', headerName: 'Refset Name', class: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
             { field: 'edition', headerName: 'Edition/Extension', class: 'refset-tool-directory-column-edition' },
             { field: 'organization', headerName: 'Organization/Owner', class: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', class: 'refset-tool-directory-column-version-status' },

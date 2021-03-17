@@ -48,17 +48,14 @@
             [showFirstLastButtons]="refsetGridPaging.showFirstLastButtons">
         </mat-paginator>
 
-        <!-- Infomation Templates -->
+        <!-- Information Templates -->
         <ng-template #directoryInfoSection let-params>
 
             <mat-icon aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon"
                 aria-label="View All Refset Metadata" title="View All Refset Metadata"
                 (click)="openInformation(params.data.id)">
-                information</mat-icon>
-
-            <mat-icon *ngIf="params?.data?.private" aria-hidden="false" #directoryPrivateIcon
-                class="refset-tool-table-action-icon" aria-label="Private Refset" title="Private Refset">
-                lock</mat-icon>
+                information
+            </mat-icon>
 
         </ng-template>
 
@@ -66,16 +63,31 @@
             To be implemented later.
         </ng-template>
 
+        <!-- Name Templates -->
+        <ng-template #directoryNameSection let-params>
+
+            {{params?.value}}
+
+            <mat-icon *ngIf="params?.data?.private" aria-hidden="false" #directoryPrivateIcon
+                class="refset-tool-table-action-icon" aria-label="Private Refset" title="Private Refset">
+                lock
+            </mat-icon>
+
+        </ng-template>
+
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
 
             <mat-icon *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.id)" aria-hidden="false"
                 #directoryDownloadIcon class="refset-tool-table-action-icon" aria-label="Download Refset"
-                title="Download Refset">download</mat-icon>
+                title="Download Refset">download
+            </mat-icon>
 
             <mat-icon *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.id)" aria-hidden="false"
                 #directoryFeedbackIcon class="refset-tool-table-action-icon" aria-label="Open Feedback"
-                title="Open Feedback">comment-processing-outline</mat-icon>
+                title="Open Feedback">
+                comment-processing-outline
+            </mat-icon>
 
         </ng-template>
 
