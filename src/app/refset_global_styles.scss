@@ -118,7 +118,7 @@ main{
 .refset-tool-table-action-icon{
     top: 7px; 
     position: relative;
-    color: $standard_link_color;
+    color: $cerulean;
     overflow: hidden;
     margin-top: auto;
     margin-bottom: auto;
@@ -155,7 +155,7 @@ main{
 }
 
 
-// Global 3-17-21 SW
+// 3-18-21 SW
 .nav-title {
     font-family: $header_font_family;
 }
@@ -182,6 +182,96 @@ main{
     line-height: 20px;
 }
 
+
+// Search & Refset Filter
+
 .mat-form-field-appearance-legacy .mat-form-field-infix {
     padding: .88em 0;
 }
+
+.mat-form-field-appearance-fill .mat-form-field-flex{
+    background-color: transparent;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-underline:hover{
+    background-color: rgba(0, 0, 0, 0.42);
+}
+
+// ------------> look for references to this color and get rid of (theming)
+// .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+    //color: #2196f3;
+//}
+
+.mat-input-element {
+    //color: pink !important;
+    //caret-color: pink !important;
+}
+
+
+// Table
+
+.ag-theme-alpine .ag-root-wrapper{
+    border-color: #eeeeee;
+}
+
+.refset-tool-directory-column-name .mat-icon{
+    color:#888;
+    font-size: 14px;
+    padding-top: 6px;
+}
+
+.ag-theme-alpine{
+    font-family: $standard_font_family;
+}
+
+.ag-theme-alpine .ag-row:hover { 
+    background-color:#F0FCFF; //icy blue hover
+}
+
+.ag-theme-alpine .ag-row-selected { 
+    background-color:#86cffc; //slightly darker selected
+    color: #000000;
+}
+
+.ag-theme-alpine .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected){
+    border-color: $cerulean;
+}
+
+// Table Header
+.ag-header-viewport{
+    border-bottom: 1px solid #eeeeee;
+}
+
+.ag-theme-alpine .ag-header-cell-resize::after{
+    background-color: #888888;
+}
+
+.ag-theme-alpine .ag-header-row:not(:first-child) .ag-header-cell{
+    border-top-color: #eeeeee;
+}
+
+// Table Header Filter Input
+.ag-theme-alpine .ag-ltr input[class^='ag-'][type='text'] {
+    border: 0;
+    border-bottom: 1px solid #aaa;
+    background-color: transparent;
+    border-radius: 0px;
+}
+
+.ag-theme-alpine .ag-ltr input[class^='ag-'][type='text']:focus {
+    border-bottom: 1px solid $cerulean;
+    box-shadow: none;
+}
+
+// Pagination
+
+.mat-raised-button{
+    min-width: 36px !important;
+    border-radius: 0px !important;
+    padding: 0px !important;
+}
+
+.mat-raised-button.mat-primary {
+    background-color: $cerulean !important; 
+}
+
