@@ -9,6 +9,10 @@ import { FormBuilder, Validators, FormGroup } from "@angular/forms";
     selector: 'app-dialog',
     template: `
         <h1 *ngIf="config.showTitle" mat-dialog-title id="{{id}}Title"> {{config.headerText}}</h1>
+        <button *ngIf="config.showCloseIcon" mat-icon-button class="refset-tool-close-button" aria-hidden="false" aria-label="Close Dialog" [mat-dialog-close]="true">
+            <mat-icon>close</mat-icon>
+        </button>
+        
         <div mat-dialog-content>
             <ng-container [ngTemplateOutlet]="config.template" [ngTemplateOutletContext]="{$implicit: data}"></ng-container> 
         </div>

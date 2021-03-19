@@ -98,7 +98,7 @@ export class RefsetDirectory {
                 resizable: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
                 suppressMenu: true
             }
         };
@@ -167,6 +167,18 @@ export class RefsetDirectory {
 
         gridReadyParams.api.setDatasource(dataSource);
 
+        // set placeholders on the grid floating filter fields
+        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+
+            if (obj.attributes['disabled']) { // skip columns with disabled filter
+              return;
+            }
+
+            let label = obj.getAttribute('aria-label');
+            let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            obj.setAttribute('placeholder', value); 
+        }); 
+
     }
 
     onGridCellClick = (event) => {
@@ -220,12 +232,13 @@ export class RefsetDirectory {
         //refset.tags = CodeUtility.removeFinal(tags, ';');
         const dialogData = {
             dialogId: dialogId,
-            showCancel: true,
+            showCancel: false,
             cancelText: 'Close',
             confirmText: 'View Complete Refset',
             showTitle: false,
             template: this.infoDialog,
-            data: refset
+            data: refset,
+            showCloseIcon: true
         }
 
         const dialogOptions = {

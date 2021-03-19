@@ -52,7 +52,7 @@
         <ng-template #directoryInfoSection let-params>
 
             <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon"
-                aria-label="View All Refset Metadata" title="View All Refset Metadata"
+                aria-label="View All Refset Metadata" title="View All Refset Metadata {{params?.data?.refsetId}}"
                 (click)="openInformation(params.data.refsetId)">
                 <mat-icon>information</mat-icon>
             </button>
@@ -190,18 +190,28 @@
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
 
-            <button mat-icon-button *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.refsetId)" aria-hidden="false"
-                #directoryDownloadIcon class="refset-tool-table-action-icon" aria-label="Download Refset"
-                title="Download Refset">
-                <mat-icon>download</mat-icon>
-            </button>
+            <div class="container-fluid">
+                <div class="row">
 
-            <button mat-icon-button *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.refsetId)" aria-hidden="false"
-                #directoryFeedbackIcon class="refset-tool-table-action-icon" aria-label="Open Feedback"
-                title="Open Feedback">
-                <mat-icon>comment-processing-outline</mat-icon>
-            </button>
+                    <div class="col-2">
+                        <button mat-icon-button *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.refsetId)" aria-hidden="false"
+                            #directoryDownloadIcon class="refset-tool-table-action-icon" aria-label="Download Refset"
+                            title="Download Refset">
+                            <mat-icon>download</mat-icon>
+                        </button>
+                    </div>
 
+                    <div class="col-2">
+                        <button mat-icon-button *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.refsetId)" aria-hidden="false"
+                            #directoryFeedbackIcon class="refset-tool-table-action-icon" aria-label="Open Feedback"
+                            title="Open Feedback">
+                            <mat-icon>comment-processing-outline</mat-icon>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            
         </ng-template>
 
         <ng-template #directoryFeedbackDialog let-data>

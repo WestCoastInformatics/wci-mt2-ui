@@ -8,6 +8,7 @@ export interface DialogData {
     cancelText?: string;
     showCancel?: boolean;
     showTitle?: boolean;
+    showCloseIcon?: boolean;
 }
 
 export const DialogDataDefaults: DialogData = {
@@ -17,5 +18,6 @@ export const DialogDataDefaults: DialogData = {
     confirmText: 'OK',
     cancelText: 'Cancel',
     showCancel: true,
-    showTitle: true
+    showTitle: true,
+    showCloseIcon: false
 }

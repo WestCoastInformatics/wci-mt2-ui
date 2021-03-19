@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 // Components
 import { DialogComponent } from './components/dialog.component';
@@ -10,7 +11,8 @@ import { DialogComponent } from './components/dialog.component';
   imports: [
     CommonModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule
   ],
   exports: [DialogComponent],
   declarations: [DialogComponent],
