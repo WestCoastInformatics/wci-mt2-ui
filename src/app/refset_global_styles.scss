@@ -54,7 +54,8 @@ main{
         min-width: 100%;
     }
 }
-// not using these now, if don't want remove - START --->
+
+// Manual Flex Styles: not using these now, if don't want remove - START --->
 .refset-tool-inline{
     display: inline;
 }
@@ -108,6 +109,12 @@ main{
 .mat-dialog-actions{
     justify-content: flex-end;
 }
+.mat-flat-button, .mat-raised-button{
+    background-color: $standard_default_button_color;
+}
+.mat-flat-button.mat-primary, .mat-raised-button.mat-primary{
+    background-color: $standard_primary_button_color;
+}
 
 // General Page Styles
 .refset-tool-page-title-section{
@@ -115,13 +122,23 @@ main{
 }
 
 // Action Button / Icon Styles
-.refset-tool-table-action-icon{
+.refset-tool-table-icon, .refset-tool-table-action-icon, button.refset-tool-table-icon, button.refset-tool-table-action-icon{
     top: 7px; 
     position: relative;
     color: $cerulean;
     overflow: hidden;
     margin-top: auto;
     margin-bottom: auto;
+
+    mat-icon{
+        overflow: hidden;  
+    }
+}
+.refset-tool-add{
+    color: $add_color
+}
+.refset-tool-delete{
+    color: $delete_color
 }
 
 // AG Grid Styles
@@ -136,7 +153,22 @@ main{
     .refset-tool-directory-column-information{
         justify-content: center;
     }    
+
+    .mat-raised-button{
+        min-width: 36px !important;
+        border-radius: 0px !important;
+        padding: 0px !important;
+    }
+    
+    .mat-raised-button.mat-primary {
+        background-color: $cerulean !important; 
+    }
 }
+
+// Refset Detail Styles
+.refset-tool-definition-icon{
+    
+} 
 
 // Pagination Styles
 .refset-tool-pagination-container{
@@ -263,15 +295,5 @@ main{
     box-shadow: none;
 }
 
-// Pagination
 
-.mat-raised-button{
-    min-width: 36px !important;
-    border-radius: 0px !important;
-    padding: 0px !important;
-}
-
-.mat-raised-button.mat-primary {
-    background-color: $cerulean !important; 
-}
 

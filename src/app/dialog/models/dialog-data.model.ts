@@ -1,12 +1,13 @@
 import { TemplateRef } from '@angular/core';
 
 export interface DialogData {
-    headerText: string,
-    template: TemplateRef<any>,
-    data: any,
-    confirmText?: string,
-    cancelText?: string,
-    showCancel?: boolean
+    headerText?: string;
+    template: TemplateRef<any>;
+    data: any;
+    confirmText?: string;
+    cancelText?: string;
+    showCancel?: boolean;
+    showTitle?: boolean;
 }
 
 export const DialogDataDefaults: DialogData = {
@@ -15,5 +16,6 @@ export const DialogDataDefaults: DialogData = {
     data: {},
     confirmText: 'OK',
     cancelText: 'Cancel',
-    showCancel: true
+    showCancel: true,
+    showTitle: true
 }

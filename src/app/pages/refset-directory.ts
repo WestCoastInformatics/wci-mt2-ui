@@ -9,6 +9,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 
 /**
@@ -64,20 +65,21 @@ export class RefsetDirectory {
     ngAfterViewInit() {
 
         this.columnDefs = [
-            { field: 'private', headerName: '', contentTemplate: 'infoSection', cellRenderer: 'templateRenderer', width: '70', cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
-            { field: 'id', headerName: 'Refset ID', class: 'refset-tool-directory-column-id' },
-            { field: 'name', headerName: 'Refset Name', class: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellClass: 'refset-tool-directory-column-name', cellRendererParams: { template: this.nameSection } },
-            { field: 'edition', headerName: 'Edition/Extension', class: 'refset-tool-directory-column-edition' },
-            { field: 'organization', headerName: 'Organization/Owner', class: 'refset-tool-directory-column-organization' },
-            { field: 'versionStatus', headerName: 'Version Status', class: 'refset-tool-directory-column-version-status' },
-            { field: 'versionDate', headerName: 'Version Date', class: 'refset-tool-directory-column-version-date' },
-            { field: 'modifiedDate', headerName: 'Last Modified Date', class: 'refset-tool-directory-column-modified-date' },
-            { field: 'canDownload', headerName: '', contentTemplate: 'actionSection', cellRenderer: 'templateRenderer', width: '70', class: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+            { colId: 'information', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
+            { field: 'name', headerName: 'Refset Name', cellRenderer: 'templateRenderer', cellClass: 'refset-tool-directory-column-name', cellRendererParams: { template: this.nameSection } },
+            { field: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
+            { field: 'organization', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
+            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date' },
+            { field: 'modifiedDate', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
+            { colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
             context: { componentParent: this },
             pagination: true,
+            onGridSizeChanged: UiUtility.resizeGridColumns,
             suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
             paginationPageSize: this.refsetGridPaging.pageSize,
@@ -96,7 +98,8 @@ export class RefsetDirectory {
                 resizable: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { suppressFilterButton: true }
+                floatingFilterComponentParams: { suppressFilterButton: true },
+                suppressMenu: true
             }
         };
 
@@ -177,7 +180,7 @@ export class RefsetDirectory {
             console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
-                console.log('Selected Row: ' + selectedRow.id);
+                console.log('Selected Row: ' + selectedRow.refsetId);
             });
         }
     }
@@ -193,7 +196,7 @@ export class RefsetDirectory {
 
         for (let i = 0; i < this.refsetData.length; i++) {
 
-            if (this.refsetData[i].id == refsetId) {
+            if (this.refsetData[i].refsetId == refsetId) {
 
                 refset = this.refsetData[i];
                 break;
@@ -208,16 +211,26 @@ export class RefsetDirectory {
         let refset = this.getRefsetRow(refsetId);
         const dialogId = 'directoryInfoDialog';
 
+        let tags = '';
+
+        for (const tag of refset.tags){
+            tags += tag + "; ";
+        }
+
+        //refset.tags = CodeUtility.removeFinal(tags, ';');
         const dialogData = {
             dialogId: dialogId,
-            headerText: `Refset Metadata for ${refset.name} (${refset.id})`,
-            showCancel: false,
+            showCancel: true,
+            cancelText: 'Close',
+            confirmText: 'View Complete Refset',
+            showTitle: false,
             template: this.infoDialog,
             data: refset
         }
 
         const dialogOptions = {
             id: dialogId,
+            width: '1000px',
             disableClose: false
         }
 
@@ -231,7 +244,7 @@ export class RefsetDirectory {
 
         const dialogData = {
             dialogId: dialogId,
-            headerText: `Download Refset ${refset.name} (${refset.id})`,
+            headerText: `Download Refset ${refset.name} (${refset.refsetId})`,
             showCancel: false,
             template: this.downloadDialog,
             data: refset

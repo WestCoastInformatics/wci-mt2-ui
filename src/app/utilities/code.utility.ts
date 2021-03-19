@@ -28,6 +28,15 @@ export class CodeUtility {
     }
 
     /*
+     * removeFinal - return the string with the specified characters removed if they are the last characters in the string or followed only by whitespace.
+     */
+    static removeFinal(str: string, charsToRemove: string): string {
+
+        let  regex = new RegExp(`${charsToRemove}\\s*$`);
+        return str.replace(regex, "");
+    }
+
+    /*
      * hasValue - return a boolean if passed variable has a legitimate value (not undefined, null, or possibly empty string.
      * variable - the variable to test
      * rejectEmpty - a boolean to set if the function should count empty strings or empty objects as non-valid values. Defaults to true
