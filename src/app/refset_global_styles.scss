@@ -128,7 +128,7 @@ main{
 
 // Action Button / Icon Styles
 .refset-tool-table-icon, .refset-tool-table-action-icon, button.refset-tool-table-icon, button.refset-tool-table-action-icon{
-    top: 7px; 
+    //top: 7px; 
     position: relative;
     color: $cerulean;
     overflow: hidden;
@@ -143,7 +143,8 @@ main{
     float: right;
     top:-24px;
     right:-24px;
-    color: $delete_color
+    //color: $delete_color
+    color:$standard_font_color;
 }
 .refset-tool-add{
     color: $add_color
@@ -154,7 +155,13 @@ main{
 
 // AG Grid Styles
 .refset-tool-ag-grid{
-    height: 500px;
+    height: 623px;
+}
+.ag-theme-alpine .ag-cell{
+    line-height: 56px;
+}
+.ag-theme-alpine .ag-row-odd{
+    background-color: #efefef;
 }
 .ag-theme-alpine .ag-root-wrapper{
     border-color: #eeeeee;
@@ -162,7 +169,7 @@ main{
 .refset-tool-directory-column-name .mat-icon{
     color:#888;
     font-size: 14px;
-    padding-top: 6px;
+    padding-top: 12px;
 }
 .ag-theme-alpine{
     font-family: $standard_font_family;
@@ -172,7 +179,7 @@ main{
         background-color:#F0FCFF; //icy blue hover
     }
     .ag-row-selected { 
-        background-color:#86cffc; //slightly darker selected
+        background-color:#a4dbfd; //slightly darker selected
         color: #000000;
     }
     .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected){
@@ -213,7 +220,7 @@ main{
     }    
 
     .mat-raised-button{
-        min-width: 36px !important;
+        min-width: 32px !important;
         border-radius: 0px !important;
         padding: 0px !important;
     }
@@ -223,14 +230,10 @@ main{
     }
 }
 
-// Refset Detail Styles
-.refset-tool-definition-icon{
-    
-} 
 
 // Pagination Styles
 .refset-tool-pagination-container{
-    padding: 30px;
+    padding: 70px;
     //display: flex;
     justify-content: center;
 
@@ -248,18 +251,20 @@ main{
 // 3-18-21 SW
 .nav-title {
     font-family: $header_font_family;
+    font-size: 20px;
+    color: #eee !important;
 }
 
 .page-title {
     color: #9B9B9B;
     font-family: $header_font_family;
-    font-size: 2em; //1.5em? 24px
+    font-size: 1.5em;
 }
 
 .ag-theme-alpine .ag-header-row{
     color: #666;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .ag-theme-alpine .ag-header{
@@ -272,11 +277,16 @@ main{
     line-height: 20px;
 }
 
+.mat-icon-button .mat-button-wrapper>*{
+    //vertical-align: top !important;
+}
+
 
 // Search & Refset Filter
 
 .mat-form-field-appearance-legacy .mat-form-field-infix {
-    padding: .88em 0;
+    padding: 0.5em 0;
+    margin-top: 11px;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex{
@@ -298,5 +308,49 @@ main{
 }
 
 
+.ag-theme-alpine .ag-icon-desc:before {
+    content: "\f128";
+}
+.ag-theme-alpine .ag-icon-asc:before {
+    content: "\f12b";
+}
 
+nav a img{
+    margin-top: .25em;
+    height: 3.0rem !important;
+}
 
+.bg-dark {
+    background-color: #434955 !important;
+}
+
+footer.footer {
+    font-family: $header_font_family;
+}
+
+footer.footer a {
+    font-size: .9em !important;
+}
+
+.ag-header{
+    height: 110px !important; 
+    min-height: 110px !important;
+}
+.ag-header-row-floating-filter{
+    height: 63px !important;
+}
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=text]{
+    padding-top: 24px;
+}
+.ag-theme-alpine .ag-row{
+    height: 51px !important;
+    font-size: 16px !important;
+}
+
+.mat-input-element, .mat-primary .mat-option.mat-selected:not(.mat-option-disabled){
+    caret-color: $cerulean !important;
+}
+
+.mat-input-element, .mat-form-field-appearance-legacy .mat-form-field-label, .mat-select-value{
+    color: #666 !important;
+}

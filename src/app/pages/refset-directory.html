@@ -18,7 +18,7 @@
 
             <div class="col-md-auto">
                 <mat-form-field appearance="fill">
-                    <mat-label>Refset Filter</mat-label>
+                    <mat-label>Contents</mat-label>
                     <mat-select #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
                         <mat-option *ngFor="let option of viewOptions" [value]="option.value">
                             {{option.display}}
