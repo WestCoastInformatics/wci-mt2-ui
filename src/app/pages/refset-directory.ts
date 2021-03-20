@@ -65,7 +65,7 @@ export class RefsetDirectory {
     ngAfterViewInit() {
 
         this.columnDefs = [
-            { colId: 'information', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
+            { field: 'id', colId: 'information', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
             { field: 'name', headerName: 'Refset Name', cellRenderer: 'templateRenderer', cellClass: 'refset-tool-directory-column-name', cellRendererParams: { template: this.nameSection } },
             { field: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
@@ -73,7 +73,7 @@ export class RefsetDirectory {
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date' },
             { field: 'modifiedDate', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
-            { colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'canDownload', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
