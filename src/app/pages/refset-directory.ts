@@ -23,7 +23,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 export class RefsetDirectory {
 
     searchInput: string;
-    viewOptions = [{ value: 'all', display: 'All Refsets' }, { value: 'public', display: 'Public Refsets' }, { value: 'private', display: 'My Private Refsets' }];
+    viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView: string = 'all';
     refsetGridApi: any;
     refsetGridColumnApi: any;

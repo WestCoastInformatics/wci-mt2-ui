@@ -105,26 +105,65 @@ main{
 }
 // <--- END - not using these now, if don't want remove
 
+
+// General Page Styles
+.refset-tool-page-title-section{
+    @extend .refset-tool-flex-row;
+}
+
+.nav-title {
+    font-family: $header_font_family;
+    font-size: 20px;
+    color: #eee !important;
+}
+
+nav a img{
+    margin-top: .25em;
+    height: 3.0rem !important;
+}
+
+.bg-dark {
+    background-color: #434955 !important;
+}
+
+.page-title {
+    color: #9B9B9B;
+    font-family: $header_font_family;
+    font-size: 1.5em;
+}
+
+footer.footer {
+    font-family: $header_font_family;
+}
+
+footer.footer a {
+    font-size: .9em !important;
+}
+
+
 // Material Dialog Override Styles
 .mat-dialog-actions{
     justify-content: flex-end;
 }
+
 .mat-flat-button, .mat-raised-button{
     background-color: $standard_default_button_color;
 }
+
 .mat-flat-button.mat-primary, .mat-raised-button.mat-primary{
     background-color: $standard_primary_button_color;
 }
+
 .mat-icon-button{
     .mat-button-focus-overlay{
         //display: none;
     }
 }
 
-// General Page Styles
-.refset-tool-page-title-section{
-    @extend .refset-tool-flex-row;
+.mat-icon-button .mat-button-wrapper>*{
+    //vertical-align: top !important;
 }
+
 
 // Action Button / Icon Styles
 .refset-tool-table-icon, .refset-tool-table-action-icon, button.refset-tool-table-icon, button.refset-tool-table-action-icon{
@@ -139,42 +178,83 @@ main{
         overflow: hidden;  
     }
 }
+
 .refset-tool-close-button{
     float: right;
-    top:-24px;
-    right:-24px;
+    top:-12px;
+    right:-12px;
     //color: $delete_color
     color:$standard_font_color;
 }
+
 .refset-tool-add{
     color: $add_color
 }
+
 .refset-tool-delete{
     color: $delete_color
 }
+
 
 // AG Grid Styles
 .refset-tool-ag-grid{
     height: 623px;
 }
+
+.ag-theme-alpine .ag-header-row{
+    color: #666;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.ag-theme-alpine .ag-header{
+    border: 0px solid $ghost-grey;
+}
+
+.ag-theme-alpine .ag-icon {
+    color: #666;
+    font-size: 20px;
+    line-height: 20px;
+}
+
+.ag-theme-alpine .ag-icon-desc:before {
+    content: "\f128";
+}
+
+.ag-theme-alpine .ag-icon-asc:before {
+    content: "\f12b";
+}
+
 .ag-theme-alpine .ag-cell{
     line-height: 56px;
 }
+
 .ag-theme-alpine .ag-row-odd{
     background-color: #efefef;
 }
+
 .ag-theme-alpine .ag-root-wrapper{
     border-color: #eeeeee;
 }
+
 .refset-tool-directory-column-name .mat-icon{
     color:#888;
     font-size: 14px;
     padding-top: 12px;
 }
+
+.ag-theme-alpine .ag-ltr input[class^=ag-][type=text]{
+    padding-top: 24px;
+}
+
 .ag-theme-alpine{
     font-family: $standard_font_family;
 
     // Data Rows
+    .ag-row{
+        height: 51px !important;
+        font-size: 16px !important;
+    }
     .ag-row:hover { 
         background-color:#F0FCFF; //icy blue hover
     }
@@ -196,6 +276,13 @@ main{
     .ag-header-row:not(:first-child) .ag-header-cell{
         border-top-color: #eeeeee;
     }
+    .ag-header{
+        height: 110px !important; 
+        min-height: 110px !important;
+    }
+    .ag-header-row-floating-filter{
+        height: 63px !important;
+    }
 
     // Table Header Filter Input
     .ag-ltr input[class^='ag-'][type='text']{
@@ -211,6 +298,7 @@ main{
     }
 }
 
+
 // Directory Page Styles
 #refsetDirectoryPage{
     padding: 0px;
@@ -220,9 +308,10 @@ main{
     }    
 
     .mat-raised-button{
-        min-width: 32px !important;
+        min-width: 36px !important;
         border-radius: 0px !important;
         padding: 0px !important;
+        line-height: 36px !important;
     }
     
     .mat-raised-button.mat-primary {
@@ -248,42 +337,7 @@ main{
 }
 
 
-// 3-18-21 SW
-.nav-title {
-    font-family: $header_font_family;
-    font-size: 20px;
-    color: #eee !important;
-}
-
-.page-title {
-    color: #9B9B9B;
-    font-family: $header_font_family;
-    font-size: 1.5em;
-}
-
-.ag-theme-alpine .ag-header-row{
-    color: #666;
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.ag-theme-alpine .ag-header{
-    border: 0px solid $ghost-grey;
-}
-
-.ag-theme-alpine .ag-icon {
-    color: #666;
-    font-size: 20px;
-    line-height: 20px;
-}
-
-.mat-icon-button .mat-button-wrapper>*{
-    //vertical-align: top !important;
-}
-
-
 // Search & Refset Filter
-
 .mat-form-field-appearance-legacy .mat-form-field-infix {
     padding: 0.5em 0;
     margin-top: 11px;
@@ -297,56 +351,6 @@ main{
     background-color: rgba(0, 0, 0, 0.42);
 }
 
-// ------------> look for references to this color and get rid of (theming)
-// .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
-    //color: #2196f3;
-//}
-
-.mat-input-element {
-    //color: pink !important;
-    //caret-color: pink !important;
-}
-
-
-.ag-theme-alpine .ag-icon-desc:before {
-    content: "\f128";
-}
-.ag-theme-alpine .ag-icon-asc:before {
-    content: "\f12b";
-}
-
-nav a img{
-    margin-top: .25em;
-    height: 3.0rem !important;
-}
-
-.bg-dark {
-    background-color: #434955 !important;
-}
-
-footer.footer {
-    font-family: $header_font_family;
-}
-
-footer.footer a {
-    font-size: .9em !important;
-}
-
-.ag-header{
-    height: 110px !important; 
-    min-height: 110px !important;
-}
-.ag-header-row-floating-filter{
-    height: 63px !important;
-}
-.ag-theme-alpine .ag-ltr input[class^=ag-][type=text]{
-    padding-top: 24px;
-}
-.ag-theme-alpine .ag-row{
-    height: 51px !important;
-    font-size: 16px !important;
-}
-
 .mat-input-element, .mat-primary .mat-option.mat-selected:not(.mat-option-disabled){
     caret-color: $cerulean !important;
 }
@@ -354,3 +358,46 @@ footer.footer a {
 .mat-input-element, .mat-form-field-appearance-legacy .mat-form-field-label, .mat-select-value{
     color: #666 !important;
 }
+
+
+// Refset Details Modal / Info Popup
+.refset-tool-refset-details-title-name{
+    font-size: 1.25rem;
+}
+
+.refset-tool-refset-metadata-table{
+   margin: 1.5rem 0; 
+}
+
+.refset-tool-refset-metadata-table tr{
+    height: 44px;
+}
+
+.refset-tool-refset-metadata-label{
+    font-weight: bold;
+}
+
+.mat-raised-button{
+    line-height: 40px !important;
+}
+
+.mat-flat-button.mat-primary, .mat-raised-button.mat-primary {
+    border-radius: 0px;
+}
+
+.refset-tool-refset-metadata-column{
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    margin: 3rem .5rem 3rem 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: white;
+}
+
+// ------------> look for references to this color and get rid of (theming)
+// .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+    //color: #2196f3;
+//}
