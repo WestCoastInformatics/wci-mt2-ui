@@ -31,7 +31,7 @@ export class RefsetDirectory {
     refsetGridOptions: any;
     refsetGridPaging = {
         pageSize: 10,
-        pageSizeOptions: [10, 25, 50, 100, 250, 500]
+        pageSizeOptions: [10, 25, 50, 100]
     };
     pageEvent: PageEvent;
     showTable: boolean;
