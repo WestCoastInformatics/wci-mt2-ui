@@ -151,7 +151,7 @@
 
                                         <div *ngFor="let definitionClause of data.definition">
                                         
-                                            {{definitionClause.clause}}
+                                            {{definitionClause.value}}
 
                                             <!-- <span *ngIf="!definitionClause.negated">
                                                 <mat-icon class="refset-tool-table-icon refset-tool-add refset-tool-definition-icon" aria-label="Inclusion Clause" title="Inclusion Clause">add_circle</mat-icon>
@@ -180,11 +180,16 @@
 
             {{params?.value}}
 
-            <mat-icon *ngIf="params?.data?.private" aria-hidden="false" #directoryPrivateIcon
+            <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon
                 class="refset-tool-table-action-icon" aria-label="Private Refset" title="Private Refset">
                 lock
             </mat-icon>
 
+        </ng-template>
+
+        <!-- Edition Templates -->
+        <ng-template #directoryEditionSection let-params>
+            {{params?.data?.edition?.name}}
         </ng-template>
 
         <!-- Action Templates -->
@@ -194,7 +199,7 @@
                 <div class="row">
 
                     <div class="col-2">
-                        <button mat-icon-button *ngIf="params?.data?.canDownload" (click)="openDownload(params.data.refsetId)" aria-hidden="false"
+                        <button mat-icon-button *ngIf="params?.data?.downloadable" (click)="openDownload(params.data.refsetId)" aria-hidden="false"
                             #directoryDownloadIcon class="refset-tool-table-action-icon" aria-label="Download Refset"
                             title="Download Refset">
                             <mat-icon>download</mat-icon>
@@ -202,7 +207,7 @@
                     </div>
 
                     <div class="col-2">
-                        <button mat-icon-button *ngIf="params?.data?.canSeeFeedback" (click)="openFeedback(params.data.refsetId)" aria-hidden="false"
+                        <button mat-icon-button *ngIf="params?.data?.feedbackVisible" (click)="openFeedback(params.data.refsetId)" aria-hidden="false"
                             #directoryFeedbackIcon class="refset-tool-table-action-icon" aria-label="Open Feedback"
                             title="Open Feedback">
                             <mat-icon>comment-processing-outline</mat-icon>

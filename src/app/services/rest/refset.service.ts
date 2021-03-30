@@ -14,7 +14,7 @@ export class RefsetService extends RestService {
     }
 
     getRefsets(params: any): Observable<any> {
-        return this.get('/refsets', params);
+        return this.get('/refset/search', params);
     }
 
     

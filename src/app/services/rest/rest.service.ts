@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { environment } from 'src/environments/environment';
 
 export class RestWrapper<T> {
     totalResults: number;
@@ -41,7 +42,7 @@ export class RestService {
 
         let httpParams = new HttpParams({fromString: queryString});
 
-        return this.http.get<any>(url + '?' + queryString, {params: httpParams});
+        return this.http.get<any>(environment.restUrl + url + '?' + queryString, {params: httpParams});
     }
 
     getHttpClient(): HttpClient {

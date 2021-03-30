@@ -43,6 +43,7 @@ export class RefsetDirectory {
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
     @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
+    @ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -68,12 +69,12 @@ export class RefsetDirectory {
             { field: 'id', colId: 'information', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
             { field: 'name', headerName: 'Refset Name', cellRenderer: 'templateRenderer', cellClass: 'refset-tool-directory-column-name', cellRendererParams: { template: this.nameSection } },
-            { field: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
+            { field: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection } },
             { field: 'organization', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date' },
-            { field: 'modifiedDate', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
-            { field: 'canDownload', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
+            { field: 'downloadable', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
@@ -121,18 +122,28 @@ export class RefsetDirectory {
                 this.refsetGridApi.showLoadingOverlay();
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+                let query = UiUtility.formatFilterData(rowParams.filterModel);
+                let viewFilter = ''
+
+                if (this.selectedView === 'public'){
+                    viewFilter = 'privateRefset: false';
+                } else {
+                    viewFilter = 'privateRefset: true';
+                }
+
+                query = CodeUtility.addIfNotEmpty(query, ' AND ') + viewFilter;
+                query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 
                 let restParams = {
-                    viewFilter: this.selectedView,
+                    query: query,
                     sortModel: rowParams.sortModel,
-                    filterModel: rowParams.filterModel,
-                    rowsPerPage: this.refsetGridApi.paginationGetPageSize(),
-                    pageNumber: pageNumber
+                    limit: this.refsetGridApi.paginationGetPageSize(),
+                    offset: pageNumber
                 }
 
                 this.refsetService.getRefsets(restParams).subscribe(results => {
 
-                    let data = results.data;
+                    let data = results.items;
                     this.refsetData = data;
 
                     if (data.length > 0) {

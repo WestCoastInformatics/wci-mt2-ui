@@ -28,6 +28,24 @@ export class CodeUtility {
     }
 
     /*
+     * addIfNotEmpty - return the original string with the specified string added to the beginning or end (default) if the original is not empty.
+     */
+    static addIfNotEmpty(originalString: string, stringToAdd: string, addToEnd: boolean = true): string {
+
+        if (this.hasValue(originalString)){
+
+            if (addToEnd){
+                return originalString + stringToAdd;
+            } else {
+                return stringToAdd + originalString;
+            }
+            
+        } else {
+            return originalString;
+        }
+    }
+
+    /*
      * removeFinal - return the string with the specified characters removed if they are the last characters in the string or followed only by whitespace.
      */
     static removeFinal(str: string, charsToRemove: string): string {

@@ -1,3 +1,5 @@
+import { CodeUtility } from "./code.utility";
+
 export class UiUtility {
 
 
@@ -78,5 +80,106 @@ export class UiUtility {
             element.addClass("ui-state-disabled");
             element.prop("disabled", true);
         }
+    }
+
+    //***** AG Grid Sort Function *****/
+    // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+    static sortData(sortModel, data) {
+
+        let sortPresent = sortModel && sortModel.length > 0;
+
+        if (!sortPresent) {
+            return data;
+        }
+
+        let resultOfSort = data.slice();
+
+        resultOfSort.sort(function (a, b) {
+
+            for (let k = 0; k < sortModel.length; k++) {
+
+                let sortColModel = sortModel[k];
+                let valueA = a[sortColModel.colId];
+                let valueB = b[sortColModel.colId];
+
+                if (valueA == valueB) {
+                    continue;
+                }
+
+                let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
+
+                if (valueA > valueB) {
+                    return sortDirection;
+                } else {
+                    return sortDirection * -1;
+                }
+            }
+
+            return 0;
+        });
+
+        return resultOfSort;
+    }
+
+    //***** AG Grid Filter Function *****/
+    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+    static filterData(filterModel, data) {
+
+        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
+
+        if (!filterPresent) {
+            return data;
+        }
+
+        let resultOfFilter = [];
+
+        for (let i = 0; i < data.length; i++) {
+
+            let item = data[i];
+            let rowValid = true;
+
+            // loop thru each column with a search term
+            for (const column in filterModel) {
+
+                // test each word in the term
+                filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
+
+                    // the search word must be present in the data and the row must still be valid
+                    if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
+                        rowValid = true;
+                    } else {
+                        rowValid = false;
+                    }
+                });
+            }
+
+            if (rowValid) {
+                resultOfFilter.push(item);
+            }
+        }
+
+        return resultOfFilter;
+    }
+
+    //***** AG Grid Filter query formatter Function *****/
+    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+    static formatFilterData(filterModel) {
+
+        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
+
+        if (!filterPresent) {
+            return '';
+        }
+
+        let filterString = '';
+
+        // loop thru each column with a search term
+        for (const column in filterModel) {
+            filterString = filterModel[column].filterType + ':' + filterModel[column].filter.trim() + ' AND ';
+        }
+
+        filterString = CodeUtility.removeFinal(filterString, ' AND ');
+
+        return filterString;
     }
 }
