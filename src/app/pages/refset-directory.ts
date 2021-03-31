@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { Observable } from 'rxjs';
@@ -49,6 +50,8 @@ export class RefsetDirectory {
 
 
     constructor(
+        private router: Router,
+        private route: ActivatedRoute,
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
@@ -200,11 +203,15 @@ export class RefsetDirectory {
         } else {
 
             let selectedRows = this.refsetGridApi.getSelectedRows();
+            let selectedId: string;
             console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
-                console.log('Selected Row: ' + selectedRow.refsetId);
+                selectedId = selectedRow.refsetId;
+                console.log('Selected Row: ' + selectedId);
             });
+
+            this.router.navigate(['/details', selectedId]);
         }
     }
 

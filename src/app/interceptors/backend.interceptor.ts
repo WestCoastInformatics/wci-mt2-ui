@@ -18,19 +18,9 @@ const userData: User[] = [
 ];
 
 const conceptData = [
-    { conceptId: '448006009', description: 'Atrial septum intact', descriptionType: 'PT', status: 'Active', feedback: 'comment' },
-    { conceptId: '442119001', description: 'Cardiac shunt (finding)', descriptionType: 'FSN', status: 'Active', feedback: '' },
-    { conceptId: '249042007', description: 'Fetal heart finding', descriptionType: 'PT', status: 'Active', feedback: '' },
-    { conceptId: '56265001', description: 'Heart disease (disorder)', descriptionType: 'FSN', status: 'Active', feedback: '' },
-    { conceptId: '00000001', description: 'Test Concept 1', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000002', description: 'Test Concept 2', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000003', description: 'Test Concept 3', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000004', description: 'Test Concept 4', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000005', description: 'Test Concept 5', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000006', description: 'Test Concept 6', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000007', description: 'Test Concept 7', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000008', description: 'Test Concept 8', descriptionType: 'PT', status: 'Inactive', feedback: '' },
-    { conceptId: '00000009', description: 'Test Concept 9', descriptionType: 'PT', status: 'Inactive', feedback: '' },
+    { conceptId: '49727002', descriptions: [{id: '1', description: 'Cough', language: 'US English', type: 'PT'}, {id: '2', description: 'Toux', language: 'Belgian French', type: 'PT'}, {id: '3', description: 'bevindingen over hoesten', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '' },
+    { conceptId: '84229001', descriptions: [{id: '1', description: 'Fatigue', language: 'US English', type: 'PT'}, {id: '2', description: 'Fatigue', language: 'Belgian French', type: 'PT'}, {id: '3', description: 'vermoeidheid', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '' },
+
 ];
 
 const refsetData = [
@@ -67,8 +57,12 @@ export class BackendInterceptor implements HttpInterceptor {
                     return authenticate();
                 case url.endsWith('/concepts') && method === 'GET':
                     return concepts();
-                case url.includes('/refset') && method === 'GET':
+                case url.includes('/refset/search') && method === 'GET':
                     return refsets();
+                case url.includes('/refset/members/list') && method === 'GET':
+                    return concepts();
+                case url.includes('/refset/') && method === 'GET':
+                    return refsets(1);
                 case url.match(/\/users\/\d+$/) && method === 'GET':
                     return getUserById();
                 default:
@@ -101,12 +95,12 @@ export class BackendInterceptor implements HttpInterceptor {
             });
         }
 
-        function refsets() {
+        function refsets(numberToReturn: number = 0) {
 
             //let queryString = request.url.substr(request.url.indexOf('?') + 1);
             let params: any = CodeUtility.getParamsAsObject(request.url);
-            let pageNumber = Number.parseInt(params.offset);
-            let rowsPerPage = Number.parseInt(params.limit);
+            let pageNumber = params.offset ? Number.parseInt(params.offset) : 1;
+            let rowsPerPage = params.limit ? Number.parseInt(params.limit) : 100;
             let sortModel = params.sortModel;
             let filterModel = params.filterModel;
             let viewFilter = params.viewFilter;
@@ -142,6 +136,10 @@ export class BackendInterceptor implements HttpInterceptor {
                 startRow,
                 endRow
             );
+
+            if (numberToReturn > 0){
+                rowsThisPage = rowsThisPage[0];
+            }
 
             return ok({
                 totalKnown: true,

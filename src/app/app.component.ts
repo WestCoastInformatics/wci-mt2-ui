@@ -4,6 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { AuthoringService } from './services/authoring/authoring.service';
 import { EnvService } from './services/environment/env.service';
 import { TemplateComponent } from './pages/template.component';
+import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { TemplateRenderer } from './components/cellRenderers/template.renderer';

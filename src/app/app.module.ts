@@ -14,6 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
 import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
@@ -34,6 +36,7 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 // PAGE IMPORTS
 import { TemplateComponent } from 'src/app/pages/template.component';
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
+import { RefsetDetails } from 'src/app/pages/refset-details';
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -46,6 +49,12 @@ import { PaginationService } from 'src/app/services/pagination.service';
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 
+const appRoutes: Routes = [
+    { path: '', component: RefsetDirectory },
+    { path: 'details/:refsetId', component: RefsetDetails },
+
+];
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -55,9 +64,14 @@ import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
         TemplateRenderer,
         PaginationComponent,
         TemplateComponent,
-        RefsetDirectory
+        RefsetDirectory,
+        RefsetDetails
     ],
     imports: [
+        RouterModule.forRoot(
+            appRoutes,
+            { enableTracing: true } // <-- debugging purposes only
+        ),
         BrowserModule,
         FormsModule,
         HttpClientModule,
@@ -71,6 +85,7 @@ import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
         MatSelectModule,
         MatFormFieldModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatIconModule,
         DialogModule,
         TreeModule,

@@ -1,0 +1,245 @@
+<div id="refsetDetailsPage" class="container-fluid">
+
+    <!-- Page Title -->
+    <div class="container-fluid page-title">
+        Reference Set Details
+    </div>
+
+    <!-- Header Bar -->
+    <div class="row">
+
+        <!-- Section Title -->
+        <div class="col section-title refset-tool-refset-details-title-name">
+            {{refsetData?.name}}
+        </div>
+
+        <div class="col justify-content-end">
+
+            <mat-form-field appearance="fill">
+                <mat-label>Versions</mat-label>
+                <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion">
+                    <mat-option *ngFor="let option of versionOptions" [value]="option.value">
+                        {{option.display}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+    </div>
+
+    <!-- Metadata Section -->
+    <div class="container-fluid" id="detailsMetadataSection">
+
+        <div class="row refset-tool-refset-metadata-section">
+
+            <!-- Static Metadata Section -->
+            <div class="col refset-tool-refset-metadata-column">
+
+                <table class="refset-tool-refset-metadata-table table-striped">
+                    <tbody>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Refset ID:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.refsetId}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Edition/Extension:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.edition}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Type:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.type}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Tags:</td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.tags?.join('; ')}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Narrative:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.narrative}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <!-- Action Buttons -->
+                <div class="refset-tool-details-metadata-footer">
+                    <button mat-raised-button (click)="openArtifacts()" aria-hidden="false" #detailsArtifactButton
+                        class="refset-tool-action-button" aria-label="Open Artifacts" title="Open Artifacts">
+                        Artifacts
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Versioned Metadata Section -->
+            <div class="col refset-tool-refset-metadata-column">
+
+                <table class="refset-tool-refset-metadata-table table-striped">
+                    <tbody>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Version Date:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.versionDate}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Owner/Organization:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.organization}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Version Status:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.versionStatus}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Direct URL/URI:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.url}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">Version Notes:</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.versionNotes}}</td>
+                        </tr>
+
+                        <tr *ngIf="refsetData?.definition">
+                            <td class="refset-tool-refset-metadata-label">Definition:</td>
+                            <td class="refset-tool-refset-metadata-value">
+
+                                <div *ngFor="let definitionClause of refsetData?.definition">
+
+                                    {{definitionClause?.value}}
+
+                                    <!-- <span *ngIf="!definitionClause.negated">
+                                        <mat-icon class="refset-tool-table-icon refset-tool-add refset-tool-definition-icon" aria-label="Inclusion Clause" title="Inclusion Clause">add_circle</mat-icon>
+                                    </span>
+
+                                    <span *ngIf="definitionClause.negated">
+                                        <mat-icon class="refset-tool-table-icon refset-tool-delete refset-tool-definition-icon" aria-label="Exclusion Clause" title="Exclusion Clause">remove_circle</mat-icon>
+                                    </span> -->
+
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <!-- Action Buttons -->
+                <div class="refset-tool-details-metadata-footer">
+                    <button mat-raised-button (click)="openAuditTrail()" aria-hidden="false" #detailsAuditTrailButton
+                        class="refset-tool-action-button" aria-label="Open Audit Trail" title="Open Audit Trail">
+                        Artifacts
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Section Title -->
+    <div class="section-title refset-tool-refset-details-title-name">
+        {{refsetData?.name}}
+    </div>
+
+    <!-- Member Concepts Section -->
+    <div class="container-fluid" id="detailsMemberSection">
+
+        <div class="row">
+
+            <!-- Member Concepts List Section -->
+            <div class="col refset-tool-details-members-column">
+
+                <!-- Search Bar -->
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col-md-auto">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Language Refset</mat-label>
+                                <mat-select #detailsLanguageSelect [(value)]="selectedLanguage"
+                                    (selectionChange)="changeLanguage()">
+                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
+                                        {{option.display}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-auto">
+                            <mat-form-field>
+                                <mat-label>Search</mat-label>
+                                <input matInput #detailsSearchInput [(ngModel)]="searchInput">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-auto">
+                            <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
+                                name="membersListMode" aria-label="Members List Mode">
+                                <mat-button-toggle value="table">Table</mat-button-toggle>
+                                <mat-button-toggle value="taxonomy">Taxonomy</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Members Table -->
+                <div class="container-fluid">
+
+                    <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid"
+                        [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
+                    </ag-grid-angular>
+
+                    <app-pagination [pageSize]="membersGridPaging.pageSize" [gridOptions]="membersGridOptions"
+                        [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
+                        [pageSizeOptions]="membersGridPaging.pageSizeOptions">
+                    </app-pagination>
+
+                    <!-- Action Templates -->
+                    <ng-template #detailsActionSection let-params>
+
+                        <div class="container-fluid">
+                            <div class="row">
+
+                                <div class="col-2">
+                                    <button mat-icon-button *ngIf="params?.data?.historyVisible"
+                                        (click)="openMemberHistory(params.data.conceptId)" aria-hidden="false"
+                                        #detailsDownloadIcon class="refset-tool-table-action-icon"
+                                        aria-label="Open History" title="Open History">
+                                        <mat-icon>history</mat-icon>
+                                    </button>
+                                </div>
+
+                                <div class="col-2">
+                                    <button mat-icon-button *ngIf="params?.data?.feedbackVisible"
+                                        (click)="openMemberFeedback(params.data.conceptId)" aria-hidden="false"
+                                        #detailsFeedbackIcon class="refset-tool-table-action-icon"
+                                        aria-label="Open Feedback" title="Open Feedback">
+                                        <mat-icon>comment-processing-outline</mat-icon>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </ng-template>
+
+                </div>
+
+                <!-- Concept Details Section -->
+                <div class="col refset-tool-details-members-column">
+
+                </div>
+            </div>
+        </div>
+
+    </div>

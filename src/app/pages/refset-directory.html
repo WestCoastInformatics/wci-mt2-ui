@@ -42,12 +42,6 @@
             [pageSizeOptions]="refsetGridPaging.pageSizeOptions">
         </app-pagination>
 
-        <mat-paginator *ngIf=false #directoryPaginator [length]="refsetGridPaging.length"
-            [pageIndex]="refsetGridPaging.pageIndex" [pageSize]="refsetGridPaging.pageSize"
-            [pageSizeOptions]="refsetGridPaging.pageSizeOptions" (page)="onGridPageChange($event)"
-            [showFirstLastButtons]="refsetGridPaging.showFirstLastButtons">
-        </mat-paginator>
-
         <!-- Information Templates -->
         <ng-template #directoryInfoSection let-params>
 
