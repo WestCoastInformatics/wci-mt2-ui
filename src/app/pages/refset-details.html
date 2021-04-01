@@ -6,14 +6,14 @@
     </div>
 
     <!-- Header Bar -->
-    <div class="row">
+    <div class="row refset-title">
 
         <!-- Section Title -->
         <div class="col section-title refset-tool-refset-details-title-name">
             {{refsetData?.name}}
         </div>
 
-        <div class="col justify-content-end">
+        <div class="row justify-content-end">
 
             <mat-form-field appearance="fill">
                 <mat-label>Versions</mat-label>
@@ -70,8 +70,8 @@
 
                 <!-- Action Buttons -->
                 <div class="refset-tool-details-metadata-footer">
-                    <button mat-raised-button (click)="openArtifacts()" aria-hidden="false" #detailsArtifactButton
-                        class="refset-tool-action-button" aria-label="Open Artifacts" title="Open Artifacts">
+                    <button mat-raised-button color="primary" (click)="openArtifacts()" aria-hidden="false" #detailsArtifactButton
+                        class="refset-tool-action-button" aria-label="Open Artifacts" title="Open Artifacts"  ng-reflect-color="primary">
                         Artifacts
                     </button>
                 </div>
@@ -135,8 +135,8 @@
 
                 <!-- Action Buttons -->
                 <div class="refset-tool-details-metadata-footer">
-                    <button mat-raised-button (click)="openAuditTrail()" aria-hidden="false" #detailsAuditTrailButton
-                        class="refset-tool-action-button" aria-label="Open Audit Trail" title="Open Audit Trail">
+                    <button mat-raised-button color="primary" (click)="openAuditTrail()" aria-hidden="false" #detailsAuditTrailButton
+                        class="refset-tool-action-button" aria-label="Open Audit Trail" title="Open Audit Trail" ng-reflect-color="primary">
                         Artifacts
                     </button>
                 </div>
@@ -159,8 +159,8 @@
             <div class="col refset-tool-details-members-column">
 
                 <!-- Search Bar -->
-                <div class="container-fluid">
-                    <div class="row">
+                <div class="container-fluid pr-0">
+                    <div class="row justify-content-end"> 
 
                         <div class="col-md-auto">
                             <mat-form-field appearance="fill">
@@ -181,7 +181,7 @@
                             </mat-form-field>
                         </div>
 
-                        <div class="col-md-auto">
+                        <div class="col-md-auto pr-0">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
                                 name="membersListMode" aria-label="Members List Mode">
                                 <mat-button-toggle value="table">Table</mat-button-toggle>
@@ -193,7 +193,7 @@
                 </div>
 
                 <!-- Members Table -->
-                <div class="container-fluid">
+                <div class="container-fluid pr-0">
 
                     <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid"
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">

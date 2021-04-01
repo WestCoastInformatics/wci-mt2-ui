@@ -319,7 +319,7 @@ footer.footer a {
 
 
 // Directory Page Styles
-#refsetDirectoryPage{
+#refsetDirectoryPage, #refsetDetailsPage{
     padding: 0px;
 
     .refset-tool-directory-column-information{
@@ -334,10 +334,54 @@ footer.footer a {
     }
     
     .mat-raised-button.mat-primary {
-        background-color: $cerulean !important; 
+        background-color: $cerulean !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important; 
+        margin-bottom: 15px;
+    }
+
+    .mat-raised-button.mat-button-disabled, .mat-raised-button.mat-button-base{
+        margin-bottom: 15px;
     }
 }
 
+// Details Page Styles
+
+#refsetDetailsPage .row{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+#refsetDetailsPage .refset-tool-refset-details-title-name{
+    padding-left: 15px;
+    padding-top:37px;
+}
+
+#refsetDetailsPage .refset-tool-refset-metadata-column{
+    margin-top: 0px !important;
+}
+
+#detailsMemberSection, #detailsMemberSection .refset-tool-details-members-column{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#detailsMetadataSection{
+    padding-right: 0px;
+}
+
+.refset-tool-details-metadata-footer{
+    display: flex;
+    justify-content: flex-end;
+} 
+
+.refset-tool-details-metadata-footer button{
+    min-width: 150px !important;
+} 
+
+#refsetDetailsPage button .mat-raised-button.mat-button-base{
+    width: 150px;
+}
 
 // Pagination Styles
 .refset-tool-pagination-container{
@@ -408,9 +452,13 @@ footer.footer a {
 .refset-tool-refset-metadata-column{
     background-color: #f5f5f5;
     border-radius: 5px;
-    margin: 1.5rem 1.5rem 3rem 0;
+    margin: 1.5rem 0 3rem 0;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.refset-tool-refset-metadata-column:first-child{
+    margin: 1.5rem 1.5rem 3rem 0;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -421,3 +469,23 @@ footer.footer a {
 // .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
     //color: #2196f3;
 //}
+
+
+// Table-Tax Button Group
+.mat-button-toggle-checked{
+    background-color: $cerulean;
+    color: white !important; 
+}
+
+.mat-button-toggle-standalone.mat-button-toggle-appearance-standard, .mat-button-toggle-group-appearance-standard {
+    margin-top: 15px;
+    border: 1px solid #666;
+    
+}
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content{
+    line-height: 40px;
+}
+
+.mat-button-toggle-group-appearance-standard{
+    border-radius: 0px;
+}
