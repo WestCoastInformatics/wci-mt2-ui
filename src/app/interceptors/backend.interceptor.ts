@@ -11,6 +11,8 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { Concept } from 'src/app/models/concept';
 import { User } from 'src/app/models/user';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { environment } from 'src/environments/environment';
+import { UiUtility } from '../utilities/ui.utility';
 
 const userData: User[] = [
     { firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', username: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith' },
@@ -52,22 +54,28 @@ export class BackendInterceptor implements HttpInterceptor {
             .pipe(dematerialize());
 
         function handleRoute() {
-            switch (true) {
-                case url.endsWith('/auth') && method === 'POST':
-                    return authenticate();
-                case url.endsWith('/concepts') && method === 'GET':
-                    return concepts();
-                case url.includes('/refset/search') && method === 'GET':
-                    return refsets();
-                case url.includes('/refset/members/list') && method === 'GET':
-                    return concepts();
-                case url.includes('/refset/') && method === 'GET':
-                    return refsets(1);
-                case url.match(/\/users\/\d+$/) && method === 'GET':
-                    return getUserById();
-                default:
-                    // pass through any requests not handled above
-                    return next.handle(request); 
+
+            if (environment.hasOwnProperty('mockRestData') && environment['mockRestData']){
+
+                switch (true) {
+                    case url.endsWith('/auth') && method === 'POST':
+                        return authenticate();
+                    case url.endsWith('/concepts') && method === 'GET':
+                        return concepts();
+                    case url.includes('/refset/search') && method === 'GET':
+                        return refsets();
+                    case url.includes('/refset/members/list') && method === 'GET':
+                        return concepts();
+                    case url.includes('/refset/') && method === 'GET':
+                        return refsets(1);
+                    case url.match(/\/users\/\d+$/) && method === 'GET':
+                        return getUserById();
+                    default:
+                        // pass through any requests not handled above
+                        return next.handle(request); 
+                }
+            } else {
+                return next.handle(request); 
             }
         }
 
@@ -99,12 +107,12 @@ export class BackendInterceptor implements HttpInterceptor {
 
             //let queryString = request.url.substr(request.url.indexOf('?') + 1);
             let params: any = CodeUtility.getParamsAsObject(request.url);
-            let pageNumber = params.offset ? Number.parseInt(params.offset) : 1;
+            let pageNumber = params.offset ? Number.parseInt(params.offset) : 0;
             let rowsPerPage = params.limit ? Number.parseInt(params.limit) : 100;
             let sortModel = params.sortModel;
             let filterModel = params.filterModel;
             let viewFilter = params.viewFilter;
-            let startRow = (pageNumber - 1) * rowsPerPage;
+            let startRow = (pageNumber) * rowsPerPage;
             let endRow = startRow + rowsPerPage;
 
             if (sortModel) {
@@ -156,85 +164,8 @@ export class BackendInterceptor implements HttpInterceptor {
         }
 
         //***** Sort and Filter Function *****/
-        // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
-        // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
         function sortAndFilter(allOfTheData, sortModel, filterModel) {
-            return sortData(sortModel, filterData(filterModel, allOfTheData));
-        }
-
-        function sortData(sortModel, data) {
-
-            let sortPresent = sortModel && sortModel.length > 0;
-
-            if (!sortPresent) {
-                return data;
-            }
-
-            let resultOfSort = data.slice();
-
-            resultOfSort.sort(function (a, b) {
-
-                for (let k = 0; k < sortModel.length; k++) {
-
-                    let sortColModel = sortModel[k];
-                    let valueA = a[sortColModel.colId];
-                    let valueB = b[sortColModel.colId];
-
-                    if (valueA == valueB) {
-                        continue;
-                    }
-
-                    let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
-
-                    if (valueA > valueB) {
-                        return sortDirection;
-                    } else {
-                        return sortDirection * -1;
-                    }
-                }
-
-                return 0;
-            });
-
-            return resultOfSort;
-        }
-
-        function filterData(filterModel, data) {
-
-            let filterPresent = filterModel && Object.keys(filterModel).length > 0;
-
-            if (!filterPresent) {
-                return data;
-            }
-
-            let resultOfFilter = [];
-
-            for (let i = 0; i < data.length; i++) {
-
-                let item = data[i];
-                let rowValid = true;
-
-                // loop thru each column with a search term
-                for (const column in filterModel) {
-
-                    // test each word in the term
-                    filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
-
-                        // the search word must be present in the data and the row must still be valid
-                        if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
-                            rowValid = true;
-                        } else {
-                            rowValid = false;
-                        }
-                    });
-                }
-
-                if (rowValid) {
-                    resultOfFilter.push(item);
-                }
-            }
-
-            return resultOfFilter;
+            return UiUtility.sortData(sortModel, UiUtility.filterData(filterModel, allOfTheData));
         }
 
         //***** Helper Function *****/

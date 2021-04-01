@@ -200,7 +200,7 @@ export class RefsetDetails {
 
     onMembersGridCellClick = (event) => {
 
-        if (event.column.colId === 'id') {
+        if (event.column.colId === 'actions') {
 
 
         } else {

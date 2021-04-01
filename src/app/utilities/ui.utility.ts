@@ -82,6 +82,55 @@ export class UiUtility {
         }
     }
 
+    //***** AG Grid Filter query string formatter Function *****/
+    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+    static formatFilterData(filterModel) {
+
+        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
+
+        if (!filterPresent) {
+            return '';
+        }
+
+        let filterString = '';
+
+        // loop thru each column with a search term
+        for (const column in filterModel) {
+            filterString = column + ':"' + filterModel[column].filter.trim() + '" AND ';
+        }
+
+        filterString = CodeUtility.removeFinal(filterString, ' AND ');
+
+        return filterString;
+    }
+
+    //***** AG Grid Sort query string formatter Function *****/
+    // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+    static formatSortData(sortModel, returnAsObject: boolean = true, numberOfSortsAllowed: number = 1) {
+
+        let sort: any = {};
+
+        // loop thru each column with a search term
+        for (let i = 0; i < sortModel?.length && i < numberOfSortsAllowed; i++) {
+
+            const column = sortModel[i];
+            let ascending = true;
+
+            if (column.sort != 'asc'){
+                ascending = false;
+            }
+
+            sort.sort = column.colId;
+            sort.sortAscending = ascending;
+        }
+
+        if (returnAsObject){
+            return sort;
+        } else {
+            return CodeUtility.serialize(sort);
+        }
+    }
+
     //***** AG Grid Sort Function *****/
     // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
     static sortData(sortModel, data) {
@@ -159,27 +208,5 @@ export class UiUtility {
         }
 
         return resultOfFilter;
-    }
-
-    //***** AG Grid Filter query formatter Function *****/
-    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
-    static formatFilterData(filterModel) {
-
-        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
-
-        if (!filterPresent) {
-            return '';
-        }
-
-        let filterString = '';
-
-        // loop thru each column with a search term
-        for (const column in filterModel) {
-            filterString = filterModel[column].filterType + ':' + filterModel[column].filter.trim() + ' AND ';
-        }
-
-        filterString = CodeUtility.removeFinal(filterString, ' AND ');
-
-        return filterString;
     }
 }

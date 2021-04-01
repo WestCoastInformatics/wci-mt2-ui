@@ -50,7 +50,7 @@ export class CodeUtility {
      */
     static removeFinal(str: string, charsToRemove: string): string {
 
-        let  regex = new RegExp(`${charsToRemove}\\s*$`);
+        let  regex = new RegExp(`${charsToRemove}\s*$`);
         return str.replace(regex, "");
     }
 

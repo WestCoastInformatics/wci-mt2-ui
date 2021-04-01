@@ -42,7 +42,7 @@ export class RestService {
 
         let httpParams = new HttpParams({fromString: queryString});
 
-        return this.http.get<any>(environment.restUrl + url + '?' + queryString, {params: httpParams});
+        return this.http.get<any>(environment.restUrl + url, {params: httpParams});
     }
 
     getHttpClient(): HttpClient {

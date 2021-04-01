@@ -69,15 +69,15 @@ export class RefsetDirectory {
     ngAfterViewInit() {
 
         this.columnDefs = [
-            { field: 'id', colId: 'information', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-information', cellRendererParams: { template: this.infoSection }, filter: false },
+            { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
-            { field: 'name', headerName: 'Refset Name', cellRenderer: 'templateRenderer', cellClass: 'refset-tool-directory-column-name', cellRendererParams: { template: this.nameSection } },
-            { field: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection } },
-            { field: 'organization', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
+            { field: 'edition.name', colId: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
+            { field: 'project.organization.name', colId: 'organization', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date' },
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
-            { field: 'downloadable', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
         this.refsetGridOptions = {
@@ -126,30 +126,36 @@ export class RefsetDirectory {
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
+                console.log("^^^^^^ query fitlers: " + query);
                 let viewFilter = ''
 
                 if (this.selectedView === 'public'){
-                    viewFilter = 'privateRefset: false';
-                } else {
-                    viewFilter = 'privateRefset: true';
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
+                } else if (this.selectedView === 'private'){
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
                 }
 
-                query = CodeUtility.addIfNotEmpty(query, ' AND ') + viewFilter;
-                query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                console.log("^^^^^^ query after viewFilters: " + query);
+                //query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 
                 let restParams = {
                     query: query,
-                    sortModel: rowParams.sortModel,
                     limit: this.refsetGridApi.paginationGetPageSize(),
-                    offset: pageNumber
+                    offset: pageNumber - 1,
+                    sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
+                    filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 }
 
-                this.refsetService.getRefsets(restParams).subscribe(results => {
+                console.log("^^^^^^ restParams: ", restParams);
+                console.log("^^^^^^ UiUtility.formatSortData(rowParams.sortModel): ", UiUtility.formatSortData(rowParams.sortModel));
+                console.log("^^^^^^ {...restParams, ...UiUtility.formatSortData(rowParams.sortModel)}: ", {...restParams, ...UiUtility.formatSortData(rowParams.sortModel)});
+
+                this.refsetService.getRefsets({...restParams, ...UiUtility.formatSortData(rowParams.sortModel)}).subscribe(results => {
 
                     let data = results.items;
                     this.refsetData = data;
 
-                    if (data.length > 0) {
+                    if (data?.length > 0) {
 
                         this.refsetGridApi.hideOverlay();
                         let currentRowCount = null;
@@ -197,7 +203,7 @@ export class RefsetDirectory {
 
     onGridCellClick = (event) => {
 
-        if (event.column.colId === 'private' || event.column.colId === 'canDownload') {
+        if (event.column.colId === 'information' || event.column.colId === 'actions') {
 
 
         } else {
