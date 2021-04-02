@@ -40,9 +40,12 @@ export class RestService {
             }
         }
 
-        let httpParams = new HttpParams({fromString: queryString});
+        queryString = CodeUtility.addIfNotEmpty(queryString, '?', false);
 
-        return this.http.get<any>(environment.restUrl + url, {params: httpParams});
+        //not sure if we need this, maybe for posts
+        //let httpParams = new HttpParams({fromString: queryString});
+
+        return this.http.get<any>(environment.restUrl + url + queryString);
     }
 
     getHttpClient(): HttpClient {

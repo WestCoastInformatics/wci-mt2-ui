@@ -20,20 +20,24 @@ const userData: User[] = [
 ];
 
 const conceptData = [
-    { conceptId: '49727002', descriptions: [{id: '1', description: 'Cough', language: 'US English', type: 'PT'}, {id: '2', description: 'Toux', language: 'Belgian French', type: 'PT'}, {id: '3', description: 'bevindingen over hoesten', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '' },
-    { conceptId: '84229001', descriptions: [{id: '1', description: 'Fatigue', language: 'US English', type: 'PT'}, {id: '2', description: 'Fatigue', language: 'Belgian French', type: 'PT'}, {id: '3', description: 'vermoeidheid', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '' },
-
-];
-
-const refsetData = [
-    { id: '0001', refsetId: '0001', name: 'Refset 1', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
-    { id: '0002', refsetId: '0002', name: 'Refset 2', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' },
-    { id: '0003', refsetId: '0003', name: 'Refset 3', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Beta', versionNotes: 'Notes on refset 3 version', narrative: 'Narrative text on refset 3.', tags: ['blood', 'procedures'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: false, feedback: '' },
-    { id: '0004', refsetId: '0004', name: 'Refset 4', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 4 version', narrative: 'Narrative text on refset 4.', tags: ['global'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' },
-    { id: '0005', refsetId: '0005', name: 'Refset 5', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 5 version', narrative: 'Narrative text on refset 5.', tags: ['allergy', 'outdoors'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
+    { conceptId: '49727002', descriptions: {'1': {id: '1', description: 'Cough', language: 'US English', type: 'PT'}, '2': {id: '2', description: 'Toux', language: 'Belgian French', type: 'PT'}, '3': {id: '3', description: 'bevindingen over hoesten', language: 'Flemish', type: 'PT'}}, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { conceptId: '84229001', descriptions: {'1': {id: '1', description: 'Fatigue', language: 'US English', type: 'PT'}, '2': {id: '2', description: 'Fatigue', language: 'Belgian French', type: 'PT'}, '3': {id: '3', description: 'vermoeidheid', language: 'Flemish', type: 'PT'}}, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
+    conceptData.push(
+        { conceptId: i.toString(), descriptions: {'1': {id: '1', description: 'Generic Concept ' + i, language: 'US English', type: 'PT'}, '2': {id: '2', description: 'Concept générique ' + i, language: 'Belgian French', type: 'PT'}, '3': {id: '3', description: 'Generiek concept ' + i, language: 'Flemish', type: 'PT'}}, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
+    )
+}
+const refsetData = [
+    { id: '1001', refsetId: '1001', name: 'Refset 1', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
+    { id: '1002', refsetId: '1002', name: 'Refset 2', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' },
+    { id: '1003', refsetId: '1003', name: 'Refset 3', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Beta', versionNotes: 'Notes on refset 3 version', narrative: 'Narrative text on refset 3.', tags: ['blood', 'procedures'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: false, feedback: '' },
+    { id: '1004', refsetId: '1004', name: 'Refset 4', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 4 version', narrative: 'Narrative text on refset 4.', tags: ['global'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' },
+    { id: '1005', refsetId: '1005', name: 'Refset 5', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 5 version', narrative: 'Narrative text on refset 5.', tags: ['allergy', 'outdoors'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
+];
+
+for (let i = 6; i < 306; i++){
     refsetData.push(
         { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
     )
@@ -45,6 +49,8 @@ export class BackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         const { url, method, headers, body } = request;
+        let totalResults = 0;
+        let params: any = CodeUtility.getParamsAsObject(request.url);
 
         // wrap in delayed observable to simulate server api call
         return of(null)
@@ -67,7 +73,7 @@ export class BackendInterceptor implements HttpInterceptor {
                     case url.includes('/refset/members/list') && method === 'GET':
                         return concepts();
                     case url.includes('/refset/') && method === 'GET':
-                        return refsets(1);
+                        return refset();
                     case url.match(/\/users\/\d+$/) && method === 'GET':
                         return getUserById();
                     default:
@@ -104,33 +110,27 @@ export class BackendInterceptor implements HttpInterceptor {
         }
 
         function concepts() {
+
+            let rowsThisPage = sortAndFilter(conceptData);
+
             return ok({
                 totalKnown: true,
-                totalResults: conceptData.length,
+                totalResults: totalResults,
                 languages: [{languageId: '1', name: 'US English (PT)'}, {languageId: '2', name: 'Belgian French (PT)'}, {languageId: '3', name: 'Flemish (PT)'}],
-                items: conceptData
+                items: rowsThisPage
             });
+        }
+
+        function refset() {
+
+            let refsetId = Number.parseInt(request.url.substr(request.url.indexOf('/refset/') + 8)) - 1001;
+
+            return ok(refsetData[refsetId]);
         }
 
         function refsets(numberToReturn: number = 0) {
 
-            //let queryString = request.url.substr(request.url.indexOf('?') + 1);
-            let params: any = CodeUtility.getParamsAsObject(request.url);
-            let pageNumber = params.offset ? Number.parseInt(params.offset) : 0;
-            let rowsPerPage = params.limit ? Number.parseInt(params.limit) : 100;
-            let sortModel = params.sortModel;
-            let filterModel = params.filterModel;
             let viewFilter = params.viewFilter;
-            let startRow = (pageNumber) * rowsPerPage;
-            let endRow = startRow + rowsPerPage;
-
-            if (sortModel) {
-                sortModel = Object.values(sortModel);
-            }
-            // let pageNumber = Number.parseInt(request.params.get("pageNumber"));
-            // let rowsPerPage = Number.parseInt(request.params.get("rowsPerPage"));
-            // let sortModel = request.params.get("sortModel");
-            // let filterModel = request.params.get("filterModel");
 
             let dataAfterViewFilter = refsetData.filter(row => {
 
@@ -143,16 +143,7 @@ export class BackendInterceptor implements HttpInterceptor {
                 return rowValid;
             });
 
-            let dataAfterSortingAndFiltering = sortAndFilter(
-                dataAfterViewFilter,
-                sortModel,
-                filterModel
-            );
-
-            let rowsThisPage = dataAfterSortingAndFiltering.slice(
-                startRow,
-                endRow
-            );
+            let rowsThisPage = sortAndFilter(dataAfterViewFilter);
 
             if (numberToReturn > 0){
                 rowsThisPage = rowsThisPage[0];
@@ -160,7 +151,7 @@ export class BackendInterceptor implements HttpInterceptor {
 
             return ok({
                 totalKnown: true,
-                totalResults: dataAfterSortingAndFiltering.length,
+                totalResults: totalResults,
                 items: rowsThisPage
             });
         }
@@ -173,8 +164,29 @@ export class BackendInterceptor implements HttpInterceptor {
         }
 
         //***** Sort and Filter Function *****/
-        function sortAndFilter(allOfTheData, sortModel, filterModel) {
-            return UiUtility.sortData(sortModel, UiUtility.filterData(filterModel, allOfTheData));
+        function sortAndFilter(allOfTheData) {
+
+            let pageNumber = params.offset ? Number.parseInt(params.offset) : 0;
+            let rowsPerPage = params.limit ? Number.parseInt(params.limit) : 100;
+            let sortModel = params.sortModel;
+            let filterModel = params.filterModel;
+            let startRow = (pageNumber) * rowsPerPage;
+            let endRow = startRow + rowsPerPage;
+
+            if (sortModel) {
+                sortModel = Object.values(sortModel);
+            }
+
+            let dataAfterSortingAndFiltering = UiUtility.sortData(sortModel, UiUtility.filterData(filterModel, allOfTheData));
+
+            let rowsThisPage = dataAfterSortingAndFiltering.slice(
+                startRow,
+                endRow
+            );
+
+            totalResults = dataAfterSortingAndFiltering.length;
+
+            return rowsThisPage;
         }
 
         //***** Helper Function *****/

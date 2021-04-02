@@ -45,7 +45,7 @@
 
                         <tr>
                             <td class="refset-tool-refset-metadata-label">Edition/Extension:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.data?.edition?.name}}</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.editionName}}</td>
                         </tr>
 
                         <tr>
@@ -91,7 +91,7 @@
 
                         <tr>
                             <td class="refset-tool-refset-metadata-label">Owner/Organization:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.project?.organization?.name}}</td>
+                            <td class="refset-tool-refset-metadata-value">{{refsetData?.organizationName}}</td>
                         </tr>
 
                         <tr>
@@ -199,7 +199,7 @@
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
                     </ag-grid-angular>
 
-                    <app-pagination [pageSize]="membersGridPaging.pageSize" [gridOptions]="membersGridOptions"
+                    <app-pagination *ngIf="showTable" [pageSize]="membersGridPaging.pageSize" [gridOptions]="membersGridOptions"
                         [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
                         [pageSizeOptions]="membersGridPaging.pageSizeOptions">
                     </app-pagination>

@@ -44,7 +44,7 @@ export class RefsetDetails {
     membersTreeData: any;
     dialog: DialogService;
 
-    @ViewChild('detailsActionSection') actionSection: TemplateRef<any>; 
+    @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
 
 
     constructor(
@@ -78,8 +78,6 @@ export class RefsetDetails {
     }
 
     ngAfterViewInit() {
-        
-        
 
         this.membersGridOptions = {
             context: { componentParent: this },
@@ -107,6 +105,9 @@ export class RefsetDetails {
                 suppressMenu: true
             }
         };
+
+        this.showTable = true
+        this.changeDetectorRef.detectChanges();
     }
 
     //***** Members Grid Functions *****/
@@ -124,16 +125,14 @@ export class RefsetDetails {
 
                 let pageNumber = rowParams.endRow / this.membersGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
-                let viewFilter = ''
 
-                query = CodeUtility.addIfNotEmpty(query, ' AND ') + viewFilter;
-                query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                //query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 
                 let restParams = {
                     query: query,
                     sortModel: rowParams.sortModel,
                     limit: this.membersGridApi.paginationGetPageSize(),
-                    offset: pageNumber
+                    offset: pageNumber - 1
                 }
 
                 this.refsetService.getMembersList(this.refsetId, restParams).subscribe(results => {
@@ -148,13 +147,13 @@ export class RefsetDetails {
                         { field: 'conceptId', headerName: 'Refset ID', cellClass: 'refset-tool-details-column-concept-id' }
                     ];
 
-                    for (let language of languages){
-                        this.membersColumnDefs.push({ field: 'descriptions[' + language.languageId + ']', colId: 'description' + language.languageId, headerName: language.name, cellClass: 'refset-tool-details-column-description' });
+                    for (let language of languages) {
+                        this.membersColumnDefs.push({ field: language.languageId, colId: 'description' + language.languageId, headerName: language.name, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
                         { field: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date' },
-                        { field: 'id', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-details-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+                        { field: 'id', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
                     ]);
 
                     if (data.length > 0) {
@@ -176,16 +175,18 @@ export class RefsetDetails {
                         } else {
                             currentRowCount = data.length + ((pageNumber - 1) * this.membersGridApi.paginationGetPageSize());
                         }
-                        
+
                         rowParams.successCallback(data, lastRow);
                     } else {
 
                         this.membersGridApi.showNoRowsOverlay();
                         rowParams.successCallback(data, 0);
                     }
-
-                    this.showTable = true
-                    this.changeDetectorRef.detectChanges();
+                },
+                error => {
+                    
+                    this.membersGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
                 });
             }
         };
@@ -196,15 +197,19 @@ export class RefsetDetails {
         Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
 
             if (obj.attributes['disabled']) { // skip columns with disabled filter
-              return;
+                return;
             }
 
             let label = obj.getAttribute('aria-label');
             let value = label.substring(0, label.indexOf('Filter Input')) + '...';
-            obj.setAttribute('placeholder', value); 
-        }); 
+            obj.setAttribute('placeholder', value);
+        });
 
     }
+
+    descriptionValueGetter = function (params) {
+        return params?.data?.descriptions[params.colDef.field]?.description;
+    };
 
     onMembersGridCellClick = (event) => {
 
@@ -228,26 +233,26 @@ export class RefsetDetails {
 
     //***** General Functions *****/
     changeVersion() {
-        
+
     }
 
     openAuditTrail() {
-        
+
     }
 
     openArtifacts() {
-        
+
     }
 
     changeLanguage() {
-        
+
     }
 
     openMemberFeedback() {
-        
+
     }
 
     openMemberHistory() {
-        
+
     }
 }
