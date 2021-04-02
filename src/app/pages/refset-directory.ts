@@ -72,8 +72,8 @@ export class RefsetDirectory {
             { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
-            { field: 'edition.name', colId: 'edition', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
-            { field: 'project.organization.name', colId: 'organization', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
+            { field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
+            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date' },
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
@@ -181,6 +181,11 @@ export class RefsetDirectory {
                         this.refsetGridApi.showNoRowsOverlay();
                         rowParams.successCallback(data, 0);
                     }
+                },
+                error => {
+                    
+                    this.refsetGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
                 });
             }
         };
