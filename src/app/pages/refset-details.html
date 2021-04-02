@@ -137,7 +137,7 @@
                 <div class="refset-tool-details-metadata-footer">
                     <button mat-raised-button color="primary" (click)="openAuditTrail()" aria-hidden="false" #detailsAuditTrailButton
                         class="refset-tool-action-button" aria-label="Open Audit Trail" title="Open Audit Trail" ng-reflect-color="primary">
-                        Artifacts
+                        Audit Trail
                     </button>
                 </div>
             </div>
@@ -147,7 +147,7 @@
 
     <!-- Section Title -->
     <div class="section-title refset-tool-refset-details-title-name">
-        {{refsetData?.name}}
+        Reference Set Members
     </div>
 
     <!-- Member Concepts Section -->
@@ -156,7 +156,7 @@
         <div class="row">
 
             <!-- Member Concepts List Section -->
-            <div class="col refset-tool-details-members-column">
+            <div class="col-lg-6 refset-tool-details-members-column">
 
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
@@ -239,6 +239,13 @@
                 <div class="col refset-tool-details-members-column">
 
                 </div>
+            </div>
+
+            <div class="col-lg-6 refset-tool-details-concept-details-column">
+                <div class="section-title refset-tool-refset-details-title-name">
+                    Concept Details
+                </div>
+                <p>This is where the concept details will be displayed.</p>
             </div>
         </div>
 

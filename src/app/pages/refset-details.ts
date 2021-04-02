@@ -26,7 +26,7 @@ export class RefsetDetails {
     refsetId: string;
     searchInput: string;
     versionOptions = [{ value: '3', display: 'Published (2021-01-15)' }, { value: '2', display: 'In Development' }, { value: '1', display: 'Beta (2020-11-23)' }];
-    selectedVersion: string = '03';
+    selectedVersion: string = '3';
     languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
     selectedLanguage: string = '1';
     membersGridApi: any;
@@ -44,7 +44,7 @@ export class RefsetDetails {
     membersTreeData: any;
     dialog: DialogService;
 
-    @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
+    @ViewChild('detailsActionSection') actionSection: TemplateRef<any>; 
 
 
     constructor(
