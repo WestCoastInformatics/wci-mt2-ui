@@ -401,6 +401,8 @@ footer.footer a {
 
 }
 
+
+
 // Pagination Styles
 .refset-tool-pagination-container{
     padding: 70px;
@@ -533,9 +535,15 @@ footer.footer a {
 }
 
 #mat-form-field-label-1, #mat-form-field-label-3{
-    display:none;
+    //display:none;
 }
 
-#mat-input-0 label{
-    display:none;
+#mat-input-0 label{ //hide versions & language refset labels - refset details
+    //display:none;
+}
+
+//title icons
+#title-download, #title-feedback{
+    width: 40px;
+    margin: 0px;
 }

@@ -11,6 +11,26 @@
         <!-- Section Title -->
         <div class="col section-title refset-tool-refset-details-title-name">
             {{refsetData?.name}}
+            <button id="title-download" mat-icon-button="" aria-hidden="false" aria-label="Download Refset" title="Download Refset" class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
+                <span class="mat-button-wrapper">
+                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download
+                    </mat-icon>
+                </span>
+                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round" ng-reflect-disabled="false" ng-reflect-centered="true" ng-reflect-trigger="[object HTMLButtonElement]">
+                </span>
+                <span class="mat-button-focus-overlay">
+                </span>
+            </button>
+            <button id="title-feedback" mat-icon-button="" aria-hidden="false" aria-label="Open Feedback" title="Open Feedback" class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
+                <span class="mat-button-wrapper">
+                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">comment-processing-outline
+                    </mat-icon>
+                </span>
+                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round" ng-reflect-disabled="false" ng-reflect-centered="true" ng-reflect-trigger="[object HTMLButtonElement]">
+                </span>
+                <span class="mat-button-focus-overlay">
+                </span>
+            </button>
         </div>
 
         <div class="row justify-content-end">
@@ -181,7 +201,7 @@
                             </mat-form-field>
                         </div>
 
-                        <div class="col-md-auto pr-0">
+                        <div class="col-md-auto">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
                                 name="membersListMode" aria-label="Members List Mode">
                                 <mat-button-toggle value="table">Table</mat-button-toggle>
@@ -193,7 +213,7 @@
                 </div>
 
                 <!-- Members Table -->
-                <div class="container-fluid pr-0">
+                <div class="container-fluid">
 
                     <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid"
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
