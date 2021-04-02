@@ -26,16 +26,16 @@ const conceptData = [
 ];
 
 const refsetData = [
-    { id: '0001', refsetId: '0001', name: 'Refset 1', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
-    { id: '0002', refsetId: '0002', name: 'Refset 2', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' },
-    { id: '0003', refsetId: '0003', name: 'Refset 3', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Beta', versionNotes: 'Notes on refset 3 version', narrative: 'Narrative text on refset 3.', tags: ['blood', 'procedures'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: false, feedback: '' },
-    { id: '0004', refsetId: '0004', name: 'Refset 4', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 4 version', narrative: 'Narrative text on refset 4.', tags: ['global'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' },
-    { id: '0005', refsetId: '0005', name: 'Refset 5', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 5 version', narrative: 'Narrative text on refset 5.', tags: ['allergy', 'outdoors'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
+    { id: '0001', refsetId: '0001', name: 'Refset 1', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
+    { id: '0002', refsetId: '0002', name: 'Refset 2', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' },
+    { id: '0003', refsetId: '0003', name: 'Refset 3', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Beta', versionNotes: 'Notes on refset 3 version', narrative: 'Narrative text on refset 3.', tags: ['blood', 'procedures'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: false, feedback: '' },
+    { id: '0004', refsetId: '0004', name: 'Refset 4', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 4 version', narrative: 'Narrative text on refset 4.', tags: ['global'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' },
+    { id: '0005', refsetId: '0005', name: 'Refset 5', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset 5 version', narrative: 'Narrative text on refset 5.', tags: ['allergy', 'outdoors'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
 ];
 
 for (let i = 0; i < 300; i++){
     refsetData.push(
-        { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
+        { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
     )
 }
 
@@ -75,7 +75,15 @@ export class BackendInterceptor implements HttpInterceptor {
                         return next.handle(request); 
                 }
             } else {
-                return next.handle(request); 
+                
+                switch (true) {
+
+                    case url.includes('/refset/members/list') && method === 'GET':
+                        return concepts();
+                    default:
+                        // pass through any requests not handled above
+                        return next.handle(request); 
+                }
             }
         }
 
@@ -99,6 +107,7 @@ export class BackendInterceptor implements HttpInterceptor {
             return ok({
                 totalKnown: true,
                 totalResults: conceptData.length,
+                languages: [{languageId: '1', name: 'US English (PT)'}, {languageId: '2', name: 'Belgian French (PT)'}, {languageId: '3', name: 'Flemish (PT)'}],
                 items: conceptData
             });
         }

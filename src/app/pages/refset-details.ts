@@ -65,10 +65,9 @@ export class RefsetDetails {
 
         this.refsetService.getRefset(this.refsetId).subscribe(results => {
 
-            let data = results.items;
-            this.refsetData = data;
+            this.refsetData = results;
 
-            if (data.length === 1) {
+            if (CodeUtility.hasValue(this.refsetData)) {
 
 
             } else {
@@ -80,14 +79,7 @@ export class RefsetDetails {
 
     ngAfterViewInit() {
         
-        this.membersColumnDefs = [
-            { field: 'conceptId', headerName: 'Refset ID', cellClass: 'refset-tool-details-column-concept-id' },
-            { field: 'descriptionEnglish', headerName: 'US English (PT)', cellClass: 'refset-tool-details-column-description' },
-            { field: 'descriptionBelgian', headerName: 'Belgian French (PT)', cellClass: 'refset-tool-details-column-description' },
-            { field: 'descriptionFlemish', headerName: 'Flemish (PT)', cellClass: 'refset-tool-details-column-description' },
-            { field: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date' },
-            { field: 'id', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-details-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
-        ];
+        
 
         this.membersGridOptions = {
             context: { componentParent: this },
@@ -115,9 +107,6 @@ export class RefsetDetails {
                 suppressMenu: true
             }
         };
-
-        this.showTable = true
-        this.changeDetectorRef.detectChanges();
     }
 
     //***** Members Grid Functions *****/
@@ -152,6 +141,22 @@ export class RefsetDetails {
                     let data = results.items;
                     this.membersGridData = data;
 
+                    // get the languages we will be using as columns
+                    let languages = results.languages;
+
+                    this.membersColumnDefs = [
+                        { field: 'conceptId', headerName: 'Refset ID', cellClass: 'refset-tool-details-column-concept-id' }
+                    ];
+
+                    for (let language of languages){
+                        this.membersColumnDefs.push({ field: 'descriptions[' + language.languageId + ']', colId: 'description' + language.languageId, headerName: language.name, cellClass: 'refset-tool-details-column-description' });
+                    }
+
+                    this.membersColumnDefs.push(...[
+                        { field: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date' },
+                        { field: 'id', colId: 'actions', headerName: '', cellRenderer: 'templateRenderer', width: 70, cellClass: 'refset-tool-details-column-actions', cellRendererParams: { template: this.actionSection }, filter: false }
+                    ]);
+
                     if (data.length > 0) {
 
                         this.membersGridApi.hideOverlay();
@@ -178,6 +183,9 @@ export class RefsetDetails {
                         this.membersGridApi.showNoRowsOverlay();
                         rowParams.successCallback(data, 0);
                     }
+
+                    this.showTable = true
+                    this.changeDetectorRef.detectChanges();
                 });
             }
         };

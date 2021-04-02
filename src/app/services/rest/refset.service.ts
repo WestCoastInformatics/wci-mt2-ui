@@ -18,11 +18,11 @@ export class RefsetService extends RestService {
     }
 
     getRefset(refsetId: string): Observable<any> {
-        return this.get("/refset/{{refsetId}}");
+        return this.get('/refset/' + refsetId);
     }
 
     getMembersList(refsetId: string, params: any): Observable<any> {
-        return this.get("/refset/members/list/{{refsetId}}");
+        return this.get('/refset/members/list/' + refsetId);
     }
 
     
