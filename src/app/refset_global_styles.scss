@@ -355,15 +355,26 @@ footer.footer a {
 #refsetDetailsPage .refset-tool-refset-details-title-name{
     padding-left: 15px;
     padding-top:37px;
+    padding-bottom: 15px;
 }
 
 #refsetDetailsPage .refset-tool-refset-metadata-column{
     margin-top: 0px !important;
 }
 
+#detailsMemberSection{
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    margin-left: 15px;
+}
+
 #detailsMemberSection, #detailsMemberSection .refset-tool-details-members-column{
+    //padding-left: 0px;
+    //padding-right: 0px;
+}
+
+#detailsMemberSection .refset-tool-details-members-column, #detailsMemberSection .refset-tool-details-members-column .container-fluid{
     padding-left: 0px;
-    padding-right: 0px;
 }
 
 #detailsMetadataSection{
@@ -381,6 +392,13 @@ footer.footer a {
 
 #refsetDetailsPage button .mat-raised-button.mat-button-base{
     width: 150px;
+}
+
+.refset-tool-details-concept-details-column {
+    background-color: white;
+    border-radius: 4px;
+    margin-top: 80px;
+
 }
 
 // Pagination Styles
@@ -422,6 +440,10 @@ footer.footer a {
     color: #666 !important;
 }
 
+.mat-form-field-appearance-fill .mat-form-field-flex{
+    width:250px;
+}
+
 
 // Refset Details Modal / Info Popup
 .refset-tool-refset-details-title-name{
@@ -431,14 +453,16 @@ footer.footer a {
 .refset-tool-refset-metadata-table{
    margin: 1.5rem 0; 
 }
-
+  
 .refset-tool-refset-metadata-table tr{
     height: 44px;
 }
 
+.refset-tool
+
 .refset-tool-refset-metadata-label{
     font-weight: bold;
-    padding-left: 10px;
+    padding-left: 15px;
 }
 
 .mat-raised-button{
@@ -453,8 +477,8 @@ footer.footer a {
     background-color: #f5f5f5;
     border-radius: 5px;
     margin: 1.5rem 0 3rem 0;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .refset-tool-refset-metadata-column:first-child{
@@ -477,6 +501,10 @@ footer.footer a {
     color: white !important; 
 }
 
+.mat-button-toggle-button{
+    width: 100px !important;
+}
+
 .mat-button-toggle-standalone.mat-button-toggle-appearance-standard, .mat-button-toggle-group-appearance-standard {
     margin-top: 15px;
     border: 1px solid #666;
@@ -488,4 +516,26 @@ footer.footer a {
 
 .mat-button-toggle-group-appearance-standard{
     border-radius: 0px;
+}
+
+
+#refsetDetailsPage .mat-raised-button.mat-button-base.refset-tool-action-button{
+    width: 170px;
+    line-height: 40px !important;
+}
+
+// Temp Style
+
+// Make Table in Button Group appear selected on load
+#mat-button-toggle-1-button {
+    background-color: $cerulean;
+    color: white;
+}
+
+#mat-form-field-label-1, #mat-form-field-label-3{
+    display:none;
+}
+
+#mat-input-0 label{
+    display:none;
 }
