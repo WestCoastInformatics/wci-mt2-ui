@@ -360,6 +360,13 @@ footer.footer a {
 
 #refsetDetailsPage .refset-tool-refset-metadata-column{
     margin-top: 0px !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.refset-tool-details-metadata-footer{
+    margin-top: auto;
 }
 
 #detailsMemberSection{
@@ -400,6 +407,8 @@ footer.footer a {
     margin-top: 80px;
 
 }
+
+
 
 // Pagination Styles
 .refset-tool-pagination-container{
@@ -528,14 +537,12 @@ footer.footer a {
 
 // Make Table in Button Group appear selected on load
 #mat-button-toggle-1-button {
-    background-color: $cerulean;
-    color: white;
+    //background-color: $cerulean;
+    //color: white;
 }
 
-#mat-form-field-label-1, #mat-form-field-label-3{
-    display:none;
-}
-
-#mat-input-0 label{
-    display:none;
+//title icons
+#title-download, #title-feedback{
+    width: 40px;
+    margin: 0px;
 }
