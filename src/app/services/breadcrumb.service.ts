@@ -24,8 +24,6 @@ export class BreadcrumbService {
 
         for (let breadcrumb of breadcrumbs){
 
-            //breadcrumbNav = CodeUtility.addIfNotEmpty(breadcrumbNav, '<span class="refset-tool-breadcrumb-separator">/</span>');
-
             breadcrumb.id = i;
             breadcrumb.class = 'refset-tool-breadcrumb';
 

@@ -30,6 +30,7 @@ export class RefsetDetails {
     selectedVersion: string = '3';
     languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
     selectedLanguage: string = '1';
+    selectedMemebersListMode: string = 'table';
     membersGridApi: any;
     membersGridColumnApi: any;
     membersColumnDefs = [];
@@ -64,7 +65,7 @@ export class RefsetDetails {
 
         this.refsetId = this.route.snapshot.paramMap.get('refsetId');
         this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
-        this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {path: '/details/1001', label: 'Refset Details'}]);
+        this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
 
         this.refsetService.getRefset(this.refsetId).subscribe(results => {
 

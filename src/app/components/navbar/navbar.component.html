@@ -1,24 +1,28 @@
 <nav class="navbar sticky-top navbar-dark bg-dark p-2 pr-2 row">
-    <a class="col-1 logo" routerLink="/">
-        <img class="logo mr-2 p-0" src="/assets/small_logo.png">
-        <span class="title text-ghost-grey nav-title">Reference Set Tool</span>
-    </a>
 
-    <a routerLink="directory" routerLinkActive="active">Test</a>
+        <div class="refset-tool-nav-item-row">
 
-    <div class="refset-tool-breadcrumb-nav col text-ghost-grey">
-        <div *ngFor="let breadcrumb of breadcrumbs" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
-            {{breadcrumb.label}}
+            <a class="refset-tool-nav-logo-section" routerLink="/">
+                <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
+                <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool</span>
+            </a>
+        
+            <div class="refset-tool-breadcrumb-bar text-ghost-grey">
+                <div *ngFor="let breadcrumb of breadcrumbs" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
+                    {{breadcrumb.label}}
+                </div>
+            </div>
+            
+            <ng-container [ngSwitch]="environment">
+                <div *ngSwitchCase="'local'" class="banner text-white local"></div>
+                <div *ngSwitchCase="'dev'" class="banner text-white dev"></div>
+                <div *ngSwitchCase="'uat'" class="banner text-white uat"></div>
+                <div *ngSwitchCase="'training'" class="banner text-white training"></div>
+                <div *ngSwitchDefault class="banner text-white d-none"></div>
+            </ng-container>
+
         </div>
-    </div>
     
-    <ng-container [ngSwitch]="environment">
-        <div *ngSwitchCase="'local'" class="banner text-white local"></div>
-        <div *ngSwitchCase="'dev'" class="banner text-white dev"></div>
-        <div *ngSwitchCase="'uat'" class="banner text-white uat"></div>
-        <div *ngSwitchCase="'training'" class="banner text-white training"></div>
-        <div *ngSwitchDefault class="banner text-white d-none"></div>
-    </ng-container>
 
     <div *ngIf="user" class="float-right mx-3">
         <div class="logout d-inline-block m-2" (click)="logout()">

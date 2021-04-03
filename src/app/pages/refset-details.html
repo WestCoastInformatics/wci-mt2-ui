@@ -203,7 +203,7 @@
 
                         <div class="col-md-auto">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
-                                name="membersListMode" aria-label="Members List Mode">
+                                name="membersListMode" aria-label="Members List Mode" [(value)]="selectedMemebersListMode">
                                 <mat-button-toggle value="table">Table</mat-button-toggle>
                                 <mat-button-toggle value="taxonomy">Taxonomy</mat-button-toggle>
                             </mat-button-toggle-group>

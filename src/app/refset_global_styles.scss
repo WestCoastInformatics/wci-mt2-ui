@@ -111,10 +111,23 @@ main{
     @extend .refset-tool-flex-row;
 }
 
-.nav-title {
+.refset-tool-nav-title {
     font-family: $header_font_family;
     font-size: 20px;
     color: #eee !important;
+}
+
+.refset-tool-nav-item-row > * {
+    margin-left: 10px;
+}
+.refset-tool-nav-item-row {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.refset-tool-nav-logo-section {
+    width: 250px;
+    margin-left: 15px;
 }
 
 nav a img{
@@ -138,6 +151,29 @@ footer.footer {
 
 footer.footer a {
     font-size: .9em !important;
+}
+
+.refset-tool-breadcrumb-bar > :first-child {
+    margin-left: 10px;
+}
+.refset-tool-breadcrumb-bar > :not(:last-child)::after {
+    content: "/";
+    color: $ghost-grey;
+    margin: 0px 10px
+}
+.refset-tool-breadcrumb-bar {
+    display: flex;
+    align-items: center;
+    //font-size: smaller;
+
+    .refset-tool-breadcrumb {
+        //margin-left: 10px;
+
+        &.refset-tool-breadcrumb-selectable {
+            cursor: pointer;
+            color: $standard_link_color;
+        }
+    }
 }
 
 
