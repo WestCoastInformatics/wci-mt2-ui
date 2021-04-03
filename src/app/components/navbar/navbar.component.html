@@ -1,9 +1,17 @@
-<nav class="navbar sticky-top navbar-dark bg-dark p-2 pr-2">
-    <a class="logo" routerLink="/">
+<nav class="navbar sticky-top navbar-dark bg-dark p-2 pr-2 row">
+    <a class="col-1 logo" routerLink="/">
         <img class="logo mr-2 p-0" src="/assets/small_logo.png">
         <span class="title text-ghost-grey nav-title">Refset Tool</span>
     </a>
 
+    <a routerLink="directory" routerLinkActive="active">Test</a>
+
+    <div class="refset-tool-breadcrumb-nav col text-ghost-grey">
+        <div *ngFor="let breadcrumb of breadcrumbs" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
+            {{breadcrumb.label}}
+        </div>
+    </div>
+    
     <ng-container [ngSwitch]="environment">
         <div *ngSwitchCase="'local'" class="banner text-white local"></div>
         <div *ngSwitchCase="'dev'" class="banner text-white dev"></div>

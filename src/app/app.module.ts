@@ -45,13 +45,15 @@ import { RestService } from 'src/app/services/rest/rest.service';
 import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 
 const appRoutes: Routes = [
-    { path: '', component: RefsetDirectory },
-    { path: 'details/:refsetId', component: RefsetDetails },
+    { path: '', pathMatch: 'full', redirectTo: 'directory' },
+    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
+    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details' } },
 
 ];
 
@@ -100,6 +102,7 @@ const appRoutes: Routes = [
         ConceptsService,
         RefsetService,
         PaginationService,
+        BreadcrumbService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HeaderInterceptor,

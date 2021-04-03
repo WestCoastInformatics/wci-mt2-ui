@@ -11,6 +11,7 @@ import { Title } from '@angular/platform-browser';
 import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 
 /**
@@ -53,7 +54,8 @@ export class RefsetDetails {
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
-        private changeDetectorRef: ChangeDetectorRef
+        private changeDetectorRef: ChangeDetectorRef,
+        private breadcrumbService: BreadcrumbService
     ) {
     }
 
@@ -62,6 +64,7 @@ export class RefsetDetails {
 
         this.refsetId = this.route.snapshot.paramMap.get('refsetId');
         this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
+        this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {path: '/details/1001', label: 'Refset Details'}]);
 
         this.refsetService.getRefset(this.refsetId).subscribe(results => {
 

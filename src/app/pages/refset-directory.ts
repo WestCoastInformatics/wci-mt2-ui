@@ -11,6 +11,7 @@ import { Title } from '@angular/platform-browser';
 import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 
 /**
@@ -55,7 +56,8 @@ export class RefsetDirectory {
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
-        private changeDetectorRef: ChangeDetectorRef
+        private changeDetectorRef: ChangeDetectorRef,
+        private breadcrumbService: BreadcrumbService
     ) {
     }
 
@@ -63,6 +65,7 @@ export class RefsetDirectory {
     ngOnInit() {
 
         this.titleService.setTitle('Refset Tool - Refset Directory');
+        this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
         this.showTable = false;
     }
 
