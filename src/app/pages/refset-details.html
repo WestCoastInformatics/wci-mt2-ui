@@ -36,7 +36,7 @@
         <div class="row justify-content-end">
 
             <mat-form-field appearance="fill">
-                <mat-label>Versions</mat-label>
+                <mat-label></mat-label>
                 <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion">
                     <mat-option *ngFor="let option of versionOptions" [value]="option.value">
                         {{option.display}}
@@ -176,7 +176,7 @@
         <div class="row">
 
             <!-- Member Concepts List Section -->
-            <div class="col-lg-6 refset-tool-details-members-column">
+            <div class="col-lg-8 refset-tool-details-members-column">
 
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
@@ -184,7 +184,7 @@
 
                         <div class="col-md-auto">
                             <mat-form-field appearance="fill">
-                                <mat-label>Language Refset</mat-label>
+                                <mat-label></mat-label>
                                 <mat-select #detailsLanguageSelect [(value)]="selectedLanguage"
                                     (selectionChange)="changeLanguage()">
                                     <mat-option *ngFor="let option of languageOptions" [value]="option.value">
@@ -261,7 +261,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6 refset-tool-details-concept-details-column">
+            <div class="col-lg-4 refset-tool-details-concept-details-column">
                 <div class="section-title refset-tool-refset-details-title-name">
                     Concept Details
                 </div>
