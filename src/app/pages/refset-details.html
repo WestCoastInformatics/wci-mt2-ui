@@ -185,7 +185,7 @@
                         <div class="col-md-auto">
                             <mat-form-field appearance="fill">
                                 <mat-label></mat-label>
-                                <mat-select #detailsLanguageSelect [(value)]="selectedLanguage"
+                                <mat-select #detailsLanguageSelect [(value)]="selectedLanguage" multiple
                                     (selectionChange)="changeLanguage()">
                                     <mat-option *ngFor="let option of languageOptions" [value]="option.value">
                                         {{option.display}}
