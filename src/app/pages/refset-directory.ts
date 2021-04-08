@@ -30,13 +30,14 @@ export class RefsetDirectory {
     refsetGridApi: any;
     refsetGridColumnApi: any;
     columnDefs = [];
+    refsetGridColumns = [{name: 'information', show: true}, {name: 'refsetId', show: true}];
     refsetGridOptions: any;
     refsetGridPaging = {
         pageSize: 10,
         pageSizeOptions: [10, 25, 50, 100]
     };
     pageEvent: PageEvent;
-    showTable: boolean;
+    showTable: boolean = false;
     refsetData: any;
     dialog: DialogService;
 
@@ -66,7 +67,6 @@ export class RefsetDirectory {
 
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
-        this.showTable = false;
     }
 
     ngAfterViewInit() {
@@ -106,7 +106,8 @@ export class RefsetDirectory {
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
-                suppressMenu: true
+                suppressMenu: false,
+                menuTabs: ['columnsMenuTab']
             }
         };
 

@@ -10,6 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +33,7 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 
 // PAGE IMPORTS
 import { TemplateComponent } from 'src/app/pages/template.component';
@@ -65,6 +67,7 @@ const appRoutes: Routes = [
         TaxonomyTreeComponent,
         TemplateRenderer,
         PaginationComponent,
+        ColumnChooserComponent,
         TemplateComponent,
         RefsetDirectory,
         RefsetDetails
@@ -84,6 +87,7 @@ const appRoutes: Routes = [
         MatSortModule,
         MatExpansionModule,
         MatInputModule,
+        MatCheckboxModule,
         MatSelectModule,
         MatFormFieldModule,
         MatButtonModule,

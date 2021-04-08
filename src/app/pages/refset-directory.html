@@ -9,6 +9,10 @@
     <div class="container-fluid">
         <div class="row justify-content-end">
 
+            <div class="col-md-auto" *ngIf="showTable">
+                <app-column-chooser [gridColumnApi]="refsetGridColumnApi"></app-column-chooser>
+            </div>
+
             <div class="col-md-auto">
                 <mat-form-field>
                     <mat-label>Search</mat-label>
