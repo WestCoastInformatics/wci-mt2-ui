@@ -1,5 +1,5 @@
 <button mat-raised-button color="primary" (click)="openColumnChooser()" aria-hidden="false"
-    class="refset-tool-action-button" aria-label="Open Column Chooser" title="Open Column Chooser"
+    class="refset-tool-action-button refset-tool-column-chooser-button" aria-label="Open Column Chooser" title="Open Column Chooser"
     ng-reflect-color="primary">
     Choose Columns
 </button>
@@ -7,8 +7,8 @@
 <!-- Column Chooser Template -->
 <ng-template #columnChooserSection let-data>
 
-    <div *ngFor="let column of data">
-        <mat-checkbox [(ngModel)]="column.show">
+    <div class="refset-tool-column-chooser-container" *ngFor="let column of data">
+        <mat-checkbox class="refset-tool-column-chooser-field" [(ngModel)]="column.show">
             {{column.name}}
         </mat-checkbox>
     </div>
