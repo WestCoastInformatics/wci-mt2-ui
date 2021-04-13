@@ -147,6 +147,27 @@ export class CodeUtility {
     }
 
     /*
+     * stripHtml - return a string with all HTML tags removed from it.
+     */
+    static stripHtml(html){
+
+        let doc = new DOMParser().parseFromString(html, 'text/html');
+        return doc.body.textContent || "";
+     }
+
+     /*
+     * textOverflow - return a string up to a certain number of characters with '...' at the end if it excedes the limit.
+     */
+    static textOverflow(text: string, characterLimit: number){
+
+        if (text.length <= characterLimit){
+            return text;
+        } else {
+            return text.substr(0, characterLimit) + ' ...';
+        }
+     }
+
+    /*
      * toTitleCase - return the supplied string in title case.
      */
     static toTitleCase(string, separator, splitter) {

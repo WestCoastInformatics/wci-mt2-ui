@@ -29,7 +29,7 @@ export class RefsetDetails {
     versionOptions = [{ value: '3', display: 'Published (2021-01-15)' }, { value: '2', display: 'In Development' }, { value: '1', display: 'Beta (2020-11-23)' }];
     selectedVersion: string = '3';
     languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
-    selectedLanguage: string = '1';
+    selectedLanguage: string[] = ['1', '2'];
     selectedMemebersListMode: string = 'table';
     membersGridApi: any;
     membersGridColumnApi: any;
@@ -47,6 +47,7 @@ export class RefsetDetails {
     dialog: DialogService;
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
+    @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
 
 
     constructor(
@@ -73,6 +74,7 @@ export class RefsetDetails {
 
             if (CodeUtility.hasValue(this.refsetData)) {
 
+                this.shortenNoteFields();
 
             } else {
 
@@ -236,6 +238,52 @@ export class RefsetDetails {
     }
 
     //***** General Functions *****/
+
+    shortenNoteFields(){
+
+        if (CodeUtility.hasValue(this.refsetData)){
+
+            if (CodeUtility.hasValue(this.refsetData.narrative)){
+                this.refsetData.narrativeShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(this.refsetData.narrative), 25);
+            }
+
+            if (CodeUtility.hasValue(this.refsetData.versionNotes)){
+                this.refsetData.versionNotesShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(this.refsetData.versionNotes), 25);
+            }
+        }
+    }
+
+    onTmcChange($event){
+
+    }
+
+    openRichTextEditor(fieldName, displayName = fieldName) {
+
+        const dialogId = 'detailsRichTextDialog';
+
+        const dialogData = {
+            headerText: `Refset ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
+            template: this.richTextDialog,
+            data: {fieldName: fieldName, text: this.refsetData[fieldName]}
+        }
+
+        const dialogOptions = {
+            id: dialogId,
+            width: '750px'
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+
+        this.dialog.confirmed().subscribe(data => {
+
+            if (data) {
+
+                this.refsetData[fieldName] = data.text;
+                this.shortenNoteFields();
+            }
+        });
+    }
+
     changeVersion() {
 
     }

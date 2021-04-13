@@ -23,6 +23,7 @@ import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
@@ -95,7 +96,8 @@ const appRoutes: Routes = [
         MatIconModule,
         DialogModule,
         TreeModule,
-        AgGridModule.withComponents([TemplateRenderer])
+        AgGridModule.withComponents([TemplateRenderer]),
+        EditorModule
     ],
     entryComponents: [],
     providers: [
@@ -107,6 +109,7 @@ const appRoutes: Routes = [
         RefsetService,
         PaginationService,
         BreadcrumbService,
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: HeaderInterceptor,

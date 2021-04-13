@@ -11,22 +11,32 @@
         <!-- Section Title -->
         <div class="col section-title refset-tool-refset-details-title-name">
             {{refsetData?.name}}
-            <button id="title-download" mat-icon-button="" aria-hidden="false" aria-label="Download Refset" title="Download Refset" class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
+            <button id="title-download" mat-icon-button="" aria-hidden="false" aria-label="Download Refset"
+                title="Download Refset"
+                class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
                 <span class="mat-button-wrapper">
-                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download
+                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color"
+                        aria-hidden="true" data-mat-icon-type="font">download
                     </mat-icon>
                 </span>
-                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round" ng-reflect-disabled="false" ng-reflect-centered="true" ng-reflect-trigger="[object HTMLButtonElement]">
+                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"
+                    ng-reflect-disabled="false" ng-reflect-centered="true"
+                    ng-reflect-trigger="[object HTMLButtonElement]">
                 </span>
                 <span class="mat-button-focus-overlay">
                 </span>
             </button>
-            <button id="title-feedback" mat-icon-button="" aria-hidden="false" aria-label="Open Feedback" title="Open Feedback" class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
+            <button id="title-feedback" mat-icon-button="" aria-hidden="false" aria-label="Open Feedback"
+                title="Open Feedback"
+                class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
                 <span class="mat-button-wrapper">
-                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">comment-processing-outline
+                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color"
+                        aria-hidden="true" data-mat-icon-type="font">comment-processing-outline
                     </mat-icon>
                 </span>
-                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round" ng-reflect-disabled="false" ng-reflect-centered="true" ng-reflect-trigger="[object HTMLButtonElement]">
+                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"
+                    ng-reflect-disabled="false" ng-reflect-centered="true"
+                    ng-reflect-trigger="[object HTMLButtonElement]">
                 </span>
                 <span class="mat-button-focus-overlay">
                 </span>
@@ -82,7 +92,9 @@
 
                         <tr>
                             <td class="refset-tool-refset-metadata-label">Narrative:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.narrative}}</td>
+                            <td class="refset-tool-refset-metadata-value" (click)="openRichTextEditor('narrative')">
+                                <span *ngIf="refsetData" [innerHTML]="refsetData.narrativeShortText"></span>
+                            </td>
                         </tr>
 
                     </tbody>
@@ -90,12 +102,12 @@
 
                 <!-- Action Buttons -->
                 <div class="refset-tool-details-metadata-footer">
-                    <button mat-raised-button color="primary" (click)="openArtifacts()" aria-hidden="false" #detailsArtifactButton
-                        class="refset-tool-action-button" aria-label="Open Artifacts" title="Open Artifacts"  ng-reflect-color="primary">
+                    <button mat-raised-button color="primary" (click)="openArtifacts()" aria-hidden="false"
+                        #detailsArtifactButton class="refset-tool-action-button" aria-label="Open Artifacts"
+                        title="Open Artifacts" ng-reflect-color="primary">
                         Artifacts
                     </button>
                 </div>
-
             </div>
 
             <!-- Versioned Metadata Section -->
@@ -126,7 +138,9 @@
 
                         <tr>
                             <td class="refset-tool-refset-metadata-label">Version Notes:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.versionNotes}}</td>
+                            <td class="refset-tool-refset-metadata-value" (click)="openRichTextEditor('versionNotes', 'version notes')">
+                                <span *ngIf="refsetData" [innerHTML]="refsetData.versionNotesShortText"></span>
+                            </td>
                         </tr>
 
                         <tr *ngIf="refsetData?.definition">
@@ -153,10 +167,27 @@
                     </tbody>
                 </table>
 
+                <!-- Rich Text Editor Dialog -->
+                <ng-template #detailsRichTextDialog let-data>
+                    
+                    <editor [(ngModel)]="data.text" [init]="{
+                        base_url: '/tinymce',
+                        suffix: '.min',
+                        height: 200,
+                        menubar: false,
+                        plugins: [
+                        'lists advlist'
+                        ],
+                        toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+                    }"></editor>
+
+                </ng-template>
+
                 <!-- Action Buttons -->
                 <div class="refset-tool-details-metadata-footer">
-                    <button mat-raised-button color="primary" (click)="openAuditTrail()" aria-hidden="false" #detailsAuditTrailButton
-                        class="refset-tool-action-button" aria-label="Open Audit Trail" title="Open Audit Trail" ng-reflect-color="primary">
+                    <button mat-raised-button color="primary" (click)="openAuditTrail()" aria-hidden="false"
+                        #detailsAuditTrailButton class="refset-tool-action-button" aria-label="Open Audit Trail"
+                        title="Open Audit Trail" ng-reflect-color="primary">
                         Audit Trail
                     </button>
                 </div>
@@ -180,7 +211,7 @@
 
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
-                    <div class="row justify-content-end"> 
+                    <div class="row justify-content-end">
 
                         <div class="col-md-auto">
                             <mat-form-field appearance="fill">
@@ -203,7 +234,8 @@
 
                         <div class="col-md-auto">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
-                                name="membersListMode" aria-label="Members List Mode" [(value)]="selectedMemebersListMode">
+                                name="membersListMode" aria-label="Members List Mode"
+                                [(value)]="selectedMemebersListMode">
                                 <mat-button-toggle value="table">Table</mat-button-toggle>
                                 <mat-button-toggle value="taxonomy">Taxonomy</mat-button-toggle>
                             </mat-button-toggle-group>
@@ -219,8 +251,8 @@
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
                     </ag-grid-angular>
 
-                    <app-pagination *ngIf="showTable" [pageSize]="membersGridPaging.pageSize" [gridOptions]="membersGridOptions"
-                        [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
+                    <app-pagination *ngIf="showTable" [pageSize]="membersGridPaging.pageSize"
+                        [gridOptions]="membersGridOptions" [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
                         [pageSizeOptions]="membersGridPaging.pageSizeOptions">
                     </app-pagination>
 

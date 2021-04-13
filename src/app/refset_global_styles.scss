@@ -55,6 +55,11 @@ main{
     }
 }
 
+// reboot overrides
+b, strong {
+    font-weight: bold;
+}
+
 // Manual Flex Styles: not using these now, if don't want remove - START --->
 .refset-tool-inline{
     display: inline;

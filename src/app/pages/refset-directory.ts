@@ -256,6 +256,17 @@ export class RefsetDirectory {
         let refset = this.getRefsetRow(refsetId);
         const dialogId = 'directoryInfoDialog';
 
+        if (CodeUtility.hasValue(refset)){
+
+            if (CodeUtility.hasValue(refset.narrative)){
+                refset.narrativeShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(refset.narrative), 25);
+            }
+
+            if (CodeUtility.hasValue(refset.versionNotes)){
+                refset.versionNotesShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(refset.versionNotes), 25);
+            }
+        }
+
         let tags = '';
 
         for (const tag of refset.tags){
