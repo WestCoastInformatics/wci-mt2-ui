@@ -34,6 +34,7 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 
 // PAGE IMPORTS
@@ -68,6 +69,7 @@ const appRoutes: Routes = [
         TaxonomyTreeComponent,
         TemplateRenderer,
         PaginationComponent,
+        RefsetDownloadComponent,
         ColumnChooserComponent,
         TemplateComponent,
         RefsetDirectory,

@@ -42,7 +42,6 @@ export class RefsetDirectory {
     dialog: DialogService;
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
-    @ViewChild('directoryDownloadDialog') downloadDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
     @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
@@ -294,25 +293,37 @@ export class RefsetDirectory {
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
     }
 
-    openDownload(refsetId: string) {
+    changeFormat(field) {
 
-        let refset = this.getRefsetRow(refsetId);
-        const dialogId = 'directoryInfoDialog';
+        let showContent = false;
+        let showLanguages = false;
+        let showVersions = false;
 
-        const dialogData = {
-            dialogId: dialogId,
-            headerText: `Download Refset ${refset.name} (${refset.refsetId})`,
-            showCancel: false,
-            template: this.downloadDialog,
-            data: refset
+        if (field.value == 'rf2' || field.value == 'rf2_with_names') {
+
+            showContent = true;
+
+            if (field.value == 'rf2_with_names') {
+                showLanguages = true;
+            }
+
+        } else {
+            showVersions = true;
         }
+    }
 
-        const dialogOptions = {
-            id: dialogId,
-            disableClose: false
+    changeContent(field) {
+
+        let showComparison = false;
+        let showVersions = false;
+
+        if (field.value == 'snapshot' || field.value == 'snapshot_delta') {
+            showVersions = true;
+        } 
+        
+        if (field.value == 'delta' || field.value == 'snapshot_delta') {
+            showComparison = true;
         }
-
-        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
     }
 
     openFeedback(refsetId: string) {

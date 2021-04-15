@@ -197,11 +197,7 @@
                 <div class="row">
 
                     <div class="col-2">
-                        <button mat-icon-button *ngIf="params?.data?.downloadable" (click)="openDownload(params.data.refsetId)" aria-hidden="false"
-                            #directoryDownloadIcon class="refset-tool-table-action-icon" aria-label="Download Refset"
-                            title="Download Refset">
-                            <mat-icon>download</mat-icon>
-                        </button>
+                        <app-refset-download *ngIf="params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)"></app-refset-download>
                     </div>
 
                     <div class="col-2">
@@ -223,10 +219,6 @@
                 <mat-label>Feedback</mat-label>
                 <input matInput [(ngModel)]="data.feedback">
             </mat-form-field>
-        </ng-template>
-
-        <ng-template #directoryDownloadDialog let-data>
-            To be implemented later.
         </ng-template>
 
     </div>

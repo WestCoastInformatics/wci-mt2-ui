@@ -1,0 +1,55 @@
+<button mat-icon-button (click)="openDownload(refset.refsetId)" aria-hidden="false" #refsetDownloadIcon
+    class="refset-tool-table-action-icon" aria-label="Download Refset" title="Download Refset">
+    <mat-icon>download</mat-icon>
+</button>
+
+<ng-template #refsetDownloadDialog let-data>
+    <div class="container-fluid">
+
+        <div class="row" id="downloadFormatRow">
+
+            <div class="col-2">
+                <label for="downloadFormatField">Format:</label>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="fill">
+                    <mat-select #downloadFormatField [(value)]="data.selectedFormat"
+                        (selectionChange)="changeFormat(this)">
+                        <mat-option *ngFor="let option of data.formatOptions" [value]="option.value">
+                            {{option.display}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row" id="downloadContentRow">
+
+            <div class="col-2">
+                <label for="downloadContentField">Content:</label>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="fill">
+                    <mat-select #downloadContentField [(value)]="data.selectedContent"
+                        (selectionChange)="changeConcent(this)">
+                        <mat-option *ngFor="let option of data.contentOptions" [value]="option.value">
+                            {{option.display}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row" id="downloadLanguageRow">
+
+            <div class="col-2">
+                <label for="downloadFormatField">Language Refset:</label>
+            </div>
+            <div class="col">
+                <div *ngFor="let option of data.languageOptions" [value]="option.value">
+                    <mat-checkbox [(ngModel)]="option.selected">{{option.display}}</mat-checkbox>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
