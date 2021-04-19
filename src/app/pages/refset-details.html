@@ -11,21 +11,7 @@
         <!-- Section Title -->
         <div class="col section-title refset-tool-refset-details-title-name">
             {{refsetData?.name}}
-            <button id="title-download" mat-icon-button="" aria-hidden="false" aria-label="Download Refset"
-                title="Download Refset"
-                class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
-                <span class="mat-button-wrapper">
-                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color"
-                        aria-hidden="true" data-mat-icon-type="font">download
-                    </mat-icon>
-                </span>
-                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"
-                    ng-reflect-disabled="false" ng-reflect-centered="true"
-                    ng-reflect-trigger="[object HTMLButtonElement]">
-                </span>
-                <span class="mat-button-focus-overlay">
-                </span>
-            </button>
+            <app-refset-download *ngIf="refsetData?.downloadable" [refset]="refsetData" buttonClasses="refset-tool-title-download"></app-refset-download>
             <button id="title-feedback" mat-icon-button="" aria-hidden="false" aria-label="Open Feedback"
                 title="Open Feedback"
                 class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">

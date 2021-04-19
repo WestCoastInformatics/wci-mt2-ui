@@ -1,6 +1,18 @@
-<button mat-icon-button (click)="openDownload(refset.refsetId)" aria-hidden="false" #refsetDownloadIcon
-    class="refset-tool-table-action-icon" aria-label="Download Refset" title="Download Refset">
-    <mat-icon>download</mat-icon>
+<button mat-icon-button #refsetDownloadButton id="refsetDownloadButton" aria-hidden="false"
+    (click)="openDownload(refset.refsetId)" 
+    class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted {{buttonClasses}}" 
+    aria-label="Download Refset" title="Download Refset">
+    <span class="mat-button-wrapper">
+        <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color"
+            aria-hidden="true" data-mat-icon-type="font">download
+        </mat-icon>
+    </span>
+    <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"
+        ng-reflect-disabled="false" ng-reflect-centered="true"
+        ng-reflect-trigger="[object HTMLButtonElement]">
+    </span>
+    <span class="mat-button-focus-overlay">
+    </span>
 </button>
 
 <ng-template #refsetDownloadDialog let-data>

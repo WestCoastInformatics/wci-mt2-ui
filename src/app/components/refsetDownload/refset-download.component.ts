@@ -20,6 +20,7 @@ import { data } from 'jquery';
 export class RefsetDownloadComponent {
 
     @Input() refset;
+    @Input() buttonClasses: String = '';
     
     formatOptions: any[];
     contentOptions: any[];
