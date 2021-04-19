@@ -293,39 +293,6 @@ export class RefsetDirectory {
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
     }
 
-    changeFormat(field) {
-
-        let showContent = false;
-        let showLanguages = false;
-        let showVersions = false;
-
-        if (field.value == 'rf2' || field.value == 'rf2_with_names') {
-
-            showContent = true;
-
-            if (field.value == 'rf2_with_names') {
-                showLanguages = true;
-            }
-
-        } else {
-            showVersions = true;
-        }
-    }
-
-    changeContent(field) {
-
-        let showComparison = false;
-        let showVersions = false;
-
-        if (field.value == 'snapshot' || field.value == 'snapshot_delta') {
-            showVersions = true;
-        } 
-        
-        if (field.value == 'delta' || field.value == 'snapshot_delta') {
-            showComparison = true;
-        }
-    }
-
     openFeedback(refsetId: string) {
 
         let refset = this.getRefsetRow(refsetId);
