@@ -112,6 +112,8 @@ b, strong {
 
 
 // General Page Styles
+
+
 .refset-tool-page-title-section{
     @extend .refset-tool-flex-row;
 }
@@ -136,8 +138,13 @@ b, strong {
 }
 
 nav a img{
-    margin-top: .25em;
+    margin-top: -.5em;
     height: 3.0rem !important;
+    margin-left: 15px;
+}
+nav a span{
+    margin-top: .5em;
+    display: inline-block;
 }
 
 .bg-dark {
@@ -181,6 +188,12 @@ footer.footer a {
     }
 }
 
+.refset-tool-nav-item-row a:hover{
+    text-decoration:none;
+}
+.refset-tool-nav-item-row a span{
+    //color: greenyellow !important;
+}
 
 // Material Dialog Override Styles
 .mat-dialog-actions{
@@ -385,6 +398,9 @@ footer.footer a {
         margin-bottom: 15px;
     }
 }
+#refsetDirectoryPage .outer-table-button{
+    margin-top: 23px;
+}
 
 // Details Page Styles
 
@@ -544,6 +560,31 @@ footer.footer a {
     //color: #2196f3;
 //}
 
+// Multi-select list
+.mat-form-field-appearance-fill .mat-form-field-flex{
+    width: 420px;
+}
+
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+    color: $cerulean !important;
+}
+
+.mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate{
+    background: $cerulean !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex:hover{
+    border-bottom: 1px solid $cerulean;
+}
+
+//Search (clear-search)
+.clear-search{
+    color: $standard_font_color;
+    position:relative;
+    z-index: 100;
+    left: -13px;
+    
+}
 
 // Table-Tax Button Group
 .mat-button-toggle-checked{

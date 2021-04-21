@@ -64,7 +64,7 @@ export class ColumnChooserComponent {
         const dialogData = {
             dialogId: dialogId,
             showCancel: false,
-            confirmText: 'OK',
+            confirmText: 'Save',
             headerText: 'Select which columns to display:',
             template: this.columnChooserDialog,
             data: this.columns,
