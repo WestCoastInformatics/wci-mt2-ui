@@ -20,13 +20,13 @@ const userData: User[] = [
 ];
 
 const conceptData = [
-    { conceptId: '49727002', descriptions: {'1': {id: '1', description: 'Cough', language: 'US English', type: 'PT'}, '2': {id: '2', description: 'Toux', language: 'Belgian French', type: 'PT'}, '3': {id: '3', description: 'bevindingen over hoesten', language: 'Flemish', type: 'PT'}}, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
-    { conceptId: '84229001', descriptions: {'1': {id: '1', description: 'Fatigue', language: 'US English', type: 'PT'}, '2': {id: '2', description: 'Fatigue', language: 'Belgian French', type: 'PT'}, '3': {id: '3', description: 'vermoeidheid', language: 'Flemish', type: 'PT'}}, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { code: '49727002', descriptions: [{id: '1', term: 'Cough', language: 'US English', type: 'PT'}, {id: '2', term: 'Toux', language: 'Belgian French', type: 'PT'}, {id: '3', term: 'bevindingen over hoesten', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { code: '84229001', descriptions: [{id: '1', term: 'Fatigue', language: 'US English', type: 'PT'}, {id: '2', term: 'Fatigue', language: 'Belgian French', type: 'PT'}, {id: '3', term: 'vermoeidheid', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
     conceptData.push(
-        { conceptId: i.toString(), descriptions: {'1': {id: '1', description: 'Generic Concept ' + i, language: 'US English', type: 'PT'}, '2': {id: '2', description: 'Concept générique ' + i, language: 'Belgian French', type: 'PT'}, '3': {id: '3', description: 'Generiek concept ' + i, language: 'Flemish', type: 'PT'}}, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
+        { code: i.toString(), descriptions: [{id: '1', term: 'Generic Concept ' + i, language: 'US English', type: 'PT'}, {id: '2', term: 'Concept générique ' + i, language: 'Belgian French', type: 'PT'}, {id: '3', term: 'Generiek concept ' + i, language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
     )
 }
 const refsetData = [
@@ -70,7 +70,7 @@ export class BackendInterceptor implements HttpInterceptor {
                         return concepts();
                     case url.includes('/refset/search') && method === 'GET':
                         return refsets();
-                    case url.includes('/refset/members/list') && method === 'GET':
+                    case url.includes('/members') && method === 'GET':
                         return concepts();
                     case url.includes('/refset/') && method === 'GET':
                         return refset();
@@ -116,7 +116,7 @@ export class BackendInterceptor implements HttpInterceptor {
             return ok({
                 totalKnown: true,
                 totalResults: totalResults,
-                languages: [{languageId: '1', name: 'US English (PT)'}, {languageId: '2', name: 'Belgian French (PT)'}, {languageId: '3', name: 'Flemish (PT)'}],
+                languages: [{languageId: '1', languageName: 'US English (PT)'}, {languageId: '2', languageName: 'Belgian French (PT)'}, {languageId: '3', languageName: 'Flemish (PT)'}],
                 items: rowsThisPage
             });
         }

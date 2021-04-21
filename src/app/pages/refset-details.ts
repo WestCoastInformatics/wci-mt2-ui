@@ -122,6 +122,7 @@ export class RefsetDetails {
         console.log("In onGridReady", this.actionSection);
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
+        let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
         let dataSource = {
             rowCount: null,
@@ -146,20 +147,25 @@ export class RefsetDetails {
                     let data = results.items;
                     this.membersGridData = data;
 
-                    // get the languages we will be using as columns
-                    let languages = results.languages;
-
                     this.membersColumnDefs = [
-                        { field: 'conceptId', headerName: 'Refset ID', cellClass: 'refset-tool-details-column-concept-id' }
+                        { field: 'code', headerName: 'Concept ID', cellClass: 'refset-tool-details-column-concept-id' }
                     ];
 
-                    for (let language of languages) {
-                        this.membersColumnDefs.push({ field: language.languageId, colId: 'description' + language.languageId, headerName: language.name, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
+                    if (data.languages){
+                        refsetLanguages = data.languages;
+                    }
+
+                    for (let i = 0; i < refsetLanguages.length; i++) {
+
+                        let language = refsetLanguages[i];
+                        let fieldPrefix = 'descriptions[' + i + '].';
+
+                        this.membersColumnDefs.push({ field: i.toString(), colId: 'description' + language.languageId, headerName: language.languageName, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
                         { field: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date' },
-                        { field: 'id', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
+                        { field: 'memberStatus', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
                     ]);
 
                     if (data.length > 0) {
@@ -214,7 +220,7 @@ export class RefsetDetails {
     }
 
     descriptionValueGetter = function (params) {
-        return params?.data?.descriptions[params.colDef.field]?.description;
+        return params?.data?.descriptions[params.colDef.field]?.term;
     };
 
     onMembersGridCellClick = (event) => {
