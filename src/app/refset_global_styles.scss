@@ -411,7 +411,7 @@ footer.footer a {
 
 #refsetDetailsPage .refset-tool-refset-details-title-name{
     padding-left: 15px;
-    padding-top:37px;
+    //padding-top:37px;
     padding-bottom: 15px;
 }
 
@@ -422,6 +422,18 @@ footer.footer a {
     flex: 1;
 }
 
+#refsetDetailsPage .details-version-select .mat-form-field-appearance-fill .mat-form-field-flex{
+    padding:0 .75em 0 .75em;
+    //margin-top: -30px;
+}
+
+#refsetDetailsPage .refset-title{
+    background:white;
+    top: 62px;
+    //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
+    padding-right: 15px;
+}
+
 .refset-tool-details-metadata-footer{
     margin-top: auto;
 }
@@ -430,6 +442,8 @@ footer.footer a {
     background-color: #f5f5f5;
     border-radius: 4px;
     margin-left: 15px;
+    margin-right: 15px;
+    width: auto;
 }
 
 #detailsMemberSection, #detailsMemberSection .refset-tool-details-members-column{
@@ -442,7 +456,7 @@ footer.footer a {
 }
 
 #detailsMetadataSection{
-    padding-right: 0px;
+    padding-right: 15px;
 }
 
 .refset-tool-details-metadata-footer{
@@ -577,7 +591,7 @@ footer.footer a {
     border-bottom: 1px solid $cerulean;
 }
 
-//Search (clear-search)
+// Search (clear-search)
 .clear-search{
     color: $standard_font_color;
     position:relative;
@@ -634,3 +648,6 @@ footer.footer a {
     width: 40px;
     margin: 0px;
 }
+
+
+

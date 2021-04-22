@@ -1,14 +1,17 @@
 <div id="refsetDetailsPage" class="container-fluid">
 
     <!-- Page Title -->
-    <div class="container-fluid page-title">
+    <!--<div class="container-fluid page-title">
         Reference Set Details
-    </div>
+    </div>-->
 
     <!-- Header Bar -->
-    <div class="row refset-title">
+    <div class="row refset-title sticky-top">
 
         <!-- Section Title -->
+        <div class="col-md-2 page-title">
+            Reference Set Details
+        </div>
         <div class="col section-title refset-tool-refset-details-title-name">
             {{refsetData?.name}}
             <app-refset-download *ngIf="refsetData?.downloadable" [refset]="refsetData" buttonClasses="refset-tool-title-download"></app-refset-download>
@@ -29,7 +32,7 @@
             </button>
         </div>
 
-        <div class="row justify-content-end">
+        <div class="row justify-content-end details-version-select">
 
             <mat-form-field appearance="fill">
                 <mat-label></mat-label>
@@ -193,13 +196,13 @@
         <div class="row">
 
             <!-- Member Concepts List Section -->
-            <div class="col-lg-8 refset-tool-details-members-column">
+            <div class="col-lg-7 refset-tool-details-members-column">
 
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
                     <div class="row justify-content-end">
 
-                        <div class="col-md-auto">
+                        <div class="col-md-6">
                             <mat-form-field appearance="fill">
                                 <mat-label></mat-label>
                                 <mat-select #detailsLanguageSelect [(value)]="selectedLanguage" multiple
@@ -211,7 +214,7 @@
                             </mat-form-field>
                         </div>
 
-                        <div class="col-md-auto">
+                        <div class="col-md-3">
                             <mat-form-field>
                                 <mat-label>Search</mat-label>
                                 <input matInput #detailsSearchInput [(ngModel)]="searchInput">
@@ -283,7 +286,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-4 refset-tool-details-concept-details-column">
+            <div class="col-lg-5 refset-tool-details-concept-details-column">
                 <div class="section-title refset-tool-refset-details-title-name">
                     Concept Details
                 </div>
