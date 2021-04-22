@@ -425,7 +425,7 @@ footer.footer a {
 #refsetDetailsPage .details-version-select .mat-form-field-appearance-fill .mat-form-field-flex{
     padding:0 .75em 0 .75em;
     //margin-top: -30px;
-}
+} 
 
 #refsetDetailsPage .refset-title{
     background:white;
@@ -649,5 +649,13 @@ footer.footer a {
     margin: 0px;
 }
 
+// Download Dialog
+ #downloadDialogCancel{
+     background: #e93848;
+     color: white;
+     border-radius: 0px;
+ }
 
-
+#downloadDialogActions button{
+    width:130px;
+}
