@@ -42,9 +42,12 @@
             [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
         </ag-grid-angular>
 
-        <app-pagination [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions"
+        <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize" 
+            [gridOptions]="refsetGridOptions"
             [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
-            [pageSizeOptions]="refsetGridPaging.pageSizeOptions">
+            [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+            [totalKnown]="refsetGridPaging.totalKnown"
+            [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
         </app-pagination>
 
         <!-- Information Templates -->

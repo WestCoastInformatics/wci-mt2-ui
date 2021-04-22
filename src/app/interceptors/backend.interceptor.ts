@@ -150,8 +150,8 @@ export class BackendInterceptor implements HttpInterceptor {
             }
 
             return ok({
-                totalKnown: true,
-                totalResults: totalResults,
+                //totalKnown: false,
+                //totalResults: totalResults,
                 items: rowsThisPage
             });
         }

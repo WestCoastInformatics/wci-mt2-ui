@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -12,6 +11,7 @@ import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 
 
 /**
@@ -37,9 +37,13 @@ export class RefsetDetails {
     membersGridOptions: any;
     membersGridPaging = {
         pageSize: 10,
-        pageSizeOptions: [10, 25, 50, 100]
+        pageSizeOptions: [10, 25, 50, 100],
+        totalKnown: false,
+        totalRows: null,
+        manualStateRefresh: new Boolean(true)
     };
-    pageEvent: PageEvent;
+    membersGridLastFilter: string = '';
+    membersGridLastSort: string = '';
     showTable: boolean;
     refsetData: any;
     membersGridData: any;
@@ -48,6 +52,7 @@ export class RefsetDetails {
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
+    @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
 
 
     constructor(
@@ -132,8 +137,29 @@ export class RefsetDetails {
 
                 let pageNumber = rowParams.endRow / this.membersGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
+                let sort = UiUtility.formatSortData(rowParams.sortModel);
 
                 //query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+
+                let newFilterString = query;
+                let newSortString = JSON.stringify(sort);
+
+                // if the filters or sort have changed then move to the first page
+                if (newFilterString !== this.membersGridLastFilter || newSortString !== this.membersGridLastSort) {
+
+                    pageNumber = 1;
+                    this.membersGridApi?.api?.paginationGoToPage(0);
+                }
+
+                // if the filters have changed then reset the total row variables
+                if (newFilterString !== this.membersGridLastFilter){
+
+                    this.membersGridPaging.totalRows = null;
+                    this.membersGridPaging.totalKnown = false;
+                }
+
+                this.membersGridLastFilter = newFilterString;
+                this.membersGridLastSort = newSortString;
 
                 let restParams = {
                     query: query,
@@ -143,6 +169,14 @@ export class RefsetDetails {
                 }
 
                 this.refsetService.getMembersList(this.refsetId, restParams).subscribe(results => {
+
+                    if (results.items.length == 0 && pageNumber > 1) {
+
+                        this.membersGridPaging.totalRows = (this.membersGridApi.paginationGetPageSize() * (pageNumber - 1));
+                        this.membersGridPaging.totalKnown = true;
+                        this.membersPaginationComponent.goToPage(pageNumber - 1);
+                        return;
+                    }
 
                     let data = results.items;
                     this.membersGridData = data;
@@ -174,26 +208,36 @@ export class RefsetDetails {
                         let currentRowCount = null;
                         let lastRow = -1;
 
-                        if (results.totalKnown || data.length < this.membersGridApi.paginationGetPageSize()) {
+                        if (results.totalKnown || data.length < this.membersGridApi.paginationGetPageSize() || this.membersGridPaging.totalKnown) {
 
                             if (results.totalKnown) {
 
                                 lastRow = results.totalResults;
+
+                            } else if (this.membersGridPaging.totalKnown) {
+
+                                lastRow = this.membersGridPaging.totalRows;
                             } else {
 
                                 currentRowCount = data.length + ((pageNumber - 1) * this.membersGridApi.paginationGetPageSize());
                                 lastRow = currentRowCount;
                             }
+
+                            this.membersGridPaging.totalRows = lastRow;
+                            this.membersGridPaging.totalKnown = true;
+
                         } else {
                             currentRowCount = data.length + ((pageNumber - 1) * this.membersGridApi.paginationGetPageSize());
                         }
-
+                        
                         rowParams.successCallback(data, lastRow);
                     } else {
 
                         this.membersGridApi.showNoRowsOverlay();
                         rowParams.successCallback(data, 0);
                     }
+
+                    this.membersGridPaging.manualStateRefresh = new Boolean(true);
                 },
                 error => {
                     

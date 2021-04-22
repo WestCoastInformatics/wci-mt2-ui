@@ -7,10 +7,15 @@ const range = (start, stop, step) => Array.from({ length: (stop - start) / step 
 })
 export class PaginationService {
 
-    getPager(totalPages: number, currentPage: number = 0) {
+    // total pages and current page is 1 based
+    getPager(totalPages: number, currentPage: number, totalKnown: boolean = false) {
 
         let startPage: number;
         let endPage: number;
+
+        if (!totalKnown){
+            totalPages = currentPage + 1;
+        }
 
         if (totalPages <= 5) {
 

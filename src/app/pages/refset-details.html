@@ -238,9 +238,12 @@
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
                     </ag-grid-angular>
 
-                    <app-pagination *ngIf="showTable" [pageSize]="membersGridPaging.pageSize"
-                        [gridOptions]="membersGridOptions" [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
-                        [pageSizeOptions]="membersGridPaging.pageSizeOptions">
+                    <app-pagination #detailsMembersPaging *ngIf="showTable" [pageSize]="membersGridPaging.pageSize"
+                        [gridOptions]="membersGridOptions" 
+                        [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
+                        [pageSizeOptions]="membersGridPaging.pageSizeOptions" 
+                        [totalKnown]="membersGridPaging.totalKnown"
+                        [manualStateRefresh]="membersGridPaging.manualStateRefresh">>
                     </app-pagination>
 
                     <!-- Action Templates -->
@@ -248,7 +251,7 @@
 
                         <div class="container-fluid">
                             <div class="row">
-                                
+
                                 <div class="col-2">
                                     <button mat-icon-button *ngIf="params?.data?.historyVisible"
                                         (click)="openMemberHistory(params.data.conceptId)" aria-hidden="false"

@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -12,6 +11,7 @@ import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 
 
 /**
@@ -34,9 +34,13 @@ export class RefsetDirectory {
     refsetGridOptions: any;
     refsetGridPaging = {
         pageSize: 10,
-        pageSizeOptions: [10, 25, 50, 100]
+        pageSizeOptions: [10, 25, 50, 100],
+        totalKnown: false,
+        totalRows: null,
+        manualStateRefresh: new Boolean(true)
     };
-    pageEvent: PageEvent;
+    refsetGridLastFilter: string = '';
+    refsetGridLastSort: string = '';
     showTable: boolean = false;
     refsetData: any;
     dialog: DialogService;
@@ -47,7 +51,7 @@ export class RefsetDirectory {
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
     @ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 
 
     constructor(
@@ -129,8 +133,7 @@ export class RefsetDirectory {
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
-                console.log("^^^^^^ query fitlers: " + query);
-                let viewFilter = ''
+                let sort = UiUtility.formatSortData(rowParams.sortModel);
 
                 if (this.selectedView === 'public'){
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
@@ -141,6 +144,26 @@ export class RefsetDirectory {
                 console.log("^^^^^^ query after viewFilters: " + query);
                 //query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 
+                let newFilterString = query;
+                let newSortString = JSON.stringify(sort);
+
+                // if the filters or sort have changed then move to the first page
+                if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+
+                    pageNumber = 1;
+                    this.refsetGridApi?.api?.paginationGoToPage(0);
+                }
+
+                // if the filters have changed then reset the total row variables
+                if (newFilterString !== this.refsetGridLastFilter){
+
+                    this.refsetGridPaging.totalRows = null;
+                    this.refsetGridPaging.totalKnown = false;
+                }
+
+                this.refsetGridLastFilter = newFilterString;
+                this.refsetGridLastSort = newSortString;
+
                 let restParams = {
                     query: query,
                     limit: this.refsetGridApi.paginationGetPageSize(),
@@ -149,11 +172,17 @@ export class RefsetDirectory {
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 }
 
-                console.log("^^^^^^ restParams: ", restParams);
-                console.log("^^^^^^ UiUtility.formatSortData(rowParams.sortModel): ", UiUtility.formatSortData(rowParams.sortModel));
-                console.log("^^^^^^ {...restParams, ...UiUtility.formatSortData(rowParams.sortModel)}: ", {...restParams, ...UiUtility.formatSortData(rowParams.sortModel)});
+                console.log("^^^^^^ {...restParams, ...sort}: ", {...restParams, ...sort});
 
-                this.refsetService.getRefsets({...restParams, ...UiUtility.formatSortData(rowParams.sortModel)}).subscribe(results => {
+                this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
+
+                    if (results.items.length == 0 && pageNumber > 1) {
+
+                        this.refsetGridPaging.totalRows = (this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1));
+                        this.refsetGridPaging.totalKnown = true;
+                        this.paginationComponent.goToPage(pageNumber - 1);
+                        return;
+                    }
 
                     let data = results.items;
                     this.refsetData = data;
@@ -164,16 +193,24 @@ export class RefsetDirectory {
                         let currentRowCount = null;
                         let lastRow = -1;
 
-                        if (results.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize()) {
+                        if (results.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize() || this.refsetGridPaging.totalKnown) {
 
                             if (results.totalKnown) {
 
                                 lastRow = results.totalResults;
+
+                            } else if (this.refsetGridPaging.totalKnown) {
+
+                                lastRow = this.refsetGridPaging.totalRows;
                             } else {
 
                                 currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
                                 lastRow = currentRowCount;
                             }
+
+                            this.refsetGridPaging.totalRows = lastRow;
+                            this.refsetGridPaging.totalKnown = true;
+
                         } else {
                             currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
                         }
@@ -184,6 +221,8 @@ export class RefsetDirectory {
                         this.refsetGridApi.showNoRowsOverlay();
                         rowParams.successCallback(data, 0);
                     }
+
+                    this.refsetGridPaging.manualStateRefresh = new Boolean(true);
                 },
                 error => {
                     

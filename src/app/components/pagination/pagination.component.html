@@ -2,38 +2,39 @@
 
     <div class="row">
 
-        <button mat-raised-button (click)="goToPage(0)" [disabled]="getCurrentPage() === 0">
-            <mat-icon aria-hidden="false" aria-label="First page">first_page</mat-icon>
+        <button #paginationFirstPage mat-raised-button (click)="goToPage(1)" title="Go To First Page" attr.aria-label="Go To First Page">
+            <mat-icon aria-hidden="false">first_page</mat-icon>
         </button>
 
-        <button mat-raised-button (click)="goToPrevious()" [disabled]="getCurrentPage() === 0">
-            <mat-icon aria-hidden="false" aria-label="Left arrow">arrow_left</mat-icon>
+        <button #paginationPreviousPage mat-raised-button (click)="goToPrevious()" title="Go To Previous Page" attr.aria-label="Go To Previous Page {{currentPage - 1}}">
+            <mat-icon aria-hidden="false">arrow_left</mat-icon>
         </button>
 
         <span *ngFor="let page of paginationPages.pages">
-            <button mat-raised-button [color]="getCurrentPage() === page - 1 ? 'primary' : ''" (click)="goToPage(page - 1)">
+            <button #paginationPageNumber mat-raised-button [color]="currentPage === page ? 'primary' : ''" (click)="goToPage(page)" attr.aria-label="Go To Page {{page}}">
                 {{page}}
             </button>
         </span>
 
         <button mat-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
-            (click)="goToPage(paginationPages.startPage + 5)">
+            (click)="goToPage(paginationPages.startPage + 5)" title="Go To Page {{paginationPages.startPage + 5}}" attr.aria-label="Go To Page {{paginationPages.startPage + 5}}">
             ...
         </button>
 
         <button mat-raised-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
-            (click)="goToPage(paginationPages.totalPages - 1)">
+            (click)="goToPage(paginationPages.totalPages)" attr.aria-label="Go To Page {{paginationPages.totalPages}}">
             {{paginationPages.totalPages}}
         </button>
 
-        <button mat-raised-button (click)="goToNext()" [disabled]="getCurrentPage() === paginationPages.totalPages - 1">
-            <mat-icon aria-hidden="false" aria-label="Right arrow">arrow_right</mat-icon>
+        <button #paginationNextPage mat-raised-button (click)="goToNext()" title="Go To Next Page" attr.aria-label="Go To Next Page {{currentPage + 1}}">
+            <mat-icon aria-hidden="false">arrow_right</mat-icon>
         </button>
 
-        <button mat-raised-button (click)="goToPage(paginationPages.totalPages - 1)"
-            [disabled]="getCurrentPage() === paginationPages.totalPages - 1">
-            <mat-icon aria-hidden="false" aria-label="Last page">last_page</mat-icon>
+        <button #paginationLastPage mat-raised-button (click)="goToPage(paginationPages.totalPages)" title="Go To Last Page ({{paginationPages.totalPages}})" attr.aria-label="Go To Last Page {{paginationPages.totalPages}}">
+            <mat-icon aria-hidden="false">last_page</mat-icon>
         </button>
+
+        <div class="refset-tool-pagination-total-label" *ngIf="showTotal">Total Pages: {{this.numberOfPages}}</div>
 
     </div>
 
