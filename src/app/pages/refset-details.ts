@@ -322,6 +322,10 @@ export class RefsetDetails {
         return concept;
     }
 
+    closeConceptDetails() {
+        this.conceptDetail = null;
+    }
+
     onTmcChange($event){
 
     }

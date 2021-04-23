@@ -60,7 +60,7 @@ b, strong {
     font-weight: bold;
 }
 
-// Manual Flex Styles: not using these now, if don't want remove - START --->
+// Manual Flex Styles - START --->
 .refset-tool-inline{
     display: inline;
 }
@@ -99,6 +99,14 @@ b, strong {
 .refset-tool-no-margins{
     margin: 0px;
 }
+.refset-tool-no-padding{
+    margin: 0px;
+    padding: 0px;
+}
+.refset-tool-no-margins-padding{
+    margin: 0px;
+    padding: 0px;
+}
 .refset-tool-flex-no-wrap{
     flex-wrap: nowrap;
 }
@@ -108,7 +116,7 @@ b, strong {
     justify-content: flex-end;
     display: flex;
 }
-// <--- END - not using these now, if don't want remove
+// <--- Manual Flex Styles END 
 
 
 // General Page Styles
@@ -477,14 +485,16 @@ footer.footer a {
     width: 150px;
 }
 
-.refset-tool-details-concept-details-column {
+// Concept Detail Styles
+.refset-tool-concept-details-column {
     background-color: white;
     border-radius: 4px;
     margin-top: 80px;
-
 }
-
-// Concept Detail Styles
+.refset-tool-concept-details-title-name {
+    font-size: 1.25rem;
+    padding: 0px;
+}
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
@@ -497,7 +507,6 @@ footer.footer a {
         width: 20px;
         height: 17px;
     }
-    
 }
 .refset-tool-concept-details-concept-section {
     margin-bottom: 5px;
@@ -571,9 +580,7 @@ footer.footer a {
 
 
 // Refset Details Modal / Info Popup
-.refset-tool-refset-details-title-name{
-    font-size: 1.25rem;
-}
+
 
 .refset-tool-refset-metadata-table{
    margin: 1.5rem 0; 

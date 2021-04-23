@@ -12,7 +12,7 @@
         <div class="col-md-3 page-title">
             Reference Set Details
         </div>
-        <div class="col section-title refset-tool-refset-details-title-name">
+        <div class="col refset-tool-refset-details-title-name">
             {{refsetData?.name}}
             <app-refset-download *ngIf="refsetData?.downloadable" [refset]="refsetData" buttonClasses="refset-tool-title-download"></app-refset-download>
             <button id="title-feedback" mat-icon-button="" aria-hidden="false" aria-label="Open Feedback"
@@ -186,7 +186,7 @@
     </div>
 
     <!-- Section Title -->
-    <div class="section-title refset-tool-refset-details-title-name">
+    <div class="refset-tool-refset-details-title-name">
         Reference Set Members
     </div>
 
@@ -283,11 +283,23 @@
             </div>
 
             <!-- Concept Details Section -->
-            <div class="col-lg-5 refset-tool-details-concept-details-column">
+            <div class="col-lg-5 refset-tool-concept-details-column">
                 <div *ngIf="conceptDetail != null">
 
-                    <div class="section-title refset-tool-refset-details-title-name">
-                        Concept Details
+                    <div class="row align-items-center no-gutters">
+
+                        <div class="col refset-tool-concept-details-title-name">
+                            Concept Details
+                        </div>
+
+                        <div class="col text-right">
+                            <button mat-icon-button
+                                (click)="closeConceptDetails()" aria-hidden="false"
+                                class="refset-tool-table-action-icon"
+                                aria-label="Close Concept Details" title="Close Concept Details">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
                     </div>
                     
                     <!-- Parents Section -->
