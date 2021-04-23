@@ -510,11 +510,11 @@ footer.footer a {
 }
 .refset-tool-concept-details-concept-section {
     margin-bottom: 5px;
+    padding: 0px;
 }
 .refset-tool-concept-details-concept-info-column{
     background-color: $concept_details_color;
     width: 40%;
-    margin-right: 10px;
     color: white;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
@@ -523,6 +523,7 @@ footer.footer a {
     margin-bottom: 5px;
 }
 .refset-tool-concept-details-concept-roles-column{
+    margin-left: 10px;
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
