@@ -372,13 +372,13 @@
                                 </div>
                             </div>
 
-                            <!-- Relationship Section -->
-                            <div class="col refset-tool-concept-details-concept-relationships-column">
+                            <!-- Roles Section -->
+                            <div class="col refset-tool-concept-details-concept-roles-column" *ngIf="false">
                                 <div class="container-fluid">
 
-                                    <div class="row refset-tool-concept-details-relationship-row" *ngFor="let relationship of conceptDetail.relationships">
+                                    <div class="row refset-tool-concept-details-role-row" *ngFor="let role of conceptDetail.roles">
 
-                                        <div class="row refset-tool-concept-details-relationship-details" *ngFor="let detail of relationship">
+                                        <div class="row refset-tool-concept-details-role-details" *ngFor="let detail of role">
                                             {{detail}}
                                         </div>
 
