@@ -19,16 +19,79 @@ const userData: User[] = [
     { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', username: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
 ];
 
+const conceptParents = [];
+
+for (let i = 1; i < 6; i++){
+    conceptParents.push(
+        {name: 'Parent ' + i, type: ''}
+    );
+}
+
+const conceptChildren = [];
+
+for (let i = 1; i < 6; i++){
+    conceptChildren.push(
+        {name: 'Child ' + i, type: ''}
+    );
+}
+
+const conceptRelationships = [];
+
+for (let i = 1; i < 5; i++){
+    conceptRelationships.push(
+        [
+            'Occurrence  >  Congenital',
+            'Pathological process   >  Pathological developmental process',
+            'Finding site  >  Pulmonary valve structure',
+            'Associated morphology  >  Stenosis'
+        ]
+    );
+}
+
+const conceptDescriptions = [];
+
+for (let i = 1; i < 4; i++){
+
+    let term;
+    let language;
+
+    if (i == 1){
+
+        language = 'US English';
+        term = 'Generic Concept';
+    } else if (i == 2){
+
+        language = 'Belgian French';
+        term = 'Concept générique';
+    } else {
+
+        language = 'Flemish';
+        term = 'Generiek concept';
+    }
+
+    conceptDescriptions.push(
+        {languageId: i.toString(), term: term, language: language, type: 'PT'}
+    );
+}
+
 const conceptData = [
-    { code: '49727002', descriptions: [{id: '1', term: 'Cough', language: 'US English', type: 'PT'}, {id: '2', term: 'Toux', language: 'Belgian French', type: 'PT'}, {id: '3', term: 'bevindingen over hoesten', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
-    { code: '84229001', descriptions: [{id: '1', term: 'Fatigue', language: 'US English', type: 'PT'}, {id: '2', term: 'Fatigue', language: 'Belgian French', type: 'PT'}, {id: '3', term: 'vermoeidheid', language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { code: '49727002', relationships: conceptRelationships, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { code: '84229001', relationships: conceptRelationships, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
+
+    const descriptions = JSON.parse(JSON.stringify(conceptDescriptions));
+
+    descriptions.forEach(description => {
+        description.term += ' ' + i.toString();
+    });
+
     conceptData.push(
-        { code: i.toString(), descriptions: [{id: '1', term: 'Generic Concept ' + i, language: 'US English', type: 'PT'}, {id: '2', term: 'Concept générique ' + i, language: 'Belgian French', type: 'PT'}, {id: '3', term: 'Generiek concept ' + i, language: 'Flemish', type: 'PT'}], status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
-    )
+        { code: i.toString(), relationships: conceptRelationships, parents: conceptParents, children: conceptChildren, descriptions: descriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
+    );
 }
+
 const refsetData = [
     { id: '1001', refsetId: '1001', name: 'Refset 1', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
     { id: '1002', refsetId: '1002', name: 'Refset 2', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' },
@@ -40,7 +103,7 @@ const refsetData = [
 for (let i = 6; i < 306; i++){
     refsetData.push(
         { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US'}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
-    )
+    );
 }
 
 @Injectable()

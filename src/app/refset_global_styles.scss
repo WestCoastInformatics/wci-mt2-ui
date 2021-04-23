@@ -112,7 +112,11 @@ b, strong {
 
 
 // General Page Styles
-
+.refset-tool-rounded-borders {
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+}
 
 .refset-tool-page-title-section{
     @extend .refset-tool-flex-row;
@@ -479,7 +483,47 @@ footer.footer a {
 
 }
 
+// Concept Detail Styles
+.refset-tool-concept-details-taxonomy-section {
+    border-color: $concept_details_color;
+    @extend .refset-tool-rounded-borders;
+    margin-bottom: 5px;
+}
+.refset-tool-concept-details-taxonomy-icon {
+    max-width: 30px;
 
+    img {
+        width: 20px;
+        height: 17px;
+    }
+    
+}
+.refset-tool-concept-details-concept-section {
+    margin-bottom: 5px;
+}
+.refset-tool-concept-details-concept-info-column{
+    background-color: $concept_details_color;
+    width: 40%;
+    margin-right: 10px;
+    color: white;
+    border-color: $concept_details_color;
+    @extend .refset-tool-rounded-borders;
+}
+.refset-tool-concept-details-concept-row{
+    margin-bottom: 5px;
+}
+.refset-tool-concept-details-concept-relationships-column{
+    background-color: $concept_details_color;
+    border-color: $concept_details_color;
+    @extend .refset-tool-rounded-borders;
+}
+.refset-tool-concept-details-relationship-row{
+    margin-bottom: 5px;
+    background-color: white;
+    border-color: white;
+    @extend .refset-tool-rounded-borders;
+    padding: 5px;
+}
 
 // Pagination Styles
 .refset-tool-pagination-container{

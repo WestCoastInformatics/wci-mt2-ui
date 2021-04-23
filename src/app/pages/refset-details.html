@@ -280,17 +280,135 @@
 
                 </div>
 
-                <!-- Concept Details Section -->
-                <div class="col refset-tool-details-members-column">
-
-                </div>
             </div>
 
+            <!-- Concept Details Section -->
             <div class="col-lg-5 refset-tool-details-concept-details-column">
-                <div class="section-title refset-tool-refset-details-title-name">
-                    Concept Details
+                <div *ngIf="conceptDetail != null">
+
+                    <div class="section-title refset-tool-refset-details-title-name">
+                        Concept Details
+                    </div>
+                    
+                    <!-- Parents Section -->
+                    <div class="container-fluid refset-tool-concept-details-taxonomy-section">
+
+                        <div class="row">
+                            <div class="refset-tool-concept-details-section-title">Parents</div>
+                        </div>
+
+                        <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetail.parents">
+
+                            <div class="col refset-tool-concept-details-taxonomy-icon">
+                                <img class="" src="/assets/linedTaxonomyIcon.png">
+                            </div>
+
+                            <div class="col refset-tool-concept-details-taxonomy-description">
+                                {{parent.name}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <div class="container-fluid refset-tool-concept-details-concept-section">
+                        <div class="row">
+
+                            <!-- Info Section -->
+                            <div class="col refset-tool-concept-details-concept-info-column">
+                                <div class="container-fluid">
+
+                                    <!-- Name -->
+                                    <div class="row refset-tool-concept-details-concept-title-row">
+                                        
+                                        <div class="col refset-tool-concept-details-concept-name">
+                                            Test Concept Name (Test)
+                                        </div>
+
+                                        <div class="col refset-tool-concept-details-concept-link">
+                                            <button mat-icon-button
+                                                (click)="openMemberHistory()" aria-hidden="false"
+                                                class="refset-tool-concept-details-action-icon"
+                                                aria-label="Open Concept in New SNOMED Browser Window" 
+                                                title="Open Concept in New SNOMED Browser Window">
+                                                <mat-icon>open_in_new</mat-icon>
+                                            </button>
+                                        </div>
+
+                                        
+                                    </div>
+
+                                    <!-- ID -->
+                                    <div class="row refset-tool-concept-details-concept-row">
+                                        
+                                        <div class="col refset-tool-concept-details-concept-id-label">
+                                            SCTID
+                                        </div>
+
+                                        <div class="col refset-tool-concept-details-concept-id-text">
+                                            12345678
+                                        </div>
+                                    </div>
+
+                                    <!-- ECL -->
+                                    <div class="row refset-tool-concept-details-concept-row">
+                                        
+                                        <div class="col refset-tool-concept-details-concept-ecl">
+                                            12345678 | Test Concept Name (Test) |
+                                        </div>
+                                    </div>
+
+                                    <!-- Descriptions -->
+                                    <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDetail.descriptions">
+                                        
+                                        <div class="col refset-tool-concept-details-concept-description-language">
+                                            {{description.language}}
+                                        </div>
+
+                                        <div class="col refset-tool-concept-details-concept-description-text">
+                                            {{description.term}}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <!-- Relationship Section -->
+                            <div class="col refset-tool-concept-details-concept-relationships-column">
+                                <div class="container-fluid">
+
+                                    <div class="row refset-tool-concept-details-relationship-row" *ngFor="let relationship of conceptDetail.relationships">
+
+                                        <div class="row refset-tool-concept-details-relationship-details" *ngFor="let detail of relationship">
+                                            {{detail}}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Children Section -->
+                    <div class="container-fluid refset-tool-concept-details-taxonomy-section">
+
+                        <div class="row">
+                            <div class="refset-tool-concept-details-section-title">Children</div>
+                        </div>
+
+                        <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let child of conceptDetail.children">
+
+                            <div class="col refset-tool-concept-details-taxonomy-icon">
+                                <img class="refset-tool-logo mr-2 p-0" src="/assets/linedTaxonomyIcon.png">
+                            </div>
+
+                            <div class="col refset-tool-concept-details-taxonomy-description">
+                                {{child.name}}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <p>This is where the concept details will be displayed.</p>
             </div>
         </div>
 

@@ -49,6 +49,7 @@ export class RefsetDetails {
     membersGridData: any;
     membersTreeData: any;
     dialog: DialogService;
+    conceptDetail: any = null;
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
@@ -279,10 +280,11 @@ export class RefsetDetails {
             console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
-                selectedId = selectedRow.conceptId;
+                selectedId = selectedRow.code;
                 console.log('Selected Row: ' + selectedId);
             });
 
+            this.conceptDetail = this.getMemberRow(selectedId);
             //this.router.navigate(['/details', selectedId]);
         }
     }
@@ -301,6 +303,23 @@ export class RefsetDetails {
                 this.refsetData.versionNotesShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(this.refsetData.versionNotes), 25);
             }
         }
+    }
+
+    //***** General Functions *****/
+    getMemberRow(memberId: string) {
+
+        let concept;
+
+        for (let i = 0; i < this.membersGridData.length; i++) {
+
+            if (this.membersGridData[i].code == memberId) {
+
+                concept = this.membersGridData[i];
+                break;
+            }
+        }
+
+        return concept;
     }
 
     onTmcChange($event){
