@@ -513,12 +513,12 @@ footer.footer a {
 .refset-tool-concept-details-concept-row{
     margin-bottom: 5px;
 }
-.refset-tool-concept-details-concept-relationships-column{
+.refset-tool-concept-details-concept-roles-column{
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
 }
-.refset-tool-concept-details-relationship-row{
+.refset-tool-concept-details-role-row{
     margin-bottom: 5px;
     background-color: white;
     border-color: white;

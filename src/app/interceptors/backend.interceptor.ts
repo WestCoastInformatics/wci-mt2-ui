@@ -35,10 +35,10 @@ for (let i = 1; i < 6; i++){
     );
 }
 
-const conceptRelationships = [];
+const conceptRoles = [];
 
 for (let i = 1; i < 5; i++){
-    conceptRelationships.push(
+    conceptRoles.push(
         [
             'Occurrence  >  Congenital',
             'Pathological process   >  Pathological developmental process',
@@ -75,8 +75,8 @@ for (let i = 1; i < 4; i++){
 }
 
 const conceptData = [
-    { code: '49727002', relationships: conceptRelationships, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
-    { code: '84229001', relationships: conceptRelationships, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
+    { code: '84229001', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
@@ -88,7 +88,7 @@ for (let i = 0; i < 300; i++){
     });
 
     conceptData.push(
-        { code: i.toString(), relationships: conceptRelationships, parents: conceptParents, children: conceptChildren, descriptions: descriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
+        { code: i.toString(), roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', modified: '2020-01-15' }
     );
 }
 
