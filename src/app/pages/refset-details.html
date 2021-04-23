@@ -9,7 +9,7 @@
     <div class="row refset-title sticky-top">
 
         <!-- Section Title -->
-        <div class="col-md-2 page-title">
+        <div class="col-md-3 page-title">
             Reference Set Details
         </div>
         <div class="col section-title refset-tool-refset-details-title-name">
@@ -200,9 +200,9 @@
 
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
-                    <div class="row justify-content-end">
+                    <div class="row justify-content-start no-gutters">
 
-                        <div class="col-md-6">
+                        <div class="col-md">
                             <mat-form-field appearance="fill">
                                 <mat-label></mat-label>
                                 <mat-select #detailsLanguageSelect [(value)]="selectedLanguage" multiple
@@ -214,7 +214,7 @@
                             </mat-form-field>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md ml-3">
                             <mat-form-field>
                                 <mat-label>Search</mat-label>
                                 <input matInput #detailsSearchInput [(ngModel)]="searchInput">
@@ -222,7 +222,7 @@
                             <span class="clear-search">&#10005;</span>
                         </div>
 
-                        <div class="col-md-auto">
+                        <div class="col-md">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
                                 name="membersListMode" aria-label="Members List Mode"
                                 [(value)]="selectedMemebersListMode">
