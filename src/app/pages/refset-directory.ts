@@ -260,8 +260,8 @@ export class RefsetDirectory {
             console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
-                selectedId = selectedRow.refsetId;
-                console.log('Selected Row: ' + selectedId);
+                selectedId = selectedRow.id;
+                console.log('Selected Row: ' + selectedRow.refsetId);
             });
 
             this.router.navigate(['/details', selectedId]);

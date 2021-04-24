@@ -17,7 +17,10 @@ export class ColumnChooserComponent {
     dialog: DialogService;
     
     columns = [];
+    selectedColumns = [];
     @Input() gridColumnApi;
+    @Input() useDialog: boolean = true;
+    @Input() manualStateRefresh = false;
     @ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;
  
     constructor(
@@ -84,16 +87,40 @@ export class ColumnChooserComponent {
             this.columns = data;
 
             if (data) {
-
-                let state: any = [];
-
-                for (let column of data){
-                    state.push({colId: column.colId, hide: !column.show});
-                }
-
-                this.gridColumnApi.applyColumnState({state: state});
-                //this.changeDetectorRef.detectChanges();
+                this.applyColumns();
             }
         });
+    }
+
+    applyColumns() {
+
+        let state: any = [];
+        this.selectedColumns;
+        this.columns;
+
+        
+
+        for (let column of this.columns){
+
+            if (!this.useDialog){
+
+                let found = false;
+
+                for (let selectedColumn of this.selectedColumns) {
+                    
+                    if (column.colId === selectedColumn.colId) {
+
+                        found = true;
+                        break;
+                    }
+                }
+
+                column.show = found;
+            }
+
+            state.push({colId: column.colId, hide: !column.show});
+        }
+
+        this.gridColumnApi.applyColumnState({state: state});
     }
  }

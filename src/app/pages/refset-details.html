@@ -203,15 +203,7 @@
                     <div class="row justify-content-start no-gutters">
 
                         <div class="col-md">
-                            <mat-form-field appearance="fill">
-                                <mat-label></mat-label>
-                                <mat-select #detailsLanguageSelect [(value)]="selectedLanguage" multiple
-                                    (selectionChange)="changeLanguage()">
-                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
-                                        {{option.display}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+                            <app-column-chooser [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
                         </div>
 
                         <div class="col-md ml-3">
@@ -246,7 +238,7 @@
                         [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
                         [pageSizeOptions]="membersGridPaging.pageSizeOptions" 
                         [totalKnown]="membersGridPaging.totalKnown"
-                        [manualStateRefresh]="membersGridPaging.manualStateRefresh">>
+                        [manualStateRefresh]="membersGridPaging.manualStateRefresh">
                     </app-pagination>
 
                     <!-- Action Templates -->
@@ -333,7 +325,7 @@
                                     <div class="row refset-tool-concept-details-concept-title-row">
                                         
                                         <div class="col refset-tool-concept-details-concept-name">
-                                            Test Concept Name (Test)
+                                            {{conceptDescriptions[0].term}}
                                         </div>
 
                                         <div class="col refset-tool-concept-details-concept-link">
@@ -357,7 +349,7 @@
                                         </div>
 
                                         <div class="col refset-tool-concept-details-concept-id-text">
-                                            12345678
+                                            {{conceptDetail.code}}
                                         </div>
                                     </div>
 
@@ -365,15 +357,15 @@
                                     <div class="row refset-tool-concept-details-concept-row">
                                         
                                         <div class="col refset-tool-concept-details-concept-ecl">
-                                            12345678 | Test Concept Name (Test) |
+                                            {{conceptDetail.code}} | {{conceptDescriptions[0].term}} |
                                         </div>
                                     </div>
 
                                     <!-- Descriptions -->
-                                    <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDetail.descriptions">
+                                    <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
                                         
                                         <div class="col refset-tool-concept-details-concept-description-language">
-                                            {{description.language}}
+                                            {{description.languageName}}
                                         </div>
 
                                         <div class="col refset-tool-concept-details-concept-description-text">

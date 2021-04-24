@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/c
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -24,12 +24,18 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 
 export class RefsetDetails {
 
-    refsetId: string;
+    id: string;
+    refsetId: string = '';
+    refsetLoaded = new Subject<boolean>();
+    refsetLoaded$ = this.refsetLoaded.asObservable()
     searchInput: string;
     versionOptions = [{ value: '3', display: 'Published (2021-01-15)' }, { value: '2', display: 'In Development' }, { value: '1', display: 'Beta (2020-11-23)' }];
     selectedVersion: string = '3';
-    languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
-    selectedLanguage: string[] = ['1', '2'];
+    languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }, { value: '900000000000509007FSN', display: 'EN (PT)' }, { value: '21000172104', display: 'FR (PT)' }, { value: '31000172101', display: 'NL (PT)' }];
+    defaultLanguage: string;
+    selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
+    membersGridChooserManualStateRefresh =  new Boolean(true);
+    useDialog: boolean = false;
     selectedMemebersListMode: string = 'table';
     membersGridApi: any;
     membersGridColumnApi: any;
@@ -50,6 +56,7 @@ export class RefsetDetails {
     membersTreeData: any;
     dialog: DialogService;
     conceptDetail: any = null;
+    conceptDescriptions: any = [];
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
@@ -70,13 +77,53 @@ export class RefsetDetails {
     //***** Framework Functions *****/
     ngOnInit() {
 
-        this.refsetId = this.route.snapshot.paramMap.get('refsetId');
-        this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
+        this.id = this.route.snapshot.paramMap.get('refsetId');
+        
         this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
 
-        this.refsetService.getRefset(this.refsetId).subscribe(results => {
+        this.refsetLoaded$.subscribe(loaded => {
 
+            this.membersGridOptions = {
+                context: { componentParent: this },
+                pagination: true,
+                onGridSizeChanged: UiUtility.resizeGridColumns,
+                suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                suppressPaginationPanel: true,
+                paginationPageSize: this.membersGridPaging.pageSize,
+                cacheBlockSize: this.membersGridPaging.pageSize,
+                maxBlocksInCache: 1,
+                loadingCellRenderer: 'agLoadingOverlay',
+                rowModelType: 'infinite',
+                rowSelection: 'single',
+                onCellClicked: this.onMembersGridCellClick,
+                onGridReady: this.onMembersGridReady,
+                onNewColumnsLoaded: this.onMembersColumnsLoaded.bind(this),
+                frameworkComponents: {
+                    'templateRenderer': TemplateRenderer
+                },
+                defaultColDef: {
+                    sortable: true,
+                    resizable: true,
+                    filter: true,
+                    floatingFilter: true,
+                    floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
+                    suppressMenu: true
+                }
+            };
+    
+            this.showTable = true
+            this.changeDetectorRef.detectChanges();
+        });
+
+        this.refsetService.getRefset(this.id).subscribe(results => {
+
+            this.refsetId = results?.refsetId;
             this.refsetData = results;
+            this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
+
+            if (this.refsetData?.edition?.defaultLanguageRefsets?.length > 0){
+                this.defaultLanguage = this.refsetData?.edition?.defaultLanguageRefsets[0] + 'PT';
+            }
 
             if (CodeUtility.hasValue(this.refsetData)) {
 
@@ -86,49 +133,20 @@ export class RefsetDetails {
 
                 console.log('Error loading refset details data.');
             }
+
+            this.refsetLoaded.next(true);
         });
     }
 
     ngAfterViewInit() {
-
-        this.membersGridOptions = {
-            context: { componentParent: this },
-            pagination: true,
-            onGridSizeChanged: UiUtility.resizeGridColumns,
-            suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-            suppressPaginationPanel: true,
-            paginationPageSize: this.membersGridPaging.pageSize,
-            cacheBlockSize: this.membersGridPaging.pageSize,
-            maxBlocksInCache: 1,
-            loadingCellRenderer: 'agLoadingOverlay',
-            rowModelType: 'infinite',
-            rowSelection: 'single',
-            onCellClicked: this.onMembersGridCellClick,
-            onGridReady: this.onMembersGridReady,
-            frameworkComponents: {
-                'templateRenderer': TemplateRenderer
-            },
-            defaultColDef: {
-                sortable: true,
-                resizable: true,
-                filter: true,
-                floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
-                suppressMenu: true
-            }
-        };
-
-        this.showTable = true
-        this.changeDetectorRef.detectChanges();
     }
 
     //***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
 
-        console.log("In onGridReady", this.actionSection);
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
-        let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
+        //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
         let dataSource = {
             rowCount: null,
@@ -169,7 +187,7 @@ export class RefsetDetails {
                     offset: pageNumber - 1
                 }
 
-                this.refsetService.getMembersList(this.refsetId, restParams).subscribe(results => {
+                this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
 
                     if (results.items.length == 0 && pageNumber > 1) {
 
@@ -186,16 +204,12 @@ export class RefsetDetails {
                         { field: 'code', headerName: 'Concept ID', cellClass: 'refset-tool-details-column-concept-id' }
                     ];
 
-                    if (data.languages){
-                        refsetLanguages = data.languages;
-                    }
+                    for (let i = 0; i < this.languageOptions.length; i++) {
 
-                    for (let i = 0; i < refsetLanguages.length; i++) {
-
-                        let language = refsetLanguages[i];
+                        let language = this.languageOptions[i];
                         let fieldPrefix = 'descriptions[' + i + '].';
 
-                        this.membersColumnDefs.push({ field: i.toString(), colId: 'description' + language.languageId, headerName: language.languageName, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
+                        this.membersColumnDefs.push({ field: i.toString(), colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
@@ -264,6 +278,10 @@ export class RefsetDetails {
 
     }
 
+    onMembersColumnsLoaded() {
+        this.membersGridChooserManualStateRefresh = new Boolean(true);
+    }
+
     descriptionValueGetter = function (params) {
         return params?.data?.descriptions[params.colDef.field]?.term;
     };
@@ -285,6 +303,29 @@ export class RefsetDetails {
             });
 
             this.conceptDetail = this.getMemberRow(selectedId);
+            this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
+                return description != null;
+            });
+
+            // TODO: Take this out when we get parents/children working on backend
+            const conceptParents = [];
+            const conceptChildren = [];
+
+            for (let i = 1; i < 6; i++){
+                conceptParents.push(
+                    {name: 'Parent ' + i, type: ''}
+                );
+            }
+
+            for (let i = 1; i < 6; i++){
+                conceptChildren.push(
+                    {name: 'Child ' + i, type: ''}
+                );
+            }
+
+            this.conceptDetail.parents = conceptParents;
+            this.conceptDetail.children = conceptChildren;
+
             //this.router.navigate(['/details', selectedId]);
         }
     }
