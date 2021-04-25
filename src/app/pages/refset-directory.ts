@@ -52,6 +52,7 @@ export class RefsetDirectory {
     @ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
+    //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
 
     constructor(
@@ -355,6 +356,19 @@ export class RefsetDirectory {
                 refset.feedback = data.feedback;
             }
         });
+    }
+
+    clearSearch() {
+
+        if (this.searchInput != '') {
+
+            this.searchInput = '';
+            this.onSearchChange();
+        }
+    }
+
+    onSearchChange() {
+        this.refsetGridApi.purgeInfiniteCache();
     }
 
 }

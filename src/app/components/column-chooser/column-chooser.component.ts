@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import {ICellRendererParams} from "ag-grid-community";
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
@@ -9,7 +9,8 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
  */
 @Component({
     selector: 'app-column-chooser',
-    templateUrl: './column-chooser.component.html'
+    templateUrl: './column-chooser.component.html',
+    encapsulation: ViewEncapsulation.None
 })
 
 export class ColumnChooserComponent {

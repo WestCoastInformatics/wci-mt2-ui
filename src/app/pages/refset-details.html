@@ -202,19 +202,19 @@
                 <div class="container-fluid pr-0">
                     <div class="row justify-content-start no-gutters">
 
-                        <div class="col-md">
+                        <div class="col-md-3 refset-tool-details-chooser-column">
                             <app-column-chooser [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
                         </div>
 
-                        <div class="col-md ml-3">
-                            <mat-form-field>
+                        <div class="col-lg ml-3">
+                            <mat-form-field id="detailsSearchInputField">
                                 <mat-label>Search</mat-label>
-                                <input matInput #detailsSearchInput [(ngModel)]="searchInput">
+                                <input matInput #detailsSearchInput [(ngModel)]="searchInput" (change)="onSearchChange()">
                             </mat-form-field>
-                            <span class="clear-search">&#10005;</span>
+                            <span class="clear-search" (click)="clearSearch()">&#10005;</span>
                         </div>
 
-                        <div class="col-md">
+                        <div class="col-md-3">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
                                 name="membersListMode" aria-label="Members List Mode"
                                 [(value)]="selectedMemebersListMode">

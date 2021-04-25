@@ -4,10 +4,9 @@
     Choose Columns
 </button>
 
-<mat-form-field *ngIf="!useDialog" appearance="fill" class="refset-tool-column-chooser-field">
-    <mat-label></mat-label>
+<mat-form-field *ngIf="!useDialog" appearance="fill" class="refset-tool-column-chooser-select-field">
     <mat-select #detailsLanguageSelect placeholder="Select Columns" [ngModel]="columns" [(value)]="selectedColumns" multiple
-        (selectionChange)="applyColumns()" class="refset-tool-column-chooser-select">
+        (selectionChange)="applyColumns()" class="refset-tool-column-chooser-select" panelClass="refset-tool-column-chooser-select-panel">
 
         <mat-select-trigger class="trigger">
             Select Columns
@@ -22,8 +21,8 @@
 <!-- Column Chooser Template -->
 <ng-template #columnChooserSection let-data>
 
-    <div class="refset-tool-column-chooser-container" *ngFor="let column of data">
-        <mat-checkbox class="refset-tool-column-chooser-field" [(ngModel)]="column.show">
+    <div class="refset-tool-column-chooser-dialog-container" *ngFor="let column of data">
+        <mat-checkbox class="refset-tool-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
             {{column.name}}
         </mat-checkbox>
     </div>

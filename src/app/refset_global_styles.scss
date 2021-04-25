@@ -410,12 +410,35 @@ footer.footer a {
         margin-bottom: 15px;
     }
 }
+#directorySearchInputField {
+    width: 500px;
+
+    // set this to 20px less than the field to leave room for the cancel 'X'
+    .mat-form-field-flex{
+        width: 480px;
+    }
+}
 #refsetDirectoryPage .outer-table-button{
     margin-top: 23px;
 }
+#directoryViewFilterField.mat-form-field {
+    width: 125px;
+
+    .mat-form-field-flex{
+        width: 125px;
+    }
+}
+
+// Column Chooser Styles
+.mat-form-field.refset-tool-column-chooser-select-field {
+    width: 275px;
+
+    .mat-form-field-flex{
+        width: 275px;
+    }
+}
 
 // Details Page Styles
-
 #refsetDetailsPage .row{
     margin-left: 0px !important;
     margin-right: 0px !important;
@@ -457,6 +480,15 @@ footer.footer a {
     margin-left: 15px;
     margin-right: 15px;
     width: auto;
+}
+
+#detailsSearchInputField {
+    width: 500px;
+
+    // set this to 20px less than the field to leave room for the cancel 'X'
+    .mat-form-field-flex{
+        width: 480px;
+    }
 }
 
 #detailsMemberSection, #detailsMemberSection .refset-tool-details-members-column{
@@ -628,9 +660,9 @@ footer.footer a {
 //}
 
 // Multi-select list
-.mat-form-field-appearance-fill .mat-form-field-flex{
-    width: 420px;
-}
+// .mat-form-field-appearance-fill .mat-form-field-flex{
+//     width: 420px;
+// }
 
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
     color: $cerulean !important;
@@ -650,7 +682,10 @@ footer.footer a {
     position:relative;
     //z-index: 100;
     left: -13px;
-    
+    cursor: pointer;
+    &:hover {
+        color: $delete_color;
+    }
 }
 
 // Table-Tax Button Group

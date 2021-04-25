@@ -421,4 +421,17 @@ export class RefsetDetails {
     openMemberHistory() {
 
     }
+
+    clearSearch() {
+
+        if (this.searchInput != '') {
+
+            this.searchInput = '';
+            this.onSearchChange();
+        }
+    }
+
+    onSearchChange() {
+        this.membersGridApi.purgeInfiniteCache();
+    }
 }

@@ -9,20 +9,19 @@
     <div class="container-fluid">
         <div class="row justify-content-end">
 
-            <div class="col-md-auto" *ngIf="showTable">
-                <app-column-chooser [gridColumnApi]="refsetGridColumnApi"></app-column-chooser>
+            <div class="col-md-auto refset-tool-directory-chooser-column" *ngIf="showTable">
+                <app-column-chooser [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"></app-column-chooser>
             </div>
 
             <div class="col-md-auto">
-                <mat-form-field>
-                    
-                    <mat-label>Search </mat-label>
-                    <input matInput #directorySearchInput [(ngModel)]="searchInput">
+                <mat-form-field id="directorySearchInputField">
+                    <mat-label>Search</mat-label>
+                    <input matInput #directorySearchInput [(ngModel)]="searchInput" (change)="onSearchChange()">
                 </mat-form-field>
-                <span class="clear-search">&#10005;</span>
+                <span class="clear-search" (click)="clearSearch()">&#10005;</span>
             </div>
             <div class="col-md-auto">
-                <mat-form-field appearance="fill">
+                <mat-form-field id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
                     <mat-select #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
                         <mat-option *ngFor="let option of viewOptions" [value]="option.value">
