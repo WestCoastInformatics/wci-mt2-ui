@@ -410,6 +410,10 @@ footer.footer a {
         margin-bottom: 15px;
     }
 }
+
+#refsetDirectoryPage .page-title{
+    padding-top: 30px;
+}
 #directorySearchInputField {
     width: 500px;
 
@@ -468,6 +472,7 @@ footer.footer a {
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 15px;
     z-index: 100;
+    padding-top: 30px;
 }
 
 .refset-tool-details-metadata-footer{
