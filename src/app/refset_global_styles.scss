@@ -452,6 +452,7 @@ footer.footer a {
     padding-left: 15px;
     //padding-top:37px;
     padding-bottom: 15px;
+    font-size: 1.25rem;
 }
 
 #refsetDetailsPage .refset-tool-refset-metadata-column{
@@ -631,8 +632,13 @@ footer.footer a {
 .refset-tool
 
 .refset-tool-refset-metadata-label{
+    font-weight: bold !important;
+    padding-left: 15px !important;
+}
+
+.refset-tool-refset-metadata-table td.refset-tool-refset-metadata-label{
     font-weight: bold;
-    padding-left: 15px;
+    padding-left: 10px;;
 }
 
 .mat-raised-button{
@@ -687,6 +693,7 @@ footer.footer a {
     position:relative;
     //z-index: 100;
     left: -13px;
+    top:-10px;
     cursor: pointer;
     &:hover {
         color: $delete_color;
