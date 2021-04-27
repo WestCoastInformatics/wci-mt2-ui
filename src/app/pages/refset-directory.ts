@@ -82,8 +82,8 @@ export class RefsetDirectory {
             { field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
             { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date' },
-            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date' },
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
             { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
 
@@ -304,6 +304,8 @@ export class RefsetDirectory {
             if (CodeUtility.hasValue(refset.versionNotes)){
                 refset.versionNotesShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(refset.versionNotes), 25);
             }
+
+            refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
         }
 
         let tags = '';

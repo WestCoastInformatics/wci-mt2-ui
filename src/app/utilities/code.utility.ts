@@ -8,7 +8,7 @@ export class CodeUtility {
     static DATE_FORMAT_US_STANDARD_ONLY_NUMBERS = "MMDDYYYY";
     static DATE_FORMAT_US_STANDARD_WITH_TIME = CodeUtility.DATE_FORMAT_US_STANDARD + " " + CodeUtility.TIME_FORMAT;
     static DATE_FORMAT_US_STANDARD_WITH_24_HOUR_TIME = CodeUtility.DATE_FORMAT_US_STANDARD + " " + CodeUtility.TIME_FORMAT_24_HOUR;
-    static DATE_FORMAT_REVERSE = "YYYY/MM/DD";
+    static DATE_FORMAT_REVERSE = "YYYY-MM-DD";
     static DATE_FORMAT_REVERSE_ONLY_NUMBERS = "YYYYMMDD";
     static DATE_FORMAT_REVERSE_WITH_TIME = CodeUtility.DATE_FORMAT_REVERSE + " " + CodeUtility.TIME_FORMAT;
     static DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME = CodeUtility.DATE_FORMAT_REVERSE + " " + CodeUtility.TIME_FORMAT_24_HOUR;
@@ -187,6 +187,34 @@ export class CodeUtility {
                 return word.charAt(0).toUpperCase() + word.substr(1);
             })
             .join(splitter);
+    }
+
+    static parseJsonDate(jsonDate) {
+
+        if (this.hasValue(jsonDate)){
+            
+            let date = moment.unix(jsonDate/1000)
+
+            if (date.isValid()) {
+                return date;
+            } else {
+                return jsonDate;
+            }
+        } else {
+            return jsonDate;
+        }
+        
+    }
+
+    static formatJsonDate(jsonDate: string) {
+
+        let date = this.parseJsonDate(jsonDate);
+
+        if (date !== jsonDate){
+            return date.format(this.DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME);
+        } else {
+            return jsonDate;
+        }
     }
 
     /*

@@ -31,7 +31,7 @@ export class RefsetDetails {
     searchInput: string;
     versionOptions = [{ value: '3', display: 'Published (2021-01-15)' }, { value: '2', display: 'In Development' }, { value: '1', display: 'Beta (2020-11-23)' }];
     selectedVersion: string = '3';
-    languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }, { value: '900000000000509007FSN', display: 'EN (PT)' }, { value: '21000172104', display: 'FR (PT)' }, { value: '31000172101', display: 'NL (PT)' }];
+    languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
     defaultLanguage: string;
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
     membersGridChooserManualStateRefresh =  new Boolean(true);
@@ -120,9 +120,21 @@ export class RefsetDetails {
             this.refsetId = results?.refsetId;
             this.refsetData = results;
             this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
+            let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
+            let languageRefsetOptions = []
+            this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate);
 
-            if (this.refsetData?.edition?.defaultLanguageRefsets?.length > 0){
-                this.defaultLanguage = this.refsetData?.edition?.defaultLanguageRefsets[0] + 'PT';
+            for (let language of languages) {
+
+                if (CodeUtility.testBoolean(language.default)) {
+                    this.defaultLanguage = language.qualifiedLanguageRefset;
+                }
+
+                languageRefsetOptions.push({ value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode });
+            }
+
+            if (languageRefsetOptions.length > 0){
+                this.languageOptions = languageRefsetOptions
             }
 
             if (CodeUtility.hasValue(this.refsetData)) {
@@ -207,13 +219,11 @@ export class RefsetDetails {
                     for (let i = 0; i < this.languageOptions.length; i++) {
 
                         let language = this.languageOptions[i];
-                        let fieldPrefix = 'descriptions[' + i + '].';
-
                         this.membersColumnDefs.push({ field: i.toString(), colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
-                        { field: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date' },
+                        { field: 'memberEffectiveTime', colId: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
                         { field: 'memberStatus', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
                     ]);
 

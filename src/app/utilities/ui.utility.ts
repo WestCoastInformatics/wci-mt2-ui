@@ -16,6 +16,19 @@ export class UiUtility {
     }
 
     /*
+     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined  
+     * @param [object] params - The ag-grid valuegetter params object.
+     */
+    static gridDateValueGetter(params) {
+
+        if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
+            return CodeUtility.formatJsonDate(params.data[params.colDef.field]);
+        } else {
+            return '';
+        }
+    }
+
+    /*
      * getByElementOrSelector - return a element object having been passed either a element object or element selector string
      * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).
      * @return - the element object
