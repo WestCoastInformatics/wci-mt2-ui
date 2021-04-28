@@ -68,6 +68,7 @@ export class RefsetDownloadComponent {
             headerText: `Download Refset ${this.refset.name} (${this.refset.refsetId})`,
             showCancel: true,
             confirmText: 'Download',
+            confirmIcon: 'download',
             template: this.downloadDialog,
             data: {
                 formatOptions: this.formatOptions,

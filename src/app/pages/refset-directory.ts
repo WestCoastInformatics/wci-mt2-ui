@@ -265,7 +265,7 @@ export class RefsetDirectory {
                 console.log('Selected Row: ' + selectedRow.refsetId);
             });
 
-            this.router.navigate(['/details', selectedId]);
+            this.goToDetailsPage(selectedId);
         }
     }
 
@@ -274,6 +274,11 @@ export class RefsetDirectory {
     }
 
     //***** General Functions *****/
+
+    goToDetailsPage(refsetId){
+        this.router.navigate(['/details', refsetId]);
+    }
+
     getRefsetRow(refsetId: string) {
 
         let refset;
@@ -317,7 +322,7 @@ export class RefsetDirectory {
         //refset.tags = CodeUtility.removeFinal(tags, ';');
         const dialogData = {
             dialogId: dialogId,
-            showCancel: false,
+            showCancel: true,
             cancelText: 'Close',
             confirmText: 'View Complete Refset',
             showTitle: false,
@@ -333,6 +338,11 @@ export class RefsetDirectory {
         }
 
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+
+        this.dialog.confirmed().subscribe(data => {
+
+            this.goToDetailsPage(refset.id);
+        });
     }
 
     openFeedback(refsetId: string) {

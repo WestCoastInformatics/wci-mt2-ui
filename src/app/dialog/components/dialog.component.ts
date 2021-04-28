@@ -1,6 +1,7 @@
 import { Component, Inject, TemplateRef, HostListener } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 /**
  * @title Dialog
@@ -16,6 +17,8 @@ export class DialogComponent<T> {
     config: any;
     data: any;
     id: string;
+    confirmIcon: string;
+    cancelIcon: string;
 
     constructor(
         private dialogRef: MatDialogRef<DialogComponent<T>>,
@@ -25,6 +28,14 @@ export class DialogComponent<T> {
         this.config = configData;
         this.data = JSON.parse(JSON.stringify(configData.data));
         delete this.config.data;
+
+        if (CodeUtility.hasValue(this.config.confirmIcon)) {
+            this.confirmIcon = this.data.confirmIcon;
+        }
+
+        if (CodeUtility.hasValue(this.config.cancelIcon)) {
+            this.cancelIcon = this.data.cancelIcon;
+        }
     }
 
     @HostListener("keydown.esc")

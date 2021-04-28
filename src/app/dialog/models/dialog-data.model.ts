@@ -5,7 +5,9 @@ export interface DialogData {
     template: TemplateRef<any>;
     data: any;
     confirmText?: string;
+    confirmIcon?: string;
     cancelText?: string;
+    cancelIcon?: string;
     showCancel?: boolean;
     showTitle?: boolean;
     showCloseIcon?: boolean;
@@ -16,8 +18,10 @@ export const DialogDataDefaults: DialogData = {
     template: undefined,
     data: {},
     confirmText: 'OK',
+    confirmIcon: undefined,
     cancelText: 'Cancel',
+    cancelIcon: undefined,
     showCancel: true,
     showTitle: true,
-    showCloseIcon: false
+    showCloseIcon: true
 }
