@@ -773,7 +773,6 @@ footer.footer a {
     background: #e93848;
     color: white;
     border-radius: 0px;
-    border: 1px solid #e93848;
 }
 
 #downloadDialogActions button{
@@ -794,5 +793,17 @@ footer.footer a {
 }
 
 .delta-row label{
-    padding-left: 15px;
+    padding-left: 0px;
+    padding-right: 3px;
+    font-weight: normal !important;
+    color: $standard_table_data_color;
+}
+
+.delta-row label:last-child{
+    padding-left: 3px;
+}
+
+#downloadLanguageRow .mat-checkbox-layout .mat-checkbox-label{
+    font-weight: normal !important;
+    color: $standard_table_data_color;
 }

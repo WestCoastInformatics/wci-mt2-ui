@@ -89,6 +89,8 @@
             <div class="col refset-tool-download-column-field">
                 
                 <div class="row delta-row">
+                    
+                    <div><label class="in-form-label">From:</label></div>
 
                     <mat-form-field appearance="fill">
                         <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom"
@@ -99,7 +101,7 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <div><label>To:</label></div>
+                    <div><label class="in-form-label">To:</label></div>
 
                     <mat-form-field appearance="fill">
                         <mat-select #downloadComparisonToField [(value)]="data.selectedComparisonTo">

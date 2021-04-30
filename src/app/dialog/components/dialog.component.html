@@ -22,9 +22,9 @@
         </mat-icon>
     </button>
     <button mat-raised-button color="primary" id="{{id}}Confirm" (click)="confirm()">
-        {{config.confirmText}}
         <mat-icon *ngIf="config.confirmIcon" role="img" class="refset-tool-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color"
             aria-hidden="true" data-mat-icon-type="font">{{config.confirmIcon}}
         </mat-icon>
+        {{config.confirmText}}
     </button>
 </div>
