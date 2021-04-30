@@ -9,9 +9,12 @@ import { RestService, RestWrapper } from './rest.service';
 })
 export class RefsetService extends RestService {
 
+    taxonomyRootNode: any;
+
     constructor(http: HttpClient) {
         super(http);
     }
+
 
     getRefsets(params: any): Observable<any> {
         return this.get('/refset/search', params);
@@ -23,6 +26,10 @@ export class RefsetService extends RestService {
 
     getMembersList(refsetId: string, params: any): Observable<any> {
         return this.get('/refset/' + refsetId + '/members', params);
+    }
+
+    getTaxonomyRoot(): Observable<any> {
+        return this.get('/terminology/taxonomyRoot');
     }
 
     

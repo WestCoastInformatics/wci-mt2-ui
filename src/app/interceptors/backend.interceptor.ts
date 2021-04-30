@@ -19,35 +19,6 @@ const userData: User[] = [
     { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', username: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
 ];
 
-const conceptParents = [];
-
-for (let i = 1; i < 6; i++){
-    conceptParents.push(
-        {name: 'Parent ' + i, type: ''}
-    );
-}
-
-const conceptChildren = [];
-
-for (let i = 1; i < 6; i++){
-    conceptChildren.push(
-        {name: 'Child ' + i, type: ''}
-    );
-}
-
-const conceptRoles = [];
-
-for (let i = 1; i < 5; i++){
-    conceptRoles.push(
-        [
-            'Occurrence  >  Congenital',
-            'Pathological process   >  Pathological developmental process',
-            'Finding site  >  Pulmonary valve structure',
-            'Associated morphology  >  Stenosis'
-        ]
-    );
-}
-
 const conceptDescriptions = [];
 
 for (let i = 1; i < 5; i++){
@@ -82,6 +53,89 @@ for (let i = 1; i < 5; i++){
 
     conceptDescriptions.push(
         {descriptionId: i.toString(), term: term, languageId: languageId, languageName: languageName, type: 'PT'}
+    );
+}
+
+const conceptRoles = [];
+
+for (let i = 1; i < 5; i++){
+    conceptRoles.push(
+        [
+            'Occurrence  >  Congenital',
+            'Pathological process   >  Pathological developmental process',
+            'Finding site  >  Pulmonary valve structure',
+            'Associated morphology  >  Stenosis'
+        ]
+    );
+}
+
+const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false };
+taxonomyRootNode.children = populateChildren(taxonomyRootNode);
+
+function populateChildren(concept, level = 1){
+
+    let children = [];
+    let randomNotMember = Math.floor(Math.random() * 5) + 1;
+
+    for (let i = 1; i < 6; i++){
+
+        let thisConcept = {name: 'Concept ' + i + ' Level ' + level, code: '49727002', roles: conceptRoles, parents: getFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true };
+
+        if (i != 2 && i != 4 && level == 1) { 
+
+            thisConcept.hasChildrenRefsetMembers = false;
+            thisConcept.memberOfRefset = false;
+
+        } else if (level > 1 && concept.hasChildrenRefsetMembers == false) {
+
+            thisConcept.hasChildrenRefsetMembers = false;
+            thisConcept.memberOfRefset = false;
+
+        } else if (level > 1 && i == randomNotMember) {
+
+            thisConcept.hasChildrenRefsetMembers = false;
+            thisConcept.memberOfRefset = false;
+        }
+
+        if (level < 5){
+            thisConcept.children = populateChildren(thisConcept, level + 1);
+        }
+
+        children.push(thisConcept);
+    }
+
+    return children;
+}
+
+function getFlatParentList(concept) {
+
+    let parentList = [];
+
+    for (let parent of concept.parents) {
+
+        if (parent.parents.length > 0) {
+            parentList = getFlatParentList(parent.parents[0]);
+        }
+
+        parentList.push(parent);        
+    }
+
+    return parentList;
+}
+
+const conceptParents = [];
+const conceptChildren = [];
+
+for (let i = 1; i < 6; i++){
+    conceptParents.push(
+        {name: 'Parent ' + i, code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
+    );
+}
+
+
+for (let i = 1; i < 6; i++){
+    conceptChildren.push(
+        {name: 'Child ' + i, type: ''}
     );
 }
 
@@ -152,6 +206,8 @@ export class BackendInterceptor implements HttpInterceptor {
                         return concepts();
                     case url.includes('/refset/') && method === 'GET':
                         return refset();
+                    case url.includes('/taxonomyRoot') && method === 'GET':
+                        return rootNode();
                     case url.match(/\/users\/\d+$/) && method === 'GET':
                         return getUserById();
                     default:
@@ -191,12 +247,24 @@ export class BackendInterceptor implements HttpInterceptor {
 
             let rowsThisPage = sortAndFilter(conceptData);
 
+            if (params.displayType && params.displayType == 'taxonomy') {
+                rowsThisPage = taxonomyRootNode.children;
+            } else {
+                rowsThisPage = sortAndFilter(conceptData);
+            }
+
             return ok({
                 totalKnown: true,
                 totalResults: totalResults,
-                languages: [{languageId: '1', languageName: 'US English (PT)'}, {languageId: '2', languageName: 'Belgian French (PT)'}, {languageId: '3', languageName: 'Flemish (PT)'}],
                 items: rowsThisPage
             });
+        }
+
+        function rootNode() {
+
+            let refsetId = Number.parseInt(request.url.substr(request.url.indexOf('/refset/') + 8)) - 1001;
+
+            return ok(taxonomyRootNode);
         }
 
         function refset() {
