@@ -12,6 +12,8 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { TreeOptions } from 'src/app/models/tree-options.model';
+import { TreeNode } from '@circlon/angular-tree-component';
 
 
 /**
@@ -36,7 +38,7 @@ export class RefsetDetails {
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
-    selectedMemebersListMode: string = 'table';
+    selectedMemebersListMode: string = 'table'; //taxonomy
     membersGridApi: any;
     membersGridColumnApi: any;
     membersColumnDefs = [];
@@ -57,6 +59,8 @@ export class RefsetDetails {
     dialog: DialogService;
     conceptDetail: any = null;
     conceptDescriptions: any = [];
+    membersTaxonomyNodes: any[] = [];
+    membersTaxonomyOptions: TreeOptions = {getChildren: this.getTaxonomyChildren};
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
@@ -72,6 +76,7 @@ export class RefsetDetails {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService
     ) {
+        refsetService.getTaxonomyRoot();
     }
 
     //***** Framework Functions *****/
@@ -113,6 +118,10 @@ export class RefsetDetails {
     
             this.showTable = true
             this.changeDetectorRef.detectChanges();
+
+            // taxonomy loading
+            let root = this.refsetService.getTaxonomyRoot();
+            this.loadTaxonomyTree(root);
         });
 
         this.refsetService.getRefset(this.id).subscribe(results => {
@@ -152,6 +161,33 @@ export class RefsetDetails {
 
     ngAfterViewInit() {
     }
+
+    //***** Members Taxonomy Functions  *****/
+    loadTaxonomyTree(startingConcept, depth: number = 1){
+
+        let restParams = {
+            displayType: 'taxonomy',
+            depth: depth,
+            startingConceptId: startingConcept.code
+        };
+
+        this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
+
+            startingConcept.children = results.items;
+            this.membersTaxonomyNodes = [startingConcept];
+        });
+    }
+
+    getTaxonomyChildren(node: TreeNode) {
+
+        let restParams = {
+            displayType: 'taxonomy',
+            depth: 1,
+            startingConceptId: node.data.code
+        };
+
+        return this.refsetService.getMembersList(this.id, restParams);
+      }
 
     //***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {

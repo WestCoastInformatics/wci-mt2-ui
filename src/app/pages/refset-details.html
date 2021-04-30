@@ -227,7 +227,7 @@
                 </div>
 
                 <!-- Members Table -->
-                <div class="container-fluid">
+                <div class="container-fluid" *ngIf="selectedMemebersListMode == 'table'">
 
                     <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid"
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
@@ -270,6 +270,11 @@
 
                     </ng-template>
 
+                </div>
+
+                <!-- Members Taxonomy Tree -->
+                <div class="container-fluid" *ngIf="selectedMemebersListMode == 'taxonomy'">
+                    <app-taxonomy-tree treeId="detailsMembersTaxonomy" [nodes]="membersTaxonomyNodes" [options]="membersTaxonomyOptions"></app-taxonomy-tree>
                 </div>
 
             </div>

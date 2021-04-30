@@ -64,6 +64,7 @@ export class RefsetDirectory {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService
     ) {
+        refsetService.getTaxonomyRoot();
     }
 
     //***** Framework Functions *****/

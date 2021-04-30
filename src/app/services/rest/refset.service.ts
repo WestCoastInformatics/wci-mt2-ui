@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Refset } from 'src/app/models/refset';
 import { Observable } from 'rxjs';
 import { RestService, RestWrapper } from './rest.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RefsetService extends RestService {
 
-    taxonomyRootNode: any;
+    taxonomyRootNode: any = null;
 
     constructor(http: HttpClient) {
         super(http);
@@ -28,9 +29,18 @@ export class RefsetService extends RestService {
         return this.get('/refset/' + refsetId + '/members', params);
     }
 
-    getTaxonomyRoot(): Observable<any> {
-        return this.get('/terminology/taxonomyRoot');
-    }
+    getTaxonomyRoot() {
 
-    
+        if (this.taxonomyRootNode == null){
+
+            this.get('/terminology/taxonomyRoot').subscribe(results => {
+
+                if (CodeUtility.hasValue(results)){
+                    this.taxonomyRootNode = results;
+                }
+            });
+        }
+
+        return JSON.parse(JSON.stringify(this.taxonomyRootNode));
+    }
 }

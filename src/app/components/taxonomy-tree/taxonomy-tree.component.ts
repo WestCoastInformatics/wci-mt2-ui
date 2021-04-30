@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 
 /**
  * Taxonomy data with nested structure.
@@ -31,16 +32,36 @@ const TREE_DATA: ConceptNode[] = [
  */
 @Component({
     selector: 'app-taxonomy-tree',
-    template: '<tree-root [nodes]="nodes" [options]="options"></tree-root>'
+    template: '<tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions"></tree-root>'
 })
 
 export class TaxonomyTreeComponent {
 
-    nodes = TREE_DATA;
-    options = [];
+    configOptions: TreeOptions = {};
 
+    @Input() treeId: string = 'taxonomyTree';
+    @Input() nodes: any[];
+    @Input() options: TreeOptions = {};
+    
     constructor() { 
+
+        this.configOptions = {
+            ...TreeOptionDefaults,
+            ...this.options,
+        };
     }
 
-    hasChild = (_: number, node: ConceptNode) => !!node.children && node.children.length > 0;
+    ngOnChanges(changes: SimpleChanges) {
+
+        for (const propertyName in changes) {
+
+            if (propertyName === 'options') {
+
+                this.configOptions = {
+                    ...TreeOptionDefaults,
+                    ...this.options,
+                };
+            }
+        }
+    }
 }

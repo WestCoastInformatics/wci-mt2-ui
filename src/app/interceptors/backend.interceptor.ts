@@ -12,6 +12,7 @@ import { Concept } from 'src/app/models/concept';
 import { User } from 'src/app/models/user';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { environment } from 'src/environments/environment';
+import { RefsetService } from '../services/rest/refset.service';
 import { UiUtility } from '../utilities/ui.utility';
 
 const userData: User[] = [
@@ -79,7 +80,7 @@ function populateChildren(concept, level = 1){
 
     for (let i = 1; i < 6; i++){
 
-        let thisConcept = {name: 'Concept ' + i + ' Level ' + level, code: '49727002', roles: conceptRoles, parents: getFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true };
+        let thisConcept = {name: 'Concept ' + i + ' Level ' + level, code: level.toString() + '0' + i.toString(), roles: conceptRoles, parents: getFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true };
 
         if (i != 2 && i != 4 && level == 1) { 
 
@@ -261,9 +262,6 @@ export class BackendInterceptor implements HttpInterceptor {
         }
 
         function rootNode() {
-
-            let refsetId = Number.parseInt(request.url.substr(request.url.indexOf('/refset/') + 8)) - 1001;
-
             return ok(taxonomyRootNode);
         }
 
