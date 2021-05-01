@@ -70,7 +70,7 @@ for (let i = 1; i < 5; i++){
     );
 }
 
-const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false };
+const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: conceptDescriptions, root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
 taxonomyRootNode.children = populateChildren(taxonomyRootNode);
 
 function populateChildren(concept, level = 1){
@@ -80,7 +80,13 @@ function populateChildren(concept, level = 1){
 
     for (let i = 1; i < 6; i++){
 
-        let thisConcept = {name: 'Concept ' + i + ' Level ' + level, code: level.toString() + '0' + i.toString(), roles: conceptRoles, parents: getFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true };
+        let parentCode = concept.code;
+
+        if (concept.root) {
+            parentCode = '';
+        }
+
+        let thisConcept = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roles: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
 
         if (i != 2 && i != 4 && level == 1) { 
 
@@ -102,20 +108,96 @@ function populateChildren(concept, level = 1){
             thisConcept.children = populateChildren(thisConcept, level + 1);
         }
 
+        if (!CodeUtility.hasValue(thisConcept.children)) {
+            
+            thisConcept.hasChildren = false;
+            thisConcept.children = null;
+        }
+
         children.push(thisConcept);
     }
 
     return children;
 }
 
-function getFlatParentList(concept) {
+function getTaxonomyConceptChildren(conceptId, level = 1){
+
+    let children = null;
+    let concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
+
+    if (concept != null) {
+
+        if (CodeUtility.hasValue(concept.children)){
+            children = [];
+        }
+
+        for (let child of concept.children) {
+
+            let newChild = CodeUtility.clone(child);
+            newChild.children = null;
+            
+            if (level > 1) {
+                newChild.children = getNestedChildren(child, level - 1);
+            }
+
+            children.push(newChild);
+        }
+    }
+
+    function getNestedChildren(node, level){
+
+        let newTaxonomy = null;
+
+        if (CodeUtility.hasValue(node.children)){
+            newTaxonomy = [];
+        }
+
+        for (let childNode of node.children) {
+
+            let newChild = CodeUtility.clone(childNode);
+            newChild.children = null;
+
+            if (level > 1) {
+                newChild.children = getNestedChildren(childNode, level - 1);
+            }
+
+            newTaxonomy.push(newChild);
+        }
+        
+        return newTaxonomy;
+    }
+
+    return children;
+}
+
+function findTaxonomyConcept(conceptId, nodes) { 
+
+    for (let node of nodes) {
+
+        if (node.code === conceptId){
+            return node;
+        
+        } else if (CodeUtility.hasValue(node.children)) {
+
+            let foundNode = findTaxonomyConcept(conceptId, node.children);
+
+            if (foundNode != null) {
+                return foundNode;
+            }
+        }
+    }
+
+    return null;
+}
+
+function getTaxonomyFlatParentList(concept) {
 
     let parentList = [];
 
     for (let parent of concept.parents) {
 
         if (parent.parents.length > 0) {
-            parentList = getFlatParentList(parent.parents[0]);
+            parentList = getTaxonomyFlatParentList(parent.parents[0]);
         }
 
         parentList.push(parent);        
@@ -249,16 +331,18 @@ export class BackendInterceptor implements HttpInterceptor {
             let rowsThisPage = sortAndFilter(conceptData);
 
             if (params.displayType && params.displayType == 'taxonomy') {
-                rowsThisPage = taxonomyRootNode.children;
+
+                rowsThisPage = getTaxonomyConceptChildren(params.startingConceptId, params.depth);
             } else {
                 rowsThisPage = sortAndFilter(conceptData);
             }
 
-            return ok({
-                totalKnown: true,
-                totalResults: totalResults,
-                items: rowsThisPage
-            });
+            return ok(rowsThisPage);
+            // return ok({
+            //     totalKnown: true,
+            //     totalResults: totalResults,
+            //     items: rowsThisPage
+            // });
         }
 
         function rootNode() {

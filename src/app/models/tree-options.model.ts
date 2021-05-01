@@ -2,18 +2,19 @@ export interface TreeOptions {
     idField?: string;
     isExpandedField?: boolean;
     allowDrop?: boolean;
-    nodeClass?: string;
+    nodeClass?: Function;
     childrenField?: string;
     hasChildrenField?: string;
     getChildren?: Function;
+    onSelect?: Function;
 }
 
 export const TreeOptionDefaults: TreeOptions = {
     idField: 'code',
     isExpandedField: false,
     allowDrop: false,
-    nodeClass: '',
     childrenField: 'children',
     hasChildrenField: 'hasChildren',
     getChildren: null,
+    onSelect: function(event){}
 }

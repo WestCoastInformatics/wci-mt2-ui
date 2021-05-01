@@ -1,5 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
+import { TreeNode } from '@circlon/angular-tree-component';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 /**
  * Taxonomy data with nested structure.
@@ -32,12 +34,13 @@ const TREE_DATA: ConceptNode[] = [
  */
 @Component({
     selector: 'app-taxonomy-tree',
-    template: '<tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions"></tree-root>'
+    template: '<tree-root [id]="treeId" class="refset-tool-taxonomy" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)"></tree-root>'
 })
 
 export class TaxonomyTreeComponent {
 
     configOptions: TreeOptions = {};
+    staticOptions: any = {nodeClass: this.styleNodeClass};
 
     @Input() treeId: string = 'taxonomyTree';
     @Input() nodes: any[];
@@ -46,6 +49,7 @@ export class TaxonomyTreeComponent {
     constructor() { 
 
         this.configOptions = {
+            ...this.staticOptions,
             ...TreeOptionDefaults,
             ...this.options,
         };
@@ -58,10 +62,27 @@ export class TaxonomyTreeComponent {
             if (propertyName === 'options') {
 
                 this.configOptions = {
+                    ...this.staticOptions, 
                     ...TreeOptionDefaults,
                     ...this.options,
                 };
             }
         }
     }
+
+    styleNodeClass(node: TreeNode) {
+
+        let classes = '';
+
+        if (CodeUtility.testBoolean(node.data.hasChildrenRefsetMembers)) {
+            classes += ' refset-tool-taxonomy-relation-members';
+        }
+
+        if (CodeUtility.testBoolean(node.data.memberOfRefset)) {
+            classes += ' refset-tool-taxonomy-is-member';
+        }
+
+        return classes;
+      }
+
 }

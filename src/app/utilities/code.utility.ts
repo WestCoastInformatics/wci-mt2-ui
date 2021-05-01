@@ -155,6 +155,14 @@ export class CodeUtility {
         return doc.body.textContent || "";
      }
 
+    /*
+     * clone - return cloned copy of the object with new object references. Cannot process circular references
+     */
+    static clone(object){
+
+        return JSON.parse(JSON.stringify(object));
+     }
+
      /*
      * textOverflow - return a string up to a certain number of characters with '...' at the end if it excedes the limit.
      */

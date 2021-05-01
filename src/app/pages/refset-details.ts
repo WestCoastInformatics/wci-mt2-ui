@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/c
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -14,6 +14,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { TreeNode } from '@circlon/angular-tree-component';
+import { lastValueFrom } from 'rxjs';
 
 
 /**
@@ -38,7 +39,7 @@ export class RefsetDetails {
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
-    selectedMemebersListMode: string = 'table'; //taxonomy
+    selectedMemebersListMode: string = 'taxonomy'; //taxonomy
     membersGridApi: any;
     membersGridColumnApi: any;
     membersColumnDefs = [];
@@ -60,7 +61,10 @@ export class RefsetDetails {
     conceptDetail: any = null;
     conceptDescriptions: any = [];
     membersTaxonomyNodes: any[] = [];
-    membersTaxonomyOptions: TreeOptions = {getChildren: this.getTaxonomyChildren};
+    membersTaxonomyOptions: TreeOptions = {
+        getChildren: this.getTaxonomyChildren.bind(this), 
+        onSelect: this.onMembersTaxonomySelected.bind(this)
+    };
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
@@ -178,7 +182,7 @@ export class RefsetDetails {
         });
     }
 
-    getTaxonomyChildren(node: TreeNode) {
+    async getTaxonomyChildren(node: TreeNode) {
 
         let restParams = {
             displayType: 'taxonomy',
@@ -186,8 +190,18 @@ export class RefsetDetails {
             startingConceptId: node.data.code
         };
 
-        return this.refsetService.getMembersList(this.id, restParams);
-      }
+        // need to return a promise or the data to the tree, not an observable
+        let results$: Observable<any> = this.refsetService.getMembersList(this.id, restParams);
+        let resultData = await lastValueFrom(results$);
+
+        return resultData; 
+    }
+
+    onMembersTaxonomySelected(event) {
+        
+        let selectedConcept = CodeUtility.clone(event.node.data);
+        this.loadConceptDetail(selectedConcept);
+    }
 
     //***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
@@ -348,29 +362,9 @@ export class RefsetDetails {
                 console.log('Selected Row: ' + selectedId);
             });
 
-            this.conceptDetail = this.getMemberRow(selectedId);
-            this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
-                return description != null;
-            });
-
-            // TODO: Take this out when we get parents/children working on backend
-            const conceptParents = [];
-            const conceptChildren = [];
-
-            for (let i = 1; i < 6; i++){
-                conceptParents.push(
-                    {name: 'Parent ' + i, type: ''}
-                );
-            }
-
-            for (let i = 1; i < 6; i++){
-                conceptChildren.push(
-                    {name: 'Child ' + i, type: ''}
-                );
-            }
-
-            this.conceptDetail.parents = conceptParents;
-            this.conceptDetail.children = conceptChildren;
+            let selectedConcept = this.getMemberRow(selectedId);
+            this.loadConceptDetail(selectedConcept);
+            
 
             //this.router.navigate(['/details', selectedId]);
         }
@@ -407,6 +401,33 @@ export class RefsetDetails {
         }
 
         return concept;
+    }
+
+    loadConceptDetail(concept) {
+
+        this.conceptDetail = concept;
+        this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
+            return description != null;
+        });
+
+        // TODO: Take this out when we get parents/children working on backend
+        const conceptParents = [];
+        const conceptChildren = [];
+
+        for (let i = 1; i < 6; i++){
+            conceptParents.push(
+                {name: 'Parent ' + i, type: ''}
+            );
+        }
+
+        for (let i = 1; i < 6; i++){
+            conceptChildren.push(
+                {name: 'Child ' + i, type: ''}
+            );
+        }
+
+        this.conceptDetail.parents = conceptParents;
+        this.conceptDetail.children = conceptChildren;
     }
 
     closeConceptDetails() {

@@ -527,6 +527,14 @@ footer.footer a {
     width: 150px;
 }
 
+// Taxonomy Styles
+.refset-tool-taxonomy{
+
+    .tree-node .refset-tool-taxonomy-is-member{
+        font-weight: bold;
+    }
+}
+
 // Concept Detail Styles
 .refset-tool-concept-details-column {
     background-color: white;
