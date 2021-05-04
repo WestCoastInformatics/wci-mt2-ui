@@ -77,6 +77,12 @@ function populateChildren(concept, level = 1){
 
     let children = [];
     let randomNotMember = Math.floor(Math.random() * 5) + 1;
+    let randomNotMemberButChildrenAre;
+
+    do {
+        randomNotMemberButChildrenAre = Math.floor(Math.random() * 5) + 1;
+
+    } while (randomNotMember == randomNotMemberButChildrenAre);
 
     for (let i = 1; i < 6; i++){
 
@@ -88,7 +94,7 @@ function populateChildren(concept, level = 1){
 
         let thisConcept = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roles: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
 
-        if (i != 2 && i != 4 && level == 1) { 
+        if (level == 1 && (i == 2 || i == 4)) { 
 
             thisConcept.hasChildrenRefsetMembers = false;
             thisConcept.memberOfRefset = false;
@@ -102,6 +108,10 @@ function populateChildren(concept, level = 1){
 
             thisConcept.hasChildrenRefsetMembers = false;
             thisConcept.memberOfRefset = false;
+
+        } else if (level > 1 && i == randomNotMemberButChildrenAre) {
+
+            thisConcept.memberOfRefset = false;
         }
 
         if (level < 5){
@@ -113,6 +123,8 @@ function populateChildren(concept, level = 1){
             thisConcept.hasChildren = false;
             thisConcept.children = null;
         }
+
+        thisConcept.name = 'Level ' + level + ': Concept ' + level + parentCode + i + '; Member: ' + thisConcept.memberOfRefset + '; Member Children: ' + thisConcept.hasChildrenRefsetMembers;
 
         children.push(thisConcept);
     }

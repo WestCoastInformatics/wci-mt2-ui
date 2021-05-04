@@ -80,6 +80,15 @@ export class TaxonomyTreeComponent {
 
         if (CodeUtility.testBoolean(node.data.memberOfRefset)) {
             classes += ' refset-tool-taxonomy-is-member';
+
+        } else {
+
+            if (CodeUtility.testBoolean(node.data.hasChildrenRefsetMembers)) {
+                classes += ' refset-tool-taxonomy-is-not-member';
+            } else {
+                classes += ' refset-tool-taxonomy-no-members-in-branch';
+            }
+            
         }
 
         return classes;
