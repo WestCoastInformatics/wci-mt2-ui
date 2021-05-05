@@ -29,6 +29,10 @@ export class RefsetService extends RestService {
         return this.get('/refset/' + refsetId + '/members', params);
     }
 
+    downloadRefset(refsetId: string, params: any): Observable<any> {
+        return this.get('/export/' + refsetId + '', params);
+    }
+
     getTaxonomyRoot() {
 
         if (this.taxonomyRootNode == null){

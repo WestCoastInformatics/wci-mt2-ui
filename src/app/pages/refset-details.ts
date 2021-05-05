@@ -115,7 +115,7 @@ export class RefsetDetails {
                     resizable: true,
                     filter: true,
                     floatingFilter: true,
-                    floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
+                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                     suppressMenu: true
                 },
                 rowClassRules: {

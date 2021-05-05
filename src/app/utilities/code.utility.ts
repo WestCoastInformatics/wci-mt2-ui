@@ -237,6 +237,15 @@ export class CodeUtility {
     }
 
     /*
+     * getCurrentDate - get the current date in the specified format.
+     */
+    static getCurrentDate(format = this.DATE_FORMAT_REVERSE) {
+
+        let momentDate = moment();
+        return momentDate.format(format);
+    }
+
+    /*
     * getUrlString - get a properly url-encoded query string of an object.
     */
     static getUrlString(params, keys = [], isArray = false) {

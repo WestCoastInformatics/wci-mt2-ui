@@ -7,6 +7,7 @@ import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { data } from 'jquery';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 
 /**
@@ -41,18 +42,12 @@ export class RefsetDownloadComponent {
     constructor(
         private dialogFactoryService: DialogFactoryService,
         private changeDetectorRef: ChangeDetectorRef,
+        private refsetService: RefsetService,
     ) {
     }
 
     //***** Framework Functions *****/
     ngOnInit() {
-
-        this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'rf2_with_names', display: 'RF2 With Names' }, { value: 'free_set', display: 'Free Set' }, { value: 'sctids', display: 'List Of Sct IDs' }];
-        this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }, { value: 'delta', display: 'Delta' }, { value: 'snapshot_delta', display: 'Snapshot And Delta' }];
-        this.languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
-        this.versionOptions = [{ value: '1', display: 'Latest (In Development)' }, { value: '2', display: '2020-08-23 (Published)' }, { value: '3', display: '2020-01-15 (Beta)' }];
-        this.comparisonFromOptions = this.versionOptions.slice(1);
-        this.comparisonToOptions = this.versionOptions.slice(0, -1);
     }
 
     ngAfterViewInit() {
@@ -61,8 +56,14 @@ export class RefsetDownloadComponent {
     //***** General Functions *****/
     openDownload(refsetId: string) {
 
-        const dialogId = 'downloadDialog';
+        this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'rf2_with_names', display: 'RF2 With Names' }, { value: 'free_set', display: 'Free Set' }, { value: 'sctids', display: 'List Of Sct IDs' }];
+        this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }, { value: 'delta', display: 'Delta' }, { value: 'snapshot_delta', display: 'Snapshot And Delta' }];
+        this.languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
+        this.versionOptions = RefsetUtility.getVersionOptions(this.refset);
+        this.comparisonFromOptions = this.versionOptions.slice(1);
+        this.comparisonToOptions = this.versionOptions.slice(0, -1);
 
+        const dialogId = 'downloadDialog';
         const dialogData = {
             dialogId: dialogId,
             headerText: `Download Refset ${this.refset.name} (${this.refset.refsetId})`,
@@ -93,7 +94,21 @@ export class RefsetDownloadComponent {
         this.dialog.confirmed().subscribe(data => {
 
             if (data) {
-                console.log("Download Data: ", data);
+
+                console.log("Download Form Data: ", data);
+
+                let params = {
+                    exportType: data.selectedContent.toUpperCase(),
+                    fileNameDate: data.selectedVersion.replaceAll('-', ''), // release date of newer version or current date for in development
+                    startEffectiveTime: null,
+                    transientEffectiveTime: data.selectedVersion.replaceAll('-', ''),
+                    branchPath: this.refset.edition.branch + '/' + data.selectedVersion
+                };
+
+                this.refsetService.downloadRefset(this.refset.refsetId, params).subscribe(results => {
+                    console.log("Export Call Results: ", results);
+                    window.open(results);
+                });
             }
         });
     }
