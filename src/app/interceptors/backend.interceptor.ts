@@ -114,7 +114,7 @@ function populateChildren(concept, level = 1){
             thisConcept.memberOfRefset = false;
         }
 
-        if (level < 5){
+        if (level < 3){
             thisConcept.children = populateChildren(thisConcept, level + 1);
         }
 
@@ -122,6 +122,7 @@ function populateChildren(concept, level = 1){
             
             thisConcept.hasChildren = false;
             thisConcept.children = null;
+            thisConcept.hasChildrenRefsetMembers = false;
         }
 
         thisConcept.name = 'Level ' + level + ': Concept ' + level + parentCode + i + '; Member: ' + thisConcept.memberOfRefset + '; Member Children: ' + thisConcept.hasChildrenRefsetMembers;
@@ -349,12 +350,12 @@ export class BackendInterceptor implements HttpInterceptor {
                 rowsThisPage = sortAndFilter(conceptData);
             }
 
-            return ok(rowsThisPage);
-            // return ok({
-            //     totalKnown: true,
-            //     totalResults: totalResults,
-            //     items: rowsThisPage
-            // });
+            //return ok(rowsThisPage);
+            return ok({
+                totalKnown: true,
+                totalResults: totalResults,
+                items: rowsThisPage
+            });
         }
 
         function rootNode() {

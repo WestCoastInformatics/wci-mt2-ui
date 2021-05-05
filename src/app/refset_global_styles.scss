@@ -543,14 +543,30 @@ footer.footer a {
         font-weight: normal;
         color: $inactive_color;
     }
+    .tree-node img {
+        width: 25px;
+        height: 22px;
+        position: relative;
+        right: 6px;
+        top: -3px;
+    }
 
     // Tree Component Overrides
       .toggle-children {
-        background-image: url('data:image/svg+xml;utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2216px%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2218px%22%20fill%3D%22%230099CC%22%3E%3Cpath%20d%3D%22M0%200h24v24H0V0z%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M10%206L8.59%207.41%2013.17%2012l-4.58%204.59L10%2018l6-6-6-6z%22%2F%3E%3C%2Fsvg%3E');
-        //background-image: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="18px" fill="#0099CC"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"/></svg>');
+        background-image: url("/assets/chevron_right_icon.svg");
         height: 35px;
         width: 39px;
         top: -5px;
+      }
+      // used for when there are no children
+      .toggle-children-placeholder {
+        background-image: url("/assets/remove_icon.svg");
+        height: 35px;
+        width: 39px;
+        top: -5px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
       }
 
       tree-viewport{

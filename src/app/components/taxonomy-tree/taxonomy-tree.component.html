@@ -1,0 +1,6 @@
+<tree-root [id]="treeId" class="refset-tool-taxonomy" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)">
+    <ng-template #treeNodeTemplate let-node let-index="index">
+        <img src="/assets/unlinedTaxonomyIcon.png">
+        <span>{{ node.data.name }}</span>
+      </ng-template>
+</tree-root>

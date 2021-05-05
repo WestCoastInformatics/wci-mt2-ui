@@ -34,7 +34,7 @@ const TREE_DATA: ConceptNode[] = [
  */
 @Component({
     selector: 'app-taxonomy-tree',
-    template: '<tree-root [id]="treeId" class="refset-tool-taxonomy" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)"></tree-root>'
+    templateUrl: 'taxonomy-tree.component.html'
 })
 
 export class TaxonomyTreeComponent {

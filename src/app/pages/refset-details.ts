@@ -194,7 +194,7 @@ export class RefsetDetails {
         let results$: Observable<any> = this.refsetService.getMembersList(this.id, restParams);
         let resultData = await lastValueFrom(results$);
 
-        return resultData; 
+        return resultData.items; 
     }
 
     onMembersTaxonomySelected(event) {
