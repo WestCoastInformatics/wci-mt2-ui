@@ -110,7 +110,7 @@ export class RefsetDirectory {
                 resizable: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 suppressMenu: false,
                 menuTabs: ['columnsMenuTab']
             },
@@ -120,7 +120,7 @@ export class RefsetDirectory {
                     var inactivatedRow = false;
     
                     if (params.data){
-                        inactivatedRow = params.data.status.toLowerCase() != 'active';
+                        inactivatedRow = params.data.active == false;
                     }
     
                     return inactivatedRow;

@@ -224,7 +224,7 @@ const conceptChildren = [];
 
 for (let i = 1; i < 6; i++){
     conceptParents.push(
-        {name: 'Parent ' + i, code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
+        {name: 'Parent ' + i, code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
     );
 }
 
@@ -236,8 +236,8 @@ for (let i = 1; i < 6; i++){
 }
 
 const conceptData = [
-    { code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
-    { code: '84229001', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
+    { code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
+    { code: '84229001', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
@@ -248,7 +248,7 @@ for (let i = 0; i < 300; i++){
         description.term += ' ' + i.toString();
     });
 
-    let newConcept = { code: i.toString(), roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' };
+    let newConcept = { code: i.toString(), roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' };
 
     if (i == 4 || i == 6) {
         newConcept.memberStatus = false;
@@ -265,16 +265,16 @@ let fullyQualifiedLanguageRefsets = [
 ]
 
 const refsetData = [
-    { id: '1001', refsetId: '1001', name: 'Refset 1', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
-    { id: '1002', refsetId: '1002', name: 'Refset 2', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets.slice(0, -2)}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' }
+    { id: '1001', refsetId: '723264001', name: 'Lateralizable body structure reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'extensional', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '' },
+    { id: '1002', refsetId: '723563008', name: 'MRCM module scope reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets.slice(0, -2)}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'intensional', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '' }
 ];
 
 for (let i = 3; i < 306; i++){
 
-    let newRefset = { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' };
+    let newRefset = { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' };
     
     if (i == 4 || i == 6) {
-        newRefset.status = 'inactive';
+        newRefset.active = false;
     }
     
     refsetData.push(newRefset);
@@ -325,6 +325,8 @@ export class BackendInterceptor implements HttpInterceptor {
 
                     case url.includes('/refset/members/list') && method === 'GET':
                         return concepts();
+                    case url.includes('/taxonomyRoot') && method === 'GET':
+                        return rootNode();
                     default:
                         // pass through any requests not handled above
                         return next.handle(request); 

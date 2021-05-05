@@ -5,11 +5,17 @@ export class Refset {
     type: string;
     versionStatus: string;
     versionDate: string;
+    moduleId?: string;
+    externalUrl?: string;
+    definitionClauses?: any[];
     narrative?: string;
     versionNotes?: string;
-    isPrivate: boolean;
+    privateRefset: boolean;
+    localSet: boolean;
     tags?: any;
     edition?: string;
     active: boolean;
     lastModifiedDate?: string;
+    downloadable: boolean;
+    feedbackVisible: boolean;
 }

@@ -24,7 +24,7 @@ export class RefsetUtility {
             versionOptions.push(option);
         }
 
-        if (versionOptions.length > 0){
+        if (versionOptions.length == 0){
             versionOptions = CodeUtility.clone(this.mockedVersionOptions);
         }
 
