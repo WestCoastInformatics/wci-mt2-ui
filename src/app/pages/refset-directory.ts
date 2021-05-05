@@ -113,6 +113,18 @@ export class RefsetDirectory {
                 floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
                 suppressMenu: false,
                 menuTabs: ['columnsMenuTab']
+            },
+            rowClassRules: {
+                'refset_tool_grid_inactive_row': function(params) {
+    
+                    var inactivatedRow = false;
+    
+                    if (params.data){
+                        inactivatedRow = params.data.status.toLowerCase() != 'active';
+                    }
+    
+                    return inactivatedRow;
+                }
             }
         };
 
@@ -342,7 +354,9 @@ export class RefsetDirectory {
 
         this.dialog.confirmed().subscribe(data => {
 
-            this.goToDetailsPage(refset.id);
+            if (data) {
+                this.goToDetailsPage(refset.id);
+            }
         });
     }
 

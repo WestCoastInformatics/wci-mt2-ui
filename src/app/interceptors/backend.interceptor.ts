@@ -236,8 +236,8 @@ for (let i = 1; i < 6; i++){
 }
 
 const conceptData = [
-    { code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
-    { code: '84229001', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
+    { code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
+    { code: '84229001', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
@@ -248,9 +248,13 @@ for (let i = 0; i < 300; i++){
         description.term += ' ' + i.toString();
     });
 
-    conceptData.push(
-        { code: i.toString(), roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' }
-    );
+    let newConcept = { code: i.toString(), roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' };
+
+    if (i == 4 || i == 6) {
+        newConcept.memberStatus = false;
+    }
+
+    conceptData.push(newConcept);
 }
 
 let fullyQualifiedLanguageRefsets = [
@@ -266,9 +270,14 @@ const refsetData = [
 ];
 
 for (let i = 3; i < 306; i++){
-    refsetData.push(
-        { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' }
-    );
+
+    let newRefset = { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2020-01-15', modified: '2020-01-15', status: 'active', type: 'extensional', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '' };
+    
+    if (i == 4 || i == 6) {
+        newRefset.status = 'inactive';
+    }
+    
+    refsetData.push(newRefset);
 }
 
 @Injectable()

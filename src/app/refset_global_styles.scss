@@ -289,6 +289,10 @@ footer.footer a {
 // AG Grid Styles
 .refset-tool-ag-grid{
     height: 623px;
+
+    .ag-row.refset_tool_grid_inactive_row{
+        background-color: $inactive_row_color;
+    }
 }
 
 .ag-theme-alpine .ag-header-row{
@@ -541,7 +545,7 @@ footer.footer a {
     }
     .tree-node .refset-tool-taxonomy-no-members-in-branch{
         font-weight: normal;
-        color: $inactive_color;
+        color: $inactive_text_color;
     }
     .tree-node img {
         width: 25px;

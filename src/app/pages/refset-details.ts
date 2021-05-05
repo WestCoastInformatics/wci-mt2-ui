@@ -39,7 +39,7 @@ export class RefsetDetails {
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
-    selectedMemebersListMode: string = 'taxonomy'; //taxonomy
+    selectedMemebersListMode: string = 'table'; //taxonomy
     membersGridApi: any;
     membersGridColumnApi: any;
     membersColumnDefs = [];
@@ -117,6 +117,18 @@ export class RefsetDetails {
                     floatingFilter: true,
                     floatingFilterComponentParams: { placeholder: 'Warehouses', suppressFilterButton: true },
                     suppressMenu: true
+                },
+                rowClassRules: {
+                    'refset_tool_grid_inactive_row': function(params) {
+        
+                        var inactivatedRow = false;
+        
+                        if (params.data){
+                            inactivatedRow = params.data.memberStatus == false;
+                        }
+        
+                        return inactivatedRow;
+                    }
                 }
             };
     

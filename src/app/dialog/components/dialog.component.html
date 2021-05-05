@@ -3,7 +3,7 @@
     <span *ngIf="config.showTitle" id="{{id}}Title"> {{config.headerText}}</span>
 
     <button *ngIf="config.showCloseIcon" mat-icon-button class="refset-tool-close-button" aria-hidden="false"
-        aria-label="Close Dialog" [mat-dialog-close]="true">
+        aria-label="Close Dialog" (click)="cancel()">
         <mat-icon>close</mat-icon>
     </button>
 
