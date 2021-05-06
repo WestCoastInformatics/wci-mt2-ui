@@ -100,14 +100,18 @@ export class RefsetDownloadComponent {
                 let params = {
                     exportType: data.selectedContent.toUpperCase(),
                     fileNameDate: data.selectedVersion.replaceAll('-', ''), // release date of newer version or current date for in development
-                    startEffectiveTime: null,
+                    //startEffectiveTime: null,
                     transientEffectiveTime: data.selectedVersion.replaceAll('-', ''),
                     branchPath: this.refset.edition.branch + '/' + data.selectedVersion
                 };
 
                 this.refsetService.downloadRefset(this.refset.refsetId, params).subscribe(results => {
                     console.log("Export Call Results: ", results);
-                    window.open(results);
+
+                    if (results.url) {
+                        window.open(results.url);
+                    }
+                    
                 });
             }
         });
