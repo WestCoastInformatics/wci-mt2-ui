@@ -204,7 +204,7 @@ export class CodeUtility {
             let date = moment.unix(jsonDate/1000)
 
             if (date.isValid()) {
-                return date;
+                return date.utc();
             } else {
                 return jsonDate;
             }
@@ -214,12 +214,12 @@ export class CodeUtility {
         
     }
 
-    static formatJsonDate(jsonDate: string) {
+    static formatJsonDate(jsonDate: string, format: string = this.DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME) {
 
         let date = this.parseJsonDate(jsonDate);
 
         if (date !== jsonDate){
-            return date.format(this.DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME);
+            return date.format(format);
         } else {
             return jsonDate;
         }

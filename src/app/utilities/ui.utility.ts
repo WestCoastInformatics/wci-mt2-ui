@@ -22,7 +22,14 @@ export class UiUtility {
     static gridDateValueGetter(params) {
 
         if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
-            return CodeUtility.formatJsonDate(params.data[params.colDef.field]);
+
+            let format = null;
+
+            if (params.colDef.field == 'versionDate'){
+                format = CodeUtility.DATE_FORMAT_REVERSE
+            }
+
+            return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
         } else {
             return '';
         }

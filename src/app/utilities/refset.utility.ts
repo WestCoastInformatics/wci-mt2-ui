@@ -6,18 +6,17 @@ export class RefsetUtility {
 
     static getVersionOptions(refset) {
 
-        let versions = [refset.versionDate]; //refset.versionList
         let versionOptions = [];
 
-        for (let version of versions) {
+        for (let version of refset.versionList) {
 
-            let option: any = { value: version, display: version + '(' + refset.versionStatus + ')' };
+            let option: any = { value: version.date, display: version.date + '(' + version.status + ')' };
             
             if (refset.versionStatus.toLowerCase() == 'in development'){
                 option.value = CodeUtility.getCurrentDate();
             }
 
-            if (version === refset.versionDate) {
+            if (version.date === this.getVersionDate(refset)) {
                 option.selected = true;
             }
 
@@ -28,6 +27,19 @@ export class RefsetUtility {
             versionOptions = CodeUtility.clone(this.mockedVersionOptions);
         }
 
-        return versionOptions
+        return versionOptions;
+    }
+
+    static getVersionDate(refset) {
+
+        let date = '';
+
+        if (refset.versionStatus.toLowerCase() == 'in development'){
+            date = CodeUtility.getCurrentDate();
+        } else {
+            date= refset.versionDate;
+        }
+
+        return date;
     }
 }

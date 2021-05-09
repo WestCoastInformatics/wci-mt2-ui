@@ -147,7 +147,7 @@ export class RefsetDetails {
             this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
             let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
             let languageRefsetOptions = []
-            this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate);
+            this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
 
             for (let language of languages) {
 
@@ -184,7 +184,9 @@ export class RefsetDetails {
         let restParams = {
             displayType: 'taxonomy',
             depth: depth,
-            startingConceptId: startingConcept.code
+            startingConceptId: startingConcept.code,
+            offset: 0,
+            limit: 1000
         };
 
         this.refsetService.getMembersList(this.id, restParams).subscribe(results => {

@@ -33,6 +33,7 @@ export class RefsetDownloadComponent {
     showLanguages = false;
     showVersions = false;
     showComparison = false;
+    selectedVersionDate = '';
     
     dialog: DialogService;
 
@@ -63,6 +64,10 @@ export class RefsetDownloadComponent {
         this.comparisonFromOptions = this.versionOptions.slice(1);
         this.comparisonToOptions = this.versionOptions.slice(0, -1);
 
+        if (CodeUtility.hasValue(this.refset.versionDate)) {
+            this.selectedVersionDate = this.refset.versionDate;
+        }
+
         const dialogId = 'downloadDialog';
         const dialogData = {
             dialogId: dialogId,
@@ -79,7 +84,8 @@ export class RefsetDownloadComponent {
                 comparisonFromOptions: this.comparisonFromOptions,
                 comparisonToOptions: this.comparisonToOptions,
                 refsetName: this.refset.name,
-                refsetId: this.refset.refsetId
+                refsetId: this.refset.refsetId,
+                selectedVersion: RefsetUtility.getVersionDate(this.refset)
             }
         }
 
@@ -97,18 +103,31 @@ export class RefsetDownloadComponent {
 
                 console.log("Download Form Data: ", data);
 
+                let fileNameDate: any = this.selectedVersionDate;
+                let branchPath = this.refset.edition.branch;
+
+                if (fileNameDate == '') {
+                    fileNameDate = CodeUtility.getCurrentDate();
+                }
+
+                fileNameDate = fileNameDate.replaceAll('-', '');
+
+                if (this.refset.versionStatus.toLowerCase() != 'in development') {
+                    branchPath += '/' + data.selectedVersion;
+                }
+
                 let params = {
                     exportType: data.selectedContent.toUpperCase(),
-                    fileNameDate: data.selectedVersion.replaceAll('-', ''), // release date of newer version or current date for in development
+                    fileNameDate: fileNameDate, 
                     //startEffectiveTime: null,
-                    transientEffectiveTime: data.selectedVersion.replaceAll('-', ''),
-                    branchPath: this.refset.edition.branch + '/' + data.selectedVersion
+                    transientEffectiveTime: fileNameDate,
+                    branchPath: branchPath 
                 };
 
                 this.refsetService.downloadRefset(this.refset.refsetId, params).subscribe(results => {
                     console.log("Export Call Results: ", results);
 
-                    if (results.url) {
+                    if (results?.url) {
                         window.open(results.url);
                     }
                     
