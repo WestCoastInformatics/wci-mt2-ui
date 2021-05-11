@@ -117,6 +117,7 @@ export class RefsetDownloadComponent {
                 }
 
                 let params = {
+                    format: data.selectedFormat,
                     exportType: data.selectedContent.toUpperCase(),
                     fileNameDate: fileNameDate, 
                     //startEffectiveTime: null,
