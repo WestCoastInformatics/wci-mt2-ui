@@ -85,7 +85,8 @@ export class RefsetDownloadComponent {
                 comparisonToOptions: this.comparisonToOptions,
                 refsetName: this.refset.name,
                 refsetId: this.refset.refsetId,
-                selectedVersion: RefsetUtility.getVersionDate(this.refset)
+                selectedVersion: RefsetUtility.getVersionDate(this.refset),
+                exportMetadata: false
             }
         }
 
@@ -104,7 +105,6 @@ export class RefsetDownloadComponent {
                 console.log("Download Form Data: ", data);
 
                 let fileNameDate: any = this.selectedVersionDate;
-                let branchPath = this.refset.edition.branch;
 
                 if (fileNameDate == '') {
                     fileNameDate = CodeUtility.getCurrentDate();
@@ -112,20 +112,16 @@ export class RefsetDownloadComponent {
 
                 fileNameDate = fileNameDate.replaceAll('-', '');
 
-                if (this.refset.versionStatus.toLowerCase() != 'in development') {
-                    branchPath += '/' + data.selectedVersion;
-                }
-
                 let params = {
                     format: data.selectedFormat,
                     exportType: data.selectedContent.toUpperCase(),
                     fileNameDate: fileNameDate, 
                     //startEffectiveTime: null,
                     transientEffectiveTime: fileNameDate,
-                    branchPath: branchPath 
+                    exportMetadata: data.exportMetadata
                 };
 
-                this.refsetService.downloadRefset(this.refset.refsetId, params).subscribe(results => {
+                this.refsetService.downloadRefset(this.refset.id, params).subscribe(results => {
                     console.log("Export Call Results: ", results);
 
                     if (results?.url) {
