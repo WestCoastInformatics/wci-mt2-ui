@@ -191,6 +191,7 @@ export class RefsetDetails {
 
         this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
 
+            this.setEmptyChildrenNull(results.items);
             startingConcept.children = results.items;
             this.membersTaxonomyNodes = [startingConcept];
         });
@@ -201,14 +202,27 @@ export class RefsetDetails {
         let restParams = {
             displayType: 'taxonomy',
             depth: 1,
-            startingConceptId: node.data.code
+            startingConceptId: node.data.code,
+            offset: 0,
+            limit: 1000
         };
 
         // need to return a promise or the data to the tree, not an observable
         let results$: Observable<any> = this.refsetService.getMembersList(this.id, restParams);
         let resultData = await lastValueFrom(results$);
 
+        this.setEmptyChildrenNull(resultData.items);
         return resultData.items; 
+    }
+
+    setEmptyChildrenNull(conceptList){
+
+        for (let concept of conceptList){
+            
+            if (concept.children != null && concept.children.length == 0){
+                concept.children = null;
+            }
+        }
     }
 
     onMembersTaxonomySelected(event) {
@@ -260,7 +274,8 @@ export class RefsetDetails {
                     query: query,
                     sortModel: rowParams.sortModel,
                     limit: this.membersGridApi.paginationGetPageSize(),
-                    offset: pageNumber - 1
+                    offset: pageNumber - 1,
+                    displayType: 'list'
                 }
 
                 this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
