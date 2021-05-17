@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   restUrl: 'http://localhost:8080',
-  mockRestData: false 
+  mockRestData: true 
 };
 
 /*

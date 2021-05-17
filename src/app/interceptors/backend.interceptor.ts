@@ -307,6 +307,8 @@ export class BackendInterceptor implements HttpInterceptor {
                         return authenticate();
                     case url.endsWith('/concepts') && method === 'GET':
                         return concepts();
+                    case url.includes('/concept/') && method === 'GET':
+                        return memberDetails();
                     case url.includes('/refset/search') && method === 'GET':
                         return refsets();
                     case url.includes('/members') && method === 'GET':
@@ -379,6 +381,45 @@ export class BackendInterceptor implements HttpInterceptor {
             let refsetId = Number.parseInt(request.url.substr(request.url.indexOf('/refset/') + 8)) - 1001;
 
             return ok(refsetData[refsetId]);
+        }
+
+        function memberDetails() {
+
+            let conceptId = request.url.substring(request.url.indexOf('/concept/') + 9, request.url.indexOf('?refsetInternalId'));
+            let concept = null;
+            
+            for (let element of conceptData) { 
+
+                if (element.code === conceptId){
+
+                    concept = element;
+                    break;
+                }
+            };
+
+            if (!CodeUtility.hasValue(concept)) {
+                concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
+            }
+             
+            const conceptParents = [];
+            const conceptChildren = [];
+
+            for (let i = 1; i < 6; i++){
+                conceptParents.push(
+                    {name: 'Parent ' + i, type: ''}
+                );
+            }
+
+            for (let i = 1; i < 6; i++){
+                conceptChildren.push(
+                    {name: 'Child ' + i, type: ''}
+                );
+            }
+
+            concept.parents = conceptParents;
+            concept.children = conceptChildren;
+
+            return ok(concept);
         }
 
         function refsets(numberToReturn: number = 0) {

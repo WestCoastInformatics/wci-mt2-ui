@@ -434,29 +434,16 @@ export class RefsetDetails {
 
     loadConceptDetail(concept) {
 
-        this.conceptDetail = concept;
-        this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
-            return description != null;
+
+        this.refsetService.getMembersDetails(concept.code, {refsetInternalId: this.refsetData.id}).subscribe(results => {
+
+            this.conceptDetail = results;
+            
+            this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
+                return description != null;
+            });
         });
-
-        // TODO: Take this out when we get parents/children working on backend
-        const conceptParents = [];
-        const conceptChildren = [];
-
-        for (let i = 1; i < 6; i++){
-            conceptParents.push(
-                {name: 'Parent ' + i, type: ''}
-            );
-        }
-
-        for (let i = 1; i < 6; i++){
-            conceptChildren.push(
-                {name: 'Child ' + i, type: ''}
-            );
-        }
-
-        this.conceptDetail.parents = conceptParents;
-        this.conceptDetail.children = conceptChildren;
+        
     }
 
     closeConceptDetails() {
