@@ -30,7 +30,7 @@ export class RefsetUtility {
         return versionOptions;
     }
 
-    static getVersionDate(refset) {
+    static getVersionDate(refset): string {
 
         let date = '';
 
@@ -41,5 +41,40 @@ export class RefsetUtility {
         }
 
         return date;
+    }
+
+    static getBranchPath(refset): string {
+
+        let date = '';
+        let branchPath = "";
+        let pathDate = "";
+
+        if (refset.versionDate != null) {
+            pathDate = "/" + refset.versionDate;
+        }
+
+        return branchPath = refset.edition.branch + pathDate;
+    }
+
+    static getStatus(active) {
+
+        let status = 'Active';
+
+        if (!CodeUtility.testBoolean(active)){
+            status = 'Inactive';
+        }
+
+        return status;
+    }
+
+    static getDefinedImage(defined) {
+
+        let image = '/assets/linedTaxonomyIcon.png';
+
+        if (!CodeUtility.testBoolean(defined)){
+            image = '/assets/unlinedTaxonomyIcon.png';
+        }
+
+        return status;
     }
 }

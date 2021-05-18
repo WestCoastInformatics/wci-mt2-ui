@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   restUrl: 'http://localhost:8080',
-  mockRestData: true 
+  snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
+  mockRestData: false 
 };
 
 /*

@@ -1,33 +1,13 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
-import { TreeNode } from '@circlon/angular-tree-component';
+import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { TreeComponent, TreeModel, TreeNode } from '@circlon/angular-tree-component';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 /**
  * Taxonomy data with nested structure.
  * Each node has a name and an optional list of children.
  */
-interface ConceptNode {
-    id: string;
-    name: string;
-    children?: ConceptNode[];
-}
-
-const TREE_DATA: ConceptNode[] = [
-    {
-        id: '138875005',
-        name: 'SNOMED CT Concept (SNOMED RT+CTV3)',
-        children: [
-            { id: '123037004', name: 'Body structure (body structure)', children: [
-                { id: '442083009', name: 'Anatomical or acquired body structure (body structure)' },
-                { id: '278001007', name: 'Nonspecific site (body structure)' },
-                { id: '87100004', name: 'Topography unknown (body structure)' }
-            ]},
-            { id: '404684003', name: 'Clinical finding (finding)' },
-            { id: '272379006', name: 'Event (event)' },
-        ]
-    }
-];
 
 /**
  * @title Tree with nested nodes
@@ -40,13 +20,16 @@ const TREE_DATA: ConceptNode[] = [
 export class TaxonomyTreeComponent {
 
     configOptions: TreeOptions = {};
-    staticOptions: any = {nodeClass: this.styleNodeClass};
+    staticOptions: any = { nodeClass: this.styleNodeClass };
+    refsetUtility = RefsetUtility;
 
     @Input() treeId: string = 'taxonomyTree';
     @Input() nodes: any[];
     @Input() options: TreeOptions = {};
-    
-    constructor() { 
+
+    @ViewChild(TreeComponent) treeComponent: TreeComponent;
+
+    constructor() {
 
         this.configOptions = {
             ...this.staticOptions,
@@ -62,12 +45,19 @@ export class TaxonomyTreeComponent {
             if (propertyName === 'options') {
 
                 this.configOptions = {
-                    ...this.staticOptions, 
+                    ...this.staticOptions,
                     ...TreeOptionDefaults,
                     ...this.options,
                 };
             }
         }
+    }
+
+    onInitTree(event) {
+
+        let treeModel: TreeModel = this.treeComponent.treeModel;
+        let firstNode: TreeNode = treeModel.getFirstRoot();
+        firstNode.expand();
     }
 
     styleNodeClass(node: TreeNode) {
@@ -88,10 +78,10 @@ export class TaxonomyTreeComponent {
             } else {
                 classes += ' refset-tool-taxonomy-no-members-in-branch';
             }
-            
+
         }
 
         return classes;
-      }
+    }
 
 }

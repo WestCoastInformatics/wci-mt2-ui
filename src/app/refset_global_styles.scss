@@ -556,6 +556,9 @@ footer.footer a {
     }
 
     // Tree Component Overrides
+    .toggle-children-wrapper{
+        padding: 0px;
+    }
       .toggle-children {
         background-image: url("/assets/chevron_right_icon.svg");
         height: 35px;

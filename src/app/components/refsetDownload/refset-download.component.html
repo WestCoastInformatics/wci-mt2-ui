@@ -72,7 +72,7 @@
             </div>
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
-                    <mat-select #downloadVersionField [(value)]="data.selectedVersion">
+                    <mat-select #downloadVersionField [(value)]="data.selectedVersion" disabled="true">
                         <mat-option *ngFor="let option of data.versionOptions" [value]="option.value">
                             {{option.display}}
                         </mat-option>
@@ -93,8 +93,7 @@
                     <div><label class="in-form-label">From:</label></div>
 
                     <mat-form-field appearance="fill">
-                        <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom"
-                            (selectionChange)="changeComparisonFrom(data)">
+                        <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom">
                             <mat-option *ngFor="let option of data.comparisonFromOptions" [value]="option.value">
                                 {{option.display}}
                             </mat-option>
@@ -104,7 +103,7 @@
                     <div><label class="in-form-label">To:</label></div>
 
                     <mat-form-field appearance="fill">
-                        <mat-select #downloadComparisonToField [(value)]="data.selectedComparisonTo">
+                        <mat-select #downloadComparisonToField [(value)]="data.selectedComparisonTo" disabled="true">
                             <mat-option *ngFor="let option of data.comparisonToOptions" [value]="option.value">
                                 {{option.display}}
                             </mat-option>

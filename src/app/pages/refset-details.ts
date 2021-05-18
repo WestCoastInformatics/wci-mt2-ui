@@ -13,8 +13,11 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { TreeOptions } from 'src/app/models/tree-options.model';
-import { TreeNode } from '@circlon/angular-tree-component';
+import { TreeComponent, TreeModel, TreeNode } from '@circlon/angular-tree-component';
+import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { lastValueFrom } from 'rxjs';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { environment } from 'src/environments/environment';
 
 
 /**
@@ -32,14 +35,16 @@ export class RefsetDetails {
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable()
     searchInput: string;
-    versionOptions = [{ value: '3', display: 'Published (2021-01-15)' }, { value: '2', display: 'In Development' }, { value: '1', display: 'Beta (2020-11-23)' }];
-    selectedVersion: string = '3';
+    versionOptions: any;
+    selectedVersion: string;
     languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
     defaultLanguage: string;
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
-    selectedMemebersListMode: string = 'table'; //taxonomy
+    selectedMembersListMode: string = 'table'; //taxonomy
+    membersTableDisplay: string = 'block';
+    membersTaxonomyDisplay: string = 'none';
     membersGridApi: any;
     membersGridColumnApi: any;
     membersColumnDefs = [];
@@ -69,6 +74,7 @@ export class RefsetDetails {
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
+    @ViewChild('detailsMembersTaxonomy') membersTaxonomy: TaxonomyTreeComponent;
 
 
     constructor(
@@ -144,10 +150,13 @@ export class RefsetDetails {
 
             this.refsetId = results?.refsetId;
             this.refsetData = results;
+            this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
             this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
             let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
             let languageRefsetOptions = []
             this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
+            this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData);
+            this.selectedVersion = RefsetUtility.getVersionDate(this.refsetData);
 
             for (let language of languages) {
 
@@ -194,6 +203,10 @@ export class RefsetDetails {
             this.setEmptyChildrenNull(results.items);
             startingConcept.children = results.items;
             this.membersTaxonomyNodes = [startingConcept];
+
+            // let treeModel: TreeModel = this.membersTaxonomy.treeComponent.treeModel;
+            // let firstNode: TreeNode = treeModel.getFirstRoot();
+            // firstNode.expand();
         });
     }
 
@@ -497,12 +510,26 @@ export class RefsetDetails {
 
     }
 
+    onChangeMembersListMode() {
+        
+        if (this.selectedMembersListMode == 'table') {
+
+            this.membersTableDisplay = 'block';
+            this.membersTaxonomyDisplay = 'none';
+        } else {
+            this.membersTableDisplay = 'none';
+            this.membersTaxonomyDisplay = 'block';
+        }
+    }
+
     openMemberFeedback() {
 
     }
 
     openMemberHistory() {
 
+        let snomedBrowserUrl = environment['snomedBrowserUrl'] + '&conceptId1=' + this.conceptDetail.code + '&edition=' + RefsetUtility.getBranchPath(this.refsetData);
+        window.open(snomedBrowserUrl);
     }
 
     clearSearch() {

@@ -222,7 +222,8 @@
                         <div class="col-md-3">
                             <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
                                 name="membersListMode" aria-label="Members List Mode"
-                                [(value)]="selectedMemebersListMode">
+                                (change)="onChangeMembersListMode()"
+                                [(ngModel)]="selectedMembersListMode">
                                 <mat-button-toggle value="table">Table</mat-button-toggle>
                                 <mat-button-toggle value="taxonomy">Taxonomy</mat-button-toggle>
                             </mat-button-toggle-group>
@@ -232,7 +233,7 @@
                 </div>
 
                 <!-- Members Table -->
-                <div class="container-fluid" *ngIf="selectedMemebersListMode == 'table'">
+                <div class="container-fluid" [style.display]="membersTableDisplay">
 
                     <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid"
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
@@ -278,8 +279,8 @@
                 </div>
 
                 <!-- Members Taxonomy Tree -->
-                <div class="container-fluid" *ngIf="selectedMemebersListMode == 'taxonomy'">
-                    <app-taxonomy-tree treeId="detailsMembersTaxonomy" [nodes]="membersTaxonomyNodes" [options]="membersTaxonomyOptions"></app-taxonomy-tree>
+                <div class="container-fluid" [style.display]="membersTaxonomyDisplay">
+                    <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [nodes]="membersTaxonomyNodes" [options]="membersTaxonomyOptions"></app-taxonomy-tree>
                 </div>
 
             </div>
@@ -314,7 +315,8 @@
                         <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetail.parents">
 
                             <div class="col refset-tool-concept-details-taxonomy-icon">
-                                <img class="" src="/assets/linedTaxonomyIcon.png">
+                                <img *ngIf="parent.defined" src="/assets/linedTaxonomyIcon.png">
+                                <img *ngIf="!parent.defined" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
                             </div>
 
                             <div class="col refset-tool-concept-details-taxonomy-description">
@@ -338,7 +340,7 @@
                                             {{conceptDescriptions[0].term}}
                                         </div>
 
-                                        <div class="col refset-tool-concept-details-concept-link">
+                                        <div class="col-1 refset-tool-concept-details-concept-link text-right">
                                             <button mat-icon-button
                                                 (click)="openMemberHistory()" aria-hidden="false"
                                                 class="refset-tool-concept-details-action-icon"
@@ -354,7 +356,7 @@
                                     <!-- ID -->
                                     <div class="row refset-tool-concept-details-concept-row">
                                         
-                                        <div class="col refset-tool-concept-details-concept-id-label">
+                                        <div class="col-3 refset-tool-concept-details-concept-id-label">
                                             SCTID
                                         </div>
 
@@ -374,7 +376,7 @@
                                     <!-- Descriptions -->
                                     <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
                                         
-                                        <div class="col refset-tool-concept-details-concept-description-language">
+                                        <div class="col-3 refset-tool-concept-details-concept-description-language">
                                             {{description.languageName}}
                                         </div>
 
@@ -387,8 +389,8 @@
                             </div>
 
                             <!-- Roles Section -->
-                            <div class="col refset-tool-concept-details-concept-roles-column" *ngIf="false">
-                                <div class="container-fluid">
+                            <div class="col refset-tool-concept-details-concept-roles-column">
+                                <div class="container-fluid" *ngIf="false">
 
                                     <div class="row refset-tool-concept-details-role-row" *ngFor="let role of conceptDetail.roles">
 
@@ -413,7 +415,8 @@
                         <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let child of conceptDetail.children">
 
                             <div class="col refset-tool-concept-details-taxonomy-icon">
-                                <img class="refset-tool-logo mr-2 p-0" src="/assets/linedTaxonomyIcon.png">
+                                <img *ngIf="child.defined" src="/assets/linedTaxonomyIcon.png">
+                                <img *ngIf="!child.defined" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
                             </div>
 
                             <div class="col refset-tool-concept-details-taxonomy-description">

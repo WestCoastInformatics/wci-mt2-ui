@@ -10,6 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 
@@ -315,6 +316,7 @@ export class RefsetDirectory {
 
         if (CodeUtility.hasValue(refset)){
 
+            refset.status = RefsetUtility.getStatus(refset.active);
             if (CodeUtility.hasValue(refset.narrative)){
                 refset.narrativeShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(refset.narrative), 25);
             }

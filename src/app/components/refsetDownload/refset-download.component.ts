@@ -58,11 +58,18 @@ export class RefsetDownloadComponent {
     openDownload(refsetId: string) {
 
         this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'rf2_with_names', display: 'RF2 With Names' }, { value: 'free_set', display: 'Free Set' }, { value: 'sctids', display: 'List Of Sct IDs' }];
-        this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }, { value: 'delta', display: 'Delta' }, { value: 'snapshot_delta', display: 'Snapshot And Delta' }];
+        this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
         this.languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
         this.versionOptions = RefsetUtility.getVersionOptions(this.refset);
-        this.comparisonFromOptions = this.versionOptions.slice(1);
-        this.comparisonToOptions = this.versionOptions.slice(0, -1);
+        this.comparisonFromOptions = this.versionOptions;
+        this.comparisonToOptions = this.versionOptions;
+
+        if (this.versionOptions.length > 1) {
+
+            this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }, { value: 'snapshot_delta', display: 'Snapshot And Delta' }]);
+            this.comparisonFromOptions = this.versionOptions.slice(1);
+            this.comparisonToOptions = this.versionOptions.slice(0, -1);
+        }
 
         if (CodeUtility.hasValue(this.refset.versionDate)) {
             this.selectedVersionDate = this.refset.versionDate;
@@ -85,7 +92,9 @@ export class RefsetDownloadComponent {
                 comparisonToOptions: this.comparisonToOptions,
                 refsetName: this.refset.name,
                 refsetId: this.refset.refsetId,
+                selectedContent: 'snapshot',
                 selectedVersion: RefsetUtility.getVersionDate(this.refset),
+                selectedComparisonTo: RefsetUtility.getVersionDate(this.refset),
                 exportMetadata: false
             }
         }
@@ -165,9 +174,7 @@ export class RefsetDownloadComponent {
         if (!CodeUtility.hasValue(formData.selectedContent) || (formData.selectedContent == 'snapshot' || formData.selectedContent == 'snapshot_delta')){
             this.showVersions = true;
         } else {
-
             this.showVersions = false;
-            formData.selectedVersion = '';
         }
     }
 
@@ -179,7 +186,6 @@ export class RefsetDownloadComponent {
 
             this.showComparison = false;
             formData.selectedComparisonFrom = '';
-            formData.selectedComparisonTo = '';
         }
     }
 
