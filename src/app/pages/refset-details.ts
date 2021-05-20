@@ -329,7 +329,7 @@ export class RefsetDetails {
 
                             if (results.totalKnown) {
 
-                                lastRow = results.totalResults;
+                                lastRow = results.total;
 
                             } else if (this.membersGridPaging.totalKnown) {
 

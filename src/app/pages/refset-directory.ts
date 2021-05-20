@@ -212,7 +212,7 @@ export class RefsetDirectory {
 
                             if (results.totalKnown) {
 
-                                lastRow = results.totalResults;
+                                lastRow = results.total;
 
                             } else if (this.refsetGridPaging.totalKnown) {
 
