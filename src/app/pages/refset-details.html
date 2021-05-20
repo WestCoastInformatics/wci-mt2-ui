@@ -315,8 +315,8 @@
                         <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetail.parents">
 
                             <div class="col refset-tool-concept-details-taxonomy-icon">
-                                <img *ngIf="parent.defined" src="/assets/linedTaxonomyIcon.png">
-                                <img *ngIf="!parent.defined" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
+                                <img *ngIf="parent.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
+                                <img *ngIf="!parent.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
                             </div>
 
                             <div class="col refset-tool-concept-details-taxonomy-description">
@@ -336,6 +336,11 @@
                                     <!-- Name -->
                                     <div class="row refset-tool-concept-details-concept-title-row">
                                         
+                                        <div class="col refset-tool-concept-details-taxonomy-icon">
+                                            <img *ngIf="conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
+                                            <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
+                                        </div>
+
                                         <div class="col refset-tool-concept-details-concept-name">
                                             {{conceptDescriptions[0].term}}
                                         </div>

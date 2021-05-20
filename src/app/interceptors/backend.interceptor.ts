@@ -70,7 +70,7 @@ for (let i = 1; i < 5; i++){
     );
 }
 
-const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: conceptDescriptions, root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
+const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: conceptDescriptions, root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
 taxonomyRootNode.children = populateChildren(taxonomyRootNode);
 
 function populateChildren(concept, level = 1){
@@ -92,7 +92,7 @@ function populateChildren(concept, level = 1){
             parentCode = '';
         }
 
-        let thisConcept = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roles: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
+        let thisConcept: any = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roles: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
 
         if (level == 1 && (i == 2 || i == 4)) { 
 
@@ -108,6 +108,7 @@ function populateChildren(concept, level = 1){
 
             thisConcept.hasChildrenRefsetMembers = false;
             thisConcept.memberOfRefset = false;
+            thisConcept.defined = true;
 
         } else if (level > 1 && i == randomNotMemberButChildrenAre) {
 
@@ -367,7 +368,7 @@ export class BackendInterceptor implements HttpInterceptor {
             //return ok(rowsThisPage);
             return ok({
                 totalKnown: true,
-                totalResults: totalResults,
+                total: totalResults,
                 items: rowsThisPage
             });
         }
@@ -444,8 +445,8 @@ export class BackendInterceptor implements HttpInterceptor {
             }
 
             return ok({
-                //totalKnown: false,
-                //totalResults: totalResults,
+                totalKnown: true,
+                total: totalResults,
                 items: rowsThisPage
             });
         }

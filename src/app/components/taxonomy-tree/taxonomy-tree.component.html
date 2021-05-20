@@ -1,7 +1,7 @@
 <tree-root [id]="treeId" class="refset-tool-taxonomy" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)">
     <ng-template #treeNodeTemplate let-node let-index="index">
-        <img *ngIf="node.data.defined" src="/assets/linedTaxonomyIcon.png">
-        <img *ngIf="!node.data.defined" src="/assets/unlinedTaxonomyIcon.png">
+        <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
+        <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png">
         <span>{{ node.data.name }}</span>
       </ng-template>
 </tree-root>
