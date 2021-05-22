@@ -209,15 +209,16 @@ footer.footer a {
 }
 
 // Material Dialog Override Styles
-.mat-dialog-actions{
+.mat-dialog-actions.refset-tool-dialog-actions{
     justify-content: flex-end;
 }
 
-.mat-dialog-title{
+.mat-dialog-title.refset-tool-dialog-title{
     font-size: 20px;
+    display: flex;
 }
 
-.mat-dialog-content{
+.mat-dialog-content.refset-tool-dialog-content{
     //overflow: visible;
 }
 
@@ -270,11 +271,13 @@ footer.footer a {
 }
 
 .refset-tool-close-button{
-    float: right;
-    top:-12px;
-    right:-12px;
-    //color: $delete_color
-    color:$standard_font_color;
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+
+    button {
+        color:$standard_font_color;
+    }
 }
 
 .refset-tool-add{

@@ -75,6 +75,9 @@ export class RefsetDetails {
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
     @ViewChild('detailsMembersTaxonomy') membersTaxonomy: TaxonomyTreeComponent;
+    @ViewChild('refsetFeedbackDialog') refsetFeedbackDialog: TemplateRef<any>;
+    @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
+    @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
 
 
     constructor(
@@ -501,10 +504,62 @@ export class RefsetDetails {
 
     openAuditTrail() {
 
+        const dialogId = 'refsetAuditDialog';
+
+        const dialogData = {
+            headerText: `Refset Audit Trail for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            template: this.refsetAuditDialog,
+            data: this.refsetData
+        }
+
+        const dialogOptions = {
+            id: dialogId
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe(data => {
+        });
     }
 
     openArtifacts() {
 
+        const dialogId = 'refsetArtifactsDialog';
+
+        const dialogData = {
+            headerText: `Refset Artifacts for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            template: this.refsetArtifactsDialog,
+            data: this.refsetData
+        }
+
+        const dialogOptions = {
+            id: dialogId
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe(data => {
+        });
+    }
+
+    openRefsetFeedback() {
+
+        const dialogId = 'refsetFeedbackDialog';
+
+        const dialogData = {
+            headerText: `Refset Feedback for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData
+        }
+
+        const dialogOptions = {
+            id: dialogId
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe(data => {
+        });
     }
 
     changeLanguage() {
