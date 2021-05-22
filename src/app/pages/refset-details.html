@@ -64,7 +64,10 @@
 
                         <tr>
                             <td class="refset-tool-refset-metadata-label">Edition/Extension:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.editionName}}</td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.editionName}}
+                                <img class="refset-tool-edition-flag" src="{{refsetData?.flagIcon}}" *ngIf="refsetData?.flagIcon != ''" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag">
+                            </td>
                         </tr>
 
                         <tr>

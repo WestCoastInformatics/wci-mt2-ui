@@ -77,4 +77,16 @@ export class RefsetUtility {
 
         return status;
     }
+
+    static getEditionFlagIcon(branch: string) {
+
+        let countryCode = branch.toLowerCase().substring(branch.toLowerCase().lastIndexOf('/snomedct-') + 10);
+        let image = '';
+
+        if (countryCode != '' && countryCode != branch.toLowerCase()){
+            image = '/assets/flags/' + countryCode + '.png';
+        }
+
+        return image;
+    }
 }

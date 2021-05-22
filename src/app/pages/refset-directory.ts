@@ -81,7 +81,7 @@ export class RefsetDirectory {
             { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
-            { field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition' },
+            { field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection } },
             { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter },
@@ -263,6 +263,17 @@ export class RefsetDirectory {
 
     }
 
+    editionValueGetter = function (params) {
+
+        if (!CodeUtility.hasValue(params?.data)){
+            return '';
+        }
+
+        let flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
+        params.data.flagIcon = flagIcon;
+        return params?.data?.edition?.name;
+    };
+
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'information' || event.column.colId === 'actions') {
@@ -326,6 +337,7 @@ export class RefsetDirectory {
             }
 
             refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
+            refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
         }
 
         let tags = '';

@@ -157,6 +157,7 @@ export class RefsetDetails {
             this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
             this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData);
             this.selectedVersion = RefsetUtility.getVersionDate(this.refsetData);
+            this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
 
             for (let language of languages) {
 
