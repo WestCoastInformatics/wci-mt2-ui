@@ -40,6 +40,7 @@ export class RefsetDetails {
     languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
     defaultLanguage: string;
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
+    selectedTaxonomyLanguage: string = '900000000000509007PT';
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
     selectedMembersListMode: string = 'table'; //taxonomy
@@ -68,7 +69,8 @@ export class RefsetDetails {
     membersTaxonomyNodes: any[] = [];
     membersTaxonomyOptions: TreeOptions = {
         getChildren: this.getTaxonomyChildren.bind(this), 
-        onSelect: this.onMembersTaxonomySelected.bind(this)
+        onSelect: this.onMembersTaxonomySelected.bind(this),
+        displayField: '0'
     };
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
@@ -165,7 +167,9 @@ export class RefsetDetails {
             for (let language of languages) {
 
                 if (CodeUtility.testBoolean(language.default)) {
+
                     this.defaultLanguage = language.qualifiedLanguageRefset;
+                    this.selectedTaxonomyLanguage = language.qualifiedLanguageRefset;
                 }
 
                 languageRefsetOptions.push({ value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode });
@@ -246,6 +250,13 @@ export class RefsetDetails {
         
         let selectedConcept = CodeUtility.clone(event.node.data);
         this.loadConceptDetail(selectedConcept);
+    }
+
+    changeTaxonomyLanguage(){
+
+        let displayIndex: any = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
+        this.membersTaxonomyOptions.displayField = displayIndex; //'descriptions[' + displayIndex + '].term';
+        this.membersTaxonomyOptions = CodeUtility.clone(this.membersTaxonomyOptions);
     }
 
     //***** Members Grid Functions *****/

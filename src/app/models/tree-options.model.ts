@@ -7,6 +7,7 @@ export interface TreeOptions {
     hasChildrenField?: string;
     getChildren?: Function;
     onSelect?: Function;
+    displayField?: string;
 }
 
 export const TreeOptionDefaults: TreeOptions = {
@@ -16,5 +17,6 @@ export const TreeOptionDefaults: TreeOptions = {
     childrenField: 'children',
     hasChildrenField: 'hasChildren',
     getChildren: null,
+    displayField: 'name',
     onSelect: function(event){}
 }

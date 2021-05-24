@@ -2,6 +2,6 @@
     <ng-template #treeNodeTemplate let-node let-index="index">
         <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
         <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png">
-        <span>{{ node.data.name }}</span>
+        <span>{{ getNodeText(node) }}</span>
       </ng-template>
 </tree-root>

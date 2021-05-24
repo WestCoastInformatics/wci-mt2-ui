@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { TreeComponent, TreeModel, TreeNode } from '@circlon/angular-tree-component';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -29,7 +29,7 @@ export class TaxonomyTreeComponent {
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-    constructor() {
+    constructor(private changeDetectorRef: ChangeDetectorRef,) {
 
         this.configOptions = {
             ...this.staticOptions,
@@ -49,6 +49,8 @@ export class TaxonomyTreeComponent {
                     ...TreeOptionDefaults,
                     ...this.options,
                 };
+
+                this.changeDetectorRef.detectChanges();
             }
         }
     }
@@ -84,4 +86,18 @@ export class TaxonomyTreeComponent {
         return classes;
     }
 
+    getNodeText(node){
+
+        let text = '';
+        let index = node.treeModel.options.options.displayField;
+        let choosenDescription = node.data.descriptions[index];
+
+        if (choosenDescription != null){
+            text = choosenDescription.term;
+        } else {
+            text = node.data.descriptions[0].term;
+        }
+
+        return text;
+    }
 }
