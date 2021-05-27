@@ -157,7 +157,11 @@ export class RefsetDirectory {
                 }
 
                 console.log("^^^^^^ query after viewFilters: " + query);
-                //query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+
+                if (CodeUtility.hasValue(this.searchInput)){
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                }
+                
 
                 let newFilterString = query;
                 let newSortString = JSON.stringify(sort);
