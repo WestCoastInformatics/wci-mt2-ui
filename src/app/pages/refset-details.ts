@@ -80,6 +80,7 @@ export class RefsetDetails {
     @ViewChild('refsetFeedbackDialog') refsetFeedbackDialog: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
+    @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
 
 
     constructor(
@@ -443,7 +444,6 @@ export class RefsetDetails {
         }
     }
 
-    //***** General Functions *****/
     getMemberRow(memberId: string) {
 
         let concept;
@@ -593,10 +593,56 @@ export class RefsetDetails {
 
     }
 
-    openMemberHistory() {
+    openMemberHistory(conceptId) {
 
-        let snomedBrowserUrl = environment['snomedBrowserUrl'] + '&conceptId1=' + this.conceptDetail.code + '&edition=' + RefsetUtility.getBranchPath(this.refsetData);
-        window.open(snomedBrowserUrl);
+        let concept = this.getMemberRow(conceptId);
+
+         this.refsetService.getMemberHistory(this.refsetData.id, conceptId, null).subscribe(results => {
+
+            let historyData: any = {};
+            historyData.name = `${concept.name} (${concept.code})`;
+
+            historyData.columnDefs = [
+                { field: 'version', headerName: 'Version', cellClass: 'refset-tool-member-history-column-version' },
+                { field: 'change', headerName: 'Change', cellClass: 'refset-tool-member-history-column-change' }
+            ];
+            
+            
+            historyData.gridOptions = {
+                pagination: false,
+                onGridSizeChanged: UiUtility.resizeGridColumns,
+                suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                loadingCellRenderer: 'agLoadingOverlay',
+                rowModelType: 'clientSide',
+                rowData: results.items,
+                rowSelection: 'single',
+                defaultColDef: {
+                    sortable: true,
+                    resizable: true,
+                    filter: true,
+                    floatingFilter: true,
+                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                    suppressMenu: true,
+                    menuTabs: ['columnsMenuTab']
+                }
+            };
+
+            const dialogId = 'memberHistoryDialog';
+
+            const dialogData = {
+                headerText: `History By Reference Set Member`,
+                showCancel: false,
+                template: this.memberHistoryDialog,
+                data: historyData,
+            }
+
+            const dialogOptions = {
+                id: dialogId
+            }
+
+            this.dialog = this.dialogFactoryService.open(dialogData);
+        });
+        
     }
 
     clearSearch() {

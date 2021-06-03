@@ -384,7 +384,7 @@ export class RefsetDirectory {
         const dialogId = 'directoryFeedbackDialog';
 
         const dialogData = {
-            headerText: `Refset Feedback for ${refset.name} (${refset.id})`,
+            headerText: `Refset Feedback for ${refset.name} (${refset.refsetId})`,
             template: this.feedbackDialog,
             data: refset
         }

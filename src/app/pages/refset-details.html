@@ -282,7 +282,7 @@
 
                                 <div class="col-2">
                                     <button mat-icon-button *ngIf="params?.data?.historyVisible"
-                                        (click)="openMemberHistory(params.data.conceptId)" aria-hidden="false"
+                                        (click)="openMemberHistory(params.data.code)" aria-hidden="false"
                                         #detailsDownloadIcon class="refset-tool-table-action-icon"
                                         aria-label="Open History" title="Open History">
                                         <mat-icon>history</mat-icon>
@@ -291,7 +291,7 @@
 
                                 <div class="col-2">
                                     <button mat-icon-button *ngIf="params?.data?.feedbackVisible"
-                                        (click)="openMemberFeedback(params.data.conceptId)" aria-hidden="false"
+                                        (click)="openMemberFeedback(params.data.code)" aria-hidden="false"
                                         #detailsFeedbackIcon class="refset-tool-table-action-icon"
                                         aria-label="Open Feedback" title="Open Feedback">
                                         <mat-icon>comment-processing-outline</mat-icon>
@@ -301,6 +301,21 @@
                             </div>
                         </div>
 
+                    </ng-template>
+
+                    <ng-template #memberHistoryDialog let-data>
+                        
+                        <div class="container-fluid">
+
+                            <div class="refset-tool-dialog-name">
+                                {{data.name}}
+                            </div>
+
+                            <ag-grid-angular #memberHistoryTable id="memberHistoryGrid" class="ag-theme-alpine refset-tool-ag-grid"
+                                [columnDefs]="data.columnDefs" [gridOptions]="data.gridOptions">
+                            </ag-grid-angular>
+
+                        </div>
                     </ng-template>
 
                 </div>
