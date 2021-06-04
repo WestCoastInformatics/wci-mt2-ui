@@ -72,7 +72,7 @@ export class RefsetDownloadComponent {
         }
 
         if (CodeUtility.hasValue(this.refset.versionDate)) {
-            this.selectedVersionDate = this.refset.versionDate;
+            this.selectedVersionDate = CodeUtility.formatJsonDate(this.refset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         }
 
         const dialogId = 'downloadDialog';
