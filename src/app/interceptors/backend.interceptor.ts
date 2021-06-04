@@ -70,7 +70,7 @@ for (let i = 1; i < 5; i++){
     );
 }
 
-const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: conceptDescriptions, root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
+const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: [{descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, {descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}], root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
 taxonomyRootNode.children = populateChildren(taxonomyRootNode);
 
 function populateChildren(concept, level = 1){
