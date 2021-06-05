@@ -26,6 +26,7 @@ export class TaxonomyTreeComponent {
     @Input() treeId: string = 'taxonomyTree';
     @Input() nodes: any[];
     @Input() options: TreeOptions = {};
+    @Input() manualStateRefresh = false;
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
@@ -40,9 +41,13 @@ export class TaxonomyTreeComponent {
 
     ngOnChanges(changes: SimpleChanges) {
 
+        if (!CodeUtility.hasValue(this.nodes)) {
+            return;
+        }
+        
         for (const propertyName in changes) {
 
-            if (propertyName === 'options') {
+            if (propertyName === 'options' || propertyName === 'manualStateRefresh') {
 
                 this.configOptions = {
                     ...this.staticOptions,
@@ -94,8 +99,11 @@ export class TaxonomyTreeComponent {
 
         if (choosenDescription != null){
             text = choosenDescription.term;
-        } else {
+            
+        } else if (node.data.descriptions[0] != null) {
             text = node.data.descriptions[0].term;
+        } else {
+            text = node.data.name;
         }
 
         return text;

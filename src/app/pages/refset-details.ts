@@ -67,6 +67,7 @@ export class RefsetDetails {
     conceptDetail: any = null;
     conceptDescriptions: any = [];
     membersTaxonomyNodes: any[] = [];
+    membersTaxonomyManualStateRefresh: Boolean = new Boolean(false);
     membersTaxonomyOptions: TreeOptions = {
         getChildren: this.getTaxonomyChildren.bind(this), 
         onSelect: this.onMembersTaxonomySelected.bind(this),
@@ -257,7 +258,8 @@ export class RefsetDetails {
 
         let displayIndex: any = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
         this.membersTaxonomyOptions.displayField = displayIndex; //'descriptions[' + displayIndex + '].term';
-        this.membersTaxonomyOptions = CodeUtility.clone(this.membersTaxonomyOptions);
+        this.membersTaxonomyManualStateRefresh = new Boolean("true"); //'descriptions[' + displayIndex + '].term';
+        //this.membersTaxonomyOptions = CodeUtility.clone(this.membersTaxonomyOptions);
     }
 
     //***** Members Grid Functions *****/
@@ -277,7 +279,9 @@ export class RefsetDetails {
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                //query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                if (CodeUtility.hasValue(this.searchInput)){
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                }
 
                 let newFilterString = query;
                 let newSortString = JSON.stringify(sort);
@@ -299,12 +303,15 @@ export class RefsetDetails {
                 this.membersGridLastFilter = newFilterString;
                 this.membersGridLastSort = newSortString;
 
-                let restParams = {
-                    query: query,
+                let restParams: any = {
                     sortModel: rowParams.sortModel,
                     limit: this.membersGridApi.paginationGetPageSize(),
                     offset: pageNumber - 1,
                     displayType: 'list'
+                }
+
+                if (CodeUtility.hasValue(query)){
+                    restParams.query = query;
                 }
 
                 this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
