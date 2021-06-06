@@ -24,6 +24,7 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+//import { ToastrModule } from 'ngx-toastr';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
@@ -96,6 +97,7 @@ const appRoutes: Routes = [
         MatButtonModule,
         MatButtonToggleModule,
         MatIconModule,
+        //ToastrModule.forRoot(),
         DialogModule,
         TreeModule,
         AgGridModule.withComponents([TemplateRenderer]),

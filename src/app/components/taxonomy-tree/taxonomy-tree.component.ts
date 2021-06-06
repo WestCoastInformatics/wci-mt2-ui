@@ -40,10 +40,6 @@ export class TaxonomyTreeComponent {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-
-        if (!CodeUtility.hasValue(this.nodes)) {
-            return;
-        }
         
         for (const propertyName in changes) {
 
@@ -61,6 +57,10 @@ export class TaxonomyTreeComponent {
     }
 
     onInitTree(event) {
+
+        if (!CodeUtility.hasValue(this.nodes)) {
+            return;
+        }
 
         let treeModel: TreeModel = this.treeComponent.treeModel;
         let firstNode: TreeNode = treeModel.getFirstRoot();

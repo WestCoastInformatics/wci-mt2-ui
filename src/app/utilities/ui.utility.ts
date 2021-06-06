@@ -1,4 +1,5 @@
 import { CodeUtility } from "./code.utility";
+//import { ToastrService } from 'ngx-toastr';
 
 export class UiUtility {
 
@@ -100,6 +101,88 @@ export class UiUtility {
             element.addClass("ui-state-disabled");
             element.prop("disabled", true);
         }
+    }
+
+    // function to download a file through a REST request
+    static startFileDownload(url, data, fileName, fileExtension, description){
+
+        // This will hold the the file as a local object URL
+        var download_url;
+        var download_notification = null;
+
+        if (!CodeUtility.hasValue(fileName)){
+            fileName = 'export';
+        }
+
+        if (!CodeUtility.hasValue(fileExtension)){
+            fileExtension = 'zip';
+        }
+
+        if (!CodeUtility.hasValue(description)){
+            description = 'export';
+        }
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            xhr: function () {
+
+                var request = $.ajaxSettings.xhr();
+
+                request.addEventListener('readystatechange', function(event) {
+
+                    if(request.readyState == 4) {
+
+                        // Downloaing has finished
+                        download_url = URL.createObjectURL(request.response);
+
+                        var message = '<a href="' + download_url + '" download="' + fileName + '.' + fileExtension + '">Your ' + description + ' is complete. Click this message to download your file.</a>';
+
+                        download_notification.update({message: message});
+
+                        download_notification.$ele.on('click', 'a', function() {
+                            download_notification.close();
+                        });
+
+                        // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
+                        setTimeout(function() {
+
+                            window.URL.revokeObjectURL(download_url);
+                            download_notification.update({type: 'error', message: 'Your ' + description + ' download expired after 5 minutes. Please try again'});
+                        }, 300000);
+                    }
+                });
+
+                request.addEventListener('progress', function(event) {
+
+                    var percent_complete = (event.loaded / event.total) * 100;
+
+                    if (download_notification == null){
+
+                        // download_notification = $.notify({message: 'Your ' + description + ' file is now being saved.', showProgressbar: true, progress: percent_complete}, {
+                        //     type: 'success',
+                        //     delay: 0
+                        // });
+                    } else {
+                        download_notification.update({message: 'Your ' + description + ' file is now being saved.', showProgressbar: true, progress: percent_complete});
+                    }
+                });
+
+                request.responseType = 'blob';
+                return request;
+            },
+            success: function (data) {
+
+                if (data.error) {
+
+                    // $.notify({message: data.error}, {
+                    //     type: 'error',
+                    //     delay: 10000
+                    // });
+                }
+            }
+        });
     }
 
     //***** AG Grid Filter query string formatter Function *****/
