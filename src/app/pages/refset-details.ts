@@ -163,7 +163,7 @@ export class RefsetDetails {
             let languageRefsetOptions = []
             this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
             this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData);
-            this.selectedVersion = RefsetUtility.getVersionDate(this.refsetData);
+            this.selectedVersion = this.id;
             this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
 
             for (let language of languages) {
@@ -517,7 +517,7 @@ export class RefsetDetails {
     }
 
     changeVersion() {
-
+        this.router.navigate(['/details', this.selectedVersion]).then(page => { window.location.reload(); });;
     }
 
     openAuditTrail() {

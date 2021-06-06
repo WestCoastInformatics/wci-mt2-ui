@@ -10,7 +10,7 @@ export class RefsetUtility {
 
         for (let version of refset.versionList) {
 
-            let option: any = { value: version.date, display: version.date + '(' + version.status + ')' };
+            let option: any = { value: version.refsetInternalId, display: version.date + '(' + version.status + ')' };
             
             if (refset.versionStatus.toLowerCase() == 'in development'){
                 option.value = CodeUtility.getCurrentDate();

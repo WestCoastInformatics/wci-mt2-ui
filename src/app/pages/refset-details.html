@@ -37,7 +37,7 @@
 
             <mat-form-field appearance="fill">
                 <mat-label></mat-label>
-                <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion">
+                <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion()">
                     <mat-option *ngFor="let option of versionOptions" [value]="option.value">
                         {{option.display}}
                     </mat-option>
