@@ -64,6 +64,7 @@ export class RefsetDownloadComponent {
         this.versionOptions = RefsetUtility.getVersionOptions(this.refset, 'date');
         this.comparisonFromOptions = this.versionOptions;
         this.comparisonToOptions = this.versionOptions;
+        let versionDate = RefsetUtility.getVersionDate(this.refset);
 
         for (let language of this.refset?.edition?.fullyQualifiedLanguageRefsets) {
             languageRefsetOptions.push({ value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode, selected: true });
@@ -80,9 +81,7 @@ export class RefsetDownloadComponent {
             this.comparisonToOptions = this.versionOptions.slice(0, -1);
         }
 
-        if (CodeUtility.hasValue(this.refset.versionDate)) {
-            this.selectedVersionDate = CodeUtility.formatJsonDate(this.refset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
-        }
+        this.selectedVersionDate = CodeUtility.formatJsonDate(versionDate, CodeUtility.DATE_FORMAT_REVERSE);
 
         const dialogId = 'downloadDialog';
         const dialogData = {
@@ -102,8 +101,8 @@ export class RefsetDownloadComponent {
                 refsetName: this.refset.name,
                 refsetId: this.refset.refsetId,
                 selectedContent: 'snapshot',
-                selectedVersion: RefsetUtility.getVersionDate(this.refset),
-                selectedComparisonTo: RefsetUtility.getVersionDate(this.refset),
+                selectedVersion: this.selectedVersionDate,
+                selectedComparisonTo: this.selectedVersionDate,
                 exportMetadata: false
             }
         }

@@ -80,7 +80,7 @@ export class RefsetDirectory {
         this.columnDefs = [
             { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
             { field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection } },
             { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
