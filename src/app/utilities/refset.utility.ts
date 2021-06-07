@@ -4,13 +4,19 @@ export class RefsetUtility {
 
     static mockedVersionOptions = [{ value: '2021-02-21', display: 'In Development' }, { value: '2021-01-15', display: 'Published (2021-01-15)' }, { value: '2020-11-23', display: 'Beta (2020-11-23)' }];
 
-    static getVersionOptions(refset) {
+    static getVersionOptions(refset, valueField: string = "id") {
 
         let versionOptions = [];
 
         for (let version of refset.versionList) {
 
-            let option: any = { value: version.refsetInternalId, display: version.date + '(' + version.status + ')' };
+            let value = version.refsetInternalId;
+
+            if (valueField == "date") {
+                value = version.date;
+            }
+
+            let option: any = { value: value, display: version.date + '(' + version.status + ')' };
             
             if (refset.versionStatus.toLowerCase() == 'in development'){
                 option.value = CodeUtility.getCurrentDate();

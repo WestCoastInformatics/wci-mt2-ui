@@ -59,10 +59,19 @@ export class RefsetDownloadComponent {
 
         this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'rf2_with_names', display: 'RF2 With Names' }, { value: 'free_set', display: 'Free Set' }, { value: 'sctids', display: 'List Of Sct IDs' }];
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
-        this.languageOptions = [{ value: '1', display: 'US English (PT)' }, { value: '2', display: 'Belgian French (PT)' }, { value: '3', display: 'Flemish (PT)' }];
-        this.versionOptions = RefsetUtility.getVersionOptions(this.refset);
+        this.languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
+        let languageRefsetOptions = [];
+        this.versionOptions = RefsetUtility.getVersionOptions(this.refset, 'date');
         this.comparisonFromOptions = this.versionOptions;
         this.comparisonToOptions = this.versionOptions;
+
+        for (let language of this.refset?.edition?.fullyQualifiedLanguageRefsets) {
+            languageRefsetOptions.push({ value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode, selected: true });
+        }
+
+        if (languageRefsetOptions.length > 0){
+            this.languageOptions = languageRefsetOptions
+        }
 
         if (this.versionOptions.length > 1) {
 

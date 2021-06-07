@@ -160,7 +160,7 @@ export class RefsetDetails {
             this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
             this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
             let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
-            let languageRefsetOptions = []
+            let languageRefsetOptions = [];
             this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
             this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData);
             this.selectedVersion = this.id;
