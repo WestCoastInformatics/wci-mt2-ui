@@ -437,11 +437,11 @@
 
                             <!-- Roles Section -->
                             <div class="col refset-tool-concept-details-concept-roles-column">
-                                <div class="container-fluid" *ngIf="false">
+                                <div class="container-fluid" *ngIf="true">
 
-                                    <div class="row refset-tool-concept-details-role-row" *ngFor="let role of conceptDetail.roles">
+                                    <div class="row refset-tool-concept-details-role-row" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
 
-                                        <div class="row refset-tool-concept-details-role-details" *ngFor="let detail of role">
+                                        <div class="row refset-tool-concept-details-role-details" *ngFor="let detail of role.value">
                                             {{detail}}
                                         </div>
 

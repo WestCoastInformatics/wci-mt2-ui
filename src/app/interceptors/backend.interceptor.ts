@@ -57,20 +57,19 @@ for (let i = 1; i < 5; i++){
     );
 }
 
-const conceptRoles = [];
+const conceptRoles = {};
 
 for (let i = 1; i < 5; i++){
-    conceptRoles.push(
+    conceptRoles[i + ''] =
         [
             'Occurrence  >  Congenital',
             'Pathological process   >  Pathological developmental process',
             'Finding site  >  Pulmonary valve structure',
             'Associated morphology  >  Stenosis'
-        ]
-    );
+        ];
 }
 
-const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roles: conceptRoles, parents: [], children: [], descriptions: [{descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, {descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}], root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
+const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roleGroups: conceptRoles, parents: [], children: [], descriptions: [{descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, {descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}], root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
 taxonomyRootNode.children = populateChildren(taxonomyRootNode);
 
 function populateChildren(concept, level = 1){
@@ -92,7 +91,7 @@ function populateChildren(concept, level = 1){
             parentCode = '';
         }
 
-        let thisConcept: any = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roles: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
+        let thisConcept: any = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roleGroups: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
 
         if (level == 1 && (i == 2 || i == 4)) { 
 
@@ -225,7 +224,7 @@ const conceptChildren = [];
 
 for (let i = 1; i < 6; i++){
     conceptParents.push(
-        {name: 'Parent ' + i, code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
+        {name: 'Parent ' + i, code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
     );
 }
 
@@ -237,8 +236,8 @@ for (let i = 1; i < 6; i++){
 }
 
 const conceptData = [
-    { code: '49727002', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
-    { code: '84229001', roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
+    { code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
+    { code: '84229001', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
@@ -249,7 +248,7 @@ for (let i = 0; i < 300; i++){
         description.term += ' ' + i.toString();
     });
 
-    let newConcept = { code: i.toString(), roles: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' };
+    let newConcept = { code: i.toString(), roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' };
 
     if (i == 4 || i == 6) {
         newConcept.memberStatus = false;

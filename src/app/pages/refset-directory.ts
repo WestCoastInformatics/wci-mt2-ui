@@ -183,12 +183,15 @@ export class RefsetDirectory {
                 this.refsetGridLastFilter = newFilterString;
                 this.refsetGridLastSort = newSortString;
 
-                let restParams = {
-                    query: query,
+                let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: pageNumber - 1,
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
+                }
+
+                if (CodeUtility.hasValue(query)){
+                    restParams.query = query;
                 }
 
                 console.log("^^^^^^ {...restParams, ...sort}: ", {...restParams, ...sort});
