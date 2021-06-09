@@ -61,13 +61,21 @@ export class RefsetDownloadComponent {
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
         this.languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
         let languageRefsetOptions = [];
+        let selectedLanguage = "";
         this.versionOptions = RefsetUtility.getVersionOptions(this.refset, 'date');
         this.comparisonFromOptions = this.versionOptions;
         this.comparisonToOptions = this.versionOptions;
         let versionDate = RefsetUtility.getVersionDate(this.refset);
 
         for (let language of this.refset?.edition?.fullyQualifiedLanguageRefsets) {
-            languageRefsetOptions.push({ value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode, selected: true });
+
+            let optionDetails: any = { value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode };
+
+            if (CodeUtility.testBoolean(language.default)){
+                selectedLanguage = language.qualifiedLanguageRefset;
+            }
+
+            languageRefsetOptions.push(optionDetails);
         }
 
         if (languageRefsetOptions.length > 0){
@@ -102,6 +110,7 @@ export class RefsetDownloadComponent {
                 refsetId: this.refset.refsetId,
                 selectedContent: 'snapshot',
                 selectedVersion: this.selectedVersionDate,
+                selectedLanguage: selectedLanguage,
                 selectedComparisonTo: this.selectedVersionDate,
                 exportMetadata: false
             }
@@ -132,6 +141,7 @@ export class RefsetDownloadComponent {
                 let params = {
                     format: data.selectedFormat,
                     exportType: data.selectedContent.toUpperCase(),
+                    language: data.selectedLanguage,
                     fileNameDate: fileNameDate, 
                     //startEffectiveTime: null,
                     transientEffectiveTime: fileNameDate,
