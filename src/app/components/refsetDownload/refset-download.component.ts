@@ -141,7 +141,7 @@ export class RefsetDownloadComponent {
                 let params = {
                     format: data.selectedFormat,
                     exportType: data.selectedContent.toUpperCase(),
-                    language: data.selectedLanguage,
+                    languageId: data.selectedLanguage,
                     fileNameDate: fileNameDate, 
                     //startEffectiveTime: null,
                     transientEffectiveTime: fileNameDate,
