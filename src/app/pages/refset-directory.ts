@@ -185,7 +185,7 @@ export class RefsetDirectory {
 
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
-                    offset: pageNumber - 1,
+                    offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 }
