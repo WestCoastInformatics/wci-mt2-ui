@@ -262,7 +262,7 @@
                 <!-- Members Table -->
                 <div class="container-fluid" [style.display]="membersTableDisplay">
 
-                    <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid"
+                    <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                         [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
                     </ag-grid-angular>
 

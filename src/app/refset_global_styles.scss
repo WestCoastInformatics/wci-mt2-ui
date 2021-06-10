@@ -373,7 +373,7 @@ footer.footer a {
     .ag-header-row:not(:first-child) .ag-header-cell{
         border-top-color: #eeeeee;
     }
-    .ag-header{
+    &.refset-tool-ag-grid-filter .ag-header{
         height: 110px !important; 
         min-height: 110px !important;
     }
