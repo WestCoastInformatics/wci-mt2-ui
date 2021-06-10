@@ -326,7 +326,7 @@
 
                 <!-- Members Taxonomy Tree -->
                 <div class="container-fluid" [style.display]="membersTaxonomyDisplay">
-                    <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [nodes]="membersTaxonomyNodes" [options]="membersTaxonomyOptions" [manualStateRefresh]="membersTaxonomyManualStateRefresh"></app-taxonomy-tree>
+                    <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="membersTaxonomyRoot" [options]="membersTaxonomyOptions" [manualStateRefresh]="membersTaxonomyManualStateRefresh"></app-taxonomy-tree>
                 </div>
 
             </div>

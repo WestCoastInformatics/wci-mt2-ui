@@ -5,9 +5,9 @@ export interface TreeOptions {
     nodeClass?: Function;
     childrenField?: string;
     hasChildrenField?: string;
-    getChildren?: Function;
     onSelect?: Function;
     displayField?: string;
+    expandFirstNode?: boolean;
 }
 
 export const TreeOptionDefaults: TreeOptions = {
@@ -16,7 +16,7 @@ export const TreeOptionDefaults: TreeOptions = {
     allowDrop: false,
     childrenField: 'children',
     hasChildrenField: 'hasChildren',
-    getChildren: null,
     displayField: 'name',
+    expandFirstNode: true,
     onSelect: function(event){}
 }

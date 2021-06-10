@@ -2,23 +2,16 @@ import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/c
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { Observable, of, Subject } from 'rxjs';
-import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
-import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { TreeOptions } from 'src/app/models/tree-options.model';
-import { TreeComponent, TreeModel, TreeNode } from '@circlon/angular-tree-component';
-import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
-import { lastValueFrom } from 'rxjs';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { environment } from 'src/environments/environment';
-
+import { Subject } from 'rxjs';
 
 /**
  * @title Tree with nested nodes
@@ -66,10 +59,9 @@ export class RefsetDetails {
     dialog: DialogService;
     conceptDetail: any = null;
     conceptDescriptions: any = [];
-    membersTaxonomyNodes: any[] = [];
+    membersTaxonomyRoot: any[] = [];
     membersTaxonomyManualStateRefresh: Boolean = new Boolean(false);
     membersTaxonomyOptions: TreeOptions = {
-        getChildren: this.getTaxonomyChildren.bind(this), 
         onSelect: this.onMembersTaxonomySelected.bind(this),
         displayField: '0'
     };
@@ -77,7 +69,6 @@ export class RefsetDetails {
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
-    @ViewChild('detailsMembersTaxonomy') membersTaxonomy: TaxonomyTreeComponent;
     @ViewChild('refsetFeedbackDialog') refsetFeedbackDialog: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
@@ -150,8 +141,7 @@ export class RefsetDetails {
             this.changeDetectorRef.detectChanges();
 
             // taxonomy loading
-            let root = this.refsetService.getTaxonomyRoot();
-            this.loadTaxonomyTree(root);
+            this.membersTaxonomyRoot = this.refsetService.getTaxonomyRoot();
         });
 
         this.refsetService.getRefset(this.id).subscribe(results => {
@@ -195,60 +185,7 @@ export class RefsetDetails {
         });
     }
 
-    ngAfterViewInit() {
-    }
-
     //***** Members Taxonomy Functions  *****/
-    loadTaxonomyTree(startingConcept, depth: number = 1){
-
-        let restParams = {
-            displayType: 'taxonomy',
-            depth: depth,
-            startingConceptId: startingConcept.code,
-            offset: 0,
-            limit: 1000
-        };
-
-        this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
-
-            this.setEmptyChildrenNull(results.items);
-            startingConcept.children = results.items;
-            this.membersTaxonomyNodes = [startingConcept];
-
-            // let treeModel: TreeModel = this.membersTaxonomy.treeComponent.treeModel;
-            // let firstNode: TreeNode = treeModel.getFirstRoot();
-            // firstNode.expand();
-        });
-    }
-
-    async getTaxonomyChildren(node: TreeNode) {
-
-        let restParams = {
-            displayType: 'taxonomy',
-            depth: 1,
-            startingConceptId: node.data.code,
-            offset: 0,
-            limit: 1000
-        };
-
-        // need to return a promise or the data to the tree, not an observable
-        let results$: Observable<any> = this.refsetService.getMembersList(this.id, restParams);
-        let resultData = await lastValueFrom(results$);
-
-        this.setEmptyChildrenNull(resultData.items);
-        return resultData.items; 
-    }
-
-    setEmptyChildrenNull(conceptList){
-
-        for (let concept of conceptList){
-            
-            if (concept.children != null && concept.children.length == 0){
-                concept.children = null;
-            }
-        }
-    }
-
     onMembersTaxonomySelected(event) {
         
         let selectedConcept = CodeUtility.clone(event.node.data);
@@ -258,9 +195,8 @@ export class RefsetDetails {
     changeTaxonomyLanguage(){
 
         let displayIndex: any = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
-        this.membersTaxonomyOptions.displayField = displayIndex; //'descriptions[' + displayIndex + '].term';
-        this.membersTaxonomyManualStateRefresh = new Boolean("true"); //'descriptions[' + displayIndex + '].term';
-        //this.membersTaxonomyOptions = CodeUtility.clone(this.membersTaxonomyOptions);
+        this.membersTaxonomyOptions.displayField = displayIndex;
+        this.membersTaxonomyManualStateRefresh = new Boolean("true"); 
     }
 
     //***** Members Grid Functions *****/

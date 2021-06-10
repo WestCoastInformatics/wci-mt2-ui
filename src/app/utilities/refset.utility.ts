@@ -95,4 +95,14 @@ export class RefsetUtility {
 
         return image;
     }
+
+    static setEmptyChildrenNull(conceptList){
+
+        for (let concept of conceptList){
+            
+            if (concept.children != null && concept.children.length == 0){
+                concept.children = null;
+            }
+        }
+    }
 }
