@@ -82,6 +82,7 @@ export class RefsetDetails {
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
+    @ViewChild('memberFeedbackDialog') memberFeedbackDialog: TemplateRef<any>;
 
 
     constructor(
@@ -596,8 +597,25 @@ export class RefsetDetails {
         }
     }
 
-    openMemberFeedback() {
+    openMemberFeedback(conceptId: string) {
 
+        let concept = this.getMemberRow(conceptId);
+        const dialogId = 'conceptFeedbackDialog';
+
+        const dialogData = {
+            headerText: `Member Feedback for ${concept.name} (${conceptId})`,
+            template: this.memberFeedbackDialog,
+            data: concept
+        }
+
+        const dialogOptions = {
+            id: dialogId
+        }
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe(data => {
+        });
     }
 
     openMemberHistory(conceptId) {
