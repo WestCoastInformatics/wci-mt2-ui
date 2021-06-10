@@ -48,7 +48,7 @@ export class TaxonomyTreeComponent {
         
         for (const propertyName in changes) {
 
-            if (CodeUtility.hasValue(this.nodes) && (propertyName === 'options' || propertyName === 'manualStateRefresh')) {
+            if (propertyName === 'options' || propertyName === 'manualStateRefresh') {
 
                 this.configOptions = {
                     ...this.staticOptions,
@@ -57,9 +57,12 @@ export class TaxonomyTreeComponent {
                     getChildren: this.getChildren.bind(this)
                 };
 
-                let treeModel: TreeModel = this.treeComponent.treeModel;
-                this.sortTree(treeModel.nodes);
+                if (CodeUtility.hasValue(this.nodes)) {
 
+                    let treeModel: TreeModel = this.treeComponent.treeModel;
+                    this.sortTree(treeModel.nodes);
+                }
+                
                 this.changeDetectorRef.detectChanges();
 
             } else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
