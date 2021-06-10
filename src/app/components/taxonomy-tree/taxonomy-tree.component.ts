@@ -43,7 +43,7 @@ export class TaxonomyTreeComponent {
         
         for (const propertyName in changes) {
 
-            if (propertyName === 'options' || propertyName === 'manualStateRefresh') {
+            if (CodeUtility.hasValue(this.nodes) && (propertyName === 'options' || propertyName === 'manualStateRefresh')) {
 
                 this.configOptions = {
                     ...this.staticOptions,
@@ -51,7 +51,14 @@ export class TaxonomyTreeComponent {
                     ...this.options,
                 };
 
+                let treeModel: TreeModel = this.treeComponent.treeModel;
+                let firstNode: TreeNode = treeModel.getFirstRoot();
+                this.sortTree(treeModel.nodes);
+
                 this.changeDetectorRef.detectChanges();
+
+            } else if (propertyName === 'nodes' && CodeUtility.hasValue(this.nodes)) {
+                this.sortTree(this.nodes);
             }
         }
     }
@@ -108,4 +115,31 @@ export class TaxonomyTreeComponent {
 
         return text;
     }
+
+    sortTree(nodes) {
+
+		for (const node of nodes) {
+
+			// If the element of the array has a property _children_, we sort the childrens, then parse them
+			if (CodeUtility.hasValue(node.children)) {
+
+				node.children = this.sortNodes(node.children);
+				this.sortTree(node.children);
+			}
+		}
+	}
+
+	sortNodes(nodes) {
+
+		return nodes.sort(function (node1, node2) {
+
+			if (node1.name < node2.name) {
+				return -1;
+			} else if (node1.name > node2.name) {
+				return 1;
+			} else {
+				return 0;
+			}
+		});
+	}
 }
