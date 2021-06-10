@@ -426,6 +426,8 @@ export class BackendInterceptor implements HttpInterceptor {
 
             let viewFilter = params.viewFilter;
 
+            params.offset = params.offset / params.limit;
+
             let dataAfterViewFilter = refsetData.filter(row => {
 
                 let rowValid = true;
