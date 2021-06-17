@@ -1,8 +1,8 @@
 import { CodeUtility } from "./code.utility";
-//import { ToastrService } from 'ngx-toastr';
+import { NotificationService } from 'src/app/services/notification.service';
+import { ActiveToast, ToastRef } from "ngx-toastr";
 
 export class UiUtility {
-
 
     /*
      * resizeGridColumns - return a element object having been passed either a element object or element selector string
@@ -11,7 +11,7 @@ export class UiUtility {
     static resizeGridColumns(event) {
 
         // check to see if any parent of the grid is hidden, if so don't resize the columns because the grid will error
-        if (event.api.gridCore.eGridDiv.offsetParent != null){
+        if (event.api.gridCore.eGridDiv.offsetParent != null) {
             event.api.sizeColumnsToFit();
         }
     }
@@ -26,7 +26,7 @@ export class UiUtility {
 
             let format = null;
 
-            if (params.colDef.field == 'versionDate'){
+            if (params.colDef.field == 'versionDate') {
                 format = CodeUtility.DATE_FORMAT_REVERSE
             }
 
@@ -41,7 +41,7 @@ export class UiUtility {
      * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).
      * @return - the element object
      */
-    static getByElementOrSelector(formElementOrSelector){ 
+    static getByElementOrSelector(formElementOrSelector) {
 
         let element;
 
@@ -72,7 +72,7 @@ export class UiUtility {
                     return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
                 });
 
-                let index = focusable.indexOf(document.activeElement);
+            let index = focusable.indexOf(document.activeElement);
             focusable[index + 1].focus();
         }
     }
@@ -83,7 +83,7 @@ export class UiUtility {
 
         let element = this.getByElementOrSelector(elementOrSelector);
 
-        if (enable == undefined || enable == null){
+        if (enable == undefined || enable == null) {
 
             if (element.hasClass("ui-state-disabled")) {
                 enable = true;
@@ -104,68 +104,86 @@ export class UiUtility {
     }
 
     // function to download a file through a REST request
-    static startFileDownload(url, data, fileName, fileExtension, description){
+    static startFileDownload(notificationService: NotificationService, url, fileName = null, description = null) {
 
         // This will hold the the file as a local object URL
-        var download_url;
-        var download_notification = null;
+        let downloadUrl;
+        let downloadNotification: any = null;
 
-        if (!CodeUtility.hasValue(fileName)){
-            fileName = 'export';
-        }
-
-        if (!CodeUtility.hasValue(fileExtension)){
-            fileExtension = 'zip';
-        }
-
-        if (!CodeUtility.hasValue(description)){
-            description = 'export';
+        if (!CodeUtility.hasValue(description)) {
+            description = 'download';
         }
 
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: url,
-            data: data,
+            xhrFields: {
+                responseType: 'blob' // to avoid binary data being mangled on charset conversion
+            },
             xhr: function () {
 
-                var request = $.ajaxSettings.xhr();
+                let request = $.ajaxSettings.xhr();
 
-                request.addEventListener('readystatechange', function(event) {
+                request.addEventListener('readystatechange', function (event) {
 
-                    if(request.readyState == 4) {
+                    if (request.readyState == 4) {
 
                         // Downloaing has finished
-                        download_url = URL.createObjectURL(request.response);
+                        downloadUrl = URL.createObjectURL(request.response);
+                        let id = 'file_download_' + CodeUtility.getUniqueID();
+                        
+                        if (!CodeUtility.hasValue(fileName)) {
+                            
+                            let disposition = request.getResponseHeader('Content-Disposition');
 
-                        var message = '<a href="' + download_url + '" download="' + fileName + '.' + fileExtension + '">Your ' + description + ' is complete. Click this message to download your file.</a>';
+                            if (disposition && disposition.indexOf('attachment') !== -1) {
 
-                        download_notification.update({message: message});
+                                let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                                let matches = regex.exec(disposition);
 
-                        download_notification.$ele.on('click', 'a', function() {
-                            download_notification.close();
-                        });
+                                if (matches != null && matches[1]) {
+                                    fileName = matches[1].replace(/['"]/g, '');
+                                } else {
+                                    fileName = '';
+                                }
+                            }
+                        }
+
+                        let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
+
+                        let message = 'Your ' + description + ' is complete. Click this message to download your file';
+
+                        notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id}, 100);
+
+                        setTimeout(function () {
+
+                            $('#' + id).click(function () {
+                                notificationService.close(downloadNotification);
+                            });
+                        }, 600);
 
                         // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
-                        setTimeout(function() {
+                        setTimeout(function () {
 
-                            window.URL.revokeObjectURL(download_url);
-                            download_notification.update({type: 'error', message: 'Your ' + description + ' download expired after 5 minutes. Please try again'});
+                            window.URL.revokeObjectURL(downloadUrl);
+
+                            if (notificationService.isOpen(downloadNotification)){
+
+                                notificationService.close(downloadNotification);
+                                notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', {closeButton: true, timeout: 0, extendedTimeout: 0 });
+                            }
                         }, 300000);
                     }
                 });
 
-                request.addEventListener('progress', function(event) {
+                request.addEventListener('progress', function (event) {
 
                     var percent_complete = (event.loaded / event.total) * 100;
 
-                    if (download_notification == null){
-
-                        // download_notification = $.notify({message: 'Your ' + description + ' file is now being saved.', showProgressbar: true, progress: percent_complete}, {
-                        //     type: 'success',
-                        //     delay: 0
-                        // });
+                    if (downloadNotification == null) {
+                        downloadNotification = notificationService.showProgress('Your ' + description + ' file is now being saved.', '', null, null);
                     } else {
-                        download_notification.update({message: 'Your ' + description + ' file is now being saved.', showProgressbar: true, progress: percent_complete});
+                        notificationService.update(downloadNotification, 'Your ' + description + ' file is now being saved.', null, null, null, percent_complete);
                     }
                 });
 
@@ -219,7 +237,7 @@ export class UiUtility {
             const column = sortModel[i];
             let ascending = true;
 
-            if (column.sort != 'asc'){
+            if (column.sort != 'asc') {
                 ascending = false;
             }
 
@@ -227,7 +245,7 @@ export class UiUtility {
             sort.sortAscending = ascending;
         }
 
-        if (returnAsObject){
+        if (returnAsObject) {
             return sort;
         } else {
             return CodeUtility.serialize(sort);

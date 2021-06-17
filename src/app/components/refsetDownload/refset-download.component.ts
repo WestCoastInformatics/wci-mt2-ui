@@ -8,7 +8,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { data } from 'jquery';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
-
+import { NotificationService } from 'src/app/services/notification.service';
 
 /**
  * @title Tree with nested nodes
@@ -44,6 +44,7 @@ export class RefsetDownloadComponent {
         private dialogFactoryService: DialogFactoryService,
         private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
+        private notificationService: NotificationService
     ) {
     }
 
@@ -130,6 +131,8 @@ export class RefsetDownloadComponent {
 
                 console.log("Download Form Data: ", data);
 
+                let description = 'Refset ' +  this.refset.refsetId + ' download';
+                let notification = this.notificationService.show('Your ' + description + ' is being generated. Do not leave this window or you will need to start again', null, 'info', {timeOut: 0, extendedTimeOut: 0});
                 let fileNameDate: any = this.selectedVersionDate;
 
                 if (fileNameDate == '') {
@@ -152,7 +155,10 @@ export class RefsetDownloadComponent {
                     console.log("Export Call Results: ", results);
 
                     if (results?.url) {
-                        window.open(results.url);
+
+                        this.notificationService.close(notification);
+                        UiUtility.startFileDownload(this.notificationService, results.url, null, description);
+                        //window.open(results.url);
                     }
                     
                 });

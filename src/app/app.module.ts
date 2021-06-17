@@ -20,11 +20,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
 import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
+import { SafeUrlPipe } from 'src/app/pipes/safe-urls.pipe';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastNoAnimationModule } from 'ngx-toastr';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
@@ -37,6 +38,7 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
+import { NotificationComponent } from 'src/app/components/notification/notification.component';
 
 // PAGE IMPORTS
 import { TemplateComponent } from 'src/app/pages/template.component';
@@ -51,6 +53,7 @@ import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
@@ -73,6 +76,8 @@ const appRoutes: Routes = [
         RefsetDownloadComponent,
         ColumnChooserComponent,
         TemplateComponent,
+        NotificationComponent,
+        SafeUrlPipe,
         RefsetDirectory,
         RefsetDetails
     ],
@@ -97,13 +102,15 @@ const appRoutes: Routes = [
         MatButtonModule,
         MatButtonToggleModule,
         MatIconModule,
-        ToastrModule.forRoot(),
+        ToastNoAnimationModule.forRoot({
+            toastComponent: NotificationComponent
+          }),
         DialogModule,
         TreeModule,
         AgGridModule.withComponents([TemplateRenderer]),
         EditorModule
     ],
-    entryComponents: [],
+    entryComponents: [NotificationComponent],
     providers: [
         AuthenticationService,
         AuthoringService,
@@ -113,6 +120,7 @@ const appRoutes: Routes = [
         RefsetService,
         PaginationService,
         BreadcrumbService,
+        NotificationService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {
             provide: HTTP_INTERCEPTORS,
