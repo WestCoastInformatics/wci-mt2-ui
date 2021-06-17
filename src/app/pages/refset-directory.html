@@ -92,8 +92,8 @@
                                 <tr>
                                     <td class="refset-tool-refset-metadata-label">Edition/Extension:</td>
                                     <td class="refset-tool-refset-metadata-value">
-                                        {{data?.edition?.name}}
                                         <img class="refset-tool-edition-flag" src="{{data?.flagIcon}}" *ngIf="data?.flagIcon != ''" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag">
+                                        {{data?.edition?.name}}
                                     </td>
                                 </tr>
 
@@ -198,9 +198,8 @@
 
         <!-- Edition Templates -->
         <ng-template #directoryEditionSection let-params>
-            {{params?.data?.edition?.name}}
             <img class="refset-tool-edition-flag" src="{{params?.data?.flagIcon}}" *ngIf="params?.data?.flagIcon != ''" title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag">
-            
+            {{params?.data?.edition?.name}}
         </ng-template>
 
         <!-- Action Templates -->
