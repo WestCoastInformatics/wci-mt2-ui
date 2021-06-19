@@ -60,11 +60,12 @@ export class RefsetDetails {
     conceptDetail: any = null;
     conceptDescriptions: any = [];
     membersTaxonomyRoot: any[] = [];
-    membersTaxonomyManualStateRefresh: Boolean = new Boolean(false);
-    membersTaxonomyOptions: TreeOptions = {
-        onSelect: this.onMembersTaxonomySelected.bind(this),
+    taxonomyManualStateRefresh: Boolean = new Boolean(false);
+    taxonomyOptions: TreeOptions = {
+        onSelect: this.onTaxonomySelected.bind(this),
         displayField: '0'
     };
+
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
@@ -96,6 +97,11 @@ export class RefsetDetails {
         this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
 
         this.refsetLoaded$.subscribe(loaded => {
+
+            // load taxonomy root
+            this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
+                this.membersTaxonomyRoot = results;
+            });
 
             this.membersGridOptions = {
                 context: { componentParent: this },
@@ -139,9 +145,7 @@ export class RefsetDetails {
     
             this.showTable = true
             this.changeDetectorRef.detectChanges();
-
-            // taxonomy loading
-            this.membersTaxonomyRoot = this.refsetService.getTaxonomyRoot();
+            
         });
 
         this.refsetService.getRefset(this.id).subscribe(results => {
@@ -186,7 +190,7 @@ export class RefsetDetails {
     }
 
     //***** Members Taxonomy Functions  *****/
-    onMembersTaxonomySelected(event) {
+    onTaxonomySelected(event) {
         
         let selectedConcept = CodeUtility.clone(event.node.data);
         this.loadConceptDetail(selectedConcept);
@@ -195,8 +199,8 @@ export class RefsetDetails {
     changeTaxonomyLanguage(){
 
         let displayIndex: any = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
-        this.membersTaxonomyOptions.displayField = displayIndex;
-        this.membersTaxonomyManualStateRefresh = new Boolean("true"); 
+        this.taxonomyOptions.displayField = displayIndex;
+        this.taxonomyManualStateRefresh = new Boolean("true"); 
     }
 
     //***** Members Grid Functions *****/

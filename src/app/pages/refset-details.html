@@ -326,7 +326,7 @@
 
                 <!-- Members Taxonomy Tree -->
                 <div class="container-fluid" [style.display]="membersTaxonomyDisplay">
-                    <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="membersTaxonomyRoot" [options]="membersTaxonomyOptions" [manualStateRefresh]="membersTaxonomyManualStateRefresh"></app-taxonomy-tree>
+                    <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="membersTaxonomyRoot" [options]="taxonomyOptions" [manualStateRefresh]="taxonomyManualStateRefresh"></app-taxonomy-tree>
                 </div>
 
             </div>
@@ -366,7 +366,10 @@
                             </div>
 
                             <div class="col refset-tool-concept-details-taxonomy-description">
-                                {{parent.name}}
+                               -- {{taxonomyOptions.displayField}}
+                               ** {{parent.descriptions}} ||
+                               ^^ {{parent.name}}
+                               $$ {{parent.descriptions[taxonomyOptions.displayField]?.term}}
                             </div>
                         </div>
                     </div>
@@ -463,17 +466,12 @@
                             <div class="refset-tool-concept-details-section-title">Children</div>
                         </div>
 
-                        <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let child of conceptDetail.children">
-
-                            <div class="col refset-tool-concept-details-taxonomy-icon">
-                                <img *ngIf="child.defined" src="/assets/linedTaxonomyIcon.png">
-                                <img *ngIf="!child.defined" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
-                            </div>
-
-                            <div class="col refset-tool-concept-details-taxonomy-description">
-                                {{child.name}}
-                            </div>
+                        <!-- Children Taxonomy Tree -->
+                        <div class="container-fluid">
+                            <app-taxonomy-tree #childrenMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="conceptDetail" [options]="taxonomyOptions" [manualStateRefresh]="taxonomyManualStateRefresh"></app-taxonomy-tree>
                         </div>
+
+                        
                     </div>
 
                 </div>
