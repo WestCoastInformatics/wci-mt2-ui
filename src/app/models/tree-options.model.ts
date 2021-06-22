@@ -8,6 +8,7 @@ export interface TreeOptions {
     onSelect?: Function;
     displayField?: string;
     expandFirstNode?: boolean;
+    hasMultipleRootNodes?: boolean
 }
 
 export const TreeOptionDefaults: TreeOptions = {
@@ -18,5 +19,6 @@ export const TreeOptionDefaults: TreeOptions = {
     hasChildrenField: 'hasChildren',
     displayField: 'name',
     expandFirstNode: true,
+    hasMultipleRootNodes: false,
     onSelect: function(event){}
 }

@@ -31,6 +31,7 @@ export class TaxonomyTreeComponent {
     @Input() rootNode: any;
     @Input() options: TreeOptions = {};
     @Input() manualStateRefresh = false;
+    @Input() hasMultipleRootNodes: boolean = false;
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
@@ -45,7 +46,7 @@ export class TaxonomyTreeComponent {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        
+
         for (const propertyName in changes) {
 
             if (propertyName === 'options' || propertyName === 'manualStateRefresh') {
@@ -57,34 +58,60 @@ export class TaxonomyTreeComponent {
                     getChildren: this.getChildren.bind(this)
                 };
 
+                if (this.hasMultipleRootNodes) {
+                    this.configOptions.expandFirstNode = false;
+                }
+
                 if (CodeUtility.hasValue(this.nodes)) {
 
                     let treeModel: TreeModel = this.treeComponent.treeModel;
                     this.sortTree(treeModel.nodes);
                 }
-                
+
                 this.changeDetectorRef.detectChanges();
 
             } else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
-                
-                let depth: number = 1
 
-                let restParams = {
-                    displayType: 'taxonomy',
-                    depth: depth,
-                    startingConceptId: this.rootNode.code,
-                    offset: 0,
-                    limit: 1000
-                };
-        
-                this.refsetService.getMembersList(this.refset.id, restParams).subscribe(results => {
-        
-                    RefsetUtility.setEmptyChildrenNull(results.items);
-                    this.rootNode.children = results.items;
-                    this.sortTree([this.rootNode]);
-                    this.nodes = [this.rootNode];
-                });
+                // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
+                if (this.rootNode.hasChildren
+                    && (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].descriptions))) {
+
+                    let depth: number = 1
+
+                    let restParams = {
+                        displayType: 'taxonomy',
+                        depth: depth,
+                        startingConceptId: this.rootNode.code,
+                        offset: 0,
+                        limit: 1000
+                    };
+
+                    this.refsetService.getMembersList(this.refset.id, restParams).subscribe(results => {
+                        this.prepareData(results.items);
+                    });
+
+                } else {
+                    this.prepareData(this.rootNode.children);
+                }
             }
+        }
+    }
+
+    prepareData(data) {
+
+        RefsetUtility.setEmptyChildrenNull(data);
+
+        if (this.hasMultipleRootNodes) {
+
+            this.rootNode = data;
+            this.sortNodes(this.rootNode);
+            this.sortTree(this.rootNode);
+            this.nodes = this.rootNode;
+        } else {
+
+            this.rootNode.children = data;
+            this.sortTree([this.rootNode]);
+            this.nodes = [this.rootNode];
         }
     }
 
@@ -115,10 +142,10 @@ export class TaxonomyTreeComponent {
         // need to return a promise or the data to the tree, not an observable
         let results$: Observable<any> = this.refsetService.getMembersList(this.refset.id, restParams);
         let resultData: any = await lastValueFrom(results$);
-        let data = resultData.items; 
+        let data = resultData.items;
 
         RefsetUtility.setEmptyChildrenNull(data);
-        this.sortTree([{children: data}]);
+        this.sortTree([{ children: data }]);
         return data;
     }
 
@@ -146,21 +173,21 @@ export class TaxonomyTreeComponent {
         return classes;
     }
 
-    getNodeText(node){
+    getNodeText(node) {
 
         let text = '';
         let index = this.options.displayField;
         let data = node.data;
 
-        if (!CodeUtility.hasValue(data)){
+        if (!CodeUtility.hasValue(data)) {
             data = node;
         }
 
         let choosenDescription = data.descriptions[index];
 
-        if (choosenDescription != null){
+        if (choosenDescription != null) {
             text = choosenDescription.term;
-            
+
         } else if (data.descriptions[0] != null) {
             text = data.descriptions[0].term;
         } else {
@@ -172,20 +199,20 @@ export class TaxonomyTreeComponent {
 
     sortTree(nodes) {
 
-		for (const node of nodes) {
+        for (const node of nodes) {
 
-			// If the element of the array has a property _children_, we sort the childrens, then parse them
-			if (CodeUtility.hasValue(node.children)) {
+            // If the element of the array has a property _children_, we sort the childrens, then parse them
+            if (CodeUtility.hasValue(node.children)) {
 
-				node.children = this.sortNodes(node.children);
-				this.sortTree(node.children);
-			}
-		}
-	}
+                node.children = this.sortNodes(node.children);
+                this.sortTree(node.children);
+            }
+        }
+    }
 
-	sortNodes(nodes) {
+    sortNodes(nodes) {
 
-		return nodes.sort((node1, node2) => {
+        return nodes.sort((node1, node2) => {
 
             let name1 = this.getNodeText(node1);
             let name2 = this.getNodeText(node2);
@@ -193,5 +220,5 @@ export class TaxonomyTreeComponent {
             let compareValue = name1.localeCompare(name2);
             return compareValue;
         });
-	}
+    }
 }
