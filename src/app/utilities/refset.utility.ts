@@ -105,4 +105,49 @@ export class RefsetUtility {
             }
         }
     }
+
+    static sortDescriptions(descriptions, fullyQualifiedLanguageRefsets){
+
+        let languagePriority: any = {};
+        let i = 1;
+
+        // let the language priorities defined in the refset apply to the sort
+        for (let languageRefset of fullyQualifiedLanguageRefsets){
+
+            if (!languagePriority.hasOwnProperty(languageRefset.languageCode)){
+
+                languagePriority[languageRefset.languageCode] = i;
+                i++;
+            }
+        }
+
+        let typePriority = {
+            'PT': 1,
+            'AC': 2,
+            'FSN': 3,
+            'DEF': 4,
+        };
+
+        return descriptions.sort((description1, description2) => {
+
+            let languageCompareValue = languagePriority[description1.language] - languagePriority[description2.language];
+
+            // sort first based on language
+            if (languageCompareValue != 0) {
+                return languageCompareValue;
+            }
+
+            let typeCompareValue = typePriority[description1.type] - typePriority[description2.type];
+
+            // sort second based on description type
+            if (typeCompareValue != 0 ) {
+                return typeCompareValue;
+            }
+
+            // finally sort alphabetically
+            let descriptionCompareValue = description1.localeCompare(description2);
+
+            return descriptionCompareValue;
+        });
+    }
 }

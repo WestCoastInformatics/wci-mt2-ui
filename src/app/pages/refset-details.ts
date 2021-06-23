@@ -418,6 +418,8 @@ export class RefsetDetails {
             this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
                 return description != null;
             });
+
+            RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
         });
         
     }
