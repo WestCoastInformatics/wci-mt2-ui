@@ -1,3 +1,5 @@
+import { TreeNode } from '@circlon/angular-tree-component';
+
 export interface TreeOptions {
     idField?: string;
     isExpandedField?: boolean;
@@ -8,7 +10,9 @@ export interface TreeOptions {
     onSelect?: Function;
     displayField?: string;
     expandFirstNode?: boolean;
-    hasMultipleRootNodes?: boolean
+    hasMultipleRootNodes?: boolean;
+    useVirtualScroll?: boolean;
+    nodeHeight?: any;
 }
 
 export const TreeOptionDefaults: TreeOptions = {
@@ -20,5 +24,7 @@ export const TreeOptionDefaults: TreeOptions = {
     displayField: 'name',
     expandFirstNode: true,
     hasMultipleRootNodes: false,
-    onSelect: function(event){}
+    onSelect: function(event){},
+    useVirtualScroll: false,
+    nodeHeight: 22
 }

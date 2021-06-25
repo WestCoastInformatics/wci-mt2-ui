@@ -33,6 +33,10 @@ export class RefsetService extends RestService {
         return this.get('/concept/' + conceptId, params);
     }
 
+    getTaxonomySearch(refsetId: string, params: any): Observable<any> {
+        return this.get('/refset/' + refsetId + '/taxonomy/search', params);
+    }
+
     getMemberHistory(refsetId: string, conceptId: string, params: any): Observable<any> {
         return this.get('/refset/' + refsetId + '/member/' + conceptId, params);
     }

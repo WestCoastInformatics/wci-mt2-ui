@@ -203,6 +203,43 @@ export class UiUtility {
         });
     }
 
+    //***** AG Grid Function to apply data and paging to table *****/
+    static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams) {
+
+        if (results.items.length > 0) {
+
+            gridApi.hideOverlay();
+            let lastRow = -1;
+
+            if (results.totalKnown || results.items.length < gridApi.paginationGetPageSize() || pagingParams.totalKnown) {
+
+                if (results.totalKnown) {
+
+                    lastRow = results.total;
+
+                } else if (pagingParams.totalKnown) {
+
+                    lastRow = pagingParams.totalRows;
+                } else {
+
+                    lastRow = results.items.length + ((pageNumber - 1) * gridApi.paginationGetPageSize());
+                }
+
+                pagingParams.totalRows = lastRow;
+                pagingParams.totalKnown = true;
+
+            }
+            
+            rowParams.successCallback(results.items, lastRow);
+        } else {
+
+            gridApi.showNoRowsOverlay();
+            rowParams.successCallback(results.items, 0);
+        }
+
+        pagingParams.manualStateRefresh = new Boolean(true);
+    }
+
     //***** AG Grid Filter query string formatter Function *****/
     // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
     static formatFilterData(filterModel) {

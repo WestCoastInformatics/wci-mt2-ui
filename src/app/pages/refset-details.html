@@ -238,12 +238,20 @@
                             </mat-form-field>
                         </div>
 
-                        <div class="col-lg ml-3">
-                            <mat-form-field id="detailsSearchInputField">
+                        <div class="col-lg ml-3" [style.display]="membersTableDisplay">
+                            <mat-form-field id="detailsTableSearchInputField" class="refset-tool-details-search-field">
                                 <mat-label>Search</mat-label>
-                                <input matInput #detailsSearchInput [(ngModel)]="searchInput" (change)="onSearchChange()">
+                                <input matInput #detailsTableSearchInput [(ngModel)]="tableSearchInput" (change)="onTableSearchChange()">
                             </mat-form-field>
-                            <span class="clear-search" (click)="clearSearch()">&#10005;</span>
+                            <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
+                        </div>
+
+                        <div class="col-lg ml-3" [style.display]="membersTaxonomyDisplay">
+                            <mat-form-field id="detailsTaxonomySearchInputField" class="refset-tool-details-search-field">
+                                <mat-label>Search</mat-label>
+                                <input matInput #detailsTaxonomySearchInput [(ngModel)]="taxonomySearchInput" (change)="onTaxonomySearchChange()">
+                            </mat-form-field>
+                            <span class="clear-search" (click)="clearSearch('taxonomy')">&#10005;</span>
                         </div>
 
                         <div class="col-md-3">
@@ -326,6 +334,38 @@
 
                 <!-- Members Taxonomy Tree -->
                 <div class="container-fluid" [style.display]="membersTaxonomyDisplay">
+
+                    <div #memberTaxonomySearchResults class="container-fluid" [style.display]="taxonomySearchDisplay">
+
+                        <!-- Taxonomy Search Results Grid -->
+                        <ag-grid-angular id="taxonomySearchTable" #taxonomySearchTable *ngIf="showTaxonomySearchTable" class="ag-theme-alpine refset-tool-ag-grid"
+                            [columnDefs]="taxonomySearchColumnDefs" [gridOptions]="taxonomySearchGridOptions">
+                        </ag-grid-angular>
+
+                        <app-pagination #taxonomySearchPaginationComponent *ngIf="showTaxonomySearchTable" [pageSize]="taxonomySearchGridPaging.pageSize"
+                            [gridOptions]="taxonomySearchGridOptions" 
+                            [numberOfPages]="taxonomySearchGridApi?.paginationGetTotalPages()"
+                            [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions" 
+                            [totalKnown]="taxonomySearchGridPaging.totalKnown"
+                            [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh">
+                        </app-pagination>
+
+                        <!-- Result Template -->
+                        <ng-template #taxonomyResultSection let-params>
+
+                            {{params?.value}}
+
+                        </ng-template>
+
+                        <!-- Path Template -->
+                        <ng-template #taxonomyPathSection let-params>
+
+                            {{params?.value}}
+
+                        </ng-template>
+
+                    </div>
+
                     <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="membersTaxonomyRoot" [options]="taxonomyOptions" [manualStateRefresh]="taxonomyManualStateRefresh"></app-taxonomy-tree>
                 </div>
 

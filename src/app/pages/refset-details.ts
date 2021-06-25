@@ -12,6 +12,7 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Subject } from 'rxjs';
+import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 
 /**
  * @title Tree with nested nodes
@@ -27,13 +28,14 @@ export class RefsetDetails {
     refsetId: string = '';
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable()
-    searchInput: string;
+    tableSearchInput: string;
     versionOptions: any;
     selectedVersion: string;
     languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
     defaultLanguage: string;
     selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
     selectedTaxonomyLanguage: string = '900000000000509007PT';
+    selectedTaxonomyLanguageIndex: number = 0;
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
     selectedMembersListMode: string = 'table'; //taxonomy
@@ -65,6 +67,23 @@ export class RefsetDetails {
         onSelect: this.onTaxonomySelected.bind(this),
         displayField: '0'
     };
+    taxonomySearchInput: string;
+    taxonomySearchResults: any[] = [];
+    showTaxonomySearchTable: boolean = false;
+    taxonomySearchDisplay: string = 'none';
+    taxonomySearchGridApi: any;
+    taxonomySearchGridColumnApi: any;
+    taxonomySearchColumnDefs = [];
+    taxonomySearchGridOptions: any;
+    taxonomySearchGridPaging = {
+        pageSize: 10,
+        pageSizeOptions: [10, 25, 50, 100],
+        totalKnown: false,
+        totalRows: null,
+        manualStateRefresh: new Boolean(true)
+    };
+    taxonomySearchGridLastFilter: string = '';
+    taxonomySearchGridLastSort: string = '';
 
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
@@ -75,6 +94,10 @@ export class RefsetDetails {
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
     @ViewChild('memberFeedbackDialog') memberFeedbackDialog: TemplateRef<any>;
+    @ViewChild('detailsMembersTaxonomy') taxonomyMembersComponent: TaxonomyTreeComponent;
+    @ViewChild('taxonomySearchPaginationComponent') taxonomySearchPaginationComponent: PaginationComponent;
+    @ViewChild('taxonomyResultSection') taxonomyResultSection: TemplateRef<any>;
+    @ViewChild('taxonomyPathSection') taxonomyPathSection: TemplateRef<any>;
 
 
     constructor(
@@ -142,8 +165,40 @@ export class RefsetDetails {
                     }
                 }
             };
+
+            this.taxonomySearchColumnDefs = [
+                { field: 'result', headerName: 'Result', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyResultValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyResultSection } },
+                { field: 'path', headerName: 'Path', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyPathValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyPathSection } },
+            ];
+
+            this.taxonomySearchGridOptions = {
+                context: { componentParent: this },
+                pagination: true,
+                onGridSizeChanged: UiUtility.resizeGridColumns,
+                suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                suppressPaginationPanel: true,
+                paginationPageSize: this.taxonomySearchGridPaging.pageSize,
+                cacheBlockSize: this.taxonomySearchGridPaging.pageSize,
+                maxBlocksInCache: 1,
+                loadingCellRenderer: 'agLoadingOverlay',
+                rowModelType: 'infinite',
+                rowSelection: 'single',
+                onCellClicked: this.onTaxonomySearchGridCellClick,
+                onGridReady: this.onTaxonomySearchGridReady,
+                frameworkComponents: {
+                    'templateRenderer': TemplateRenderer
+                },
+                defaultColDef: {
+                    sortable: true,
+                    resizable: true,
+                    suppressMenu: true,
+                    floatingFilter: false,
+                    filter: false,
+                }
+            };
     
             this.showTable = true
+            this.showTaxonomySearchTable = true
             this.changeDetectorRef.detectChanges();
             
         });
@@ -198,9 +253,145 @@ export class RefsetDetails {
 
     changeTaxonomyLanguage(){
 
-        let displayIndex: any = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
-        this.taxonomyOptions.displayField = displayIndex;
+        this.selectedTaxonomyLanguageIndex = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
+        this.taxonomyOptions.displayField = this.selectedTaxonomyLanguageIndex + '';
         this.taxonomyManualStateRefresh = new Boolean("true"); 
+    }
+
+    onTaxonomySearchGridReady = (gridReadyParams) => {
+
+        this.taxonomySearchGridApi = gridReadyParams.api;
+        this.taxonomySearchGridColumnApi = gridReadyParams.columnApi;
+
+        let dataSource = {
+            rowCount: null,
+            getRows: (rowParams) => {
+
+                if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
+
+                    this.taxonomySearchGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
+                    return;
+                }
+
+                this.taxonomySearchGridApi.showLoadingOverlay();
+
+                let pageNumber = rowParams.endRow / this.taxonomySearchGridApi.paginationGetPageSize();
+                let query = '';
+                let sort = UiUtility.formatSortData(rowParams.sortModel);
+
+                if (CodeUtility.hasValue(this.tableSearchInput)){
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.tableSearchInput;
+                }
+
+                let newFilterString = query;
+                let newSortString = JSON.stringify(sort);
+
+                // if the filters or sort have changed then move to the first page
+                if (newFilterString !== this.taxonomySearchGridLastFilter || newSortString !== this.taxonomySearchGridLastSort) {
+
+                    pageNumber = 1;
+                    this.taxonomySearchGridApi.api?.paginationGoToPage(0);
+                }
+
+                // if the filters have changed then reset the total row variables
+                if (newFilterString !== this.taxonomySearchGridLastFilter){
+
+                    this.taxonomySearchGridPaging.totalRows = null;
+                    this.taxonomySearchGridPaging.totalKnown = false;
+                }
+
+                this.taxonomySearchGridLastFilter = newFilterString;
+                this.taxonomySearchGridLastSort = newSortString;
+
+                let restParams: any = {
+                    sortModel: rowParams.sortModel,
+                    limit: this.taxonomySearchGridApi.paginationGetPageSize(),
+                    offset: pageNumber - 1
+                }
+
+                if (CodeUtility.hasValue(query)){
+                    restParams.query = query;
+                }
+
+                this.refsetService.getTaxonomySearch(this.id, restParams).subscribe(results => {
+
+                    if (results.items.length == 0 && pageNumber > 1) {
+
+                        this.taxonomySearchGridPaging.totalRows = (this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1));
+                        this.taxonomySearchGridPaging.totalKnown = true;
+                        this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                        return;
+                    }
+
+                    UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, rowParams);
+                },
+                error => {
+                    
+                    this.taxonomySearchGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
+                });
+            }
+        };
+
+        gridReadyParams.api.setDatasource(dataSource);
+
+    }
+
+    taxonomyPathValueGetter = function (params) {
+
+        if (!CodeUtility.hasValue(params.data)) {
+            return '';
+        }
+
+        let pathString = '';
+
+        for (let pathConcept of params.data.path) {
+ 
+            pathString = CodeUtility.addIfNotEmpty(pathString, ' > ') + pathConcept.descriptions[this.selectedTaxonomyLanguageIndex].term;
+        }
+
+        return pathString;
+    };
+
+    taxonomyResultValueGetter = function (params) {
+
+        if (!CodeUtility.hasValue(params.data)) {
+            return '';
+        }
+
+        return params.data.result.descriptions[this.selectedTaxonomyLanguageIndex].term;
+    };
+
+    onTaxonomySearchGridCellClick = (event) => {
+
+        let selectedRows = this.taxonomySearchGridApi.getSelectedRows();
+        let selectedId: string;
+        let selectedPath: any;
+
+        selectedRows.forEach(function (selectedRow, index) {
+
+            selectedId = selectedRow.result.code;
+            selectedPath = selectedRow.path;
+            console.log('Selected Row: ' + selectedId);
+        });
+
+        this.goToTaxonomyConcept(selectedId, selectedPath);
+    }
+
+    onTaxonomySearchChange() {
+
+        if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
+            this.taxonomySearchDisplay = 'none';
+        } else {
+            this.taxonomySearchDisplay = 'block';
+        }
+
+        this.taxonomySearchGridApi.purgeInfiniteCache();
+    }
+
+    goToTaxonomyConcept(selectedConcept, selectedPath) {
+        this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath);
     }
 
     //***** Members Grid Functions *****/
@@ -220,8 +411,8 @@ export class RefsetDetails {
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                if (CodeUtility.hasValue(this.searchInput)){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                if (CodeUtility.hasValue(this.tableSearchInput)){
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.tableSearchInput;
                 }
 
                 let newFilterString = query;
@@ -374,6 +565,10 @@ export class RefsetDetails {
 
             //this.router.navigate(['/details', selectedId]);
         }
+    }
+
+    onTableSearchChange() {
+        this.membersGridApi.purgeInfiniteCache();
     }
 
     //***** General Functions *****/
@@ -610,16 +805,20 @@ export class RefsetDetails {
         
     }
 
-    clearSearch() {
+    clearSearch(field) {
 
-        if (this.searchInput != '') {
+        let value;
 
-            this.searchInput = '';
-            this.onSearchChange();
+        if (field == 'table') {
+            value = 'tableSearchInput';
+        } else {
+            value = 'taxonomySearchInput';
         }
-    }
 
-    onSearchChange() {
-        this.membersGridApi.purgeInfiniteCache();
+        if (this[value] != '') {
+
+            this[value] = '';
+            this['on' + CodeUtility.toTitleCase(field) + 'SearchChange']();
+        }
     }
 }

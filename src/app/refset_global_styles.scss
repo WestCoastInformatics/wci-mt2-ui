@@ -500,12 +500,12 @@ footer.footer a {
     width: auto;
 }
 
-#detailsSearchInputField {
-    width: 500px;
+.refset-tool-details-search-field {
+    width: 95%;
 
     // set this to 20px less than the field to leave room for the cancel 'X'
     .mat-form-field-flex{
-        width: 480px;
+        width: calc(100% - 20px);
     }
 }
 
@@ -536,7 +536,9 @@ footer.footer a {
 }
 
 // Taxonomy Styles
-.refset-tool-taxonomy{
+.refset-tool-taxonomy {
+    height: 623px;
+    display: block;
 
     .tree-node .refset-tool-taxonomy-is-member{
         font-weight: bold;
@@ -585,6 +587,10 @@ footer.footer a {
         padding-top: 10px;
         margin-bottom: 15px;
     }
+}
+
+#taxonomySearchTable{
+    height: 305px;
 }
 
 // Member History Styles
@@ -646,7 +652,7 @@ footer.footer a {
 
 // Pagination Styles
 .refset-tool-pagination-container{
-    padding: 70px;
+    padding: 20px 70px;
     //display: flex;
     justify-content: center;
 

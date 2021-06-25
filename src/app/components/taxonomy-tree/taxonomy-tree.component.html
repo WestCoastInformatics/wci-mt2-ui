@@ -1,7 +1,9 @@
-<tree-root [id]="treeId" class="refset-tool-taxonomy" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)">
-    <ng-template #treeNodeTemplate let-node let-index="index">
-        <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
-        <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png">
-        <span>{{ getNodeText(node) }}</span>
-      </ng-template>
-</tree-root>
+<div class="container-fluid refset-tool-taxonomy">
+    <tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)" (loadNodeChildren)="onLoadNodeChildren($event)">
+        <ng-template #treeNodeTemplate let-node let-index="index">
+            <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
+            <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png">
+            <span>{{ getNodeText(node) }}</span>
+          </ng-template>
+    </tree-root>
+</div>

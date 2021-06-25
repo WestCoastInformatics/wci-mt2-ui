@@ -178,15 +178,7 @@ export class CodeUtility {
     /*
      * toTitleCase - return the supplied string in title case.
      */
-    static toTitleCase(string, separator, splitter) {
-
-        if (separator == undefined || separator == null) {
-            separator = '_';
-        }
-
-        if (splitter == undefined || splitter == null) {
-            splitter = ' ';
-        }
+    static toTitleCase(string, separator = ' ', splitter = ' ') {
 
         return string
             .toLowerCase()

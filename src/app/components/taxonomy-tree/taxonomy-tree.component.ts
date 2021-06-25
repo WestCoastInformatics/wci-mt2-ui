@@ -24,6 +24,7 @@ export class TaxonomyTreeComponent {
     configOptions: TreeOptions = {};
     staticOptions: any = { nodeClass: this.styleNodeClass };
     nodes: any[] = [];
+    loadNodeChildrenProcess: Function = (event) => {};
     refsetUtility = RefsetUtility;
 
     @Input() treeId: string = 'taxonomyTree';
@@ -220,5 +221,173 @@ export class TaxonomyTreeComponent {
             let compareValue = name1.localeCompare(name2);
             return compareValue;
         });
+    }
+
+    onLoadNodeChildren(event) {
+        this.loadNodeChildrenProcess(event);
+    }
+
+    getNodeIDByConceptID(conceptID) {
+
+        return this.treeComponent.treeModel.getNodeBy((node) => {
+            
+            let data = node.data;
+
+            if (!CodeUtility.hasValue(data)) {
+                data = node;
+            }
+
+            return data.code == conceptID;
+        });
+    }
+
+    /*
+    * findNodeInTree - find the target node in the tree, populating its lineage path if it is not currently in the tree
+    * @param conceptID - the concept ID for the target node
+    * @param parentPath - an array of the parents concepts of the target concept starting at the root of the tree. If not supplied tree will look parents up.
+    * @param returnFunction - a callback function that takes as a parameter the tree node ID of the target node. Because findNodeInTree may be making ajax calls it can't return the ID normally
+    * @param selectTheNode - should the target node be selected once it is found (default true)
+    * @param suppressChangeEvent - should the tree onchange event be fired if the target node is selected (default true)
+    */
+    findNodeInTree(conceptID, parentPath: any[] = [], returnFunction: Function = function(){}, selectTheNode = true, suppressChangeEvent = true) {
+
+        let deferred;
+
+        let startFind = () => {
+
+            // create a deferred object so that we can make sure only one query gets processed at a time
+            deferred = $.Deferred();
+
+            // create a deferred object so that when the node is found we can return the node ID to the calling function
+            let deferredReturn = $.Deferred();
+
+            // an array of callback functions to handle cleanup of each node we touch once we find the target node
+            let cleanUpNodes = [];
+
+            // get the ID of the node in the tree from the concept ID
+            let node = this.getNodeIDByConceptID(conceptID);
+
+            // if the node exists in the tree continue on
+            if (node == undefined){
+
+                let processNodeParents = (parentArray) => {
+
+                    if (parentArray.length > 0){
+
+                        // this is a recursive function that will process each of the returned nodes, starting with the root, and walk down to the target node
+                        let walkTree = (index) => {
+
+                            // find this node in the tree
+                            let nodeInTree = this.getNodeIDByConceptID(parentArray[index].code);
+
+                            if (nodeInTree) {
+
+                                // store the open/close state of the node in the tree
+                                let isAlreadyOpen = nodeInTree.isExpanded;
+
+                                // add a function to our callback array to handle cleanup of this node once the target node is found
+                                cleanUpNodes.push(function () {
+
+                                    // if the node was closed and we are not selecting the target node, re-close this node
+                                    if (!selectTheNode && !isAlreadyOpen) {
+                                        nodeInTree.collapse();
+                                    }
+                                });
+
+                                let processNodeChildren = () => {
+
+                                    // if we are not at the last element of the parent array
+                                    if (index < parentArray.length - 1){
+
+                                        // call this the walkTree function again with the index for the next child node
+                                        walkTree(index + 1);
+
+                                    } else {
+
+                                        this.loadNodeChildrenProcess = (event) => {};
+
+                                        // since the node has no children it is the parent of our target node, so the target node should now exist in the tree.
+                                        // get the target node by its concept ID
+                                        node = this.getNodeIDByConceptID(conceptID);
+
+                                        // resolve our deferred call with the target node
+                                        deferredReturn.resolve(node);
+
+                                        // back down our callback array to clean up all the nodes that were touched
+                                        while (cleanUpNodes.length > 0){
+                                            cleanUpNodes.pop().call();
+                                        }
+                                    }
+                                };
+
+                                // open this node in the tree so we get all of its children
+                                this.loadNodeChildrenProcess = (event) => {processNodeChildren()};
+                                
+                                if (isAlreadyOpen) {
+                                    processNodeChildren();
+                                } else {
+                                    nodeInTree.expand();
+                                }
+                                
+                            }
+                        };
+
+                        // call the recursive function with the index for the root node
+                        walkTree(0);
+                    }
+                };
+
+                if (parentPath.length > 0) { 
+                    processNodeParents(parentPath);
+
+                } else {
+
+                    // make a call to get all the parents of the target node back to the root
+                    //$.get(gon.routes.taxonomy_load_tree_data_path + params, processNodeParents);
+                }
+
+            } else{
+
+                // the node was already in the tree so resolve our deferred call with its tree ID
+                deferredReturn.resolve(node);
+            }
+
+            // what to do once our target node has been found
+            $.when(deferredReturn).done((data) => {
+
+                // if the node was found and we are selecting the target
+                if (data != undefined && selectTheNode){
+
+                    // select the target node without firing the change event and set the concept ID as the current ID on the tree
+                    this.selectNode(node, suppressChangeEvent);
+                }
+
+                deferred.resolve();
+
+                // put the target node ID into the return callback so the calling function has access to it
+                returnFunction(data);
+            });
+        };
+
+        // make sure only one find operation is run at a time
+        if (deferred && deferred.state() == "pending"){
+            deferred.done(startFind);
+        } else {
+            startFind();
+        }
+    }
+
+    selectNode(node, suppressChangeEvent) {
+
+        node.ensureVisible();
+        
+
+        if (suppressChangeEvent) {
+            node.focus();
+        } else {
+            node.setIsActive(true);
+        }
+
+        node.scrollIntoView();
     }
 }

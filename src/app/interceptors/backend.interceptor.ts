@@ -20,6 +20,66 @@ const userData: User[] = [
     { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', username: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
 ];
 
+const taxonomySearchResults: any[] = [
+    { 
+        path: [
+            {
+                code: '138875005',
+                descriptions: [
+                    {descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                    {descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                ]
+            },
+            {
+                code: '404684003',
+                descriptions: [
+                    {descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                    {descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                ]
+            },
+        ],
+        result: {
+            code: '80631005',
+            descriptions: [
+                {descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+            ]
+        } 
+    },
+    { 
+        path: [
+            {
+                code: '138875005',
+                descriptions: [
+                    {descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                    {descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                ]
+            },
+            {
+                code: '404684003',
+                descriptions: [
+                    {descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                    {descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                ]
+            },
+            {
+                code: '80631005',
+                descriptions: [
+                    {descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                    {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                ]
+            },
+        ],
+        result: {
+            code: '13104003',
+            descriptions: [
+                {descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+                {descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+            ]
+        } 
+    },
+];
+
 const conceptDescriptions = [];
 
 for (let i = 1; i < 5; i++){
@@ -313,6 +373,8 @@ export class BackendInterceptor implements HttpInterceptor {
                         return refsets();
                     case url.includes('/members') && method === 'GET':
                         return concepts();
+                    case url.includes('/taxonomy/search') && method === 'GET':
+                        return taxonomySearch();
                     case url.includes('/refset/') && method === 'GET':
                         return refset();
                     case url.includes('/taxonomyRoot') && method === 'GET':
@@ -328,8 +390,8 @@ export class BackendInterceptor implements HttpInterceptor {
                 switch (true) {
                     case url.includes('/taxonomyRoot') && method === 'GET':
                         return rootNode();
-                    // case url.includes('/members') && url.includes('taxonomy') && method === 'GET':
-                    //     return concepts();
+                    case url.includes('/taxonomy/search') && method === 'GET':
+                        return taxonomySearch();
                     default:
                         // pass through any requests not handled above
                         return next.handle(request); 
@@ -355,7 +417,7 @@ export class BackendInterceptor implements HttpInterceptor {
 
         function concepts() {
 
-            let rowsThisPage = sortAndFilter(conceptData);
+            let rowsThisPage;
 
             if (params.displayType && params.displayType == 'taxonomy') {
 
@@ -364,11 +426,21 @@ export class BackendInterceptor implements HttpInterceptor {
                 rowsThisPage = sortAndFilter(conceptData);
             }
 
-            //return ok(rowsThisPage);
             return ok({
                 totalKnown: true,
                 total: totalResults,
                 items: rowsThisPage
+            });
+        }
+
+        function taxonomySearch() {
+
+            taxonomySearchResults
+
+            return ok({
+                totalKnown: true,
+                total: taxonomySearchResults.length,
+                items: taxonomySearchResults
             });
         }
 
