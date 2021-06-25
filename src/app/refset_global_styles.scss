@@ -552,6 +552,15 @@ footer.footer a {
         font-weight: normal;
         color: $inactive_text_color;
     }
+    .tree-node .refset-tool-taxonomy-relation-members{
+
+        .toggle-children-wrapper{
+
+            .toggle-children {
+                background-image: url("/assets/circled_chevron_right_icon.svg");
+            }
+        }
+    }
     .tree-node img {
         width: 25px;
         height: 22px;

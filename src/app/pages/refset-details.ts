@@ -256,6 +256,7 @@ export class RefsetDetails {
         this.selectedTaxonomyLanguageIndex = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
         this.taxonomyOptions.displayField = this.selectedTaxonomyLanguageIndex + '';
         this.taxonomyManualStateRefresh = new Boolean("true"); 
+        this.taxonomySearchGridApi.refreshCells();
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
