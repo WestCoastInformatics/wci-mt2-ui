@@ -154,7 +154,7 @@ export class TaxonomyTreeComponent {
 
         let classes = '';
 
-        if (CodeUtility.testBoolean(node.data.hasAncestorRefsetMembers)) {
+        if (CodeUtility.testBoolean(node.data.hasDescendantRefsetMembers)) {
             classes += ' refset-tool-taxonomy-relation-members';
         }
 
