@@ -392,7 +392,7 @@ export class RefsetDetails {
     }
 
     goToTaxonomyConcept(selectedConcept, selectedPath) {
-        this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath);
+        this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, undefined, true, false);
     }
 
     //***** Members Grid Functions *****/

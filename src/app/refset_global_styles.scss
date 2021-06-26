@@ -541,26 +541,20 @@ footer.footer a {
     margin-bottom: 15px;
     display: block;
 
-    .tree-node .refset-tool-taxonomy-is-member{
+    .tree-node.refset-tool-taxonomy-is-member{
         font-weight: bold;
         color: $standard_font_color;
     }
-    .tree-node .refset-tool-taxonomy-is-not-member{
+    .tree-node.refset-tool-taxonomy-is-not-member{
         font-weight: normal;
         color: $standard_font_color;
     }
-    .tree-node .refset-tool-taxonomy-no-members-in-branch{
-        font-weight: normal;
-        color: $inactive_text_color;
+    .tree-node.refset-tool-taxonomy-no-members-in-branch{
+        //font-weight: normal;
+        //color: $inactive_text_color;
     }
-    .tree-node .refset-tool-taxonomy-relation-members{
-
-        .toggle-children-wrapper{
-
-            .toggle-children {
-                background-image: url("/assets/circled_chevron_right_icon.svg");
-            }
-        }
+    .tree-node.refset-tool-taxonomy-relation-members > tree-node-wrapper > .node-wrapper > tree-node-expander > .toggle-children-wrapper > .toggle-children {
+        background-image: url("/assets/circled_chevron_right_icon.svg");
     }
     .tree-node img {
         width: 25px;
