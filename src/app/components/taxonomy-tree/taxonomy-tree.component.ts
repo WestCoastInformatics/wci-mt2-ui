@@ -388,6 +388,7 @@ export class TaxonomyTreeComponent {
             node.setIsActive(true);
         }
 
-        node.scrollIntoView();
+        let element: any = $('#' + node.parent.data.code + '-' + node.data.code);
+        element[0].scrollIntoView({behavior: 'smooth'});
     }
 }
