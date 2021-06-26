@@ -114,6 +114,20 @@ export class UiUtility {
             description = 'download';
         }
 
+        let notifyOfError = () => {
+
+            if (CodeUtility.hasValue(downloadUrl)){
+                window.URL.revokeObjectURL(downloadUrl);
+            }
+
+            if (notificationService.isOpen(downloadNotification)) {
+                notificationService.close(downloadNotification);
+            }
+
+            downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', {closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+            downloadNotification;
+        };
+
         $.ajax({
             type: "GET",
             url: url,
@@ -126,53 +140,59 @@ export class UiUtility {
 
                 request.addEventListener('readystatechange', function (event) {
 
-                    if (request.readyState == 4) {
+                    try {
 
-                        // Downloaing has finished
-                        downloadUrl = URL.createObjectURL(request.response);
-                        let id = 'file_download_' + CodeUtility.getUniqueID();
-                        
-                        if (!CodeUtility.hasValue(fileName)) {
+                        if (request.status != 500 && request.readyState == 4) {
+
+                            // Downloaing has finished
+                            downloadUrl = URL.createObjectURL(request.response);
+                            let id = 'file_download_' + CodeUtility.getUniqueID();
                             
-                            let disposition = request.getResponseHeader('Content-Disposition');
+                            if (!CodeUtility.hasValue(fileName)) {
+                                
+                                let disposition = request.getResponseHeader('Content-Disposition');
 
-                            if (disposition && disposition.indexOf('attachment') !== -1) {
+                                if (disposition && disposition.indexOf('attachment') !== -1) {
 
-                                let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                                let matches = regex.exec(disposition);
+                                    let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                                    let matches = regex.exec(disposition);
 
-                                if (matches != null && matches[1]) {
-                                    fileName = matches[1].replace(/['"]/g, '');
-                                } else {
-                                    fileName = '';
+                                    if (matches != null && matches[1]) {
+                                        fileName = matches[1].replace(/['"]/g, '');
+                                    } else {
+                                        fileName = '';
+                                    }
                                 }
                             }
+
+                            let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
+
+                            let message = 'Your ' + description + ' is complete. Click this message to download your file';
+
+                            notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id}, 100);
+
+                            setTimeout(function () {
+
+                                $('#' + id).click(function () {
+                                    notificationService.close(downloadNotification);
+                                });
+                            }, 600);
+
+                            // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
+                            setTimeout(function () {
+
+                                window.URL.revokeObjectURL(downloadUrl);
+
+                                if (notificationService.isOpen(downloadNotification)){
+
+                                    notificationService.close(downloadNotification);
+                                    notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', {closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+                                }
+                            }, 300000);
                         }
 
-                        let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
-
-                        let message = 'Your ' + description + ' is complete. Click this message to download your file';
-
-                        notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id}, 100);
-
-                        setTimeout(function () {
-
-                            $('#' + id).click(function () {
-                                notificationService.close(downloadNotification);
-                            });
-                        }, 600);
-
-                        // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
-                        setTimeout(function () {
-
-                            window.URL.revokeObjectURL(downloadUrl);
-
-                            if (notificationService.isOpen(downloadNotification)){
-
-                                notificationService.close(downloadNotification);
-                                notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', {closeButton: true, timeout: 0, extendedTimeout: 0 });
-                            }
-                        }, 300000);
+                    } catch (error) {
+                        notifyOfError();
                     }
                 });
 
@@ -193,12 +213,11 @@ export class UiUtility {
             success: function (data) {
 
                 if (data.error) {
-
-                    // $.notify({message: data.error}, {
-                    //     type: 'error',
-                    //     delay: 10000
-                    // });
+                    notifyOfError();
                 }
+            },
+            error: function (data) {
+                notifyOfError();
             }
         });
     }
