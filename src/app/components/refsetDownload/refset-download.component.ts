@@ -67,6 +67,8 @@ export class RefsetDownloadComponent {
         this.comparisonFromOptions = this.versionOptions;
         this.comparisonToOptions = this.versionOptions;
         let versionDate = RefsetUtility.getVersionDate(this.refset);
+        this.selectedVersionDate = CodeUtility.formatJsonDate(versionDate, CodeUtility.DATE_FORMAT_REVERSE);
+        let selectedVersionDateIndex = this.versionOptions.findIndex((element) => { element.value == this.selectedVersionDate });
 
         for (let language of this.refset?.edition?.fullyQualifiedLanguageRefsets) {
 
@@ -86,11 +88,9 @@ export class RefsetDownloadComponent {
         if (this.versionOptions.length > 1) {
 
             this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }, { value: 'snapshot_delta', display: 'Snapshot And Delta' }]);
-            this.comparisonFromOptions = this.versionOptions.slice(1);
-            this.comparisonToOptions = this.versionOptions.slice(0, -1);
+            this.comparisonFromOptions =  this.versionOptions.slice(0, selectedVersionDateIndex);
+            this.comparisonToOptions = this.versionOptions;
         }
-
-        this.selectedVersionDate = CodeUtility.formatJsonDate(versionDate, CodeUtility.DATE_FORMAT_REVERSE);
 
         const dialogId = 'downloadDialog';
         const dialogData = {
@@ -141,7 +141,7 @@ export class RefsetDownloadComponent {
 
                 fileNameDate = fileNameDate.replaceAll('-', '');
 
-                let params = {
+                let params: any = {
                     format: data.selectedFormat,
                     exportType: data.selectedContent.toUpperCase(),
                     languageId: data.selectedLanguage,
@@ -150,6 +150,10 @@ export class RefsetDownloadComponent {
                     transientEffectiveTime: fileNameDate,
                     exportMetadata: data.exportMetadata
                 };
+
+                if (data.selectedContent == 'delta') {
+                    params.startEffectiveTime =data.selectedComparisonFrom.replaceAll('-', '');
+                }
 
                 this.refsetService.downloadRefset(this.refset.id, params).subscribe(results => {
                     console.log("Export Call Results: ", results);
@@ -225,13 +229,13 @@ export class RefsetDownloadComponent {
 
     changeComparisonFrom(formData) {
 
-        let selectedFrom = formData.selectedComparisonFrom;
-        let toOptions = this.versionOptions.slice(0, selectedFrom - 1);
+        // let selectedFrom = formData.selectedComparisonFrom;
+        // let toOptions = this.versionOptions.slice(0, selectedFrom - 1);
 
-        if (formData.selectedComparisonTo >= selectedFrom){
-            formData.selectedComparisonTo = '';
-        }
+        // if (formData.selectedComparisonTo >= selectedFrom){
+        //     formData.selectedComparisonTo = '';
+        // }
 
-        formData.comparisonToOptions = toOptions;
+        // formData.comparisonToOptions = toOptions;
     }
 }
