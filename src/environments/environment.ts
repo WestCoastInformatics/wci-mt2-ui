@@ -2,11 +2,23 @@
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+let restUrl = '${RT2GUI_SERVICE_API_URL}';
+let snomedBrowserUrl = '${RT2GUI_SNOMED_BROWSER_URL}'
+
+if (restUrl == '${RT2GUI_SERVICE_API_URL}'){
+    restUrl = 'https://dev-rt2.ihtsdotools.org/';
+    //restUrl = 'http://localhost:8080';
+}
+
+if (snomedBrowserUrl == '${RT2GUI_SNOMED_BROWSER_URL}'){
+  snomedBrowserUrl = 'https://browser.ihtsdotools.org/?perspective=full';
+}
+
 export const environment = {
-  production: false,
-  restUrl: 'http://localhost:8080',
-  snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
-  mockRestData: false 
+    production: false,
+    restUrl: restUrl,
+    snomedBrowserUrl: snomedBrowserUrl,
+    mockRestData: false 
 };
 
 /*
