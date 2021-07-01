@@ -16,7 +16,7 @@
             <div class="col-md-auto">
                 <mat-form-field id="directorySearchInputField">
                     <mat-label>Search</mat-label>
-                    <input matInput #directorySearchInput [(ngModel)]="searchInput" (change)="onSearchChange()">
+                    <input matInput #directorySearchInput [(ngModel)]="searchInput" (keyup)="onSearchChange()" (change)="onSearchChange()">
                 </mat-form-field>
                 <span class="clear-search" (click)="clearSearch()">&#10005;</span>
             </div>

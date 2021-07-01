@@ -241,7 +241,7 @@
                         <div class="col-lg ml-3" [style.display]="membersTableDisplay">
                             <mat-form-field id="detailsTableSearchInputField" class="refset-tool-details-search-field">
                                 <mat-label>Search</mat-label>
-                                <input matInput #detailsTableSearchInput [(ngModel)]="tableSearchInput" (change)="onTableSearchChange()">
+                                <input matInput #detailsTableSearchInput [(ngModel)]="tableSearchInput" (keyup)="onTableSearchChange()" (change)="onTableSearchChange()">
                             </mat-form-field>
                             <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
                         </div>
@@ -249,7 +249,7 @@
                         <div class="col-lg ml-3" [style.display]="membersTaxonomyDisplay">
                             <mat-form-field id="detailsTaxonomySearchInputField" class="refset-tool-details-search-field">
                                 <mat-label>Search</mat-label>
-                                <input matInput #detailsTaxonomySearchInput [(ngModel)]="taxonomySearchInput" (change)="onTaxonomySearchChange()">
+                                <input matInput #detailsTaxonomySearchInput [(ngModel)]="taxonomySearchInput" (keyup)="onTaxonomySearchChange()" (change)="onTaxonomySearchChange()">
                             </mat-form-field>
                             <span class="clear-search" (click)="clearSearch('taxonomy')">&#10005;</span>
                         </div>

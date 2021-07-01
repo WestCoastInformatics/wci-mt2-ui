@@ -6,6 +6,7 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
@@ -136,7 +137,6 @@ export class RefsetDetails {
                 paginationPageSize: this.membersGridPaging.pageSize,
                 cacheBlockSize: this.membersGridPaging.pageSize,
                 maxBlocksInCache: 1,
-                loadingCellRenderer: 'agLoadingOverlay',
                 rowModelType: 'infinite',
                 rowSelection: 'single',
                 onCellClicked: this.onMembersGridCellClick,
@@ -181,7 +181,6 @@ export class RefsetDetails {
                 paginationPageSize: this.taxonomySearchGridPaging.pageSize,
                 cacheBlockSize: this.taxonomySearchGridPaging.pageSize,
                 maxBlocksInCache: 1,
-                loadingCellRenderer: 'agLoadingOverlay',
                 rowModelType: 'infinite',
                 rowSelection: 'single',
                 onCellClicked: this.onTaxonomySearchGridCellClick,
@@ -282,8 +281,8 @@ export class RefsetDetails {
                 let query = '';
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                if (CodeUtility.hasValue(this.tableSearchInput)){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.tableSearchInput;
+                if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2){
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.taxonomySearchInput;
                 }
 
                 let newFilterString = query;
@@ -381,6 +380,7 @@ export class RefsetDetails {
         this.goToTaxonomyConcept(selectedId, selectedPath);
     }
 
+    @Debounce()
     onTaxonomySearchChange() {
 
         if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
@@ -389,7 +389,9 @@ export class RefsetDetails {
             this.taxonomySearchDisplay = 'block';
         }
 
-        this.taxonomySearchGridApi.purgeInfiniteCache();
+        if (!CodeUtility.hasValue(this.taxonomySearchInput) || (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2)) {
+            this.taxonomySearchGridApi.purgeInfiniteCache();
+        }
     }
 
     goToTaxonomyConcept(selectedConcept, selectedPath) {
@@ -413,7 +415,7 @@ export class RefsetDetails {
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                if (CodeUtility.hasValue(this.tableSearchInput)){
+                if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2){
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.tableSearchInput;
                 }
 
@@ -508,7 +510,7 @@ export class RefsetDetails {
                     } else {
 
                         this.membersGridApi.showNoRowsOverlay();
-                        rowParams.successCallback(data, 0);
+                        rowParams.successCallback([], 0);
                     }
 
                     this.membersGridPaging.manualStateRefresh = new Boolean(true);
@@ -569,8 +571,12 @@ export class RefsetDetails {
         }
     }
 
+    @Debounce()
     onTableSearchChange() {
-        this.membersGridApi.purgeInfiniteCache();
+
+        if (!CodeUtility.hasValue(this.tableSearchInput) || (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2)) {
+            this.membersGridApi.purgeInfiniteCache();
+        }
     }
 
     //***** General Functions *****/
@@ -607,6 +613,7 @@ export class RefsetDetails {
 
     loadConceptDetail(concept) {
 
+        this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
 
         this.refsetService.getMembersDetails(concept.code, {refsetInternalId: this.refsetData.id}).subscribe(results => {

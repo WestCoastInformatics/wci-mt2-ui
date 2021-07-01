@@ -13,6 +13,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { Debounce } from '../decorators/debounce.decorator';
 
 
 /**
@@ -98,7 +99,6 @@ export class RefsetDirectory {
             paginationPageSize: this.refsetGridPaging.pageSize,
             cacheBlockSize: this.refsetGridPaging.pageSize,
             maxBlocksInCache: 1,
-            loadingCellRenderer: 'agLoadingOverlay',
             rowModelType: 'infinite',
             rowSelection: 'single',
             onCellClicked: this.onGridCellClick,
@@ -158,7 +158,7 @@ export class RefsetDirectory {
 
                 console.log("^^^^^^ query after viewFilters: " + query);
 
-                if (CodeUtility.hasValue(this.searchInput)){
+                if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2){
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
                 }
                 
@@ -241,7 +241,7 @@ export class RefsetDirectory {
                     } else {
 
                         this.refsetGridApi.showNoRowsOverlay();
-                        rowParams.successCallback(data, 0);
+                        rowParams.successCallback([], 0);
                     }
 
                     this.refsetGridPaging.manualStateRefresh = new Boolean(true);
@@ -301,6 +301,7 @@ export class RefsetDirectory {
         }
     }
 
+    @Debounce()
     changedViewFilter() {
         this.refsetGridApi.purgeInfiniteCache();
     }
@@ -415,8 +416,12 @@ export class RefsetDirectory {
         }
     }
 
+    @Debounce()
     onSearchChange() {
-        this.refsetGridApi.purgeInfiniteCache();
+
+        if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+            this.refsetGridApi.purgeInfiniteCache();
+        }
     }
 
 }
