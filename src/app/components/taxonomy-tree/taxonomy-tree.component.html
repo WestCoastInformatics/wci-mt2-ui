@@ -1,4 +1,9 @@
 <div class="container-fluid refset-tool-taxonomy">
+
+    <div class="row" *ngIf="isLoading">
+        <div>Loading...</div> 
+    </div>
+
     <tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)" (loadNodeChildren)="onLoadNodeChildren($event)">
         <ng-template #treeNodeTemplate let-node let-index="index">
             <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">

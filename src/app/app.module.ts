@@ -41,7 +41,6 @@ import { ColumnChooserComponent } from 'src/app/components/column-chooser/column
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 
 // PAGE IMPORTS
-import { TemplateComponent } from 'src/app/pages/template.component';
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 
@@ -75,7 +74,6 @@ const appRoutes: Routes = [
         PaginationComponent,
         RefsetDownloadComponent,
         ColumnChooserComponent,
-        TemplateComponent,
         NotificationComponent,
         SafeUrlPipe,
         RefsetDirectory,

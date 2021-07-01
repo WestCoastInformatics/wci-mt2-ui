@@ -45,3 +45,4 @@ Thumbs.db
 # profiling files
 chrome-profiler-events.json
 speed-measure-plugin.json
+.vscode/launch.json

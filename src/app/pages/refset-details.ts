@@ -61,6 +61,7 @@ export class RefsetDetails {
     dialog: DialogService;
     conceptDetail: any = null;
     conceptDescriptions: any = [];
+    isConceptDetailsLoading: boolean = false;
     membersTaxonomyRoot: any[] = [];
     taxonomyManualStateRefresh: Boolean = new Boolean(false);
     taxonomyOptions: TreeOptions = {
@@ -606,9 +607,11 @@ export class RefsetDetails {
 
     loadConceptDetail(concept) {
 
+        this.isConceptDetailsLoading = true;
 
         this.refsetService.getMembersDetails(concept.code, {refsetInternalId: this.refsetData.id}).subscribe(results => {
 
+            this.isConceptDetailsLoading = false;
             this.conceptDetail = results;
             
             this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {

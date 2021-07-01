@@ -140,7 +140,7 @@
                                 <span *ngIf="refsetData" [innerHTML]="refsetData.versionNotesShortText"></span>
                             </td>
                         </tr>
-
+                        
                         <tr *ngIf="refsetData?.definition">
                             <td class="refset-tool-refset-metadata-label">Definition:</td>
                             <td class="refset-tool-refset-metadata-value">
@@ -373,6 +373,11 @@
 
             <!-- Concept Details Section -->
             <div class="col-lg-5 refset-tool-concept-details-column">
+
+                <div class="row" *ngIf="isConceptDetailsLoading">
+                    <div>Loading...</div> 
+                </div>
+
                 <div *ngIf="conceptDetail != null">
 
                     <div class="row align-items-center no-gutters">
@@ -396,6 +401,10 @@
 
                         <div class="row">
                             <div class="refset-tool-concept-details-section-title">Parents</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="refset-tool-concept-details-no-relationships" *ngIf="conceptDetail.parents.length == 0">There are no parents</div>
                         </div>
 
                         <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetail.parents">
@@ -501,6 +510,10 @@
 
                         <div class="row">
                             <div class="refset-tool-concept-details-section-title">Children</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="refset-tool-concept-details-no-relationships" *ngIf="conceptDetail.children.length == 0">There are no children</div>
                         </div>
 
                         <!-- Children Taxonomy Tree -->

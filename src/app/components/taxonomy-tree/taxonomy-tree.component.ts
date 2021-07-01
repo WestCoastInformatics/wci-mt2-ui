@@ -26,6 +26,7 @@ export class TaxonomyTreeComponent {
     nodes: any[] = [];
     loadNodeChildrenProcess: Function = (event) => {};
     refsetUtility = RefsetUtility;
+    isLoading: boolean = false;
 
     @Input() treeId: string = 'taxonomyTree';
     @Input() refset: any;
@@ -77,6 +78,7 @@ export class TaxonomyTreeComponent {
                 if (this.rootNode.hasChildren
                     && (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].descriptions))) {
 
+                    this.isLoading = true;
                     let depth: number = 1
 
                     let restParams = {
@@ -114,6 +116,8 @@ export class TaxonomyTreeComponent {
             this.sortTree([this.rootNode]);
             this.nodes = [this.rootNode];
         }
+
+        this.isLoading = false;
     }
 
     onInitTree(event) {
