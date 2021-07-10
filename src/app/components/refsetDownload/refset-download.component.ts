@@ -170,14 +170,14 @@ export class RefsetDownloadComponent {
         });
     }
 
-    showSections(formData){
+    showSections(formData) {
         this.showContentSection(formData);
         this.showLanguageSection(formData);
         this.showVersionSection(formData);
         this.showComparisonSection(formData);
     }
 
-    showContentSection(formData){
+    showContentSection(formData) {
 
         if (CodeUtility.hasValue(formData.selectedFormat) && (formData.selectedFormat == 'rf2' || formData.selectedFormat == 'rf2_with_names')){
             this.showContent = true;
@@ -188,7 +188,7 @@ export class RefsetDownloadComponent {
         }
     }
 
-    showLanguageSection(formData){
+    showLanguageSection(formData) {
 
         if (CodeUtility.hasValue(formData.selectedFormat) && formData.selectedFormat == 'rf2_with_names'){
             this.showLanguages = true;
@@ -197,7 +197,7 @@ export class RefsetDownloadComponent {
         }
     }
 
-    showVersionSection(formData){
+    showVersionSection(formData) {
 
         if (!CodeUtility.hasValue(formData.selectedContent) || (formData.selectedContent == 'snapshot' || formData.selectedContent == 'snapshot_delta')){
             this.showVersions = true;
@@ -206,7 +206,7 @@ export class RefsetDownloadComponent {
         }
     }
 
-    showComparisonSection(formData){
+    showComparisonSection(formData) {
 
         if (CodeUtility.hasValue(formData.selectedContent) && (formData.selectedContent == 'delta' || formData.selectedContent == 'snapshot_delta')){
             this.showComparison = true;
@@ -237,5 +237,13 @@ export class RefsetDownloadComponent {
         // }
 
         // formData.comparisonToOptions = toOptions;
+    }
+
+    addSpaceAfterVersionDate(stringValue: string): string {
+        if (stringValue?.includes('(')) {
+            return stringValue.split('(').join(' (');
+        }
+
+        return stringValue;
     }
 }
