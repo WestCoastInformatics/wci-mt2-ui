@@ -240,8 +240,10 @@ export class RefsetDownloadComponent {
     }
 
     addSpaceAfterVersionDate(stringValue: string): string {
-        return stringValue?.includes('(')
-        ? stringValue.split('(').join(' (')
-        : stringValue;
+        if (stringValue?.includes('(')) {
+            return stringValue.split('(').join(' (');
+        }
+
+        return stringValue;
     }
 }
