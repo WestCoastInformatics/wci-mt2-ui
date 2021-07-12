@@ -57,6 +57,7 @@ export class RefsetDownloadComponent {
 
     //***** General Functions *****/
     openDownload(refsetId: string) {
+        this.hideSections();
 
         this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'rf2_with_names', display: 'RF2 With Names' }, { value: 'free_set', display: 'Free Set' }, { value: 'sctids', display: 'List Of Sct IDs' }];
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
@@ -175,6 +176,13 @@ export class RefsetDownloadComponent {
         this.showLanguageSection(formData);
         this.showVersionSection(formData);
         this.showComparisonSection(formData);
+    }
+
+    private hideSections(): void {
+        this.showContent = false;
+        this.showLanguages = false;
+        this.showComparison = false;
+        this.showVersions = false;
     }
 
     showContentSection(formData) {
