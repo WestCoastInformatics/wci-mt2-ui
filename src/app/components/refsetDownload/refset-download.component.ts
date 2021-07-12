@@ -87,7 +87,7 @@ export class RefsetDownloadComponent {
 
         if (this.versionOptions.length > 1) {
 
-            this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }, { value: 'snapshot_delta', display: 'Snapshot And Delta' }]);
+            this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }]);
             this.comparisonFromOptions =  this.versionOptions.slice(0, selectedVersionDateIndex);
             this.comparisonToOptions = this.versionOptions;
         }
