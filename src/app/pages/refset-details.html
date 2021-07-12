@@ -1,5 +1,4 @@
 <div id="refsetDetailsPage" class="container-fluid">
-
     <!-- Page Title -->
     <!--<div class="container-fluid page-title">
         Reference Set Details
@@ -7,102 +6,157 @@
 
     <!-- Header Bar -->
     <div class="row refset-title sticky-top">
-
         <!-- Section Title -->
-        <div class="col-md-auto page-title">
-            Reference Set Details
-        </div>
+        <div class="col-md-auto page-title">Reference Set Details</div>
         <div class="col refset-tool-refset-details-title-name">
             {{refsetData?.name}}
-            <app-refset-download *ngIf="refsetData?.downloadable" [refset]="refsetData" buttonClasses="refset-tool-title-download"></app-refset-download>
-            <button id="title-feedback" mat-icon-button="" aria-hidden="false" aria-label="Open Feedback"
+            <app-refset-download
+                *ngIf="refsetData?.downloadable"
+                [refset]="refsetData"
+                buttonClasses="refset-tool-title-download"
+            ></app-refset-download>
+            <button
+                id="title-feedback"
+                mat-icon-button=""
+                aria-hidden="false"
+                aria-label="Open Feedback"
                 (click)="openRefsetFeedback()"
                 title="Open Feedback"
-                class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted">
+                class="
+                    mat-focus-indicator
+                    refset-tool-table-action-icon
+                    mat-icon-button mat-button-base
+                    ng-star-inserted
+                "
+            >
                 <span class="mat-button-wrapper">
-                    <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color"
-                        aria-hidden="true" data-mat-icon-type="font">comment-processing-outline
+                    <mat-icon
+                        role="img"
+                        class="
+                            mat-icon
+                            notranslate
+                            material-icons
+                            mat-icon-no-color
+                        "
+                        aria-hidden="true"
+                        data-mat-icon-type="font"
+                        >comment-processing-outline
                     </mat-icon>
                 </span>
-                <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"
-                    ng-reflect-disabled="false" ng-reflect-centered="true"
-                    ng-reflect-trigger="[object HTMLButtonElement]">
+                <span
+                    matripple=""
+                    class="mat-ripple mat-button-ripple mat-button-ripple-round"
+                    ng-reflect-disabled="false"
+                    ng-reflect-centered="true"
+                    ng-reflect-trigger="[object HTMLButtonElement]"
+                >
                 </span>
-                <span class="mat-button-focus-overlay">
-                </span>
+                <span class="mat-button-focus-overlay"> </span>
             </button>
         </div>
 
         <div class="row justify-content-end details-version-select">
-
             <mat-form-field appearance="fill">
                 <mat-label></mat-label>
-                <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion()">
-                    <mat-option *ngFor="let option of versionOptions" [value]="option.value">
+                <mat-select
+                    #detailsVersionSelect
+                    [(value)]="selectedVersion"
+                    (selectionChange)="changeVersion()"
+                >
+                    <mat-option
+                        *ngFor="let option of versionOptions"
+                        [value]="option.value"
+                    >
                         {{option.display}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
         </div>
     </div>
 
     <!-- Metadata Section -->
     <div class="container-fluid" id="detailsMetadataSection">
-
         <div class="row refset-tool-refset-metadata-section">
-
             <!-- Static Metadata Section -->
             <div class="col refset-tool-refset-metadata-column">
-
                 <table class="refset-tool-refset-metadata-table table-striped">
                     <tbody>
-
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Refset ID:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.refsetId}}</td>
+                            <td class="refset-tool-refset-metadata-label">
+                                Refset ID:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.refsetId}}
+                            </td>
                         </tr>
 
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Edition/Extension:</td>
+                            <td class="refset-tool-refset-metadata-label">
+                                Edition/Extension:
+                            </td>
                             <td class="refset-tool-refset-metadata-value">
-                                <img class="refset-tool-edition-flag" src="{{refsetData?.flagIcon}}" *ngIf="refsetData?.flagIcon != ''" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag">
+                                <img
+                                    class="refset-tool-edition-flag"
+                                    src="{{refsetData?.flagIcon}}"
+                                    *ngIf="refsetData?.flagIcon != ''"
+                                    title="{{refsetData?.editionName}} Flag"
+                                    aria-label="{{refsetData?.editionName}} Flag"
+                                />
                                 {{refsetData?.editionName}}
                             </td>
                         </tr>
 
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Status:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.status}}</td>
+                            <td class="refset-tool-refset-metadata-label">
+                                Status:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.status}}
+                            </td>
                         </tr>
 
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Type:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.type}}</td>
+                            <td class="refset-tool-refset-metadata-label">
+                                Type:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.type}}
+                            </td>
                         </tr>
 
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Tags:</td>
+                            <td class="refset-tool-refset-metadata-label">
+                                Tags:
+                            </td>
                             <td class="refset-tool-refset-metadata-value">
                                 {{refsetData?.tags?.join('; ')}}
                             </td>
                         </tr>
 
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Narrative:</td>
-                            <td class="refset-tool-refset-metadata-value" (click)="openRichTextEditor('narrative')">
-                                <span *ngIf="refsetData" [innerHTML]="refsetData.narrativeShortText"></span>
+                            <td class="refset-tool-refset-metadata-label">
+                                Narrative:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{ refsetData?.narrativeShortText }}
                             </td>
                         </tr>
-
                     </tbody>
                 </table>
 
                 <!-- Action Buttons -->
                 <div class="refset-tool-details-metadata-footer">
-                    <button mat-raised-button color="primary" (click)="openArtifacts()" aria-hidden="false"
-                        #detailsArtifactButton class="refset-tool-action-button" aria-label="Open Artifacts"
-                        title="Open Artifacts" ng-reflect-color="primary">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="openArtifacts()"
+                        aria-hidden="false"
+                        #detailsArtifactButton
+                        class="refset-tool-action-button"
+                        aria-label="Open Artifacts"
+                        title="Open Artifacts"
+                        ng-reflect-color="primary"
+                    >
                         Artifacts
                     </button>
                 </div>
@@ -110,43 +164,67 @@
 
             <!-- Versioned Metadata Section -->
             <div class="col refset-tool-refset-metadata-column">
-
                 <table class="refset-tool-refset-metadata-table table-striped">
                     <tbody>
-
                         <tr>
-                            <td class="refset-tool-refset-metadata-label">Version Date:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.versionDate}}</td>
-                        </tr>
-
-                        <tr>
-                            <td class="refset-tool-refset-metadata-label">Owner/Organization:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.organizationName}}</td>
-                        </tr>
-
-                        <tr>
-                            <td class="refset-tool-refset-metadata-label">Version Status:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.versionStatus}}</td>
-                        </tr>
-
-                        <tr>
-                            <td class="refset-tool-refset-metadata-label">Direct URL/URI:</td>
-                            <td class="refset-tool-refset-metadata-value">{{refsetData?.url}}</td>
-                        </tr>
-
-                        <tr>
-                            <td class="refset-tool-refset-metadata-label">Version Notes:</td>
-                            <td class="refset-tool-refset-metadata-value" (click)="openRichTextEditor('versionNotes', 'version notes')">
-                                <span *ngIf="refsetData" [innerHTML]="refsetData.versionNotesShortText"></span>
+                            <td class="refset-tool-refset-metadata-label">
+                                Version Date:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.versionDate}}
                             </td>
                         </tr>
-                        
-                        <tr *ngIf="refsetData?.definition">
-                            <td class="refset-tool-refset-metadata-label">Definition:</td>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">
+                                Owner/Organization:
+                            </td>
                             <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.organizationName}}
+                            </td>
+                        </tr>
 
-                                <div *ngFor="let definitionClause of refsetData?.definition">
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">
+                                Version Status:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.versionStatus}}
+                            </td>
+                        </tr>
 
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">
+                                Direct URL/URI:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.url}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="refset-tool-refset-metadata-label">
+                                Version Notes:
+                            </td>
+                            <td
+                                class="refset-tool-refset-metadata-value"
+                                (click)="openRichTextEditor('versionNotes', 'version notes')"
+                            >
+                                <span
+                                    *ngIf="refsetData"
+                                    [innerHTML]="refsetData.versionNotesShortText"
+                                ></span>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="refsetData?.definition">
+                            <td class="refset-tool-refset-metadata-label">
+                                Definition:
+                            </td>
+                            <td class="refset-tool-refset-metadata-value">
+                                <div
+                                    *ngFor="let definitionClause of refsetData?.definition"
+                                >
                                     {{definitionClause?.value}}
 
                                     <!-- <span *ngIf="!definitionClause.negated">
@@ -156,19 +234,17 @@
                                     <span *ngIf="definitionClause.negated">
                                         <mat-icon class="refset-tool-table-icon refset-tool-delete refset-tool-definition-icon" aria-label="Exclusion Clause" title="Exclusion Clause">remove_circle</mat-icon>
                                     </span> -->
-
                                 </div>
-
                             </td>
                         </tr>
-
                     </tbody>
                 </table>
 
                 <!-- Rich Text Editor Dialog -->
                 <ng-template #detailsRichTextDialog let-data>
-                    
-                    <editor [(ngModel)]="data.text" [init]="{
+                    <editor
+                        [(ngModel)]="data.text"
+                        [init]="{
                         base_url: '/tinymce',
                         suffix: '.min',
                         height: 200,
@@ -177,20 +253,27 @@
                         'lists advlist'
                         ],
                         toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
-                    }"></editor>
-
+                    }"
+                    ></editor>
                 </ng-template>
 
                 <!-- Action Buttons -->
                 <div class="refset-tool-details-metadata-footer">
-                    <button mat-raised-button color="primary" (click)="openAuditTrail()" aria-hidden="false"
-                        #detailsAuditTrailButton class="refset-tool-action-button" aria-label="Open Audit Trail"
-                        title="Open Audit Trail" ng-reflect-color="primary">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="openAuditTrail()"
+                        aria-hidden="false"
+                        #detailsAuditTrailButton
+                        class="refset-tool-action-button"
+                        aria-label="Open Audit Trail"
+                        title="Open Audit Trail"
+                        ng-reflect-color="primary"
+                    >
                         Audit Trail
                     </button>
                 </div>
             </div>
-
         </div>
 
         <ng-template #refsetFeedbackDialog let-data>
@@ -213,319 +296,575 @@
 
     <!-- Member Concepts Section -->
     <div class="container-fluid" id="detailsMemberSection">
-
         <div class="row">
-
             <!-- Member Concepts List Section -->
             <div class="col-lg-7 refset-tool-details-members-column">
-
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
                     <div class="row justify-content-start no-gutters">
-
-                        <div class="col-md-3 refset-tool-details-chooser-column" [style.display]="membersTableDisplay">
-                            <app-column-chooser [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
+                        <div
+                            class="col-md-3 refset-tool-details-chooser-column"
+                            [style.display]="membersTableDisplay"
+                        >
+                            <app-column-chooser
+                                [gridColumnApi]="membersGridColumnApi"
+                                [useDialog]="useDialog"
+                                [manualStateRefresh]="membersGridChooserManualStateRefresh"
+                            ></app-column-chooser>
                         </div>
 
-                        <div class="col-md-3 refset-tool-details-chooser-column" [style.display]="membersTaxonomyDisplay">
+                        <div
+                            class="col-md-3 refset-tool-details-chooser-column"
+                            [style.display]="membersTaxonomyDisplay"
+                        >
                             <mat-form-field appearance="fill">
-                                <mat-select #downloadFormatField [(value)]="selectedTaxonomyLanguage"
-                                    (selectionChange)="changeTaxonomyLanguage()">
-                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
+                                <mat-select
+                                    #downloadFormatField
+                                    [(value)]="selectedTaxonomyLanguage"
+                                    (selectionChange)="changeTaxonomyLanguage()"
+                                >
+                                    <mat-option
+                                        *ngFor="let option of languageOptions"
+                                        [value]="option.value"
+                                    >
                                         {{option.display}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
 
-                        <div class="col-lg ml-3" [style.display]="membersTableDisplay">
-                            <mat-form-field id="detailsTableSearchInputField" class="refset-tool-details-search-field">
+                        <div
+                            class="col-lg ml-3"
+                            [style.display]="membersTableDisplay"
+                        >
+                            <mat-form-field
+                                id="detailsTableSearchInputField"
+                                class="refset-tool-details-search-field"
+                            >
                                 <mat-label>Search</mat-label>
-                                <input matInput #detailsTableSearchInput [(ngModel)]="tableSearchInput" (keyup)="onTableSearchChange()" (change)="onTableSearchChange()">
+                                <input
+                                    matInput
+                                    #detailsTableSearchInput
+                                    [(ngModel)]="tableSearchInput"
+                                    (keyup)="onTableSearchChange()"
+                                    (change)="onTableSearchChange()"
+                                />
                             </mat-form-field>
-                            <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
+                            <span
+                                class="clear-search"
+                                (click)="clearSearch('table')"
+                                >&#10005;</span
+                            >
                         </div>
 
-                        <div class="col-lg ml-3" [style.display]="membersTaxonomyDisplay">
-                            <mat-form-field id="detailsTaxonomySearchInputField" class="refset-tool-details-search-field">
+                        <div
+                            class="col-lg ml-3"
+                            [style.display]="membersTaxonomyDisplay"
+                        >
+                            <mat-form-field
+                                id="detailsTaxonomySearchInputField"
+                                class="refset-tool-details-search-field"
+                            >
                                 <mat-label>Search</mat-label>
-                                <input matInput #detailsTaxonomySearchInput [(ngModel)]="taxonomySearchInput" (keyup)="onTaxonomySearchChange()" (change)="onTaxonomySearchChange()">
+                                <input
+                                    matInput
+                                    #detailsTaxonomySearchInput
+                                    [(ngModel)]="taxonomySearchInput"
+                                    (keyup)="onTaxonomySearchChange()"
+                                    (change)="onTaxonomySearchChange()"
+                                />
                             </mat-form-field>
-                            <span class="clear-search" (click)="clearSearch('taxonomy')">&#10005;</span>
+                            <span
+                                class="clear-search"
+                                (click)="clearSearch('taxonomy')"
+                                >&#10005;</span
+                            >
                         </div>
 
                         <div class="col-md-3">
-                            <mat-button-toggle-group class="refset-tool-toggle-buttons" #detailsMembersListMode
-                                name="membersListMode" aria-label="Members List Mode"
+                            <mat-button-toggle-group
+                                class="refset-tool-toggle-buttons"
+                                #detailsMembersListMode
+                                name="membersListMode"
+                                aria-label="Members List Mode"
                                 (change)="onChangeMembersListMode()"
-                                [(ngModel)]="selectedMembersListMode">
-                                <mat-button-toggle value="table">Table</mat-button-toggle>
-                                <mat-button-toggle value="taxonomy">Taxonomy</mat-button-toggle>
+                                [(ngModel)]="selectedMembersListMode"
+                            >
+                                <mat-button-toggle value="table"
+                                    >Table</mat-button-toggle
+                                >
+                                <mat-button-toggle value="taxonomy"
+                                    >Taxonomy</mat-button-toggle
+                                >
                             </mat-button-toggle-group>
                         </div>
-
                     </div>
                 </div>
 
                 <!-- Members Table -->
-                <div class="container-fluid" [style.display]="membersTableDisplay">
-
-                    <ag-grid-angular #detailsMembersTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                        [columnDefs]="membersColumnDefs" [gridOptions]="membersGridOptions">
+                <div
+                    class="container-fluid"
+                    [style.display]="membersTableDisplay"
+                >
+                    <ag-grid-angular
+                        #detailsMembersTable
+                        *ngIf="showTable"
+                        class="
+                            ag-theme-alpine
+                            refset-tool-ag-grid refset-tool-ag-grid-filter
+                        "
+                        [columnDefs]="membersColumnDefs"
+                        [gridOptions]="membersGridOptions"
+                    >
                     </ag-grid-angular>
 
-                    <app-pagination #detailsMembersPaging *ngIf="showTable" [pageSize]="membersGridPaging.pageSize"
-                        [gridOptions]="membersGridOptions" 
+                    <app-pagination
+                        #detailsMembersPaging
+                        *ngIf="showTable"
+                        [pageSize]="membersGridPaging.pageSize"
+                        [gridOptions]="membersGridOptions"
                         [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
-                        [pageSizeOptions]="membersGridPaging.pageSizeOptions" 
+                        [pageSizeOptions]="membersGridPaging.pageSizeOptions"
                         [totalKnown]="membersGridPaging.totalKnown"
-                        [manualStateRefresh]="membersGridPaging.manualStateRefresh">
+                        [manualStateRefresh]="membersGridPaging.manualStateRefresh"
+                    >
                     </app-pagination>
 
                     <!-- Action Templates -->
                     <ng-template #detailsActionSection let-params>
-
                         <div class="container-fluid">
                             <div class="row">
-
                                 <div class="col-2">
-                                    <button mat-icon-button *ngIf="params?.data?.historyVisible"
-                                        (click)="openMemberHistory(params.data.code)" aria-hidden="false"
-                                        #detailsDownloadIcon class="refset-tool-table-action-icon"
-                                        aria-label="Open History" title="Open History">
+                                    <button
+                                        mat-icon-button
+                                        *ngIf="params?.data?.historyVisible"
+                                        (click)="openMemberHistory(params.data.code)"
+                                        aria-hidden="false"
+                                        #detailsDownloadIcon
+                                        class="refset-tool-table-action-icon"
+                                        aria-label="Open History"
+                                        title="Open History"
+                                    >
                                         <mat-icon>history</mat-icon>
                                     </button>
                                 </div>
 
                                 <div class="col-2">
-                                    <button mat-icon-button *ngIf="params?.data?.feedbackVisible"
-                                        (click)="openMemberFeedback(params.data.code)" aria-hidden="false"
-                                        #detailsFeedbackIcon class="refset-tool-table-action-icon"
-                                        aria-label="Open Feedback" title="Open Feedback">
-                                        <mat-icon>comment-processing-outline</mat-icon>
+                                    <button
+                                        mat-icon-button
+                                        *ngIf="params?.data?.feedbackVisible"
+                                        (click)="openMemberFeedback(params.data.code)"
+                                        aria-hidden="false"
+                                        #detailsFeedbackIcon
+                                        class="refset-tool-table-action-icon"
+                                        aria-label="Open Feedback"
+                                        title="Open Feedback"
+                                    >
+                                        <mat-icon
+                                            >comment-processing-outline</mat-icon
+                                        >
                                     </button>
                                 </div>
-
                             </div>
                         </div>
-
                     </ng-template>
 
                     <ng-template #memberHistoryDialog let-data>
-                        
                         <div class="container-fluid">
-
                             <div class="refset-tool-dialog-name">
                                 {{data.name}}
                             </div>
 
-                            <ag-grid-angular #memberHistoryTable id="memberHistoryGrid" class="ag-theme-alpine refset-tool-ag-grid"
-                                [columnDefs]="data.columnDefs" [gridOptions]="data.gridOptions">
+                            <ag-grid-angular
+                                #memberHistoryTable
+                                id="memberHistoryGrid"
+                                class="ag-theme-alpine refset-tool-ag-grid"
+                                [columnDefs]="data.columnDefs"
+                                [gridOptions]="data.gridOptions"
+                            >
                             </ag-grid-angular>
-
                         </div>
                     </ng-template>
 
                     <ng-template #memberFeedbackDialog let-data>
-                        This functionality will be implemented in subsequent phases.
+                        This functionality will be implemented in subsequent
+                        phases.
                     </ng-template>
-
                 </div>
 
                 <!-- Members Taxonomy Tree -->
-                <div class="container-fluid" [style.display]="membersTaxonomyDisplay">
-
-                    <div #memberTaxonomySearchResults class="container-fluid" [style.display]="taxonomySearchDisplay">
-
+                <div
+                    class="container-fluid"
+                    [style.display]="membersTaxonomyDisplay"
+                >
+                    <div
+                        #memberTaxonomySearchResults
+                        class="container-fluid"
+                        [style.display]="taxonomySearchDisplay"
+                    >
                         <!-- Taxonomy Search Results Grid -->
-                        <ag-grid-angular id="taxonomySearchTable" #taxonomySearchTable *ngIf="showTaxonomySearchTable" class="ag-theme-alpine refset-tool-ag-grid"
-                            [columnDefs]="taxonomySearchColumnDefs" [gridOptions]="taxonomySearchGridOptions">
+                        <ag-grid-angular
+                            id="taxonomySearchTable"
+                            #taxonomySearchTable
+                            *ngIf="showTaxonomySearchTable"
+                            class="ag-theme-alpine refset-tool-ag-grid"
+                            [columnDefs]="taxonomySearchColumnDefs"
+                            [gridOptions]="taxonomySearchGridOptions"
+                        >
                         </ag-grid-angular>
 
-                        <app-pagination #taxonomySearchPaginationComponent *ngIf="showTaxonomySearchTable" [pageSize]="taxonomySearchGridPaging.pageSize"
-                            [gridOptions]="taxonomySearchGridOptions" 
+                        <app-pagination
+                            #taxonomySearchPaginationComponent
+                            *ngIf="showTaxonomySearchTable"
+                            [pageSize]="taxonomySearchGridPaging.pageSize"
+                            [gridOptions]="taxonomySearchGridOptions"
                             [numberOfPages]="taxonomySearchGridApi?.paginationGetTotalPages()"
-                            [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions" 
+                            [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
                             [totalKnown]="taxonomySearchGridPaging.totalKnown"
-                            [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh">
+                            [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
+                        >
                         </app-pagination>
 
                         <!-- Result Template -->
                         <ng-template #taxonomyResultSection let-params>
-
                             {{params?.value}}
-
                         </ng-template>
 
                         <!-- Path Template -->
                         <ng-template #taxonomyPathSection let-params>
-
                             {{params?.value}}
-
                         </ng-template>
-
                     </div>
 
-                    <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="membersTaxonomyRoot" [options]="taxonomyOptions" [manualStateRefresh]="taxonomyManualStateRefresh"></app-taxonomy-tree>
+                    <app-taxonomy-tree
+                        #detailsMembersTaxonomy
+                        treeId="detailsMembersTree"
+                        [refset]="refsetData"
+                        [rootNode]="membersTaxonomyRoot"
+                        [options]="taxonomyOptions"
+                        [manualStateRefresh]="taxonomyManualStateRefresh"
+                    ></app-taxonomy-tree>
                 </div>
-
             </div>
 
             <!-- Concept Details Section -->
             <div class="col-lg-5 refset-tool-concept-details-column">
-
                 <div class="row" *ngIf="isConceptDetailsLoading">
-                    <div>Loading...</div> 
+                    <div>Loading...</div>
                 </div>
 
                 <div *ngIf="conceptDetail != null">
-
                     <div class="row align-items-center no-gutters">
-
                         <div class="col refset-tool-concept-details-title-name">
                             Concept Details
                         </div>
 
                         <div class="col text-right">
-                            <button mat-icon-button
-                                (click)="closeConceptDetails()" aria-hidden="false"
+                            <button
+                                mat-icon-button
+                                (click)="closeConceptDetails()"
+                                aria-hidden="false"
                                 class="refset-tool-table-action-icon"
-                                aria-label="Close Concept Details" title="Close Concept Details">
+                                aria-label="Close Concept Details"
+                                title="Close Concept Details"
+                            >
                                 <mat-icon>close</mat-icon>
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Parents Section -->
-                    <div class="container-fluid refset-tool-concept-details-taxonomy-section">
-
+                    <div
+                        class="
+                            container-fluid
+                            refset-tool-concept-details-taxonomy-section
+                        "
+                    >
                         <div class="row">
-                            <div class="refset-tool-concept-details-section-title">Parents</div>
+                            <div
+                                class="
+                                    refset-tool-concept-details-section-title
+                                "
+                            >
+                                Parents
+                            </div>
                         </div>
 
                         <div class="row">
-                            <div class="refset-tool-concept-details-no-relationships" *ngIf="conceptDetail.parents.length == 0">There are no parents</div>
+                            <div
+                                class="
+                                    refset-tool-concept-details-no-relationships
+                                "
+                                *ngIf="conceptDetail.parents.length == 0"
+                            >
+                                There are no parents
+                            </div>
                         </div>
 
-                        <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetail.parents">
-
-                            <div class="col refset-tool-concept-details-taxonomy-icon">
-                                <img *ngIf="parent.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
-                                <img *ngIf="!parent.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
+                        <div
+                            class="
+                                row
+                                refset-tool-concept-details-taxonomy-item
+                            "
+                            *ngFor="let parent of conceptDetail.parents"
+                        >
+                            <div
+                                class="
+                                    col
+                                    refset-tool-concept-details-taxonomy-icon
+                                "
+                            >
+                                <img
+                                    *ngIf="parent.defined"
+                                    title="Fully Defined"
+                                    aria-label="Fully Defined"
+                                    src="/assets/linedTaxonomyIcon.png"
+                                />
+                                <img
+                                    *ngIf="!parent.defined"
+                                    title="Primitive"
+                                    aria-label="Primitive"
+                                    class="refset-tool-logo mr-2 p-0"
+                                    src="/assets/unlinedTaxonomyIcon.png"
+                                />
                             </div>
 
-                            <div class="col refset-tool-concept-details-taxonomy-description">
-                               {{parent.name}}
+                            <div
+                                class="
+                                    col
+                                    refset-tool-concept-details-taxonomy-description
+                                "
+                            >
+                                {{parent.name}}
                             </div>
                         </div>
                     </div>
 
                     <!-- Details Section -->
-                    <div class="container-fluid refset-tool-concept-details-concept-section">
+                    <div
+                        class="
+                            container-fluid
+                            refset-tool-concept-details-concept-section
+                        "
+                    >
                         <div class="row">
-
                             <!-- Info Section -->
-                            <div class="col refset-tool-concept-details-concept-info-column">
+                            <div
+                                class="
+                                    col
+                                    refset-tool-concept-details-concept-info-column
+                                "
+                            >
                                 <div class="container-fluid">
-
                                     <!-- Name -->
-                                    <div class="row refset-tool-concept-details-concept-title-row">
-                                        
-                                        <div class="col refset-tool-concept-details-taxonomy-icon">
-                                            <img *ngIf="conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
-                                            <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png">
+                                    <div
+                                        class="
+                                            row
+                                            refset-tool-concept-details-concept-title-row
+                                        "
+                                    >
+                                        <div
+                                            class="
+                                                col
+                                                refset-tool-concept-details-taxonomy-icon
+                                            "
+                                        >
+                                            <img
+                                                *ngIf="conceptDetail.defined"
+                                                title="Fully Defined"
+                                                aria-label="Fully Defined"
+                                                src="/assets/linedTaxonomyIcon.png"
+                                            />
+                                            <img
+                                                *ngIf="!conceptDetail.defined"
+                                                title="Primitive"
+                                                aria-label="Primitive"
+                                                class="
+                                                    refset-tool-logo
+                                                    mr-2
+                                                    p-0
+                                                "
+                                                src="/assets/unlinedTaxonomyIcon.png"
+                                            />
                                         </div>
 
-                                        <div class="col refset-tool-concept-details-concept-name">
+                                        <div
+                                            class="
+                                                col
+                                                refset-tool-concept-details-concept-name
+                                            "
+                                        >
                                             {{conceptDescriptions[0].term}}
                                         </div>
 
-                                        <div class="col-1 refset-tool-concept-details-concept-link text-right">
-                                            <button mat-icon-button
-                                                (click)="openMemberHistory()" aria-hidden="false"
-                                                class="refset-tool-concept-details-action-icon"
-                                                aria-label="Open Concept in New SNOMED Browser Window" 
-                                                title="Open Concept in New SNOMED Browser Window">
+                                        <div
+                                            class="
+                                                col-1
+                                                refset-tool-concept-details-concept-link
+                                                text-right
+                                            "
+                                        >
+                                            <button
+                                                mat-icon-button
+                                                (click)="openMemberHistory()"
+                                                aria-hidden="false"
+                                                class="
+                                                    refset-tool-concept-details-action-icon
+                                                "
+                                                aria-label="Open Concept in New SNOMED Browser Window"
+                                                title="Open Concept in New SNOMED Browser Window"
+                                            >
                                                 <mat-icon>open_in_new</mat-icon>
                                             </button>
                                         </div>
-
-                                        
                                     </div>
 
                                     <!-- ID -->
-                                    <div class="row refset-tool-concept-details-concept-row">
-                                        
-                                        <div class="col-3 refset-tool-concept-details-concept-id-label">
+                                    <div
+                                        class="
+                                            row
+                                            refset-tool-concept-details-concept-row
+                                        "
+                                    >
+                                        <div
+                                            class="
+                                                col-3
+                                                refset-tool-concept-details-concept-id-label
+                                            "
+                                        >
                                             SCTID
                                         </div>
 
-                                        <div class="col refset-tool-concept-details-concept-id-text">
+                                        <div
+                                            class="
+                                                col
+                                                refset-tool-concept-details-concept-id-text
+                                            "
+                                        >
                                             {{conceptDetail.code}}
                                         </div>
                                     </div>
 
                                     <!-- ECL -->
-                                    <div class="row refset-tool-concept-details-concept-row">
-                                        
-                                        <div class="col refset-tool-concept-details-concept-ecl">
-                                            {{conceptDetail.code}} | {{conceptDescriptions[0].term}} |
+                                    <div
+                                        class="
+                                            row
+                                            refset-tool-concept-details-concept-row
+                                        "
+                                    >
+                                        <div
+                                            class="
+                                                col
+                                                refset-tool-concept-details-concept-ecl
+                                            "
+                                        >
+                                            {{conceptDetail.code}} |
+                                            {{conceptDescriptions[0].term}} |
                                         </div>
                                     </div>
 
                                     <!-- Descriptions -->
-                                    <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
-                                        
-                                        <div class="col-3 refset-tool-concept-details-concept-description-language">
+                                    <div
+                                        class="
+                                            row
+                                            refset-tool-concept-details-concept-row
+                                        "
+                                        *ngFor="let description of conceptDescriptions"
+                                    >
+                                        <div
+                                            class="
+                                                col-3
+                                                refset-tool-concept-details-concept-description-language
+                                            "
+                                        >
                                             {{description.languageName}}
                                         </div>
 
-                                        <div class="col refset-tool-concept-details-concept-description-text">
+                                        <div
+                                            class="
+                                                col
+                                                refset-tool-concept-details-concept-description-text
+                                            "
+                                        >
                                             {{description.term}}
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
 
                             <!-- Roles Section -->
-                            <div class="col refset-tool-concept-details-concept-roles-column">
+                            <div
+                                class="
+                                    col
+                                    refset-tool-concept-details-concept-roles-column
+                                "
+                            >
                                 <div class="container-fluid" *ngIf="true">
-
-                                    <div class="row refset-tool-concept-details-role-row" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
-
-                                        <div class="row refset-tool-concept-details-role-details" *ngFor="let detail of role.value">
+                                    <div
+                                        class="
+                                            row
+                                            refset-tool-concept-details-role-row
+                                        "
+                                        *ngFor="let role of conceptDetail.roleGroups | keyvalue"
+                                    >
+                                        <div
+                                            class="
+                                                row
+                                                refset-tool-concept-details-role-details
+                                            "
+                                            *ngFor="let detail of role.value"
+                                        >
                                             {{detail}}
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Children Section -->
-                    <div class="container-fluid refset-tool-concept-details-taxonomy-section">
-
+                    <div
+                        class="
+                            container-fluid
+                            refset-tool-concept-details-taxonomy-section
+                        "
+                    >
                         <div class="row">
-                            <div class="refset-tool-concept-details-section-title">Children</div>
+                            <div
+                                class="
+                                    refset-tool-concept-details-section-title
+                                "
+                            >
+                                Children
+                            </div>
                         </div>
 
                         <div class="row">
-                            <div class="refset-tool-concept-details-no-relationships" *ngIf="conceptDetail.children.length == 0">There are no children</div>
+                            <div
+                                class="
+                                    refset-tool-concept-details-no-relationships
+                                "
+                                *ngIf="conceptDetail.children.length == 0"
+                            >
+                                There are no children
+                            </div>
                         </div>
 
                         <!-- Children Taxonomy Tree -->
                         <div class="container-fluid">
-                            <app-taxonomy-tree #childrenMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="conceptDetail" [options]="taxonomyOptions" [manualStateRefresh]="taxonomyManualStateRefresh" hasMultipleRootNodes="false"></app-taxonomy-tree>
+                            <app-taxonomy-tree
+                                #childrenMembersTaxonomy
+                                treeId="detailsMembersTree"
+                                [refset]="refsetData"
+                                [rootNode]="conceptDetail"
+                                [options]="taxonomyOptions"
+                                [manualStateRefresh]="taxonomyManualStateRefresh"
+                                hasMultipleRootNodes="false"
+                            ></app-taxonomy-tree>
                         </div>
-
-                        
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
+</div>
