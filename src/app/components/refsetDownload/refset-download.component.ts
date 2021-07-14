@@ -1,12 +1,9 @@
-import { ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { Observable } from 'rxjs';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { data } from 'jquery';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 
@@ -42,17 +39,9 @@ export class RefsetDownloadComponent {
 
     constructor(
         private dialogFactoryService: DialogFactoryService,
-        private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
         private notificationService: NotificationService
     ) {
-    }
-
-    //***** Framework Functions *****/
-    ngOnInit() {
-    }
-
-    ngAfterViewInit() {
     }
 
     //***** General Functions *****/
@@ -86,7 +75,7 @@ export class RefsetDownloadComponent {
             this.languageOptions = languageRefsetOptions
         }
 
-        if (this.versionOptions.length > 1) {
+        if (this.versionOptions.length > 1 && this.shouldShowDeltaContentLabel()) {
 
             this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }]);
             this.comparisonFromOptions =  this.versionOptions.slice(0, selectedVersionDateIndex);
@@ -253,5 +242,35 @@ export class RefsetDownloadComponent {
         }
 
         return stringValue;
+    }
+
+    shouldShowDeltaContentLabel(): boolean {
+        if (this.comparisonToOptions.length === 1 && this.comparisonFromOptions.length === 1) {
+            return false;
+        } else {
+            return this.checkRefsetDates();
+        }
+    }
+
+    private checkRefsetDates(): boolean {
+        const comparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
+            if (version.display.includes('(')) {
+                // tslint:disable-next-line: no-shadowed-variable
+                const comparisonFromDate = new Date(version.display.split('(')[0]);
+                return comparisonFromDate.getTime();
+            }
+
+            const comparisonFromDate = new Date(version.display);
+            return comparisonFromDate.getTime();
+        });
+
+        const comparisonToDate = new Date(this.selectedVersionDate).getTime();
+
+        for (const date of comparisonFromOptionsArray) {
+            if (date >= comparisonToDate) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,35 +1,53 @@
-<button mat-icon-button #refsetDownloadButton id="refsetDownloadButton" aria-hidden="false"
-    (click)="openDownload(refset.refsetId)" 
-    class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted {{buttonClasses}}" 
-    aria-label="Download Refset" title="Download Refset">
+<button
+    mat-icon-button
+    #refsetDownloadButton
+    id="refsetDownloadButton"
+    aria-hidden="false"
+    (click)="openDownload(refset.refsetId)"
+    class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted {{
+        buttonClasses
+    }}"
+    aria-label="Download Refset"
+    title="Download Refset"
+>
     <span class="mat-button-wrapper">
-        <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color"
-            aria-hidden="true" data-mat-icon-type="font">download
+        <mat-icon
+            role="img"
+            class="mat-icon notranslate material-icons mat-icon-no-color"
+            aria-hidden="true"
+            data-mat-icon-type="font"
+            >download
         </mat-icon>
     </span>
-    <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"
-        ng-reflect-disabled="false" ng-reflect-centered="true"
-        ng-reflect-trigger="[object HTMLButtonElement]">
+    <span
+        matripple=""
+        class="mat-ripple mat-button-ripple mat-button-ripple-round"
+        ng-reflect-disabled="false"
+        ng-reflect-centered="true"
+        ng-reflect-trigger="[object HTMLButtonElement]"
+    >
     </span>
-    <span class="mat-button-focus-overlay">
-    </span>
+    <span class="mat-button-focus-overlay"> </span>
 </button>
 
 <ng-template #refsetDownloadDialog let-data>
-
     <div class="container-fluid">
-
         <div class="row" id="downloadFormatRow">
-
             <div class="col refset-tool-download-column-label">
                 <label>Format:</label>
             </div>
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
-                    <mat-select #downloadFormatField [(value)]="data.selectedFormat"
-                        (selectionChange)="changeFormat(data)">
-                        <mat-option *ngFor="let option of data.formatOptions" [value]="option.value">
-                            {{option.display}}
+                    <mat-select
+                        #downloadFormatField
+                        [(value)]="data.selectedFormat"
+                        (selectionChange)="changeFormat(data)"
+                    >
+                        <mat-option
+                            *ngFor="let option of data.formatOptions"
+                            [value]="option.value"
+                        >
+                            {{ option.display }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -37,16 +55,21 @@
         </div>
 
         <div class="row" id="downloadContentRow" *ngIf="showContent">
-
             <div class="col refset-tool-download-column-label">
                 <label>Content:</label>
             </div>
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
-                    <mat-select #downloadContentField [(value)]="data.selectedContent"
-                        (selectionChange)="changeContent(data)">
-                        <mat-option *ngFor="let option of data.contentOptions" [value]="option.value">
-                            {{option.display}}
+                    <mat-select
+                        #downloadContentField
+                        [(value)]="data.selectedContent"
+                        (selectionChange)="changeContent(data)"
+                    >
+                        <mat-option
+                            *ngFor="let option of data.contentOptions"
+                            [value]="option.value"
+                        >
+                            {{ option.display }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -54,15 +77,20 @@
         </div>
 
         <div class="row" id="downloadLanguageRow" *ngIf="showLanguages">
-
             <div class="col refset-tool-download-column-label">
                 <label>Language Refset:</label>
             </div>
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
-                    <mat-select #downloadLanguageField [(value)]="data.selectedLanguage">
-                        <mat-option *ngFor="let option of data.languageOptions" [value]="option.value">
-                            {{option.display}}
+                    <mat-select
+                        #downloadLanguageField
+                        [(value)]="data.selectedLanguage"
+                    >
+                        <mat-option
+                            *ngFor="let option of data.languageOptions"
+                            [value]="option.value"
+                        >
+                            {{ option.display }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -70,14 +98,20 @@
         </div>
 
         <div class="row" id="downloadVersionRow" *ngIf="showVersions">
-
             <div class="col refset-tool-download-column-label">
                 <label>Version:</label>
             </div>
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
-                    <mat-select #downloadVersionField [(value)]="data.selectedVersion" disabled="true">
-                        <mat-option *ngFor="let option of data.versionOptions" [value]="option.value">
+                    <mat-select
+                        #downloadVersionField
+                        [(value)]="data.selectedVersion"
+                        disabled="true"
+                    >
+                        <mat-option
+                            *ngFor="let option of data.versionOptions"
+                            [value]="option.value"
+                        >
                             {{ addSpaceAfterVersionDate(option.display) }}
                         </mat-option>
                     </mat-select>
@@ -86,19 +120,24 @@
         </div>
 
         <div class="row" id="downloadComparisonRow" *ngIf="showComparison">
-
             <div class="col refset-tool-download-column-label">
                 <label>Delta Comparison:</label>
             </div>
             <div class="col refset-tool-download-column-field">
-                
                 <div class="row delta-row">
-                    
                     <div><label class="in-form-label">From:</label></div>
 
                     <mat-form-field appearance="fill">
-                        <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom">
-                            <mat-option *ngFor="let option of data.comparisonFromOptions" [value]="option.value">
+                        <mat-select
+                            #downloadComparisonFromField
+                            [(value)]="data.selectedComparisonFrom"
+                        >
+                            <mat-option
+                                *ngFor="
+                                    let option of data.comparisonFromOptions
+                                "
+                                [value]="option.value"
+                            >
                                 {{ addSpaceAfterVersionDate(option.display) }}
                             </mat-option>
                         </mat-select>
@@ -107,24 +146,32 @@
                     <div><label class="in-form-label">To:</label></div>
 
                     <mat-form-field appearance="fill">
-                        <mat-select #downloadComparisonToField [(value)]="data.selectedComparisonTo" disabled="true">
-                            <mat-option *ngFor="let option of data.comparisonToOptions" [value]="option.value">
+                        <mat-select
+                            #downloadComparisonToField
+                            [(value)]="data.selectedComparisonTo"
+                            disabled="true"
+                        >
+                            <mat-option
+                                *ngFor="let option of data.comparisonToOptions"
+                                [value]="option.value"
+                            >
                                 {{ addSpaceAfterVersionDate(option.display) }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-
                 </div>
             </div>
         </div>
 
         <div class="row" id="downloadMetaDataRow">
-
             <div class="col refset-tool-download-column-label">
                 <label>Include Metadata:</label>
             </div>
             <div class="col refset-tool-download-column-field">
-                <mat-checkbox [(ngModel)]="data.exportMetadata" value="true"></mat-checkbox>
+                <mat-checkbox
+                    [(ngModel)]="data.exportMetadata"
+                    value="true"
+                ></mat-checkbox>
             </div>
         </div>
     </div>
