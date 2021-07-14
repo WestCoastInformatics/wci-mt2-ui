@@ -254,17 +254,18 @@ export class RefsetDownloadComponent {
 
     private checkRefsetDates(): boolean {
         const comparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
-            if (version.display.includes('(')) {
+            console.log(version);
+            if (version.display?.includes('(')) {
                 // tslint:disable-next-line: no-shadowed-variable
-                const comparisonFromDate = new Date(version.display.split('(')[0]);
-                return comparisonFromDate.getTime();
+                const comparisonFromDate = new Date(version.display?.split('(')[0]);
+                return comparisonFromDate?.getTime();
             }
 
             const comparisonFromDate = new Date(version.display);
-            return comparisonFromDate.getTime();
+            return comparisonFromDate?.getTime();
         });
 
-        const comparisonToDate = new Date(this.selectedVersionDate).getTime();
+        const comparisonToDate = new Date(this.selectedVersionDate)?.getTime();
 
         for (const date of comparisonFromOptionsArray) {
             if (date >= comparisonToDate) {

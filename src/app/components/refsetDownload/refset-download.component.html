@@ -76,6 +76,18 @@
             </div>
         </div>
 
+        <div
+            class="row"
+            id="downloadContentRow"
+            *ngIf="showVersions && !shouldShowDeltaContentLabel()"
+        >
+            <div class="col refset-tool-download-column-label"></div>
+            <div class="col refset-tool-download-column-field">
+                *Delta option not available as this is the initial version of
+                the refset
+            </div>
+        </div>
+
         <div class="row" id="downloadLanguageRow" *ngIf="showLanguages">
             <div class="col refset-tool-download-column-label">
                 <label>Language Refset:</label>
@@ -119,7 +131,11 @@
             </div>
         </div>
 
-        <div class="row" id="downloadComparisonRow" *ngIf="showComparison">
+        <div
+            class="row"
+            id="downloadComparisonRow"
+            *ngIf="showComparison && shouldShowDeltaContentLabel()"
+        >
             <div class="col refset-tool-download-column-label">
                 <label>Delta Comparison:</label>
             </div>
