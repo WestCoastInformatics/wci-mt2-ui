@@ -29,24 +29,31 @@ fdescribe('RefsetDownloadComponent', () => {
 
     describe('shouldShowDeltaContentLabel', () => {
         it('should return false if comparisonToOptions and comparisonFromOptions have exactly one version', () => {
-            mockRefset.comparisonToOptions = ['01/21/1968'];
-            mockRefset.comparisonFromOptions = ['01/21/1968'];
+            mockRefset.comparisonToOptions = ['01/21/1998'];
+            mockRefset.comparisonFromOptions = ['01/21/1998'];
 
             expect(mockRefset.shouldShowDeltaContentLabel()).toBe(false);
         });
         it('should return true if comparisonToOptions and comparisonFromOptions have more than one version and the comparisonToOptions dates are GREATER than the current version', () => {
-            mockRefset.comparisonToOptions = [{'value': '1968-02-21', 'display': '1968-02-21(In Development)'}, {'value': '1968-02-21', 'display': '1968-02-21(In Development)'}];
-            mockRefset.comparisonFromOptions = [{'value': '1969-02-21', 'display': '1969-02-21(In Development)'}, {'value': '1968-02-21', 'display': '1968-02-21(In Development)'}];
-            mockRefset.selectedVersionDate = '1970-02-21';
+            mockRefset.comparisonToOptions = [{'value': '1998-02-21', 'display': '1998-02-21(In Development)'}, {'value': '1998-02-21', 'display': '1998-02-21(In Development)'}];
+            mockRefset.comparisonFromOptions = [{'value': '1999-02-21', 'display': '1999-02-21(In Development)'}, {'value': '1998-02-21', 'display': '1998-02-21(In Development)'}];
+            mockRefset.selectedVersionDate = '2000-02-21';
 
             expect(mockRefset.shouldShowDeltaContentLabel()).toBe(true);
         });
         it('should return false if comparisonToOptions and comparisonFromOptions have more than one version and the comparisonToOptions dates are GREATER than the current version', () => {
-            mockRefset.comparisonToOptions = [{'value': '1968-02-21', 'display': '1968-02-21(In Development)'}, {'value': '1968-02-21', 'display': '1968-02-21(In Development)'}];
-            mockRefset.comparisonFromOptions = [{'value': '1969-02-21', 'display': '1969-02-21(In Development)'}, {'value': '1968-02-21', 'display': '1968-02-21(In Development)'}];
-            mockRefset.selectedVersionDate = '1965-02-21';
+            mockRefset.comparisonToOptions = [{'value': '1998-02-21', 'display': '1998-02-21(In Development)'}, {'value': '1998-02-21', 'display': '1998-02-21(In Development)'}];
+            mockRefset.comparisonFromOptions = [{'value': '1999-02-21', 'display': '1999-02-21(In Development)'}, {'value': '1998-02-21', 'display': '1998-02-21(In Development)'}];
+            mockRefset.selectedVersionDate = '1995-02-21';
 
             expect(mockRefset.shouldShowDeltaContentLabel()).toBe(false);
+        });
+        it('should return true if comparisonToOptions and comparisonFromOptions have more than one version and the comparisonToOptions dates are LESS than the current version', () => {
+            mockRefset.comparisonToOptions = [{'value': '1998-02-21', 'display': '1998-02-21(In Development)'}, {'value': '1998-02-21', 'display': '1998-02-21(In Development)'}];
+            mockRefset.comparisonFromOptions = [{'value': '1999-02-21', 'display': '1999-02-21(In Development)'}, {'value': '1998-02-21', 'display': '1998-02-21(In Development)'}];
+            mockRefset.selectedVersionDate = '2001-02-21';
+
+            expect(mockRefset.shouldShowDeltaContentLabel()).toBe(true);
         });
     });
 });

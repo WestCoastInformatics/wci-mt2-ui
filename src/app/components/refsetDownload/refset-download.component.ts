@@ -254,7 +254,6 @@ export class RefsetDownloadComponent {
 
     private checkRefsetDates(): boolean {
         const comparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
-            console.log(version);
             if (version.display?.includes('(')) {
                 // tslint:disable-next-line: no-shadowed-variable
                 const comparisonFromDate = new Date(version.display?.split('(')[0]);
