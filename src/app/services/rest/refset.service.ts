@@ -55,4 +55,16 @@ export class RefsetService extends RestService {
 
         return JSON.parse(JSON.stringify(this.taxonomyRootNode));
     }
+
+    getVersionStatuses(): Observable<any> {
+        return this.get('/refset/versionStatuses');
+    }
+
+	getEditions(): Observable<any> {
+        return this.get('/refset/editions');
+    }
+	
+    getVersions(): Observable<any> {
+        return this.get('/refset/versions');
+    }
 }
