@@ -5,6 +5,7 @@ import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.ser
 import { Observable } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { Refset } from 'src/app/models/refset';
@@ -14,6 +15,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
+import { forkJoin } from 'rxjs';
 
 
 /**
@@ -46,6 +48,9 @@ export class RefsetDirectory {
     showTable: boolean = false;
     refsetData: any;
     dialog: DialogService;
+	versionStatuses: any; 
+	versions: any; 
+	editions: any; 
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -54,6 +59,7 @@ export class RefsetDirectory {
     @ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
+    @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
 
@@ -66,7 +72,7 @@ export class RefsetDirectory {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService
     ) {
-        refsetService.getTaxonomyRoot();
+        refsetService.getTaxonomyRoot();		
     }
 
     //***** Framework Functions *****/
@@ -77,15 +83,31 @@ export class RefsetDirectory {
     }
 
     ngAfterViewInit() {
+		forkJoin(
+        	this.refsetService.getVersionStatuses(),
+			this.refsetService.getVersions(),
+			this.refsetService.getEditions(),
+		).subscribe(([results, versionResults, editionResults]) => {
 
-        this.columnDefs = [
+            this.versionStatuses = results;
+            let versionStatusArray = this.versionStatuses?.items;
+			this.versions = versionResults;
+            let versionsArray = this.versions?.items;
+			this.editions = editionResults;
+            let editionsArray = this.editions?.items;
+            
+
+	    this.columnDefs = [
             { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
-            { field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection } },
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
+			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
+        floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
             { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
-            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status' },
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', floatingFilterComponent: 'categoryFilterComponent',
+        floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
+        floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
             { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
         ];
@@ -104,7 +126,8 @@ export class RefsetDirectory {
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             frameworkComponents: {
-                'templateRenderer': TemplateRenderer
+                'templateRenderer': TemplateRenderer,
+				'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
                 sortable: true,
@@ -129,8 +152,10 @@ export class RefsetDirectory {
             }
         };
 
+	    
         this.showTable = true
         this.changeDetectorRef.detectChanges();
+});
     }
 
     //***** AG Grid Functions *****/

@@ -39,6 +39,7 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
@@ -77,7 +78,8 @@ const appRoutes: Routes = [
         NotificationComponent,
         SafeUrlPipe,
         RefsetDirectory,
-        RefsetDetails
+        RefsetDetails,
+		CategoryFilterComponent
     ],
     imports: [
         RouterModule.forRoot(
