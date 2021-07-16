@@ -51,6 +51,7 @@ export class RefsetDirectory {
 	versionStatuses: any; 
 	versions: any; 
 	editions: any; 
+	organizations: any;
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -87,7 +88,8 @@ export class RefsetDirectory {
         	this.refsetService.getVersionStatuses(),
 			this.refsetService.getVersions(),
 			this.refsetService.getEditions(),
-		).subscribe(([results, versionResults, editionResults]) => {
+			this.refsetService.getOrganizations(),
+		).subscribe(([results, versionResults, editionResults, organizationResults]) => {
 
             this.versionStatuses = results;
             let versionStatusArray = this.versionStatuses?.items;
@@ -95,7 +97,8 @@ export class RefsetDirectory {
             let versionsArray = this.versions?.items;
 			this.editions = editionResults;
             let editionsArray = this.editions?.items;
-            
+            this.organizations = organizationResults;
+            let organizationsArray = this.organizations?.items;
 
 	    this.columnDefs = [
             { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
@@ -103,7 +106,8 @@ export class RefsetDirectory {
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
 			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
-            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization' },
+            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', floatingFilterComponent: 'categoryFilterComponent',
+        floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}}, 
             { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',

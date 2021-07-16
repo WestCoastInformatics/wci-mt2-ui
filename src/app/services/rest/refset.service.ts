@@ -68,6 +68,10 @@ export class RefsetService extends RestService {
         return this.get('/refset/editions');
     }
 	
+	getOrganizations(): Observable<any> {
+        return this.get('/refset/organizations');
+    }
+
     getVersions(): Observable<any> {
         return this.get('/refset/versions');
     }
