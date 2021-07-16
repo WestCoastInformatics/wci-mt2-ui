@@ -25,6 +25,10 @@ export class RefsetService extends RestService {
         return this.get('/refset/' + refsetId);
     }
 
+    cacheMemberAncestors(refsetId: string, params: any = {}): Observable<any> {
+        return this.get('/ancestors/' + refsetId, params);
+    }
+
     getMembersList(refsetId: string, params: any): Observable<any> {
         return this.get('/refset/' + refsetId + '/members', params);
     }

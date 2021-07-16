@@ -12,7 +12,8 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 
 /**
@@ -28,7 +29,9 @@ export class RefsetDetails {
     id: string;
     refsetId: string = '';
     refsetLoaded = new Subject<boolean>();
-    refsetLoaded$ = this.refsetLoaded.asObservable()
+    refsetLoaded$ = this.refsetLoaded.asObservable();
+    memberCacheLoaded = new Subject<boolean>();
+    memberCacheLoaded$ = this.refsetLoaded.asObservable();
     tableSearchInput: string;
     versionOptions: any;
     selectedVersion: string;
@@ -121,7 +124,13 @@ export class RefsetDetails {
         
         this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
 
-        this.refsetLoaded$.subscribe(loaded => {
+        var allObservables = [this.refsetLoaded$, this.memberCacheLoaded$].map((obs, i) => obs.pipe(tap({
+            next(value) { console.log(`Observable ${i} emits: ${value}`); },
+            complete() { console.log(`Observable ${i} is complete`); }
+        })));
+    
+        // call forkJoin on returned observables
+        forkJoin(allObservables).subscribe(loaded => {
 
             // load taxonomy root
             this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
@@ -236,11 +245,25 @@ export class RefsetDetails {
                 this.shortenNoteFields();
 
             } else {
-
                 console.log('Error loading refset details data.');
             }
 
             this.refsetLoaded.next(true);
+            this.refsetLoaded.complete();
+        });
+
+        this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
+
+            let success = results?.success;
+
+            if (CodeUtility.testBoolean(success)) {
+
+            } else {
+                console.log('Error caching refset member details.');
+            }
+
+            this.memberCacheLoaded.next(true);
+            this.memberCacheLoaded.complete();
         });
     }
 
