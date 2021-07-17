@@ -75,11 +75,13 @@ export class RefsetDownloadComponent {
             this.languageOptions = languageRefsetOptions
         }
 
-        if (this.versionOptions.length > 1 && this.shouldShowDeltaContentLabel()) {
-
-            this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }]);
+        if (this.versionOptions.length > 1) {
             this.comparisonFromOptions =  this.versionOptions.slice(0, selectedVersionDateIndex);
             this.comparisonToOptions = this.versionOptions;
+        }
+
+        if (this.shouldShowDeltaContentLabel()) {
+            this.contentOptions.push(...[{ value: 'delta', display: 'Delta' }]);
         }
 
         const dialogId = 'downloadDialog';
@@ -246,6 +248,7 @@ export class RefsetDownloadComponent {
 
     shouldShowDeltaContentLabel(): boolean {
         if (this.comparisonToOptions.length === 1 && this.comparisonFromOptions.length === 1) {
+
             return false;
         } else {
             return this.checkRefsetDates();
@@ -268,6 +271,7 @@ export class RefsetDownloadComponent {
 
         const comparisonToDate = new Date(this.selectedVersionDate)?.getTime();
             if (sortedComparisonFromOptionsArray[0] >= comparisonToDate) {
+
                 return false;
             }
         return true;
