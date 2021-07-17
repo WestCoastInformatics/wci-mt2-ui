@@ -3,7 +3,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { RefsetDownloadComponent } from './refset-download.component';
 
-fdescribe('RefsetDownloadComponent', () => {
+describe('RefsetDownloadComponent', () => {
     let mockRefset: RefsetDownloadComponent;
     let mockDialogFactoryService: DialogFactoryService;
     let mockRefsetService: RefsetService;
