@@ -253,24 +253,23 @@ export class RefsetDownloadComponent {
     }
 
     private checkRefsetDates(): boolean {
-        const comparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
+        const mappedComparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
             if (version.display?.includes('(')) {
                 // tslint:disable-next-line: no-shadowed-variable
                 const comparisonFromDate = new Date(version.display?.split('(')[0]);
                 return comparisonFromDate?.getTime();
+            } else {
+                const comparisonFromDate = new Date(version.display);
+                return comparisonFromDate?.getTime();
             }
-
-            const comparisonFromDate = new Date(version.display);
-            return comparisonFromDate?.getTime();
         });
 
-        const comparisonToDate = new Date(this.selectedVersionDate)?.getTime();
+        const sortedComparisonFromOptionsArray = mappedComparisonFromOptionsArray.sort((a, b) => a - b);
 
-        for (const date of comparisonFromOptionsArray) {
-            if (date >= comparisonToDate) {
+        const comparisonToDate = new Date(this.selectedVersionDate)?.getTime();
+            if (sortedComparisonFromOptionsArray[0] >= comparisonToDate) {
                 return false;
             }
-        }
         return true;
     }
 }
