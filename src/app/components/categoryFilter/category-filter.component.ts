@@ -26,10 +26,10 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
   agInit(params: SelectFloatingFilterParams): void {
     this.params = params;
     this.names = this.params.names;
-	console.log("^^^^^^ agInit ", this.names.values);
+	console.log("^^^^^^ agInit ", this.names?.values);
 	let obj: SelectEntry = new SelectEntry(this.optionNum++, "");
     this.options.push(obj);
-	for (let i = 0; i < this.names.length; i++) {
+	for (let i = 0; i < this.names?.length; i++) {
         let entry = this.names[i];
     	let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value);
     	this.options.push(obj);
