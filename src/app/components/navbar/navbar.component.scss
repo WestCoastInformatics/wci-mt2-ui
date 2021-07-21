@@ -1,4 +1,4 @@
-@import '~src/variables.scss';
+@import "~src/variables.scss";
 
 nav {
     a.logo {
@@ -10,7 +10,7 @@ nav {
         }
 
         span.title {
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: 1.5px;
             line-height: 4rem;
             vertical-align: top;
@@ -34,28 +34,28 @@ nav {
     }
 
     div.local::before {
-        content: 'LOC';
+        content: "LOC";
         padding: 0 3rem;
         background-color: $river-bed;
         border: 1px solid $sea-buckthorn;
     }
 
     div.dev::before {
-        content: 'DEV';
+        content: "DEV";
         padding: 0 3rem;
         background-color: $mandy;
         border: 1px solid $sea-buckthorn;
     }
 
     div.uat::before {
-        content: 'UAT';
+        content: "UAT";
         padding: 0 3rem;
         background-color: $cerulean;
         border: 1px solid $sea-buckthorn;
     }
 
     div.training::before {
-        content: 'TRN';
+        content: "TRN";
         padding: 0 3rem;
         background-color: $fruit-salad;
         border: 1px solid $sea-buckthorn;
@@ -67,7 +67,7 @@ nav {
 
         span {
             line-height: 3rem;
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: 0.1rem;
         }
 
@@ -84,7 +84,7 @@ nav {
         span {
             font-size: 1.2rem;
             line-height: 3rem;
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: 0.1rem;
 
             &:hover {
@@ -97,7 +97,6 @@ nav {
         list-style-type: none;
         max-height: 3rem;
 
-
         li {
             display: inline-block;
 
@@ -105,11 +104,9 @@ nav {
                 font-size: 1.4rem;
                 color: $white;
                 line-height: 2rem;
-                font-weight: 300;
+                font-weight: 400;
                 letter-spacing: 0.2rem;
             }
-
-
 
             div.dropdown-menu {
                 background-color: $bootstrap-black;
@@ -121,7 +118,7 @@ nav {
                 }
 
                 a.dropdown-item {
-                    font-weight: 300;
+                    font-weight: 400;
                     z-index: auto;
 
                     &:hover {
