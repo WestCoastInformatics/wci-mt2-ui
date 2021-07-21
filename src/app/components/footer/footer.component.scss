@@ -1,4 +1,4 @@
-@import '~src/variables.scss';
+@import "~src/variables.scss";
 
 footer.footer {
     position: fixed;
@@ -10,7 +10,7 @@ footer.footer {
     white-space: nowrap;
 
     a {
-        font-weight: 300;
+        font-weight: 400;
         font-size: 1.2rem;
 
         &:hover {
