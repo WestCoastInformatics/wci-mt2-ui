@@ -1,21 +1,18 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { Observable } from 'rxjs';
-import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
-import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
-import { forkJoin } from 'rxjs';
+import { forkJoin, fromEvent, Observable, Subscription, } from 'rxjs';
 
 
 /**
@@ -26,7 +23,7 @@ import { forkJoin } from 'rxjs';
     templateUrl: 'refset-directory.html'
 })
 
-export class RefsetDirectory {
+export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
 
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
@@ -63,17 +60,18 @@ export class RefsetDirectory {
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
+    resizeObservable$: Observable<Event>;
+    resizeSubscription$: Subscription;
 
     constructor(
         private router: Router,
-        private route: ActivatedRoute,
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService
     ) {
-        refsetService.getTaxonomyRoot();		
+        refsetService.getTaxonomyRoot();
     }
 
     //***** Framework Functions *****/
@@ -81,6 +79,22 @@ export class RefsetDirectory {
 
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
+        this.resizeObservable$ = fromEvent(window, 'resize');
+        this.resizeSubscription$ = this.resizeObservable$.subscribe( evt => {
+            if (evt.target['innerWidth'] < 1300) {
+                this.refsetGridOptions = {
+                    onGridSizeChanged: undefined,
+                };
+            } else {
+                this.refsetGridOptions = {
+                    onGridSizeChanged: UiUtility.resizeGridColumns,
+                };
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.resizeSubscription$.unsubscribe();
     }
 
     ngAfterViewInit() {
@@ -141,6 +155,7 @@ export class RefsetDirectory {
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 suppressMenu: false,
                 menuTabs: ['columnsMenuTab']
+                
             },
             rowClassRules: {
                 'refset_tool_grid_inactive_row': function(params) {
