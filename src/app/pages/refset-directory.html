@@ -51,7 +51,7 @@
     </div>
 
     <!-- Refset Table -->
-    <div class="container-fluid" style="width: 100%">
+    <div class="container-fluid">
         <ag-grid-angular
             #directoryTable
             *ngIf="showTable"
@@ -61,6 +61,8 @@
             "
             [columnDefs]="columnDefs"
             [gridOptions]="refsetGridOptions"
+            (gridSizeChanged)="onGridSizeChanged(event)"
+            style="width: 100%"
         >
         </ag-grid-angular>
 
@@ -384,16 +386,16 @@
 
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
-            <div class="container-fluid">
+            <div class="container-fluid action-buttons">
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-2 column-download-button">
                         <app-refset-download
                             *ngIf="params?.data?.downloadable"
                             [refset]="getRefsetRow(params.data.refsetId)"
                         ></app-refset-download>
                     </div>
 
-                    <div class="col-2">
+                    <div class="col-2 column-feedback-button">
                         <button
                             mat-icon-button
                             *ngIf="params?.data?.feedbackVisible"

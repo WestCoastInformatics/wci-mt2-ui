@@ -1,5 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
@@ -12,7 +12,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
-import { forkJoin, fromEvent, Observable, Subscription, } from 'rxjs';
+import { forkJoin } from 'rxjs';
 
 
 /**
@@ -23,7 +23,7 @@ import { forkJoin, fromEvent, Observable, Subscription, } from 'rxjs';
     templateUrl: 'refset-directory.html'
 })
 
-export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
+export class RefsetDirectory implements OnInit, AfterViewInit {
 
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
@@ -49,6 +49,7 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
 	versions: any; 
 	editions: any; 
 	organizations: any;
+    initialGridWidth: number;
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -59,9 +60,6 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
-
-    resizeObservable$: Observable<Event>;
-    resizeSubscription$: Subscription;
 
     constructor(
         private router: Router,
@@ -76,25 +74,8 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
-
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
-        this.resizeObservable$ = fromEvent(window, 'resize');
-        this.resizeSubscription$ = this.resizeObservable$.subscribe( evt => {
-            if (evt.target['innerWidth'] < 1300) {
-                this.refsetGridOptions = {
-                    onGridSizeChanged: undefined,
-                };
-            } else {
-                this.refsetGridOptions = {
-                    onGridSizeChanged: UiUtility.resizeGridColumns,
-                };
-            }
-        });
-    }
-
-    ngOnDestroy() {
-        this.resizeSubscription$.unsubscribe();
     }
 
     ngAfterViewInit() {
@@ -115,8 +96,8 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
             let organizationsArray = this.organizations?.items;
 
 	    this.columnDefs = [
-            { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
+            { field: 'id', colId: 'information', headerName: '', width: 50, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id'},
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
 			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
@@ -127,13 +108,12 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
-            { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
         ];
 
         this.refsetGridOptions = {
             context: { componentParent: this },
             pagination: true,
-            onGridSizeChanged: UiUtility.resizeGridColumns,
             suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
             paginationPageSize: this.refsetGridPaging.pageSize,
@@ -143,19 +123,18 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
             rowSelection: 'single',
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
+            onGridSizeChanged: this.onGridSizeChanged,
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
 				'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
                 sortable: true,
-                resizable: true,
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 suppressMenu: false,
-                menuTabs: ['columnsMenuTab']
-                
+                menuTabs: ['columnsMenuTab'],
             },
             rowClassRules: {
                 'refset_tool_grid_inactive_row': function(params) {
@@ -313,6 +292,14 @@ export class RefsetDirectory implements OnInit, OnDestroy, AfterViewInit {
         }); 
 
     }
+
+    onGridSizeChanged(params: any) {
+        if (params?.clientWidth > 1600) {
+            this.refsetGridOptions = {
+                onGridSizeChanged: UiUtility.resizeGridColumns(params)
+            };
+        }
+      }
 
     editionValueGetter = function (params) {
 
