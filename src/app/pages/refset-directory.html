@@ -149,6 +149,7 @@
                                             class="refset-tool-edition-flag"
                                             src="{{data?.flagIcon}}"
                                             *ngIf="data?.flagIcon != ''"
+                                            [hidden]="data?.flagIcon"
                                             title="{{data?.editionName}} Flag"
                                             aria-label="{{data?.editionName}} Flag"
                                         />
@@ -377,6 +378,7 @@
                 class="refset-tool-edition-flag"
                 src="{{params?.data?.flagIcon}}"
                 *ngIf="params?.data?.flagIcon != ''"
+                [hidden]="!params?.data?.flagIcon"
                 title="{{params?.data?.editionName}} Flag"
                 aria-label="{{params?.data?.editionName}} Flag"
             />

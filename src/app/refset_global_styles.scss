@@ -452,7 +452,7 @@ button.refset-tool-table-action-icon {
     padding-top: 30px;
 }
 #directorySearchInputField {
-    width: 360px;
+    width: 340px;
 
     // set this to 20px less than the field to leave room for the cancel 'X'
     .mat-form-field-flex {
@@ -472,11 +472,15 @@ button.refset-tool-table-action-icon {
 
 // Column Chooser Styles
 .mat-form-field.refset-tool-column-chooser-select-field {
-    width: 275px;
+    width: 140px;
 
     .mat-form-field-flex {
-        width: 275px;
+        width: 155px;
     }
+}
+
+.format-option-drop-down {
+    width: 140px;
 }
 
 // Details Page Styles
@@ -529,7 +533,8 @@ button.refset-tool-table-action-icon {
 }
 
 .refset-tool-details-search-field {
-    width: 95%;
+    width: 90%;
+    padding-left: 30px;
 
     // set this to 20px less than the field to leave room for the cancel 'X'
     .mat-form-field-flex {
@@ -740,7 +745,7 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
-    width: 250px;
+    width: 140px;
 }
 
 // Refset Details Modal / Info Popup
@@ -800,6 +805,10 @@ button.refset-tool-table-action-icon {
 
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
     color: $cerulean !important;
+}
+
+.mat-select-arrow {
+    transform: translate(0px, 3px) !important;
 }
 
 .mat-primary .mat-pseudo-checkbox-checked,
