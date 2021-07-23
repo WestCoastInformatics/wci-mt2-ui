@@ -299,7 +299,7 @@ button.refset-tool-table-action-icon {
 
 // AG Grid Styles
 .refset-tool-ag-grid {
-    height: min-content;
+    height: 623px;
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -585,6 +585,7 @@ button.refset-tool-table-action-icon {
 }
 // Taxonomy Styles
 .refset-tool-taxonomy {
+    height: 623px;
     margin-bottom: 15px;
     display: block;
 
