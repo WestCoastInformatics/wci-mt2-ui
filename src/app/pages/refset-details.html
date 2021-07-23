@@ -401,8 +401,8 @@
                                 <mat-button-toggle value="table"
                                     >Table</mat-button-toggle
                                 >
-                                <mat-button-toggle value="taxonomy"
-                                    >Taxonomy</mat-button-toggle
+                                <mat-button-toggle value="taxonomy" [disabled]="!showTaxonomySearchTable"
+                                    >{{taxonomyButtonLabel}}</mat-button-toggle
                                 >
                             </mat-button-toggle-group>
                         </div>

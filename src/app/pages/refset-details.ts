@@ -72,6 +72,7 @@ export class RefsetDetails {
         onSelect: this.onTaxonomySelected.bind(this),
         displayField: '0'
     };
+    taxonomyButtonLabel = 'Loading...';
     taxonomySearchInput: string;
     taxonomySearchResults: any[] = [];
     showTaxonomySearchTable: boolean = false;
@@ -124,18 +125,17 @@ export class RefsetDetails {
         
         this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
 
-        var allObservables = [this.refsetLoaded$, this.memberCacheLoaded$].map((obs, i) => obs.pipe(tap({
-            next(value) { console.log(`Observable ${i} emits: ${value}`); },
-            complete() { console.log(`Observable ${i} is complete`); }
-        })));
-    
-        // call forkJoin on returned observables
-        forkJoin(allObservables).subscribe(loaded => {
+        // var allObservables = [this.refsetLoaded$, this.memberCacheLoaded$].map((obs, i) => obs.pipe(tap({
+        //     next(value) { console.log(`Observable ${i} emits: ${value}`); },
+        //     complete() { console.log(`Observable ${i} is complete`); }
+        // })));
 
-            // load taxonomy root
-            this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
-                this.membersTaxonomyRoot = results;
-            });
+        var allObservables = {
+            refsetLoaded: this.refsetLoaded$, 
+            memberCacheLoaded: this.memberCacheLoaded
+        };
+        
+        this.refsetLoaded$.subscribe(loaded => {
 
             this.membersGridOptions = {
                 context: { componentParent: this },
@@ -167,13 +167,27 @@ export class RefsetDetails {
                         var inactivatedRow = false;
         
                         if (params.data){
-                            inactivatedRow = params.data.memberStatus == false;
+                            inactivatedRow = params.data.active == false;
                         }
         
                         return inactivatedRow;
                     }
                 }
             };
+
+            this.showTable = true
+        });
+    
+        // call forkJoin on returned observables
+        forkJoin(allObservables).subscribe(({refsetLoaded, memberCacheLoaded}) => {
+
+            console.log('refsetLoaded: ' + refsetLoaded);
+            console.log('memberCacheLoaded: ' + memberCacheLoaded);
+            
+            // load taxonomy root
+            this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
+                this.membersTaxonomyRoot = results;
+            });
 
             this.taxonomySearchColumnDefs = [
                 { field: 'name', colId: 'result', headerName: 'Result', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyResultValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyResultSection } },
@@ -201,13 +215,24 @@ export class RefsetDetails {
                     suppressMenu: true,
                     floatingFilter: false,
                     filter: false,
+                },
+                rowClassRules: {
+                    'refset_tool_grid_inactive_row': function(params) {
+        
+                        var inactivatedRow = false;
+        
+                        if (params.data){
+                            inactivatedRow = params.data.active == false;
+                        }
+        
+                        return inactivatedRow;
+                    }
                 }
             };
     
-            this.showTable = true
+            this.taxonomyButtonLabel = "Taxonomy";
             this.showTaxonomySearchTable = true
             this.changeDetectorRef.detectChanges();
-            
         });
 
         this.refsetService.getRefset(this.id).subscribe(results => {

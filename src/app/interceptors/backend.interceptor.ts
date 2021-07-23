@@ -292,8 +292,8 @@ for (let i = 1; i < 6; i++){
 }
 
 const conceptData = [
-    { code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
-    { code: '84229001', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' },
+    { code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' },
+    { code: '84229001', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' },
 ];
 
 for (let i = 0; i < 300; i++){
@@ -304,10 +304,10 @@ for (let i = 0; i < 300; i++){
         description.term += ' ' + i.toString();
     });
 
-    let newConcept = { code: i.toString(), roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberStatus: true, memberEffectiveTime: '2020-01-15' };
+    let newConcept = { code: i.toString(), roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' };
 
     if (i == 4 || i == 6) {
-        newConcept.memberStatus = false;
+        newConcept.memberOfRefset = false;
     }
 
     conceptData.push(newConcept);
