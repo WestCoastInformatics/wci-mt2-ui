@@ -134,6 +134,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 suppressMenu: false,
                 menuTabs: ['columnsMenuTab'],
+                resizable: true
             },
             rowClassRules: {
                 'refset_tool_grid_inactive_row': function(params) {
