@@ -345,13 +345,12 @@
                                 id="detailsTableSearchInputField"
                                 class="refset-tool-details-search-field"
                             >
-                                <mat-label>Search</mat-label>
+                                <mat-label>Search (Type at least 3 characters. Example: shou fra)</mat-label>
                                 <input
                                     matInput
                                     #detailsTableSearchInput
                                     [(ngModel)]="tableSearchInput"
-                                    (keyup)="onTableSearchChange()"
-                                    (change)="onTableSearchChange()"
+                                    (input)="onTableSearchChange()"
                                 />
                             </mat-form-field>
                             <span
@@ -369,13 +368,12 @@
                                 id="detailsTaxonomySearchInputField"
                                 class="refset-tool-details-search-field"
                             >
-                                <mat-label>Search</mat-label>
+                                <mat-label>Search (Type at least 3 characters. Example: shou fra)</mat-label>
                                 <input
                                     matInput
                                     #detailsTaxonomySearchInput
                                     [(ngModel)]="taxonomySearchInput"
-                                    (keyup)="onTaxonomySearchChange()"
-                                    (change)="onTaxonomySearchChange()"
+                                    (input)="onTaxonomySearchChange()"
                                 />
                             </mat-form-field>
                             <span

@@ -176,8 +176,8 @@ export class RefsetDetails {
             };
 
             this.taxonomySearchColumnDefs = [
-                { field: 'result', headerName: 'Result', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyResultValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyResultSection } },
-                { field: 'path', headerName: 'Path', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyPathValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyPathSection } },
+                { field: 'name', colId: 'result', headerName: 'Result', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyResultValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyResultSection } },
+                { field: 'parents', colId: 'path', headerName: 'Path', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyPathValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyPathSection } },
             ];
 
             this.taxonomySearchGridOptions = {
@@ -338,6 +338,8 @@ export class RefsetDetails {
 
                 this.refsetService.getTaxonomySearch(this.id, restParams).subscribe(results => {
 
+                    this.taxonomySearchResults = results.items;
+
                     if (results.items.length == 0 && pageNumber > 1) {
 
                         this.taxonomySearchGridPaging.totalRows = (this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1));
@@ -350,6 +352,7 @@ export class RefsetDetails {
                 },
                 error => {
                     
+                    this.taxonomySearchResults = [];
                     this.taxonomySearchGridApi.showNoRowsOverlay();
                     rowParams.successCallback([], 0);
                 });
@@ -368,9 +371,10 @@ export class RefsetDetails {
 
         let pathString = '';
 
-        for (let pathConcept of params.data.path) {
+        for (let pathConcept of params.data.parents) {
  
-            pathString = CodeUtility.addIfNotEmpty(pathString, ' > ') + pathConcept.descriptions[this.selectedTaxonomyLanguageIndex].term;
+            let parentText = this.getTaxonomySearchDescription(pathConcept);
+            pathString = CodeUtility.addIfNotEmpty(pathString, ' > ') + parentText;
         }
 
         return pathString;
@@ -382,8 +386,25 @@ export class RefsetDetails {
             return '';
         }
 
-        return params.data.result.descriptions[this.selectedTaxonomyLanguageIndex].term;
+        return this.getTaxonomySearchDescription(params.data);
     };
+
+    getTaxonomySearchDescription(concept) {
+
+        let text = '';
+        let choosenDescription = concept.descriptions[this.selectedTaxonomyLanguageIndex];
+
+        if (choosenDescription != null) {
+            text = choosenDescription.term;
+
+        } else if (concept.descriptions[0] != null) {
+            text = concept.descriptions[0].term;
+        } else {
+            text = concept.name;
+        }
+
+        return text;
+    }
 
     onTaxonomySearchGridCellClick = (event) => {
 
@@ -393,8 +414,8 @@ export class RefsetDetails {
 
         selectedRows.forEach(function (selectedRow, index) {
 
-            selectedId = selectedRow.result.code;
-            selectedPath = selectedRow.path;
+            selectedId = selectedRow.code;
+            selectedPath = selectedRow.parents;
             console.log('Selected Row: ' + selectedId);
         });
 
@@ -404,14 +425,18 @@ export class RefsetDetails {
     @Debounce()
     onTaxonomySearchChange() {
 
-        if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
-            this.taxonomySearchDisplay = 'none';
-        } else {
-            this.taxonomySearchDisplay = 'block';
-        }
+        let showSearch = CodeUtility.hasValue(this.taxonomySearchInput) && (this.taxonomySearchResults.length > 0 || this.taxonomySearchInput.length > 2);
 
-        if (!CodeUtility.hasValue(this.taxonomySearchInput) || (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2)) {
-            this.taxonomySearchGridApi.purgeInfiniteCache();
+        if (showSearch) {
+
+            this.taxonomySearchDisplay = 'block';
+
+            if (this.taxonomySearchInput.length > 2) {
+                this.taxonomySearchGridApi.purgeInfiniteCache();
+            }
+            
+        } else {
+            this.taxonomySearchDisplay = 'none';
         }
     }
 

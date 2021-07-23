@@ -22,7 +22,12 @@ const userData: User[] = [
 
 const taxonomySearchResults: any[] = [
     { 
-        path: [
+        code: '80631005',
+        descriptions: [
+            {descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+            {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+        ],
+        parents: [
             {
                 code: '138875005',
                 descriptions: [
@@ -37,17 +42,15 @@ const taxonomySearchResults: any[] = [
                     {descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
                 ]
             },
-        ],
-        result: {
-            code: '80631005',
-            descriptions: [
-                {descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
-            ]
-        } 
+        ]
     },
     { 
-        path: [
+        code: '13104003',
+        descriptions: [
+            {descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
+            {descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+        ],
+        parents: [
             {
                 code: '138875005',
                 descriptions: [
@@ -69,14 +72,7 @@ const taxonomySearchResults: any[] = [
                     {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
                 ]
             },
-        ],
-        result: {
-            code: '13104003',
-            descriptions: [
-                {descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                {descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
-            ]
-        } 
+        ]
     },
 ];
 
@@ -373,7 +369,7 @@ export class BackendInterceptor implements HttpInterceptor {
                         return refsets();
                     case url.includes('/members') && method === 'GET':
                         return concepts();
-                    case url.includes('/taxonomy/search') && method === 'GET':
+                    case url.includes('/taxonomySearch') && method === 'GET':
                         return taxonomySearch();
                     case url.includes('/refset/') && method === 'GET':
                         return refset();
@@ -390,8 +386,6 @@ export class BackendInterceptor implements HttpInterceptor {
                 switch (true) {
                     case url.includes('/taxonomyRoot') && method === 'GET':
                         return rootNode();
-                    case url.includes('/taxonomy/search') && method === 'GET':
-                        return taxonomySearch();
                     default:
                         // pass through any requests not handled above
                         return next.handle(request); 
