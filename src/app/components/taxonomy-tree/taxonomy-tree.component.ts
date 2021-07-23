@@ -192,10 +192,8 @@ export class TaxonomyTreeComponent {
 
         if (choosenDescription != null) {
             text = choosenDescription?.term;
-
-        }
-
-        if (data?.descriptions && data?.descriptions[0]) {
+            
+        } else if (data?.descriptions && data?.descriptions[0]) {
             text = data?.descriptions[0].term;
         } else {
             text = data?.name;
