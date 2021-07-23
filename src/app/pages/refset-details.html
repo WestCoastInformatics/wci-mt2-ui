@@ -345,7 +345,10 @@
                                 id="detailsTableSearchInputField"
                                 class="refset-tool-details-search-field"
                             >
-                                <mat-label>Search (Type at least 3 characters. Example: shou fra)</mat-label>
+                                <mat-label
+                                    >Search (Type at least 3 characters.
+                                    Example: shou fra)</mat-label
+                                >
                                 <input
                                     matInput
                                     #detailsTableSearchInput
@@ -368,7 +371,10 @@
                                 id="detailsTaxonomySearchInputField"
                                 class="refset-tool-details-search-field"
                             >
-                                <mat-label>Search (Type at least 3 characters. Example: shou fra)</mat-label>
+                                <mat-label
+                                    >Search (Type at least 3 characters.
+                                    Example: shou fra)</mat-label
+                                >
                                 <input
                                     matInput
                                     #detailsTaxonomySearchInput
@@ -550,12 +556,15 @@
             </div>
 
             <!-- Concept Details Section -->
-            <div class="col-lg-5 refset-tool-concept-details-column">
+            <div
+                class="col-lg-5 refset-tool-concept-details-column"
+                *ngIf="isConceptDetailsLoading || conceptDetail"
+            >
                 <div class="row" *ngIf="isConceptDetailsLoading">
                     <div>Loading...</div>
                 </div>
 
-                <div *ngIf="conceptDetail != null">
+                <div *ngIf="conceptDetail">
                     <div class="row align-items-center no-gutters">
                         <div class="col refset-tool-concept-details-title-name">
                             Concept Details
