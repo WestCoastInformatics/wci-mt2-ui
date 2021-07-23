@@ -298,7 +298,7 @@ button.refset-tool-table-action-icon {
 
 // AG Grid Styles
 .refset-tool-ag-grid {
-    height: 623px;
+    height: min-content;
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -366,7 +366,9 @@ button.refset-tool-table-action-icon {
 .ag-theme-alpine .ag-ltr input[class^="ag-"][type="text"] {
     padding-top: 24px;
 }
-
+.ag-root-wrapper-body {
+    height: max-content !important;
+}
 .ag-theme-alpine {
     font-family: $standard_font_family;
 
@@ -546,6 +548,7 @@ button.refset-tool-table-action-icon {
 #detailsMemberSection .refset-tool-details-members-column {
     //padding-left: 0px;
     //padding-right: 0px;
+    font-size: 12px;
 }
 
 #detailsMemberSection .refset-tool-details-members-column,
@@ -572,7 +575,6 @@ button.refset-tool-table-action-icon {
 
 // Taxonomy Styles
 .refset-tool-taxonomy {
-    height: 623px;
     margin-bottom: 15px;
     display: block;
 
@@ -606,8 +608,8 @@ button.refset-tool-table-action-icon {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
     .tree-node img {
-        width: 25px;
-        height: 22px;
+        width: 18.75px;
+        height: 16.5px;
         position: relative;
         right: 6px;
         top: -3px;
@@ -619,15 +621,15 @@ button.refset-tool-table-action-icon {
     }
     .toggle-children {
         background-image: url("/assets/chevron_right_icon.svg");
-        height: 35px;
-        width: 39px;
+        height: 26.25px;
+        width: 29.25px;
         top: -5px;
     }
     // used for when there are no children
     .toggle-children-placeholder {
         background-image: url("/assets/remove_icon.svg");
-        height: 35px;
-        width: 39px;
+        height: 26.25px;
+        width: 29.25px;
         top: -5px;
         background-repeat: no-repeat;
         background-position: center;
@@ -657,15 +659,23 @@ button.refset-tool-table-action-icon {
     border-radius: 4px;
     margin-top: 80px;
     margin-bottom: 15px;
+    font-size: 12px;
+}
+.refset-tool-details-chooser-column {
+    font-size: 16px;
 }
 .refset-tool-concept-details-title-name {
     font-size: 1.25rem;
     padding: 0px;
 }
+.refset-tool-toggle-buttons {
+    font-size: 16px;
+}
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
     margin-bottom: 5px;
+    height: fit-content;
 }
 .refset-tool-concept-details-taxonomy-icon {
     max-width: 30px;
