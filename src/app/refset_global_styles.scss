@@ -196,6 +196,7 @@ footer.footer a {
 
     .refset-tool-breadcrumb {
         //margin-left: 10px;
+        font-size: 16px !important;
 
         &.refset-tool-breadcrumb-selectable {
             cursor: pointer;
@@ -368,6 +369,9 @@ button.refset-tool-table-action-icon {
 }
 .ag-root-wrapper-body {
     height: max-content !important;
+}
+.no-row-overlay {
+    height: 300px;
 }
 .ag-theme-alpine {
     font-family: $standard_font_family;
@@ -548,7 +552,7 @@ button.refset-tool-table-action-icon {
 #detailsMemberSection .refset-tool-details-members-column {
     //padding-left: 0px;
     //padding-right: 0px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 #detailsMemberSection .refset-tool-details-members-column,
@@ -572,7 +576,13 @@ button.refset-tool-table-action-icon {
 #refsetDetailsPage button .mat-raised-button.mat-button-base {
     width: 150px;
 }
-
+.node-content-wrapper {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+.node-wrapper {
+    line-height: 0px !important;
+}
 // Taxonomy Styles
 .refset-tool-taxonomy {
     margin-bottom: 15px;
@@ -608,11 +618,11 @@ button.refset-tool-table-action-icon {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
     .tree-node img {
-        width: 18.75px;
-        height: 16.5px;
+        width: 12.75px;
+        height: 10.5px;
         position: relative;
         right: 6px;
-        top: -3px;
+        top: 0px;
     }
 
     // Tree Component Overrides
@@ -621,16 +631,16 @@ button.refset-tool-table-action-icon {
     }
     .toggle-children {
         background-image: url("/assets/chevron_right_icon.svg");
-        height: 26.25px;
+        height: 18px;
         width: 29.25px;
-        top: -5px;
+        top: -3px;
     }
     // used for when there are no children
     .toggle-children-placeholder {
         background-image: url("/assets/remove_icon.svg");
-        height: 26.25px;
+        height: 18px;
         width: 29.25px;
-        top: -5px;
+        top: 2px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
@@ -659,7 +669,7 @@ button.refset-tool-table-action-icon {
     border-radius: 4px;
     margin-top: 80px;
     margin-bottom: 15px;
-    font-size: 12px;
+    font-size: 14px;
 }
 .refset-tool-details-chooser-column {
     font-size: 16px;
@@ -681,8 +691,8 @@ button.refset-tool-table-action-icon {
     max-width: 30px;
 
     img {
-        width: 20px;
-        height: 17px;
+        width: 12.75px;
+        height: 10.5px;
     }
 }
 .refset-tool-concept-details-concept-section {
