@@ -99,6 +99,7 @@
                                     class="refset-tool-edition-flag"
                                     src="{{refsetData?.flagIcon}}"
                                     *ngIf="refsetData?.flagIcon != ''"
+                                    [hidden]="!refsetData?.flagIcon"
                                     title="{{refsetData?.editionName}} Flag"
                                     aria-label="{{refsetData?.editionName}} Flag"
                                 />
@@ -317,7 +318,10 @@
                             class="col-md-3 refset-tool-details-chooser-column"
                             [style.display]="membersTaxonomyDisplay"
                         >
-                            <mat-form-field appearance="fill">
+                            <mat-form-field
+                                appearance="fill"
+                                class="format-option-drop-down"
+                            >
                                 <mat-select
                                     #downloadFormatField
                                     [(value)]="selectedTaxonomyLanguage"

@@ -1,60 +1,92 @@
 <div id="refsetDirectoryPage" class="container-fluid">
-
     <!-- Page Title -->
-    <div class="container-fluid page-title">
-        Reference Set Directory
-    </div>
+    <div class="container-fluid page-title">Reference Set Directory</div>
 
     <!-- Search Bar -->
     <div class="container-fluid">
         <div class="row justify-content-end">
-
-            <div class="col-md-auto refset-tool-directory-chooser-column" *ngIf="showTable">
-                <app-column-chooser [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"></app-column-chooser>
+            <div
+                class="col-md-auto refset-tool-directory-chooser-column"
+                *ngIf="showTable"
+            >
+                <app-column-chooser
+                    [gridColumnApi]="refsetGridColumnApi"
+                    [useDialog]="useDialog"
+                ></app-column-chooser>
             </div>
 
             <div class="col-md-auto">
                 <mat-form-field id="directorySearchInputField">
                     <mat-label>Search</mat-label>
-                    <input matInput #directorySearchInput [(ngModel)]="searchInput" (keyup)="onSearchChange()" (change)="onSearchChange()">
+                    <input
+                        matInput
+                        #directorySearchInput
+                        [(ngModel)]="searchInput"
+                        (keyup)="onSearchChange()"
+                        (change)="onSearchChange()"
+                    />
                 </mat-form-field>
-                <span class="clear-search" (click)="clearSearch()">&#10005;</span>
+                <span class="clear-search" (click)="clearSearch()"
+                    >&#10005;</span
+                >
             </div>
             <div class="col-md-auto">
                 <mat-form-field id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
-                    <mat-select #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-                        <mat-option *ngFor="let option of viewOptions" [value]="option.value">
+                    <mat-select
+                        #directoryViewSelect
+                        [(value)]="selectedView"
+                        (selectionChange)="changedViewFilter()"
+                    >
+                        <mat-option
+                            *ngFor="let option of viewOptions"
+                            [value]="option.value"
+                        >
                             {{option.display}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
-
         </div>
     </div>
 
     <!-- Refset Table -->
     <div class="container-fluid">
-
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+        <ag-grid-angular
+            #directoryTable
+            *ngIf="showTable"
+            class="
+                ag-theme-alpine
+                refset-tool-ag-grid refset-tool-ag-grid-filter
+            "
+            [columnDefs]="columnDefs"
+            [gridOptions]="refsetGridOptions"
+            style="width: 100%"
+        >
         </ag-grid-angular>
 
-        <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize" 
+        <app-pagination
+            #directoryPaging
+            [pageSize]="refsetGridPaging.pageSize"
             [gridOptions]="refsetGridOptions"
             [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
             [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
             [totalKnown]="refsetGridPaging.totalKnown"
-            [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+            [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+        >
         </app-pagination>
 
         <!-- Information Templates -->
         <ng-template #directoryInfoSection let-params>
-
-            <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon"
-                aria-label="View All Refset Metadata" title="View All Refset Metadata {{params?.data?.refsetId}}"
-                (click)="openInformation(params.data.refsetId)">
+            <button
+                mat-icon-button
+                aria-hidden="false"
+                #directoryInfoIcon
+                class="refset-tool-table-action-icon"
+                aria-label="View All Refset Metadata"
+                title="View All Refset Metadata {{params?.data?.refsetId}}"
+                (click)="openInformation(params.data.refsetId)"
+            >
                 <mat-icon>information</mat-icon>
             </button>
 
@@ -62,13 +94,10 @@
                 class="refset-tool-table-icon" aria-label="{{params?.data?.type === 'extensional' ? 'extensional refset' : 'intensional refset'}}" title="{{params?.data?.type === 'extensional' ? 'extensional refset' : 'intensional refset'}}">
                 {{params?.data?.type === 'extensional' ? 'settings' : 'format_list_bulleted'}}
             </mat-icon> -->
-
         </ng-template>
 
         <ng-template #directoryInfoDialog let-data>
-            
             <div class="container-fluid" id="directoryInformationSection">
-
                 <div class="row refset-tool-refset-details-title-name">
                     {{data.name}}
                 </div>
@@ -78,88 +107,236 @@
                 </div>
 
                 <div class="row refset-tool-refset-metadata-section">
-
                     <div class="col refset-tool-refset-metadata-column">
-
-                        <table class="refset-tool-refset-metadata-table table-striped">
+                        <table
+                            class="
+                                refset-tool-refset-metadata-table
+                                table-striped
+                            "
+                        >
                             <tbody>
-
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Refset ID:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.refsetId}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Refset ID:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.refsetId}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Edition/Extension:</td>
-                                    <td class="refset-tool-refset-metadata-value">
-                                        <img class="refset-tool-edition-flag" src="{{data?.flagIcon}}" *ngIf="data?.flagIcon != ''" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag">
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Edition/Extension:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        <img
+                                            class="refset-tool-edition-flag"
+                                            src="{{data?.flagIcon}}"
+                                            *ngIf="data?.flagIcon != ''"
+                                            [hidden]="data?.flagIcon"
+                                            title="{{data?.editionName}} Flag"
+                                            aria-label="{{data?.editionName}} Flag"
+                                        />
                                         {{data?.edition?.name}}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Status:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.status}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Status:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.status}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Type:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.type}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Type:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.type}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Tags:</td>
-                                    <td class="refset-tool-refset-metadata-value">
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Tags:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
                                         {{data.tags.join('; ')}}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Narrative:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.narrativeShortText}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Narrative:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.narrativeShortText}}
+                                    </td>
                                 </tr>
-
                             </tbody>
                         </table>
-
                     </div>
 
                     <div class="col refset-tool-refset-metadata-column">
-
-                        <table class="refset-tool-refset-metadata-table table-striped">
+                        <table
+                            class="
+                                refset-tool-refset-metadata-table
+                                table-striped
+                            "
+                        >
                             <tbody>
-
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Version Date:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.versionDate}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Version Date:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.versionDate}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Owner/Organization:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data?.project?.organization?.name}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Owner/Organization:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data?.project?.organization?.name}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Version Status:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.versionStatus}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Version Status:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.versionStatus}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Direct URL/URI:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.url}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Direct URL/URI:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.url}}
+                                    </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="refset-tool-refset-metadata-label">Version Notes:</td>
-                                    <td class="refset-tool-refset-metadata-value">{{data.versionNotesShortText}}</td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Version Notes:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        {{data.versionNotesShortText}}
+                                    </td>
                                 </tr>
 
                                 <tr *ngIf="data?.definition">
-                                    <td class="refset-tool-refset-metadata-label">Definition:</td>
-                                    <td class="refset-tool-refset-metadata-value">
-
-                                        <div *ngFor="let definitionClause of data.definition">
-                                        
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                    >
+                                        Definition:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        <div
+                                            *ngFor="let definitionClause of data.definition"
+                                        >
                                             {{definitionClause.value}}
 
                                             <!-- <span *ngIf="!definitionClause.negated">
@@ -169,69 +346,80 @@
                                             <span *ngIf="definitionClause.negated">
                                                 <mat-icon class="refset-tool-table-icon refset-tool-delete refset-tool-definition-icon" aria-label="Exclusion Clause" title="Exclusion Clause">remove_circle</mat-icon>
                                             </span> -->
-
                                         </div>
-
                                     </td>
                                 </tr>
-
                             </tbody>
                         </table>
-
                     </div>
-
                 </div>
             </div>
         </ng-template>
 
         <!-- Name Templates -->
         <ng-template #directoryNameSection let-params>
-
             {{params?.value}}
 
-            <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon
-                class="refset-tool-table-action-icon" aria-label="Private Refset" title="Private Refset">
+            <mat-icon
+                *ngIf="params?.data?.privateRefset"
+                aria-hidden="false"
+                #directoryPrivateIcon
+                class="refset-tool-table-action-icon"
+                aria-label="Private Refset"
+                title="Private Refset"
+            >
                 lock
             </mat-icon>
-
         </ng-template>
 
         <!-- Edition Templates -->
         <ng-template #directoryEditionSection let-params>
-            <img class="refset-tool-edition-flag" src="{{params?.data?.flagIcon}}" *ngIf="params?.data?.flagIcon != ''" title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag">
+            <img
+                class="refset-tool-edition-flag"
+                src="{{params?.data?.flagIcon}}"
+                *ngIf="params?.data?.flagIcon != ''"
+                [hidden]="!params?.data?.flagIcon"
+                title="{{params?.data?.editionName}} Flag"
+                aria-label="{{params?.data?.editionName}} Flag"
+            />
             {{params?.data?.edition?.name}}
         </ng-template>
 
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
-
-            <div class="container-fluid">
+            <div class="container-fluid action-buttons">
                 <div class="row">
-
-                    <div class="col-2">
-                        <app-refset-download *ngIf="params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)"></app-refset-download>
+                    <div class="col-2 column-download-button">
+                        <app-refset-download
+                            *ngIf="params?.data?.downloadable"
+                            [refset]="getRefsetRow(params.data.refsetId)"
+                        ></app-refset-download>
                     </div>
 
-                    <div class="col-2">
-                        <button mat-icon-button *ngIf="params?.data?.feedbackVisible" (click)="openFeedback(params.data.refsetId)" aria-hidden="false"
-                            #directoryFeedbackIcon class="refset-tool-table-action-icon" aria-label="Open Feedback"
-                            title="Open Feedback">
+                    <div class="col-2 column-feedback-button">
+                        <button
+                            mat-icon-button
+                            *ngIf="params?.data?.feedbackVisible"
+                            (click)="openFeedback(params.data.refsetId)"
+                            aria-hidden="false"
+                            #directoryFeedbackIcon
+                            class="refset-tool-table-action-icon"
+                            aria-label="Open Feedback"
+                            title="Open Feedback"
+                        >
                             <mat-icon>comment-processing-outline</mat-icon>
                         </button>
                     </div>
-
                 </div>
             </div>
-            
         </ng-template>
 
         <ng-template #directoryFeedbackDialog let-data>
             This functionality will be implemented in subsequent phases.
             <mat-form-field *ngIf="false">
                 <mat-label>Feedback</mat-label>
-                <input matInput [(ngModel)]="data.feedback">
+                <input matInput [(ngModel)]="data.feedback" />
             </mat-form-field>
         </ng-template>
-
     </div>
 </div>

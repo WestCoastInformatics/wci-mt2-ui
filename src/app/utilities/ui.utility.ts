@@ -1,7 +1,5 @@
 import { CodeUtility } from "./code.utility";
 import { NotificationService } from 'src/app/services/notification.service';
-import { ActiveToast, ToastRef } from "ngx-toastr";
-
 export class UiUtility {
 
     /*

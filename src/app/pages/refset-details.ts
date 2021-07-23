@@ -140,7 +140,6 @@ export class RefsetDetails {
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
-                onGridSizeChanged: UiUtility.resizeGridColumns,
                 suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 suppressPaginationPanel: true,
                 paginationPageSize: this.membersGridPaging.pageSize,
@@ -184,7 +183,6 @@ export class RefsetDetails {
             this.taxonomySearchGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
-                onGridSizeChanged: UiUtility.resizeGridColumns,
                 suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 suppressPaginationPanel: true,
                 paginationPageSize: this.taxonomySearchGridPaging.pageSize,
@@ -512,18 +510,18 @@ export class RefsetDetails {
                     this.membersGridData = data;
 
                     this.membersColumnDefs = [
-                        { field: 'code', headerName: 'Concept ID', cellClass: 'refset-tool-details-column-concept-id' }
+                        { field: 'code', headerName: 'Concept ID', flex: 1, minWidth: 120, cellClass: 'refset-tool-details-column-concept-id' }
                     ];
 
                     for (let i = 0; i < this.languageOptions.length; i++) {
 
                         let language = this.languageOptions[i];
-                        this.membersColumnDefs.push({ field: i.toString(), colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
+                        this.membersColumnDefs.push({ field: i.toString(), flex: 1, minWidth: 220, colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
-                        { field: 'memberEffectiveTime', colId: 'modified', headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
-                        { field: 'active', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
+                        { field: 'memberEffectiveTime', colId: 'modified', flex: 1, minWidth: 220, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
+                        { field: 'active', colId: 'actions', headerName: '', width: 120, minWidth: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right' }
                     ]);
 
                     if (data.length > 0) {
@@ -785,11 +783,11 @@ export class RefsetDetails {
         
         if (this.selectedMembersListMode == 'table') {
 
-            this.membersTableDisplay = 'block';
+            this.membersTableDisplay = 'inline-block';
             this.membersTaxonomyDisplay = 'none';
         } else {
             this.membersTableDisplay = 'none';
-            this.membersTaxonomyDisplay = 'block';
+            this.membersTaxonomyDisplay = 'inline-block';
         }
     }
 
@@ -831,7 +829,6 @@ export class RefsetDetails {
             
             historyData.gridOptions = {
                 pagination: false,
-                onGridSizeChanged: UiUtility.resizeGridColumns,
                 suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 loadingCellRenderer: 'agLoadingOverlay',
                 rowModelType: 'clientSide',
@@ -839,7 +836,6 @@ export class RefsetDetails {
                 rowSelection: 'single',
                 defaultColDef: {
                     sortable: true,
-                    resizable: true,
                     filter: false,
                     floatingFilter: false,
                     suppressMenu: true

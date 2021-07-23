@@ -181,22 +181,24 @@ export class TaxonomyTreeComponent {
     getNodeText(node) {
 
         let text = '';
-        let index = this.options.displayField;
-        let data = node.data;
+        let index = this.options?.displayField;
+        let data = node?.data;
 
         if (!CodeUtility.hasValue(data)) {
             data = node;
         }
 
-        let choosenDescription = data.descriptions[index];
+        let choosenDescription = data?.descriptions ? data?.descriptions[index] : undefined;
 
         if (choosenDescription != null) {
-            text = choosenDescription.term;
+            text = choosenDescription?.term;
 
-        } else if (data.descriptions[0] != null) {
-            text = data.descriptions[0].term;
+        }
+
+        if (data?.descriptions && data?.descriptions[0]) {
+            text = data?.descriptions[0].term;
         } else {
-            text = data.name;
+            text = data?.name;
         }
 
         return text;

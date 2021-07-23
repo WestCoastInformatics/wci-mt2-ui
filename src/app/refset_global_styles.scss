@@ -347,6 +347,22 @@ button.refset-tool-table-action-icon {
     padding-top: 12px;
 }
 
+.refset-tool-directory-column-actions {
+    padding-left: 12px !important;
+}
+
+.column-download-button {
+    padding-left: 0px;
+}
+
+.column-feedback-button {
+    padding-left: 10px;
+}
+
+.action-buttons {
+    padding-left: 10px;
+}
+
 .ag-theme-alpine .ag-ltr input[class^="ag-"][type="text"] {
     padding-top: 24px;
 }
@@ -409,6 +425,7 @@ button.refset-tool-table-action-icon {
 
     .refset-tool-directory-column-information {
         justify-content: center;
+        padding-left: 3px;
     }
 
     .mat-raised-button {
@@ -435,7 +452,7 @@ button.refset-tool-table-action-icon {
     padding-top: 30px;
 }
 #directorySearchInputField {
-    width: 500px;
+    width: 340px;
 
     // set this to 20px less than the field to leave room for the cancel 'X'
     .mat-form-field-flex {
@@ -455,11 +472,15 @@ button.refset-tool-table-action-icon {
 
 // Column Chooser Styles
 .mat-form-field.refset-tool-column-chooser-select-field {
-    width: 275px;
+    width: 140px;
 
     .mat-form-field-flex {
-        width: 275px;
+        width: 155px;
     }
+}
+
+.format-option-drop-down {
+    width: 140px;
 }
 
 // Details Page Styles
@@ -512,8 +533,9 @@ button.refset-tool-table-action-icon {
 }
 
 .refset-tool-details-search-field {
-    width: 95%;
-
+    width: 90%;
+    padding-left: 30px;
+    font-size: 14px;
     // set this to 20px less than the field to leave room for the cancel 'X'
     .mat-form-field-flex {
         width: calc(100% - 20px);
@@ -723,7 +745,7 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
-    width: 250px;
+    width: 140px;
 }
 
 // Refset Details Modal / Info Popup
@@ -783,6 +805,10 @@ button.refset-tool-table-action-icon {
 
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
     color: $cerulean !important;
+}
+
+.mat-select-arrow {
+    transform: translate(0px, 3px) !important;
 }
 
 .mat-primary .mat-pseudo-checkbox-checked,

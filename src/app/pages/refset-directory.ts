@@ -1,14 +1,11 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { Observable } from 'rxjs';
-import { AgGridAngular } from 'ag-grid-angular';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
-import { Refset } from 'src/app/models/refset';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
@@ -26,7 +23,7 @@ import { forkJoin } from 'rxjs';
     templateUrl: 'refset-directory.html'
 })
 
-export class RefsetDirectory {
+export class RefsetDirectory implements OnInit, AfterViewInit {
 
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
@@ -52,6 +49,7 @@ export class RefsetDirectory {
 	versions: any; 
 	editions: any; 
 	organizations: any;
+    initialGridWidth: number;
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -63,22 +61,19 @@ export class RefsetDirectory {
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
-
     constructor(
         private router: Router,
-        private route: ActivatedRoute,
         private titleService: Title,
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService
     ) {
-        refsetService.getTaxonomyRoot();		
+        refsetService.getTaxonomyRoot();
     }
 
     //***** Framework Functions *****/
     ngOnInit() {
-
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
     }
@@ -101,25 +96,24 @@ export class RefsetDirectory {
             let organizationsArray = this.organizations?.items;
 
 	    this.columnDefs = [
-            { field: 'id', colId: 'information', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false },
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id' },
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
-			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'id', colId: 'information', headerName: '', width: 50, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 210},
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
+			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 210, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
-            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', flex: 1, minWidth: 210, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}}, 
-            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 210, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 210, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
-            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
-            { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false }
+            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 210, valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
         ];
 
         this.refsetGridOptions = {
             context: { componentParent: this },
             pagination: true,
-            onGridSizeChanged: UiUtility.resizeGridColumns,
             suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
             paginationPageSize: this.refsetGridPaging.pageSize,
@@ -135,12 +129,11 @@ export class RefsetDirectory {
             },
             defaultColDef: {
                 sortable: true,
-                resizable: true,
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 suppressMenu: false,
-                menuTabs: ['columnsMenuTab']
+                menuTabs: ['columnsMenuTab'],
             },
             rowClassRules: {
                 'refset_tool_grid_inactive_row': function(params) {
