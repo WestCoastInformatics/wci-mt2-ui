@@ -488,6 +488,10 @@ export class RefsetDetails {
 
                 if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2){
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.tableSearchInput;
+                } else if (this.tableSearchInput && !CodeUtility.hasValue(this.tableSearchInput)) {
+                    this.membersGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
+                    return;
                 }
 
                 let newFilterString = query;
@@ -522,9 +526,8 @@ export class RefsetDetails {
                 }
 
                 this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
-
                     if (results.items.length == 0 && pageNumber > 1) {
-
+                        this.membersGridApi.showNoRowsOverlay();
                         this.membersGridPaging.totalRows = (this.membersGridApi.paginationGetPageSize() * (pageNumber - 1));
                         this.membersGridPaging.totalKnown = true;
                         this.membersPaginationComponent.goToPage(pageNumber - 1);
@@ -533,6 +536,12 @@ export class RefsetDetails {
 
                     let data = results.items;
                     this.membersGridData = data;
+
+                    if (!data.length) {
+                        this.membersGridApi.showNoRowsOverlay();
+                        rowParams.successCallback([], 0);
+                        return;
+                    }
 
                     this.membersColumnDefs = [
                         { field: 'code', headerName: 'Concept ID', flex: 1, minWidth: 120, cellClass: 'refset-tool-details-column-concept-id' }
