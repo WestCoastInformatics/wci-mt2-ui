@@ -4,6 +4,7 @@ import { Refset } from 'src/app/models/refset';
 import { Observable } from 'rxjs';
 import { RestService, RestWrapper } from './rest.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -11,49 +12,53 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 export class RefsetService extends RestService {
 
     taxonomyRootNode: any = null;
+    contextPath = '/refsetservice/';
 
     constructor(http: HttpClient) {
         super(http);
+
+        if (CodeUtility.hasValue(environment.restContextPath)) {
+            this.contextPath = environment.restContextPath;
+        }
     }
 
-
     getRefsets(params: any): Observable<any> {
-        return this.get('/refset/search', params);
+        return this.get(this.contextPath + 'refset/search', params);
     }
 
     getRefset(refsetId: string): Observable<any> {
-        return this.get('/refset/' + refsetId);
+        return this.get(this.contextPath + 'refset/' + refsetId);
     }
 
     cacheMemberAncestors(refsetId: string, params: any = {}): Observable<any> {
-        return this.get('/ancestors/' + refsetId, params);
+        return this.get(this.contextPath + 'ancestors/' + refsetId, params);
     }
 
     getMembersList(refsetId: string, params: any): Observable<any> {
-        return this.get('/refset/' + refsetId + '/members', params);
+        return this.get(this.contextPath + 'refset/' + refsetId + '/members', params);
     }
 
     getMembersDetails(conceptId: string, params: any): Observable<any> {
-        return this.get('/concept/' + conceptId, params);
+        return this.get(this.contextPath + 'concept/' + conceptId, params);
     }
 
     getTaxonomySearch(refsetId: string, params: any): Observable<any> {
-        return this.get('/refset/' + refsetId + '/taxonomySearch', params);
+        return this.get(this.contextPath + 'refset/' + refsetId + '/taxonomySearch', params);
     }
 
     getMemberHistory(refsetId: string, conceptId: string, params: any): Observable<any> {
-        return this.get('/refset/' + refsetId + '/member/' + conceptId, params);
+        return this.get(this.contextPath + 'refset/' + refsetId + '/member/' + conceptId, params);
     }
 
     downloadRefset(refsetId: string, params: any): Observable<any> {
-        return this.get('/export/' + refsetId + '', params);
+        return this.get(this.contextPath + 'export/' + refsetId + '', params);
     }
 
     getTaxonomyRoot() {
 
         if (this.taxonomyRootNode == null){
 
-            this.get('/terminology/taxonomyRoot').subscribe(results => {
+            this.get(this.contextPath + 'terminology/taxonomyRoot').subscribe(results => {
 
                 if (CodeUtility.hasValue(results)){
                     this.taxonomyRootNode = results;
@@ -65,18 +70,18 @@ export class RefsetService extends RestService {
     }
 
     getVersionStatuses(): Observable<any> {
-        return this.get('/refset/versionStatuses');
+        return this.get(this.contextPath + 'refset/versionStatuses');
     }
 
 	getEditions(): Observable<any> {
-        return this.get('/refset/editions');
+        return this.get(this.contextPath + 'refset/editions');
     }
 	
 	getOrganizations(): Observable<any> {
-        return this.get('/refset/organizations');
+        return this.get(this.contextPath + 'refset/organizations');
     }
 
     getVersions(): Observable<any> {
-        return this.get('/refset/versions');
+        return this.get(this.contextPath + 'refset/versions');
     }
 }
