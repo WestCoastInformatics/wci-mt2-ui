@@ -901,4 +901,12 @@ export class RefsetDetails {
             this['on' + CodeUtility.toTitleCase(field) + 'SearchChange']();
         }
     }
+
+    addSpaceAfterVersionDate(stringValue: string): string {
+        if (stringValue?.includes('(')) {
+            return stringValue.split('(').join(' (');
+        }
+
+        return stringValue;
+    }
 }
