@@ -3,7 +3,7 @@ html,
 body {
     font-family: $standard_font_family;
     font-size: $standard_font_size;
-    font-weight: 400;
+    font-weight: 100;
     color: $standard_font_color;
     position: relative;
     min-height: 100%;
@@ -14,6 +14,13 @@ body {
     display: flex;
     flex-direction: column;
     letter-spacing: 0.5px;
+}
+
+@-moz-document url-prefix() {
+    html,
+    body {
+        font-weight: 400 !important;
+    }
 }
 
 label {
