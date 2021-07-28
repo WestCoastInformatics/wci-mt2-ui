@@ -3,7 +3,7 @@ html,
 body {
     font-family: $standard_font_family;
     font-size: $standard_font_size;
-    font-weight: $standard_font_weight;
+    font-weight: 400;
     color: $standard_font_color;
     position: relative;
     min-height: 100%;
@@ -697,6 +697,10 @@ button.refset-tool-table-action-icon {
         height: 10.5px;
     }
 }
+.refset-tool-concept-details-concept-name {
+    font-size: 15px;
+}
+
 .refset-tool-concept-details-concept-section {
     margin-bottom: 5px;
     padding: 0px;
@@ -706,6 +710,8 @@ button.refset-tool-table-action-icon {
     width: 40%;
     color: white;
     border-color: $concept_details_color;
+    line-height: 1;
+    font-weight: 400;
     @extend .refset-tool-rounded-borders;
 }
 .refset-tool-concept-details-concept-row {
