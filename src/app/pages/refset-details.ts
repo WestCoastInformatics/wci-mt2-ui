@@ -147,6 +147,7 @@ export class RefsetDetails {
                 maxBlocksInCache: 1,
                 rowModelType: 'infinite',
                 rowSelection: 'single',
+                enableCellTextSelection: true,
                 onCellClicked: this.onMembersGridCellClick,
                 onGridReady: this.onMembersGridReady,
                 onNewColumnsLoaded: this.onMembersColumnsLoaded.bind(this),
