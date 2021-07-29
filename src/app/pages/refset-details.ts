@@ -489,6 +489,10 @@ export class RefsetDetails {
 
                 if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2){
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.tableSearchInput;
+                } else if (this.tableSearchInput && !CodeUtility.hasValue(this.tableSearchInput)) {
+                    this.membersGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
+                    return;
                 }
 
                 let newFilterString = query;
@@ -523,9 +527,8 @@ export class RefsetDetails {
                 }
 
                 this.refsetService.getMembersList(this.id, restParams).subscribe(results => {
-
                     if (results.items.length == 0 && pageNumber > 1) {
-
+                        this.membersGridApi.showNoRowsOverlay();
                         this.membersGridPaging.totalRows = (this.membersGridApi.paginationGetPageSize() * (pageNumber - 1));
                         this.membersGridPaging.totalKnown = true;
                         this.membersPaginationComponent.goToPage(pageNumber - 1);
@@ -535,6 +538,12 @@ export class RefsetDetails {
                     let data = results.items;
                     this.membersGridData = data;
 
+                    if (!data.length) {
+                        this.membersGridApi.showNoRowsOverlay();
+                        rowParams.successCallback([], 0);
+                        return;
+                    }
+
                     this.membersColumnDefs = [
                         { field: 'code', headerName: 'Concept ID', flex: 1, minWidth: 120, cellClass: 'refset-tool-details-column-concept-id' }
                     ];
@@ -542,11 +551,12 @@ export class RefsetDetails {
                     for (let i = 0; i < this.languageOptions.length; i++) {
 
                         let language = this.languageOptions[i];
-                        this.membersColumnDefs.push({ field: i.toString(), flex: 1, minWidth: 220, colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
+                        let minWidth = language.value === '101FSN' ? 250 : 190;
+                        this.membersColumnDefs.push({ field: i.toString(), flex: 1, minWidth: minWidth, colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
-                        { field: 'memberEffectiveTime', colId: 'modified', flex: 1, minWidth: 220, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
+                        { field: 'memberEffectiveTime', colId: 'modified', flex: 1, minWidth: 150, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
                         { field: 'active', colId: 'actions', headerName: '', width: 120, minWidth: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right' }
                     ]);
 
@@ -901,5 +911,13 @@ export class RefsetDetails {
             this[value] = '';
             this['on' + CodeUtility.toTitleCase(field) + 'SearchChange']();
         }
+    }
+
+    addSpaceAfterVersionDate(stringValue: string): string {
+        if (stringValue?.includes('(')) {
+            return stringValue.split('(').join(' (');
+        }
+
+        return stringValue;
     }
 }

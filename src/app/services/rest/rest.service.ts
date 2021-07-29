@@ -17,6 +17,8 @@ export class RestWrapper<T> {
 })
 export class RestService {
 
+    restUrl = environment.restUrl;
+
     constructor(private http: HttpClient) {
     }
 
@@ -45,7 +47,7 @@ export class RestService {
         //not sure if we need this, maybe for posts
         //let httpParams = new HttpParams({fromString: queryString});
 
-        return this.http.get<any>(environment.restUrl + url + queryString);
+        return this.http.get<any>(this.restUrl + url + queryString);
     }
 
     getHttpClient(): HttpClient {
