@@ -555,7 +555,7 @@ export class RefsetDetails {
                     }
 
                     this.membersColumnDefs.push(...[
-                        { field: 'memberEffectiveTime', colId: 'modified', width: 150, minWidth: 150, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
+                        { field: 'memberEffectiveTime', colId: 'modified', flex: 1, minWidth: 150, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
                         { field: 'active', colId: 'actions', headerName: '', width: 120, minWidth: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right' }
                     ]);
 
