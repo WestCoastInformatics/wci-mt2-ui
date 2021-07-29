@@ -303,10 +303,18 @@ button.refset-tool-table-action-icon {
 .refset-tool-delete {
     color: $delete_color;
 }
-
+.refset-tool-concept-details-concept-ecl {
+    padding-left: 0px;
+}
+.refset-tool-concept-details-concept-id-label {
+    padding-left: 0px;
+}
+.refset-tool-concept-details-taxonomy-icon {
+    padding-left: 0px;
+}
 // AG Grid Styles
 .refset-tool-ag-grid {
-    height: 623px;
+    max-height: 623px;
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -694,7 +702,12 @@ button.refset-tool-table-action-icon {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
     margin-bottom: 5px;
-    height: fit-content;
+    height: 130px;
+    resize: vertical;
+    overflow: auto;
+}
+.children-section {
+    height: 623px;
 }
 .refset-tool-concept-details-taxonomy-icon {
     max-width: 30px;
@@ -712,12 +725,19 @@ button.refset-tool-table-action-icon {
     margin-bottom: 5px;
     padding: 0px;
 }
+.refset-tool-concept-details-section-title {
+    font-weight: 400;
+}
 .refset-tool-concept-details-concept-info-column {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    height: fit-content;
     background-color: $concept_details_color;
     width: 40%;
     color: white;
     border-color: $concept_details_color;
     line-height: 1;
+    font-size: 12px;
     font-weight: 400;
     @extend .refset-tool-rounded-borders;
 }
@@ -726,14 +746,22 @@ button.refset-tool-table-action-icon {
 }
 .refset-tool-concept-details-concept-roles-column {
     margin-left: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
 }
+.refset-tool-concept-details-concept-description-language {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 .refset-tool-concept-details-role-row {
+    line-height: 1.3;
+    font-size: 12px;
     margin-bottom: 5px;
     background-color: white;
-    border-color: white;
+    border-color: darkgrey;
     @extend .refset-tool-rounded-borders;
     padding: 5px;
 }
