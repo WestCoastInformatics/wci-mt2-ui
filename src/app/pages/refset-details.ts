@@ -550,11 +550,12 @@ export class RefsetDetails {
                     for (let i = 0; i < this.languageOptions.length; i++) {
 
                         let language = this.languageOptions[i];
-                        this.membersColumnDefs.push({ field: i.toString(), flex: 1, minWidth: 220, colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
+                        let minWidth = language.value === '101FSN' ? 250 : 190;
+                        this.membersColumnDefs.push({ field: i.toString(), flex: 1, minWidth: minWidth, colId: language.value, headerName: language.display, cellClass: 'refset-tool-details-column-description', valueGetter: this.descriptionValueGetter });
                     }
 
                     this.membersColumnDefs.push(...[
-                        { field: 'memberEffectiveTime', colId: 'modified', flex: 1, minWidth: 220, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
+                        { field: 'memberEffectiveTime', colId: 'modified', flex: 1, minWidth: 150, headerName: 'Modified Date', cellClass: 'refset-tool-details-column-modified-date', valueGetter: UiUtility.gridDateValueGetter },
                         { field: 'active', colId: 'actions', headerName: '', width: 120, minWidth: 120, cellClass: 'refset-tool-details-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right' }
                     ]);
 
