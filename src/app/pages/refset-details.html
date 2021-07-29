@@ -67,7 +67,7 @@
                         *ngFor="let option of versionOptions"
                         [value]="option.value"
                     >
-                        {{option.display}}
+                        {{ addSpaceAfterVersionDate(option.display) }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -401,7 +401,9 @@
                                 <mat-button-toggle value="table"
                                     >Table</mat-button-toggle
                                 >
-                                <mat-button-toggle value="taxonomy" [disabled]="!showTaxonomySearchTable"
+                                <mat-button-toggle
+                                    value="taxonomy"
+                                    [disabled]="!showTaxonomySearchTable"
                                     >{{taxonomyButtonLabel}}</mat-button-toggle
                                 >
                             </mat-button-toggle-group>
@@ -838,6 +840,7 @@
                         class="
                             container-fluid
                             refset-tool-concept-details-taxonomy-section
+                            children-section
                         "
                     >
                         <div class="row">

@@ -271,7 +271,7 @@ export class UiUtility {
 
         // loop thru each column with a search term
         for (const column in filterModel) {
-            filterString += column + ':"' + filterModel[column].filter.trim() + '" AND ';
+            filterString += column + ':' + filterModel[column].filter.trim() + ' AND ';
         }
 
         filterString = CodeUtility.removeFinal(filterString, ' AND ');

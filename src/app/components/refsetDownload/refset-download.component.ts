@@ -153,7 +153,7 @@ export class RefsetDownloadComponent {
                     if (results?.url) {
 
                         this.notificationService.close(notification);
-                        UiUtility.startFileDownload(this.notificationService, results.url, null, description);
+                        UiUtility.startFileDownload(this.notificationService, this.refsetService.restUrl + this.refsetService.contextPath + results.url, null, description);
                         //window.open(results.url);
                     }
                     
