@@ -120,6 +120,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             cacheBlockSize: this.refsetGridPaging.pageSize,
             maxBlocksInCache: 1,
             rowModelType: 'infinite',
+            enableCellTextSelection: true,
             rowSelection: 'single',
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
