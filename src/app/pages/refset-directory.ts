@@ -97,15 +97,15 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
 	    this.columnDefs = [
             { field: 'id', colId: 'information', headerName: '', width: 50, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 210},
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
-			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 210, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 130},
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 370, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
+			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 200, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
             { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', flex: 1, minWidth: 210, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}}, 
-            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 210, floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 180, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 210, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 210, valueGetter: UiUtility.gridDateValueGetter },
             { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
@@ -120,6 +120,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             cacheBlockSize: this.refsetGridPaging.pageSize,
             maxBlocksInCache: 1,
             rowModelType: 'infinite',
+            enableCellTextSelection: true,
             rowSelection: 'single',
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
