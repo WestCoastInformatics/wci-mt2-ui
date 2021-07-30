@@ -3,5 +3,7 @@ export const environment = {
   restUrl: '',
   restContextPath: '/refsetservice/',
   snomedBrowserUrl: 'https://prod-browser.ihtsdotools.org/?perspective=full',
-  mockRestData: false 
+  mockRestData: false,
+  refsetsExportableAsFreeset: '787778008',
+  freesetUrl: 'https://gps.snomed.org'
 };
