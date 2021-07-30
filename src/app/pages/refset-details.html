@@ -55,6 +55,7 @@
             </button>
         </div>
 
+        <div class="current-version-label">Current Version:</div>
         <div class="row justify-content-end details-version-select">
             <mat-form-field appearance="fill">
                 <mat-label></mat-label>
@@ -62,6 +63,7 @@
                     #detailsVersionSelect
                     [(value)]="selectedVersion"
                     (selectionChange)="changeVersion()"
+                    [disableOptionCentering]="true"
                 >
                     <mat-option
                         *ngFor="let option of versionOptions"
@@ -112,7 +114,7 @@
                                 Status:
                             </td>
                             <td class="refset-tool-refset-metadata-value">
-                                {{refsetData?.status}}
+                                {{capitalizeFirstLetterOfString(refsetData?.status)}}
                             </td>
                         </tr>
 
@@ -121,7 +123,7 @@
                                 Type:
                             </td>
                             <td class="refset-tool-refset-metadata-value">
-                                {{refsetData?.type}}
+                                {{capitalizeFirstLetterOfString(refsetData?.type)}}
                             </td>
                         </tr>
 
@@ -190,7 +192,7 @@
                                 Version Status:
                             </td>
                             <td class="refset-tool-refset-metadata-value">
-                                {{refsetData?.versionStatus}}
+                                {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
                             </td>
                         </tr>
 
@@ -370,6 +372,7 @@
                             <mat-form-field
                                 id="detailsTaxonomySearchInputField"
                                 class="refset-tool-details-search-field"
+                                *ngIf="showMembersSearchBar()"
                             >
                                 <mat-label
                                     >Search (Type at least 3 characters.
@@ -382,9 +385,23 @@
                                     (input)="onTaxonomySearchChange()"
                                 />
                             </mat-form-field>
+                            <mat-form-field
+                                id="detailsTaxonomySearchInputField"
+                                class="refset-tool-details-search-field"
+                                *ngIf="!showMembersSearchBar()"
+                            >
+                                <input
+                                    matInput
+                                    #detailsTaxonomySearchInput
+                                    [(ngModel)]="taxonomySearchInput"
+                                    (input)="onTaxonomySearchChange()"
+                                    disabled
+                                />
+                            </mat-form-field>
                             <span
                                 class="clear-search"
                                 (click)="clearSearch('taxonomy')"
+                                *ngIf="showMembersSearchBar()"
                                 >&#10005;</span
                             >
                         </div>
