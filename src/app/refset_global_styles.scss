@@ -808,9 +808,19 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
-    width: 140px;
+    width: 230px;
 }
 
+.mat-form-field-flex .ng-tns-c109-2 {
+    width: 130px;
+}
+
+.current-version-label {
+    font-weight: 100;
+    font-size: 17.5px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
 // Refset Details Modal / Info Popup
 
 .refset-tool-refset-metadata-table {
@@ -921,7 +931,6 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage
     .mat-raised-button.mat-button-base.refset-tool-action-button {
-    width: 170px;
     line-height: 40px !important;
 }
 
@@ -980,19 +989,35 @@ button.refset-tool-table-action-icon {
     padding-bottom: 30px;
 }
 
+.version-input-placeholder {
+    background-color: transparent;
+    padding-top: 37px;
+    text-decoration: underline;
+}
+
+.delta-select {
+    padding-top: 10px;
+    padding-left: 15px;
+}
+
+.delta-input-placeholder {
+    padding-left: 15px;
+    text-decoration: underline;
+    background-color: transparent;
+    padding-top: 25px;
+}
+
 .delta-row {
     margin-left: 0px;
 }
 
 .delta-row label {
-    padding-left: 0px;
-    padding-right: 3px;
     font-weight: normal !important;
     color: $standard_table_data_color;
 }
 
 .delta-row label:last-child {
-    padding-left: 3px;
+    padding-left: 0px;
 }
 
 #downloadLanguageRow .mat-checkbox-layout .mat-checkbox-label {

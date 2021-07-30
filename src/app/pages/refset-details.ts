@@ -920,4 +920,17 @@ export class RefsetDetails {
 
         return stringValue;
     }
+
+    capitalizeFirstLetterOfString(stringValue: string): string {
+        if (stringValue) {
+            return stringValue.replace(/(?:^|\s|[-"'([{])+\S/g, (c) => c.toUpperCase());
+        }
+
+        return stringValue;
+    }
+
+    showMembersSearchBar(): boolean {
+        return (this.showTable && this.membersTableDisplay === 'inline-block' && this.membersTaxonomyDisplay === 'none')
+        || (this.showTaxonomySearchTable && this.membersTaxonomyDisplay === 'inline-block' && this.membersTableDisplay === 'none')
+    }
 }
