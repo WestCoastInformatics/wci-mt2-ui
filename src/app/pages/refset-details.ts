@@ -943,8 +943,4 @@ export class RefsetDetails {
     setFullNotesText(show: boolean): void {
         this.showFullNotesText = show;
     }
-
-    removeParagraphTags(stringValue: string): string {
-        return stringValue?.replace(/<\/?p[^>]*>/g, '');
-    }
 }
