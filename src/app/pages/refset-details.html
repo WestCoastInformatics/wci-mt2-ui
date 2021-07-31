@@ -140,8 +140,18 @@
                             <td class="refset-tool-refset-metadata-label">
                                 Narrative:
                             </td>
-                            <td class="refset-tool-refset-metadata-value">
-                                {{ refsetData?.narrativeShortText }}
+                            <td
+                                class="refset-tool-refset-metadata-value"
+                                (mouseover)="setFullNarrativeText(true)"
+                                (mouseout)="setFullNarrativeText(false)"
+                            >
+                                <ng-container *ngIf="showFullNarrativeText"
+                                    >{{ refsetData?.narrative }}</ng-container
+                                >
+                                <ng-container *ngIf="!showFullNarrativeText"
+                                    >{{ refsetData?.narrativeShortText
+                                    }}</ng-container
+                                >
                             </td>
                         </tr>
                     </tbody>
@@ -211,12 +221,20 @@
                             </td>
                             <td
                                 class="refset-tool-refset-metadata-value"
+                                (mouseover)="setFullNotesText(true)"
+                                (mouseout)="setFullNotesText(false)"
                                 (click)="openRichTextEditor('versionNotes', 'version notes')"
                             >
-                                <span
-                                    *ngIf="refsetData"
-                                    [innerHTML]="refsetData.versionNotesShortText"
-                                ></span>
+                                <ng-container *ngIf="showFullNotesText">
+                                    {{
+                                    removeParagraphTags(refsetData?.versionNotes)
+                                    }}
+                                </ng-container>
+                                <ng-container *ngIf="!showFullNotesText">
+                                    {{
+                                    removeParagraphTags(refsetData?.versionNotesShortText)
+                                    }}
+                                </ng-container>
                             </td>
                         </tr>
 

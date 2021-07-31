@@ -104,6 +104,8 @@ export class RefsetDetails {
     @ViewChild('taxonomySearchPaginationComponent') taxonomySearchPaginationComponent: PaginationComponent;
     @ViewChild('taxonomyResultSection') taxonomyResultSection: TemplateRef<any>;
     @ViewChild('taxonomyPathSection') taxonomyPathSection: TemplateRef<any>;
+    showFullNarrativeText = false;
+    showFullNotesText = false;
 
 
     constructor(
@@ -932,5 +934,17 @@ export class RefsetDetails {
     showMembersSearchBar(): boolean {
         return (this.showTable && this.membersTableDisplay === 'inline-block' && this.membersTaxonomyDisplay === 'none')
         || (this.showTaxonomySearchTable && this.membersTaxonomyDisplay === 'inline-block' && this.membersTableDisplay === 'none')
+    }
+
+    setFullNarrativeText(show: boolean): void {
+        this.showFullNarrativeText = show;
+    }
+
+    setFullNotesText(show: boolean): void {
+        this.showFullNotesText = show;
+    }
+
+    removeParagraphTags(stringValue: string): string {
+        return stringValue?.replace(/<\/?p[^>]*>/g, '');
     }
 }
