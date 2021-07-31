@@ -226,14 +226,14 @@
                                 (click)="openRichTextEditor('versionNotes', 'version notes')"
                             >
                                 <ng-container *ngIf="showFullNotesText">
-                                    {{
-                                    removeParagraphTags(refsetData?.versionNotes)
-                                    }}
+                                    <span
+                                        [innerHTML]="refsetData?.versionNotes"
+                                    ></span>
                                 </ng-container>
                                 <ng-container *ngIf="!showFullNotesText">
-                                    {{
-                                    removeParagraphTags(refsetData?.versionNotesShortText)
-                                    }}
+                                    <span
+                                        [innerHTML]="refsetData?.versionNotesShortText"
+                                    ></span>
                                 </ng-container>
                             </td>
                         </tr>
