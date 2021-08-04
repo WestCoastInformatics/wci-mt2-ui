@@ -79,7 +79,11 @@
         <div
             class="row"
             id="downloadContentRow"
-            *ngIf="showVersions && !shouldShowDeltaContentLabel()"
+            *ngIf="
+                showVersions &&
+                !shouldShowDeltaContentLabel() &&
+                showDeltaOption(data)
+            "
         >
             <div class="col refset-tool-download-column-label"></div>
             <div class="col refset-tool-download-column-field">
