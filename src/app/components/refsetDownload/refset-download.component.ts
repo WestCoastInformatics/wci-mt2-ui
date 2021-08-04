@@ -183,6 +183,10 @@ export class RefsetDownloadComponent {
         this.showVersions = false;
     }
 
+    showDeltaOption(formData): boolean {
+        return (formData.selectedFormat === 'rf2' || formData.selectedFormat === 'rf2_with_names')
+    }
+
     showContentSection(formData) {
 
         if (CodeUtility.hasValue(formData.selectedFormat) && (formData.selectedFormat == 'rf2' || formData.selectedFormat == 'rf2_with_names')){
