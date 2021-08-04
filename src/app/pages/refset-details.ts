@@ -159,9 +159,6 @@ export class RefsetDetails {
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
-                    filter: true,
-                    floatingFilter: true,
-                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                     suppressMenu: true
                 },
                 rowClassRules: {
