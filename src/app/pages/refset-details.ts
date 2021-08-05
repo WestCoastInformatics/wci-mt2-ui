@@ -159,9 +159,6 @@ export class RefsetDetails {
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
-                    filter: true,
-                    floatingFilter: true,
-                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                     suppressMenu: true
                 },
                 rowClassRules: {
@@ -189,7 +186,10 @@ export class RefsetDetails {
             
             // load taxonomy root
             this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
+
                 this.membersTaxonomyRoot = results;
+                this.taxonomyButtonLabel = "Taxonomy";
+                this.showTaxonomySearchTable = true
             });
 
             this.taxonomySearchColumnDefs = [
@@ -232,10 +232,7 @@ export class RefsetDetails {
                     }
                 }
             };
-    
-            this.taxonomyButtonLabel = "Taxonomy";
-            this.showTaxonomySearchTable = true
-            this.changeDetectorRef.detectChanges();
+            
         });
 
         this.refsetService.getRefset(this.id).subscribe(results => {
