@@ -142,8 +142,8 @@
                             </td>
                             <td
                                 class="refset-tool-refset-metadata-value"
-                                (mouseover)="setFullNarrativeText(true)"
-                                (mouseout)="setFullNarrativeText(false)"
+                                (mouseenter)="setFullNarrativeText(true)"
+                                (mouseleave)="setFullNarrativeText(false)"
                             >
                                 <ng-container *ngIf="showFullNarrativeText"
                                     >{{ refsetData?.narrative }}</ng-container
@@ -221,8 +221,8 @@
                             </td>
                             <td
                                 class="refset-tool-refset-metadata-value"
-                                (mouseover)="setFullNotesText(true)"
-                                (mouseout)="setFullNotesText(false)"
+                                (mouseenter)="setFullNotesText(true)"
+                                (mouseleave)="setFullNotesText(false)"
                                 (click)="openRichTextEditor('versionNotes', 'version notes')"
                             >
                                 <ng-container *ngIf="showFullNotesText">
