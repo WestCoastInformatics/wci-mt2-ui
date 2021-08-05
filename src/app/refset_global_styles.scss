@@ -893,6 +893,9 @@ button.refset-tool-table-action-icon {
     border-bottom: 1px solid $cerulean;
 }
 
+.ag-center-cols-clipper {
+    min-height: 300px !important;
+}
 // Search (clear-search)
 .clear-search {
     color: $standard_font_color;
