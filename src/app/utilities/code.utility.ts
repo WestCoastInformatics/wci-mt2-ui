@@ -30,17 +30,23 @@ export class CodeUtility {
     /*
      * addIfNotEmpty - return the original string with the specified string added to the beginning or end (default) if the original is not empty.
      */
-    static addIfNotEmpty(originalString: string, stringToAdd: string, addToEnd: boolean = true): string {
+    static addIfNotEmpty(originalString: string, stringToAdd: string, addToEnd: boolean = true, addOr = false): string {
 
         if (this.hasValue(originalString)){
 
             if (addToEnd){
-                return originalString + stringToAdd;
+                if (addOr) {
+                    return `${originalString} AND (${stringToAdd}`;
+                }
+                return `(${originalString + stringToAdd}`;
             } else {
                 return stringToAdd + originalString;
             }
             
         } else {
+            if (addOr) {
+                return `(${stringToAdd}`;
+            }
             return originalString;
         }
     }
