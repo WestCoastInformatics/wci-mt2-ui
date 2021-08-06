@@ -29,6 +29,7 @@ import { ToastNoAnimationModule } from 'ngx-toastr';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
+import {MatRadioModule} from '@angular/material/radio';
 
 // COMPONENT IMPORTS
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
@@ -102,6 +103,7 @@ const appRoutes: Routes = [
         MatButtonModule,
         MatButtonToggleModule,
         MatIconModule,
+        MatRadioModule,
         ToastNoAnimationModule.forRoot({
             toastComponent: NotificationComponent
           }),

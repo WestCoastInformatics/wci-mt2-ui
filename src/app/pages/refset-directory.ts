@@ -59,6 +59,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
+    metadataAndConcepts = true;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     constructor(
@@ -183,9 +184,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 console.log("^^^^^^ query after viewFilters: " + query);
 
                 if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                    if (!this.metadataAndConcepts) {
+                        query = CodeUtility.addIfNotEmpty(query, `${UiUtility.formatSelectedData(this.columnDefs, this.searchInput)}) AND `, true, true) + this.searchInput;
+                    } else {
+                        query = CodeUtility.addIfNotEmpty(query, ') AND ') + this.searchInput;
+                    }
                 }
-                
 
                 let newFilterString = query;
                 let newSortString = JSON.stringify(sort);
@@ -448,4 +452,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
     }
 
+    searchSelectionRadioResult(event: any): void {
+        this.metadataAndConcepts = event.value === 'true';
+        this.refsetGridApi.purgeInfiniteCache();
+    }
 }
