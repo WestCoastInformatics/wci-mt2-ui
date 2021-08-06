@@ -34,6 +34,16 @@ export class ColumnChooserComponent {
 
         if (this.gridColumnApi?.columnController?.columnDefs){
 
+            // make sure not to lose previous column selections
+            let previousColumns = this.columns;
+            this.columns = [];
+
+            if (this.columns.length > 0) {
+                this.selectedColumns = [];
+            }
+            
+            let detectChanges = false;
+
             for (let column of this.gridColumnApi?.columnController?.columnDefs){
 
                 let columnData: any = {};
@@ -49,8 +59,19 @@ export class ColumnChooserComponent {
                 } else {
                     columnData.name = columnData.colId;
                 }
+
+                let previousColumn = previousColumns.find(element => element.colId == columnData.colId);
     
-                if (!column.hasOwnProperty('hide') || column.hide === false){
+                // apply previous column selections if there were any
+                if (previousColumn) {
+
+                    columnData.show = previousColumn.show;
+
+                    if (columnData.show) {
+                        this.selectedColumns.push(columnData);
+                    }
+
+                } else if (!column.hasOwnProperty('hide') || column.hide === false){
                     columnData.show = true;
                 } else {
                     columnData.show = false;
@@ -93,13 +114,15 @@ export class ColumnChooserComponent {
         });
     }
 
+    valueCompare(column1, column2) {
+        return column1 && column2 ? column1.colId === column2.colId : column1 === column2;
+    }
+
     applyColumns() {
 
         let state: any = [];
         this.selectedColumns;
         this.columns;
-
-        
 
         for (let column of this.columns){
 
