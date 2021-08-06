@@ -275,8 +275,26 @@ export class UiUtility {
         }
 
         filterString = CodeUtility.removeFinal(filterString, ' AND ');
-
         return filterString;
+    }
+
+    // ***** AG Grid Radio button search selector query string formatter Function *****/
+    static formatSelectedData(columnDefs: any[], searchInput: string): string {
+
+        const selectedDataPresent = columnDefs && columnDefs?.length;
+
+        if (!selectedDataPresent) {
+            return '';
+        }
+
+        let selectedDataString = '';
+        // loop thru each column with a search term
+        for (const column of columnDefs) {
+            selectedDataString += column.field + ':' + searchInput?.trim() + ' OR ';
+        }
+        selectedDataString = CodeUtility.removeFinal(selectedDataString, ' OR ');
+
+        return selectedDataString;
     }
 
     //***** AG Grid Sort query string formatter Function *****/
