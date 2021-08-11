@@ -318,7 +318,7 @@ button.refset-tool-table-action-icon {
 }
 // AG Grid Styles
 .refset-tool-ag-grid {
-    max-height: 623px;
+    // max-height: 623px;
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -393,7 +393,7 @@ button.refset-tool-table-action-icon {
 }
 .ag-root-wrapper-body {
     height: max-content !important;
-    max-height: 623px;
+    // max-height: 623px;
 }
 .no-row-overlay {
     height: 300px;
