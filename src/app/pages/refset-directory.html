@@ -4,7 +4,7 @@
 
     <!-- Search Bar -->
     <div class="container-fluid">
-        <div class="row justify-content-end">
+        <div class="row justify-content-end" style="align-items: baseline">
             <div
                 class="col-md-auto refset-tool-directory-chooser-column"
                 *ngIf="showTable"
@@ -17,7 +17,7 @@
 
             <div class="col-md-auto">
                 <mat-form-field id="directorySearchInputField">
-                    <mat-label>Search</mat-label>
+                    <mat-label class="search-label">Search</mat-label>
                     <input
                         matInput
                         #directorySearchInput
@@ -29,23 +29,8 @@
                 <span class="clear-search" (click)="clearSearch()"
                     >&#10005;</span
                 >
-                <mat-radio-group
-                    aria-label="Select an option"
-                    style="margin-bottom: 10px; display: flow-root"
-                    (change)="searchSelectionRadioResult($event)"
-                >
-                    <mat-radio-button value="true" checked
-                        >Metadata and concepts</mat-radio-button
-                    >
-                    <mat-radio-button
-                        value="false"
-                        disableRipple
-                        style="margin-left: 20px"
-                        >Metadata only</mat-radio-button
-                    >
-                </mat-radio-group>
             </div>
-            <div class="col-md-auto">
+            <div class="col-md-auto" style="padding-left: 5px">
                 <mat-form-field id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
                     <mat-select
@@ -61,6 +46,31 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+            </div>
+            <div
+                class="radio-butons"
+                style="
+                    padding-left: 15px;
+                    padding-top: 30px;
+                    padding-right: 20px;
+                    font-size: 12px;
+                "
+            >
+                <mat-radio-group
+                    aria-label="Select an option"
+                    style="margin-bottom: 10px; display: flow-root"
+                    (change)="searchSelectionRadioResult($event)"
+                >
+                    <mat-radio-button value="true" checked
+                        >Metadata and concepts</mat-radio-button
+                    >
+                    <mat-radio-button
+                        value="false"
+                        disableRipple
+                        style="margin-left: 20px"
+                        >Metadata only</mat-radio-button
+                    >
+                </mat-radio-group>
             </div>
         </div>
     </div>
@@ -407,6 +417,7 @@
                     <div class="col-2 column-download-button">
                         <app-refset-download
                             *ngIf="params?.data?.downloadable"
+                            [class.centerDownload]="!params?.data?.feedbackVisible"
                             [refset]="getRefsetRow(params.data.refsetId)"
                         ></app-refset-download>
                     </div>
