@@ -340,9 +340,13 @@
             <div class="col-lg-7 refset-tool-details-members-column">
                 <!-- Search Bar -->
                 <div class="container-fluid pr-0">
-                    <div class="row justify-content-start no-gutters">
+                    <div
+                        class="row justify-content-start no-gutters"
+                        style="align-items: baseline"
+                    >
                         <div
                             class="col-md-3 refset-tool-details-chooser-column"
+                            style="padding-left: 5px"
                             [style.display]="membersTableDisplay"
                         >
                             <app-column-chooser
@@ -717,6 +721,7 @@
                                     col
                                     refset-tool-concept-details-concept-info-column
                                 "
+                                [class.refset-tool-concept-details-concept-info-column-status]="!conceptDetail.active"
                             >
                                 <div class="container-fluid">
                                     <!-- Name -->
@@ -861,8 +866,14 @@
                                     col
                                     refset-tool-concept-details-concept-roles-column
                                 "
+                                [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length"
                             >
                                 <div class="container-fluid" *ngIf="true">
+                                    <span
+                                        class="no-attributes"
+                                        *ngIf="!conceptDetail.roleGroups.length"
+                                        >No attributes</span
+                                    >
                                     <div
                                         class="
                                             row
