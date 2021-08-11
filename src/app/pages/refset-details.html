@@ -5,7 +5,7 @@
     </div>-->
 
     <!-- Header Bar -->
-    <div class="row refset-title sticky-top">
+    <div class="row refset-title sticky-top" style="align-items: baseline">
         <!-- Section Title -->
         <div class="col-md-auto page-title">Reference Set Details</div>
         <div class="col refset-tool-refset-details-title-name">
@@ -97,6 +97,7 @@
                                 Edition/Extension:
                             </td>
                             <td class="refset-tool-refset-metadata-value">
+                                {{refsetData?.editionName}}
                                 <img
                                     class="refset-tool-edition-flag"
                                     src="{{refsetData?.flagIcon}}"
@@ -105,7 +106,6 @@
                                     title="{{refsetData?.editionName}} Flag"
                                     aria-label="{{refsetData?.editionName}} Flag"
                                 />
-                                {{refsetData?.editionName}}
                             </td>
                         </tr>
 
@@ -122,7 +122,12 @@
                             <td class="refset-tool-refset-metadata-label">
                                 Type:
                             </td>
-                            <td class="refset-tool-refset-metadata-value">
+                            <td
+                                class="
+                                    refset-tool-refset-metadata-value
+                                    capitalize-metadata-value
+                                "
+                            >
                                 {{capitalizeFirstLetterOfString(refsetData?.type)}}
                             </td>
                         </tr>
@@ -194,6 +199,14 @@
                             </td>
                             <td class="refset-tool-refset-metadata-value">
                                 {{refsetData?.organizationName}}
+                                <img
+                                    class="refset-tool-edition-flag"
+                                    src="{{refsetData?.flagIcon}}"
+                                    *ngIf="refsetData?.flagIcon != ''"
+                                    [hidden]="!refsetData?.flagIcon"
+                                    title="{{refsetData?.editionName}} Flag"
+                                    aria-label="{{refsetData?.editionName}} Flag"
+                                />
                             </td>
                         </tr>
 
@@ -201,7 +214,12 @@
                             <td class="refset-tool-refset-metadata-label">
                                 Version Status:
                             </td>
-                            <td class="refset-tool-refset-metadata-value">
+                            <td
+                                class="
+                                    refset-tool-refset-metadata-value
+                                    capitalize-metadata-value
+                                "
+                            >
                                 {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
                             </td>
                         </tr>
@@ -454,10 +472,7 @@
                     <ag-grid-angular
                         #detailsMembersTable
                         *ngIf="showTable"
-                        class="
-                            ag-theme-alpine
-                            refset-tool-ag-grid
-                        "
+                        class="ag-theme-alpine refset-tool-ag-grid"
                         [columnDefs]="membersColumnDefs"
                         [gridOptions]="membersGridOptions"
                     >
@@ -754,7 +769,7 @@
                                         >
                                             <button
                                                 mat-icon-button
-                                                (click)="openMemberHistory()"
+                                                (click)="openMemberHistory(conceptDetail.code)"
                                                 aria-hidden="false"
                                                 class="
                                                     refset-tool-concept-details-action-icon

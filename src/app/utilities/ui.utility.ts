@@ -24,7 +24,7 @@ export class UiUtility {
 
             let format = null;
 
-            if (params.colDef.field == 'versionDate') {
+            if (params.colDef.field === 'versionDate' || params.colDef.field === 'modified') {
                 format = CodeUtility.DATE_FORMAT_REVERSE
             }
 
