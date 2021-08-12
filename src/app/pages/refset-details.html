@@ -347,7 +347,7 @@
                         <div
                             class="col-md-3 refset-tool-details-chooser-column"
                             style="padding-left: 5px"
-                            [style.display]="membersTableDisplay"
+                            [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay"
                         >
                             <app-column-chooser
                                 [gridColumnApi]="membersGridColumnApi"
