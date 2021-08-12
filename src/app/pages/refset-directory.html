@@ -210,6 +210,7 @@
                                     <td
                                         class="
                                             refset-tool-refset-metadata-value
+                                            capitalize-metadata-value
                                         "
                                     >
                                         {{data.type}}
@@ -245,8 +246,18 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
+                                        (mouseenter)="setFullNarrativeText(true)"
+                                        (mouseleave)="setFullNarrativeText(false)"
                                     >
-                                        {{data.narrativeShortText}}
+                                        <ng-container
+                                            *ngIf="showFullNarrativeText"
+                                            >{{ data?.narrative }}</ng-container
+                                        >
+                                        <ng-container
+                                            *ngIf="!showFullNarrativeText"
+                                            >{{ data?.narrativeShortText
+                                            }}</ng-container
+                                        >
                                     </td>
                                 </tr>
                             </tbody>
@@ -306,6 +317,7 @@
                                     <td
                                         class="
                                             refset-tool-refset-metadata-value
+                                            capitalize-metadata-value
                                         "
                                     >
                                         {{data.versionStatus}}
@@ -341,8 +353,17 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
+                                        (mouseenter)="setFullNotesText(true)"
+                                        (mouseleave)="setFullNotesText(false)"
                                     >
-                                        {{data.versionNotesShortText}}
+                                        <ng-container *ngIf="showFullNotesText">
+                                            {{ data?.versionNotes }}
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="!showFullNotesText"
+                                        >
+                                            {{ data?.versionNotesShortText }}
+                                        </ng-container>
                                     </td>
                                 </tr>
 

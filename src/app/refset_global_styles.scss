@@ -249,6 +249,10 @@ footer.footer a {
     }
 }
 
+.mat-option-text {
+    text-transform: capitalize;
+}
+
 .mat-icon-button .mat-button-wrapper > * {
     //vertical-align: top !important;
 }
@@ -314,7 +318,7 @@ button.refset-tool-table-action-icon {
 }
 // AG Grid Styles
 .refset-tool-ag-grid {
-    max-height: 623px;
+    // max-height: 623px;
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -389,7 +393,7 @@ button.refset-tool-table-action-icon {
 }
 .ag-root-wrapper-body {
     height: max-content !important;
-    max-height: 623px;
+    // max-height: 623px;
 }
 .no-row-overlay {
     height: 300px;
@@ -525,6 +529,9 @@ button.refset-tool-table-action-icon {
     .mat-form-field-flex {
         width: 125px;
     }
+    .mat-form-field-underline {
+        width: 125px;
+    }
 }
 
 .ag-floating-filter-input {
@@ -532,10 +539,16 @@ button.refset-tool-table-action-icon {
 }
 // Column Chooser Styles
 .mat-form-field.refset-tool-column-chooser-select-field {
-    width: 160px;
+    width: 190px;
 
     .mat-form-field-flex {
         width: 175px;
+    }
+}
+
+.refset-tool-column-chooser-select {
+    .mat-select-trigger {
+        width: 160px;
     }
 }
 
@@ -569,6 +582,7 @@ button.refset-tool-table-action-icon {
     .mat-form-field-flex {
     padding: 0 0.75em 0 0.75em;
     //margin-top: -30px;
+    width: 225px;
 }
 
 #refsetDetailsPage .refset-title {
@@ -744,6 +758,9 @@ button.refset-tool-table-action-icon {
     resize: vertical;
     overflow: auto;
 }
+#detailsMembersTree tree-viewport {
+    overflow: unset !important;
+}
 .children-section {
     height: 623px;
 }
@@ -779,6 +796,9 @@ button.refset-tool-table-action-icon {
     font-weight: 400;
     @extend .refset-tool-rounded-borders;
 }
+.refset-tool-concept-details-concept-info-column-status {
+    background-color: lightpink;
+}
 .refset-tool-concept-details-concept-row {
     margin-bottom: 5px;
 }
@@ -789,6 +809,17 @@ button.refset-tool-table-action-icon {
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
+}
+.refset-tool-concept-details-concept-roles-column-no-attributes {
+    margin-left: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: rgba(30, 144, 255, 0.17);
+    border-color: $concept_details_color;
+    @extend .refset-tool-rounded-borders;
+}
+.no-attributes {
+    opacity: 30%;
 }
 .refset-tool-concept-details-concept-description-language {
     padding-left: 0px;
@@ -853,12 +884,13 @@ button.refset-tool-table-action-icon {
     color: #666 !important;
 }
 
-.mat-form-field-appearance-fill .mat-form-field-flex {
-    width: 230px;
-}
-
 .mat-form-field-flex .ng-tns-c109-2 {
     width: 130px;
+    padding-left: 0px;
+}
+
+.mat-form-field-flex .ng-tns-c109-1 {
+    padding-right: 0px !important;
 }
 
 .mat-form-field-flex .ng-tns-c109-1 {
@@ -866,7 +898,7 @@ button.refset-tool-table-action-icon {
 }
 
 .current-version-label {
-    font-weight: 100;
+    font-weight: 400;
     font-size: 17.5px;
     padding-right: 10px;
     padding-top: 10px;

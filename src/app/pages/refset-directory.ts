@@ -50,7 +50,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 	editions: any; 
 	organizations: any;
     initialGridWidth: number;
-
+    showFullNarrativeText = false;
+    showFullNotesText = false;
+    
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
     @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
@@ -453,5 +455,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     searchSelectionRadioResult(event: any): void {
         this.metadataAndConcepts = event.value === 'true';
         this.refsetGridApi.purgeInfiniteCache();
+    }
+
+    setFullNarrativeText(show: boolean): void {
+        this.showFullNarrativeText = show;
+    }
+
+    setFullNotesText(show: boolean): void {
+        this.showFullNotesText = show;
     }
 }

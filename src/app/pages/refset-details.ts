@@ -43,7 +43,7 @@ export class RefsetDetails {
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
     selectedMembersListMode: string = 'table'; //taxonomy
-    membersTableDisplay: string = 'block';
+    membersTableDisplay: string = 'inline-block';
     membersTaxonomyDisplay: string = 'none';
     membersGridApi: any;
     membersGridColumnApi: any;
