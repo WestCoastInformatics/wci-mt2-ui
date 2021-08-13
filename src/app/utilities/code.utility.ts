@@ -212,7 +212,7 @@ export class CodeUtility {
         
     }
 
-    static formatJsonDate(jsonDate: string, format: string = this.DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME) {
+    static formatJsonDate(jsonDate: string, format: string = this.DATE_FORMAT_REVERSE) {
 
         let date = this.parseJsonDate(jsonDate);
 

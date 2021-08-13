@@ -155,8 +155,26 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
         this.showTable = true
         this.changeDetectorRef.detectChanges();
+        // this.overrideHeaderScroll();
 });
     }
+
+    // overrideHeaderScroll(): void {
+    //     let headerScrollPosition = 0;
+
+    //     document.getElementsByClassName('ag-header-container')[0].setAttribute('class', 'ag-header-container scroll-override');
+    //     document.getElementsByClassName('ag-header-container')[0].addEventListener('scroll', (x) => {
+    //         // console.log(x.target['scrollLeft'])
+    //         headerScrollPosition = x.target['scrollLeft'];
+    //         document.getElementsByClassName('ag-header-container')[0].setAttribute('style', `width: auto !important; transform: translateX(-${headerScrollPosition}px);`);
+    //     })
+    //     document.getElementsByClassName('ag-header-container')[0].addEventListener('scroll', (x) => {
+    //         console.log(headerScrollPosition)
+    //         document.getElementsByClassName('ag-center-cols-viewport')[0].setAttribute('style', `height: calc(100% + 15px); width: auto !important; transform: translateX(-${headerScrollPosition}px);`);
+    //         document.getElementsByClassName('ag-center-cols-viewport')[0].scrollLeft = headerScrollPosition;
+    //     })
+        
+    // }
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {

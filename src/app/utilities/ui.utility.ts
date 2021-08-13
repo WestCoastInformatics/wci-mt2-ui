@@ -22,11 +22,7 @@ export class UiUtility {
 
         if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
 
-            let format = null;
-
-            if (params.colDef.field === 'versionDate' || params.colDef.field === 'modified') {
-                format = CodeUtility.DATE_FORMAT_REVERSE
-            }
+                let format = CodeUtility.DATE_FORMAT_REVERSE
 
             return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
         } else {
