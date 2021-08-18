@@ -1,14 +1,37 @@
-<div class="container-fluid refset-tool-taxonomy">
-
+<div
+    class="container-fluid refset-tool-taxonomy"
+    style="padding-left: 0px; padding-right: 0px"
+>
     <div class="row" *ngIf="isLoading">
-        <div>Loading...</div> 
+        <div>Loading...</div>
     </div>
 
-    <tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)" (loadNodeChildren)="onLoadNodeChildren($event)">
+    <tree-root
+        [id]="treeId"
+        [nodes]="nodes"
+        [options]="configOptions"
+        (activate)="configOptions.onSelect($event)"
+        (updateData)="onInitTree($event)"
+        (loadNodeChildren)="onLoadNodeChildren($event)"
+    >
         <ng-template #treeNodeTemplate let-node let-index="index">
-            <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png">
-            <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png">
-            <span id="{{node?.parent?.data?.code + '-' + node?.data?.code}}">{{ getNodeText(node) }}</span>
-          </ng-template>
+            <img
+                *ngIf="node.data.defined"
+                title="Fully Defined"
+                aria-label="Fully Defined"
+                src="/assets/linedTaxonomyIcon.png"
+            />
+            <img
+                *ngIf="!node.data.defined"
+                title="Primitive"
+                aria-label="Primitive"
+                src="/assets/unlinedTaxonomyIcon.png"
+            />
+            <span
+                id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}"
+                style="line-height: normal"
+                >{{ getNodeText(node) }}</span
+            >
+        </ng-template>
     </tree-root>
 </div>
