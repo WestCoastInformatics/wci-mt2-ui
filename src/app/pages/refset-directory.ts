@@ -50,7 +50,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 	editions: any; 
 	organizations: any;
     initialGridWidth: number;
-
+    showFullNarrativeText = false;
+    showFullNotesText = false;
+    
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
     @ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
@@ -97,21 +99,20 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             let organizationsArray = this.organizations?.items;
 
 	    this.columnDefs = [
-            { field: 'id', colId: 'information', headerName: '', width: 50, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 130},
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 370, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
-			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 200, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'id', colId: 'information', headerName: '', width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
+			{ field: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 170, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
-            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', flex: 1, minWidth: 210, floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', flex: 1, minWidth: 180, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}}, 
-            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 180, floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 150, floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 140, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
-            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 210, valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
             { field: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
         ];
-
         this.refsetGridOptions = {
             context: { componentParent: this },
             pagination: true,
@@ -152,11 +153,28 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             }
         };
 
-	    
         this.showTable = true
         this.changeDetectorRef.detectChanges();
+        // this.overrideHeaderScroll();
 });
     }
+
+    // overrideHeaderScroll(): void {
+    //     let headerScrollPosition = 0;
+
+    //     document.getElementsByClassName('ag-header-container')[0].setAttribute('class', 'ag-header-container scroll-override');
+    //     document.getElementsByClassName('ag-header-container')[0].addEventListener('scroll', (x) => {
+    //         // console.log(x.target['scrollLeft'])
+    //         headerScrollPosition = x.target['scrollLeft'];
+    //         document.getElementsByClassName('ag-header-container')[0].setAttribute('style', `width: auto !important; transform: translateX(-${headerScrollPosition}px);`);
+    //     })
+    //     document.getElementsByClassName('ag-header-container')[0].addEventListener('scroll', (x) => {
+    //         console.log(headerScrollPosition)
+    //         document.getElementsByClassName('ag-center-cols-viewport')[0].setAttribute('style', `height: calc(100% + 15px); width: auto !important; transform: translateX(-${headerScrollPosition}px);`);
+    //         document.getElementsByClassName('ag-center-cols-viewport')[0].scrollLeft = headerScrollPosition;
+    //     })
+        
+    // }
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
@@ -455,5 +473,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     searchSelectionRadioResult(event: any): void {
         this.metadataAndConcepts = event.value === 'true';
         this.refsetGridApi.purgeInfiniteCache();
+    }
+
+    setFullNarrativeText(show: boolean): void {
+        this.showFullNarrativeText = show;
+    }
+
+    setFullNotesText(show: boolean): void {
+        this.showFullNotesText = show;
     }
 }

@@ -16,7 +16,7 @@ export class RefsetUtility {
                 value = version.date;
             }
 
-            let option: any = { value: value, display: version.date + '(' + version.status + ')' };
+            let option: any = { value: value, display: version.date + '(' + version.status?.charAt(0) + version.status?.slice(1).toLowerCase() + ')' };
             
             if (refset.versionStatus.toLowerCase() == 'in development'){
                 option.value = CodeUtility.getCurrentDate();

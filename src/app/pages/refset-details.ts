@@ -13,7 +13,6 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Subject, forkJoin } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 
 /**
@@ -43,7 +42,7 @@ export class RefsetDetails {
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
     selectedMembersListMode: string = 'table'; //taxonomy
-    membersTableDisplay: string = 'block';
+    membersTableDisplay: string = 'inline-block';
     membersTaxonomyDisplay: string = 'none';
     membersGridApi: any;
     membersGridColumnApi: any;
@@ -677,7 +676,7 @@ export class RefsetDetails {
     }
 
     getMemberRow(memberId: string) {
-
+        console.log(memberId)
         let concept;
 
         for (let i = 0; i < this.membersGridData.length; i++) {
@@ -850,11 +849,11 @@ export class RefsetDetails {
     openMemberHistory(conceptId) {
 
         let concept = this.getMemberRow(conceptId);
-
-         this.refsetService.getMemberHistory(this.refsetData.id, conceptId, null).subscribe(results => {
+        console.log(concept);
+         this.refsetService.getMemberHistory(this.refsetData?.id, conceptId, null).subscribe(results => {
 
             let historyData: any = {};
-            historyData.name = `${concept.name} (${concept.code})`;
+            historyData.name = `${concept?.name} (${concept?.code})`;
 
             historyData.columnDefs = [
                 { field: 'version', headerName: 'Version', cellClass: 'refset-tool-member-history-column-version' },

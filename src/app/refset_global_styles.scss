@@ -3,7 +3,7 @@ html,
 body {
     font-family: $standard_font_family;
     font-size: $standard_font_size;
-    font-weight: 100;
+    font-weight: 400;
     color: $standard_font_color;
     position: relative;
     min-height: 100%;
@@ -249,6 +249,10 @@ footer.footer a {
     }
 }
 
+.mat-option-text {
+    text-transform: capitalize;
+}
+
 .mat-icon-button .mat-button-wrapper > * {
     //vertical-align: top !important;
 }
@@ -314,7 +318,7 @@ button.refset-tool-table-action-icon {
 }
 // AG Grid Styles
 .refset-tool-ag-grid {
-    max-height: 623px;
+    // max-height: 623px;
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -323,7 +327,7 @@ button.refset-tool-table-action-icon {
 
 .ag-theme-alpine .ag-header-row {
     color: #666;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 700;
 }
 
@@ -363,6 +367,10 @@ button.refset-tool-table-action-icon {
     padding-top: 12px;
 }
 
+.mat-select-arrow-wrapper {
+    padding-top: 10px;
+}
+
 .refset-tool-directory-column-actions {
     padding-left: 12px !important;
 }
@@ -385,6 +393,7 @@ button.refset-tool-table-action-icon {
 }
 .ag-root-wrapper-body {
     height: max-content !important;
+    // max-height: 623px;
 }
 .no-row-overlay {
     height: 300px;
@@ -395,7 +404,7 @@ button.refset-tool-table-action-icon {
     // Data Rows
     .ag-row {
         height: 51px !important;
-        font-size: 16px !important;
+        font-size: 13px !important;
     }
     .ag-row:hover {
         background-color: #f0fcff; //icy blue hover
@@ -450,6 +459,10 @@ button.refset-tool-table-action-icon {
         padding-left: 3px;
     }
 
+    .refset-tool-directory-column-information .refset-tool-table-action-icon {
+        left: 8px;
+    }
+
     .mat-raised-button {
         min-width: 36px !important;
         border-radius: 0px !important;
@@ -470,9 +483,35 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.centerDownload {
+    padding-left: 7px;
+}
+
+.refset-tool-directory-column-version-status .ag-cell-value {
+    text-transform: lowercase;
+}
+
+.refset-tool-directory-column-version-status .ag-cell-value::first-letter {
+    text-transform: uppercase;
+}
+
+.capitalize-metadata-value {
+    text-transform: lowercase;
+}
+
+.capitalize-metadata-value::first-letter {
+    text-transform: uppercase;
+}
+
 #refsetDirectoryPage .page-title {
     padding-top: 30px;
+    padding-left: 30px;
 }
+
+#refsetDetailsPage .page-title {
+    padding-left: 30px;
+}
+
 #directorySearchInputField {
     width: 340px;
 
@@ -486,18 +525,40 @@ button.refset-tool-table-action-icon {
 }
 #directoryViewFilterField.mat-form-field {
     width: 125px;
-
+    padding-left: 5px;
     .mat-form-field-flex {
+        width: 125px;
+    }
+    .mat-form-field-underline {
         width: 125px;
     }
 }
 
+// .scroll-override {
+//     width: auto !important;
+//     overflow-x: scroll !important;
+//     overflow-y: hidden !important;
+// }
+
+// .scroll-override::-webkit-scrollbar {
+//     display: none;
+// }
+
+.ag-floating-filter-input {
+    padding-bottom: 12px;
+}
 // Column Chooser Styles
 .mat-form-field.refset-tool-column-chooser-select-field {
-    width: 160px;
+    width: 190px;
 
     .mat-form-field-flex {
         width: 175px;
+    }
+}
+
+.refset-tool-column-chooser-select {
+    .mat-select-trigger {
+        width: 160px;
     }
 }
 
@@ -531,6 +592,7 @@ button.refset-tool-table-action-icon {
     .mat-form-field-flex {
     padding: 0 0.75em 0 0.75em;
     //margin-top: -30px;
+    width: 225px;
 }
 
 #refsetDetailsPage .refset-title {
@@ -684,9 +746,11 @@ button.refset-tool-table-action-icon {
 .refset-tool-concept-details-column {
     background-color: white;
     border-radius: 4px;
-    margin-top: 80px;
+    margin-top: 20px;
     margin-bottom: 15px;
     font-size: 14px;
+    margin-left: 20px;
+    margin-right: 5px;
 }
 .refset-tool-details-chooser-column {
     font-size: 16px;
@@ -697,6 +761,11 @@ button.refset-tool-table-action-icon {
 }
 .refset-tool-toggle-buttons {
     font-size: 16px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+#detailsTaxonomySearchInputField {
+    top: 2px;
 }
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
@@ -705,6 +774,9 @@ button.refset-tool-table-action-icon {
     height: 130px;
     resize: vertical;
     overflow: auto;
+}
+#detailsMembersTree tree-viewport {
+    overflow: unset !important;
 }
 .children-section {
     height: 623px;
@@ -741,6 +813,9 @@ button.refset-tool-table-action-icon {
     font-weight: 400;
     @extend .refset-tool-rounded-borders;
 }
+.refset-tool-concept-details-concept-info-column-status {
+    background-color: lightpink;
+}
 .refset-tool-concept-details-concept-row {
     margin-bottom: 5px;
 }
@@ -751,6 +826,17 @@ button.refset-tool-table-action-icon {
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
+}
+.refset-tool-concept-details-concept-roles-column-no-attributes {
+    margin-left: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: rgba(30, 144, 255, 0.17);
+    border-color: $concept_details_color;
+    @extend .refset-tool-rounded-borders;
+}
+.no-attributes {
+    opacity: 30%;
 }
 .refset-tool-concept-details-concept-description-language {
     padding-left: 0px;
@@ -788,8 +874,16 @@ button.refset-tool-table-action-icon {
     margin-top: 11px;
 }
 
+.mat-form-field-appearance-fill .mat-form-field-infix {
+    padding: 0.5em;
+}
+
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
+}
+
+.mat-form-field-underline {
+    height: 1px;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-underline:hover {
@@ -807,16 +901,21 @@ button.refset-tool-table-action-icon {
     color: #666 !important;
 }
 
-.mat-form-field-appearance-fill .mat-form-field-flex {
-    width: 230px;
-}
-
 .mat-form-field-flex .ng-tns-c109-2 {
     width: 130px;
+    padding-left: 0px;
+}
+
+.mat-form-field-flex .ng-tns-c109-1 {
+    padding-right: 0px !important;
+}
+
+.mat-form-field-flex .ng-tns-c109-1 {
+    padding-right: 0px !important;
 }
 
 .current-version-label {
-    font-weight: 100;
+    font-weight: 400;
     font-size: 17.5px;
     padding-right: 10px;
     padding-top: 10px;
@@ -904,13 +1003,20 @@ button.refset-tool-table-action-icon {
     position: relative;
     //z-index: 100;
     left: -13px;
-    top: -10px;
+    top: 0px;
     cursor: pointer;
     &:hover {
         color: $delete_color;
     }
 }
 
+.search-label {
+    padding-left: 10px;
+}
+
+.refset-tool-directory-chooser-column {
+    padding-right: 20px;
+}
 // Table-Tax Button Group
 .mat-button-toggle-checked {
     background-color: $cerulean;
