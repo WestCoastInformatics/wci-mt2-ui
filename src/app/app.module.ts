@@ -30,6 +30,7 @@ import { ToastNoAnimationModule } from 'ngx-toastr';
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
 import {MatRadioModule} from '@angular/material/radio';
+import { AngularSplitModule } from 'angular-split';
 
 // COMPONENT IMPORTS
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
@@ -110,7 +111,8 @@ const appRoutes: Routes = [
         DialogModule,
         TreeModule,
         AgGridModule.withComponents([TemplateRenderer]),
-        EditorModule
+        EditorModule,
+        AngularSplitModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

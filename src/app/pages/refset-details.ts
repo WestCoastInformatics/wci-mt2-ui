@@ -13,7 +13,6 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Subject, forkJoin } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 
 /**
