@@ -1,8 +1,11 @@
-@import '~bootstrap/dist/css/bootstrap.min.css';
-@import '~src/material-theme.scss';
-@import '~src/variables.scss';
-@import '~ngx-toastr/toastr';
-@import '~@circlon/angular-tree-component/css/angular-tree-component.css';
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~src/material-theme.scss";
+@import "~src/variables.scss";
+@import "~ngx-toastr/toastr";
+@import "~@circlon/angular-tree-component/css/angular-tree-component.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "./app/refset_global_styles.scss";
+
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";

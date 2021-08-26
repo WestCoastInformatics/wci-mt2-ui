@@ -767,6 +767,9 @@ button.refset-tool-table-action-icon {
 #detailsTaxonomySearchInputField {
     top: 2px;
 }
+.modal-dialog {
+    max-width: 700px !important;
+}
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
@@ -775,9 +778,9 @@ button.refset-tool-table-action-icon {
     resize: vertical;
     overflow: auto;
 }
-#detailsMembersTree tree-viewport {
-    overflow: unset !important;
-}
+// #detailsMembersTree tree-viewport {
+//     overflow: unset !important;
+// }
 .children-section {
     height: 623px;
 }
@@ -1051,6 +1054,26 @@ button.refset-tool-table-action-icon {
     max-width: 200px;
 }
 
+.col.create-new-refset-field {
+    width: 300px;
+    max-width: 300px;
+    mat-form-field {
+        width: 100%;
+    }
+    mat-chip {
+        zoom: 0.8;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+        background: white;
+    }
+}
+
+.col.create-new-refset-label {
+    width: 250px;
+    max-width: 250px;
+}
+
 // Temp Style
 
 // Make Table in Button Group appear selected on load
@@ -1143,4 +1166,8 @@ button.refset-tool-table-action-icon {
     border-radius: 15px;
     width: 400px;
     height: 30px;
+}
+
+.example-chip-list {
+    width: 100%;
 }

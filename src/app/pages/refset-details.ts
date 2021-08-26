@@ -14,6 +14,7 @@ import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Subject, forkJoin } from 'rxjs';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
+import { environment } from 'src/environments/environment';
 
 /**
  * @title Tree with nested nodes
@@ -891,7 +892,11 @@ export class RefsetDetails {
 
             this.dialog = this.dialogFactoryService.open(dialogData);
         });
-        
+    }
+
+    openInNewWindow(conceptId: string): void {
+        let snomedBrowserUrl = environment['snomedBrowserUrl'] + '&conceptId1=' + conceptId + '&edition=' + RefsetUtility.getBranchPath(this.refsetData);
+        window.open(snomedBrowserUrl);
     }
 
     clearSearch(field) {
