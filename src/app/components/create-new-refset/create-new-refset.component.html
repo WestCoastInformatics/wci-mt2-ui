@@ -1,0 +1,318 @@
+<button
+    mat-raised-button
+    color="primary"
+    (click)="openCreateRefsetModal(createNewRefsetDialog)"
+    aria-hidden="false"
+    #createRefsetButton
+    class="refset-tool-action-button"
+    aria-label="Create New Refset"
+    title="Create New Refset"
+    ng-reflect-color="primary"
+>
+    Create New Refset
+</button>
+<ng-template #createNewRefsetDialog let-modal>
+    <div class="modal-header" style="border: none; padding-left: 30px">
+        <h4
+            class="modal-title"
+            id="modal-basic-title"
+            style="
+                color: #9b9b9b;
+                font-size: 1.5em;
+                font-family: 'museo', 'Open Sans', 'Helvetica Neue', Helvetica,
+                    Arial, sans serif;
+            "
+        >
+            Create New Refset
+        </h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div
+        class="container-fluid"
+        style="padding: 30px; padding-bottom: 0px; padding-top: 0px"
+    >
+        <div
+            class="modal-body"
+            style="
+                background-color: rgba(245, 245, 246, 1);
+                padding: 28px;
+                padding-top: 0px;
+                border-radius: 5px;
+                font-size: 14px;
+            "
+        >
+            <div
+                class="row"
+                style="
+                    align-items: baseline;
+                    display: flex;
+                    align-items: center;
+                "
+            >
+                <div
+                    style="display: flex; align-items: center; margin-top: 20px"
+                >
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Project Name:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <input
+                                matInput
+                                type="text"
+                                [(ngModel)]="dummydata[0]"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Owner/Organization:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <input
+                                matInput
+                                type="text"
+                                [(ngModel)]="dummydata[0]"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Edition/Extension:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <mat-select [(ngModel)]="selectedValue" name="data">
+                                <mat-option
+                                    *ngFor="let data of dummydata"
+                                    [value]="data"
+                                >
+                                    {{ data }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Extension Version Date:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <mat-select [(ngModel)]="selectedValue" name="data">
+                                <mat-option
+                                    *ngFor="let data of dummydata"
+                                    [value]="data"
+                                >
+                                    {{ data }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Assign Refset Concept:</label>
+                    </div>
+                    <div
+                        class="col create-new-refset-field"
+                        style="flex: 1; margin-top: 30px"
+                    >
+                        <mat-radio-group
+                            (change)="checkRadioButtonValue($event)"
+                        >
+                            <mat-radio-button value="1"
+                                >Choose an existing metadata
+                                concept</mat-radio-button
+                            >
+                            <mat-form-field
+                                appearance="fill"
+                                [hidden]="isSelected == 2"
+                            >
+                                <mat-select
+                                    [(ngModel)]="selectedValue"
+                                    name="data"
+                                >
+                                    <mat-option
+                                        *ngFor="let data of dummydata"
+                                        [value]="data"
+                                    >
+                                        {{ data }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-radio-button value="2"
+                                >Create a new concept</mat-radio-button
+                            >
+                            <mat-form-field
+                                class="example-form-field"
+                                appearance="fill"
+                                [hidden]="isSelected == 1"
+                            >
+                                <input
+                                    matInput
+                                    type="text"
+                                    placeholder="Create a new concept"
+                                    [(ngModel)]="value2a"
+                                />
+                                <button
+                                    *ngIf="value2a"
+                                    matSuffix
+                                    mat-icon-button
+                                    aria-label="Clear"
+                                    (click)="value2a = ''"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                            <mat-form-field
+                                class="example-form-field"
+                                appearance="fill"
+                                [hidden]="isSelected == 1"
+                            >
+                                <input
+                                    matInput
+                                    type="text"
+                                    placeholder="PT Description"
+                                    [(ngModel)]="value2b"
+                                />
+                                <button
+                                    *ngIf="value2b"
+                                    matSuffix
+                                    mat-icon-button
+                                    aria-label="Clear"
+                                    (click)="value2b = ''"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Narrative:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <textarea
+                                matInput
+                                placeholder="The full description explaining the purpose of the reference set"
+                            ></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div
+                    style="
+                        display: flex;
+                        align-items: center;
+                        height: 130px;
+                        margin-bottom: 20px;
+                    "
+                >
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Reference Set Tags:</label>
+                    </div>
+                    <div
+                        class="col create-new-refset-field"
+                        style="flex: 1; margin-top: 30px"
+                    >
+                        <mat-form-field class="example-chip-list">
+                            <input
+                                placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add a tag to categorize the refset"
+                                [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="
+                                    separatorKeysCodes
+                                "
+                                [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="add($event)"
+                            />
+                            <mat-chip-list #chipList> </mat-chip-list>
+                        </mat-form-field>
+                        <mat-chip
+                            *ngFor="let data of dummydata"
+                            [selectable]="selectable"
+                            [removable]="removable"
+                            (removed)="remove(data)"
+                            class="mat-elevation-z5"
+                        >
+                            {{ data }}
+                            <mat-icon matChipRemove *ngIf="removable"
+                                >cancel</mat-icon
+                            >
+                        </mat-chip>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Reference Set Type:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <mat-select [(ngModel)]="selectedValue" name="data">
+                                <mat-option
+                                    *ngFor="let data of dummydata"
+                                    [value]="data"
+                                >
+                                    {{ data }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Availability:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-checkbox>Private</mat-checkbox>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center">
+                    <div class="col create-new-refset-label" style="flex: 1">
+                        <label>Assignee:</label>
+                    </div>
+                    <div class="col create-new-refset-field" style="flex: 1">
+                        <mat-form-field appearance="fill">
+                            <mat-select [(ngModel)]="selectedValue" name="data">
+                                <mat-option
+                                    *ngFor="let data of dummydata"
+                                    [value]="data"
+                                >
+                                    {{ data }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="border: none; padding-right: 30px">
+        <button
+            type="button"
+            (click)="modal.close('Create New Refset')"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Create New Refset"
+            title="Create New Refset"
+            ng-reflect-color="primary"
+        >
+            Create New Refset
+        </button>
+    </div>
+</ng-template>

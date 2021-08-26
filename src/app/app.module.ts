@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -21,7 +22,7 @@ import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
 import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
 import { SafeUrlPipe } from 'src/app/pipes/safe-urls.pipe';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTypeaheadModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
@@ -59,6 +60,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
+import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
@@ -81,7 +83,8 @@ const appRoutes: Routes = [
         SafeUrlPipe,
         RefsetDirectory,
         RefsetDetails,
-		CategoryFilterComponent
+		CategoryFilterComponent,
+		CreateNewRefsetComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -94,6 +97,7 @@ const appRoutes: Routes = [
         BrowserAnimationsModule,
         NgbTypeaheadModule,
         MatTableModule,
+        MatChipsModule,
         MatPaginatorModule,
         MatSortModule,
         MatExpansionModule,
@@ -112,7 +116,8 @@ const appRoutes: Routes = [
         TreeModule,
         AgGridModule.withComponents([TemplateRenderer]),
         EditorModule,
-        AngularSplitModule
+        AngularSplitModule,
+        NgbModule
     ],
     entryComponents: [NotificationComponent],
     providers: [
