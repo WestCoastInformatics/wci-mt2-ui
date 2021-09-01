@@ -106,7 +106,7 @@ export class RefsetDetails {
     @ViewChild('taxonomyPathSection') taxonomyPathSection: TemplateRef<any>;
     showFullNarrativeText = false;
     showFullNotesText = false;
-
+    editMode = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -123,9 +123,19 @@ export class RefsetDetails {
     //***** Framework Functions *****/
     ngOnInit() {
 
+        this.route.data.subscribe(data => {
+            console.log(data.editMode);
+
+            this.editMode = data.editMode;
+        })
+
         this.id = this.route.snapshot.paramMap.get('refsetId');
         
-        this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
+        if (!this.editMode) {
+            this.breadcrumbService.setBreadcrumbs([{path: '/directory', label: 'Directory'}, {label: 'Refset Details'}]);
+        } else {
+            this.breadcrumbService.setBreadcrumbs([{path: '/projects/refset', label: 'Projects'}, {label: 'Edit Reference Set'}]);
+        }
 
         // var allObservables = [this.refsetLoaded$, this.memberCacheLoaded$].map((obs, i) => obs.pipe(tap({
         //     next(value) { console.log(`Observable ${i} emits: ${value}`); },
