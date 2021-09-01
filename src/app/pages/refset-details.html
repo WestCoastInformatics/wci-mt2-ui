@@ -405,6 +405,7 @@
                                             <input
                                                 matInput
                                                 #detailsTableSearchInput
+                                                id="detailsTableSearchInput"
                                                 [(ngModel)]="tableSearchInput"
                                                 (input)="onTableSearchChange()"
                                             />
@@ -414,6 +415,19 @@
                                             (click)="clearSearch('table')"
                                             >&#10005;</span
                                         >
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            (click)="openEclBuilder('detailsTableSearchInput')"
+                                            aria-hidden="false"
+                                            #detailsTableSearchEclButton
+                                            class="refset-tool-action-button"
+                                            aria-label="Open ECL Builder"
+                                            title="Open ECL Builder"
+                                            ng-reflect-color="primary"
+                                        >
+                                            ECL Builder
+                                        </button>
                                     </div>
 
                                     <div
@@ -435,6 +449,7 @@
                                             <input
                                                 matInput
                                                 #detailsTaxonomySearchInput
+                                                id="detailsTaxonomySearchInput"
                                                 [(ngModel)]="taxonomySearchInput"
                                                 (input)="onTaxonomySearchChange()"
                                             />
@@ -449,6 +464,7 @@
                                             <input
                                                 matInput
                                                 #detailsTaxonomySearchInput
+                                                id="detailsTaxonomySearchInput"
                                                 [(ngModel)]="taxonomySearchInput"
                                                 (input)="onTaxonomySearchChange()"
                                                 disabled
@@ -460,6 +476,19 @@
                                             *ngIf="showMembersSearchBar()"
                                             >&#10005;</span
                                         >
+                                        <button
+                                            mat-raised-button
+                                            color="primary"
+                                            (click)="openEclBuilder('detailsTaxonomySearchInput')"
+                                            aria-hidden="false"
+                                            #detailsTaxonomySearchEclButton
+                                            class="refset-tool-action-button"
+                                            aria-label="Open ECL Builder"
+                                            title="Open ECL Builder"
+                                            ng-reflect-color="primary"
+                                        >
+                                            ECL Builder
+                                        </button>
                                     </div>
 
                                     <div

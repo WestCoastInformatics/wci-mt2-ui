@@ -1,5 +1,7 @@
 import { CodeUtility } from "./code.utility";
 import { NotificationService } from 'src/app/services/notification.service';
+import { environment } from "src/environments/environment";
+
 export class UiUtility {
 
     /*
@@ -213,6 +215,28 @@ export class UiUtility {
             error: function (data) {
                 notifyOfError();
             }
+        });
+    }
+
+    // Function to open SNOMED ECL Builder
+    static openEclBuilder(fieldId, branch) {
+
+        let field = $('#' + fieldId);
+        let eclString = field.val();
+        let snomedBrowserUrl = environment['snowstormApiUrl']
+
+        $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snomedBrowserUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+
+        const eclBuilder = document.querySelector('ecl-builder');
+    
+        eclBuilder.addEventListener('output', (event: any) => {
+
+            field.val(event.detail);
+
+            // need to create a custom event to allow jquery to trigger an Angular event
+            const customEvent = document.createEvent('Event');  
+            customEvent.initEvent('input', true, true);
+            field[0].dispatchEvent(customEvent);
         });
     }
 

@@ -354,6 +354,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     //***** General Functions *****/
 
+    openEclBuilder(fieldId) {
+        UiUtility.openEclBuilder(fieldId, "MAIN");
+    }
+
     goToDetailsPage(refsetId){
         this.router.navigate(['/details', refsetId]);
     }
