@@ -672,6 +672,10 @@ export class RefsetDetails {
 
     //***** General Functions *****/
 
+    openEclBuilder(fieldId) {
+        UiUtility.openEclBuilder(fieldId, RefsetUtility.getBranchPath(this.refsetData));
+    }
+
     shortenNoteFields(){
 
         if (CodeUtility.hasValue(this.refsetData)){

@@ -22,6 +22,7 @@
                     <input
                         matInput
                         #directorySearchInput
+                        id="directorySearchInput"
                         [(ngModel)]="searchInput"
                         (keyup)="onSearchChange()"
                         (change)="onSearchChange()"
@@ -30,6 +31,19 @@
                 <span class="clear-search" (click)="clearSearch()"
                     >&#10005;</span
                 >
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="openEclBuilder('directorySearchInput')"
+                    aria-hidden="false"
+                    #directorySearchEclButton
+                    class="refset-tool-action-button"
+                    aria-label="Open ECL Builder"
+                    title="Open ECL Builder"
+                    ng-reflect-color="primary"
+                >
+                    ECL Builder
+                </button>
             </div>
             <div class="col-md-auto" style="padding-left: 5px">
                 <mat-form-field id="directoryViewFilterField" appearance="fill">

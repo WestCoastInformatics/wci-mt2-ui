@@ -3,6 +3,7 @@ export const environment = {
   restUrl: '',
   restContextPath: '/refsetservice/',
   snomedBrowserUrl: 'https://prod-browser.ihtsdotools.org/?perspective=full',
+  snowstormApiUrl: 'https://snowstorm.ihtsdotools.org/snowstorm/snomed-ct',
   mockRestData: false,
   refsetsExportableAsFreeset: '787778008',
   freesetUrl: 'https://gps.snomed.org'
