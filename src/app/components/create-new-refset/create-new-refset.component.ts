@@ -16,7 +16,7 @@ export class CreateNewRefsetComponent {
   addOnBlur = true;
   selectedRadioButton = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  isSelected = 1;
+  isSelected = 0;
 
   constructor(private modalService: NgbModal,
     private detectChanges: ChangeDetectorRef) {

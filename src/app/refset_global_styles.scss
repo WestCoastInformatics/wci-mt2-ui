@@ -453,7 +453,6 @@ button.refset-tool-table-action-icon {
 #refsetDirectoryPage,
 #refsetDetailsPage {
     padding: 0px;
-
     .refset-tool-directory-column-information {
         justify-content: center;
         padding-left: 3px;
@@ -483,8 +482,62 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.wrapper-progressBar {
+    width: 100%;
+}
+
+.progressBar li {
+    list-style-type: none;
+    float: left;
+    width: 10%;
+    position: relative;
+    text-align: center;
+}
+
+.progressBar li:before {
+    content: " ";
+    line-height: 30px;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ddd;
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px;
+    background-color: white;
+}
+
+.progressBar li:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #ddd;
+    top: 6px;
+    left: -50%;
+    z-index: -1;
+}
+
+.progressBar li:first-child:after {
+    content: none;
+}
+
+.progressBar li.active {
+    color: #00a4e4;
+}
+
+.progressBar li.active:before {
+    border-color: #00a4e4;
+    background-color: #00a4e4;
+}
+
+#refsetDirectoryPage {
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
 .centerDownload {
-    padding-left: 7px;
+    padding-left: 2px;
 }
 
 .refset-tool-directory-column-version-status .ag-cell-value {

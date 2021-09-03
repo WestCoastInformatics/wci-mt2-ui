@@ -43,10 +43,12 @@ import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refse
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
+import { ProjectsRefsetComponent } from './pages/projects/projects-refset.component';
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -60,13 +62,14 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
+import { SideBarModule } from './components/side-bar/side-bar.module';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
     { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
-    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details' } },
-
+    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
+    { path: 'projects/refset', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' } },
+    { path: 'edit/refset/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Edit Reference Set', editMode: true } },
 ];
 
 @NgModule({
@@ -84,7 +87,8 @@ const appRoutes: Routes = [
         RefsetDirectory,
         RefsetDetails,
 		CategoryFilterComponent,
-		CreateNewRefsetComponent
+		CreateNewRefsetComponent,
+		ProjectsRefsetComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -117,7 +121,8 @@ const appRoutes: Routes = [
         AgGridModule.withComponents([TemplateRenderer]),
         EditorModule,
         AngularSplitModule,
-        NgbModule
+        NgbModule,
+        SideBarModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

@@ -26,6 +26,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/search', params);
     }
 
+    // getProjects(params: any): Observable<any> {
+    //     return this.get(this.contextPath + 'project/search', params);
+    // }
+
     getRefset(refsetId: string): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId);
     }
