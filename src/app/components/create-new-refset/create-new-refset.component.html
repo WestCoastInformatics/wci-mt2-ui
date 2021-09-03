@@ -53,11 +53,17 @@
                 style="
                     align-items: baseline;
                     display: flex;
-                    align-items: center;
+                    align-items: normal;
                 "
             >
                 <div
-                    style="display: flex; align-items: center; margin-top: 20px"
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                        margin-top: 20px;
+                    "
                 >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Project Name:</label>
@@ -73,7 +79,14 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Owner/Organization:</label>
                     </div>
@@ -88,24 +101,36 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Edition/Extension:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
                         <mat-form-field appearance="fill">
-                            <mat-select [(ngModel)]="selectedValue" name="data">
-                                <mat-option
-                                    *ngFor="let data of dummydata"
-                                    [value]="data"
-                                >
-                                    {{ data }}
-                                </mat-option>
-                            </mat-select>
+                            <input
+                                matInput
+                                type="text"
+                                [(ngModel)]="dummydata[0]"
+                                disabled
+                            />
                         </mat-form-field>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Extension Version Date:</label>
                     </div>
@@ -122,14 +147,18 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Assign Refset Concept:</label>
                     </div>
-                    <div
-                        class="col create-new-refset-field"
-                        style="flex: 1; margin-top: 30px"
-                    >
+                    <div class="col create-new-refset-field" style="flex: 1">
                         <mat-radio-group
                             (change)="checkRadioButtonValue($event)"
                         >
@@ -139,7 +168,7 @@
                             >
                             <mat-form-field
                                 appearance="fill"
-                                [hidden]="isSelected == 2"
+                                [hidden]="isSelected == 2 || isSelected == 0"
                             >
                                 <mat-select
                                     [(ngModel)]="selectedValue"
@@ -159,12 +188,12 @@
                             <mat-form-field
                                 class="example-form-field"
                                 appearance="fill"
-                                [hidden]="isSelected == 1"
+                                [hidden]="isSelected == 1 || isSelected == 0"
                             >
                                 <input
                                     matInput
                                     type="text"
-                                    placeholder="Create a new concept"
+                                    placeholder="Enter the name of the new concept"
                                     [(ngModel)]="value2a"
                                 />
                                 <button
@@ -177,36 +206,25 @@
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </mat-form-field>
-                            <mat-form-field
-                                class="example-form-field"
-                                appearance="fill"
-                                [hidden]="isSelected == 1"
-                            >
-                                <input
-                                    matInput
-                                    type="text"
-                                    placeholder="PT Description"
-                                    [(ngModel)]="value2b"
-                                />
-                                <button
-                                    *ngIf="value2b"
-                                    matSuffix
-                                    mat-icon-button
-                                    aria-label="Clear"
-                                    (click)="value2b = ''"
-                                >
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            </mat-form-field>
                         </mat-radio-group>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
-                    <div class="col create-new-refset-label" style="flex: 1">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
+                    <div
+                        class="col create-new-refset-label"
+                        style="flex: 1; align-self: normal"
+                    >
                         <label>Narrative:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
-                        <mat-form-field appearance="fill">
+                        <mat-form-field appearance="outline">
                             <textarea
                                 matInput
                                 placeholder="The full description explaining the purpose of the reference set"
@@ -217,18 +235,15 @@
                 <div
                     style="
                         display: flex;
-                        align-items: center;
-                        height: 130px;
-                        margin-bottom: 20px;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
                     "
                 >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Reference Set Tags:</label>
                     </div>
-                    <div
-                        class="col create-new-refset-field"
-                        style="flex: 1; margin-top: 30px"
-                    >
+                    <div class="col create-new-refset-field" style="flex: 1">
                         <mat-form-field class="example-chip-list">
                             <input
                                 placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add a tag to categorize the refset"
@@ -255,46 +270,39 @@
                         </mat-chip>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Reference Set Type:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
                         <mat-form-field appearance="fill">
-                            <mat-select [(ngModel)]="selectedValue" name="data">
-                                <mat-option
-                                    *ngFor="let data of dummydata"
-                                    [value]="data"
-                                >
-                                    {{ data }}
-                                </mat-option>
-                            </mat-select>
+                            <select matNativeControl>
+                                <option value="Extensional">Extensional</option>
+                                <option value="Intensional">Intensional</option>
+                            </select>
                         </mat-form-field>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center">
+                <div
+                    style="
+                        display: flex;
+                        align-items: normal;
+                        justify-content: space-between;
+                        width: 100%;
+                    "
+                >
                     <div class="col create-new-refset-label" style="flex: 1">
                         <label>Availability:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
                         <mat-checkbox>Private</mat-checkbox>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center">
-                    <div class="col create-new-refset-label" style="flex: 1">
-                        <label>Assignee:</label>
-                    </div>
-                    <div class="col create-new-refset-field" style="flex: 1">
-                        <mat-form-field appearance="fill">
-                            <mat-select [(ngModel)]="selectedValue" name="data">
-                                <mat-option
-                                    *ngFor="let data of dummydata"
-                                    [value]="data"
-                                >
-                                    {{ data }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
                     </div>
                 </div>
             </div>
@@ -304,6 +312,7 @@
         <button
             type="button"
             (click)="modal.close('Create New Refset')"
+            [routerLink]="['/edit/refset/1f6d62c4-3c4e-4321-a016-d2760c2c1c7f']"
             mat-raised-button
             color="primary"
             aria-hidden="false"

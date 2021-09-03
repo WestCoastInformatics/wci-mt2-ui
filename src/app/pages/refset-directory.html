@@ -5,7 +5,19 @@
     <!-- Search Bar -->
     <div class="container-fluid">
         <div class="row justify-content-end" style="align-items: baseline">
-            <create-new-refset></create-new-refset>
+            <button
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                #createRefsetButton
+                class="refset-tool-action-button"
+                aria-label="Create New Refset"
+                title="Create New Refset"
+                ng-reflect-color="primary"
+                [routerLink]="['/projects/refset']"
+            >
+                Open Projects Page
+            </button>
             <div
                 class="col-md-auto refset-tool-directory-chooser-column"
                 *ngIf="showTable"
@@ -450,7 +462,7 @@
         <ng-template #directoryActionSection let-params>
             <div class="container-fluid action-buttons">
                 <div class="row">
-                    <div class="col-2 column-download-button">
+                    <div class="column-download-button">
                         <app-refset-download
                             *ngIf="params?.data?.downloadable"
                             [class.centerDownload]="!params?.data?.feedbackVisible"

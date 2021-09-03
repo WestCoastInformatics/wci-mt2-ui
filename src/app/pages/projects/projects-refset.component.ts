@@ -56,6 +56,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.titleService.setTitle('Refset Tool - Projects');
         this.breadcrumbService.setBreadcrumbs([{path: '/Projects', label: 'Projects'}, {label: 'Reference Sets'}]);
+        // console.log('look at me');
+        // this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=false').subscribe(x => {
+        //     console.log(x);
+        // })
     }
 
     ngAfterViewInit() {
@@ -64,18 +68,14 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 			this.refsetService.getVersions(),
 			this.refsetService.getEditions(),
 			this.refsetService.getOrganizations(),
-		).subscribe(([results]) => {
-
-            this.versionStatuses = results;
-            let versionStatusArray = this.versionStatuses?.items;
-
+		).subscribe(x => {
+            console.log(x)
 	    this.columnDefs = [
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1},
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },            
-            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, floatingFilterComponent: 'categoryFilterComponent',
-            floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
             { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow', flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowSection }, floatingFilterComponent: 'categoryFilterComponent'},
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'published', headerName: 'Last Published Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, valueGetter: UiUtility.gridDateValueGetter },
         ];
         this.refsetGridOptions = {
             context: { componentParent: this },
@@ -122,7 +122,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
-
+        console.log(gridReadyParams)
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
 
