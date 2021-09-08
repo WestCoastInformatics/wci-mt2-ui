@@ -27,6 +27,7 @@ export class TaxonomyTreeComponent {
     loadNodeChildrenProcess: Function = (event) => {};
     refsetUtility = RefsetUtility;
     isLoading: boolean = false;
+    noData: boolean = false;
 
     @Input() treeId: string = 'taxonomyTree';
     @Input() refset: any;
@@ -75,8 +76,7 @@ export class TaxonomyTreeComponent {
             } else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
 
                 // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
-                if (this.rootNode.hasChildren
-                    && (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].descriptions))) {
+                if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].descriptions)) {
 
                     this.isLoading = true;
                     let depth: number = 1
@@ -117,6 +117,12 @@ export class TaxonomyTreeComponent {
             this.nodes = [this.rootNode];
         }
 
+        if (CodeUtility.hasValue(data)) {
+            this.noData = false;
+        } else {
+            this.noData = true;
+        }
+        
         this.isLoading = false;
     }
 

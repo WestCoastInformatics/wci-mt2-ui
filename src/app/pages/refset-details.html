@@ -854,7 +854,7 @@
                                                 "
                                                 *ngIf="conceptDetail.parents.length == 0"
                                             >
-                                                There are no parents
+                                                There is no data.
                                             </div>
                                         </div>
 
@@ -1115,22 +1115,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="row">
-                                            <div
-                                                class="
-                                                    refset-tool-concept-details-no-relationships
-                                                "
-                                                *ngIf="conceptDetail.children.length == 0"
-                                            >
-                                                There are no children
-                                            </div>
-                                        </div>
 
                                         <!-- Children Taxonomy Tree -->
                                         <div class="container-fluid">
                                             <app-taxonomy-tree
                                                 #childrenMembersTaxonomy
-                                                treeId="detailsMembersTree"
+                                                treeId="childrenMembersTree"
                                                 [refset]="refsetData"
                                                 [rootNode]="conceptDetail"
                                                 [options]="taxonomyOptions"
