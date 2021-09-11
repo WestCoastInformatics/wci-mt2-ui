@@ -1,0 +1,108 @@
+<button
+    mat-raised-button
+    color="primary"
+    (click)="openImportFromListModal(importFromListDialog)"
+    aria-hidden="false"
+    #importFromFileButton
+    class="refset-tool-action-button"
+    aria-label="Import From List"
+    title="Import From List"
+    ng-reflect-color="primary"
+>
+    Open List Import
+</button>
+<ng-template #importFromListDialog let-modal>
+    <div
+        class="modal-header"
+        style="border: none; padding-left: 30px; padding-bottom: 30px"
+    >
+        <h4
+            class="modal-title"
+            id="modal-basic-title"
+            style="
+                color: #9b9b9b;
+                font-size: 1.5em;
+                font-family: 'museo', 'Open Sans', 'Helvetica Neue', Helvetica,
+                    Arial, sans serif;
+            "
+        >
+            Add or Remove Members By List
+        </h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div
+        class="container-fluid"
+        style="padding: 30px; padding-bottom: 0px; padding-top: 0px"
+    >
+        <div
+            class="modal-body"
+            style="
+                background-color: rgba(245, 245, 246, 1);
+                padding: 28px;
+                border-radius: 5px;
+                font-size: 14px;
+                text-align: center;
+                text-align: -webkit-center;
+            "
+        >
+            <div
+                style="
+                    width: 300px;
+                    text-align: left;
+                    font-size: 13px;
+                    padding-bottom: 20px;
+                "
+            >
+                Enter a list of member IDs. Use a comma or whitespace delimited
+                numeric identifiers.
+            </div>
+            <mat-form-field
+                class="add-by-list-text-area"
+                appearance="outline"
+                style="width: 300px"
+            >
+                <textarea
+                    matInput
+                    style="height: 250px"
+                    [(ngModel)]="listOfIds"
+                ></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="modal-footer" style="border: none; padding: 30px">
+        <button
+            type="button"
+            (click)="modal.close('Add Members'); addMembers()"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Add Members"
+            title="Add Members"
+            ng-reflect-color="primary"
+        >
+            Add Members
+        </button>
+        <button
+            type="button"
+            (click)="modal.close('Remove Members'); removeMembers()"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Remove Members"
+            title="Remove Members"
+            ng-reflect-color="primary"
+            style="margin-left: 15px"
+        >
+            Remove Members
+        </button>
+    </div>
+</ng-template>

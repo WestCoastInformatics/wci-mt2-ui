@@ -1,0 +1,10 @@
+@import "~src/variables.scss";
+
+::ng-deep #importFromListDialog ngb-modal-window .modal-content {
+    max-width: 551px !important;
+    max-height: 605px !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: white !important;
+}

@@ -416,6 +416,14 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
+            <import-from-file-modal
+                *ngIf="editMode"
+                [internalRefsetId]="id"
+            ></import-from-file-modal>
+            <import-from-list-modal
+                *ngIf="editMode"
+                [internalRefsetId]="id"
+            ></import-from-list-modal>
         </div>
 
         <!-- Member Concepts Section -->

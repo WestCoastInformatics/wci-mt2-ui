@@ -1,3 +1,14 @@
 .container-toggled {
     padding-left: 118px !important;
 }
+
+::ng-deep .project-drop-down .mat-select-arrow-wrapper {
+    padding-top: 0;
+}
+
+::ng-deep
+    #refsetProjectsPage
+    .refset-tool-pagination-container
+    .row:nth-child(2) {
+    display: none;
+}

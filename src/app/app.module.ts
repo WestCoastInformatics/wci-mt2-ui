@@ -1,7 +1,7 @@
 // FRAMEWORK IMPORTS
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -44,6 +44,8 @@ import { ColumnChooserComponent } from 'src/app/components/column-chooser/column
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
+import { ImportFromFileModalComponent } from './components/import-from-file-modal/import-from-file-modal.component';
+import { ImportFromListModalComponent } from './components/import-from-list-modal/import-from-list-modal.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
@@ -63,6 +65,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 import { SideBarModule } from './components/side-bar/side-bar.module';
+import { dragAndDropDirective } from './directives/drag-and-drop.directive';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
@@ -88,7 +91,10 @@ const appRoutes: Routes = [
         RefsetDetails,
 		CategoryFilterComponent,
 		CreateNewRefsetComponent,
-		ProjectsRefsetComponent
+		ProjectsRefsetComponent,
+        ImportFromFileModalComponent,
+        ImportFromListModalComponent,
+        dragAndDropDirective
     ],
     imports: [
         RouterModule.forRoot(
@@ -122,7 +128,8 @@ const appRoutes: Routes = [
         EditorModule,
         AngularSplitModule,
         NgbModule,
-        SideBarModule
+        SideBarModule,
+        ReactiveFormsModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

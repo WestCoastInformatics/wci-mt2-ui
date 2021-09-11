@@ -15,7 +15,7 @@
         "fill-space-2"
         "toggle-sidebar";
     width: 250px;
-    height: 100%;
+    height: 1000px;
     position: absolute;
     top: 60px;
     left: 0;
@@ -49,6 +49,7 @@
 .my-toggle-text {
     padding-left: 10px;
     color: #ffffff;
+    padding-top: 5px;
 }
 
 .my-settings {
@@ -87,6 +88,7 @@
     margin-left: 24px;
     display: flex;
     cursor: pointer;
+    padding-top: 20px;
 }
 
 .my-teams:hover {
@@ -112,6 +114,7 @@
 .my-teams-text {
     padding-left: 10px;
     color: #ffffff;
+    padding-top: 5px;
 }
 
 .my-organizations {
@@ -119,6 +122,7 @@
     margin-left: 24px;
     display: flex;
     cursor: pointer;
+    padding-top: 20px;
 }
 
 .my-organizations:hover {
@@ -144,6 +148,7 @@
 .my-organizations-text {
     padding-left: 10px;
     color: #ffffff;
+    padding-top: 5px;
 }
 
 .my-projects {
@@ -151,6 +156,7 @@
     margin-left: 24px;
     display: flex;
     cursor: pointer;
+    padding-top: 20px;
 }
 
 .my-projects:hover {
@@ -176,6 +182,7 @@
 .my-projects-text {
     padding-left: 10px;
     color: #ffffff;
+    padding-top: 5px;
 }
 
 .termhub-logo-text {

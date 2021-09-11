@@ -26,12 +26,32 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/search', params);
     }
 
-    // getProjects(params: any): Observable<any> {
-    //     return this.get(this.contextPath + 'project/search', params);
-    // }
+    getProjects(params: any): Observable<any> {
+        return this.get(this.contextPath + 'project/search', params, false);
+    }
+
+    createRefset(params: any): Observable<any> {
+        return this.post(this.contextPath + 'refset/', params);
+    }
+
+    addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}`, '');
+    }
+
+    removeRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}`, '');
+    }
 
     getRefset(refsetId: string): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId);
+    }
+
+    getRefsetConcepts(params: any): Observable<any> {
+        return this.get(this.contextPath + 'general/refsetConcepts', params, false);
+    }
+
+    getBranchVersions(params: any): Observable<any> {
+        return this.get(this.contextPath + 'general/branchVersions', params, false);
     }
 
     cacheMemberAncestors(refsetId: string, params: any = {}): Observable<any> {
