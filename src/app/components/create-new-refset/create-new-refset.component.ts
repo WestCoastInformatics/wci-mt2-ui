@@ -1,13 +1,16 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { firstValueFrom } from 'rxjs';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'create-new-refset',
   templateUrl: './create-new-refset.component.html'
 })
-export class CreateNewRefsetComponent {
+export class CreateNewRefsetComponent implements OnInit {
   dummydata = ['Your Usual Project', 'test2', 'test3'];
   selectedValue = this.dummydata[0];
   visible = true;
@@ -17,13 +20,83 @@ export class CreateNewRefsetComponent {
   selectedRadioButton = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   isSelected = 0;
+  selectedMetaDataConcept: any;
+  selectedBranchVersion: any;
+  createdMetaDataConcept: any;
+  selectedNarrative: any;
+  selectedTags = [];
+  referenceTypes = ['Extensional', 'Intensional'];
+  selectedReferenceType: any;
+  selectedAvailability = false;
+
+  @Input()
+  selectedProject: any;
+
+  @Input()
+  existingMetadataConcepts: any;
+
+  @Input()
+  existingBranchVersions: any;
 
   constructor(private modalService: NgbModal,
-    private detectChanges: ChangeDetectorRef) {
+    private detectChanges: ChangeDetectorRef,
+    private router: Router,
+    private refsetService: RefsetService) {
+  }
+
+  ngOnInit(): void {
+
   }
 
   openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
-    this.modalService.open(createNewRefsetDialog);
+    console.log(this.existingMetadataConcepts);
+    if (this.selectedProject) {
+      this.modalService.open(createNewRefsetDialog);
+    }
+  }
+
+  resetModal(): void {
+    this.isSelected = 0;
+    this.selectedMetaDataConcept = undefined;
+    this.selectedBranchVersion = undefined;
+    this.createdMetaDataConcept = undefined;
+    this.selectedNarrative = undefined;
+    this.selectedTags = [];
+    this.selectedReferenceType = undefined;
+    this.selectedAvailability = undefined;
+  }
+
+  createRefsetObject(): void {
+    this.refsetService.createRefset({
+      name: this.selectedProject?.name,
+      // parentConceptId: '',
+      moduleId: '',
+      editionId: this.selectedProject?.organization?.edition?.id,
+      projectId: this.selectedProject?.id,
+      narrative: this.selectedNarrative,
+      type: this.selectedReferenceType,
+      privateRefset: this.selectedAvailability,
+    }).subscribe(refsetId => this.router.navigate(['/edit/refset', refsetId.refsetInternalId]));
+
+    console.log('refset object created');
+    console.log(this.selectedProject.name);
+    console.log(this.selectedProject['organization'].name);
+    console.log(this.selectedProject['organization'].edition.name);
+    console.log(this.selectedMetaDataConcept);
+    console.log(this.createdMetaDataConcept);
+    console.log(this.selectedNarrative);
+    console.log(this.selectedTags);
+    console.log(this.selectedReferenceType);
+    console.log(this.selectedAvailability);
+  }
+
+  isComplete(): boolean {
+    return this.selectedProject.name &&
+    this.selectedProject.organization.edition.id &&
+    this.selectedProject.id &&
+    this.selectedNarrative &&
+    this.selectedReferenceType &&
+    this.selectedAvailability;
   }
 
   checkRadioButtonValue(event: any): void {
@@ -38,7 +111,7 @@ export class CreateNewRefsetComponent {
 
     // Add our fruit
     if ((value || '').trim()) {
-      this.dummydata.push(value);
+      this.selectedTags.push(value);
     }
 
     // Reset the input value
@@ -48,10 +121,10 @@ export class CreateNewRefsetComponent {
   }
 
   remove(data: string): void {
-    const index = this.dummydata.indexOf(data);
+    const index = this.selectedTags.indexOf(data);
 
     if (index >= 0) {
-      this.dummydata.splice(index, 1);
+      this.selectedTags.splice(index, 1);
     }
   }
 }

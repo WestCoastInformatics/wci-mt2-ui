@@ -1,5 +1,5 @@
 <app-side-bar></app-side-bar>
-<div id="refsetDirectoryPage" class="container-fluid">
+<div id="refsetProjectsPage" class="container-fluid">
     <div
         class="row refset-title"
         style="
@@ -8,6 +8,7 @@
             top: 60px;
             z-index: 2;
             background-color: white;
+            padding-top: 10px;
             box-shadow: 0 4px 2px -2px gray;
         "
     >
@@ -21,21 +22,45 @@
             class="row justify-content-end details-version-select"
             style="margin-left: 20px"
         >
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="outline" class="project-drop-down">
+                <mat-label>Choose Project</mat-label>
                 <mat-select
                     #detailsVersionSelect
-                    [(value)]="selectedValue"
                     [disableOptionCentering]="true"
+                    [(value)]="selectedProject"
+                    (selectionChange)="onGridReady(originalGridParams)"
                 >
                     <mat-option
-                        *ngFor="let data of dummydata"
-                        [value]="data"
+                        *ngFor="let project of projects"
+                        [value]="project"
                         style="z-index: 3"
                     >
-                        {{ data }}
+                        {{ project.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </div>
+        <div
+            class="col-md-auto page-title"
+            style="
+                margin-right: 20px;
+                color: #555555;
+                padding-left: 60px;
+                font-size: 14px;
+            "
+        >
+            {{
+                selectedProject
+                    ? "Project Name: " +
+                      selectedProject?.name +
+                      &nbsp;&nbsp;" | "&nbsp;&nbsp; +
+                      "Organization Name: " +
+                      selectedProject?.organization?.name +
+                      &nbsp;&nbsp;" | "&nbsp;&nbsp; +
+                      "Status: " + (selectedProject?.privateProject ? 'Public' : 'Private') +
+                      &nbsp;&nbsp;" | "&nbsp;&nbsp; + "Project Role: Author"
+                    : ""
+            }}
         </div>
     </div>
 
@@ -46,6 +71,7 @@
             justify-content: space-between;
             display: flex;
             padding-right: 20px;
+            padding-top: 20px;
             align-items: baseline;
             padding-left: 265px;
         "
@@ -58,7 +84,11 @@
             Reference Sets
         </div>
         <div style="display: inline">
-            <create-new-refset></create-new-refset>
+            <create-new-refset
+                [selectedProject]="selectedProject"
+                [existingMetadataConcepts]="existingMetadataConcepts"
+                [existingBranchVersions]="existingBranchVersions"
+            ></create-new-refset>
         </div>
         <div style="display: inline; padding-left: 10px">
             <button
@@ -82,8 +112,9 @@
         [class.container-toggled]="toggleService.isToggled"
         style="padding-left: 265px"
     >
-        <!-- <ag-grid-angular
+        <ag-grid-angular
             #directoryTable
+            *ngIf="showTable"
             class="
                 ag-theme-alpine
                 refset-tool-ag-grid refset-tool-ag-grid-filter
@@ -92,11 +123,33 @@
             [gridOptions]="refsetGridOptions"
             style="width: 100%"
         >
-        </ag-grid-angular> -->
+        </ag-grid-angular>
+
+        <app-pagination
+            #directoryPaging
+            [pageSize]="refsetGridPaging.pageSize"
+            [gridOptions]="refsetGridOptions"
+            [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
+            [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+            [totalKnown]="refsetGridPaging.totalKnown"
+            [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+        >
+        </app-pagination>
 
         <!-- Name Templates -->
-        <!-- <ng-template #directoryNameSection let-params>
+        <ng-template #directoryNameSection let-params>
             {{ params?.value }}
-        </ng-template> -->
+
+            <mat-icon
+                *ngIf="params?.data?.privateRefset"
+                aria-hidden="false"
+                #directoryPrivateIcon
+                class="refset-tool-table-action-icon"
+                aria-label="Private Refset"
+                title="Private Refset"
+            >
+                lock
+            </mat-icon>
+        </ng-template>
     </div>
 </div>

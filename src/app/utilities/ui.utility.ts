@@ -23,7 +23,7 @@ export class UiUtility {
     static gridDateValueGetter(params) {
 
         if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
-
+            
                 let format = CodeUtility.DATE_FORMAT_REVERSE
 
             return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);

@@ -1,7 +1,7 @@
 <button
     mat-raised-button
     color="primary"
-    (click)="openCreateRefsetModal(createNewRefsetDialog)"
+    (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
     aria-hidden="false"
     #createRefsetButton
     class="refset-tool-action-button"
@@ -73,7 +73,7 @@
                             <input
                                 matInput
                                 type="text"
-                                [(ngModel)]="dummydata[0]"
+                                [(ngModel)]="selectedProject.name"
                                 disabled
                             />
                         </mat-form-field>
@@ -95,7 +95,9 @@
                             <input
                                 matInput
                                 type="text"
-                                [(ngModel)]="dummydata[0]"
+                                [(ngModel)]="
+                                    selectedProject['organization'].name
+                                "
                                 disabled
                             />
                         </mat-form-field>
@@ -117,7 +119,9 @@
                             <input
                                 matInput
                                 type="text"
-                                [(ngModel)]="dummydata[0]"
+                                [(ngModel)]="
+                                    selectedProject['organization'].edition.name
+                                "
                                 disabled
                             />
                         </mat-form-field>
@@ -136,14 +140,19 @@
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
                         <mat-form-field appearance="fill">
-                            <mat-select [(ngModel)]="selectedValue" name="data">
-                                <mat-option
-                                    *ngFor="let data of dummydata"
-                                    [value]="data"
+                            <select
+                                matNativeControl
+                                [(ngModel)]="selectedBranchVersion"
+                            >
+                                <option
+                                    *ngFor="
+                                        let existingBranchVersion of existingBranchVersions
+                                    "
+                                    [value]="existingBranchVersion"
                                 >
-                                    {{ data }}
-                                </mat-option>
-                            </mat-select>
+                                    {{ existingBranchVersion }}
+                                </option>
+                            </select>
                         </mat-form-field>
                     </div>
                 </div>
@@ -159,10 +168,10 @@
                         <label>Assign Refset Concept:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
-                        <mat-radio-group
-                            (change)="checkRadioButtonValue($event)"
-                        >
-                            <mat-radio-button value="1"
+                        <mat-radio-group>
+                            <mat-radio-button
+                                value="1"
+                                (change)="checkRadioButtonValue($event)"
                                 >Choose an existing metadata
                                 concept</mat-radio-button
                             >
@@ -170,19 +179,26 @@
                                 appearance="fill"
                                 [hidden]="isSelected == 2 || isSelected == 0"
                             >
-                                <mat-select
-                                    [(ngModel)]="selectedValue"
-                                    name="data"
+                                <mat-label
+                                    >Choose existing metadata concept</mat-label
                                 >
-                                    <mat-option
-                                        *ngFor="let data of dummydata"
-                                        [value]="data"
+                                <select
+                                    matNativeControl
+                                    [(ngModel)]="selectedMetaDataConcept"
+                                >
+                                    <option
+                                        *ngFor="
+                                            let existingMetadataConcept of existingMetadataConcepts
+                                        "
+                                        [value]="existingMetadataConcept"
                                     >
-                                        {{ data }}
-                                    </mat-option>
-                                </mat-select>
+                                        {{ existingMetadataConcept.name }}
+                                    </option>
+                                </select>
                             </mat-form-field>
-                            <mat-radio-button value="2"
+                            <mat-radio-button
+                                value="2"
+                                (change)="checkRadioButtonValue($event)"
                                 >Create a new concept</mat-radio-button
                             >
                             <mat-form-field
@@ -194,7 +210,7 @@
                                     matInput
                                     type="text"
                                     placeholder="Enter the name of the new concept"
-                                    [(ngModel)]="value2a"
+                                    [(ngModel)]="createdMetaDataConcept"
                                 />
                                 <button
                                     *ngIf="value2a"
@@ -228,6 +244,7 @@
                             <textarea
                                 matInput
                                 placeholder="The full description explaining the purpose of the reference set"
+                                [(ngModel)]="selectedNarrative"
                             ></textarea>
                         </mat-form-field>
                     </div>
@@ -257,13 +274,13 @@
                             <mat-chip-list #chipList> </mat-chip-list>
                         </mat-form-field>
                         <mat-chip
-                            *ngFor="let data of dummydata"
+                            *ngFor="let selectedTag of selectedTags"
                             [selectable]="selectable"
                             [removable]="removable"
-                            (removed)="remove(data)"
+                            (removed)="remove(selectedTag)"
                             class="mat-elevation-z5"
                         >
-                            {{ data }}
+                            {{ selectedTag }}
                             <mat-icon matChipRemove *ngIf="removable"
                                 >cancel</mat-icon
                             >
@@ -283,9 +300,17 @@
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
                         <mat-form-field appearance="fill">
-                            <select matNativeControl>
-                                <option value="Extensional">Extensional</option>
-                                <option value="Intensional">Intensional</option>
+                            <mat-label>Select Reference Set Type</mat-label>
+                            <select
+                                matNativeControl
+                                [(ngModel)]="selectedReferenceType"
+                            >
+                                <option
+                                    *ngFor="let referenceType of referenceTypes"
+                                    [value]="referenceType"
+                                >
+                                    {{ referenceType }}
+                                </option>
                             </select>
                         </mat-form-field>
                     </div>
@@ -302,7 +327,9 @@
                         <label>Availability:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
-                        <mat-checkbox>Private</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="selectedAvailability"
+                            >Private</mat-checkbox
+                        >
                     </div>
                 </div>
             </div>
@@ -310,9 +337,9 @@
     </div>
     <div class="modal-footer" style="border: none; padding-right: 30px">
         <button
+            [disabled]="!isComplete()"
             type="button"
-            (click)="modal.close('Create New Refset')"
-            [routerLink]="['/edit/refset/1f6d62c4-3c4e-4321-a016-d2760c2c1c7f']"
+            (click)="modal.close('Create New Refset'); createRefsetObject()"
             mat-raised-button
             color="primary"
             aria-hidden="false"

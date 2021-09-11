@@ -29,7 +29,7 @@ export class RestService {
     get(url: string, params: any = {}, parseParams: boolean = true): Observable<any> {
 
         let queryString: string;
-
+        
         // if parseParams is true then build the query string, else use the params argument as is
         if (parseParams) {
             queryString = CodeUtility.serialize(params);
@@ -44,10 +44,11 @@ export class RestService {
 
         queryString = CodeUtility.addIfNotEmpty(queryString, '?', false);
 
-        //not sure if we need this, maybe for posts
-        //let httpParams = new HttpParams({fromString: queryString});
-
         return this.http.get<any>(this.restUrl + url + queryString);
+    }
+
+    post(url: string, params: any): Observable<any> {
+            return this.http.post<any>(this.restUrl + url, params);
     }
 
     getHttpClient(): HttpClient {
