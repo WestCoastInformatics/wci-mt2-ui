@@ -20,13 +20,13 @@ export class CreateNewRefsetComponent implements OnInit {
   selectedRadioButton = false;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   isSelected = 0;
-  selectedMetaDataConcept: any;
-  selectedBranchVersion: any;
-  createdMetaDataConcept: any;
-  selectedNarrative: any;
+  selectedMetaDataConcept = '';
+  selectedBranchVersion = '';
+  createdMetaDataConcept = '';
+  selectedNarrative = '';
   selectedTags = [];
   referenceTypes = ['Extensional', 'Intensional'];
-  selectedReferenceType: any;
+  selectedReferenceType = '';
   selectedAvailability = false;
 
   @Input()
@@ -57,13 +57,13 @@ export class CreateNewRefsetComponent implements OnInit {
 
   resetModal(): void {
     this.isSelected = 0;
-    this.selectedMetaDataConcept = undefined;
-    this.selectedBranchVersion = undefined;
-    this.createdMetaDataConcept = undefined;
-    this.selectedNarrative = undefined;
+    this.selectedMetaDataConcept = '';
+    this.selectedBranchVersion = '';
+    this.createdMetaDataConcept = '';
+    this.selectedNarrative = '';
     this.selectedTags = [];
-    this.selectedReferenceType = undefined;
-    this.selectedAvailability = undefined;
+    this.selectedReferenceType = '';
+    this.selectedAvailability = false;
   }
 
   createRefsetObject(): void {
@@ -75,6 +75,8 @@ export class CreateNewRefsetComponent implements OnInit {
       projectId: this.selectedProject?.id,
       narrative: this.selectedNarrative,
       type: this.selectedReferenceType,
+      // tags: this.selectedTags?.join('; ').toString(),
+      versionDate: this.selectedBranchVersion,
       privateRefset: this.selectedAvailability,
     }).subscribe(refsetId => this.router.navigate(['/edit/refset', refsetId.refsetInternalId]));
 
@@ -93,10 +95,7 @@ export class CreateNewRefsetComponent implements OnInit {
   isComplete(): boolean {
     return this.selectedProject.name &&
     this.selectedProject.organization.edition.id &&
-    this.selectedProject.id &&
-    this.selectedNarrative &&
-    this.selectedReferenceType &&
-    this.selectedAvailability;
+    this.selectedProject.id
   }
 
   checkRadioButtonValue(event: any): void {
