@@ -137,14 +137,9 @@ export class RefsetDetails {
             this.breadcrumbService.setBreadcrumbs([{path: '/projects/refset', label: 'Projects'}, {label: 'Edit Reference Set'}]);
         }
 
-        // var allObservables = [this.refsetLoaded$, this.memberCacheLoaded$].map((obs, i) => obs.pipe(tap({
-        //     next(value) { console.log(`Observable ${i} emits: ${value}`); },
-        //     complete() { console.log(`Observable ${i} is complete`); }
-        // })));
-
         var allObservables = {
             refsetLoaded: this.refsetLoaded$, 
-            memberCacheLoaded: this.memberCacheLoaded
+            //memberCacheLoaded: this.memberCacheLoaded
         };
         
         this.refsetLoaded$.subscribe(loaded => {
@@ -189,10 +184,10 @@ export class RefsetDetails {
         });
     
         // call forkJoin on returned observables
-        forkJoin(allObservables).subscribe(({refsetLoaded, memberCacheLoaded}) => {
+        forkJoin(allObservables).subscribe(({refsetLoaded}) => {
 
             console.log('refsetLoaded: ' + refsetLoaded);
-            console.log('memberCacheLoaded: ' + memberCacheLoaded);
+            //console.log('memberCacheLoaded: ' + memberCacheLoaded);
             
             // load taxonomy root
             this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
@@ -285,19 +280,19 @@ export class RefsetDetails {
             this.refsetLoaded.complete();
         });
 
-        this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
+        // this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
 
-            let success = results?.success;
+        //     let success = results?.success;
 
-            if (CodeUtility.testBoolean(success)) {
+        //     if (CodeUtility.testBoolean(success)) {
 
-            } else {
-                console.log('Error caching refset member details.');
-            }
+        //     } else {
+        //         console.log('Error caching refset member details.');
+        //     }
 
-            this.memberCacheLoaded.next(true);
-            this.memberCacheLoaded.complete();
-        });
+        //     this.memberCacheLoaded.next(true);
+        //     this.memberCacheLoaded.complete();
+        // });
     }
 
     //***** Members Taxonomy Functions  *****/
