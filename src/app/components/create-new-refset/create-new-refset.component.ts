@@ -68,14 +68,14 @@ export class CreateNewRefsetComponent implements OnInit {
 
   createRefsetObject(): void {
     this.refsetService.createRefset({
-      name: this.selectedProject?.name,
+      name: this.selectedMetaDataConcept ? this.selectedMetaDataConcept : (this.createdMetaDataConcept ? this.createdMetaDataConcept : ''),
       // parentConceptId: '',
       moduleId: '',
       editionId: this.selectedProject?.organization?.edition?.id,
       projectId: this.selectedProject?.id,
       narrative: this.selectedNarrative,
       type: this.selectedReferenceType,
-      // tags: this.selectedTags?.join('; ').toString(),
+      tags: this.selectedTags,
       versionDate: this.selectedBranchVersion,
       privateRefset: this.selectedAvailability,
     }).subscribe(refsetId => this.router.navigate(['/edit/refset', refsetId.refsetInternalId]));
@@ -84,8 +84,8 @@ export class CreateNewRefsetComponent implements OnInit {
     console.log(this.selectedProject.name);
     console.log(this.selectedProject['organization'].name);
     console.log(this.selectedProject['organization'].edition.name);
-    console.log(this.selectedMetaDataConcept);
-    console.log(this.createdMetaDataConcept);
+    console.log(this.isSelected);
+    console.log(this.selectedMetaDataConcept ? this.selectedMetaDataConcept : (this.createdMetaDataConcept ? this.createdMetaDataConcept : ''));
     console.log(this.selectedNarrative);
     console.log(this.selectedTags);
     console.log(this.selectedReferenceType);
@@ -100,6 +100,11 @@ export class CreateNewRefsetComponent implements OnInit {
 
   checkRadioButtonValue(event: any): void {
     this.isSelected = event.value;
+    if (event.value === '1') {
+      this.createdMetaDataConcept = '';
+    } else if (event.value === '2') {
+      this.selectedMetaDataConcept = '';
+    }
     this.detectChanges.detectChanges();
     console.log(this.isSelected);
   }
