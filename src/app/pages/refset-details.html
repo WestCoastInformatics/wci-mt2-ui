@@ -471,14 +471,30 @@
                                     (mouseenter)="setFullNarrativeText(true)"
                                     (mouseleave)="setFullNarrativeText(false)"
                                 >
-                                    <ng-container *ngIf="showFullNarrativeText"
+                                    <ng-container
+                                        *ngIf="showFullNarrativeText && !editMode"
                                         >{{ refsetData?.narrative
                                         }}</ng-container
                                     >
-                                    <ng-container *ngIf="!showFullNarrativeText"
+                                    <ng-container
+                                        *ngIf="!showFullNarrativeText && !editMode"
                                         >{{ refsetData?.narrativeShortText
                                         }}</ng-container
                                     >
+                                    <ng-container
+                                        *ngIf="showFullNarrativeText && editMode"
+                                    >
+                                        <span
+                                            [innerHTML]="refsetData?.narrative"
+                                        ></span>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="!showFullNarrativeText && editMode"
+                                    >
+                                        <span
+                                            [innerHTML]="refsetData?.narrativeShortText"
+                                        ></span>
+                                    </ng-container>
                                 </td>
                             </tr>
                         </tbody>
