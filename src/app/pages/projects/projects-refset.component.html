@@ -42,6 +42,7 @@
         </div>
         <div
             class="col-md-auto page-title"
+            *ngIf="selectedProject"
             style="
                 margin-right: 20px;
                 color: #555555;
@@ -49,18 +50,18 @@
                 font-size: 14px;
             "
         >
-            {{
-                selectedProject
-                    ? "Project Name: " +
-                      selectedProject?.name +
-                      &nbsp;&nbsp;" | "&nbsp;&nbsp; +
-                      "Organization Name: " +
-                      selectedProject?.organization?.name +
-                      &nbsp;&nbsp;" | "&nbsp;&nbsp; +
-                      "Status: " + (selectedProject?.privateProject ? 'Public' : 'Private') +
-                      &nbsp;&nbsp;" | "&nbsp;&nbsp; + "Project Role: Author"
-                    : ""
-            }}
+            <b>Project Name: </b
+            ><span>{{selectedProject?.name +
+                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+
+            <b>Organization Name: </b
+            ><span>{{selectedProject?.organization?.name +
+                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+
+            <b>Status: </b
+            ><span>{{(selectedProject?.privateProject ? 'Public' : 'Private') +
+                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            <b>Project Role: </b><span>Author</span>
         </div>
     </div>
 
