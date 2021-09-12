@@ -122,7 +122,7 @@ export class RefsetDetails {
 
     //***** Framework Functions *****/
     ngOnInit() {
-
+        
         this.route.data.subscribe(data => {
             console.log(data.editMode);
 
