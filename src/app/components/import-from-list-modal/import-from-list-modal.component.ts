@@ -10,6 +10,8 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 export class ImportFromListModalComponent {
   files: any[] = [];
   listOfIds: any;
+  showLoadingSpinner = false;
+
   @Input()
   internalRefsetId: string;
 
@@ -18,17 +20,35 @@ export class ImportFromListModalComponent {
   }
 
   addMembers(): void {
+    this.showLoadingSpinner = true;
     console.log(this.listOfIds.replaceAll(' ', ',').replaceAll('\n', ',').trim());
 
     this.refsetService.addRefsetMembers(this.internalRefsetId, 'list', this.listOfIds.replaceAll(' ', ',').replaceAll('\n', ',').trim())
-      .subscribe(x => console.log(x));
+    .subscribe(
+      data => {
+        console.log(data);
+        this.showLoadingSpinner = false;
+      },
+      error => {
+        console.log(error);
+        this.showLoadingSpinner = false;
+      });
   }
 
   removeMembers(): void {
+    this.showLoadingSpinner = true;
     console.log(this.listOfIds.replaceAll(' ', ',').replaceAll('\n', ',').trim());
 
     this.refsetService.removeRefsetMembers(this.internalRefsetId, 'list', this.listOfIds.replaceAll(' ', ',').replaceAll('\n', ',').trim())
-      .subscribe(x => console.log(x));
+    .subscribe(
+      data => {
+        console.log(data);
+        this.showLoadingSpinner = false;
+      },
+      error => {
+        console.log(error);
+        this.showLoadingSpinner = false;
+      });
   }
 
   openImportFromListModal(importFromListDialog: NgbModal) {

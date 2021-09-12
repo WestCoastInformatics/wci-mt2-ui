@@ -348,7 +348,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         if (this.selectedProject) {
             this.refsetService.getBranchVersions(`branch=${this.selectedProject?.organization?.edition?.branch.toString()}`).subscribe(results => {
                 this.existingBranchVersions = results.items ? results.items : undefined;
-                console.log(this.existingBranchVersions);
             });
         }
     }

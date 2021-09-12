@@ -11,6 +11,9 @@
 >
     Create New Refset
 </button>
+
+<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+
 <ng-template #createNewRefsetDialog let-modal>
     <div class="modal-header" style="border: none; padding-left: 30px">
         <h4
@@ -190,9 +193,9 @@
                                         *ngFor="
                                             let existingMetadataConcept of existingMetadataConcepts
                                         "
-                                        [value]="existingMetadataConcept.name"
+                                        [value]="existingMetadataConcept?.name"
                                     >
-                                        {{ existingMetadataConcept.name }}
+                                        {{ existingMetadataConcept?.name }}
                                     </option>
                                 </select>
                             </mat-form-field>
@@ -201,6 +204,25 @@
                                 (change)="checkRadioButtonValue($event)"
                                 >Create a new concept</mat-radio-button
                             >
+                            <mat-form-field
+                                appearance="fill"
+                                [hidden]="isSelected == 1 || isSelected == 0"
+                            >
+                                <mat-label>Choose parent concept</mat-label>
+                                <select
+                                    matNativeControl
+                                    [(ngModel)]="selectedParentConcept"
+                                >
+                                    <option
+                                        *ngFor="
+                                            let existingMetadataConcept of existingMetadataConcepts
+                                        "
+                                        [value]="existingMetadataConcept?.code"
+                                    >
+                                        {{ existingMetadataConcept?.name }}
+                                    </option>
+                                </select>
+                            </mat-form-field>
                             <mat-form-field
                                 class="example-form-field"
                                 appearance="fill"

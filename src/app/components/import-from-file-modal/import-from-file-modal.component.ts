@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -11,15 +11,23 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 export class ImportFromFileModalComponent implements OnInit {
   files: any[] = [];
   uploadedFile: any;
+  showLoadingSpinner = false;
+
   @Input()
   internalRefsetId: string;
 
+  @Output()
+  reloadGrid = new EventEmitter<boolean>();
+
   constructor(private modalService: NgbModal,
-    private refsetService: RefsetService,
-    private router: Router) {
+    private refsetService: RefsetService) {
   }
 
   ngOnInit(): void {
+  }
+
+  private sendReloadGridTrigger(value: boolean): void {
+    this.reloadGrid.emit(value);
   }
 
   openImportFromFileModal(importFromFileDialog: NgbModal) {
@@ -27,20 +35,30 @@ export class ImportFromFileModalComponent implements OnInit {
     this.modalService.open(importFromFileDialog);
   }
 
-  addMembers(): void {
+  updateMembers(): void {
+    this.showLoadingSpinner = true;
     const listOfIds = [];
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
       for (const line of fileReader.result.toString().split(/[\r\n]+/)) {
         if (line.split('\t')[5] !== 'referencedComponentId') {
-          listOfIds.push(line.split('\t')[5]);
+          listOfIds.push(line.split('\t')[5] ? line.split('\t')[5] : line.split('\t')[0].replace(',', '').trim());
         }
       }
+      console.log(listOfIds.join(','));
       this.refsetService.addRefsetMembers(this.internalRefsetId, 'list', listOfIds.join(','))
-      .subscribe(x => console.log(x));
-    }
+      .subscribe(
+        data => {
+          console.log(data);
+          this.sendReloadGridTrigger(true);
+          this.showLoadingSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.showLoadingSpinner = false;
+        });
+    };
     fileReader.readAsText(this.uploadedFile);
-    console.log(listOfIds.join(','));
   }
 
   /**

@@ -90,7 +90,7 @@ export class RefsetDetails {
     };
     taxonomySearchGridLastFilter: string = '';
     taxonomySearchGridLastSort: string = '';
-
+    originalGridParams: any;
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
@@ -122,7 +122,7 @@ export class RefsetDetails {
 
     //***** Framework Functions *****/
     ngOnInit() {
-        
+
         this.route.data.subscribe(data => {
             console.log(data.editMode);
 
@@ -476,7 +476,7 @@ export class RefsetDetails {
 
     //***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
-
+        this.originalGridParams = gridReadyParams;
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];

@@ -1,16 +1,33 @@
 <button
-    mat-raised-button
-    color="primary"
-    (click)="openImportFromFileModal(importFromFileDialog)"
-    aria-hidden="false"
     #importFromFileButton
-    class="refset-tool-action-button"
-    aria-label="Import From File"
-    title="Import From File"
-    ng-reflect-color="primary"
+    (click)="openImportFromFileModal(importFromFileDialog)"
+    style="
+        width: 39px;
+        height: 31px;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgba(0, 164, 228, 1);
+        background-color: rgba(255, 255, 255, 1);
+        padding-left: 3px;
+    "
 >
-    Open File Upload
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 0 24 24"
+        width="24px"
+        fill="rgba(0, 164, 228, 1)"
+    >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+            d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"
+        />
+    </svg>
 </button>
+
+<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+
 <ng-template #importFromFileDialog let-modal>
     <div
         class="modal-header"
@@ -52,10 +69,9 @@
             "
         >
             <mat-form-field appearance="fill" style="width: 300px">
-                <mat-label>I/O Handler</mat-label>
                 <select matNativeControl>
-                    <option value="volvo">Import RF2</option>
-                    <option value="saab">Import RF2 Delta</option>
+                    <option value="rf2">Import RF2</option>
+                    <option value="rf2list">Import List of SctIds</option>
                 </select>
             </mat-form-field>
             <div
@@ -178,7 +194,7 @@
     <div class="modal-footer" style="border: none; padding: 30px">
         <button
             type="button"
-            (click)="modal.close('Upgrade Members'); addMembers()"
+            (click)="modal.close('Upgrade Members'); updateMembers()"
             mat-raised-button
             color="primary"
             aria-hidden="false"
