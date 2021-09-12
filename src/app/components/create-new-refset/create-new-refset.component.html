@@ -262,13 +262,18 @@
                         <label>Narrative:</label>
                     </div>
                     <div class="col create-new-refset-field" style="flex: 1">
-                        <mat-form-field appearance="outline">
-                            <textarea
-                                matInput
-                                placeholder="The full description explaining the purpose of the reference set"
-                                [(ngModel)]="selectedNarrative"
-                            ></textarea>
-                        </mat-form-field>
+                        <editor
+                            [(ngModel)]="selectedNarrative"
+                            [init]="{
+                                base_url: '/tinymce',
+                                suffix: '.min',
+                                height: 200,
+                                menubar: false,
+                                plugins: ['lists advlist'],
+                                toolbar:
+                                    'undo redo | bold italic | bullist numlist outdent indent'
+                            }"
+                        ></editor>
                     </div>
                 </div>
                 <div
