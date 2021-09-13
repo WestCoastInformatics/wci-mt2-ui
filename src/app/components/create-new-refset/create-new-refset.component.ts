@@ -23,7 +23,7 @@ export class CreateNewRefsetComponent implements OnInit {
   selectedMetaDataConcept = '';
   selectedBranchVersion = '';
   createdMetaDataConcept = '';
-  selectedParentConcept = '';
+  selectedParentConcept = undefined;
   selectedNarrative = '';
   selectedTags = [];
   referenceTypes = ['Extensional', 'Intensional'];
@@ -61,7 +61,7 @@ export class CreateNewRefsetComponent implements OnInit {
     this.selectedMetaDataConcept = '';
     this.selectedBranchVersion = '';
     this.createdMetaDataConcept = '';
-    this.selectedParentConcept = '';
+    this.selectedParentConcept = undefined;
     this.selectedNarrative = '';
     this.selectedTags = [];
     this.selectedReferenceType = '';
@@ -72,7 +72,7 @@ export class CreateNewRefsetComponent implements OnInit {
     this.showLoadingSpinner = true;
     this.refsetService.createRefset({
       name: this.selectedMetaDataConcept ? this.selectedMetaDataConcept : (this.createdMetaDataConcept ? this.createdMetaDataConcept : ''),
-      parentConceptId: this.selectedParentConcept,
+      parentConceptId: this.selectedParentConcept ? this.selectedParentConcept : undefined,
       moduleId: '',
       editionId: this.selectedProject?.organization?.edition?.id,
       projectId: this.selectedProject?.id,
@@ -82,8 +82,10 @@ export class CreateNewRefsetComponent implements OnInit {
       versionDate: this.selectedBranchVersion,
       privateRefset: this.selectedAvailability,
     }).subscribe(refsetId => {
-      this.showLoadingSpinner = false;
-      this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
+      setTimeout(x => {
+        this.showLoadingSpinner = false;
+        this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
+      }, 5000);
     },
     error => {
       console.log(error);
