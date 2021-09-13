@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 
@@ -15,8 +15,15 @@ export class ImportFromListModalComponent {
   @Input()
   internalRefsetId: string;
 
+  @Output()
+  reloadGrid = new EventEmitter<boolean>();
+
   constructor(private modalService: NgbModal,
     private refsetService: RefsetService) {
+  }
+
+  private sendReloadGridTrigger(value: boolean): void {
+    this.reloadGrid.emit(value);
   }
 
   addMembers(): void {
@@ -28,6 +35,7 @@ export class ImportFromListModalComponent {
       data => {
         console.log(data);
         this.showLoadingSpinner = false;
+        this.sendReloadGridTrigger(true);
       },
       error => {
         console.log(error);
@@ -44,6 +52,7 @@ export class ImportFromListModalComponent {
       data => {
         console.log(data);
         this.showLoadingSpinner = false;
+        this.sendReloadGridTrigger(true);
       },
       error => {
         console.log(error);
