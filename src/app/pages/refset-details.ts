@@ -193,7 +193,7 @@ export class RefsetDetails {
             this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
 
                 this.membersTaxonomyRoot = results;
-                this.taxonomyButtonLabel = "Taxonomy";
+                this.taxonomyButtonLabel = 'Taxonomy';
                 this.showTaxonomySearchTable = true
             });
 
@@ -306,7 +306,7 @@ export class RefsetDetails {
 
         this.selectedTaxonomyLanguageIndex = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
         this.taxonomyOptions.displayField = this.selectedTaxonomyLanguageIndex + '';
-        this.taxonomyManualStateRefresh = new Boolean("true"); 
+        this.taxonomyManualStateRefresh = new Boolean('true'); 
         this.taxonomySearchGridApi.refreshCells();
     }
 
@@ -952,5 +952,9 @@ export class RefsetDetails {
 
     setFullNotesText(show: boolean): void {
         this.showFullNotesText = show;
+    }
+
+    removeHtmlTags(value: string): string {
+        return value?.replace(/(<([^>]+)>)/ig, '');
     }
 }

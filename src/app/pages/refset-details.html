@@ -481,12 +481,14 @@
                                 >
                                     <ng-container
                                         *ngIf="showFullNarrativeText && !editMode"
-                                        >{{ refsetData?.narrative
+                                        >{{
+                                        removeHtmlTags(refsetData?.narrative)
                                         }}</ng-container
                                     >
                                     <ng-container
                                         *ngIf="!showFullNarrativeText && !editMode"
-                                        >{{ refsetData?.narrativeShortText
+                                        >{{
+                                        removeHtmlTags(refsetData?.narrativeShortText)
                                         }}</ng-container
                                     >
                                     <ng-container
