@@ -75,6 +75,8 @@ export class ImportFromFileModalComponent implements OnInit {
    */
   fileBrowseHandler(files) {
     this.prepareFilesList(files);
+    this.uploadedFile = files[0];
+    console.log(files[0]);
   }
 
   /**
