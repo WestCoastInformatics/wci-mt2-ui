@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 
 @Component({
   selector: 'import-from-file-modal',
-  templateUrl: './import-from-file-modal.component.html',
-  styleUrls: ['./import-from-file-modal.component.scss']
+  templateUrl: './import-from-file-modal.component.html'
 })
 export class ImportFromFileModalComponent implements OnInit {
   files: any[] = [];

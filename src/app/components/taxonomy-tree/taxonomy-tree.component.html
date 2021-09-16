@@ -1,7 +1,4 @@
-<div
-    class="container-fluid refset-tool-taxonomy"
-    style="padding-left: 0px; padding-right: 0px"
->
+<div class="container-fluid refset-tool-taxonomy">
     <div class="row" *ngIf="isLoading">
         <div>Loading...</div>
     </div>
@@ -33,7 +30,7 @@
             />
             <span
                 id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}"
-                style="line-height: normal"
+                class="taxonomy-code-text"
                 >{{ getNodeText(node) }}</span
             >
         </ng-template>

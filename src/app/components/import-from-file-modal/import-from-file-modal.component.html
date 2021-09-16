@@ -1,47 +1,21 @@
 <button
     #importFromFileButton
     (click)="openImportFromFileModal(importFromFileDialog)"
-    style="
-        width: 39px;
-        height: 31px;
-        box-sizing: border-box;
-        border-width: 1px;
-        border-style: solid;
-        border-color: rgba(0, 164, 228, 1);
-        background-color: rgba(255, 255, 255, 1);
-        padding-left: 3px;
-    "
+    class="import-from-file-button"
 >
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 0 24 24"
-        width="24px"
-        fill="rgba(0, 164, 228, 1)"
-    >
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path
-            d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"
-        />
-    </svg>
+    <img
+        src="assets/import-file-upload-icon.svg"
+        alt="Document symbol denoting an upload icon"
+    />
 </button>
 
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #importFromFileDialog let-modal>
-    <div
-        class="modal-header"
-        style="border: none; padding-left: 30px; padding-bottom: 30px"
-    >
+    <div class="modal-header import-from-file-modal-header">
         <h4
-            class="modal-title"
+            class="modal-title import-from-file-modal-title"
             id="modal-basic-title"
-            style="
-                color: #9b9b9b;
-                font-size: 1.5em;
-                font-family: 'museo', 'Open Sans', 'Helvetica Neue', Helvetica,
-                    Arial, sans serif;
-            "
         >
             Import members From File
         </h4>
@@ -54,29 +28,19 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div
-        class="container-fluid"
-        style="padding: 30px; padding-bottom: 0px; padding-top: 0px"
-    >
-        <div
-            class="modal-body"
-            style="
-                background-color: rgba(245, 245, 246, 1);
-                padding: 30px;
-                border-radius: 5px;
-                font-size: 14px;
-                text-align: center;
-            "
-        >
-            <mat-form-field appearance="fill" style="width: 300px">
+    <div class="container-fluid import-from-file-container-fluid">
+        <div class="modal-body import-from-file-modal-body">
+            <mat-form-field
+                appearance="fill"
+                class="import-from-file-drop-down"
+            >
                 <select matNativeControl>
                     <option value="rf2">Import RF2</option>
                     <option value="rf2list">Import List of SctIds</option>
                 </select>
             </mat-form-field>
             <div
-                class="container"
-                style="width: 300px; background-color: white"
+                class="container-file-import"
                 dragAndDrop
                 (fileDropped)="onFileDropped($event)"
             >
@@ -87,79 +51,29 @@
                     multiple
                     (change)="fileBrowseHandler($event.target.files)"
                 />
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="64"
-                    viewBox="0 0 63 64"
-                >
-                    <g fill="#3B454F" fill-rule="nonzero">
-                        <path
-                            d="M42.656 15.135a1.953 1.953 0 0 1-1.391-.578L31.5 4.795l-9.765 9.762a1.97 1.97 0 1 1-2.785-2.785L30.106.616a1.97 1.97 0 0 1 2.785 0l11.157 11.156a1.97 1.97 0 0 1-1.392 3.363z"
-                        />
-                        <path
-                            d="M31.5 36.791a1.97 1.97 0 0 1-1.969-1.969V2.01a1.97 1.97 0 0 1 3.938 0v32.812a1.97 1.97 0 0 1-1.969 1.969z"
-                        />
-                        <path
-                            d="M55.781 63.041H7.22A7.225 7.225 0 0 1 0 55.822V41.385a4.599 4.599 0 0 1 4.594-4.594h7.234a4.567 4.567 0 0 1 4.402 3.276l2.814 9.382a.658.658 0 0 0 .628.467h23.656a.658.658 0 0 0 .628-.467l2.814-9.385a4.572 4.572 0 0 1 4.402-3.273h7.234A4.599 4.599 0 0 1 63 41.385v14.437a7.225 7.225 0 0 1-7.219 7.219zM4.594 40.729a.656.656 0 0 0-.657.656v14.437a3.286 3.286 0 0 0 3.282 3.282H55.78a3.286 3.286 0 0 0 3.282-3.282V41.385a.656.656 0 0 0-.657-.656h-7.234a.65.65 0 0 0-.628.467L47.73 50.58a4.628 4.628 0 0 1-4.402 3.274H19.672a4.567 4.567 0 0 1-4.402-3.276l-2.814-9.382a.65.65 0 0 0-.628-.467H4.594z"
-                        />
-                    </g>
-                </svg>
+                <img
+                    src="assets/import-file-upload-icon2.svg"
+                    alt="Document symbol denoting an upload icon"
+                />
 
                 <h3>Drag and drop file here</h3>
                 <h3>or</h3>
-                <label for="fileDropRef" style="width: 135px"
+                <label
+                    for="fileDropRef"
+                    class="import-from-file-drop-down-label"
                     >Browse for file</label
                 >
             </div>
-            <div class="files-list">
+            <div class="files-list-file-import">
                 <div
                     class="single-file"
                     *ngFor="let file of files; let i = index"
                 >
-                    <div class="file-icon" style="width: 50px">
-                        <svg
-                            version="1.1"
-                            id="Capa_1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                            x="0px"
-                            y="0px"
-                            viewBox="0 0 58 58"
-                            style="enable-background: new 0 0 58 58"
-                            xml:space="preserve"
-                        >
-                            <polygon
-                                style="fill: #edeada"
-                                points="51.5,14 37.5,0 6.5,0 6.5,58 51.5,58 "
-                            />
-                            <g>
-                                <path
-                                    style="fill: #cec9ae"
-                                    d="M16.5,23h25c0.552,0,1-0.447,1-1s-0.448-1-1-1h-25c-0.552,0-1,0.447-1,1S15.948,23,16.5,23z"
-                                />
-                                <path
-                                    style="fill: #cec9ae"
-                                    d="M16.5,15h10c0.552,0,1-0.447,1-1s-0.448-1-1-1h-10c-0.552,0-1,0.447-1,1S15.948,15,16.5,15z"
-                                />
-                                <path
-                                    style="fill: #cec9ae"
-                                    d="M41.5,29h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,29,41.5,29z"
-                                />
-                                <path
-                                    style="fill: #cec9ae"
-                                    d="M41.5,37h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,37,41.5,37z"
-                                />
-                                <path
-                                    style="fill: #cec9ae"
-                                    d="M41.5,45h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,45,41.5,45z"
-                                />
-                            </g>
-                            <polygon
-                                style="fill: #cec9ae"
-                                points="37.5,0 37.5,14 51.5,14 "
-                            />
-                        </svg>
+                    <div class="file-icon">
+                        <img
+                            src="assets/doc-upload-icon.svg"
+                            alt="Document symbol denoting an uploaded file"
+                        />
                     </div>
                     <div class="info">
                         <h4 class="name">
@@ -174,24 +88,16 @@
                     </div>
 
                     <div class="delete" (click)="deleteFile(i)">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="18"
-                            viewBox="0 0 14 18"
-                        >
-                            <path
-                                fill="#B1B1B1"
-                                fill-rule="nonzero"
-                                d="M1 16c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v10zm3.17-7.83a.996.996 0 0 1 1.41 0L7 9.59l1.42-1.42a.996.996 0 1 1 1.41 1.41L8.41 11l1.42 1.42a.996.996 0 1 1-1.41 1.41L7 12.41l-1.42 1.42a.996.996 0 1 1-1.41-1.41L5.59 11 4.17 9.58a.996.996 0 0 1 0-1.41zM10.5 1L9.79.29C9.61.11 9.35 0 9.09 0H4.91c-.26 0-.52.11-.7.29L3.5 1H1c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1h-2.5z"
-                            />
-                        </svg>
+                        <img
+                            src="assets/doc-delete-icon.svg"
+                            alt="Document symbol denoting a trash can to delete files"
+                        />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal-footer" style="border: none; padding: 30px">
+    <div class="modal-footer import-from-file-modal-footer">
         <button
             type="button"
             (click)="modal.close('Upgrade Members'); updateMembers()"

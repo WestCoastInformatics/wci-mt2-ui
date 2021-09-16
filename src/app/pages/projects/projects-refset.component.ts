@@ -7,7 +7,6 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -18,8 +17,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
   selector: 'projects-refset',
-  templateUrl: './projects-refset.component.html',
-  styleUrls: ['./projects-refset.component.scss']
+  templateUrl: './projects-refset.component.html'
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
