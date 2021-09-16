@@ -1,0 +1,14 @@
+ <svg
+                id="my-toggle-icon"
+                data-name="icon / menu / toggle"
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 14 14"
+            >
+                <path
+                    id="Subtract"
+                    d="M12,14H2a2,2,0,0,1-2-2V2A2,2,0,0,1,2,0H12a2,2,0,0,1,2,2V12A2,2,0,0,1,12,14ZM5,2A1,1,0,0,0,4,3v8a1,1,0,0,0,2,0V3A1,1,0,0,0,5,2Z"
+                    fill="rgb(0, 164, 228)"
+                />
+            </svg>

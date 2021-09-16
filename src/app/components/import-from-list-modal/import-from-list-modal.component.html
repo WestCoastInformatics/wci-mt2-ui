@@ -1,46 +1,31 @@
+<style>
+    ::ng-deep #importFromListDialog ngb-modal-window .modal-content {
+        max-width: 551px !important;
+        max-height: 605px !important;
+    }
+
+    ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+        background-color: white !important;
+    }
+</style>
 <button
     #importFromFileButton
     (click)="openImportFromListModal(importFromListDialog)"
-    style="
-        width: 39px;
-        height: 31px;
-        box-sizing: border-box;
-        border-width: 1px;
-        border-style: solid;
-        border-color: rgba(0, 164, 228, 1);
-        background-color: rgba(255, 255, 255, 1);
-    "
+    class="import-from-list-button"
 >
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="24px"
-        viewBox="0 0 24 24"
-        width="24px"
-        fill="rgba(0, 164, 228, 1)"
-    >
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path
-            d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"
-        />
-    </svg>
+    <img
+        src="assets/import-list-upload-icon.svg"
+        alt="Document symbol denoting an upload icon"
+    />
 </button>
 
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #importFromListDialog let-modal>
-    <div
-        class="modal-header"
-        style="border: none; padding-left: 30px; padding-bottom: 30px"
-    >
+    <div class="modal-header import-from-list-modal-header">
         <h4
-            class="modal-title"
+            class="modal-title import-from-list-modal-title"
             id="modal-basic-title"
-            style="
-                color: #9b9b9b;
-                font-size: 1.5em;
-                font-family: 'museo', 'Open Sans', 'Helvetica Neue', Helvetica,
-                    Arial, sans serif;
-            "
         >
             Add or Remove Members By List
         </h4>
@@ -53,46 +38,22 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div
-        class="container-fluid"
-        style="padding: 30px; padding-bottom: 0px; padding-top: 0px"
-    >
-        <div
-            class="modal-body"
-            style="
-                background-color: rgba(245, 245, 246, 1);
-                padding: 28px;
-                border-radius: 5px;
-                font-size: 14px;
-                text-align: center;
-                text-align: -webkit-center;
-            "
-        >
-            <div
-                style="
-                    width: 300px;
-                    text-align: left;
-                    font-size: 13px;
-                    padding-bottom: 20px;
-                "
-            >
+    <div class="container-fluid import-from-list-container-fluid">
+        <div class="modal-body import-from-list-modal-body">
+            <div class="import-from-list-list-text">
                 Enter a list of member IDs. Use a comma or whitespace delimited
                 numeric identifiers.
             </div>
-            <mat-form-field
-                class="add-by-list-text-area"
-                appearance="outline"
-                style="width: 300px"
-            >
+            <mat-form-field class="add-by-list-text-area" appearance="outline">
                 <textarea
                     matInput
-                    style="height: 250px"
+                    class="import-from-list-text-area"
                     [(ngModel)]="listOfIds"
                 ></textarea>
             </mat-form-field>
         </div>
     </div>
-    <div class="modal-footer" style="border: none; padding: 30px">
+    <div class="modal-footer import-from-list-modal-footer">
         <button
             type="button"
             (click)="modal.close('Add Members'); addMembers()"
@@ -112,11 +73,13 @@
             mat-raised-button
             color="primary"
             aria-hidden="false"
-            class="refset-tool-action-button"
+            class="
+                refset-tool-action-button
+                import-from-list-remove-members-button
+            "
             aria-label="Remove Members"
             title="Remove Members"
             ng-reflect-color="primary"
-            style="margin-left: 15px"
         >
             Remove Members
         </button>

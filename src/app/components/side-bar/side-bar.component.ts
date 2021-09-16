@@ -3,8 +3,7 @@ import { ToggleService } from 'src/app/services/toggle-service/toggle.service';
 
 @Component({
   selector: 'app-side-bar',
-  templateUrl: './side-bar.component.html',
-  styleUrls: ['./side-bar.component.css']
+  templateUrl: './side-bar.component.html'
 })
 export class SideBarComponent implements OnInit {
 
