@@ -33,7 +33,7 @@ export class ImportFromFileModalComponent implements OnInit {
     this.modalService.open(importFromFileDialog);
   }
 
-  updateMembers(): void {
+  addMembers(): void {
     this.showLoadingSpinner = true;
     const listOfIds = [];
     const fileReader = new FileReader();
@@ -45,6 +45,32 @@ export class ImportFromFileModalComponent implements OnInit {
       }
       console.log(listOfIds.join(','));
       this.refsetService.addRefsetMembers(this.internalRefsetId, 'list', listOfIds.join(','))
+      .subscribe(
+        data => {
+          console.log(data);
+          this.sendReloadGridTrigger(true);
+          this.showLoadingSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.showLoadingSpinner = false;
+        });
+    };
+    fileReader.readAsText(this.uploadedFile);
+  }
+
+  removeMembers(): void {
+    this.showLoadingSpinner = true;
+    const listOfIds = [];
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      for (const line of fileReader.result.toString().split(/[\r\n]+/)) {
+        if (line.split('\t')[5] !== 'referencedComponentId') {
+          listOfIds.push(line.split('\t')[5] ? line.split('\t')[5] : line.split('\t')[0].replace(',', '').trim());
+        }
+      }
+      console.log(listOfIds.join(','));
+      this.refsetService.removeRefsetMembers(this.internalRefsetId, 'list', listOfIds.join(','))
       .subscribe(
         data => {
           console.log(data);

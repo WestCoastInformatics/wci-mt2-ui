@@ -509,6 +509,7 @@
                 ></import-from-file-modal>
                 <import-from-list-modal
                     [internalRefsetId]="id"
+                    (reloadGrid)="onMembersGridReady(originalGridParams)"
                 ></import-from-list-modal>
                 <button class="button-inactive">
                     <img

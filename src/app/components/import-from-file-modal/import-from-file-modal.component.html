@@ -17,7 +17,7 @@
             class="modal-title import-from-file-modal-title"
             id="modal-basic-title"
         >
-            Import members From File
+            Add or Remove members From File
         </h4>
         <button
             type="button"
@@ -100,16 +100,30 @@
     <div class="modal-footer import-from-file-modal-footer">
         <button
             type="button"
-            (click)="modal.close('Upgrade Members'); updateMembers()"
+            (click)="modal.close('Upgrade Members'); addMembers()"
             mat-raised-button
             color="primary"
             aria-hidden="false"
             class="refset-tool-action-button"
-            aria-label="Upgrade Members"
-            title="Upgrade Members"
+            aria-label="Add Members"
+            title="Add Members"
             ng-reflect-color="primary"
         >
-            Update Members
+            Add Members
+        </button>
+        <button
+            type="button"
+            (click)="modal.close('Upgrade Members'); removeMembers()"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Remove Members"
+            title="Remove Members"
+            ng-reflect-color="primary"
+            style="margin-left: 15px"
+        >
+            Remove Members
         </button>
     </div>
 </ng-template>
