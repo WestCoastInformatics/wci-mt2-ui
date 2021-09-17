@@ -52,7 +52,7 @@ export class TaxonomyTreeComponent {
 
         for (const propertyName in changes) {
 
-            if (propertyName === 'options' || propertyName === 'manualStateRefresh') {
+            if (propertyName === 'options') {
 
                 this.configOptions = {
                     ...this.staticOptions,
@@ -75,16 +75,18 @@ export class TaxonomyTreeComponent {
 
             } else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
 
-                // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
-                if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].descriptions)) {
+                this.isLoading = true;
 
-                    this.isLoading = true;
+                // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
+                if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].name)) {
+
                     let depth: number = 1
 
                     let restParams = {
                         displayType: 'taxonomy',
                         depth: depth,
                         startingConceptId: this.rootNode.code,
+                        language: this.options.language,
                         offset: 0,
                         limit: 1000
                     };
@@ -96,6 +98,11 @@ export class TaxonomyTreeComponent {
                 } else {
                     this.prepareData(this.rootNode.children);
                 }
+
+            } else if (propertyName === 'manualStateRefresh') {
+                
+                this.isLoading = true;
+                this.nodes = [];
             }
         }
     }
@@ -146,6 +153,7 @@ export class TaxonomyTreeComponent {
             displayType: 'taxonomy',
             depth: 1,
             startingConceptId: node.data.code,
+            language: this.options.language,
             offset: 0,
             limit: 1000
         };
@@ -187,22 +195,18 @@ export class TaxonomyTreeComponent {
     getNodeText(node) {
 
         let text = '';
-        let index = this.options?.displayField;
         let data = node?.data;
 
         if (!CodeUtility.hasValue(data)) {
             data = node;
         }
 
-        let choosenDescription = data?.descriptions ? data?.descriptions[index] : undefined;
+        let useFsn = this.options?.useFsn;
 
-        if (choosenDescription != null) {
-            text = choosenDescription?.term;
-            
-        } else if (data?.descriptions && data?.descriptions[0]) {
-            text = data?.descriptions[0].term;
+        if (useFsn && CodeUtility.hasValue(data.fsn)) {
+            text = data.fsn;
         } else {
-            text = data?.name;
+            text = data.name;
         }
 
         return text;

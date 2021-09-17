@@ -3,6 +3,11 @@ import { CodeUtility } from "./code.utility";
 export class RefsetUtility {
 
     static mockedVersionOptions = [{ value: '2021-02-21', display: 'In Development' }, { value: '2021-01-15', display: 'Published (2021-01-15)' }, { value: '2020-11-23', display: 'Beta (2020-11-23)' }];
+    static SNOMED_ROOT_CONCEPT_ID = '138875005';
+    static DEFAULT_LANGUAGE_CODE = 'en';
+    static DEFAULT_LANGUAGE_REFSET = '900000000000509007';
+    static DEFAULT_LANGUAGE_TYPE = 'PT';
+    static DEFAULT_ACCEPT_LANGUAGE = RefsetUtility.DEFAULT_LANGUAGE_CODE + '-X-' + RefsetUtility.DEFAULT_LANGUAGE_REFSET;
 
     static getVersionOptions(refset, valueField: string = "id") {
 

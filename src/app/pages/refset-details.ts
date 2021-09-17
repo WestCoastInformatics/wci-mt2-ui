@@ -35,10 +35,8 @@ export class RefsetDetails {
     tableSearchInput: string;
     versionOptions: any;
     selectedVersion: string;
-    languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
-    defaultLanguage: string;
-    selectedLanguage: string[] = ['900000000000509007PT', '900000000000509007FSN'];
-    selectedTaxonomyLanguage: string = '900000000000509007PT';
+    languageOptions = [{ value: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ':' + RefsetUtility.DEFAULT_LANGUAGE_TYPE, display: RefsetUtility.DEFAULT_LANGUAGE_CODE + ' (' + RefsetUtility.DEFAULT_LANGUAGE_TYPE + ')' }];
+    selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ':' + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     selectedTaxonomyLanguageIndex: number = 0;
     membersGridChooserManualStateRefresh =  new Boolean(true);
     useDialog: boolean = false;
@@ -64,13 +62,16 @@ export class RefsetDetails {
     membersTreeData: any;
     dialog: DialogService;
     conceptDetail: any = null;
+    conceptDetailParents: any = [];
+    conceptDetailChildren: any = [];
     conceptDescriptions: any = [];
     isConceptDetailsLoading: boolean = false;
     membersTaxonomyRoot: any[] = [];
     taxonomyManualStateRefresh: Boolean = new Boolean(false);
     taxonomyOptions: TreeOptions = {
         onSelect: this.onTaxonomySelected.bind(this),
-        displayField: '0'
+        useFsn: false,
+        language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE
     };
     taxonomyButtonLabel = 'Loading...';
     taxonomySearchInput: string;
@@ -188,14 +189,8 @@ export class RefsetDetails {
 
             console.log('refsetLoaded: ' + refsetLoaded);
             //console.log('memberCacheLoaded: ' + memberCacheLoaded);
-            
-            // load taxonomy root
-            this.refsetService.getMembersDetails('138875005', {refsetInternalId: this.refsetData.id}).subscribe(results => {
 
-                this.membersTaxonomyRoot = results;
-                this.taxonomyButtonLabel = 'Taxonomy';
-                this.showTaxonomySearchTable = true
-            });
+            this.loadTaxonomyRoot()
 
             this.taxonomySearchColumnDefs = [
                 { field: 'name', colId: 'result', headerName: 'Result', cellClass: 'refset-tool-directory-column-edition', valueGetter: this.taxonomyResultValueGetter.bind(this), cellRenderer: 'templateRenderer', cellRendererParams: { template: this.taxonomyResultSection } },
@@ -255,13 +250,19 @@ export class RefsetDetails {
 
             for (let language of languages) {
 
-                if (CodeUtility.testBoolean(language.default)) {
+                let type = "PT";
 
-                    this.defaultLanguage = language.qualifiedLanguageRefset;
-                    this.selectedTaxonomyLanguage = language.qualifiedLanguageRefset;
+                if (language.qualifiedLanguageCode.indexOf('FSN') >= 0) {
+                    type = "FSN";
                 }
 
-                languageRefsetOptions.push({ value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode });
+                let languageValue = language.languageCode + '-X-' + language.languageRefset + ':' + type;
+
+                if (CodeUtility.testBoolean(language.default)) {
+                    this.selectedTaxonomyLanguage = languageValue;
+                }
+
+                languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageCode });
             }
 
             if (languageRefsetOptions.length > 0){
@@ -296,6 +297,27 @@ export class RefsetDetails {
     }
 
     //***** Members Taxonomy Functions  *****/
+    loadTaxonomyRoot() {
+
+        let restParams = {
+            displayType: 'taxonomy',
+            returnStartingConcept: true,
+            language: this.getTaxonomyLanguageWithoutType(),
+            depth: 1,
+            startingConceptId: RefsetUtility.SNOMED_ROOT_CONCEPT_ID,
+            offset: 0,
+            limit: 1000
+        };
+        
+        // load taxonomy root
+        this.refsetService.getMembersList(this.refsetData.id, restParams).subscribe(results => {
+
+            this.membersTaxonomyRoot = results.items[0];
+            this.taxonomyButtonLabel = 'Taxonomy';
+            this.showTaxonomySearchTable = true
+        });
+    }
+    
     onTaxonomySelected(event) {
         
         let selectedConcept = CodeUtility.clone(event.node.data);
@@ -305,9 +327,29 @@ export class RefsetDetails {
     changeTaxonomyLanguage(){
 
         this.selectedTaxonomyLanguageIndex = this.languageOptions.findIndex(option => option.value === this.selectedTaxonomyLanguage);
-        this.taxonomyOptions.displayField = this.selectedTaxonomyLanguageIndex + '';
-        this.taxonomyManualStateRefresh = new Boolean('true'); 
         this.taxonomySearchGridApi.refreshCells();
+        this.taxonomyOptions.useFsn =  this.getTaxonomyLanguageType().toLowerCase() == 'fsn';
+        this.taxonomyOptions.language =  this.getTaxonomyLanguageWithoutType();
+
+        // reload the members taxonomy tree
+        this.taxonomyManualStateRefresh = new Boolean("true");
+        this.loadTaxonomyRoot();
+
+        // if concept details is present reload the concept details child tree 
+        if (CodeUtility.hasValue(this.conceptDetail)) {
+
+            delete this.conceptDetail.children
+            this.conceptDetail = CodeUtility.clone(this.conceptDetail);
+            this.loadConceptDetailParents(this.conceptDetail.code);
+        }
+    }
+
+    getTaxonomyLanguageWithoutType() {
+        return this.selectedTaxonomyLanguage.replace(/:.*$/, '');
+    }
+
+    getTaxonomyLanguageType() {
+        return this.selectedTaxonomyLanguage.replace(/^.*:/, '');
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
@@ -717,7 +759,26 @@ export class RefsetDetails {
 
             RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
         });
+
+        this.loadConceptDetailParents(concept.code);
+    }
+
+    loadConceptDetailParents(conceptId) {
+
+        let restParams = {
+            displayType: 'taxonomy',
+            returnChildren: false,
+            language: this.getTaxonomyLanguageWithoutType(),
+            depth: 1,
+            startingConceptId: conceptId,
+            offset: 0,
+            limit: 1000
+        };
         
+        // load the parents
+        this.refsetService.getMembersList(this.refsetData.id, restParams).subscribe(results => {
+            this.conceptDetailParents = results.items;
+        });
     }
 
     closeConceptDetails() {
