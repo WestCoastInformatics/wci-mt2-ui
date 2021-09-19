@@ -163,14 +163,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-
-
                 if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2){
-                    if (!this.metadataAndConcepts) {
-                        query = CodeUtility.addIfNotEmpty(query, `${UiUtility.formatSelectedData(this.columnDefs, this.searchInput)}) AND `, true, true) + this.searchInput;
-                    } else {
-                        query = CodeUtility.addIfNotEmpty(query, ') AND ') + this.searchInput;
-                    }
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
                 }
 
                 let newFilterString = query;
@@ -196,6 +190,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
+                    searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
                     query: this.selectedProject?.organization?.name ? this.selectedProject?.organization?.name : 'zzzzzzzzzzzz'

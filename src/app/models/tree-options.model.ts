@@ -7,8 +7,9 @@ export interface TreeOptions {
     nodeClass?: Function;
     childrenField?: string;
     hasChildrenField?: string;
+    language?: string;
     onSelect?: Function;
-    displayField?: string;
+    useFsn?: boolean;
     expandFirstNode?: boolean;
     hasMultipleRootNodes?: boolean;
     useVirtualScroll?: boolean;
@@ -21,7 +22,8 @@ export const TreeOptionDefaults: TreeOptions = {
     allowDrop: false,
     childrenField: 'children',
     hasChildrenField: 'hasChildren',
-    displayField: 'name',
+    language: '',
+    useFsn: false,
     expandFirstNode: true,
     hasMultipleRootNodes: false,
     onSelect: function(event){},

@@ -35,18 +35,23 @@ export class CodeUtility {
         if (this.hasValue(originalString)){
 
             if (addToEnd){
+
                 if (addOr) {
-                    return `${originalString} AND (${stringToAdd}`;
+                    return `${originalString} AND ${stringToAdd}`;
                 }
-                return `(${originalString + stringToAdd}`;
+
+                return `${originalString + stringToAdd}`;
+
             } else {
                 return stringToAdd + originalString;
             }
             
         } else {
+
             if (addOr) {
-                return `(${stringToAdd}`;
+                return `${stringToAdd}`;
             }
+            
             return originalString;
         }
     }

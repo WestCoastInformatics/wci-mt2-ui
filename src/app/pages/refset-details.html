@@ -954,7 +954,7 @@
                                                 class="
                                                     refset-tool-concept-details-no-relationships
                                                 "
-                                                *ngIf="conceptDetail.parents.length == 0"
+                                                *ngIf="conceptDetailParents.length == 0"
                                             >
                                                 There is no data.
                                             </div>
@@ -965,7 +965,7 @@
                                                 row
                                                 refset-tool-concept-details-taxonomy-item
                                             "
-                                            *ngFor="let parent of conceptDetail.parents"
+                                            *ngFor="let parent of conceptDetailParents"
                                         >
                                             <div
                                                 class="
@@ -998,7 +998,8 @@
                                                     refset-tool-concept-details-taxonomy-description
                                                 "
                                             >
-                                                {{parent.name}}
+                                                <span *ngIf="this.taxonomyOptions.useFsn">{{parent.fsn}}</span>
+                                                <span *ngIf="!this.taxonomyOptions.useFsn">{{parent.name}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1225,7 +1226,6 @@
                                                 [refset]="refsetData"
                                                 [rootNode]="conceptDetail"
                                                 [options]="taxonomyOptions"
-                                                [manualStateRefresh]="taxonomyManualStateRefresh"
                                                 hasMultipleRootNodes="false"
                                             ></app-taxonomy-tree>
                                         </div>

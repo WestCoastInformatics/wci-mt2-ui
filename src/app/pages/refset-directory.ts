@@ -186,11 +186,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 console.log("^^^^^^ query after viewFilters: " + query);
 
                 if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2){
-                    if (!this.metadataAndConcepts) {
-                        query = CodeUtility.addIfNotEmpty(query, `${UiUtility.formatSelectedData(this.columnDefs, this.searchInput)}) AND `, true, true) + this.searchInput;
-                    } else {
-                        query = CodeUtility.addIfNotEmpty(query, ') AND ') + this.searchInput;
-                    }
+                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
                 }
 
                 let newFilterString = query;
@@ -216,6 +212,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
+                    searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 }
