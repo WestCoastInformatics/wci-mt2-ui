@@ -199,13 +199,13 @@
                             <img src="assets/quote-icon.svg" alt="quote icon" />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/notes-icon.svg" alt="quote icon" />
+                            <img src="assets/notes-icon.svg" alt="notes icon" />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/pages-icon.svg" alt="quote icon" />
+                            <img src="assets/pages-icon.svg" alt="pages icon" />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/trash-icon.svg" alt="quote icon" />
+                            <img src="assets/trash-icon.svg" alt="trash icon" />
                         </button>
                     </div>
                 </div>
@@ -511,12 +511,7 @@
                     [internalRefsetId]="id"
                     (reloadGrid)="onMembersGridReady(originalGridParams)"
                 ></import-from-list-modal>
-                <button class="button-inactive">
-                    <img
-                        src="assets/mag-icon.svg"
-                        alt="magnifying glass icon"
-                    />
-                </button>
+                <add-remove-by-concept-modal></add-remove-by-concept-modal>
                 <button
                     (click)="openEclBuilder('detailsTableSearchInput')"
                     #detailsTableSearchEclButton

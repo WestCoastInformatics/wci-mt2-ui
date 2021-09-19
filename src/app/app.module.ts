@@ -12,6 +12,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -66,6 +67,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 import { SideBarModule } from './components/side-bar/side-bar.module';
 import { dragAndDropDirective } from './directives/drag-and-drop.directive';
+import { AddRemoveByConceptModalComponent } from './components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
@@ -94,7 +96,8 @@ const appRoutes: Routes = [
 		ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
-        dragAndDropDirective
+        dragAndDropDirective,
+        AddRemoveByConceptModalComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -129,7 +132,8 @@ const appRoutes: Routes = [
         AngularSplitModule,
         NgbModule,
         SideBarModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatSlideToggleModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

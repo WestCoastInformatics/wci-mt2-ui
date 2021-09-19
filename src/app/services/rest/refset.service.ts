@@ -70,6 +70,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/' + refsetId + '/taxonomySearch', params);
     }
 
+    getConceptSearch(refsetId: string, params: any): Observable<any> {
+        return this.get(this.contextPath + 'refset/' + refsetId + '/conceptSearch', params);
+    }
+
     getMemberHistory(refsetId: string, conceptId: string, params: any): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId + '/member/' + conceptId, params);
     }

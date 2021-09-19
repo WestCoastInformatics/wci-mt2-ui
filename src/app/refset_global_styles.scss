@@ -824,8 +824,8 @@ button.refset-tool-table-action-icon {
 #detailsTaxonomySearchInputField {
     top: 2px;
 }
-.modal-dialog {
-    max-width: 700px !important;
+.createNewRefsetDialog > .modal-dialog {
+    max-width: 700px;
 }
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
@@ -2130,4 +2130,128 @@ button.refset-tool-table-action-icon {
     background-color: white;
     padding-top: 10px;
     box-shadow: 0 4px 2px -2px gray;
+}
+
+.add-remove-concept-hierarchy-modal-button {
+    width: 39px;
+    height: 31px;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 164, 228, 1);
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.add-remove-concept-hierarchy-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 0px !important;
+}
+
+.add-remove-concept-hierarchy-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
+        sans serif;
+}
+
+.add-remove-concept-hierarchy-modal-body {
+    padding: 0;
+}
+
+.add-remove-concept-hierarchy-modal-input-field {
+    width: 308px;
+}
+
+.add-remove-concept-hierarchy-modal-cancel-search {
+    margin-left: -10px;
+}
+
+.add-remove-concept-hierarchy-modal-container-fluid {
+    padding: 30px !important;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+    height: 680px;
+}
+
+.add-remove-concept-hierarchy-modal-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.add-remove-concept-hierarchy-modal-size > .modal-dialog {
+    width: 1000px;
+    max-width: 1240px;
+}
+
+.add-remove-concept-hierarchy-modal-Section-container {
+    width: 100% !important;
+}
+
+.add-remove-concept-hierarchy-modal-search-bar {
+    padding-left: 0;
+    margin-left: 5px;
+}
+
+.add-remove-concept-hierarchy-modal-details-size {
+    height: 250px;
+    max-height: 250px;
+}
+
+.add-remove-concept-hierarchy-modal-children-size {
+    height: 274px;
+    max-height: 274px;
+}
+
+.add-remove-concept-hierarchy-modal-parent-size {
+    height: 90px;
+    max-height: 90px;
+}
+
+#addRemoveByConceptHierarchySearchInputField {
+    width: 245px;
+}
+
+.add-remove-concept-hierarchy-modal-table {
+    height: 542px;
+    overflow-x: scroll;
+    overflow: overlay;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgba(215, 215, 215, 1);
+}
+
+// .add-remove-concept-hierarchy-modal-table::-webkit-scrollbar { 
+//     display: none;
+// }
+
+// .add-remove-concept-hierarchy-modal-table {
+//     -ms-overflow-style: none;
+//     overflow: -moz-scrollbars-none;
+// }
+
+.add-remove-concept-hierarchy-modal-results-container {
+    padding-left: 0;
+    padding-right: 20px;
+}
+
+.add-remove-concept-hierarchy-modal-results-row {
+
+}
+
+.add-remove-concept-hierarchy-modal-active-slider-section {
+    padding-left: 5px;
+}
+
+.add-remove-concept-hierarchy-modal-active-slider {
+    font-size: 12px;
+}
+
+.add-remove-concept-hierarchy-modal-results-title {
+    padding-top: 10px;
+    font-size: 16px;
+}
+
+.as-split-gutter {
+    height: 98% !important;
 }

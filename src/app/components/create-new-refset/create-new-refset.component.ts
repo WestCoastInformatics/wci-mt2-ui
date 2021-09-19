@@ -52,7 +52,7 @@ export class CreateNewRefsetComponent implements OnInit {
   openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
     console.log(this.existingMetadataConcepts);
     if (this.selectedProject) {
-      this.modalService.open(createNewRefsetDialog);
+      this.modalService.open(createNewRefsetDialog, { windowClass: 'createNewRefsetDialog'  });
     }
   }
 
