@@ -71,7 +71,7 @@ export class RefsetService extends RestService {
     }
 
     getConceptSearch(refsetId: string, params: any): Observable<any> {
-        return this.get(this.contextPath + 'refset/' + refsetId + '/conceptSearch', params);
+        return this.get(this.contextPath + 'refset/' + refsetId + '/conceptSearch', params, false);
     }
 
     getMemberHistory(refsetId: string, conceptId: string, params: any): Observable<any> {
