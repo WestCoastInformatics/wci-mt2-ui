@@ -17,6 +17,28 @@
     >
         <ng-template #treeNodeTemplate let-node let-index="index">
             <img
+                *ngIf="!rootNode?.memberOfRefset && editMode"
+                src="assets/add-symbol-icon.svg"
+                (click)="addConcept(rootNode)"
+                width="18px"
+                height="18px"
+                title="Add"
+                aria-label="Add"
+                class="add-symbol-icon"
+                alt="Add symbol shown when you're able to add a concept"
+            />
+            <img
+                *ngIf="rootNode?.memberOfRefset && editMode"
+                src="assets/subtract-symbol-icon.svg"
+                (click)="removeConcept(rootNode)"
+                width="18px"
+                height="18px"
+                title="Subtract"
+                aria-label="Subtract"
+                class="subtract-symbol-icon"
+                alt="Subtract symbol shown when you're able to remove a concept"
+            />
+            <img
                 *ngIf="node.data.defined"
                 title="Fully Defined"
                 aria-label="Fully Defined"

@@ -150,7 +150,7 @@ export class RefsetUtility {
             }
 
             // finally sort alphabetically
-            let descriptionCompareValue = description1.localeCompare(description2);
+            let descriptionCompareValue = description1.toString().localeCompare(description2);
 
             return descriptionCompareValue;
         });

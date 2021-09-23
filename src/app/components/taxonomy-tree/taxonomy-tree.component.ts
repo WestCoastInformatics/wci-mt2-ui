@@ -16,15 +16,15 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
  */
 @Component({
     selector: 'app-taxonomy-tree',
-    templateUrl: 'taxonomy-tree.component.html'
+    templateUrl: 'taxonomy-tree.component.html',
 })
-
 export class TaxonomyTreeComponent {
-
     configOptions: TreeOptions = {};
     staticOptions: any = { nodeClass: this.styleNodeClass };
     nodes: any[] = [];
     loadNodeChildrenProcess: Function = (event) => {};
+    @Input()
+    editMode = false;
     refsetUtility = RefsetUtility;
     isLoading: boolean = false;
     noData: boolean = false;
@@ -38,27 +38,26 @@ export class TaxonomyTreeComponent {
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private refsetService: RefsetService,) {
-
+    constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        private refsetService: RefsetService
+    ) {
         this.configOptions = {
             ...this.staticOptions,
             ...TreeOptionDefaults,
             ...this.options,
-            getChildren: this.getChildren.bind(this)
+            getChildren: this.getChildren.bind(this),
         };
     }
 
     ngOnChanges(changes: SimpleChanges) {
-
         for (const propertyName in changes) {
-
             if (propertyName === 'options') {
-
                 this.configOptions = {
                     ...this.staticOptions,
                     ...TreeOptionDefaults,
                     ...this.options,
-                    getChildren: this.getChildren.bind(this)
+                    getChildren: this.getChildren.bind(this),
                 };
 
                 if (this.hasMultipleRootNodes) {
@@ -66,21 +65,23 @@ export class TaxonomyTreeComponent {
                 }
 
                 if (CodeUtility.hasValue(this.nodes)) {
-
-                    let treeModel: TreeModel = this.treeComponent.treeModel;
+                    let treeModel: TreeModel = this.treeComponent?.treeModel;
                     this.sortTree(treeModel.nodes);
                 }
 
                 this.changeDetectorRef.detectChanges();
-
-            } else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
-
+            } else if (
+                propertyName === 'rootNode' &&
+                CodeUtility.hasValue(this.rootNode)
+            ) {
                 this.isLoading = true;
 
                 // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
-                if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].name)) {
-
-                    let depth: number = 1
+                if (
+                    !CodeUtility.hasValue(this.rootNode.children) ||
+                    !CodeUtility.hasValue(this.rootNode.children[0].name)
+                ) {
+                    let depth: number = 1;
 
                     let restParams = {
                         displayType: 'taxonomy',
@@ -88,19 +89,18 @@ export class TaxonomyTreeComponent {
                         startingConceptId: this.rootNode.code,
                         language: this.options.language,
                         offset: 0,
-                        limit: 1000
+                        limit: 1000,
                     };
 
-                    this.refsetService.getMembersList(this.refset.id, restParams).subscribe(results => {
-                        this.prepareData(results.items);
-                    });
-
+                    this.refsetService
+                        .getMembersList(this.refset.id, restParams)
+                        .subscribe((results) => {
+                            this.prepareData(results.items);
+                        });
                 } else {
                     this.prepareData(this.rootNode.children);
                 }
-
             } else if (propertyName === 'manualStateRefresh') {
-                
                 this.isLoading = true;
                 this.nodes = [];
             }
@@ -108,17 +108,14 @@ export class TaxonomyTreeComponent {
     }
 
     prepareData(data) {
-
         RefsetUtility.setEmptyChildrenNull(data);
 
         if (this.hasMultipleRootNodes) {
-
             this.rootNode = data;
             this.sortNodes(this.rootNode);
             this.sortTree(this.rootNode);
             this.nodes = this.rootNode;
         } else {
-
             this.rootNode.children = data;
             this.sortTree([this.rootNode]);
             this.nodes = [this.rootNode];
@@ -129,18 +126,16 @@ export class TaxonomyTreeComponent {
         } else {
             this.noData = true;
         }
-        
+
         this.isLoading = false;
     }
 
     onInitTree(event) {
-
         if (!CodeUtility.hasValue(this.nodes)) {
             return;
         }
 
         if (this.configOptions.expandFirstNode) {
-
             let treeModel: TreeModel = this.treeComponent.treeModel;
             let firstNode: TreeNode = treeModel.getFirstRoot();
             firstNode.expand();
@@ -148,18 +143,20 @@ export class TaxonomyTreeComponent {
     }
 
     async getChildren(node: TreeNode) {
-
         let restParams = {
             displayType: 'taxonomy',
             depth: 1,
             startingConceptId: node.data.code,
             language: this.options.language,
             offset: 0,
-            limit: 1000
+            limit: 1000,
         };
 
         // need to return a promise or the data to the tree, not an observable
-        let results$: Observable<any> = this.refsetService.getMembersList(this.refset.id, restParams);
+        let results$: Observable<any> = this.refsetService.getMembersList(
+            this.refset.id,
+            restParams
+        );
         let resultData: any = await lastValueFrom(results$);
         let data = resultData.items;
 
@@ -169,7 +166,6 @@ export class TaxonomyTreeComponent {
     }
 
     styleNodeClass(node: TreeNode) {
-
         let classes = '';
 
         if (CodeUtility.testBoolean(node.data.hasDescendantRefsetMembers)) {
@@ -213,12 +209,9 @@ export class TaxonomyTreeComponent {
     }
 
     sortTree(nodes) {
-
         for (const node of nodes) {
-
             // If the element of the array has a property _children_, we sort the childrens, then parse them
             if (CodeUtility.hasValue(node.children)) {
-
                 node.children = this.sortNodes(node.children);
                 this.sortTree(node.children);
             }
@@ -256,15 +249,20 @@ export class TaxonomyTreeComponent {
     }
 
     /*
-    * findNodeInTree - find the target node in the tree, populating its lineage path if it is not currently in the tree
-    * @param conceptID - the concept ID for the target node
-    * @param parentPath - an array of the parents concepts of the target concept starting at the root of the tree. If not supplied tree will look parents up.
-    * @param returnFunction - a callback function that takes as a parameter the tree node ID of the target node. Because findNodeInTree may be making ajax calls it can't return the ID normally
-    * @param selectTheNode - should the target node be selected once it is found (default true)
-    * @param suppressChangeEvent - should the tree onchange event be fired if the target node is selected (default true)
-    */
-    findNodeInTree(conceptID, parentPath: any[] = [], returnFunction: Function = function(){}, selectTheNode = true, suppressChangeEvent = true) {
-
+     * findNodeInTree - find the target node in the tree, populating its lineage path if it is not currently in the tree
+     * @param conceptID - the concept ID for the target node
+     * @param parentPath - an array of the parents concepts of the target concept starting at the root of the tree. If not supplied tree will look parents up.
+     * @param returnFunction - a callback function that takes as a parameter the tree node ID of the target node. Because findNodeInTree may be making ajax calls it can't return the ID normally
+     * @param selectTheNode - should the target node be selected once it is found (default true)
+     * @param suppressChangeEvent - should the tree onchange event be fired if the target node is selected (default true)
+     */
+    findNodeInTree(
+        conceptID,
+        parentPath: any[] = [],
+        returnFunction: Function = function () {},
+        selectTheNode = true,
+        suppressChangeEvent = true
+    ) {
         let deferred;
 
         let startFind = () => {
@@ -282,26 +280,25 @@ export class TaxonomyTreeComponent {
             let node = this.getNodeIDByConceptID(conceptID);
 
             // if the node exists in the tree continue on
-            if (node == undefined){
+            if (node == undefined) {
 
                 let processNodeParents = (parentArray) => {
-
-                    if (parentArray.length > 0){
-
+                    
+                    if (parentArray.length > 0) {
+                        
                         // this is a recursive function that will process each of the returned nodes, starting with the root, and walk down to the target node
                         let walkTree = (index) => {
-
                             // find this node in the tree
-                            let nodeInTree = this.getNodeIDByConceptID(parentArray[index].code);
+                            let nodeInTree = this.getNodeIDByConceptID(
+                                parentArray[index].code
+                            );
 
                             if (nodeInTree) {
-
                                 // store the open/close state of the node in the tree
                                 let isAlreadyOpen = nodeInTree.isExpanded;
 
                                 // add a function to our callback array to handle cleanup of this node once the target node is found
                                 cleanUpNodes.push(function () {
-
                                     // if the node was closed and we are not selecting the target node, re-close this node
                                     if (!selectTheNode && !isAlreadyOpen) {
                                         nodeInTree.collapse();
@@ -309,40 +306,42 @@ export class TaxonomyTreeComponent {
                                 });
 
                                 let processNodeChildren = () => {
-
                                     // if we are not at the last element of the parent array
-                                    if (index < parentArray.length - 1){
-
+                                    if (index < parentArray.length - 1) {
                                         // call this the walkTree function again with the index for the next child node
                                         walkTree(index + 1);
-
                                     } else {
-
-                                        this.loadNodeChildrenProcess = (event) => {};
+                                        this.loadNodeChildrenProcess = (
+                                            event
+                                        ) => {};
 
                                         // since the node has no children it is the parent of our target node, so the target node should now exist in the tree.
                                         // get the target node by its concept ID
-                                        node = this.getNodeIDByConceptID(conceptID);
+                                        node =
+                                            this.getNodeIDByConceptID(
+                                                conceptID
+                                            );
 
                                         // resolve our deferred call with the target node
                                         deferredReturn.resolve(node);
 
                                         // back down our callback array to clean up all the nodes that were touched
-                                        while (cleanUpNodes.length > 0){
+                                        while (cleanUpNodes.length > 0) {
                                             cleanUpNodes.pop().call();
                                         }
                                     }
                                 };
 
                                 // open this node in the tree so we get all of its children
-                                this.loadNodeChildrenProcess = (event) => {processNodeChildren()};
-                                
+                                this.loadNodeChildrenProcess = (event) => {
+                                    processNodeChildren();
+                                };
+
                                 if (isAlreadyOpen) {
                                     processNodeChildren();
                                 } else {
                                     nodeInTree.expand();
                                 }
-                                
                             }
                         };
 
@@ -351,27 +350,21 @@ export class TaxonomyTreeComponent {
                     }
                 };
 
-                if (parentPath.length > 0) { 
+                if (parentPath.length > 0) {
                     processNodeParents(parentPath);
-
                 } else {
-
                     // make a call to get all the parents of the target node back to the root
                     //$.get(gon.routes.taxonomy_load_tree_data_path + params, processNodeParents);
                 }
-
-            } else{
-
+            } else {
                 // the node was already in the tree so resolve our deferred call with its tree ID
                 deferredReturn.resolve(node);
             }
 
             // what to do once our target node has been found
             $.when(deferredReturn).done((data) => {
-
                 // if the node was found and we are selecting the target
-                if (data != undefined && selectTheNode){
-
+                if (data != undefined && selectTheNode) {
                     // select the target node without firing the change event and set the concept ID as the current ID on the tree
                     this.selectNode(node, suppressChangeEvent);
                 }
@@ -384,17 +377,43 @@ export class TaxonomyTreeComponent {
         };
 
         // make sure only one find operation is run at a time
-        if (deferred && deferred.state() == "pending"){
+        if (deferred && deferred.state() == 'pending') {
             deferred.done(startFind);
         } else {
             startFind();
         }
     }
 
-    selectNode(node, suppressChangeEvent) {
+    addConcept(concept): void {
+        this.refsetService
+            .addRefsetMembers(this.refset.id, 'list', concept?.code?.toString())
+            .subscribe(
+                (data) => {
+                    console.log(data);
+                    console.log(concept);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+    }
 
+    removeConcept(concept): void {
+        this.refsetService
+            .removeRefsetMembers(this.refset.id, 'list', concept?.code?.toString())
+            .subscribe(
+                (data) => {
+                    console.log(data);
+                    console.log(concept);
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+    }
+
+    selectNode(node, suppressChangeEvent) {
         node.ensureVisible();
-        
 
         if (suppressChangeEvent) {
             node.focus();
@@ -402,7 +421,9 @@ export class TaxonomyTreeComponent {
             node.setIsActive(true);
         }
 
-        let element: any = $('#' + node.parent.data.code + '-' + node.data.code);
-        element[0].scrollIntoView({behavior: 'smooth'});
+        let element: any = $(
+            '#' + node.parent.data.code + '-' + node.data.code
+        );
+        element[0].scrollIntoView({ behavior: 'smooth' });
     }
 }
