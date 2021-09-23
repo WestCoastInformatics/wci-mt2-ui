@@ -502,7 +502,7 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
-            <div class="set-of-buttons">
+            <div class="set-of-buttons" *ngIf="editMode">
                 <import-from-file-modal
                     [internalRefsetId]="id"
                     (reloadGrid)="onMembersGridReady(originalGridParams)"
