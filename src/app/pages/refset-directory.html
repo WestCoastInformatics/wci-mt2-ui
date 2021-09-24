@@ -29,20 +29,62 @@
             </div>
 
             <div class="col-md-auto">
-                <mat-form-field id="directorySearchInputField">
-                    <mat-label class="search-label">Search</mat-label>
-                    <input
-                        matInput
-                        #directorySearchInput
-                        id="directorySearchInput"
-                        [(ngModel)]="searchInput"
-                        (keyup)="onSearchChange()"
-                        (change)="onSearchChange()"
-                    />
-                </mat-form-field>
-                <span class="clear-search" (click)="clearSearch()"
-                    >&#10005;</span
-                >
+                <div class="dropdown">
+                    <mat-form-field id="directorySearchInputField">
+                        <mat-label class="search-label">{{ metadataAndConcepts ? 'Search metadata and concepts' : 'Search metadata only' }}</mat-label>
+                        <input
+                            matInput
+                            #directorySearchInput
+                            id="directorySearchInput"
+                            [(ngModel)]="searchInput"
+                            (keyup)="onSearchChange()"
+                            (change)="onSearchChange()"
+                        />
+                        <img
+                            style="
+                                width: 14px;
+                                height: 14px;
+                                position: absolute;
+                                left: 310px;
+                            "
+                            src="assets/empty-filter.png"
+                            (click)="showDropdown()"
+                        />
+                    </mat-form-field>
+                    <span class="clear-search" (click)="clearSearch()"
+                        >&#10005;</span
+                    >
+                    <div class="dropdown-content" [class.dropdown-content-show]="toggleDropdown">
+                        <div class="radio-butons" style="font-size: 12px">
+                            <mat-radio-group
+                                aria-label="Select an option"
+                                style="display: grid"
+                                (change)="searchSelectionRadioResult($event)"
+                            >
+                                <mat-radio-button value="true" checked
+                                    >Search metadata and
+                                    concepts</mat-radio-button
+                                >
+                                <mat-radio-button value="false" disableRipple
+                                    >Search metadata only</mat-radio-button
+                                >
+                            </mat-radio-group>
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="showDropdown()"
+                                aria-hidden="false"
+                                class="refset-tool-action-button"
+                                aria-label="Save"
+                                title="Save"
+                                ng-reflect-color="primary"
+                                style="float: right; margin-bottom: 0"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <button
                     mat-raised-button
                     color="primary"
@@ -73,31 +115,6 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-            </div>
-            <div
-                class="radio-butons"
-                style="
-                    padding-left: 15px;
-                    padding-top: 30px;
-                    padding-right: 20px;
-                    font-size: 12px;
-                "
-            >
-                <mat-radio-group
-                    aria-label="Select an option"
-                    style="margin-bottom: 10px; display: flow-root"
-                    (change)="searchSelectionRadioResult($event)"
-                >
-                    <mat-radio-button value="true" checked
-                        >Metadata and concepts</mat-radio-button
-                    >
-                    <mat-radio-button
-                        value="false"
-                        disableRipple
-                        style="margin-left: 20px"
-                        >Metadata only</mat-radio-button
-                    >
-                </mat-radio-group>
             </div>
         </div>
     </div>
