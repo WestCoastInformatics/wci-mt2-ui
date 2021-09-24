@@ -62,6 +62,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     metadataAndConcepts = true;
+    toggleDropdown = false;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     constructor(
@@ -159,6 +160,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 });
     }
 
+    showDropdown(): void {
+        if (!this.toggleDropdown) {
+            this.toggleDropdown = true;
+        } else {
+            this.toggleDropdown = false;
+        }
+    }
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {

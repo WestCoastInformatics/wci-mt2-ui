@@ -874,7 +874,9 @@ button.refset-tool-table-action-icon {
     @extend .refset-tool-rounded-borders;
 }
 
-.add-remove-concept-hierarchy-modal-details-size > .row > .refset-tool-concept-details-concept-info-column {
+.add-remove-concept-hierarchy-modal-details-size
+    > .row
+    > .refset-tool-concept-details-concept-info-column {
     width: 100%;
 }
 .refset-tool-concept-details-concept-info-column-status {
@@ -2226,7 +2228,7 @@ button.refset-tool-table-action-icon {
     border-color: rgba(215, 215, 215, 1);
 }
 
-// .add-remove-concept-hierarchy-modal-table::-webkit-scrollbar { 
+// .add-remove-concept-hierarchy-modal-table::-webkit-scrollbar {
 //     display: none;
 // }
 
@@ -2241,7 +2243,6 @@ button.refset-tool-table-action-icon {
 }
 
 .add-remove-concept-hierarchy-modal-results-row {
-
 }
 
 .add-remove-concept-hierarchy-modal-table-first-column {
@@ -2286,7 +2287,9 @@ button.refset-tool-table-action-icon {
     height: 98% !important;
 }
 
-.add-remove-concept-hierarchy-modal-parent-size > .row > .refset-tool-concept-details-taxonomy-icon {
+.add-remove-concept-hierarchy-modal-parent-size
+    > .row
+    > .refset-tool-concept-details-taxonomy-icon {
     display: flex;
     align-self: center;
     .add-symbol-icon {
@@ -2335,4 +2338,29 @@ button.refset-tool-table-action-icon {
 .taxonomy-icon-edit-mode {
     display: flex;
     align-self: center;
+}
+
+.refset-tool-column-chooser-select-field {
+    font-size: 14px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 340px;
+    top: 55px;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 16px 16px;
+    z-index: 1;
+}
+
+.dropdown-content-show {
+    display: block;
 }
