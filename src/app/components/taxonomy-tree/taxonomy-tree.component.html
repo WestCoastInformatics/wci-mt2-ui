@@ -1,3 +1,5 @@
+<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+
 <div class="container-fluid refset-tool-taxonomy">
     <div class="row" *ngIf="isLoading">
         <div>Loading...</div>
@@ -17,9 +19,9 @@
     >
         <ng-template #treeNodeTemplate let-node let-index="index">
             <img
-                *ngIf="!rootNode?.memberOfRefset && editMode"
+                [hidden]="node?.data.memberOfRefset && editMode"
                 src="assets/add-symbol-icon.svg"
-                (click)="addConcept(rootNode)"
+                (click)="addConcept(node?.data)"
                 width="18px"
                 height="18px"
                 title="Add"
@@ -28,9 +30,9 @@
                 alt="Add symbol shown when you're able to add a concept"
             />
             <img
-                *ngIf="rootNode?.memberOfRefset && editMode"
+                [hidden]="!node?.data.memberOfRefset && editMode"
                 src="assets/subtract-symbol-icon.svg"
-                (click)="removeConcept(rootNode)"
+                (click)="removeConcept(node?.data)"
                 width="18px"
                 height="18px"
                 title="Subtract"
@@ -53,6 +55,7 @@
             <span
                 id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}"
                 class="taxonomy-code-text"
+                (click)="sendConceptDetailTrigger(node?.data)"
                 >{{ getNodeText(node) }}</span
             >
         </ng-template>

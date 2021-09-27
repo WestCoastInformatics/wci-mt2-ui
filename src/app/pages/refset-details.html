@@ -1,3 +1,5 @@
+<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+
 <div id="refsetDetailsPage" class="container-fluid">
     <!-- Page Title -->
     <!--<div class="container-fluid page-title">
@@ -511,7 +513,10 @@
                     [internalRefsetId]="id"
                     (reloadGrid)="onMembersGridReady(originalGridParams)"
                 ></import-from-list-modal>
-                <add-remove-by-concept-modal></add-remove-by-concept-modal>
+                <add-remove-by-concept-modal
+                    [internalRefsetId]="id"
+                    (reloadGrid)="onMembersGridReady(originalGridParams)"
+                ></add-remove-by-concept-modal>
                 <button
                     (click)="openEclBuilder('detailsTableSearchInput')"
                     #detailsTableSearchEclButton
@@ -975,8 +980,8 @@
                                                 [class.taxonomy-icon-edit-mode]="editMode"
                                             >
                                                 <img
-                                                    *ngIf="
-                                                        !parent?.memberOfRefset && editMode
+                                                    [hidden]="
+                                                        parent?.memberOfRefset && editMode
                                                     "
                                                     src="assets/add-symbol-icon.svg"
                                                     (click)="addConcept(parent)"
@@ -988,8 +993,8 @@
                                                     alt="Add symbol shown when you're able to add a concept"
                                                 />
                                                 <img
-                                                    *ngIf="
-                                                        parent?.memberOfRefset && editMode
+                                                    [hidden]="
+                                                        !parent?.memberOfRefset && editMode
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
                                                     (click)="
@@ -1070,7 +1075,7 @@
                                                             "
                                                         >
                                                             <img
-                                                                *ngIf="!conceptDetail?.memberOfRefset && editMode"
+                                                                [hidden]="conceptDetail?.memberOfRefset && editMode"
                                                                 src="assets/add-symbol-icon-inverted.svg"
                                                                 (click)="addConcept(conceptDetail)"
                                                                 width="18px"
@@ -1083,7 +1088,7 @@
                                                                 alt="Add symbol shown when you're able to add a concept"
                                                             />
                                                             <img
-                                                                *ngIf="conceptDetail?.memberOfRefset && editMode"
+                                                                [hidden]="!conceptDetail?.memberOfRefset && editMode"
                                                                 src="assets/subtract-symbol-icon-inverted.svg"
                                                                 (click)="removeConcept(conceptDetail)"
                                                                 width="18px"
@@ -1096,7 +1101,7 @@
                                                                 alt="Subtract symbol shown when you're able to remove a concept"
                                                             />
                                                             <img
-                                                                *ngIf="conceptDetail.defined && !editMode"
+                                                                [hidden]="!conceptDetail.defined && !editMode"
                                                                 title="Fully Defined"
                                                                 aria-label="Fully Defined"
                                                                 src="/assets/linedTaxonomyIcon.png"
@@ -1289,6 +1294,8 @@
                                                 [options]="taxonomyOptions"
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode"
+                                                (reloadGrid)="onMembersGridReady(originalGridParams)"
+                                                (conceptDetail)="loadConceptDetail($event)"
                                             ></app-taxonomy-tree>
                                         </div>
                                     </div>
@@ -1305,8 +1312,8 @@
 <!-- Concept Code Templates -->
 <ng-template #conceptCodeSection let-params>
     <img
-        *ngIf="
-                !params?.data?.memberOfRefset && editMode
+        [hidden]="
+                params?.data?.memberOfRefset && editMode
             "
         src="assets/add-symbol-icon.svg"
         (click)="addConcept(params?.data)"
@@ -1318,8 +1325,8 @@
         alt="Add symbol shown when you're able to add a concept"
     />
     <img
-        *ngIf="
-                params?.data?.memberOfRefset && editMode
+        [hidden]="
+                !params?.data?.memberOfRefset && editMode
             "
         src="assets/subtract-symbol-icon.svg"
         (click)="

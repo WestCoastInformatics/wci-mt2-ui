@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { TreeComponent, TreeModel, TreeNode } from '@circlon/angular-tree-component';
 import { lastValueFrom, Observable } from 'rxjs';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
@@ -37,6 +37,14 @@ export class TaxonomyTreeComponent {
     @Input() hasMultipleRootNodes: boolean = false;
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
+    showLoadingSpinner = false;
+
+    @Output()
+    reloadGrid = new EventEmitter<boolean>();
+    @Output()
+    tableChange = new EventEmitter<boolean>();
+    @Output()
+    conceptDetail = new EventEmitter<any>();
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -189,7 +197,7 @@ export class TaxonomyTreeComponent {
     }
 
     getNodeText(node) {
-
+        
         let text = '';
         let data = node?.data;
 
@@ -384,30 +392,52 @@ export class TaxonomyTreeComponent {
         }
     }
 
+    private sendReloadGridTrigger(value: boolean): void {
+        this.reloadGrid.emit(value);
+    }
+
+    private sendTableChangeTrigger(value: boolean): void {
+        this.tableChange.emit(value);
+    }
+
+    private sendConceptDetailTrigger(value: any): void {
+        console.log(value)
+        this.conceptDetail.emit(value);
+    }
+
     addConcept(concept): void {
+        this.showLoadingSpinner = true;
         this.refsetService
-            .addRefsetMembers(this.refset.id, 'list', concept?.code?.toString())
+            .addRefsetMembers(this.refset.id, 'list', concept.code.toString())
             .subscribe(
                 (data) => {
-                    console.log(data);
-                    console.log(concept);
+                    console.log('data: ', data);
+                    this.sendReloadGridTrigger(true);
+                    this.sendTableChangeTrigger(true);
+                    this.sendConceptDetailTrigger(concept);
+                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.showLoadingSpinner = false;
                 }
             );
     }
 
     removeConcept(concept): void {
+        this.showLoadingSpinner = true;
         this.refsetService
-            .removeRefsetMembers(this.refset.id, 'list', concept?.code?.toString())
+            .removeRefsetMembers(this.refset.id, 'list', concept.code.toString())
             .subscribe(
                 (data) => {
                     console.log(data);
-                    console.log(concept);
+                    this.sendReloadGridTrigger(true);
+                    this.sendTableChangeTrigger(true);
+                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.showLoadingSpinner = false;
                 }
             );
     }

@@ -134,6 +134,8 @@ export class RefsetDetails {
     showFullNotesText = false;
     editMode = false;
     taxonomyGridParams: any;
+    showLoadingSpinner = false;
+    selectedConcept: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -380,6 +382,7 @@ export class RefsetDetails {
 
     addConcept(concept): void {
         console.log(concept);
+        this.showLoadingSpinner = true;
         this.refsetService
             .addRefsetMembers(this.id, 'list', concept.code.toString())
             .subscribe(
@@ -388,14 +391,18 @@ export class RefsetDetails {
                     console.log(concept);
                     this.isConceptDetailsLoading = this.conceptDetail = false;
                     this.onMembersGridReady(this.originalGridParams);
+                    this.loadConceptDetail(concept);
+                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.showLoadingSpinner = false;
                 }
             );
     }
 
     removeConcept(concept): void {
+        this.showLoadingSpinner = true;
         this.refsetService
             .removeRefsetMembers(this.id, 'list', concept.code.toString())
             .subscribe(
@@ -404,9 +411,11 @@ export class RefsetDetails {
                     console.log(concept);
                     this.isConceptDetailsLoading = this.conceptDetail = false;
                     this.onMembersGridReady(this.originalGridParams);
+                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.showLoadingSpinner = false;
                 }
             );
     }
@@ -870,7 +879,6 @@ export class RefsetDetails {
         } else {
             let selectedRows = this.membersGridApi.getSelectedRows();
             let selectedId: string;
-            console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
                 selectedId = selectedRow.code;
@@ -924,7 +932,6 @@ export class RefsetDetails {
     }
 
     getMemberRow(memberId: string) {
-        console.log(memberId);
         let concept;
 
         for (let i = 0; i < this.membersGridData.length; i++) {
@@ -938,19 +945,21 @@ export class RefsetDetails {
     }
 
     loadConceptDetail(concept) {
+        console.log(concept);
+        this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
 
         this.refsetService
-            .getMembersDetails(concept.code, {
+            .getMembersDetails(concept?.code, {
                 refsetInternalId: this.refsetData.id,
             })
             .subscribe((results) => {
                 this.isConceptDetailsLoading = false;
-                this.conceptDetail = results;
-                console.log(this.conceptDetail);
+                this.conceptDetail = concept;
+                console.log(results)
                 this.conceptDescriptions =
-                    this.conceptDetail.descriptions.filter(function (
+                    results.descriptions.filter(function (
                         description
                     ) {
                         return description != null;
@@ -962,7 +971,7 @@ export class RefsetDetails {
                 );
             });
 
-        this.loadConceptDetailParents(concept.code);
+        this.loadConceptDetailParents(concept?.code);
     }
 
     loadConceptDetailParents(conceptId) {
@@ -1109,7 +1118,6 @@ export class RefsetDetails {
 
     openMemberHistory(conceptId) {
         let concept = this.getMemberRow(conceptId);
-        console.log(concept);
         this.refsetService
             .getMemberHistory(this.refsetData?.id, conceptId, null)
             .subscribe((results) => {
