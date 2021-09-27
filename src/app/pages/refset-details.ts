@@ -360,6 +360,7 @@ export class RefsetDetails {
 
     //***** Members Taxonomy Functions  *****/
     loadTaxonomyRoot() {
+        this.showLoadingSpinner = true;
         let restParams = {
             displayType: 'taxonomy',
             returnStartingConcept: true,
@@ -377,6 +378,7 @@ export class RefsetDetails {
                 this.membersTaxonomyRoot = results.items[0];
                 this.taxonomyButtonLabel = 'Taxonomy';
                 this.showTaxonomySearchTable = true;
+                this.showLoadingSpinner = false;
             });
     }
 

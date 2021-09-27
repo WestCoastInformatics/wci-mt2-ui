@@ -1238,7 +1238,7 @@ button.refset-tool-table-action-icon {
 /* Absolute Center Spinner */
 .loading {
     position: fixed;
-    z-index: 999;
+    z-index: 9999;
     height: 2em;
     width: 2em;
     overflow: show;
@@ -2092,7 +2092,7 @@ button.refset-tool-table-action-icon {
     > .refset-title-container
     > .refset-tool-refset-details-title-name
     > .set-of-buttons {
-    width: 156px;
+    width: 157px;
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
@@ -2186,8 +2186,11 @@ button.refset-tool-table-action-icon {
 }
 
 .add-remove-concept-hierarchy-modal-size > .modal-dialog {
-    width: 1000px;
-    max-width: 1240px;
+    width: 500px;
+    max-width: 500px;
+    .modal-content {
+        height: 300px;
+    }
 }
 
 .add-remove-concept-hierarchy-modal-Section-container {
