@@ -254,15 +254,17 @@
                             </div>
                         </as-split-area>
                         <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="25">
-                            <div class="refset-tool-concept-details-column">
-                                <!-- <div
+                            <div class="refset-tool-concept-details-column"
+                            *ngIf="isConceptDetailsLoading || conceptSelected"
+                            >
+                                <div
                                     class="row"
                                     *ngIf="isConceptDetailsLoading"
                                 >
                                     <div>Loading...</div>
-                                </div> -->
+                                </div>
 
-                                <div *ngIf="showResults && conceptSelected">
+                                <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
                                     <div
                                         class="
                                             row
