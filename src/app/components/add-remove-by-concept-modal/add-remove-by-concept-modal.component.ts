@@ -44,6 +44,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     internalRefsetId: string;
     selectedConcept: any;
     showLoadingSpinner = false;
+    isConceptDetailsLoading = false;
 
     constructor(
         private readonly modalService: NgbModal,
@@ -79,6 +80,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             .subscribe(
                 (data) => {
                     console.log(data);
+                    this.isConceptDetailsLoading = false;
                     this.sendReloadGridTrigger(true);
                     this.onTableSearchChange();
                     this.loadConceptDetail(this.selectedConcept.code.toString());
@@ -98,6 +100,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             .subscribe(
                 (data) => {
                     console.log(data);
+                    this.isConceptDetailsLoading = false;
                     this.sendReloadGridTrigger(true);
                     this.onTableSearchChange();
                     this.loadConceptDetail(this.selectedConcept.code.toString());
@@ -124,18 +127,21 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.conceptSelected = true;
         this.selectedConcept = concept;
         console.log(concept);
+        this.isConceptDetailsLoading = true;
         this.loadConceptDetailParents(concept.code.toString());
         this.loadConceptDetail(concept.code.toString());
     }
 
     loadConceptDetail(concept) {
         this.conceptDetail = null;
+        this.isConceptDetailsLoading = true;
 
         this.refsetService
             .getMembersDetails(concept, {
                 refsetInternalId: this.internalRefsetId,
             })
             .subscribe((results) => {
+                this.isConceptDetailsLoading = false;
                 this.conceptDetail = results;
                 this.conceptDescriptions =
                 this.conceptDetail.descriptions.filter(function (
