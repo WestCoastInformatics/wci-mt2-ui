@@ -6,6 +6,8 @@
     <img src="assets/mag-icon.svg" alt="magnifying glass icon" />
 </button>
 
+<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+
 <ng-template #addRemoveConceptHierarchyModal let-modal>
     <div class="modal-header add-remove-concept-hierarchy-modal-header">
         <h4
@@ -141,8 +143,8 @@
                                                     *matCellDef="let concept"
                                                 >
                                                     <img
-                                                        *ngIf="
-                                                            !concept.memberOfRefset
+                                                        [hidden]="
+                                                            concept.memberOfRefset
                                                         "
                                                         src="assets/add-symbol-icon.svg"
                                                         (click)="
@@ -153,8 +155,8 @@
                                                         alt="Add symbol shown when you're able to add a concept"
                                                     />
                                                     <img
-                                                        *ngIf="
-                                                            concept.memberOfRefset
+                                                        [hidden]="
+                                                            !concept.memberOfRefset
                                                         "
                                                         src="assets/subtract-symbol-icon.svg"
                                                         (click)="
@@ -325,8 +327,8 @@
                                                 "
                                             >
                                                 <img
-                                                    *ngIf="
-                                                        !parent?.memberOfRefset
+                                                    [hidden]="
+                                                        parent?.memberOfRefset
                                                     "
                                                     src="assets/add-symbol-icon.svg"
                                                     (click)="addConcept(parent)"
@@ -338,8 +340,8 @@
                                                     alt="Add symbol shown when you're able to add a concept"
                                                 />
                                                 <img
-                                                    *ngIf="
-                                                        parent?.memberOfRefset
+                                                    [hidden]="
+                                                        !parent?.memberOfRefset
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
                                                     (click)="
@@ -427,8 +429,8 @@
                                                             "
                                                         >
                                                             <img
-                                                                *ngIf="
-                                                                    !conceptDetail?.memberOfRefset
+                                                                [hidden]="
+                                                                    conceptDetail?.memberOfRefset
                                                                 "
                                                                 src="assets/add-symbol-icon.svg"
                                                                 (click)="
@@ -446,8 +448,8 @@
                                                                 alt="Add symbol shown when you're able to add a concept"
                                                             />
                                                             <img
-                                                                *ngIf="
-                                                                    conceptDetail?.memberOfRefset
+                                                                [hidden]="
+                                                                    !conceptDetail?.memberOfRefset
                                                                 "
                                                                 src="assets/subtract-symbol-icon.svg"
                                                                 (click)="
@@ -650,6 +652,9 @@
                                                     taxonomyManualStateRefresh
                                                 "
                                                 hasMultipleRootNodes="false"
+                                                (reloadGrid)="sendReloadGridTrigger(true)"
+                                                (tableChange)="onTableSearchChange()"
+                                                (conceptDetail)="loadConceptDetail($event)"
                                             ></app-taxonomy-tree>
                                         </div>
                                     </div>

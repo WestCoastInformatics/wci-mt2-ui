@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +15,6 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 export class AddRemoveByConceptModalComponent implements OnInit {
     searchInput: string;
     searchResults = [];
-    id: string;
     displayedColumns: string[] = ['memberOfRefset', 'name', 'description'];
     dataSource = [];
     color: ThemePalette = 'primary';
@@ -38,34 +37,23 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     editMode = true;
     showResults = false;
     conceptSelected: boolean;
+    @Output()
+    reloadGrid = new EventEmitter<boolean>();
+
+    @Input()
+    internalRefsetId: string;
+    selectedConcept: any;
+    showLoadingSpinner = false;
 
     constructor(
         private readonly modalService: NgbModal,
-        private refsetService: RefsetService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private readonly changeDetection: ChangeDetectorRef
+        private refsetService: RefsetService
     ) {}
 
     ngOnInit(): void {
-        this.id = this.route.snapshot.paramMap.get('refsetId');
-        this.refsetService.getRefset(this.id).subscribe((results) => {
+        this.refsetService.getRefset(this.internalRefsetId).subscribe((results) => {
             this.refsetData = results;
         });
-        const restParams: any = {
-            sortModel: '',
-            limit: 500,
-            offset: 0,
-            displayType: 'list',
-        };
-        // this.refsetService
-        //     .getMembersList(this.id, restParams)
-        //     .subscribe((results) => {
-        //         console.log(results.items);
-
-        //         this.dataSource = results.items;
-        //         this.initialResults = this.dataSource;
-        //     });
     }
 
     displayActiveConcepts($event: any): void {
@@ -80,30 +68,44 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         }
     }
 
+    sendReloadGridTrigger(value: boolean): void {
+        this.reloadGrid.emit(value);
+    }
+
     addConcept(concept): void {
+        this.showLoadingSpinner = true;
         this.refsetService
-            .addRefsetMembers(this.id, 'list', concept.code.toString())
+            .addRefsetMembers(this.internalRefsetId, 'list', concept.code.toString())
             .subscribe(
                 (data) => {
                     console.log(data);
-                    console.log(concept);
+                    this.sendReloadGridTrigger(true);
+                    this.onTableSearchChange();
+                    this.loadConceptDetail(this.selectedConcept.code.toString());
+                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.showLoadingSpinner = false;
                 }
             );
     }
 
     removeConcept(concept): void {
+        this.showLoadingSpinner = true;
         this.refsetService
-            .removeRefsetMembers(this.id, 'list', concept.code.toString())
+            .removeRefsetMembers(this.internalRefsetId, 'list', concept.code.toString())
             .subscribe(
                 (data) => {
                     console.log(data);
-                    console.log(concept);
+                    this.sendReloadGridTrigger(true);
+                    this.onTableSearchChange();
+                    this.loadConceptDetail(this.selectedConcept.code.toString());
+                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.showLoadingSpinner = false;
                 }
             );
     }
@@ -120,6 +122,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     selectConcept(concept: any): void {
         this.conceptSelected = true;
+        this.selectedConcept = concept;
         console.log(concept);
         this.loadConceptDetailParents(concept.code.toString());
         this.loadConceptDetail(concept.code.toString());
@@ -130,14 +133,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.refsetService
             .getMembersDetails(concept, {
-                refsetInternalId: this.id,
+                refsetInternalId: this.internalRefsetId,
             })
             .subscribe((results) => {
                 this.conceptDetail = results;
                 this.conceptDescriptions =
-                    this.conceptDetail.descriptions.filter(function (
+                this.conceptDetail.descriptions.filter(function (
                         description
                     ) {
+                        console.log(description)
                         return description != null;
                     });
 
@@ -162,10 +166,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         // load the parents
         this.refsetService
-            .getMembersList(this.id, restParams)
+            .getMembersList(this.internalRefsetId, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
-                console.log(this.conceptDetailParents);
             });
     }
 
@@ -176,9 +179,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     @Debounce()
     onTableSearchChange() {
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            console.log(this.searchInput);
+            this.showLoadingSpinner = true;
 
-          this.refsetService.getConceptSearch(this.id, `limit=500&offset=0&query=${this.searchInput}`).subscribe(results => {
+          this.refsetService.getConceptSearch(this.internalRefsetId, `limit=500&offset=0&query=${this.searchInput}`).subscribe(results => {
             console.log(results.items);
 
             this.dataSource = results.items;
@@ -189,12 +192,14 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             } else {
                 this.showResults = false;
             }
+            this.showLoadingSpinner = false;
           },
           error => {
               this.searchResults = [];
               this.showResults = false;
               console.log('errored out');
               console.log(this.searchInput);
+              this.showLoadingSpinner = false;
           });
         }
     }
