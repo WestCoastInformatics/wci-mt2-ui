@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
@@ -114,9 +113,34 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     openAddRemoveModal(addRemoveConceptHierarchyModal: NgbModal) {
+        this.refreshModal();
         this.modalService.open(addRemoveConceptHierarchyModal, {
-            windowClass: 'add-remove-concept-hierarchy-modal-size'
+            windowClass: 'add-remove-concept-hierarchy-modal-size',
+            animation: true,
+            beforeDismiss: () => {
+                this.refreshModal();
+                return true;
+            }
         });
+    }
+
+    changeModalSize(): void {
+        const modalDialog = <HTMLElement> document.getElementsByClassName('modal-dialog')[0];
+        if (modalDialog) {
+            modalDialog.style.width = '1000px';
+            modalDialog.style.maxWidth = '1240px';
+        }
+
+        const modalContent = <HTMLElement> document.getElementsByClassName('modal-content')[0];
+        if (modalContent) {
+            modalContent.style.height = '100%';
+        }
+    }
+
+    refreshModal(): void {
+        this.clearSearch();
+        this.onTableSearchChange();
+        this.conceptSelected = false;
     }
 
     clearSearch(): void {
@@ -194,6 +218,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             this.initialResults = this.dataSource;
             // tslint:disable-next-line: no-unused-expression
             if (results.items.length) {
+                this.changeModalSize();
                 this.showResults = true;
             } else {
                 this.showResults = false;

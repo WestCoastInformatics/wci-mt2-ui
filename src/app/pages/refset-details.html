@@ -888,6 +888,8 @@
                                         [editMode]="editMode"
                                         [options]="taxonomyOptions"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
+                                        (reloadGrid)="loadTaxonomyRoot()"
+                                        (conceptDetail)="loadConceptDetail($event)"
                                     ></app-taxonomy-tree>
                                 </div>
                             </div>
