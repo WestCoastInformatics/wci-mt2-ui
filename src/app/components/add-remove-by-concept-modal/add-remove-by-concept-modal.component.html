@@ -3,7 +3,12 @@
     (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)"
     class="add-remove-concept-hierarchy-modal-button"
 >
-    <img src="assets/mag-icon.svg" alt="magnifying glass icon" />
+    <img
+        src="assets/mag-icon.svg"
+        alt="magnifying glass icon"
+        title="Search for concepts"
+        aria-label="Search for concepts"
+    />
 </button>
 
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
@@ -32,29 +37,15 @@
         "
     >
         <div class="modal-body add-remove-concept-hierarchy-modal-body">
-            <!-- <mat-form-field
-                id="addRemoveByConceptHierarchySearchInputField"
-                class="add-remove-concept-hierarchy-modal-input-field"
-            >
-                <mat-label>Search by ID or Keyword</mat-label>
-                <input
-                    matInput
-                    #addRemoveByConceptHierarchySearchInput
-                    id="addRemoveByConceptHierarchySearchInput"
-                    [(ngModel)]="searchInput"
-                />
-            </mat-form-field>
-            <span
-                class="add-remove-concept-hierarchy-modal-cancel-search"
-                (click)="clearSearch()"
-                >&#10005;</span
-            > -->
             <div class="row">
                 <div
                     class="add-remove-concept-hierarchy-modal-Section-container"
                 >
                     <as-split direction="horizontal" gutterSize="4">
-                        <as-split-area [size]="showResults && conceptSelected ? 50 : 100" [minSize]="25">
+                        <as-split-area
+                            [size]="showResults && conceptSelected ? 50 : 100"
+                            [minSize]="25"
+                        >
                             <div class="refset-tool-details-members-column">
                                 <!-- Search Bar -->
                                 <div
@@ -72,6 +63,8 @@
                                             >Search by ID or Keyword</mat-label
                                         >
                                         <input
+                                            title="Search by ID or Keyword"
+                                            aria-label="Search by ID or Keyword"
                                             matInput
                                             #addRemoveByConceptHierarchySearchInput
                                             id="addRemoveByConceptHierarchySearchInput"
@@ -89,7 +82,7 @@
                                         >&#10005;</span
                                     >
                                     <section
-                                    *ngIf="showResults"
+                                        *ngIf="showResults"
                                         class="
                                             add-remove-concept-hierarchy-modal-active-slider-section
                                         "
@@ -98,6 +91,8 @@
                                             class="
                                                 add-remove-concept-hierarchy-modal-results-title
                                             "
+                                            title="Search results"
+                                            aria-label="Search results"
                                         >
                                             Search Results
                                         </div>
@@ -107,6 +102,8 @@
                                             "
                                             [color]="color"
                                             [checked]="checked"
+                                            title="Display Active Concepts Only"
+                                            aria-label="Display Active Concepts Only"
                                             (change)="
                                                 displayActiveConcepts($event)
                                             "
@@ -210,6 +207,12 @@
                                                         />
                                                         <div
                                                             class="concept-name"
+                                                            title="{{
+                                                                concept.name
+                                                            }}"
+                                                            aria-label="{{
+                                                                concept.name
+                                                            }}"
                                                         >
                                                             {{ concept.name }}
                                                         </div>
@@ -230,6 +233,8 @@
                                                     (click)="
                                                         selectConcept(concept)
                                                     "
+                                                    title="{{concept?.descriptions[0]?.term}}"
+                                                    aria-label="{{concept?.descriptions[0]?.term}}"
                                                 >
                                                     {{
                                                         concept?.descriptions[0]
@@ -253,9 +258,15 @@
                                 </div>
                             </div>
                         </as-split-area>
-                        <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="25">
-                            <div class="refset-tool-concept-details-column"
-                            *ngIf="isConceptDetailsLoading || conceptSelected"
+                        <as-split-area
+                            [size]="showResults && conceptSelected ? 50 : 0"
+                            [minSize]="25"
+                        >
+                            <div
+                                class="refset-tool-concept-details-column"
+                                *ngIf="
+                                    isConceptDetailsLoading || conceptSelected
+                                "
                             >
                                 <div
                                     class="row"
@@ -264,7 +275,13 @@
                                     <div>Loading...</div>
                                 </div>
 
-                                <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
+                                <div
+                                    *ngIf="
+                                        showResults &&
+                                        conceptSelected &&
+                                        !isConceptDetailsLoading
+                                    "
+                                >
                                     <div
                                         class="
                                             row
@@ -654,9 +671,15 @@
                                                     taxonomyManualStateRefresh
                                                 "
                                                 hasMultipleRootNodes="false"
-                                                (reloadGrid)="sendReloadGridTrigger(true)"
-                                                (tableChange)="onTableSearchChange()"
-                                                (conceptDetail)="loadConceptDetail($event)"
+                                                (reloadGrid)="
+                                                    sendReloadGridTrigger(true)
+                                                "
+                                                (tableChange)="
+                                                    onTableSearchChange()
+                                                "
+                                                (conceptDetail)="
+                                                    loadConceptDetail($event)
+                                                "
                                             ></app-taxonomy-tree>
                                         </div>
                                     </div>

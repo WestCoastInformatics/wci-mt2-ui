@@ -188,7 +188,7 @@
         <!-- Metadata Section -->
         <div class="metadata-container" *ngIf="editMode">
             <div class="container-fluid">
-                <div class="metadata-name">
+                <div class="metadata-name" title="{{refsetData?.name}}" aria-label="{{refsetData?.name}}">
                     {{refsetData?.name}}
                     <div class="set-of-buttons">
                         <button class="button-inactive">
@@ -200,16 +200,36 @@
                             />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/quote-icon.svg" alt="quote icon" />
+                            <img
+                                src="assets/quote-icon.svg"
+                                alt="quote icon"
+                                title="View Feedback"
+                                aria-label="View Feedback"
+                            />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/notes-icon.svg" alt="notes icon" />
+                            <img
+                                src="assets/notes-icon.svg"
+                                alt="notes icon"
+                                title="Edit metadata"
+                                aria-label="Edit metadata"
+                            />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/pages-icon.svg" alt="pages icon" />
+                            <img
+                                src="assets/pages-icon.svg"
+                                alt="pages icon"
+                                title="Clone refset"
+                                aria-label="Clone refset"
+                            />
                         </button>
                         <button class="button-inactive">
-                            <img src="assets/trash-icon.svg" alt="trash icon" />
+                            <img
+                                src="assets/trash-icon.svg"
+                                alt="trash icon"
+                                title="Delete refset"
+                                aria-label="Delete refset"
+                            />
                         </button>
                     </div>
                 </div>
@@ -238,19 +258,33 @@
                     >
                         <tbody>
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Refset ID:"
+                                    aria-label="Refset ID:"
+                                >
                                     Refset ID:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{refsetData?.refsetId}}"
+                                >
                                     {{refsetData?.refsetId}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Edition/Extension:"
+                                    aria-label="Edition/Extension:"
+                                >
                                     Edition/Extension:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{refsetData?.editionName}}"
+                                >
                                     {{refsetData?.editionName}}
                                     <img
                                         class="refset-tool-edition-flag"
@@ -264,16 +298,27 @@
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Status:"
+                                    aria-label="Status:"
+                                >
                                     Status:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{capitalizeFirstLetterOfString(refsetData?.status)}}"
+                                >
                                     {{capitalizeFirstLetterOfString(refsetData?.status)}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Type:"
+                                    aria-label="Type:"
+                                >
                                     Type:
                                 </td>
                                 <td
@@ -281,22 +326,34 @@
                                         refset-tool-refset-metadata-value
                                         capitalize-metadata-value
                                     "
+                                    title="{{capitalizeFirstLetterOfString(refsetData?.type)}}"
                                 >
                                     {{capitalizeFirstLetterOfString(refsetData?.type)}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    aria-label="Tags:"
+                                    title="Tags:"
+                                >
                                     Tags:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{refsetData?.tags?.join('; ')}}"
+                                >
                                     {{refsetData?.tags?.join('; ')}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    aria-label="Narrative:"
+                                    title="Narrative:"
+                                >
                                     Narrative:
                                 </td>
                                 <td
@@ -360,19 +417,33 @@
                     >
                         <tbody>
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Version Date:"
+                                    aria-label="Version Date:"
+                                >
                                     Version Date:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{refsetData?.versionDate}}"
+                                >
                                     {{refsetData?.versionDate}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Owner/Organization:"
+                                    aria-label="Owner/Organization:"
+                                >
                                     Owner/Organization:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{refsetData?.organizationName}}"
+                                >
                                     {{refsetData?.organizationName}}
                                     <img
                                         class="refset-tool-edition-flag"
@@ -386,7 +457,11 @@
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Version Status:"
+                                    aria-label="Version Status:"
+                                >
                                     Version Status:
                                 </td>
                                 <td
@@ -394,22 +469,34 @@
                                         refset-tool-refset-metadata-value
                                         capitalize-metadata-value
                                     "
+                                    title="{{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}"
                                 >
                                     {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Direct URL/URI:"
+                                    aria-label="Direct URL/URI:"
+                                >
                                     Direct URL/URI:
                                 </td>
-                                <td class="refset-tool-refset-metadata-value">
+                                <td
+                                    class="refset-tool-refset-metadata-value"
+                                    title="{{refsetData?.url}}"
+                                >
                                     {{refsetData?.url}}
                                 </td>
                             </tr>
 
                             <tr>
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Version Notes:"
+                                    aria-label="Version Notes:"
+                                >
                                     Version Notes:
                                 </td>
                                 <td
@@ -432,7 +519,11 @@
                             </tr>
 
                             <tr *ngIf="refsetData?.definition">
-                                <td class="refset-tool-refset-metadata-label">
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Definition:"
+                                    aria-label="Definition:"
+                                >
                                     Definition:
                                 </td>
                                 <td class="refset-tool-refset-metadata-value">
@@ -524,7 +615,12 @@
                     #detailsTableSearchEclButton
                     class="button-inactive"
                 >
-                    <img src="assets/wrench-icon.svg" alt="wrench icon" />
+                    <img
+                        src="assets/wrench-icon.svg"
+                        alt="wrench icon"
+                        title="ECL builder"
+                        aria-label="ECL Builder"
+                    />
                 </button>
             </div>
         </div>
@@ -608,6 +704,8 @@
                                                     id="detailsTableSearchInput"
                                                     [(ngModel)]="tableSearchInput"
                                                     (input)="onTableSearchChange()"
+                                                    title="Search (Type at least 3 characters. Example: shou fra)"
+                                                    aria-label="Search (Type at least 3 characters. Example: shou fra)"
                                                 />
                                             </mat-form-field>
                                             <span
@@ -654,6 +752,8 @@
                                                     id="detailsTaxonomySearchInput"
                                                     [(ngModel)]="taxonomySearchInput"
                                                     (input)="onTaxonomySearchChange()"
+                                                    title="Search (Type at least 3 characters. Example: shou fra)"
+                                                    aria-label="Search (Type at least 3 characters. Example: shou fra)"
                                                 />
                                             </mat-form-field>
                                             <mat-form-field
@@ -709,11 +809,16 @@
                                                 (change)="onChangeMembersListMode()"
                                                 [(ngModel)]="selectedMembersListMode"
                                             >
-                                                <mat-button-toggle value="table"
+                                                <mat-button-toggle
+                                                    value="table"
+                                                    title="Table"
+                                                    aria-label="Table"
                                                     >Table</mat-button-toggle
                                                 >
                                                 <mat-button-toggle
                                                     value="taxonomy"
+                                                    title="Taxonomy"
+                                                    aria-label="Taxonomy"
                                                     [disabled]="!showTaxonomySearchTable"
                                                     >{{taxonomyButtonLabel}}</mat-button-toggle
                                                 >
@@ -1039,10 +1144,14 @@
                                             >
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
+                                                    title="{{parent.fsn}}"
+                                                    aria-label="{{parent.fsn}}"
                                                     >{{parent.fsn}}</span
                                                 >
                                                 <span
                                                     *ngIf="!this.taxonomyOptions.useFsn"
+                                                    title="{{parent.name}}"
+                                                    aria-label="{{parent.name}}"
                                                     >{{parent.name}}</span
                                                 >
                                             </div>
@@ -1128,6 +1237,8 @@
                                                                 col
                                                                 refset-tool-concept-details-concept-name
                                                             "
+                                                            title="{{conceptDescriptions[0].term}}"
+                                                            aria-label="{{conceptDescriptions[0].term}}"
                                                         >
                                                             {{conceptDescriptions[0].term}}
                                                         </div>
@@ -1177,6 +1288,8 @@
                                                                 col
                                                                 refset-tool-concept-details-concept-id-text
                                                             "
+                                                            title="{{conceptDetail.code}}"
+                                                            aria-label="{{conceptDetail.code}}"
                                                         >
                                                             {{conceptDetail.code}}
                                                         </div>
@@ -1215,6 +1328,8 @@
                                                                 col-3
                                                                 refset-tool-concept-details-concept-description-language
                                                             "
+                                                            title="{{description.languageName}}"
+                                                            aria-label="{{description.languageName}}"
                                                         >
                                                             {{description.languageName}}
                                                         </div>
@@ -1224,6 +1339,8 @@
                                                                 col
                                                                 refset-tool-concept-details-concept-description-text
                                                             "
+                                                            title="{{description.term}}"
+                                                            aria-label="{{description.term}}"
                                                         >
                                                             {{description.term}}
                                                         </div>
