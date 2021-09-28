@@ -2051,7 +2051,7 @@ button.refset-tool-table-action-icon {
     > .container-fluid
     > .metadata-name
     > .set-of-buttons {
-    width: 195px;
+    width: 234px;
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
@@ -2069,16 +2069,45 @@ button.refset-tool-table-action-icon {
     > .metadata-container
     > .container-fluid
     > .metadata-name
-    > .set-of-buttons
-    > .button-inactive {
-    width: 39px;
+    > .set-of-buttons {
+        .button-inactive {
+            width: 39px;
+            box-sizing: border-box;
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgba(0, 164, 228, 1);
+            background-color: rgba(255, 255, 255, 1);
+            padding-left: 3px;
+        }
+    }
+
+.refset-tool-refset-details-title-name
+    > .set-of-buttons-non-edit-mode {
+    width: 117px;
+    height: 33px;
+    background-color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
     border-color: rgba(0, 164, 228, 1);
-    background-color: rgba(255, 255, 255, 1);
-    padding-left: 3px;
+    border-radius: 3px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-around;
 }
+
+.refset-tool-refset-details-title-name
+    > .set-of-buttons-non-edit-mode {
+        .button-inactive {
+            width: 39px;
+            box-sizing: border-box;
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgba(0, 164, 228, 1);
+            background-color: rgba(255, 255, 255, 1);
+            padding-left: 3px;
+        }
+    }
 
 #refsetDetailsPage
     > .refset-title-container
@@ -2366,4 +2395,12 @@ button.refset-tool-table-action-icon {
 
 .dropdown-content-show {
     display: block;
+}
+
+.detail-top-link {
+    padding-left: 15px;
+    color: rgba(0, 164, 228, 1);
+    text-decoration: underline;
+    font-size: 12px;
+    cursor: pointer;
 }

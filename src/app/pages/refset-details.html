@@ -114,54 +114,39 @@
         <!-- Header Bar -->
         <div class="row refset-title sticky-top" *ngIf="!editMode">
             <!-- Section Title -->
-            <div class="col-md-auto page-title">Reference Set Details</div>
+            <!-- <div class="col-md-auto page-title">Reference Set Details</div> -->
             <div class="col refset-tool-refset-details-title-name">
                 {{refsetData?.name}}
-                <app-refset-download
-                    *ngIf="refsetData?.downloadable"
-                    [refset]="refsetData"
-                    buttonClasses="refset-tool-title-download"
-                ></app-refset-download>
-                <button
-                    id="title-feedback"
-                    mat-icon-button=""
-                    aria-hidden="false"
-                    aria-label="Open Feedback"
-                    (click)="openRefsetFeedback()"
-                    title="Open Feedback"
-                    class="
-                        mat-focus-indicator
-                        refset-tool-table-action-icon
-                        mat-icon-button mat-button-base
-                        ng-star-inserted
-                    "
-                >
-                    <span class="mat-button-wrapper">
-                        <mat-icon
-                            role="img"
-                            class="
-                                mat-icon
-                                notranslate
-                                material-icons
-                                mat-icon-no-color
-                            "
-                            aria-hidden="true"
-                            data-mat-icon-type="font"
-                            >comment-processing-outline
-                        </mat-icon>
-                    </span>
-                    <span
-                        matripple=""
-                        class="
-                            mat-ripple mat-button-ripple mat-button-ripple-round
-                        "
-                        ng-reflect-disabled="false"
-                        ng-reflect-centered="true"
-                        ng-reflect-trigger="[object HTMLButtonElement]"
+                <div class="set-of-buttons-non-edit-mode">
+                    <app-refset-download
+                        [refset]="refsetData"
+                    ></app-refset-download>
+                    <button class="button-inactive">
+                        <img
+                            src="assets/quote-icon.svg"
+                            alt="quote icon"
+                            title="View Feedback"
+                            aria-label="View Feedback"
+                            (click)="openRefsetFeedback()"
+                        />
+                    </button>
+                    <button class="button-inactive">
+                        <img
+                            src="assets/compare-refset-icon.svg"
+                            alt="notes icon"
+                            title="Edit metadata"
+                            aria-label="Edit metadata"
+                        />
+                    </button>
+                </div>
+                <div>
+                    <a class="detail-top-link" (click)="openArtifacts()"
+                        >Artifacts</a
                     >
-                    </span>
-                    <span class="mat-button-focus-overlay"> </span>
-                </button>
+                    <a class="detail-top-link" (click)="openAuditTrail()"
+                        >Audit Trail</a
+                    >
+                </div>
             </div>
 
             <div class="current-version-label">Current Version:</div>
@@ -188,23 +173,31 @@
         <!-- Metadata Section -->
         <div class="metadata-container" *ngIf="editMode">
             <div class="container-fluid">
-                <div class="metadata-name" title="{{refsetData?.name}}" aria-label="{{refsetData?.name}}">
+                <div
+                    class="metadata-name"
+                    title="{{refsetData?.name}}"
+                    aria-label="{{refsetData?.name}}"
+                >
                     {{refsetData?.name}}
                     <div class="set-of-buttons">
-                        <button class="button-inactive">
-                            <img
-                                src="assets/download-icon.svg"
-                                alt="download icon"
-                                title="download button"
-                                aria-label="download button"
-                            />
-                        </button>
+                        <app-refset-download
+                            [refset]="refsetData"
+                        ></app-refset-download>
                         <button class="button-inactive">
                             <img
                                 src="assets/quote-icon.svg"
                                 alt="quote icon"
                                 title="View Feedback"
                                 aria-label="View Feedback"
+                                (click)="openRefsetFeedback()"
+                            />
+                        </button>
+                        <button class="button-inactive">
+                            <img
+                                src="assets/compare-refset-icon.svg"
+                                alt="notes icon"
+                                title="Edit metadata"
+                                aria-label="Edit metadata"
                             />
                         </button>
                         <button class="button-inactive">
@@ -231,6 +224,14 @@
                                 aria-label="Delete refset"
                             />
                         </button>
+                    </div>
+                    <div>
+                        <a class="detail-top-link" (click)="openArtifacts()"
+                            >Artifacts</a
+                        >
+                        <a class="detail-top-link" (click)="openAuditTrail()"
+                            >Audit Trail</a
+                        >
                     </div>
                 </div>
                 <button
@@ -391,23 +392,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <!-- Action Buttons -->
-                    <div class="refset-tool-details-metadata-footer">
-                        <button
-                            mat-raised-button
-                            color="primary"
-                            (click)="openArtifacts()"
-                            aria-hidden="false"
-                            #detailsArtifactButton
-                            class="refset-tool-action-button"
-                            aria-label="Open Artifacts"
-                            title="Open Artifacts"
-                            ng-reflect-color="primary"
-                        >
-                            Artifacts
-                        </button>
-                    </div>
                 </div>
 
                 <!-- Versioned Metadata Section -->
@@ -561,23 +545,6 @@
                     }"
                         ></editor>
                     </ng-template>
-
-                    <!-- Action Buttons -->
-                    <div class="refset-tool-details-metadata-footer">
-                        <button
-                            mat-raised-button
-                            color="primary"
-                            (click)="openAuditTrail()"
-                            aria-hidden="false"
-                            #detailsAuditTrailButton
-                            class="refset-tool-action-button"
-                            aria-label="Open Audit Trail"
-                            title="Open Audit Trail"
-                            ng-reflect-color="primary"
-                        >
-                            Audit Trail
-                        </button>
-                    </div>
                 </div>
             </div>
 
