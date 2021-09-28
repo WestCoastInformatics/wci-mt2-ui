@@ -11,7 +11,8 @@
         [routerLinkActive]="['active']"
     >
         <div class="my-projects-icon">
-            <img src="assets/my-projects-icon.svg" alt="my projects icon" />
+            <img src="assets/my-projects-icon.svg" alt="my projects icon" title="My projects"
+            aria-label="My projects" />
         </div>
         <div class="my-projects-text" *ngIf="!toggleService.isToggled">
             Reference Sets
@@ -23,7 +24,8 @@
         [routerLinkActive]="['active']"
     >
         <!-- <div class="my-organizations-icon">
-            <img src="assets/my-organizations-icon.svg" alt="my organizations icon" />
+            <img src="assets/my-organizations-icon.svg" alt="my organizations icon" title="My organizations"
+        aria-label="My organizations" />
           
         </div>
         <div class="my-organizations-text" *ngIf="!toggleService.isToggled">
@@ -46,10 +48,12 @@
     <div class="fill-space-2"></div>
     <div class="toggle-sidebar" (click)="toggleService.toggleSidebar()">
         <div class="my-toggle-icon" *ngIf="!toggleService.isToggled">
-            <img src="assets/my-toggle-icon.svg" alt="my toggle icon" />
+            <img src="assets/my-toggle-icon.svg" alt="my toggle icon" title="Toggle sidebar"
+            aria-label="Toggle sidebar" />
         </div>
         <div class="my-toggle-icon" *ngIf="toggleService.isToggled">
-            <img src="assets/my-toggle-icon-toggled.svg" alt="my toggle icon" />
+            <img src="assets/my-toggle-icon-toggled.svg" alt="my toggle icon" title="Toggled Sidebar"
+            aria-label="Toggled sidebar" />
         </div>
         <div class="my-toggle-text" *ngIf="!toggleService.isToggled">
             Toggle Sidebar

@@ -197,8 +197,9 @@ export class RefsetDetails {
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
-                    suppressMenu: true,
+                    suppressMenu: true
                 },
+                enableBrowserTooltips: true,
                 rowClassRules: {
                     refset_tool_grid_inactive_row: function (params) {
                         var inactivatedRow = false;
@@ -233,6 +234,7 @@ export class RefsetDetails {
                     cellRendererParams: {
                         template: this.taxonomyResultSection,
                     },
+                    tooltipField: 'name'
                 },
                 {
                     field: 'parents',
@@ -242,6 +244,7 @@ export class RefsetDetails {
                     valueGetter: this.taxonomyPathValueGetter.bind(this),
                     cellRenderer: 'templateRenderer',
                     cellRendererParams: { template: this.taxonomyPathSection },
+                    tooltipField: 'parents'
                 },
             ];
 
@@ -267,6 +270,7 @@ export class RefsetDetails {
                     floatingFilter: false,
                     filter: false,
                 },
+                enableBrowserTooltips: true,
                 rowClassRules: {
                     refset_tool_grid_inactive_row: function (params) {
                         var inactivatedRow = false;
@@ -742,6 +746,7 @@ export class RefsetDetails {
                                     cellRendererParams: {
                                         template: this.conceptCodeSection,
                                     },
+                                    tooltipField: 'code'
                                 },
                             ];
 
@@ -762,6 +767,7 @@ export class RefsetDetails {
                                     cellClass:
                                         'refset-tool-details-column-description',
                                     valueGetter: this.descriptionValueGetter,
+                                    tooltipField: i.toString()
                                 });
                             }
 
@@ -777,6 +783,7 @@ export class RefsetDetails {
                                             'refset-tool-details-column-modified-date',
                                         valueGetter:
                                             UiUtility.gridDateValueGetter,
+                                        tooltipField: 'memberEffectiveTime'
                                     },
                                     {
                                         field: 'active',
@@ -792,6 +799,7 @@ export class RefsetDetails {
                                         },
                                         filter: false,
                                         pinned: 'right',
+                                        tooltipField: 'active'
                                     },
                                 ]
                             );
@@ -1131,11 +1139,13 @@ export class RefsetDetails {
                         field: 'version',
                         headerName: 'Version',
                         cellClass: 'refset-tool-member-history-column-version',
+                        tooltipField: 'version'
                     },
                     {
                         field: 'change',
                         headerName: 'Change',
                         cellClass: 'refset-tool-member-history-column-change',
+                        tooltipField: 'change'
                     },
                 ];
 
@@ -1150,8 +1160,9 @@ export class RefsetDetails {
                         sortable: true,
                         filter: false,
                         floatingFilter: false,
-                        suppressMenu: true,
+                        suppressMenu: true
                     },
+                    enableBrowserTooltips: true,
                 };
 
                 const dialogId = 'memberHistoryDialog';
