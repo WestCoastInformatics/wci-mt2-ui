@@ -483,6 +483,14 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.isDisabled {
+    .mat-raised-button.mat-primary {
+        background-color: lightgrey !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        margin-bottom: 15px;
+    }
+}
 .wrapper-progressBar {
     width: 100%;
 }
@@ -825,7 +833,7 @@ button.refset-tool-table-action-icon {
     top: 2px;
 }
 .createNewRefsetDialog > .modal-dialog {
-    max-width: 700px;
+    max-width: 900px;
 }
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
@@ -1118,8 +1126,8 @@ button.refset-tool-table-action-icon {
 }
 
 .col.create-new-refset-field {
-    width: 300px;
-    max-width: 300px;
+    width: 700px;
+    max-width: 700px;
     mat-form-field {
         width: 100%;
     }
@@ -1133,8 +1141,8 @@ button.refset-tool-table-action-icon {
 }
 
 .col.create-new-refset-label {
-    width: 250px;
-    max-width: 250px;
+    width: 200px;
+    max-width: 200px;
 }
 
 // Temp Style
@@ -1818,6 +1826,14 @@ button.refset-tool-table-action-icon {
     padding-top: 0px;
 }
 
+.bold-if-member {
+    font-weight: 400;
+}
+
+.greyed-if-not-member {
+    color: darkgrey;
+}
+
 .create-new-refset-modal-body {
     background-color: rgba(245, 245, 246, 1);
     padding: 28px !important;
@@ -2070,20 +2086,19 @@ button.refset-tool-table-action-icon {
     > .container-fluid
     > .metadata-name
     > .set-of-buttons {
-        .button-inactive {
-            width: 39px;
-            box-sizing: border-box;
-            border-width: 1px;
-            border-style: solid;
-            border-color: rgba(0, 164, 228, 1);
-            background-color: rgba(255, 255, 255, 1);
-            padding-left: 3px;
-        }
+    .button-inactive {
+        width: 39px;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgba(0, 164, 228, 1);
+        background-color: rgba(255, 255, 255, 1);
+        padding-left: 3px;
     }
+}
 
-.refset-tool-refset-details-title-name
-    > .set-of-buttons-non-edit-mode {
-    width: 117px;
+.refset-tool-refset-details-title-name > .set-of-buttons-non-edit-mode {
+    width: 156px;
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
@@ -2094,20 +2109,22 @@ button.refset-tool-table-action-icon {
     margin-left: 20px;
     display: flex;
     justify-content: space-around;
+    .details-edit-refset-modal {
+        height: 31px;
+    }
 }
 
-.refset-tool-refset-details-title-name
-    > .set-of-buttons-non-edit-mode {
-        .button-inactive {
-            width: 39px;
-            box-sizing: border-box;
-            border-width: 1px;
-            border-style: solid;
-            border-color: rgba(0, 164, 228, 1);
-            background-color: rgba(255, 255, 255, 1);
-            padding-left: 3px;
-        }
+.refset-tool-refset-details-title-name > .set-of-buttons-non-edit-mode {
+    .button-inactive {
+        width: 39px;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgba(0, 164, 228, 1);
+        background-color: rgba(255, 255, 255, 1);
+        padding-left: 3px;
     }
+}
 
 #refsetDetailsPage
     > .refset-title-container
@@ -2403,4 +2420,26 @@ button.refset-tool-table-action-icon {
     text-decoration: underline;
     font-size: 12px;
     cursor: pointer;
+}
+
+.scroll-to-top {
+    z-index: 1;
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.show-scrollTop {
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+}
+
+.scroll-to-top-button {
+    border-radius: 50%;
+    height: 30px;
+    background-color: rgb(0, 169, 224);
+    width: 30px;
+    color: white;
 }

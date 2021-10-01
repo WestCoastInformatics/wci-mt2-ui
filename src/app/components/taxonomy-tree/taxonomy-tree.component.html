@@ -18,8 +18,9 @@
         (loadNodeChildren)="onLoadNodeChildren($event)"
     >
         <ng-template #treeNodeTemplate let-node let-index="index">
-            <img
-                [hidden]="node?.data.memberOfRefset && editMode"
+            <ng-container *ngIf="editMode">
+                <img
+                [hidden]="node?.data.memberOfRefset"
                 src="assets/add-symbol-icon.svg"
                 (click)="addConcept(node?.data)"
                 width="18px"
@@ -30,7 +31,7 @@
                 alt="Add symbol shown when you're able to add a concept"
             />
             <img
-                [hidden]="!node?.data.memberOfRefset && editMode"
+                [hidden]="!node?.data.memberOfRefset"
                 src="assets/subtract-symbol-icon.svg"
                 (click)="removeConcept(node?.data)"
                 width="18px"
@@ -40,6 +41,7 @@
                 class="subtract-symbol-icon"
                 alt="Subtract symbol shown when you're able to remove a concept"
             />
+            </ng-container>
             <img
                 *ngIf="node.data.defined"
                 title="Fully Defined"
@@ -55,6 +57,8 @@
             <span
                 id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}"
                 class="taxonomy-code-text"
+                [class.bold-if-member]="node?.data?.memberOfRefset && editMode"
+                [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
                 (click)="sendConceptDetailTrigger(node?.data)"
                 title="{{ getNodeText(node) }}"
                 aria-label="{{ getNodeText(node) }}"

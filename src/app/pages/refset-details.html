@@ -119,6 +119,7 @@
                 {{refsetData?.name}}
                 <div class="set-of-buttons-non-edit-mode">
                     <app-refset-download
+                        [isDetailPage]="true"
                         [refset]="refsetData"
                     ></app-refset-download>
                     <button class="button-inactive">
@@ -138,6 +139,12 @@
                             aria-label="Edit metadata"
                         />
                     </button>
+                    <create-new-refset
+                        [isDetailsPage]="true"
+                        [selectedProject]="selectedProject"
+                        [existingMetadataConcepts]="existingMetadataConcepts"
+                        [existingBranchVersions]="existingBranchVersions"
+                    ></create-new-refset>
                 </div>
                 <div>
                     <a class="detail-top-link" (click)="openArtifacts()"
@@ -181,6 +188,7 @@
                     {{refsetData?.name}}
                     <div class="set-of-buttons">
                         <app-refset-download
+                            [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
                         <button class="button-inactive">
@@ -301,22 +309,6 @@
                             <tr>
                                 <td
                                     class="refset-tool-refset-metadata-label"
-                                    title="Status:"
-                                    aria-label="Status:"
-                                >
-                                    Status:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{capitalizeFirstLetterOfString(refsetData?.status)}}"
-                                >
-                                    {{capitalizeFirstLetterOfString(refsetData?.status)}}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
                                     title="Type:"
                                     aria-label="Type:"
                                 >
@@ -357,37 +349,31 @@
                                 >
                                     Narrative:
                                 </td>
+                                <td class="refset-tool-refset-metadata-value">
+                                    <ng-container>
+                                        <readonly-text-modal
+                                            [shortText]="refsetData?.narrativeShortText"
+                                            [longText]="refsetData?.narrative"
+                                            [title]="'Narrative'"
+                                        ></readonly-text-modal>
+                                    </ng-container>
+                                    <span>...</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td
+                                    class="refset-tool-refset-metadata-label"
+                                    title="Refset Names:"
+                                    aria-label="Refset Names:"
+                                >
+                                    Refset Names:
+                                </td>
                                 <td
                                     class="refset-tool-refset-metadata-value"
-                                    (mouseenter)="setFullNarrativeText(true)"
-                                    (mouseleave)="setFullNarrativeText(false)"
+                                    title="{{capitalizeFirstLetterOfString(refsetData?.name)}}"
                                 >
-                                    <ng-container
-                                        *ngIf="showFullNarrativeText && !editMode"
-                                        >{{
-                                        removeHtmlTags(refsetData?.narrative)
-                                        }}</ng-container
-                                    >
-                                    <ng-container
-                                        *ngIf="!showFullNarrativeText && !editMode"
-                                        >{{
-                                        removeHtmlTags(refsetData?.narrativeShortText)
-                                        }}</ng-container
-                                    >
-                                    <ng-container
-                                        *ngIf="showFullNarrativeText && editMode"
-                                    >
-                                        <span
-                                            [innerHTML]="refsetData?.narrative"
-                                        ></span>
-                                    </ng-container>
-                                    <ng-container
-                                        *ngIf="!showFullNarrativeText && editMode"
-                                    >
-                                        <span
-                                            [innerHTML]="refsetData?.narrativeShortText"
-                                        ></span>
-                                    </ng-container>
+                                    {{capitalizeFirstLetterOfString(refsetData?.name)}}
                                 </td>
                             </tr>
                         </tbody>
@@ -483,21 +469,17 @@
                                 >
                                     Version Notes:
                                 </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    (mouseenter)="setFullNotesText(true)"
-                                    (mouseleave)="setFullNotesText(false)"
-                                    (click)="openRichTextEditor('versionNotes', 'version notes')"
-                                >
-                                    <ng-container *ngIf="showFullNotesText">
+                                <td class="refset-tool-refset-metadata-value">
+                                    <ng-container>
+                                        <readonly-text-modal
+                                            [shortText]="refsetData?.versionNotesShortText"
+                                            [longText]="refsetData?.versionNotes"
+                                            [title]="'Version Notes'"
+                                        ></readonly-text-modal>
                                         <span
-                                            [innerHTML]="refsetData?.versionNotes"
-                                        ></span>
-                                    </ng-container>
-                                    <ng-container *ngIf="!showFullNotesText">
-                                        <span
-                                            [innerHTML]="refsetData?.versionNotesShortText"
-                                        ></span>
+                                            (click)="openRichTextEditor('versionNotes', 'version notes')"
+                                            >...</span
+                                        >
                                     </ng-container>
                                 </td>
                             </tr>
@@ -564,6 +546,9 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
+            <span [hidden]="!numOfResults">
+                &nbsp;{{'(' + numOfResults + ')'}}</span
+            >
             <div class="set-of-buttons" *ngIf="editMode">
                 <import-from-file-modal
                     [internalRefsetId]="id"
@@ -594,10 +579,16 @@
 
         <!-- Member Concepts Section -->
         <div class="container-fluid" id="detailsMemberSection">
-            <div class="row">
+            <div
+                class="row"
+                [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'"
+            >
                 <div class="detailsMemberSection-container">
                     <as-split direction="horizontal" gutterSize="4">
-                        <as-split-area [size]="60" [minSize]="25">
+                        <as-split-area
+                            [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100"
+                            [minSize]="25"
+                        >
                             <div class="refset-tool-details-members-column">
                                 <!-- Search Bar -->
                                 <div class="container-fluid pr-0">
@@ -820,6 +811,7 @@
                                         [pageSizeOptions]="membersGridPaging.pageSizeOptions"
                                         [totalKnown]="membersGridPaging.totalKnown"
                                         [manualStateRefresh]="membersGridPaging.manualStateRefresh"
+                                        [numOfResults]="numOfResults"
                                     >
                                     </app-pagination>
 
@@ -932,6 +924,7 @@
                                             [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
                                             [totalKnown]="taxonomySearchGridPaging.totalKnown"
                                             [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
+                                            [numOfResults]="numOfResults"
                                         >
                                         </app-pagination>
 
@@ -958,6 +951,7 @@
                                         [refset]="refsetData"
                                         [rootNode]="membersTaxonomyRoot"
                                         [editMode]="editMode"
+                                        [selectedConcept]="selectedConcept"
                                         [options]="taxonomyOptions"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
                                         (reloadGrid)="loadTaxonomyRoot()"
@@ -967,7 +961,7 @@
                             </div>
                         </as-split-area>
                         <as-split-area
-                            [size]="40"
+                            [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0"
                             [minSize]="isConceptDetailsLoading || conceptDetail ? 25 : 0"
                         >
                             <div
@@ -1057,7 +1051,7 @@
                                             >
                                                 <img
                                                     [hidden]="
-                                                        parent?.memberOfRefset && editMode
+                                                        parent?.memberOfRefset || !editMode
                                                     "
                                                     src="assets/add-symbol-icon.svg"
                                                     (click)="addConcept(parent)"
@@ -1070,7 +1064,7 @@
                                                 />
                                                 <img
                                                     [hidden]="
-                                                        !parent?.memberOfRefset && editMode
+                                                        !parent?.memberOfRefset || !editMode
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
                                                     (click)="
@@ -1155,7 +1149,7 @@
                                                             "
                                                         >
                                                             <img
-                                                                [hidden]="conceptDetail?.memberOfRefset && editMode"
+                                                                [hidden]="conceptDetail?.memberOfRefset || !editMode"
                                                                 src="assets/add-symbol-icon-inverted.svg"
                                                                 (click)="addConcept(conceptDetail)"
                                                                 width="18px"
@@ -1168,7 +1162,7 @@
                                                                 alt="Add symbol shown when you're able to add a concept"
                                                             />
                                                             <img
-                                                                [hidden]="!conceptDetail?.memberOfRefset && editMode"
+                                                                [hidden]="!conceptDetail?.memberOfRefset || !editMode"
                                                                 src="assets/subtract-symbol-icon-inverted.svg"
                                                                 (click)="removeConcept(conceptDetail)"
                                                                 width="18px"
@@ -1181,13 +1175,13 @@
                                                                 alt="Subtract symbol shown when you're able to remove a concept"
                                                             />
                                                             <img
-                                                                [hidden]="!conceptDetail.defined && !editMode"
+                                                                [hidden]="!conceptDetail.defined || !editMode"
                                                                 title="Fully Defined"
                                                                 aria-label="Fully Defined"
                                                                 src="/assets/linedTaxonomyIcon.png"
                                                             />
                                                             <img
-                                                                *ngIf="!conceptDetail.defined && !editMode"
+                                                                *ngIf="!conceptDetail.defined || !editMode"
                                                                 title="Primitive"
                                                                 aria-label="Primitive"
                                                                 class="
@@ -1379,6 +1373,7 @@
                                                 treeId="childrenMembersTree"
                                                 [refset]="refsetData"
                                                 [rootNode]="conceptDetail"
+                                                [selectedConcept]="selectedConcept"
                                                 [options]="taxonomyOptions"
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode"
@@ -1400,9 +1395,7 @@
 <!-- Concept Code Templates -->
 <ng-template #conceptCodeSection let-params>
     <img
-        [hidden]="
-                params?.data?.memberOfRefset && editMode
-            "
+        [hidden]="params?.data?.memberOfRefset || !editMode"
         src="assets/add-symbol-icon.svg"
         (click)="addConcept(params?.data)"
         width="18px"
@@ -1413,9 +1406,7 @@
         alt="Add symbol shown when you're able to add a concept"
     />
     <img
-        [hidden]="
-                !params?.data?.memberOfRefset && editMode
-            "
+        [hidden]="!params?.data?.memberOfRefset || !editMode"
         src="assets/subtract-symbol-icon.svg"
         (click)="
                 removeConcept(params?.data)

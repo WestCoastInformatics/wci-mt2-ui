@@ -35,7 +35,7 @@ export class TaxonomyTreeComponent {
     @Input() options: TreeOptions = {};
     @Input() manualStateRefresh = false;
     @Input() hasMultipleRootNodes: boolean = false;
-
+    @Input() selectedConcept: any;
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
     showLoadingSpinner = false;
 

@@ -71,7 +71,7 @@
             class="container-fluid page-title"
             style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)"
         >
-            Reference Sets
+            Reference Sets <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span>
         </div>
         <div style="display: inline">
             <create-new-refset
@@ -82,11 +82,12 @@
         </div>
         <div style="display: inline; padding-left: 10px">
             <button
+                disabled
                 mat-raised-button
                 color="primary"
                 aria-hidden="false"
                 #createRefsetButton
-                class="refset-tool-action-button"
+                class="refset-tool-action-button isDisabled"
                 aria-label="Create New Refset"
                 title="Create New Refset"
                 ng-reflect-color="primary"
@@ -123,6 +124,7 @@
             [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
             [totalKnown]="refsetGridPaging.totalKnown"
             [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+            [numOfResults]="numOfResults"
         >
         </app-pagination>
 

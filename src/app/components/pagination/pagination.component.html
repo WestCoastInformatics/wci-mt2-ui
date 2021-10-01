@@ -41,7 +41,7 @@
     <div class="row">
 
         <span *ngFor="let sizeOption of pageSizeOptions">
-            <button mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''" (click)="setPageSize(sizeOption)">
+            <button [hidden]="(numOfResults < sizeOption) || (numOfResults < 25)" mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''" (click)="setPageSize(sizeOption)">
                 {{sizeOption}}
             </button>
         </span>

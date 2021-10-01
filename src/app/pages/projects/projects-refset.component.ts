@@ -59,6 +59,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     originalGridParams: any;
     existingMetadataConcepts: any;
     existingBranchVersions: any;
+    numOfResults: number;
 
     constructor(
         private router: Router,
@@ -118,7 +119,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 				'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
-                sortable: true,
+                sortable: false,
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
@@ -199,7 +200,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 console.log(this.selectedProject?.organization?.name)
 
                 this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
-                    console.log(results)
+                    console.log(results.total)
+                    this.numOfResults = results.total;
                     if (results.items.length == 0 && pageNumber > 1) {
 
                         this.refsetGridPaging.totalRows = (this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1));

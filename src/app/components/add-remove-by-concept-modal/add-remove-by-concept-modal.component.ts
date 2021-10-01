@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -18,7 +18,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     dataSource = [];
     color: ThemePalette = 'primary';
     checked = false;
-    showActiveConceptsOnly = false;
+    showActiveConceptsOnly = true;
     initialResults = [];
     conceptDetailParents: any;
     selectedTaxonomyLanguage: string =
@@ -47,7 +47,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     constructor(
         private readonly modalService: NgbModal,
-        private refsetService: RefsetService
+        private refsetService: RefsetService,
+        private changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -82,7 +83,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                     this.isConceptDetailsLoading = false;
                     this.sendReloadGridTrigger(true);
                     this.onTableSearchChange();
-                    this.loadConceptDetail(this.selectedConcept.code.toString());
+                    this.loadConceptDetail(this.selectedConcept?.code.toString());
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
@@ -95,14 +96,14 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     removeConcept(concept): void {
         this.showLoadingSpinner = true;
         this.refsetService
-            .removeRefsetMembers(this.internalRefsetId, 'list', concept.code.toString())
+            .removeRefsetMembers(this.internalRefsetId, 'list', concept?.code.toString())
             .subscribe(
                 (data) => {
                     console.log(data);
                     this.isConceptDetailsLoading = false;
                     this.sendReloadGridTrigger(true);
                     this.onTableSearchChange();
-                    this.loadConceptDetail(this.selectedConcept.code.toString());
+                    this.loadConceptDetail(this.selectedConcept?.code.toString());
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
@@ -120,7 +121,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             beforeDismiss: () => {
                 this.refreshModal();
                 return true;
-            }
+            },
+            backdrop : 'static',
+            keyboard : false
         });
     }
 
@@ -156,7 +159,10 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.loadConceptDetail(concept.code.toString());
     }
 
-    loadConceptDetail(concept) {
+    loadConceptDetail(concept, shouldChangeDetail = true) {
+        if (!shouldChangeDetail) {
+            return;
+        };
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
 
