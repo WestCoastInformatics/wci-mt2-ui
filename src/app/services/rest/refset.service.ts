@@ -38,6 +38,10 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}`, '');
     }
 
+    editRefsetMembers(refsetInternalId: string, params): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}`, params);
+    }
+
     removeRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}`, '');
     }
