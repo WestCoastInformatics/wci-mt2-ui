@@ -11,10 +11,11 @@
         [routerLinkActive]="['active']"
     >
         <div class="my-projects-icon">
-            <img src="assets/my-projects-icon.svg" alt="my projects icon" title="My projects"
-            aria-label="My projects" />
+            <img src="assets/my-projects-icon.svg" alt="my projects icon" title="Reference Sets"
+            aria-label="Reference Sets" />
         </div>
-        <div class="my-projects-text" *ngIf="!toggleService.isToggled">
+        <div class="my-projects-text" *ngIf="!toggleService.isToggled" title="Reference Sets"
+        aria-label="Reference Sets">
             Reference Sets
         </div>
     </div>
@@ -55,7 +56,8 @@
             <img src="assets/my-toggle-icon-toggled.svg" alt="my toggle icon" title="Toggled Sidebar"
             aria-label="Toggled sidebar" />
         </div>
-        <div class="my-toggle-text" *ngIf="!toggleService.isToggled">
+        <div class="my-toggle-text" *ngIf="!toggleService.isToggled" title="Toggle Sidebar"
+        aria-label="Toggled sidebar">
             Toggle Sidebar
         </div>
     </div>

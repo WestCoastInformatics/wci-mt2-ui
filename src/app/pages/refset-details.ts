@@ -138,6 +138,7 @@ export class RefsetDetails {
     taxonomyGridParams: any;
     showLoadingSpinner = false;
     selectedConcept: any;
+    editModeProperties: any;
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -289,6 +290,20 @@ export class RefsetDetails {
         this.refsetService.getRefset(this.id).subscribe((results) => {
             this.refsetId = results?.refsetId;
             this.refsetData = results;
+            if (this.editMode) {
+                this.editModeProperties = {
+                    projectName: this.refsetData['project']?.name,
+                    organizationName: this.refsetData['organization']?.name,
+                    editionName: this.refsetData['organization']?.edition?.name,
+                    metadataConcept: this.refsetData?.name,
+                    parentConcept: this.refsetData?.parentConceptId,
+                    narrative: this.refsetData?.narrative,
+                    tags: this.refsetData?.tags,
+                    referenceType: this.refsetData?.type,
+                    selectedAvailability: this.refsetData?.privateRefset,
+                    versionDate: this.refsetData?.versionDate
+                };
+            }
             this.refsetData.status = RefsetUtility.getStatus(
                 this.refsetData.active
             );
@@ -398,11 +413,15 @@ export class RefsetDetails {
                     console.log(concept);
                     this.isConceptDetailsLoading = this.conceptDetail = false;
                     this.onMembersGridReady(this.originalGridParams);
-                    this.loadConceptDetail(concept, false);
+                    this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    if (this.conceptDetail || this.isConceptDetailsLoading) {
+                        this.isConceptDetailsLoading = this.conceptDetail = undefined;
+                    }
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.isConceptDetailsLoading = this.conceptDetail = undefined;
                     this.showLoadingSpinner = false;
                 }
             );
@@ -418,10 +437,15 @@ export class RefsetDetails {
                     console.log(concept);
                     this.isConceptDetailsLoading = this.conceptDetail = false;
                     this.onMembersGridReady(this.originalGridParams);
+                    this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    if (this.conceptDetail || this.isConceptDetailsLoading) {
+                        this.isConceptDetailsLoading = this.conceptDetail = undefined;
+                    }
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.isConceptDetailsLoading = this.conceptDetail = undefined;
                     this.showLoadingSpinner = false;
                 }
             );
@@ -957,10 +981,7 @@ export class RefsetDetails {
         return concept;
     }
 
-    loadConceptDetail(concept, shouldChangeDetail = true) {
-        if (!shouldChangeDetail) {
-            return;
-        };
+    loadConceptDetail(concept) {
         console.log(concept);
         this.selectedConcept = concept;
         this.conceptDetail = null;

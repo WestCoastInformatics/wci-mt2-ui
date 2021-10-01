@@ -405,6 +405,12 @@ export class TaxonomyTreeComponent {
         this.conceptDetail.emit(value);
     }
 
+    setParentNode(concept): void {
+        if (!this.selectedConcept) {
+            this.selectedConcept = concept;
+        }
+    }
+
     addConcept(concept): void {
         this.showLoadingSpinner = true;
         this.refsetService
@@ -414,7 +420,7 @@ export class TaxonomyTreeComponent {
                     console.log('data: ', data);
                     this.sendReloadGridTrigger(true);
                     this.sendTableChangeTrigger(true);
-                    this.sendConceptDetailTrigger(concept);
+                    this.sendConceptDetailTrigger(this.selectedConcept?.code.toString());
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
@@ -433,6 +439,7 @@ export class TaxonomyTreeComponent {
                     console.log(data);
                     this.sendReloadGridTrigger(true);
                     this.sendTableChangeTrigger(true);
+                    this.sendConceptDetailTrigger(this.selectedConcept?.code.toString());
                     this.showLoadingSpinner = false;
                 },
                 (error) => {

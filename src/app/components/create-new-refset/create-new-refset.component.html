@@ -16,7 +16,8 @@
 
 <button
     class="button-inactive details-edit-refset-modal"
-    *ngIf="isDetailsPage"
+    *ngIf="isDetailsPage || editMode"
+    [style.height]="editMode ? '31px' : '33px'"
     (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
 >
     <img
@@ -31,8 +32,11 @@
 
 <ng-template #createNewRefsetDialog let-modal>
     <div class="modal-header create-new-refset-modal-header">
-        <h4 class="modal-title create-new-refset-title" id="modal-basic-title">
+        <h4 *ngIf="!editMode" class="modal-title create-new-refset-title" id="modal-basic-title">
             Create New Refset
+        </h4>
+        <h4 *ngIf="editMode" class="modal-title create-new-refset-title" id="modal-basic-title">
+            Edit Refset
         </h4>
         <button
             type="button"
@@ -69,7 +73,7 @@
                                 style="cursor: default;"
                                 matInput
                                 type="text"
-                                [(ngModel)]="selectedProject.name"
+                                [(ngModel)]="editMode ? projectName : selectedProject.name"
                                 disabled
                             />
                         </mat-form-field>
@@ -99,7 +103,7 @@
                                 matInput
                                 type="text"
                                 [(ngModel)]="
-                                    selectedProject['organization'].name
+                                editMode ? organizationName : selectedProject['organization'].name
                                 "
                                 disabled
                             />
@@ -130,7 +134,7 @@
                                 matInput
                                 type="text"
                                 [(ngModel)]="
-                                    selectedProject['organization'].edition.name
+                                editMode ? editionName : selectedProject['organization'].edition.name
                                 "
                                 disabled
                             />
@@ -183,6 +187,7 @@
                         <label>Assign Refset Concept:</label>
                     </div>
                     <div
+                    *ngIf="!editMode"
                         class="
                             col
                             create-new-refset-field
@@ -399,6 +404,7 @@
     </div>
     <div class="modal-footer create-new-refset-modal-footer">
         <button
+            *ngIf="!isDetailsPage"
             [disabled]="!isComplete()"
             type="button"
             (click)="modal.close('Create New Refset'); createRefsetObject()"
@@ -411,6 +417,21 @@
             ng-reflect-color="primary"
         >
             Create New Refset
+        </button>
+        <button
+            *ngIf="isDetailsPage || editMode"
+            type="button"
+            (click)="modal.close('Edit Refset'); editRefsetObject()"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Edit Refset"
+            title="Edit Refset"
+            ng-reflect-color="primary"
+            disabled
+        >
+            Edit Refset
         </button>
     </div>
 </ng-template>

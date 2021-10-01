@@ -83,11 +83,17 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                     this.isConceptDetailsLoading = false;
                     this.sendReloadGridTrigger(true);
                     this.onTableSearchChange();
-                    this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    if (this.selectedConcept) {
+                        this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    }
+                    if (this.conceptDetail || this.isConceptDetailsLoading) {
+                        this.isConceptDetailsLoading = this.conceptDetail = undefined;
+                    }
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.isConceptDetailsLoading = this.conceptDetail = undefined;
                     this.showLoadingSpinner = false;
                 }
             );
@@ -103,11 +109,17 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                     this.isConceptDetailsLoading = false;
                     this.sendReloadGridTrigger(true);
                     this.onTableSearchChange();
-                    this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    if (this.selectedConcept) {
+                        this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    }
+                    if (this.conceptDetail || this.isConceptDetailsLoading) {
+                        this.isConceptDetailsLoading = this.conceptDetail = undefined;
+                    }
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
+                    this.isConceptDetailsLoading = this.conceptDetail = undefined;
                     this.showLoadingSpinner = false;
                 }
             );
@@ -142,7 +154,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     refreshModal(): void {
         this.clearSearch();
-        this.onTableSearchChange();
+        this.onTableSearchChange(false);
         this.conceptSelected = false;
     }
 
@@ -159,10 +171,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.loadConceptDetail(concept.code.toString());
     }
 
-    loadConceptDetail(concept, shouldChangeDetail = true) {
-        if (!shouldChangeDetail) {
-            return;
-        };
+    loadConceptDetail(concept) {
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
 
@@ -213,9 +222,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     @Debounce()
-    onTableSearchChange() {
+    onTableSearchChange(showLoadingSpinner = true) {
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            this.showLoadingSpinner = true;
+            if (showLoadingSpinner) {
+                this.showLoadingSpinner = true;
+            }
 
           this.refsetService.getConceptSearch(this.internalRefsetId, `limit=500&offset=0&query=${this.searchInput}`).subscribe(results => {
             console.log(results.items);

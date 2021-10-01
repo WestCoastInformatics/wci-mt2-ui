@@ -27,20 +27,38 @@ export class CreateNewRefsetComponent implements OnInit {
   selectedNarrative = '';
   selectedTags = [];
   referenceTypes = ['Extensional', 'Intensional'];
+  versionNotes = ''
   selectedReferenceType = '';
   selectedAvailability = false;
   showLoadingSpinner = false;
   @Input()
   selectedProject: any;
-
   @Input()
   existingMetadataConcepts: any;
-
   @Input()
   existingBranchVersions: any;
-
   @Input()
   isDetailsPage = false;
+  @Input()
+  editMode = false;
+  @Input()
+  id: string;
+  @Input()
+  editModeProperties: {
+    projectName: string;
+    organizationName: string;
+    editionName: string;
+    metadataConcept: string;
+    parentConcept: string;
+    narrative: string;
+    tags: string[];
+    referenceType: string;
+    selectedAvailability: boolean;
+    versionDate: any
+  }
+  organizationName: string;
+  editionName: string;
+  projectName: string;
   constructor(private modalService: NgbModal,
     private detectChanges: ChangeDetectorRef,
     private router: Router,
@@ -53,6 +71,9 @@ export class CreateNewRefsetComponent implements OnInit {
 
   openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
     console.log(this.existingMetadataConcepts);
+    if (this.editMode) {
+      this.setupEditMode();
+    }
     if (this.selectedProject || this.isDetailsPage) {
       this.modalService.open(createNewRefsetDialog, { windowClass: 'createNewRefsetDialog', backdrop : 'static', keyboard : false  });
     }
@@ -68,6 +89,20 @@ export class CreateNewRefsetComponent implements OnInit {
     this.selectedTags = [];
     this.selectedReferenceType = '';
     this.selectedAvailability = false;
+  }
+
+  setupEditMode(): void {
+    this.organizationName = this.editModeProperties.organizationName;
+    this.editionName = this.editModeProperties.editionName;
+    this.projectName = this.editModeProperties.projectName;
+    this.selectedMetaDataConcept = this.editModeProperties.metadataConcept;
+    this.selectedBranchVersion = this.editModeProperties.versionDate;
+    this.createdMetaDataConcept = this.editModeProperties.metadataConcept;
+    this.selectedParentConcept = this.editModeProperties.parentConcept;
+    this.selectedNarrative = this.editModeProperties.narrative;
+    this.selectedTags = this.editModeProperties.tags;
+    this.selectedReferenceType = this.editModeProperties.referenceType;
+    this.selectedAvailability = this.editModeProperties.selectedAvailability;
   }
 
   createRefsetObject(): void {
@@ -103,6 +138,27 @@ export class CreateNewRefsetComponent implements OnInit {
     console.log(this.selectedTags);
     console.log(this.selectedReferenceType);
     console.log(this.selectedAvailability);
+  }
+
+  editRefsetObject(): void {
+    this.showLoadingSpinner = true;
+    this.refsetService.editRefsetMembers(this.id, {
+      narrative: this.selectedNarrative,
+      tags: this.selectedTags,
+      versionNotes: this.versionNotes
+    }).subscribe(refsetId => {
+        this.showLoadingSpinner = false;
+        this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
+    },
+    error => {
+      console.log(error);
+      this.showLoadingSpinner = false;
+    });
+
+    console.log('refset object edited');
+    console.log(this.versionNotes);
+    console.log(this.selectedNarrative);
+    console.log(this.selectedTags);
   }
 
   isComplete(): boolean {
