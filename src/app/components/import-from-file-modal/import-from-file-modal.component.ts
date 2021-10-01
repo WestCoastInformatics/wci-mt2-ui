@@ -30,7 +30,10 @@ export class ImportFromFileModalComponent implements OnInit {
 
   openImportFromFileModal(importFromFileDialog: NgbModal) {
     this.files = [];
-    this.modalService.open(importFromFileDialog);
+    this.modalService.open(importFromFileDialog, {
+      backdrop : 'static',
+      keyboard : false
+    });
   }
 
   addMembers(): void {

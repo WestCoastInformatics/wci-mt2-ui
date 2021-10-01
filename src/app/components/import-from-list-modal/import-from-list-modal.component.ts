@@ -61,6 +61,9 @@ export class ImportFromListModalComponent {
 
   openImportFromListModal(importFromListDialog: NgbModal) {
     this.listOfIds = undefined;
-    this.modalService.open(importFromListDialog);
+    this.modalService.open(importFromListDialog, {
+      backdrop : 'static',
+      keyboard : false
+    });
   }
 }

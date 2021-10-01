@@ -182,7 +182,7 @@ export class CodeUtility {
         if (text.length <= characterLimit){
             return text;
         } else {
-            return text.substr(0, characterLimit) + ' ...';
+            return text.substr(0, characterLimit);
         }
      }
 

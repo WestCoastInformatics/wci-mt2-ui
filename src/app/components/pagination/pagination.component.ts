@@ -17,6 +17,7 @@ export class PaginationComponent implements OnChanges {
     @Input() pageSizeOptions: Array<number> = [10, 25, 50];
     @Input() totalKnown = false;
     @Input() manualStateRefresh = false;
+    @Input() numOfResults: number;
     currentPage: number = 1;
     paginationPages: any = {};
     showTotal = false;
@@ -31,11 +32,9 @@ export class PaginationComponent implements OnChanges {
     constructor(
         private pagerService: PaginationService,
         private changeDetectorRef: ChangeDetectorRef
-        ) {
-     }
+        ) {}
 
     getCurrentPage(): number {
-
         this.currentPage = this.gridOptions?.api ? this.gridOptions.api.paginationGetCurrentPage() + 1 : 1;
         return this.currentPage;
     }
@@ -56,7 +55,6 @@ export class PaginationComponent implements OnChanges {
         //         }
         //     }) 
         // });
-        
     }
 
     ngOnChanges(changes: SimpleChanges) {

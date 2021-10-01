@@ -39,6 +39,8 @@ export class CreateNewRefsetComponent implements OnInit {
   @Input()
   existingBranchVersions: any;
 
+  @Input()
+  isDetailsPage = false;
   constructor(private modalService: NgbModal,
     private detectChanges: ChangeDetectorRef,
     private router: Router,
@@ -51,8 +53,8 @@ export class CreateNewRefsetComponent implements OnInit {
 
   openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
     console.log(this.existingMetadataConcepts);
-    if (this.selectedProject) {
-      this.modalService.open(createNewRefsetDialog, { windowClass: 'createNewRefsetDialog'  });
+    if (this.selectedProject || this.isDetailsPage) {
+      this.modalService.open(createNewRefsetDialog, { windowClass: 'createNewRefsetDialog', backdrop : 'static', keyboard : false  });
     }
   }
 
@@ -82,10 +84,8 @@ export class CreateNewRefsetComponent implements OnInit {
       versionDate: this.selectedBranchVersion,
       privateRefset: this.selectedAvailability,
     }).subscribe(refsetId => {
-      setTimeout(x => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
-      }, 5000);
     },
     error => {
       console.log(error);

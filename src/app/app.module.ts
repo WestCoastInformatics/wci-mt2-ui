@@ -68,6 +68,8 @@ import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
 import { SideBarModule } from './components/side-bar/side-bar.module';
 import { dragAndDropDirective } from './directives/drag-and-drop.directive';
 import { AddRemoveByConceptModalComponent } from './components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
+import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
+import { ReadonlyTextModalComponent } from './components/readonly-text-modal/readonly-text-modal.component';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
@@ -97,7 +99,9 @@ const appRoutes: Routes = [
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
         dragAndDropDirective,
-        AddRemoveByConceptModalComponent
+        AddRemoveByConceptModalComponent,
+        ScrollTopComponent,
+        ReadonlyTextModalComponent
     ],
     imports: [
         RouterModule.forRoot(

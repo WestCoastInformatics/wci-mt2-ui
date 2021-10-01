@@ -101,7 +101,7 @@
                                                 add-remove-concept-hierarchy-modal-active-slider
                                             "
                                             [color]="color"
-                                            [checked]="checked"
+                                            [checked]="!checked"
                                             title="Display Active Concepts Only"
                                             aria-label="Display Active Concepts Only"
                                             (change)="
@@ -141,7 +141,7 @@
                                                 >
                                                     <img
                                                         [hidden]="
-                                                            concept.memberOfRefset
+                                                            concept?.memberOfRefset
                                                         "
                                                         src="assets/add-symbol-icon.svg"
                                                         (click)="
@@ -153,7 +153,7 @@
                                                     />
                                                     <img
                                                         [hidden]="
-                                                            !concept.memberOfRefset
+                                                            !concept?.memberOfRefset
                                                         "
                                                         src="assets/subtract-symbol-icon.svg"
                                                         (click)="
@@ -187,7 +187,7 @@
                                                     >
                                                         <img
                                                             *ngIf="
-                                                                concept.defined
+                                                                concept?.defined
                                                             "
                                                             width="12.75px"
                                                             height="10px"
@@ -197,7 +197,7 @@
                                                         />
                                                         <img
                                                             *ngIf="
-                                                                !concept.defined
+                                                                !concept?.defined
                                                             "
                                                             width="12.75px"
                                                             height="10px"
@@ -207,14 +207,16 @@
                                                         />
                                                         <div
                                                             class="concept-name"
+                                                            [class.bold-if-member]="concept?.memberOfRefset"
+                                                            [class.greyed-if-not-member]="!concept?.memberOfRefset"
                                                             title="{{
-                                                                concept.name
+                                                                concept?.name
                                                             }}"
                                                             aria-label="{{
-                                                                concept.name
+                                                                concept?.name
                                                             }}"
                                                         >
-                                                            {{ concept.name }}
+                                                            {{ concept?.name }}
                                                         </div>
                                                     </div>
                                                 </td>
@@ -393,6 +395,8 @@
                                                     col
                                                     refset-tool-concept-details-taxonomy-description
                                                 "
+                                                [class.bold-if-member]="concept?.memberOfRefset"
+                                                [class.greyed-if-not-member]="!concept?.memberOfRefset"
                                             >
                                                 <span
                                                     *ngIf="
@@ -667,6 +671,7 @@
                                                 [editMode]="editMode"
                                                 [rootNode]="conceptDetail"
                                                 [options]="taxonomyOptions"
+                                                [selectedConcept]="selectedConcept"
                                                 [manualStateRefresh]="
                                                     taxonomyManualStateRefresh
                                                 "

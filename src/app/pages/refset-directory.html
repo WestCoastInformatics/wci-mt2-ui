@@ -1,6 +1,6 @@
 <div id="refsetDirectoryPage" class="container-fluid">
     <!-- Page Title -->
-    <div class="container-fluid page-title">Reference Set Directory</div>
+    <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div>
 
     <!-- Search Bar -->
     <div class="container-fluid">
@@ -142,6 +142,7 @@
             [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
             [totalKnown]="refsetGridPaging.totalKnown"
             [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+            [numOfResults]="numOfResults"
         >
         </app-pagination>
 
@@ -481,6 +482,7 @@
                 <div class="row">
                     <div class="column-download-button">
                         <app-refset-download
+                            [isDetailPage]="false"
                             *ngIf="params?.data?.downloadable"
                             [class.centerDownload]="!params?.data?.feedbackVisible"
                             [refset]="getRefsetRow(params.data.refsetId)"
@@ -514,3 +516,4 @@
         </ng-template>
     </div>
 </div>
+<scroll-top></scroll-top>

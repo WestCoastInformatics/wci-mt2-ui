@@ -36,7 +36,8 @@ export class RefsetDownloadComponent {
     selectedVersionDate = '';
     refsetsExportableAsFreeset: string[];
     dialog: DialogService;
-
+    @Input()
+    isDetailPage: boolean;
 
     @ViewChild('refsetDownloadDialog') downloadDialog: TemplateRef<any>;
 

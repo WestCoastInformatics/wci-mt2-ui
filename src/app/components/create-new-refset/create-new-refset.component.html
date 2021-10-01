@@ -1,4 +1,6 @@
 <button
+    *ngIf="!isDetailsPage"
+    [disabled]="!selectedProject"
     mat-raised-button
     color="primary"
     (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
@@ -10,6 +12,19 @@
     ng-reflect-color="primary"
 >
     Create New Refset
+</button>
+
+<button
+    class="button-inactive details-edit-refset-modal"
+    *ngIf="isDetailsPage"
+    (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
+>
+    <img
+        src="assets/notes-icon.svg"
+        alt="notes icon"
+        title="Edit metadata"
+        aria-label="Edit metadata"
+    />
 </button>
 
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
@@ -47,9 +62,11 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         "
+                        style="padding-left: 25px;"
                     >
-                        <mat-form-field appearance="fill">
+                        <mat-form-field appearance="none">
                             <input
+                                style="cursor: default;"
                                 matInput
                                 type="text"
                                 [(ngModel)]="selectedProject.name"
@@ -74,9 +91,11 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         "
+                        style="padding-left: 25px;"
                     >
-                        <mat-form-field appearance="fill">
+                        <mat-form-field appearance="none">
                             <input
+                                style="cursor: default;"
                                 matInput
                                 type="text"
                                 [(ngModel)]="
@@ -103,9 +122,11 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         "
+                        style="padding-left: 25px;"
                     >
-                        <mat-form-field appearance="fill">
+                        <mat-form-field appearance="none">
                             <input
+                                style="cursor: default;"
                                 matInput
                                 type="text"
                                 [(ngModel)]="
@@ -170,6 +191,7 @@
                     >
                         <mat-radio-group>
                             <mat-radio-button
+                            style="padding-right: 30px;"
                                 value="1"
                                 (change)="checkRadioButtonValue($event)"
                                 >Choose an existing metadata

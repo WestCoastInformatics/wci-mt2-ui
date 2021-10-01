@@ -63,6 +63,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     metadataAndConcepts = true;
     toggleDropdown = false;
+    numOfResults: any;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     constructor(
@@ -133,7 +134,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             },
             enableBrowserTooltips: true,
             defaultColDef: {
-                sortable: true,
+                sortable: false,
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
@@ -233,7 +234,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 console.log("^^^^^^ {...restParams, ...sort}: ", {...restParams, ...sort});
 
                 this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
-
+                    this.numOfResults = results.total;
+                    console.log(this.numOfResults)
                     if (results.items.length == 0 && pageNumber > 1) {
 
                         this.refsetGridPaging.totalRows = (this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1));

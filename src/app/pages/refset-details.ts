@@ -112,12 +112,14 @@ export class RefsetDetails {
     taxonomySearchGridLastFilter = '';
     taxonomySearchGridLastSort = '';
     originalGridParams: any;
+    numOfResults: number;
 
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging')
     membersPaginationComponent: PaginationComponent;
     @ViewChild('refsetFeedbackDialog') refsetFeedbackDialog: TemplateRef<any>;
+    @ViewChild('refsetVersionNotes') refsetVersionNotes: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
@@ -136,7 +138,6 @@ export class RefsetDetails {
     taxonomyGridParams: any;
     showLoadingSpinner = false;
     selectedConcept: any;
-
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -195,7 +196,7 @@ export class RefsetDetails {
                     templateRenderer: TemplateRenderer,
                 },
                 defaultColDef: {
-                    sortable: true,
+                    sortable: false,
                     resizable: true,
                     suppressMenu: true
                 },
@@ -264,7 +265,7 @@ export class RefsetDetails {
                     templateRenderer: TemplateRenderer,
                 },
                 defaultColDef: {
-                    sortable: true,
+                    sortable: false,
                     resizable: true,
                     suppressMenu: true,
                     floatingFilter: false,
@@ -397,7 +398,7 @@ export class RefsetDetails {
                     console.log(concept);
                     this.isConceptDetailsLoading = this.conceptDetail = false;
                     this.onMembersGridReady(this.originalGridParams);
-                    this.loadConceptDetail(concept);
+                    this.loadConceptDetail(concept, false);
                     this.showLoadingSpinner = false;
                 },
                 (error) => {
@@ -711,6 +712,8 @@ export class RefsetDetails {
                     .getMembersList(this.id, restParams)
                     .subscribe(
                         (results) => {
+                            this.numOfResults = results.total;
+                            console.log(this.numOfResults)
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.membersGridApi.showNoRowsOverlay();
                                 this.membersGridPaging.totalRows =
@@ -954,7 +957,10 @@ export class RefsetDetails {
         return concept;
     }
 
-    loadConceptDetail(concept) {
+    loadConceptDetail(concept, shouldChangeDetail = true) {
+        if (!shouldChangeDetail) {
+            return;
+        };
         console.log(concept);
         this.selectedConcept = concept;
         this.conceptDetail = null;
@@ -1095,6 +1101,24 @@ export class RefsetDetails {
         this.dialog.confirmed().subscribe((data) => {});
     }
 
+    openRefsetVersionNotes() {
+        const dialogId = 'refsetVersionNotes';
+
+        const dialogData = {
+            headerText: `Version Notes`,
+            template: this.refsetVersionNotes,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
     changeLanguage() {}
 
     onChangeMembersListMode() {
@@ -1157,7 +1181,7 @@ export class RefsetDetails {
                     rowData: results.items,
                     rowSelection: 'single',
                     defaultColDef: {
-                        sortable: true,
+                        sortable: false,
                         filter: false,
                         floatingFilter: false,
                         suppressMenu: true
@@ -1242,6 +1266,7 @@ export class RefsetDetails {
 
     setFullNotesText(show: boolean): void {
         this.showFullNotesText = show;
+        console.log('entered')
     }
 
     removeHtmlTags(value: string): string {
