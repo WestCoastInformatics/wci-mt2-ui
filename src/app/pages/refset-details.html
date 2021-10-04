@@ -456,7 +456,8 @@
                                     class="refset-tool-refset-metadata-value"
                                     title="{{refsetData?.url}}"
                                 >
-                                    {{refsetData?.url}}
+                                    <a [href]="directRoute">{{directUrl}}</a>
+
                                 </td>
                             </tr>
 
@@ -952,9 +953,12 @@
                                         [editMode]="editMode"
                                         [selectedConcept]="selectedConcept"
                                         [options]="taxonomyOptions"
+                                        [isOnDetailsPage]="true"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
                                         (reloadGrid)="loadTaxonomyRoot()"
                                         (conceptDetail)="loadConceptDetail($event)"
+                                        (numOfChildren)="numOfChildren = $event"
+
                                     ></app-taxonomy-tree>
                                 </div>
                             </div>
@@ -1053,7 +1057,7 @@
                                                         parent?.memberOfRefset || !editMode
                                                     "
                                                     src="assets/add-symbol-icon.svg"
-                                                    (click)="addConcept(parent)"
+                                                    (click)="addConcept(parent, true)"
                                                     width="18px"
                                                     height="18px"
                                                     title="Add"
@@ -1067,7 +1071,7 @@
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
                                                     (click)="
-                                                        removeConcept(parent)
+                                                        removeConcept(parent, true)
                                                     "
                                                     width="18px"
                                                     height="18px"
@@ -1361,7 +1365,7 @@
                                                     refset-tool-concept-details-section-title
                                                 "
                                             >
-                                                Children
+                                                Children <span [hidden]="!numOfChildren">{{'(' + numOfChildren + ')'}}</span>
                                             </div>
                                         </div>
 
@@ -1376,8 +1380,10 @@
                                                 [options]="taxonomyOptions"
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode"
+                                                [isOnDetailsPage]="true"
                                                 (reloadGrid)="onMembersGridReady(originalGridParams)"
                                                 (conceptDetail)="loadConceptDetail($event)"
+                                                (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
                                         </div>
                                     </div>

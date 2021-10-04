@@ -25,7 +25,8 @@
             type="button"
             class="close"
             aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
+            (click)="modal.dismiss('Cross click'); sendReloadGridTrigger(true);
+            "
         >
             <span aria-hidden="true">&times;</span>
         </button>
@@ -254,6 +255,8 @@
                                                 class="
                                                     add-remove-concept-hierarchy-modal-results-row
                                                 "
+                                                [ngClass]="{'active-concept': selectedRowIndex == row.id}"
+                                                (click)="highlight(row)"
                                             ></tr>
                                         </table>
                                     </div>
@@ -352,7 +355,7 @@
                                                         parent?.memberOfRefset
                                                     "
                                                     src="assets/add-symbol-icon.svg"
-                                                    (click)="addConcept(parent)"
+                                                    (click)="addConcept(parent, true)"
                                                     width="18px"
                                                     height="18px"
                                                     title="Add"
@@ -366,7 +369,7 @@
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
                                                     (click)="
-                                                        removeConcept(parent)
+                                                        removeConcept(parent, true)
                                                     "
                                                     width="18px"
                                                     height="18px"
@@ -427,6 +430,7 @@
                                             refset-tool-concept-details-concept-section
                                             add-remove-concept-hierarchy-modal-details-size
                                         "
+                                        style="height: fit-content;"
                                     >
                                         <div class="row">
                                             <!-- Info Section -->
@@ -434,7 +438,6 @@
                                                 class="
                                                     refset-tool-concept-details-concept-info-column
                                                 "
-                                                style="min-height: 250px;"
                                                 [class.refset-tool-concept-details-concept-info-column-status]="
                                                     !conceptDetail?.active
                                                 "
@@ -659,7 +662,7 @@
                                                     refset-tool-concept-details-section-title
                                                 "
                                             >
-                                                Children
+                                                Children <span [hidden]="!numOfChildren">{{'(' + numOfChildren + ')'}}</span>
                                             </div>
                                         </div>
 
@@ -672,6 +675,7 @@
                                                 [editMode]="editMode"
                                                 [rootNode]="conceptDetail"
                                                 [options]="taxonomyOptions"
+                                                [isOnDetailsPage]="false"
                                                 [selectedConcept]="selectedConcept"
                                                 [manualStateRefresh]="
                                                     taxonomyManualStateRefresh
@@ -686,6 +690,10 @@
                                                 (conceptDetail)="
                                                     loadConceptDetail($event)
                                                 "
+                                                (loadingSpinner)="
+                                                    setLoadSpinnerStatus($event)
+                                                "
+                                                (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
                                         </div>
                                     </div>

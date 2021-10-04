@@ -1,29 +1,37 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { TreeOptions } from 'src/app/models/tree-options.model';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import {
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+} from "@angular/core";
+import { ThemePalette } from "@angular/material/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Debounce } from "src/app/decorators/debounce.decorator";
+import { TreeOptions } from "src/app/models/tree-options.model";
+import { RefsetService } from "src/app/services/rest/refset.service";
+import { CodeUtility } from "src/app/utilities/code.utility";
+import { RefsetUtility } from "src/app/utilities/refset.utility";
 
 @Component({
     selector: "add-remove-by-concept-modal",
-    templateUrl: './add-remove-by-concept-modal.component.html',
+    templateUrl: "./add-remove-by-concept-modal.component.html",
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
     searchInput: string;
     searchResults = [];
-    displayedColumns: string[] = ['memberOfRefset', 'name', 'description'];
+    displayedColumns: string[] = ["memberOfRefset", "name", "description"];
     dataSource = [];
-    color: ThemePalette = 'primary';
+    color: ThemePalette = "primary";
     checked = false;
     showActiveConceptsOnly = true;
     initialResults = [];
+    selectedRowIndex = -1;
     conceptDetailParents: any;
     selectedTaxonomyLanguage: string =
         RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
-        ':' +
+        ":" +
         RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
         // onSelect: this.onTaxonomySelected.bind(this),
@@ -41,10 +49,10 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     @Input()
     internalRefsetId: string;
-    selectedConcept: any;
     showLoadingSpinner = false;
     isConceptDetailsLoading = false;
-
+    selectedConcept: any;
+    numOfChildren = undefined;
     constructor(
         private readonly modalService: NgbModal,
         private refsetService: RefsetService,
@@ -52,9 +60,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.refsetService.getRefset(this.internalRefsetId).subscribe((results) => {
-            this.refsetData = results;
-        });
+        this.refsetService
+            .getRefset(this.internalRefsetId)
+            .subscribe((results) => {
+                this.refsetData = results;
+            });
     }
 
     displayActiveConcepts($event: any): void {
@@ -73,53 +83,54 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.reloadGrid.emit(value);
     }
 
-    addConcept(concept): void {
+    addConcept(concept, isInDetailsParentPanel = false): void {
+        console.log("start addition");
         this.showLoadingSpinner = true;
         this.refsetService
-            .addRefsetMembers(this.internalRefsetId, 'list', concept.code.toString())
+            .addRefsetMembers(
+                this.internalRefsetId,
+                "list",
+                concept.code.toString()
+            )
             .subscribe(
                 (data) => {
                     console.log(data);
-                    this.isConceptDetailsLoading = false;
-                    this.sendReloadGridTrigger(true);
-                    this.onTableSearchChange();
-                    if (this.selectedConcept) {
-                        this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    if (!isInDetailsParentPanel) {
+                        this.onTableSearchChange();
+                    } else {
+                        this.loadConceptDetailParents(
+                            this.selectedConcept?.code
+                        );
                     }
-                    if (this.conceptDetail || this.isConceptDetailsLoading) {
-                        this.isConceptDetailsLoading = this.conceptDetail = undefined;
-                    }
-                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
-                    this.isConceptDetailsLoading = this.conceptDetail = undefined;
                     this.showLoadingSpinner = false;
                 }
             );
     }
 
-    removeConcept(concept): void {
+    removeConcept(concept, isInDetailsParentPanel = false): void {
         this.showLoadingSpinner = true;
         this.refsetService
-            .removeRefsetMembers(this.internalRefsetId, 'list', concept?.code.toString())
+            .removeRefsetMembers(
+                this.internalRefsetId,
+                "list",
+                concept?.code.toString()
+            )
             .subscribe(
                 (data) => {
                     console.log(data);
-                    this.isConceptDetailsLoading = false;
-                    this.sendReloadGridTrigger(true);
-                    this.onTableSearchChange();
-                    if (this.selectedConcept) {
-                        this.loadConceptDetail(this.selectedConcept?.code.toString());
+                    if (!isInDetailsParentPanel) {
+                        this.onTableSearchChange();
+                    } else {
+                        this.loadConceptDetailParents(
+                            this.selectedConcept?.code
+                        );
                     }
-                    if (this.conceptDetail || this.isConceptDetailsLoading) {
-                        this.isConceptDetailsLoading = this.conceptDetail = undefined;
-                    }
-                    this.showLoadingSpinner = false;
                 },
                 (error) => {
                     console.log(error);
-                    this.isConceptDetailsLoading = this.conceptDetail = undefined;
                     this.showLoadingSpinner = false;
                 }
             );
@@ -128,27 +139,31 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     openAddRemoveModal(addRemoveConceptHierarchyModal: NgbModal) {
         this.refreshModal();
         this.modalService.open(addRemoveConceptHierarchyModal, {
-            windowClass: 'add-remove-concept-hierarchy-modal-size',
+            windowClass: "add-remove-concept-hierarchy-modal-size",
             animation: true,
             beforeDismiss: () => {
                 this.refreshModal();
                 return true;
             },
-            backdrop : 'static',
-            keyboard : false
+            backdrop: "static",
+            keyboard: false,
         });
     }
 
     changeModalSize(): void {
-        const modalDialog = <HTMLElement> document.getElementsByClassName('modal-dialog')[0];
+        const modalDialog = <HTMLElement>(
+            document.getElementsByClassName("modal-dialog")[0]
+        );
         if (modalDialog) {
-            modalDialog.style.width = '1000px';
-            modalDialog.style.maxWidth = '1240px';
+            modalDialog.style.width = "1000px";
+            modalDialog.style.maxWidth = "1240px";
         }
 
-        const modalContent = <HTMLElement> document.getElementsByClassName('modal-content')[0];
+        const modalContent = <HTMLElement>(
+            document.getElementsByClassName("modal-content")[0]
+        );
         if (modalContent) {
-            modalContent.style.height = '100%';
+            modalContent.style.height = "100%";
         }
     }
 
@@ -159,7 +174,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     clearSearch(): void {
-        this.searchInput = '';
+        this.searchInput = "";
+    }
+
+    highlight(row) {
+        this.selectedRowIndex = row.id;
     }
 
     selectConcept(concept: any): void {
@@ -183,10 +202,10 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 this.isConceptDetailsLoading = false;
                 this.conceptDetail = results;
                 this.conceptDescriptions =
-                this.conceptDetail.descriptions.filter(function (
+                    this.conceptDetail.descriptions.filter(function (
                         description
                     ) {
-                        console.log(description)
+                        console.log(description);
                         return description != null;
                     });
 
@@ -200,7 +219,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
     loadConceptDetailParents(conceptId) {
         const restParams = {
-            displayType: 'taxonomy',
+            displayType: "taxonomy",
             returnChildren: false,
             language: this.getTaxonomyLanguageWithoutType(),
             depth: 1,
@@ -214,41 +233,59 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             .getMembersList(this.internalRefsetId, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
+                if (this.showLoadingSpinner) {
+                    this.showLoadingSpinner = false;
+                }
             });
     }
 
     getTaxonomyLanguageWithoutType() {
-        return this.selectedTaxonomyLanguage.replace(/:.*$/, '');
+        return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
+    }
+
+    setLoadSpinnerStatus($event): void {
+        this.showLoadingSpinner = $event;
     }
 
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
-        if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+        if (
+            !CodeUtility.hasValue(this.searchInput) ||
+            (CodeUtility.hasValue(this.searchInput) &&
+                this.searchInput.length > 2)
+        ) {
             if (showLoadingSpinner) {
                 this.showLoadingSpinner = true;
             }
 
-          this.refsetService.getConceptSearch(this.internalRefsetId, `limit=500&offset=0&query=${this.searchInput}`).subscribe(results => {
-            console.log(results.items);
+            this.refsetService
+                .getConceptSearch(
+                    this.internalRefsetId,
+                    `limit=500&offset=0&query=${this.searchInput}`
+                )
+                .subscribe(
+                    (results) => {
+                        console.log(results.items);
 
-            this.dataSource = results.items;
-            this.initialResults = this.dataSource;
-            // tslint:disable-next-line: no-unused-expression
-            if (results.items.length) {
-                this.changeModalSize();
-                this.showResults = true;
-            } else {
-                this.showResults = false;
-            }
-            this.showLoadingSpinner = false;
-          },
-          error => {
-              this.searchResults = [];
-              this.showResults = false;
-              console.log('errored out');
-              console.log(this.searchInput);
-              this.showLoadingSpinner = false;
-          });
+                        this.dataSource = results.items;
+                        this.initialResults = this.dataSource;
+                        // tslint:disable-next-line: no-unused-expression
+                        if (results.items.length) {
+                            this.changeModalSize();
+                            this.showResults = true;
+                        } else {
+                            this.showResults = false;
+                        }
+                        this.showLoadingSpinner = false;
+                    },
+                    (error) => {
+                        this.searchResults = [];
+                        this.showResults = false;
+                        console.log("errored out");
+                        console.log(this.searchInput);
+                        this.showLoadingSpinner = false;
+                    }
+                );
         }
     }
 }

@@ -1,6 +1,6 @@
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
-<div class="container-fluid refset-tool-taxonomy">
+<div class="container-fluid refset-tool-taxonomy" style="margin-left: -30px; height: fit-content;">
     <div class="row" *ngIf="isLoading">
         <div>Loading...</div>
     </div>
@@ -22,7 +22,7 @@
                 <img
                 [hidden]="node?.data.memberOfRefset"
                 src="assets/add-symbol-icon.svg"
-                (click)="addConcept(node?.data)"
+                (click)="addConcept(node?.data, true, isOnDetailsPage, node?.parent?.data)"
                 width="18px"
                 height="18px"
                 title="Add"
@@ -33,7 +33,7 @@
             <img
                 [hidden]="!node?.data.memberOfRefset"
                 src="assets/subtract-symbol-icon.svg"
-                (click)="removeConcept(node?.data)"
+                (click)="removeConcept(node?.data, true, isOnDetailsPage, node?.parent?.data)"
                 width="18px"
                 height="18px"
                 title="Subtract"
@@ -59,7 +59,7 @@
                 class="taxonomy-code-text"
                 [class.bold-if-member]="node?.data?.memberOfRefset && editMode"
                 [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
-                (click)="sendConceptDetailTrigger(node?.data); setParentNode(node?.parent?.data?.code);"
+                (dblclick)="sendConceptDetailTrigger(isOnDetailsPage ? node.data : node?.data.code.toString());"
                 title="{{ getNodeText(node) }}"
                 aria-label="{{ getNodeText(node) }}"
                 >{{ getNodeText(node) }}</span
