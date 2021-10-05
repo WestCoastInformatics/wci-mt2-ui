@@ -174,7 +174,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     clearSearch(): void {
-        this.searchInput = "";
+        this.searchInput = '';
     }
 
     highlight(row) {
