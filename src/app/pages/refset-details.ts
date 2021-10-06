@@ -737,6 +737,11 @@ export class RefsetDetails {
                     restParams.query = query;
                 }
 
+                // if editing enable the return of hasChildren data in the list
+                if (this.editMode) {
+                    restParams.editing = true;
+                }
+
                 this.refsetService
                     .getMembersList(this.id, restParams)
                     .subscribe(
