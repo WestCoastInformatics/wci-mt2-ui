@@ -8,107 +8,55 @@
 
     <div class="row refset-title sticky-top" *ngIf="editMode">
         <!-- Section Title -->
-        <div class="col-md-auto page-title">Edit Reference Set</div>
-        <!-- <div
-            class=""
-            style="
-                margin: 0px;
-                width: 70%;
-                padding-left: 365px;
-                margin-top: -15px;
-                margin-bottom: 5px;
-                margin-right: -150px;
-            "
-        >
-            <div class="wrapper-progressBar">
-                <ul class="progressBar">
-                    <li class="active" style="font-size: 12px">
-                        Create Refset
-                    </li>
-                    <li class="active" style="font-size: 12px">Edit Refset</li>
-                    <li style="font-size: 12px">Review Refset</li>
-                    <li style="font-size: 12px">Validate Refset</li>
-                    <li style="font-size: 12px">Ready for Publication</li>
-                </ul>
-            </div>
-        </div> -->
-        <div class="row">
-            <button
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                #editButton
-                class="refset-tool-action-button"
-                aria-label="Edit"
-                title="Edit"
-                ng-reflect-color="primary"
-                style="
-                    width: 90px;
-                    height: 40px;
-                    color: white;
-                    border: 1px solid #8c8c8c;
-                "
-            >
-                Edit
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                #editButton
-                class="refset-tool-action-button"
-                aria-label="Upgrade"
-                title="Upgrade"
-                ng-reflect-color="primary"
-                style="
-                    width: 90px;
-                    height: 40px;
-                    background-color: white !important;
-                    color: #8c8c8c;
-                    border: 1px solid #8c8c8c;
-                "
-            >
-                Upgrade
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                #editButton
-                class="refset-tool-action-button"
-                aria-label="Compare"
-                title="Compare"
-                ng-reflect-color="primary"
-                style="
-                    width: 90px;
-                    height: 40px;
-                    background-color: white !important;
-                    color: #8c8c8c;
-                    border: 1px solid #8c8c8c;
-                "
-            >
-                Compare
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                #editButton
-                class="refset-tool-action-button"
-                aria-label="Publish"
-                title="Publish"
-                ng-reflect-color="primary"
-                style="
-                    width: 90px;
-                    height: 40px;
-                    background-color: white !important;
-                    color: #8c8c8c;
-                    border: 1px solid #8c8c8c;
-                "
-            >
-                Publish
-            </button>
+        <div class="col-md-auto page-title details-page-title">
+            Edit Reference Set
         </div>
+        <mat-horizontal-stepper
+            class="details-page-stepper"
+            [linear]="true"
+            labelPosition="bottom"
+            #stepper
+        >
+            <mat-step>
+                <ng-template matStepLabel>Ready for Edit</ng-template>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>In Edit</ng-template>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Ready for Review</ng-template>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>In Review</ng-template>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Review Completed</ng-template>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Ready for Publication</ng-template>
+            </mat-step>
+        </mat-horizontal-stepper>
+        <mat-button-toggle-group
+            name="fontStyle"
+            aria-label="Font Style"
+            class="details-page-right-button-group"
+        >
+            <mat-button-toggle
+                class="button-group-edit"
+                [checked]="true"
+                value="Edit"
+                >Edit</mat-button-toggle
+            >
+            <mat-button-toggle class="button-group-upgrade" value="Upgrade"
+                >Update</mat-button-toggle
+            >
+            <mat-button-toggle class="button-group-compare" value="Compare"
+                >Review</mat-button-toggle
+            >
+            <mat-button-toggle class="button-group-publish" value="Publish"
+                >Admin</mat-button-toggle
+            >
+        </mat-button-toggle-group>
     </div>
     <div class="refset-title-container">
         <!-- Header Bar -->
@@ -145,14 +93,6 @@
                         [id]="refsetId"
                         [editModeProperties]="editModeProperties"
                     ></create-new-refset>
-                </div>
-                <div>
-                    <a class="detail-top-link" (click)="openArtifacts()" title="Artifacts" aria-label="Artifacts"
-                        >Artifacts</a
-                    >
-                    <a class="detail-top-link" (click)="openAuditTrail()" title="Audit Trail" aria-label="Audit Trail"
-                        >Audit Trail</a
-                    >
                 </div>
             </div>
 
@@ -240,282 +180,374 @@
                         >
                     </div>
                 </div>
-                <button
-                    mat-raised-button
-                    color="primary"
-                    aria-hidden="false"
-                    #finishEditButton
-                    class="refset-tool-action-button finish-edit-button"
-                    aria-label="Finish Edit"
-                    title="Finish Edit"
-                    ng-reflect-color="primary"
-                    [routerLink]="['/projects/refset']"
-                    disabled
-                >
-                    Finish Edit
-                </button>
+                <div class="edit-button-group-right-below-sticky-header">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        #finishEditButton
+                        class="refset-tool-action-button finish-edit-button"
+                        aria-label="Finish Edit"
+                        title="Finish Edit"
+                        ng-reflect-color="primary"
+                        [routerLink]="['/projects/refset']"
+                    >
+                        Finish Edit
+                    </button>
+                    <ready-for-review-modal></ready-for-review-modal>
+                    <ready-for-publication-modal></ready-for-publication-modal>
+                </div>
             </div>
         </div>
 
-        <div class="container-fluid" id="detailsMetadataSection">
-            <div class="row refset-tool-refset-metadata-section">
-                <!-- Static Metadata Section -->
-                <div class="col refset-tool-refset-metadata-column">
-                    <table
-                        class="refset-tool-refset-metadata-table table-striped"
+        <div class="metadata-collapsible-container">
+            <div class="metadata-collapsible-container-group-header">
+                <div class="metadata-collapsible-container-title">
+                    Reference Set Metadata
+                    <a
+                        class="detail-top-link"
+                        (click)="openArtifacts()"
+                        title="Artifacts"
+                        aria-label="Artifacts"
+                        >Artifacts</a
                     >
-                        <tbody>
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Refset ID:"
-                                    aria-label="Refset ID:"
-                                >
-                                    Refset ID:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.refsetId}}"
-                                >
-                                    {{refsetData?.refsetId}}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Edition/Extension:"
-                                    aria-label="Edition/Extension:"
-                                >
-                                    Edition/Extension:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.editionName}}"
-                                >
-                                    {{refsetData?.editionName}}
-                                    <img
-                                        class="refset-tool-edition-flag"
-                                        src="{{refsetData?.flagIcon}}"
-                                        *ngIf="refsetData?.flagIcon != ''"
-                                        [hidden]="!refsetData?.flagIcon"
-                                        title="{{refsetData?.editionName}} Flag"
-                                        aria-label="{{refsetData?.editionName}} Flag"
-                                    />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Type:"
-                                    aria-label="Type:"
-                                >
-                                    Type:
-                                </td>
-                                <td
-                                    class="
-                                        refset-tool-refset-metadata-value
-                                        capitalize-metadata-value
-                                    "
-                                    title="{{capitalizeFirstLetterOfString(refsetData?.type)}}"
-                                >
-                                    {{capitalizeFirstLetterOfString(refsetData?.type)}}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    aria-label="Tags:"
-                                    title="Tags:"
-                                >
-                                    Tags:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.tags?.join('; ')}}"
-                                >
-                                    {{refsetData?.tags?.join('; ')}}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    aria-label="Narrative:"
-                                    title="Narrative:"
-                                >
-                                    Narrative:
-                                </td>
-                                <td class="refset-tool-refset-metadata-value">
-                                    <ng-container>
-                                        <readonly-text-modal
-                                            [shortText]="refsetData?.narrativeShortText"
-                                            [longText]="refsetData?.narrative"
-                                            [title]="'Narrative'"
-                                        ></readonly-text-modal>
-                                    </ng-container>
-                                    <span>...</span>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Refset Names:"
-                                    aria-label="Refset Names:"
-                                >
-                                    Refset Names:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.name}}"
-                                >
-                                    {{refsetData?.name}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <a
+                        class="detail-top-link"
+                        (click)="openAuditTrail()"
+                        title="Audit Trail"
+                        aria-label="Audit Trail"
+                        >Audit Trail</a
+                    >
                 </div>
-
-                <!-- Versioned Metadata Section -->
-                <div class="col refset-tool-refset-metadata-column">
-                    <table
-                        class="refset-tool-refset-metadata-table table-striped"
-                    >
-                        <tbody>
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Version Date:"
-                                    aria-label="Version Date:"
-                                >
-                                    Version Date:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.versionDate}}"
-                                >
-                                    {{refsetData?.versionDate}}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Owner/Organization:"
-                                    aria-label="Owner/Organization:"
-                                >
-                                    Owner/Organization:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.organizationName}}"
-                                >
-                                    {{refsetData?.organizationName}}
-                                    <img
-                                        class="refset-tool-edition-flag"
-                                        src="{{refsetData?.flagIcon}}"
-                                        *ngIf="refsetData?.flagIcon != ''"
-                                        [hidden]="!refsetData?.flagIcon"
-                                        title="{{refsetData?.editionName}} Flag"
-                                        aria-label="{{refsetData?.editionName}} Flag"
-                                    />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Version Status:"
-                                    aria-label="Version Status:"
-                                >
-                                    Version Status:
-                                </td>
-                                <td
-                                    class="
-                                        refset-tool-refset-metadata-value
-                                        capitalize-metadata-value
-                                    "
-                                    title="{{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}"
-                                >
-                                    {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Direct URL/URI:"
-                                    aria-label="Direct URL/URI:"
-                                >
-                                    Direct URL/URI:
-                                </td>
-                                <td
-                                    class="refset-tool-refset-metadata-value"
-                                    title="{{refsetData?.url}}"
-                                >
-                                    <a [href]="directRoute">{{directUrl}}</a>
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Version Notes:"
-                                    aria-label="Version Notes:"
-                                >
-                                    Version Notes:
-                                </td>
-                                <td class="refset-tool-refset-metadata-value">
-                                    <ng-container>
-                                        <readonly-text-modal
-                                            [shortText]="refsetData?.versionNotesShortText"
-                                            [longText]="refsetData?.versionNotes"
-                                            [title]="'Version Notes'"
-                                        ></readonly-text-modal>
-                                        <span
-                                            (click)="openRichTextEditor('versionNotes', 'version notes')"
-                                            >...</span
-                                        >
-                                    </ng-container>
-                                </td>
-                            </tr>
-
-                            <tr *ngIf="refsetData?.definition">
-                                <td
-                                    class="refset-tool-refset-metadata-label"
-                                    title="Definition:"
-                                    aria-label="Definition:"
-                                >
-                                    Definition:
-                                </td>
-                                <td class="refset-tool-refset-metadata-value">
-                                    <div
-                                        *ngFor="let definitionClause of refsetData?.definition"
+                <img
+                    src="assets/collapse-plus-icon.svg"
+                    alt="Collapse Button"
+                    title="Collapse Button"
+                    aria-label="Collapse Button"
+                    class="collapse-plus-icon"
+                    (click)="metadataCollapseTrigger()"
+                />
+            </div>
+            <div
+                class="container-fluid"
+                id="detailsMetadataSection"
+                [hidden]="hideMetadataTable"
+            >
+                <div class="row refset-tool-refset-metadata-section">
+                    <!-- Static Metadata Section -->
+                    <div class="col refset-tool-refset-metadata-column">
+                        <table
+                            class="
+                                refset-tool-refset-metadata-table
+                                table-striped
+                            "
+                        >
+                            <tbody>
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Refset ID:"
+                                        aria-label="Refset ID:"
                                     >
-                                        {{definitionClause?.value}}
+                                        Refset ID:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.refsetId}}"
+                                    >
+                                        {{refsetData?.refsetId}}
+                                    </td>
+                                </tr>
 
-                                        <!-- <span *ngIf="!definitionClause.negated">
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Edition/Extension:"
+                                        aria-label="Edition/Extension:"
+                                    >
+                                        Edition/Extension:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.editionName}}"
+                                    >
+                                        {{refsetData?.editionName}}
+                                        <img
+                                            class="refset-tool-edition-flag"
+                                            src="{{refsetData?.flagIcon}}"
+                                            *ngIf="refsetData?.flagIcon != ''"
+                                            [hidden]="!refsetData?.flagIcon"
+                                            title="{{refsetData?.editionName}} Flag"
+                                            aria-label="{{refsetData?.editionName}} Flag"
+                                        />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Type:"
+                                        aria-label="Type:"
+                                    >
+                                        Type:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                            capitalize-metadata-value
+                                        "
+                                        title="{{capitalizeFirstLetterOfString(refsetData?.type)}}"
+                                    >
+                                        {{capitalizeFirstLetterOfString(refsetData?.type)}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        aria-label="Tags:"
+                                        title="Tags:"
+                                    >
+                                        Tags:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.tags?.join('; ')}}"
+                                    >
+                                        {{refsetData?.tags?.join('; ')}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        aria-label="Narrative:"
+                                        title="Narrative:"
+                                    >
+                                        Narrative:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        <ng-container>
+                                            <readonly-text-modal
+                                                [shortText]="refsetData?.narrativeShortText"
+                                                [longText]="refsetData?.narrative"
+                                                [title]="'Narrative'"
+                                            ></readonly-text-modal>
+                                        </ng-container>
+                                        <span>...</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Refset Names:"
+                                        aria-label="Refset Names:"
+                                    >
+                                        Refset Names:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.name}}"
+                                    >
+                                        {{refsetData?.name}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Versioned Metadata Section -->
+                    <div class="col refset-tool-refset-metadata-column">
+                        <table
+                            class="
+                                refset-tool-refset-metadata-table
+                                table-striped
+                            "
+                        >
+                            <tbody>
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Version Date:"
+                                        aria-label="Version Date:"
+                                    >
+                                        Version Date:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.versionDate}}"
+                                    >
+                                        {{refsetData?.versionDate}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Owner/Organization:"
+                                        aria-label="Owner/Organization:"
+                                    >
+                                        Owner/Organization:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.organizationName}}"
+                                    >
+                                        {{refsetData?.organizationName}}
+                                        <img
+                                            class="refset-tool-edition-flag"
+                                            src="{{refsetData?.flagIcon}}"
+                                            *ngIf="refsetData?.flagIcon != ''"
+                                            [hidden]="!refsetData?.flagIcon"
+                                            title="{{refsetData?.editionName}} Flag"
+                                            aria-label="{{refsetData?.editionName}} Flag"
+                                        />
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Version Status:"
+                                        aria-label="Version Status:"
+                                    >
+                                        Version Status:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                            capitalize-metadata-value
+                                        "
+                                        title="{{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}"
+                                    >
+                                        {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Direct URL/URI:"
+                                        aria-label="Direct URL/URI:"
+                                    >
+                                        Direct URL/URI:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                        title="{{refsetData?.url}}"
+                                    >
+                                        <a [href]="directRoute"
+                                            >{{directUrl}}</a
+                                        >
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Version Notes:"
+                                        aria-label="Version Notes:"
+                                    >
+                                        Version Notes:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        <ng-container>
+                                            <readonly-text-modal
+                                                [shortText]="refsetData?.versionNotesShortText"
+                                                [longText]="refsetData?.versionNotes"
+                                                [title]="'Version Notes'"
+                                            ></readonly-text-modal>
+                                            <span
+                                                (click)="openRichTextEditor('versionNotes', 'version notes')"
+                                                >...</span
+                                            >
+                                        </ng-container>
+                                    </td>
+                                </tr>
+
+                                <tr *ngIf="refsetData?.definition">
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        title="Definition:"
+                                        aria-label="Definition:"
+                                    >
+                                        Definition:
+                                    </td>
+                                    <td
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        <div
+                                            *ngFor="let definitionClause of refsetData?.definition"
+                                        >
+                                            {{definitionClause?.value}}
+
+                                            <!-- <span *ngIf="!definitionClause.negated">
                                         <mat-icon class="refset-tool-table-icon refset-tool-add refset-tool-definition-icon" aria-label="Inclusion Clause" title="Inclusion Clause">add_circle</mat-icon>
                                     </span>
 
                                     <span *ngIf="definitionClause.negated">
                                         <mat-icon class="refset-tool-table-icon refset-tool-delete refset-tool-definition-icon" aria-label="Exclusion Clause" title="Exclusion Clause">remove_circle</mat-icon>
                                     </span> -->
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    <!-- Rich Text Editor Dialog -->
-                    <ng-template #detailsRichTextDialog let-data>
-                        <editor
-                            [(ngModel)]="data.text"
-                            [init]="{
+                        <!-- Rich Text Editor Dialog -->
+                        <ng-template #detailsRichTextDialog let-data>
+                            <editor
+                                [(ngModel)]="data.text"
+                                [init]="{
                         base_url: '/tinymce',
                         suffix: '.min',
                         height: 200,
@@ -525,24 +557,50 @@
                         ],
                         toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
                     }"
-                        ></editor>
-                    </ng-template>
+                            ></editor>
+                        </ng-template>
+                    </div>
                 </div>
+
+                <ng-template #refsetFeedbackDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #refsetArtifactsDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #refsetAuditDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
             </div>
-
-            <ng-template #refsetFeedbackDialog let-data>
-                This functionality will be implemented in subsequent phases.
-            </ng-template>
-
-            <ng-template #refsetArtifactsDialog let-data>
-                This functionality will be implemented in subsequent phases.
-            </ng-template>
-
-            <ng-template #refsetAuditDialog let-data>
-                This functionality will be implemented in subsequent phases.
-            </ng-template>
         </div>
 
+        <div class="metadata-collapsible-container">
+            <div class="metadata-collapsible-container-group-header">
+                <div class="metadata-collapsible-container-title">
+                    Workflow History
+                </div>
+                <img
+                    src="assets/collapse-plus-icon.svg"
+                    alt="Collapse Button"
+                    title="Collapse Button"
+                    aria-label="Collapse Button"
+                    class="collapse-plus-icon"
+                    (click)="workflowCollapseTrigger()"
+                />
+            </div>
+            <ag-grid-angular
+            #workflowHistoryTable
+            [hidden]="hideWorkflowTable"
+            class="
+                ag-theme-alpine
+                refset-tool-ag-grid refset-tool-ag-grid-filter
+            "
+            style="width: 100%"
+        >
+        </ag-grid-angular>
+        </div>
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
@@ -958,7 +1016,6 @@
                                         (reloadGrid)="loadTaxonomyRoot()"
                                         (conceptDetail)="loadConceptDetail($event)"
                                         (numOfChildren)="numOfChildren = $event"
-
                                     ></app-taxonomy-tree>
                                 </div>
                             </div>
@@ -1365,7 +1422,11 @@
                                                     refset-tool-concept-details-section-title
                                                 "
                                             >
-                                                Children <span [hidden]="!numOfChildren">{{'(' + numOfChildren + ')'}}</span>
+                                                Children
+                                                <span [hidden]="!numOfChildren"
+                                                    >{{'(' + numOfChildren +
+                                                    ')'}}</span
+                                                >
                                             </div>
                                         </div>
 

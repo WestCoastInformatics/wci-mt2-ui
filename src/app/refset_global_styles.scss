@@ -1028,13 +1028,13 @@ button.refset-tool-table-action-icon {
 .refset-tool-refset-metadata-column {
     background-color: #f5f5f5;
     border-radius: 5px;
-    margin: 1.5rem 0 3rem 0;
+    margin: 1.5rem 0 0 0;
     padding-left: 15px;
     padding-right: 15px;
 }
 
 .refset-tool-refset-metadata-column:first-child {
-    margin: 1.5rem 1.5rem 3rem 0;
+    margin: 1.5rem 1.5rem 0 0;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -2454,3 +2454,223 @@ button.refset-tool-table-action-icon {
 .active-concept {
     background-color: #a4dbfd;
 }
+
+.details-page-title {
+    margin-bottom: 15px;
+}
+
+.details-page-right-button-group {
+    margin-top: 0;
+    margin-bottom: 15px;
+    .button-group-edit {
+        background-color: #f5f5f5;
+    }
+    .button-group-update {
+        background-color: #f5f5f5;
+    }
+    .button-group-review {
+        background-color: #f5f5f5;
+    }
+    .button-group-admin {
+        background-color: #f5f5f5;
+    }
+    .mat-button-toggle-checked {
+        background-color: #00a9e0;
+    }
+}
+
+.details-page-stepper {
+    zoom: 0.8;
+    margin-left: 250px;
+}
+
+.edit-button-group-right-below-sticky-header {
+}
+
+.finish-edit-button  {
+    margin-left: 10px !important;
+    width: 165px !important;
+}
+
+.request-review-button  {
+    margin-left: 10px !important;
+    width: 165px !important;
+}
+
+.request-publication-button {
+    margin-left: 10px !important;
+    width: 165px !important;
+}
+
+.ready-for-publication-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+.ready-for-publication-modal > .modal-dialog > .modal-content {
+    width: 700px;
+}
+
+.ready-for-publication-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.ready-for-publication-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.ready-for-publication-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+
+.ready-for-review-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+.ready-for-review-modal > .modal-dialog > .modal-content {
+    width: 700px;
+}
+
+.ready-for-review-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.ready-for-review-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.ready-for-review-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.ready-for-review-projects-button {
+    width: 136px;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    background-color: rgba(211, 95, 125, 1);
+    border-radius: 12px;
+    top: 10px;
+}
+
+.ready-for-review-projects-text {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+    padding: 2px 2px 2px 2px;
+    width: 100%;
+    color: #FFFFFF;
+}
+
+.review-completed-projects-button {
+    width: 136px;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    background-color: rgba(198, 48, 75, 1);
+    border-radius: 12px;
+    top: 10px;
+}
+
+.review-completed-projects-text {
+    position: absolute;
+    top: 0px;
+    left: 25px;
+    padding: 2px 2px 2px 2px;
+    width: 100%;
+    color: #FFFFFF;
+}
+
+.in-edit-projects-button {
+    width: 70px;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    background-color: rgba(147, 124, 1, 1);
+    border-radius: 12px;
+    top: 10px;
+}
+
+.in-edit-projects-text {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+    padding: 2px 2px 2px 2px;
+    width: 100%;
+    color: #FFFFFF;
+}
+
+.ready-for-publication-projects-button {
+    width: 160px;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    background-color: rgba(150, 72, 176, 1);
+    border-radius: 12px;
+    top: 10px;
+}
+
+.ready-for-publication-projects-text {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+    padding: 2px 2px 2px 2px;
+    width: 100%;
+    color: #FFFFFF;
+}
+
+#refsetProjectsPage .refset-tool-directory-column-version-status .ag-cell-value {
+    text-transform: none;
+}
+
+.metadata-collapsible-container {
+    background-color: #f5f5f5;
+    margin-bottom: 1rem;
+}
+
+.metadata-collapsible-container-group-header {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: flex;
+    place-content: space-between;
+}
+
+.metadata-collapsible-container-title {
+    font-size: 1.25rem;
+}
+
+.collapse-plus-icon {
+    width: 15px;
+    height: 15px;
+    align-self: center;
+}
+  
+  .metadata-shrink-div {
+      height: 56px;
+  }

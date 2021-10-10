@@ -142,6 +142,9 @@ export class RefsetDetails {
     directUrl: string;
     directRoute: string;
     numOfChildren = undefined;
+    hideMetadataTable = false;
+    hideWorkflowTable = false;
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -1305,5 +1308,21 @@ export class RefsetDetails {
 
     removeHtmlTags(value: string): string {
         return value?.replace(/(<([^>]+)>)/gi, "");
+    }
+
+    metadataCollapseTrigger(): void {
+        if (this.hideMetadataTable) {
+            this.hideMetadataTable = false;
+        } else {
+            this.hideMetadataTable = true;
+        }
+    }
+
+    workflowCollapseTrigger(): void {
+        if (this.hideWorkflowTable) {
+            this.hideWorkflowTable = false;
+        } else {
+            this.hideWorkflowTable = true;
+        }
     }
 }

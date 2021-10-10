@@ -71,7 +71,8 @@
             class="container-fluid page-title"
             style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)"
         >
-            Reference Sets <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span>
+            Reference Sets
+            <span [hidden]="!numOfResults">{{ "(" + numOfResults + ")" }}</span>
         </div>
         <div style="display: inline">
             <create-new-refset
@@ -142,6 +143,45 @@
             >
                 lock
             </mat-icon>
+        </ng-template>
+        <!-- Version Status Templates -->
+        <ng-template #directoryversionStatusSection let-params>
+            <ng-container *ngIf="params?.value == 'Ready for Review'">
+                <div class="ready-for-review-projects-button"></div>
+                <div class="ready-for-review-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.value == 'In Edit'">
+                <div class="in-edit-projects-button"></div>
+                <div class="in-edit-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.value == 'Ready for Publication'">
+                <div class="ready-for-publication-projects-button"></div>
+                <div class="ready-for-publication-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.value == 'Review Completed'">
+                <div class="review-completed-projects-button"></div>
+                <div class="review-completed-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.value == 'Published'">
+                <div class="published-projects-button"></div>
+                <div class="published-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.value == 'In Development'">
+                <div class="in-development-projects-button"></div>
+                <div class="in-development-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
         </ng-template>
     </div>
 </div>
