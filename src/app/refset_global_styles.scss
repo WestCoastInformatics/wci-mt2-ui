@@ -2810,9 +2810,10 @@ button.refset-tool-table-action-icon {
     display:flex
 }
 
-.limit-text-250 {
+.limit-text-30 {
     white-space: nowrap;
-    max-width: 250px;
+    width: 30ch;
     display: inline-block;
     overflow: hidden;
+    text-overflow: ellipsis;
 }

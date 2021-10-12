@@ -1006,11 +1006,7 @@ export class RefsetDetails {
             }
 
             if (CodeUtility.hasValue(this.refsetData.versionNotes)) {
-                this.refsetData.versionNotesShortText =
-                    CodeUtility.textOverflow(
-                        CodeUtility.stripHtml(this.refsetData.versionNotes),
-                        25
-                    );
+                this.refsetData.versionNotesShortText = this.refsetData.versionNotes;
             }
         }
     }

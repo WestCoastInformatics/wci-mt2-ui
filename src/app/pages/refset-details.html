@@ -667,15 +667,14 @@
                                         "
                                     >
                                         <ng-container>
-                                            <readonly-text-modal
-                                                [shortText]="refsetData?.versionNotesShortText"
-                                                [longText]="refsetData?.versionNotes"
-                                                [title]="'Version Notes'"
-                                            ></readonly-text-modal>
-                                            <span
-                                                (click)="openRichTextEditor('versionNotes', 'version notes')"
-                                                >...</span
-                                            >
+                                            <span (click)="openRichTextEditor('versionNotes', 'version notes')">
+                                                <readonly-text-modal
+                                                    [shortText]="refsetData?.versionNotesShortText"
+                                                    [longText]="refsetData?.versionNotes"
+                                                    [title]="'Version Notes'"
+                                                    [showEllipsis]="true"
+                                                ></readonly-text-modal>
+                                            </span>
                                         </ng-container>
                                     </td>
                                 </tr>

@@ -383,7 +383,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             }
 
             if (CodeUtility.hasValue(refset.versionNotes)){
-                refset.versionNotesShortText = CodeUtility.textOverflow(CodeUtility.stripHtml(refset.versionNotes), 25);
+                refset.versionNotesShortText = refset.versionNotes;
             }
 
             refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
