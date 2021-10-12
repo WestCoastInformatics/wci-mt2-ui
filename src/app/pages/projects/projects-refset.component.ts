@@ -47,6 +47,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     showFullNotesText = false;
     
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
+    @ViewChild('directoryversionStatusSection') versionStatus: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 
@@ -96,7 +97,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	    this.columnDefs = [
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }},            
-            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 150},
+            { field: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus }},
             // { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer'},
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
@@ -345,5 +346,15 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 this.existingBranchVersions = results.items ? results.items : undefined;
             });
         }
+    }
+
+    capitalizeFirstLetterOfString(stringValue: string): string {
+        if (stringValue) {
+            return stringValue.replace(/(?:^|\s|[-"'([{])+\S/g, (c) =>
+                c.toUpperCase()
+            );
+        }
+
+        return stringValue;
     }
 }

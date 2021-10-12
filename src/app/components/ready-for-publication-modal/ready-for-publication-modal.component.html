@@ -1,0 +1,66 @@
+<button
+    #readyForPublicationButton
+    (click)="openreadyForPublicationModal(readyForPublicationDialog)"
+    mat-raised-button
+    color="primary"
+    aria-hidden="false"
+    #finishEditButton
+    class="refset-tool-action-button request-publication-button"
+    aria-label="Request Publication"
+    title="Request Publication"
+    ng-reflect-color="primary"
+>
+    Request Publication
+</button>
+
+<ng-template #readyForPublicationDialog let-modal>
+    <div class="modal-header ready-for-publication-modal-header">
+        <h4
+            class="modal-title ready-for-publication-modal-title"
+            id="modal-basic-title"
+        >
+            Ready for Publication
+        </h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-publication-container-fluid">
+        <div class="modal-body ready-for-publication-modal-body">
+            <div class="notes-title">Notes:</div>
+            <editor
+                [(ngModel)]="requestForPublicationNotes"
+                [init]="{
+                    base_url: '/tinymce',
+                    suffix: '.min',
+                    height: 200,
+                    menubar: false,
+                    placeholder: 'Notes for consideration.',
+                    plugins: ['lists advlist'],
+                    toolbar:
+                        'undo redo | bold italic | bullist numlist outdent indent'
+                }"
+            ></editor>
+        </div>
+    </div>
+    <div class="modal-footer ready-for-publication-footer">
+        <button
+            type="button"
+            (click)="modal.close('Request Publication')"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button request-publication-modal-button"
+            aria-label="Request Publication"
+            title="Request Publication"
+            ng-reflect-color="primary"
+        >
+            Request Publication
+        </button>
+    </div>
+</ng-template>

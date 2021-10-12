@@ -5,6 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { firstValueFrom } from 'rxjs';
 import { Route, Router } from '@angular/router';
+import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
 @Component({
   selector: 'create-new-refset',
@@ -62,7 +63,8 @@ export class CreateNewRefsetComponent implements OnInit {
   constructor(private modalService: NgbModal,
     private detectChanges: ChangeDetectorRef,
     private router: Router,
-    private refsetService: RefsetService) {
+    private refsetService: RefsetService,
+    private readonly workflowService: WorkflowService) {
   }
 
   ngOnInit(): void {
@@ -117,7 +119,7 @@ export class CreateNewRefsetComponent implements OnInit {
       type: this.selectedReferenceType,
       tags: this.selectedTags,
       versionDate: this.selectedBranchVersion,
-      privateRefset: this.selectedAvailability,
+      privateRefset: this.selectedAvailability
     }).subscribe(refsetId => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);

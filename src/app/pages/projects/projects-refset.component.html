@@ -71,7 +71,8 @@
             class="container-fluid page-title"
             style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)"
         >
-            Reference Sets <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span>
+            Reference Sets
+            <span [hidden]="!numOfResults">{{ "(" + numOfResults + ")" }}</span>
         </div>
         <div style="display: inline">
             <create-new-refset
@@ -142,6 +143,51 @@
             >
                 lock
             </mat-icon>
+        </ng-template>
+        <!-- Version Status Templates -->
+        <ng-template #directoryversionStatusSection let-params>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
+                <div class="ready-for-review-projects-button"></div>
+                <div class="ready-for-review-projects-text">
+                    {{ 'Ready for Review' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'IN_EDIT'">
+                <div class="in-edit-projects-button"></div>
+                <div class="in-edit-projects-text">
+                    {{ 'In Edit' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_PUBLICATION'">
+                <div class="ready-for-publication-projects-button"></div>
+                <div class="ready-for-publication-projects-text">
+                    {{ 'Ready for Publication' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'REVIEW_COMPLETED'">
+                <div class="review-completed-projects-button"></div>
+                <div class="review-completed-projects-text">
+                    {{ 'Review Completed' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED'">
+                <div class="published-projects-button"></div>
+                <div class="published-projects-text">
+                    {{ 'Published' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_EDIT'">
+                <div class="ready-for-edit-projects-button"></div>
+                <div class="ready-for-edit-projects-text">
+                    {{ 'Ready for Edit' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!params?.data?.workflowStatus">
+                <div class="published-projects-button"></div>
+                <div class="published-projects-text">
+                    {{ params?.value }}
+                </div>
+            </ng-container>
         </ng-template>
     </div>
 </div>
