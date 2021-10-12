@@ -188,6 +188,10 @@ footer.footer a {
     font-size: 0.9em !important;
 }
 
+footer {
+    z-index: 1000;
+}
+
 .refset-tool-breadcrumb-bar > :first-child {
     margin-left: 10px;
 }
@@ -663,7 +667,7 @@ button.refset-tool-table-action-icon {
     top: 60px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 15px;
-    z-index: 100;
+    z-index: 1000;
     padding-top: 30px;
 }
 
@@ -2487,17 +2491,16 @@ button.refset-tool-table-action-icon {
 .edit-button-group-right-below-sticky-header {
 }
 
-.finish-edit-button  {
-    margin-left: 10px !important;
-    width: 165px !important;
-}
-
-.request-review-button  {
-    margin-left: 10px !important;
-    width: 165px !important;
-}
-
-.request-publication-button {
+.launch-release-button,
+.cancel-release-button,
+.finish-edit-button,
+.request-review-button,
+.request-publication-button,
+.update-refset-button,
+.unassign-button,
+.reject-refset-button,
+.accept-refset-button,
+.cancel-update-button {
     margin-left: 10px !important;
     width: 165px !important;
 }
@@ -2586,6 +2589,25 @@ button.refset-tool-table-action-icon {
     color: #FFFFFF;
 }
 
+.ready-for-edit-projects-button {
+    width: 136px;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    background-color: rgba(202, 176, 39, 1);
+    border-radius: 12px;
+    top: 10px;
+}
+
+.ready-for-edit-projects-text {
+    position: absolute;
+    top: 0px;
+    left: 30px;
+    padding: 2px 2px 2px 2px;
+    width: 100%;
+    color: #FFFFFF;
+}
+
 .review-completed-projects-button {
     width: 136px;
     height: 31px;
@@ -2663,6 +2685,8 @@ button.refset-tool-table-action-icon {
 
 .metadata-collapsible-container-title {
     font-size: 1.25rem;
+    display: flex;
+    align-items: center;
 }
 
 .collapse-plus-icon {
@@ -2674,3 +2698,109 @@ button.refset-tool-table-action-icon {
   .metadata-shrink-div {
       height: 56px;
   }
+
+  .metadata-collapsible-container-title > .set-of-buttons-workflow-history {
+    width: 78px;
+    height: 33px;
+    background-color: rgba(255, 255, 255, 1);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 164, 228, 1);
+    border-radius: 3px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-around;
+    .details-edit-refset-modal {
+        height: 31px;
+    }
+}
+
+.metadata-collapsible-container-title > .set-of-buttons-workflow-history {
+    .button-inactive {
+        width: 38px;
+        box-sizing: border-box;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgba(0, 164, 228, 1);
+        background-color: rgba(255, 255, 255, 1);
+        padding-left: 3px;
+    }
+}
+
+.workflow-history-notes-modal-body {
+    // background-color: #f5f5f6;
+    // padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+.workflow-history-notes-modal > .modal-dialog > .modal-content {
+    width: 700px;
+}
+
+.workflow-history-notes-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.workflow-history-notes-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.workflow-history-notes-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.mat-elevation-z8 {
+    overflow: overlay;
+    box-shadow: none;
+    max-height: 300px;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-bottom: 15px solid #f5f5f5;
+}
+
+.workflow-history-table-container {
+
+}
+
+.add-remove-descendants-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+.add-remove-descendants-modal > .modal-dialog > .modal-content {
+    width: 700px;
+}
+
+.add-remove-descendants-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.add-remove-descendants-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.add-remove-descendants-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}

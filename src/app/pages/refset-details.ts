@@ -22,6 +22,10 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { Subject, forkJoin } from "rxjs";
 import { TaxonomyTreeComponent } from "src/app/components/taxonomy-tree/taxonomy-tree.component";
 import { environment } from "src/environments/environment";
+import { WorkflowService } from "../services/workflow/workflow.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatSort } from "@angular/material/sort";
+import { MatPaginator } from "@angular/material/paginator";
 
 /**
  * @title Tree with nested nodes
@@ -135,6 +139,7 @@ export class RefsetDetails {
     showFullNarrativeText = false;
     showFullNotesText = false;
     editMode = false;
+    readonlyMode = true;
     taxonomyGridParams: any;
     showLoadingSpinner = false;
     selectedConcept: any;
@@ -143,8 +148,17 @@ export class RefsetDetails {
     directRoute: string;
     numOfChildren = undefined;
     hideMetadataTable = false;
-    hideWorkflowTable = false;
-
+    hideWorkflowTable = true;
+    workflowHistoryGridOptions: any;
+    workflowHistoryColumnDefs: any;
+    refsetStatus: string;
+    updateToggled = false;
+    reviewToggled = false;
+    adminToggled = false;
+    workflowHistoryDataSource: MatTableDataSource<any>;
+    displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -152,7 +166,8 @@ export class RefsetDetails {
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
-        private breadcrumbService: BreadcrumbService
+        private breadcrumbService: BreadcrumbService,
+        private readonly workflowService: WorkflowService
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -166,8 +181,11 @@ export class RefsetDetails {
         });
 
         this.id = this.route.snapshot.paramMap.get("refsetId");
-        this.directUrl = (window.location.host + this.router.url).replace('edit/refset', 'details');
-        this.directRoute = (this.router.url).replace('edit/refset', 'details');
+        this.directUrl = (window.location.host + this.router.url).replace(
+            "edit/refset",
+            "details"
+        );
+        this.directRoute = this.router.url.replace("edit/refset", "details");
         if (!this.editMode) {
             this.breadcrumbService.setBreadcrumbs([
                 { path: "/directory", label: "Directory" },
@@ -295,6 +313,8 @@ export class RefsetDetails {
         });
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
+            this.setButtonGroupToggles(results);
+            console.log(this.refsetStatus);
             this.refsetId = results?.refsetId;
             this.refsetData = results;
             if (this.editMode) {
@@ -369,21 +389,41 @@ export class RefsetDetails {
             this.refsetLoaded.next(true);
             this.refsetLoaded.complete();
         });
-
-        // this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
-
-        //     let success = results?.success;
-
-        //     if (CodeUtility.testBoolean(success)) {
-
-        //     } else {
-        //         console.log('Error caching refset member details.');
-        //     }
-
-        //     this.memberCacheLoaded.next(true);
-        //     this.memberCacheLoaded.complete();
-        // });
+        this.loadWorkflowHistoryData();
     }
+
+    private setButtonGroupToggles(results: any): void {
+        this.refsetStatus = results?.workflowStatus;
+        this.readonlyMode = !this.refsetStatus?.includes("IN_EDIT");
+        this.reviewToggled = this.refsetStatus?.includes("IN_REVIEW");
+    }
+
+    setWorkflowStatusByAction(notes: string, action: string): void {
+        this.workflowService
+            .setWorkflowStatusByAction(
+                this.refsetData.id,
+                this.refsetData.modifiedBy,
+                action,
+                notes
+            )
+            .subscribe((results) => {
+                console.log(results);
+                if (results) {
+                    // window.location.reload();
+                    this.ngOnInit();
+                }
+            });
+    }
+
+    loadWorkflowHistoryData(): void {
+        this.refsetService
+            .getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified")
+            .subscribe((results) => {
+                console.log(results);
+                this.workflowHistoryDataSource = results?.items;
+                this.workflowHistoryDataSource.sort = this.sort;
+            });
+    };
 
     //***** Members Taxonomy Functions  *****/
     loadTaxonomyRoot() {
@@ -422,9 +462,7 @@ export class RefsetDetails {
                         this.showLoadingSpinner = false;
                     } else {
                         console.log(this.selectedConcept);
-                        this.loadConceptDetail(
-                            this.selectedConcept
-                        );
+                        this.loadConceptDetail(this.selectedConcept);
                         this.onMembersGridReady(this.originalGridParams);
                     }
                 },
@@ -446,10 +484,8 @@ export class RefsetDetails {
                         this.onMembersGridReady(this.originalGridParams);
                         this.showLoadingSpinner = false;
                     } else {
-                        this.loadConceptDetail(
-                            this.selectedConcept
-                        );
-                            this.onMembersGridReady(this.originalGridParams);
+                        this.loadConceptDetail(this.selectedConcept);
+                        this.onMembersGridReady(this.originalGridParams);
                     }
                 },
                 (error) => {
@@ -1284,6 +1320,14 @@ export class RefsetDetails {
         }
 
         return stringValue;
+    }
+
+    modifyStatusSyntax(value: string): string {
+        return this.capitalizeFirstLetterOfString(value?.replace(/\_/g, ' ').toLowerCase());
+    }
+
+    setTimeFormat(dateTime: string): string {
+        return new Date(dateTime).toLocaleDateString() + ' ' + new Date(dateTime).toLocaleTimeString();
     }
 
     showMembersSearchBar(): boolean {

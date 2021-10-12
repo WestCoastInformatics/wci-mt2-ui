@@ -73,6 +73,8 @@ import { ScrollTopComponent } from './components/scroll-top/scroll-top.component
 import { ReadonlyTextModalComponent } from './components/readonly-text-modal/readonly-text-modal.component';
 import { ReadyForPublicationModalComponent } from './components/ready-for-publication-modal/ready-for-publication-modal.component';
 import { ReadyForReviewModalComponent } from './components/ready-for-review-modal/ready-for-review-modal.component';
+import { WorkflowHistoryNotesModalComponent } from './components/workflow-history-notes-modal/workflow-history-notes-modal.component';
+import { AddRemoveDescendantsModalComponent } from './components/add-remove-descendants-modal/add-remove-descendants-modal.component';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
@@ -106,7 +108,9 @@ const appRoutes: Routes = [
         ScrollTopComponent,
         ReadonlyTextModalComponent,
         ReadyForPublicationModalComponent,
-        ReadyForReviewModalComponent
+        ReadyForReviewModalComponent,
+        WorkflowHistoryNotesModalComponent,
+        AddRemoveDescendantsModalComponent
     ],
     imports: [
         RouterModule.forRoot(

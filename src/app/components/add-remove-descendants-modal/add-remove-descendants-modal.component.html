@@ -1,0 +1,60 @@
+<ng-template #addRemoveDescendantsDialog let-modal>
+    <div class="modal-header add-remove-descendants-modal-header">
+        <h4
+            class="modal-title add-remove-descendants-modal-title"
+            id="modal-basic-title"
+        >
+            Add/Remove Member(s)
+        </h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid add-remove-descendants-container-fluid">
+        <div class="modal-body add-remove-descendants-modal-body">
+            <mat-radio-group
+                aria-labelledby="add-remove-descendants-radio-group-label"
+                class="add-remove-descendants-radio-group"
+            >
+                <mat-radio-button
+                    class="add-remove-descendants-radio-button"
+                    [value]="descendantsAndSelf"
+                >
+                    {{ '\<\<       (Decendants and Self)' }}
+                </mat-radio-button>
+                <mat-radio-button
+                    class="add-remove-descendants-radio-button"
+                    [value]="descendantsOnly"
+                >
+                    {{ '\<       (Decendants Only) ' }}
+                </mat-radio-button>
+                <mat-radio-button
+                    class="add-remove-descendants-radio-button"
+                    [value]="selfOnly"
+                >
+                    {{ '\=       (Self Only)' }}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+    <div class="modal-footer add-remove-descendants-footer">
+        <button
+            type="button"
+            (click)="modal.close('Upgrade Members')"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button upgrade-members-modal-button"
+            aria-label="Upgrade Members"
+            title="Upgrade Members"
+            ng-reflect-color="primary"
+        >
+            Upgrade Members
+        </button>
+    </div>
+</ng-template>

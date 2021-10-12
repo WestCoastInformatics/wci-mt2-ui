@@ -51,6 +51,10 @@ export class RestService {
             return this.http.post<any>(this.restUrl + url, params);
     }
 
+    put(url: string, params: any): Observable<any> {
+        return this.http.put<any>(this.restUrl + url, params);
+    }
+
     getHttpClient(): HttpClient {
         return this.http;
     }
