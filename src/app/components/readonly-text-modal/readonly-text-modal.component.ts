@@ -12,6 +12,8 @@ export class ReadonlyTextModalComponent implements OnInit {
   shortText: string;
   @Input()
   title: string;
+  @Input()
+  showEllipsis: boolean;
 
   constructor(private readonly modalService: NgbModal) { }
 

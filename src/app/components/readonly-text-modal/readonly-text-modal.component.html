@@ -1,8 +1,11 @@
-<span
-    [innerHTML]="shortText"
-    (click)="openCreateRefsetModal(refsetVersionNotes)"
->
-</span>
+<div class="limit-text-container">
+    <span class="limit-text-250"
+        [innerHTML]="shortText"
+        (click)="openCreateRefsetModal(refsetVersionNotes)"
+    >
+    </span>
+    <span *ngIf="showEllipsis">...</span>
+</div>
 
 <ng-template #refsetVersionNotes let-modal>
     <div class="modal-header">

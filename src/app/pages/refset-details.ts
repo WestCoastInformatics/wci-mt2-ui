@@ -1002,10 +1002,7 @@ export class RefsetDetails {
     shortenNoteFields() {
         if (CodeUtility.hasValue(this.refsetData)) {
             if (CodeUtility.hasValue(this.refsetData.narrative)) {
-                this.refsetData.narrativeShortText = CodeUtility.textOverflow(
-                    CodeUtility.stripHtml(this.refsetData.narrative),
-                    25
-                );
+                this.refsetData.narrativeShortText = this.refsetData.narrative;
             }
 
             if (CodeUtility.hasValue(this.refsetData.versionNotes)) {

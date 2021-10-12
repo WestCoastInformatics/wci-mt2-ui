@@ -2694,7 +2694,7 @@ button.refset-tool-table-action-icon {
     height: 15px;
     align-self: center;
 }
-  
+
   .metadata-shrink-div {
       height: 56px;
   }
@@ -2803,4 +2803,16 @@ button.refset-tool-table-action-icon {
     border: none !important;
     padding-left: 30px !important;
     padding-bottom: 30px !important;
+}
+
+.limit-text-container {
+    float:left;
+    display:flex
+}
+
+.limit-text-250 {
+    white-space: nowrap;
+    max-width: 250px;
+    display: inline-block;
+    overflow: hidden;
 }
