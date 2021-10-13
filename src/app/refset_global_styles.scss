@@ -2813,7 +2813,7 @@ button.refset-tool-table-action-icon {
 .limit-text-30 {
     white-space: nowrap;
     width: 30ch;
-    display: inline-block;
+    display: block;
     overflow: hidden;
     text-overflow: ellipsis;
 }

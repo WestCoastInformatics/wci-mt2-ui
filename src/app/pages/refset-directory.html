@@ -296,12 +296,20 @@
                                     >
                                         <ng-container
                                             *ngIf="showFullNarrativeText"
-                                            >{{ data?.narrative }}</ng-container
-                                        >
+                                            >
+                                            <span
+                                                [innerHTML]="data?.narrative">
+                                            </span>
+                                        </ng-container>
                                         <ng-container
                                             *ngIf="!showFullNarrativeText"
-                                            >{{ data?.narrativeShortText
-                                            }}</ng-container
+                                            >
+                                                <div class="limit-text-container">
+                                                    <span class="limit-text-30"
+                                                        [innerHTML]="data?.narrative">
+                                                    </span>
+                                                </div>
+                                            </ng-container
                                         >
                                     </td>
                                 </tr>
@@ -402,12 +410,18 @@
                                         (mouseleave)="setFullNotesText(false)"
                                     >
                                         <ng-container *ngIf="showFullNotesText">
-                                            {{ data?.versionNotes }}
+                                            <span
+                                                [innerHTML]="data?.versionNotes">
+                                            </span>
                                         </ng-container>
                                         <ng-container
                                             *ngIf="!showFullNotesText"
                                         >
-                                            {{ data?.versionNotesShortText }}
+                                            <div class="limit-text-container">
+                                                <span class="limit-text-30"
+                                                    [innerHTML]="data?.versionNotes">
+                                                </span>
+                                            </div>
                                         </ng-container>
                                     </td>
                                 </tr>
