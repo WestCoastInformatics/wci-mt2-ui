@@ -37,13 +37,14 @@
                             "./node_modules/@fortawesome/fontawesome-free/css/all.css",
                             "src/styles.scss",
                             "node_modules/ngx-toastr/toastr.css",
-                            "./ecl-builder/ecl-builder.js"
+                            "./ecl-builder/styles.css"
                         ],
                         "scripts": [
                             "./node_modules/jquery/dist/jquery.min.js",
                             "./node_modules/popper.js/dist/umd/popper.min.js",
                             "./node_modules/bootstrap/dist/js/bootstrap.min.js",
-                            "./node_modules/tinymce/tinymce.min.js"
+                            "./node_modules/tinymce/tinymce.min.js",
+                            "./ecl-builder/ecl-builder.js"
                         ]
                     },
                     "configurations": {
@@ -60,7 +61,7 @@
                                     "with": "src/environments/environment.prod.ts"
                                 }
                             ],
-                            "optimization": true,
+                            "optimization": false,
                             "outputHashing": "all",
                             "sourceMap": false,
                             "extractCss": true,

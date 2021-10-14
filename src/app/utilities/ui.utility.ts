@@ -17,13 +17,13 @@ export class UiUtility {
     }
 
     /*
-     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined  
+     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined
      * @param [object] params - The ag-grid valuegetter params object.
      */
     static gridDateValueGetter(params) {
 
         if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
-            
+
                 let format = CodeUtility.DATE_FORMAT_REVERSE
 
             return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
@@ -143,9 +143,9 @@ export class UiUtility {
                             // Downloaing has finished
                             downloadUrl = URL.createObjectURL(request.response);
                             let id = 'file_download_' + CodeUtility.getUniqueID();
-                            
+
                             if (!CodeUtility.hasValue(fileName)) {
-                                
+
                                 let disposition = request.getResponseHeader('Content-Disposition');
 
                                 if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -220,7 +220,6 @@ export class UiUtility {
 
     // Function to open SNOMED ECL Builder
     static openEclBuilder(fieldId, branch) {
-        return;
         let field = $('#' + fieldId);
         let eclString = field.val();
         let snomedBrowserUrl = environment['snowstormApiUrl']
@@ -228,13 +227,13 @@ export class UiUtility {
         $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snomedBrowserUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
         const eclBuilder = document.querySelector('ecl-builder');
-    
+
         eclBuilder.addEventListener('output', (event: any) => {
 
             field.val(event.detail);
 
             // need to create a custom event to allow jquery to trigger an Angular event
-            const customEvent = document.createEvent('Event');  
+            const customEvent = document.createEvent('Event');
             customEvent.initEvent('input', true, true);
             field[0].dispatchEvent(customEvent);
         });
@@ -266,7 +265,7 @@ export class UiUtility {
                 pagingParams.totalKnown = true;
 
             }
-            
+
             rowParams.successCallback(results.items, lastRow);
         } else {
 
