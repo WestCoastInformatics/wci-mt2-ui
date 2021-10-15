@@ -30,7 +30,8 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
   }
 
   saveNotes(): void {
-    this.workflowService.saveNotes(this.refsetId, this.user, this.workflowHistoryNotes)
+    this.workflowService.saveNotes(this.refsetId, this.workflowHistoryNotes)
     this.refsetDetails.ngOnInit();
+    this.workflowHistoryNotes = '';
   }
 }

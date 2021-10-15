@@ -426,7 +426,11 @@ export class RefsetDetails {
                 console.log(results);
                 if (results) {
                     // window.location.reload();
-                    this.ngOnInit();
+                    if (action.includes('UNASSIGN')) {
+                        this.router.navigateByUrl('projects/refset');
+                    } else {
+                        this.ngOnInit();
+                    }
                 }
             });
     }

@@ -74,8 +74,8 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + `refset/${refsetId}/workflowStatus?action=${action}&user=${user}&notes=${notes}`, '');
     }
 
-    updateWorkflowStatus(refsetId: string, user: string, notes: string): Observable<any> {
-        return this.put(this.contextPath + `refset/${refsetId}/workflowNote?&user=${user}&notes=${notes}`, '');
+    updateWorkflowStatus(refsetId: string, notes: string): Observable<any> {
+        return this.put(this.contextPath + `refset/${refsetId}/workflowNote?&notes=${notes}`, '');
     }
 
     getMembersList(refsetId: string, params: any): Observable<any> {
