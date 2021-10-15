@@ -2434,7 +2434,7 @@ button.refset-tool-table-action-icon {
 }
 
 .scroll-to-top {
-    z-index: 1;
+    z-index: 1001;
     position: fixed;
     bottom: 15px;
     right: 15px;
@@ -2820,4 +2820,10 @@ button.refset-tool-table-action-icon {
 
 .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
     pointer-events: none !important;
+}
+
+.mat-column-modified,
+.mat-column-userName,
+.mat-column-workflowStatus {
+    width: 230px !important;
 }

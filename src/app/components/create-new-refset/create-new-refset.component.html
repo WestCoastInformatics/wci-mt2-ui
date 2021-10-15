@@ -14,7 +14,7 @@
     Create New Refset
 </button>
 
-<button
+<!-- <button
     class="button-inactive details-edit-refset-modal"
     *ngIf="isDetailsPage || editMode"
     [style.height]="editMode ? '31px' : '31px'"
@@ -26,8 +26,19 @@
         title="Edit metadata"
         aria-label="Edit metadata"
     />
+</button> -->
+<button
+    class="button-inactive details-edit-refset-modal"
+    *ngIf="isDetailsPage || editMode"
+    [style.height]="editMode ? '31px' : '31px'"
+>
+    <img
+        src="assets/notes-icon.svg"
+        alt="notes icon"
+        title="Edit metadata"
+        aria-label="Edit metadata"
+    />
 </button>
-
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #createNewRefsetDialog let-modal>
