@@ -1,13 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
 @Component({
   selector: 'ready-for-publication-modal',
   templateUrl: './ready-for-publication-modal.component.html'
 })
 export class ReadyForPublicationModalComponent implements OnInit {
+  @Input()
+  refsetData: any;
 
-  constructor(private readonly modalService: NgbModal) { }
+  @Input()
+  readonlyMode: boolean;
+  requestForPublicationNotes = '';
+  constructor(private readonly modalService: NgbModal,
+    private readonly workflowService: WorkflowService) { }
 
   ngOnInit(): void {
   }
@@ -19,4 +26,25 @@ export class ReadyForPublicationModalComponent implements OnInit {
       windowClass: 'ready-for-publication-modal'
     });
   }
+
+  clearModal(): void {
+    this.requestForPublicationNotes = '';
+  }
+
+  setWorkflowStatusByAction(notes: string, action: string): void {
+    this.workflowService
+        .setWorkflowStatusByAction(
+            this.refsetData.id,
+            this.refsetData.modifiedBy,
+            action,
+            notes
+        )
+        .subscribe((results) => {
+            console.log(results);
+            if (results) {
+                // window.location.reload();
+                this.ngOnInit();
+            }
+        });
+}
 }

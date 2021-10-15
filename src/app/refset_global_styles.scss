@@ -2817,3 +2817,7 @@ button.refset-tool-table-action-icon {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}

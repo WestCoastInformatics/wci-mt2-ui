@@ -317,6 +317,7 @@ export class RefsetDetails {
             console.log(this.refsetStatus);
             this.refsetId = results?.refsetId;
             this.refsetData = results;
+            console.log(this.refsetData)
             if (this.editMode) {
                 this.editModeProperties = {
                     projectName: this.refsetData["project"]?.name,
