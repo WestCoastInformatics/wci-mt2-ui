@@ -2827,3 +2827,22 @@ button.refset-tool-table-action-icon {
 .mat-column-workflowStatus {
     width: 230px !important;
 }
+
+.warning-header,
+.success-header {
+    display: flex;
+}
+
+.warning-logo,
+.success-logo {
+   margin-left: -10px; 
+}
+
+.warning-body,
+.success-body {
+    padding-left: 15px;
+}
+
+.refset-tool-action-download-report-button {
+    margin-top: 16px !important;
+}

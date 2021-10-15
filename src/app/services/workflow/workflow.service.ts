@@ -9,10 +9,10 @@ export class WorkflowService {
   
   constructor(private readonly refsetService: RefsetService) { }
 
-  saveNotes(refsetId: string, user: string, workflowHistoryNotes: string): void {
+  saveNotes(refsetId: string, workflowHistoryNotes: string): void {
     console.log(refsetId);
     console.log(workflowHistoryNotes);
-    this.refsetService.updateWorkflowStatus(refsetId, user, workflowHistoryNotes).subscribe((results) => {
+    this.refsetService.updateWorkflowStatus(refsetId, workflowHistoryNotes).subscribe((results) => {
       console.log(results);
     });
   }
