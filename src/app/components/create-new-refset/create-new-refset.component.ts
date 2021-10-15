@@ -27,7 +27,7 @@ export class CreateNewRefsetComponent implements OnInit {
   selectedParentConcept = undefined;
   selectedNarrative = '';
   selectedTags = [];
-  referenceTypes = ['Extensional', 'Intensional'];
+  referenceTypes = ['Extensional', 'Intensional', 'External'];
   versionNotes = ''
   selectedReferenceType = '';
   selectedAvailability = false;

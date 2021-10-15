@@ -200,7 +200,7 @@ export class RefsetDetails {
 
         var allObservables = {
             refsetLoaded: this.refsetLoaded$,
-            //memberCacheLoaded: this.memberCacheLoaded
+            memberCacheLoaded: this.memberCacheLoaded
         };
 
         this.refsetLoaded$.subscribe((loaded) => {
@@ -244,9 +244,9 @@ export class RefsetDetails {
         });
 
         // call forkJoin on returned observables
-        forkJoin(allObservables).subscribe(({ refsetLoaded }) => {
+        forkJoin(allObservables).subscribe(({ refsetLoaded, memberCacheLoaded }) => {
             console.log("refsetLoaded: " + refsetLoaded);
-            //console.log('memberCacheLoaded: ' + memberCacheLoaded);
+            console.log('memberCacheLoaded: ' + memberCacheLoaded);
 
             this.loadTaxonomyRoot();
 
@@ -390,6 +390,21 @@ export class RefsetDetails {
             this.refsetLoaded.next(true);
             this.refsetLoaded.complete();
         });
+        
+        this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
+
+            let success = results?.success;
+
+            if (CodeUtility.testBoolean(success)) {
+
+            } else {
+                console.log('Error caching refset member details.');
+            }
+
+            this.memberCacheLoaded.next(true);
+            this.memberCacheLoaded.complete();
+        });
+
         this.loadWorkflowHistoryData();
     }
 
@@ -1043,6 +1058,9 @@ export class RefsetDetails {
                 this.isConceptDetailsLoading = false;
                 this.conceptDetail = concept;
                 console.log(results);
+                
+                this.conceptDetail.roleGroups = results.roleGroups;
+                
                 this.conceptDescriptions = results.descriptions.filter(
                     function (description) {
                         return description != null;
