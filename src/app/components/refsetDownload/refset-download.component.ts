@@ -298,6 +298,29 @@ export class RefsetDownloadComponent {
     }
 
     private checkRefsetDates(): boolean {
+
+    	const jeComparisonToDate = new Date(this.selectedVersionDate);
+    	var keysToDelete = new Array();
+
+       	for (let entry of this.comparisonFromOptions.entries()) {
+	        var date;
+			if (entry[1].display?.includes('(')) {
+                date = new Date(entry[1].display?.split('(')[0]);
+            } else {
+                date = new Date(entry[1].display);
+
+            }
+               
+            if (date >= jeComparisonToDate) {
+		    	keysToDelete.push(entry[0]);
+		    }
+ 		}
+
+    	var idx = 0;
+   	 	for (let key of keysToDelete) {
+			this.comparisonFromOptions.splice((key - idx++), 1);
+    	}
+
         const mappedComparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
             if (version.display?.includes('(')) {
                 // tslint:disable-next-line: no-shadowed-variable
