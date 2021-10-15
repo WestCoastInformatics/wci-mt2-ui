@@ -1,6 +1,7 @@
 <button
+    *ngIf="!readonlyMode"
     #readyForPublicationButton
-    (click)="openreadyForPublicationModal(readyForPublicationDialog)"
+    (click)="openreadyForPublicationModal(readyForPublicationDialog);"
     mat-raised-button
     color="primary"
     aria-hidden="false"
@@ -51,7 +52,7 @@
     <div class="modal-footer ready-for-publication-footer">
         <button
             type="button"
-            (click)="modal.close('Request Publication')"
+            (click)="modal.close('Request Publication'); setWorkflowStatusByAction(requestForPublicationNotes, 'REQUEST_PUBLICATION'); clearModal()"
             mat-raised-button
             color="primary"
             aria-hidden="false"

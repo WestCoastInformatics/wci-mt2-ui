@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
@@ -11,9 +12,11 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
   workflowHistoryNotes: string;
   @Input()
   refsetId: string;
+  @Input()
+  user: string;
   constructor(private readonly modalService: NgbModal,
-    private readonly refsetService: RefsetService,
-    private readonly workflowService: WorkflowService) { }
+    private readonly workflowService: WorkflowService,
+    private readonly refsetDetails: RefsetDetails) { }
 
   ngOnInit(): void {
   }
@@ -27,6 +30,7 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
   }
 
   saveNotes(): void {
-    this.workflowService.saveNotes(this.refsetId, this.workflowHistoryNotes);
+    this.workflowService.saveNotes(this.refsetId, this.user, this.workflowHistoryNotes)
+    this.refsetDetails.ngOnInit();
   }
 }

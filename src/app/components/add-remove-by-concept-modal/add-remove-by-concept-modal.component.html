@@ -439,7 +439,7 @@
                                                     refset-tool-concept-details-concept-info-column
                                                 "
                                                 [class.refset-tool-concept-details-concept-info-column-status]="
-                                                    !conceptDetail?.active
+                                                conceptDetail && !conceptDetail?.active
                                                 "
                                             >
                                                 <div class="container-fluid">
@@ -607,43 +607,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- Roles Section -->
-                                            <!-- <div
-                                            class="
-                                                col
-                                                refset-tool-concept-details-concept-roles-column
-                                            "
-                                            [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail?.roleGroups?.length"
-                                        >
-                                            <div
-                                                class="container-fluid"
-                                                *ngIf="true"
-                                            >
-                                                <span
-                                                    class="no-attributes"
-                                                    *ngIf="!conceptDetail?.roleGroups?.length"
-                                                    >No attributes</span
-                                                >
-                                                <div
-                                                    class="
-                                                        row
-                                                        refset-tool-concept-details-role-row
-                                                    "
-                                                    *ngFor="let role of conceptDetail?.roleGroups | keyvalue"
-                                                >
-                                                    <div
-                                                        class="
-                                                            row
-                                                            refset-tool-concept-details-role-details
-                                                        "
-                                                        *ngFor="let detail of role?.value"
-                                                    >
-                                                        {{detail}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> -->
                                         </div>
                                     </div>
 
