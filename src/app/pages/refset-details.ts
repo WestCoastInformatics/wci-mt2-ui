@@ -1054,6 +1054,9 @@ export class RefsetDetails {
                 this.isConceptDetailsLoading = false;
                 this.conceptDetail = concept;
                 console.log(results);
+                
+                this.conceptDetail.roleGroups = results.roleGroups;
+                
                 this.conceptDescriptions = results.descriptions.filter(
                     function (description) {
                         return description != null;
