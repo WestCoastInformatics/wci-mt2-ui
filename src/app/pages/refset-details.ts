@@ -478,12 +478,12 @@ export class RefsetDetails {
                 (data) => {
                     console.log(data);
                     if (!isInDetailsParentPanel) {
-                        this.onMembersGridReady(this.originalGridParams);
+                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
                         this.showLoadingSpinner = false;
                     } else {
                         console.log(this.selectedConcept);
                         this.loadConceptDetail(this.selectedConcept);
-                        this.onMembersGridReady(this.originalGridParams);
+                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
                     }
                 },
                 (error) => {
@@ -501,11 +501,11 @@ export class RefsetDetails {
                 (data) => {
                     console.log(data);
                     if (!isInDetailsPanel) {
-                        this.onMembersGridReady(this.originalGridParams);
+                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
                         this.showLoadingSpinner = false;
                     } else {
                         this.loadConceptDetail(this.selectedConcept);
-                        this.onMembersGridReady(this.originalGridParams);
+                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
                     }
                 },
                 (error) => {
@@ -1011,6 +1011,16 @@ export class RefsetDetails {
     }
 
     //***** General Functions *****/
+
+    reloadMembersGridAndTaxonomy(originalGridParams){
+
+        // reload the members grid
+        this.onMembersGridReady(this.originalGridParams)
+
+        // reload the members taxonomy tree
+        this.taxonomyManualStateRefresh = new Boolean("true");
+        this.loadTaxonomyRoot();
+    }
 
     openEclBuilder(fieldId) {
         UiUtility.openEclBuilder(
