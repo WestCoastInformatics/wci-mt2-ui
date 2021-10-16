@@ -1058,9 +1058,10 @@ export class RefsetDetails {
                 this.isConceptDetailsLoading = false;
                 this.conceptDetail = concept;
                 console.log(results);
-                
+
                 this.conceptDetail.roleGroups = results.roleGroups;
-                
+                this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
+
                 this.conceptDescriptions = results.descriptions.filter(
                     function (description) {
                         return description != null;
