@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit {
     user: User;
     userSubscription: Subscription;
     breadcrumbs;
+    authToken: any;
 
     constructor(private authenticationService: AuthenticationService,
         private breadcrumbService: BreadcrumbService,
@@ -24,10 +25,11 @@ export class NavbarComponent implements OnInit {
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef) {
 
+        this.authToken = localStorage.getItem('auth_token');
+
         this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
         //this.userSubscription = this.authenticationService.getUser().subscribe(data => this.user = data);
 
-        
     }
 
     ngOnInit() {
@@ -47,6 +49,14 @@ export class NavbarComponent implements OnInit {
         if (breadcrumb.selectable){
             this.router.navigate([breadcrumb.path]);
         }
+    }
+
+    logoutUser() {
+        this.authenticationService.logoutUser().subscribe( data => {
+            this.router.navigate(['login']);
+            localStorage.clear();
+        }, err => {
+        });
     }
 
     logout() {
