@@ -391,19 +391,7 @@ export class RefsetDetails {
             this.refsetLoaded.complete();
         });
         
-        this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
-
-            let success = results?.success;
-
-            if (CodeUtility.testBoolean(success)) {
-
-            } else {
-                console.log('Error caching refset member details.');
-            }
-
-            this.memberCacheLoaded.next(true);
-            this.memberCacheLoaded.complete();
-        });
+        this.cacheTaxonomyAncestors();
 
         this.loadWorkflowHistoryData();
     }
@@ -446,6 +434,23 @@ export class RefsetDetails {
     };
 
     //***** Members Taxonomy Functions  *****/
+    cacheTaxonomyAncestors() {
+
+        this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
+
+            let success = results?.success;
+
+            if (CodeUtility.testBoolean(success)) {
+
+            } else {
+                console.log('Error caching refset member details.');
+            }
+
+            this.memberCacheLoaded.next(true);
+            this.memberCacheLoaded.complete();
+        });
+    }
+
     loadTaxonomyRoot() {
         this.showLoadingSpinner = true;
         let restParams = {
@@ -530,8 +535,7 @@ export class RefsetDetails {
         this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
 
         // reload the members taxonomy tree
-        this.taxonomyManualStateRefresh = new Boolean("true");
-        this.loadTaxonomyRoot();
+        this.reloadTaxonomyTree();
 
         // if concept details is present reload the concept details child tree
         if (CodeUtility.hasValue(this.conceptDetail)) {
@@ -728,6 +732,12 @@ export class RefsetDetails {
             true,
             false
         );
+    }
+
+    reloadTaxonomyTree() {
+
+        this.taxonomyManualStateRefresh = new Boolean("true");
+        this.loadTaxonomyRoot();
     }
 
     //***** Members Grid Functions *****/
@@ -1016,10 +1026,22 @@ export class RefsetDetails {
 
         // reload the members grid
         this.onMembersGridReady(this.originalGridParams)
+        this.memberCacheLoaded = new Subject<boolean>();
+
+        var allObservables = {
+            memberCacheLoaded: this.memberCacheLoaded
+        };
+
+        // call forkJoin on returned observables
+        forkJoin(allObservables).subscribe(({ memberCacheLoaded }) => {
+            this.reloadTaxonomyTree();
+        });
 
         // reload the members taxonomy tree
-        this.taxonomyManualStateRefresh = new Boolean("true");
-        this.loadTaxonomyRoot();
+        this.cacheTaxonomyAncestors();
+        // this.memberCacheLoaded.subscribe((results) => {
+        //     this.reloadTaxonomyTree();
+        // });
     }
 
     openEclBuilder(fieldId) {
