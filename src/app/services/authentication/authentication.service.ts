@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { User } from '../../models/user';
 import { Subject } from 'rxjs';
 import { AuthoringService } from '../authoring/authoring.service';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +14,44 @@ export class AuthenticationService {
 
     private user = new Subject<User>();
 
-    constructor(private http: HttpClient, private authoringService: AuthoringService) {
+    constructor(private http: HttpClient, private authoringService: AuthoringService, private router: Router) {
+    }
+
+    login(userName: any, password: any): Observable<any> {
+        return this.http.post(`${environment.restUrl}${environment.restContextPath}/authenticate/${userName}`, {
+                password
+            },
+            {headers: new HttpHeaders(
+                {
+                    // 'content-type': 'application/json'
+                })
+            }
+        );
+    }
+
+    logoutUser(): Observable<any> {
+        return this.http.post(`${environment.restUrl}${environment.restContextPath}/logout/${localStorage.getItem('auth_token')}`, {
+
+            },
+            {headers: new HttpHeaders(
+                {
+                    // 'content-type': 'application/json'
+                })
+            }
+        );
+    }
+
+    isAuthenticated(): boolean {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    notAuthenticated(): any {
+        localStorage.clear();
+        this.router.navigate(['/login']);
     }
 
     setUser() {
