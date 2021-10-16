@@ -6,7 +6,7 @@
     </div>
 
     <div class="row" *ngIf="noData">
-        <div>There is no data</div>
+        <div>No children</div>
     </div>
 
     <tree-root
@@ -25,7 +25,7 @@
                 (click)="addConcept(node?.data, true, isOnDetailsPage, node?.parent?.data, addRemoveDescendantsDialog)"
                 width="18px"
                 height="18px"
-                title="Add"
+                title="Add Member"
                 aria-label="Add"
                 class="add-symbol-icon"
                 alt="Add symbol shown when you're able to add a concept"
@@ -36,7 +36,7 @@
                 (click)="removeConcept(node?.data, true, isOnDetailsPage, node?.parent?.data, addRemoveDescendantsDialog)"
                 width="18px"
                 height="18px"
-                title="Subtract"
+                title="Remove Member"
                 aria-label="Subtract"
                 class="subtract-symbol-icon"
                 alt="Subtract symbol shown when you're able to remove a concept"

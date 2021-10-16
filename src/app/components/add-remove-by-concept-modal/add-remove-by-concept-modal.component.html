@@ -6,7 +6,7 @@
     <img
         src="assets/mag-icon.svg"
         alt="magnifying glass icon"
-        title="Search for concepts"
+        title="Search for Concepts to Add"
         aria-label="Search for concepts"
     />
 </button>
@@ -64,7 +64,6 @@
                                             >Search by ID or Keyword</mat-label
                                         >
                                         <input
-                                            title="Search by ID or Keyword"
                                             aria-label="Search by ID or Keyword"
                                             matInput
                                             #addRemoveByConceptHierarchySearchInput
@@ -92,7 +91,6 @@
                                             class="
                                                 add-remove-concept-hierarchy-modal-results-title
                                             "
-                                            title="Search results"
                                             aria-label="Search results"
                                         >
                                             Search Results
@@ -103,7 +101,6 @@
                                             "
                                             [color]="color"
                                             [checked]="!checked"
-                                            title="Display Active Concepts Only"
                                             aria-label="Display Active Concepts Only"
                                             (change)="
                                             toggleDisplayActiveConcepts($event)
@@ -148,7 +145,7 @@
                                                         (click)="
                                                             addConcept(concept)
                                                         "
-                                                        title="Add"
+                                                        title="Add Member"
                                                         aria-label="Add"
                                                         alt="Add symbol shown when you're able to add a concept"
                                                     />
@@ -162,7 +159,7 @@
                                                                 concept
                                                             )
                                                         "
-                                                        title="Subtract"
+                                                        title="Remove Member"
                                                         aria-label="Subtract"
                                                         alt="Subtract symbol shown when you're able to remove a concept"
                                                     />
@@ -332,7 +329,7 @@
                                                     0
                                                 "
                                             >
-                                                There is no data.
+                                                No parents
                                             </div>
                                         </div>
 
@@ -358,7 +355,7 @@
                                                     (click)="addConcept(parent, true)"
                                                     width="18px"
                                                     height="18px"
-                                                    title="Add"
+                                                    title="Add Member"
                                                     aria-label="Add"
                                                     class="add-symbol-icon"
                                                     alt="Add symbol shown when you're able to add a concept"
@@ -373,7 +370,7 @@
                                                     "
                                                     width="18px"
                                                     height="18px"
-                                                    title="Subtract"
+                                                    title="Remove Member"
                                                     aria-label="Subtract"
                                                     class="subtract-symbol-icon"
                                                     alt="Subtract symbol shown when you're able to remove a concept"
@@ -467,7 +464,7 @@
                                                                 "
                                                                 width="18px"
                                                                 height="18px"
-                                                                title="Add"
+                                                                title="Add Member"
                                                                 aria-label="Add"
                                                                 class="
                                                                     add-symbol-icon
@@ -486,7 +483,7 @@
                                                                 "
                                                                 width="18px"
                                                                 height="18px"
-                                                                title="Subtract"
+                                                                title="Remove Member"
                                                                 aria-label="Subtract"
                                                                 class="
                                                                     subtract-symbol-icon
@@ -677,7 +674,7 @@
             aria-hidden="false"
             class="refset-tool-action-button"
             aria-label="Search"
-            title="Search"
+            title="Search Concepts"
             ng-reflect-color="primary"
         >
             Search

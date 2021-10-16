@@ -142,8 +142,8 @@
                         <img
                             src="assets/compare-refset-icon.svg"
                             alt="notes icon"
-                            title="Edit metadata"
-                            aria-label="Edit metadata"
+                            title="Compare Refset"
+                            aria-label="Compare Refset"
                         />
                     </button>
                     <create-new-refset
@@ -156,7 +156,7 @@
             </div>
 
             <div class="current-version-label">Current Version:</div>
-            <div class="row justify-content-end details-version-select">
+            <div class="row justify-content-end details-version-select" title="Select Version"> 
                 <mat-form-field appearance="fill">
                     <mat-label></mat-label>
                     <mat-select
@@ -203,7 +203,7 @@
                             <img
                                 src="assets/compare-refset-icon.svg"
                                 alt="compare icon"
-                                title="Compare metadata"
+                                title="Compare Refset"
                                 aria-label="Compare metadata"
                             />
                         </button>
@@ -217,7 +217,7 @@
                             <img
                                 src="assets/pages-icon.svg"
                                 alt="pages icon"
-                                title="Clone refset"
+                                title="Clone Refset"
                                 aria-label="Clone refset"
                             />
                         </button>
@@ -225,18 +225,10 @@
                             <img
                                 src="assets/trash-icon.svg"
                                 alt="trash icon"
-                                title="Delete refset"
+                                title="Delete Refset"
                                 aria-label="Delete refset"
                             />
                         </button>
-                    </div>
-                    <div>
-                        <a class="detail-top-link" (click)="openArtifacts()"
-                            >Artifacts</a
-                        >
-                        <a class="detail-top-link" (click)="openAuditTrail()"
-                            >Audit Trail</a
-                        >
                     </div>
                 </div>
                 <div class="edit-button-group-right-below-sticky-header">
@@ -397,14 +389,14 @@
                     <a
                         class="detail-top-link"
                         (click)="openArtifacts()"
-                        title="Artifacts"
+                        title="Open Artifacts List"
                         aria-label="Artifacts"
                         >Artifacts</a
                     >
                     <a
                         class="detail-top-link"
                         (click)="openAuditTrail()"
-                        title="Audit Trail"
+                        title="Open Audit Trail"
                         aria-label="Audit Trail"
                         >Audit Trail</a
                     >
@@ -412,7 +404,7 @@
                 <img
                     src="assets/collapse-plus-icon.svg"
                     alt="Collapse Button"
-                    title="Collapse Button"
+                    title="Collapse Metadata"
                     aria-label="Collapse Button"
                     class="collapse-plus-icon"
                     (click)="metadataCollapseTrigger()"
@@ -438,7 +430,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Refset ID:"
                                         aria-label="Refset ID:"
                                     >
                                         Refset ID:
@@ -447,7 +438,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.refsetId}}"
                                     >
                                         {{refsetData?.refsetId}}
                                     </td>
@@ -458,7 +448,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Edition/Extension:"
                                         aria-label="Edition/Extension:"
                                     >
                                         Edition/Extension:
@@ -467,7 +456,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.editionName}}"
                                     >
                                         {{refsetData?.editionName}}
                                         <img
@@ -486,7 +474,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Type:"
                                         aria-label="Type:"
                                     >
                                         Type:
@@ -496,7 +483,6 @@
                                             refset-tool-refset-metadata-value
                                             capitalize-metadata-value
                                         "
-                                        title="{{capitalizeFirstLetterOfString(refsetData?.type)}}"
                                     >
                                         {{capitalizeFirstLetterOfString(refsetData?.type)}}
                                     </td>
@@ -508,7 +494,6 @@
                                             refset-tool-refset-metadata-label
                                         "
                                         aria-label="Tags:"
-                                        title="Tags:"
                                     >
                                         Tags:
                                     </td>
@@ -516,7 +501,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.tags?.join('; ')}}"
                                     >
                                         {{refsetData?.tags?.join('; ')}}
                                     </td>
@@ -528,7 +512,6 @@
                                             refset-tool-refset-metadata-label
                                         "
                                         aria-label="Narrative:"
-                                        title="Narrative:"
                                     >
                                         Narrative:
                                     </td>
@@ -552,7 +535,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Refset Names:"
                                         aria-label="Refset Names:"
                                     >
                                         Refset Names:
@@ -561,7 +543,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.name}}"
                                     >
                                         {{refsetData?.name}}
                                     </td>
@@ -584,7 +565,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Version Date:"
                                         aria-label="Version Date:"
                                     >
                                         Version Date:
@@ -593,7 +573,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.versionDate}}"
                                     >
                                         {{refsetData?.versionDate}}
                                     </td>
@@ -604,7 +583,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Owner/Organization:"
                                         aria-label="Owner/Organization:"
                                     >
                                         Owner/Organization:
@@ -613,7 +591,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.organizationName}}"
                                     >
                                         {{refsetData?.organizationName}}
                                         <img
@@ -632,7 +609,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Version Status:"
                                         aria-label="Version Status:"
                                     >
                                         Version Status:
@@ -642,7 +618,6 @@
                                             refset-tool-refset-metadata-value
                                             capitalize-metadata-value
                                         "
-                                        title="{{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}"
                                     >
                                         {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
                                     </td>
@@ -653,7 +628,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Direct URL/URI:"
                                         aria-label="Direct URL/URI:"
                                     >
                                         Direct URL/URI:
@@ -662,7 +636,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.url}}"
                                     >
                                         <a [href]="directRoute"
                                             >{{directUrl}}</a
@@ -675,7 +648,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Version Notes:"
                                         aria-label="Version Notes:"
                                     >
                                         Version Notes:
@@ -704,7 +676,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Definition:"
                                         aria-label="Definition:"
                                     >
                                         Definition:
@@ -783,7 +754,7 @@
                 <img
                     src="assets/collapse-plus-icon.svg"
                     alt="Collapse Button"
-                    title="Collapse Button"
+                    title="Collapse Workflow History"
                     aria-label="Collapse Button"
                     class="collapse-plus-icon"
                     (click)="workflowCollapseTrigger()"
@@ -902,7 +873,7 @@
                     <img
                         src="assets/wrench-icon.svg"
                         alt="wrench icon"
-                        title="ECL builder"
+                        title="Open ECL Builder"
                         aria-label="ECL Builder"
                     />
                 </button>
@@ -940,7 +911,7 @@
                                             style="padding-left: 5px"
                                             [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay"
                                         >
-                                            <app-column-chooser
+                                            <app-column-chooser title="Select Columns to Display"
                                                 [gridColumnApi]="membersGridColumnApi"
                                                 [useDialog]="useDialog"
                                                 [manualStateRefresh]="membersGridChooserManualStateRefresh"
@@ -994,8 +965,7 @@
                                                     id="detailsTableSearchInput"
                                                     [(ngModel)]="tableSearchInput"
                                                     (input)="onTableSearchChange()"
-                                                    title="Search (Type at least 3 characters. Example: shou fra)"
-                                                    aria-label="Search (Type at least 3 characters. Example: shou fra)"
+                                                    aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)"
                                                 />
                                             </mat-form-field>
                                             <span
@@ -1042,8 +1012,7 @@
                                                     id="detailsTaxonomySearchInput"
                                                     [(ngModel)]="taxonomySearchInput"
                                                     (input)="onTaxonomySearchChange()"
-                                                    title="Search (Type at least 3 characters. Example: shou fra)"
-                                                    aria-label="Search (Type at least 3 characters. Example: shou fra)"
+                                                    aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)"
                                                 />
                                             </mat-form-field>
                                             <mat-form-field
@@ -1101,14 +1070,14 @@
                                             >
                                                 <mat-button-toggle
                                                     value="table"
-                                                    title="Table"
+                                                    title="Display Members in a Table"
                                                     aria-label="Table"
                                                     >Table</mat-button-toggle
                                                 >
                                                 <mat-button-toggle
                                                     value="taxonomy"
                                                     title="Taxonomy"
-                                                    aria-label="Taxonomy"
+                                                    aria-label="Display Members in a Taxonomy"
                                                     [disabled]="!showTaxonomySearchTable"
                                                     >{{taxonomyButtonLabel}}</mat-button-toggle
                                                 >
@@ -1165,7 +1134,7 @@
                                                             refset-tool-table-action-icon
                                                         "
                                                         aria-label="Open History"
-                                                        title="Open History"
+                                                        title="Open Membership History"
                                                     >
                                                         <mat-icon
                                                             >history</mat-icon
@@ -1183,7 +1152,7 @@
                                                         class="
                                                             refset-tool-table-action-icon
                                                         "
-                                                        aria-label="Open Feedback"
+                                                        aria-label="Open Feedback on Member"
                                                         title="Open Feedback"
                                                     >
                                                         <mat-icon
@@ -1366,7 +1335,7 @@
                                                 "
                                                 *ngIf="conceptDetailParents.length == 0"
                                             >
-                                                There is no data.
+                                                No Parents 
                                             </div>
                                         </div>
 
@@ -1391,7 +1360,7 @@
                                                     (click)="addConcept(parent, true)"
                                                     width="18px"
                                                     height="18px"
-                                                    title="Add"
+                                                    title="Add Member"
                                                     aria-label="Add"
                                                     class="add-symbol-icon"
                                                     alt="Add symbol shown when you're able to add a concept"
@@ -1406,7 +1375,7 @@
                                                     "
                                                     width="18px"
                                                     height="18px"
-                                                    title="Subtract"
+                                                    title="Remove Member"
                                                     aria-label="Subtract"
                                                     class="subtract-symbol-icon"
                                                     alt="Subtract symbol shown when you're able to remove a concept"
@@ -1488,7 +1457,7 @@
                                                                 (click)="addConcept(conceptDetail)"
                                                                 width="18px"
                                                                 height="18px"
-                                                                title="Add"
+                                                                title="Add Member"
                                                                 aria-label="Add"
                                                                 class="
                                                                     add-symbol-icon
@@ -1501,7 +1470,7 @@
                                                                 (click)="removeConcept(conceptDetail)"
                                                                 width="18px"
                                                                 height="18px"
-                                                                title="Subtract"
+                                                                title="Remove Member"
                                                                 aria-label="Subtract"
                                                                 class="
                                                                     subtract-symbol-icon
@@ -1553,7 +1522,7 @@
                                                                     refset-tool-concept-details-action-icon
                                                                 "
                                                                 aria-label="Open Concept in New SNOMED Browser Window"
-                                                                title="Open Concept in New SNOMED Browser Window"
+                                                                title="Open Concept in SNOMED Browser Window"
                                                             >
                                                                 <mat-icon
                                                                     >open_in_new</mat-icon
@@ -1657,7 +1626,7 @@
                                                 >
                                                     <span
                                                         class="no-attributes"
-                                                        *ngIf="!conceptDetail.roleGroups.length"
+                                                        *ngIf="!conceptDetail.numRoleGroups"
                                                         >No attributes</span
                                                     >
                                                     <div
@@ -1740,7 +1709,7 @@
         (click)="addConcept(params?.data)"
         width="18px"
         height="18px"
-        title="Add"
+        title="Add Member"
         aria-label="Add"
         class="add-symbol-icon"
         alt="Add symbol shown when you're able to add a concept"
@@ -1753,7 +1722,7 @@
             "
         width="18px"
         height="18px"
-        title="Subtract"
+        title="Remove Member"
         aria-label="Subtract"
         class="subtract-symbol-icon"
         alt="Subtract symbol shown when you're able to remove a concept"
