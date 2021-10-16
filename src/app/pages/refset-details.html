@@ -855,15 +855,15 @@
             <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
                 <import-from-file-modal
                     [internalRefsetId]="id"
-                    (reloadGrid)="onMembersGridReady(originalGridParams)"
+                    (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                 ></import-from-file-modal>
                 <import-from-list-modal
                     [internalRefsetId]="id"
-                    (reloadGrid)="onMembersGridReady(originalGridParams)"
+                    (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                 ></import-from-list-modal>
                 <add-remove-by-concept-modal
                     [internalRefsetId]="id"
-                    (reloadGrid)="onMembersGridReady(originalGridParams)"
+                    (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                 ></add-remove-by-concept-modal>
                 <button
                     (click)="openEclBuilder('detailsTableSearchInput')"
@@ -1256,7 +1256,7 @@
                                         [options]="taxonomyOptions"
                                         [isOnDetailsPage]="true"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
-                                        (reloadGrid)="loadTaxonomyRoot()"
+                                        (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                                         (conceptDetail)="loadConceptDetail($event)"
                                         (numOfChildren)="numOfChildren = $event"
                                     ></app-taxonomy-tree>
@@ -1685,7 +1685,7 @@
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode && !readonlyMode"
                                                 [isOnDetailsPage]="true"
-                                                (reloadGrid)="onMembersGridReady(originalGridParams)"
+                                                (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                                                 (conceptDetail)="loadConceptDetail($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>

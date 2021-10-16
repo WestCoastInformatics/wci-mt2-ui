@@ -47,18 +47,51 @@
                 numeric identifiers.
             </div>
             <mat-form-field class="add-by-list-text-area" appearance="outline">
+                <p *ngIf="!successfulImport && showBanner">
+                    <ngb-alert type="warning" (click)="showBanner = false">
+                        <div class="warning-header">
+                            <span class="material-icons warning-logo">
+                                warning
+                            </span>
+                            <div class="warning-body">
+                                <strong>Warning!</strong><br /><br />
+                                {{failedIds}}/{{numOfIds}} IDs entered are invalid and have not been
+                                added to the reference set.
+                                <br /><br />Import/export report available for
+                                download.
+                            </div>
+                        </div></ngb-alert
+                    >
+                </p>
+                <p *ngIf="successfulImport && showBanner">
+                    <ngb-alert type="success" (click)="showBanner = false">
+                        <div class="success-header">
+                            <span class="material-icons success-logo">
+                                warning
+                            </span>
+                            <div class="success-body">
+                                <strong>Success!</strong><br /><br />All IDs
+                                have been added to the reference set.
+                                <br /><br />Import/export report available for
+                                download.
+                            </div>
+                        </div></ngb-alert
+                    >
+                </p>
                 <textarea
                     matInput
                     class="import-from-list-text-area"
                     [(ngModel)]="listOfIds"
-                ></textarea>
+                >
+test</textarea
+                >
             </mat-form-field>
         </div>
     </div>
     <div class="modal-footer import-from-list-modal-footer">
         <button
             type="button"
-            (click)="modal.close('Add Members'); addMembers()"
+            (click)="addMembers()"
             mat-raised-button
             color="primary"
             aria-hidden="false"
@@ -71,7 +104,7 @@
         </button>
         <button
             type="button"
-            (click)="modal.close('Remove Members'); removeMembers()"
+            (click)="removeMembers()"
             mat-raised-button
             color="primary"
             aria-hidden="false"
@@ -85,5 +118,19 @@
         >
             Remove Members
         </button>
+        <button
+        *ngIf="showBanner"
+        type="button"
+        (click)="createImportReport();"
+        mat-raised-button
+        color="primary"
+        aria-hidden="false"
+        class="refset-tool-action-download-report-button"
+        aria-label="Import Details Report"
+        title="Import Details Report"
+        ng-reflect-color="primary"
+    >
+        Download Report
+    </button>
     </div>
 </ng-template>
