@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { AngularCsv } from 'angular7-csv';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { RefsetService } from "src/app/services/rest/refset.service";
+import { AngularCsv } from "angular7-csv";
 
 @Component({
     selector: "import-from-file-modal",
-    templateUrl: './import-from-file-modal.component.html',
+    templateUrl: "./import-from-file-modal.component.html",
 })
 export class ImportFromFileModalComponent implements OnInit {
     files: any[] = [];
@@ -38,7 +38,7 @@ export class ImportFromFileModalComponent implements OnInit {
         this.showBanner = false;
         this.files = [];
         this.modalService.open(importFromFileDialog, {
-            backdrop: 'static',
+            backdrop: "static",
             keyboard: false,
         });
     }
@@ -46,13 +46,13 @@ export class ImportFromFileModalComponent implements OnInit {
     createImportReport(): void {
         const ids = [
             {
-                name: 'Concept',
-                status: 'Status',
+                name: "Concept",
+                status: "Status",
             },
         ];
         const failedIdNamesWithoutWhiteSpace = this.failedIdNames.map(
             (name) => {
-                return name?.replace(' ', '');
+                return name?.replace(" ", "");
             }
         );
         console.log(failedIdNamesWithoutWhiteSpace);
@@ -60,7 +60,7 @@ export class ImportFromFileModalComponent implements OnInit {
             for (let i = 0; i < this.allIds.length; i++) {
                 ids.push({
                     name: this.allIds[i],
-                    status: 'SUCCESS',
+                    status: "SUCCESS",
                 });
             }
         } else {
@@ -68,18 +68,18 @@ export class ImportFromFileModalComponent implements OnInit {
                 if (failedIdNamesWithoutWhiteSpace.includes(this.allIds[i])) {
                     ids.push({
                         name: this.allIds[i],
-                        status: 'Failed',
+                        status: "Failed",
                     });
                 } else {
                     ids.push({
                         name: this.allIds[i],
-                        status: 'SUCCESS',
+                        status: "SUCCESS",
                     });
                 }
             }
         }
 
-        console.log(new AngularCsv(ids, 'Import Report'));
+        console.log(new AngularCsv(ids, "Import Report"));
     }
 
     addMembers(): void {
@@ -88,44 +88,42 @@ export class ImportFromFileModalComponent implements OnInit {
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
             for (const line of fileReader.result.toString().split(/[\r\n]+/)) {
-                if (line.split('\t')[5] !== 'referencedComponentId') {
+                if (line.split("\t")[5] !== "referencedComponentId") {
                     listOfIds.push(
-                        line.split('\t')[5]
-                            ? line.split('\t')[5]
-                            : line.split('\t')[0].replace(',', '').trim()
+                        line.split("\t")[5]
+                            ? line.split("\t")[5]
+                            : line.split("\t")[0].replace(",", "").trim()
                     );
                 }
             }
-            console.log(listOfIds.join(','));
-            this.allIds = listOfIds.join(',').split(',');
-            this.numOfIds = listOfIds.join(',').split(',').length;
+            console.log(listOfIds.join(","));
+            this.allIds = listOfIds.join(",").split(",");
+            this.numOfIds = listOfIds.join(",").split(",").length;
             this.refsetService
                 .addRefsetMembers(
                     this.internalRefsetId,
-                    'list',
-                    listOfIds.join(',')
+                    "list",
+                    listOfIds.join(",")
                 )
-                .subscribe(
-                    (data) => {
-                      console.log('hit')
-                        console.log(data);
-                        this.sendReloadGridTrigger(true);
+                .subscribe((data) => {
+                    console.log("hit");
+                    console.log(data);
+                    this.sendReloadGridTrigger(true);
+                    this.showLoadingSpinner = false;
+                    if (data?.status?.includes("All concepts added")) {
                         this.showLoadingSpinner = false;
-                        if (data?.status?.includes('All concepts added')) {
-                          this.showLoadingSpinner = false;
-                            this.showBanner = true;
-                            this.successfulImport = true;
-                        } else {
-                          this.showLoadingSpinner = false;
-                            this.failedIdNames = data?.error
-                                .replace('Unable to add concepts ', '')
-                                .split(',');
-                            this.failedIds = data?.error.split(',').length;
-                            this.showBanner = true;
-                            this.successfulImport = false;
-                        }
+                        this.showBanner = true;
+                        this.successfulImport = true;
+                    } else {
+                        this.showLoadingSpinner = false;
+                        this.failedIdNames = data?.error
+                            .replace("Unable to add concepts ", "")
+                            .split(",");
+                        this.failedIds = data?.error.split(",").length;
+                        this.showBanner = true;
+                        this.successfulImport = false;
                     }
-                );
+                });
         };
         fileReader.readAsText(this.uploadedFile);
     }
@@ -136,20 +134,20 @@ export class ImportFromFileModalComponent implements OnInit {
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
             for (const line of fileReader.result.toString().split(/[\r\n]+/)) {
-                if (line.split('\t')[5] !== 'referencedComponentId') {
+                if (line.split("\t")[5] !== "referencedComponentId") {
                     listOfIds.push(
-                        line.split('\t')[5]
-                            ? line.split('\t')[5]
-                            : line.split('\t')[0].replace(',', '').trim()
+                        line.split("\t")[5]
+                            ? line.split("\t")[5]
+                            : line.split("\t")[0].replace(",", "").trim()
                     );
                 }
             }
-            console.log(listOfIds.join(','));
+            console.log(listOfIds.join(","));
             this.refsetService
                 .removeRefsetMembers(
                     this.internalRefsetId,
-                    'list',
-                    listOfIds.join(',')
+                    "list",
+                    listOfIds.join(",")
                 )
                 .subscribe(
                     (data) => {
@@ -231,14 +229,14 @@ export class ImportFromFileModalComponent implements OnInit {
      */
     formatBytes(bytes, decimals) {
         if (bytes === 0) {
-            return '0 Bytes';
+            return "0 Bytes";
         }
         const k = 1024;
         const dm = decimals <= 0 ? 0 : decimals || 2;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return (
-            parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+            parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
         );
     }
 }
