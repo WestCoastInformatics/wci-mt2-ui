@@ -11,18 +11,18 @@
         </button>
 
         <span *ngFor="let page of paginationPages.pages">
-            <button #paginationPageNumber mat-raised-button [color]="currentPage === page ? 'primary' : ''" (click)="goToPage(page)" attr.aria-label="Go To Page {{page}}">
+            <button #paginationPageNumber mat-raised-button [color]="currentPage === page ? 'primary' : ''" (click)="goToPage(page)" attr.aria-label="Go To Page {{page}}" title="Go To Page {{page}}">
                 {{page}}
             </button>
         </span>
 
         <button mat-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
-            (click)="goToPage(paginationPages.startPage + 5)" title="Go To Page {{paginationPages.startPage + 5}}" attr.aria-label="Go To Page {{paginationPages.startPage + 5}}">
+            (click)="goToPage(paginationPages.startPage + 5)" title="Go To Page {{paginationPages.startPage + 5}}" attr.aria-label="Go To Page {{paginationPages.startPage + 5}}" title="Go To Page {{paginationPages.startPage + 5}}">
             ...
         </button>
 
         <button mat-raised-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
-            (click)="goToPage(paginationPages.totalPages)" attr.aria-label="Go To Page {{paginationPages.totalPages}}">
+            (click)="goToPage(paginationPages.totalPages)" attr.aria-label="Go To Page {{paginationPages.totalPages}}" title="Go To Page {{paginationPages.totalPages}}">
             {{paginationPages.totalPages}}
         </button>
 
@@ -41,7 +41,7 @@
     <div class="row">
 
         <span *ngFor="let sizeOption of pageSizeOptions">
-            <button [hidden]="(numOfResults < sizeOption) || (numOfResults < 25)" mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''" (click)="setPageSize(sizeOption)">
+            <button [hidden]="(numOfResults < sizeOption) || (numOfResults < 25)" mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''" (click)="setPageSize(sizeOption)" title="{{sizeOption}} Members per Page">
                 {{sizeOption}}
             </button>
         </span>
