@@ -77,8 +77,12 @@ export class TaxonomyTreeComponent {
                 }
 
                 if (CodeUtility.hasValue(this.nodes)) {
+
                     let treeModel: TreeModel = this.treeComponent?.treeModel;
-                    this.sortTree(treeModel.nodes);
+
+                    if (CodeUtility.hasValue(treeModel)) {
+                        this.sortTree(treeModel.nodes);
+                    }
                 }
 
                 this.changeDetectorRef.detectChanges();
