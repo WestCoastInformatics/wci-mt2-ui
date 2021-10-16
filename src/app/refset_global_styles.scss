@@ -2846,3 +2846,8 @@ button.refset-tool-table-action-icon {
 .refset-tool-action-download-report-button {
     margin-top: 16px !important;
 }
+
+.add-remove-descendants-radio-group {
+    display: flex;
+    flex-direction: column;
+}

@@ -431,6 +431,9 @@ export class RefsetDetails {
                     } else {
                         this.ngOnInit();
                     }
+                } else {
+                    this.ngOnInit();
+                    this.changeDetectorRef.detectChanges();
                 }
             });
     }
