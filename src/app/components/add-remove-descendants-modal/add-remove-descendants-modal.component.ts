@@ -7,6 +7,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AddRemoveDescendantsModalComponent implements OnInit {
 
+  selectedOption: string = 'selfOnly';
+  options = [
+    { value: "descendantsAndSelf", name: '\<\<       (Decendants and Self)'},
+    { value: "descendantsOnly", name: '\<       (Decendants Only) '},
+    { value: "selfOnly", name:'\=       (Self Only)'}
+  ];
+
   constructor(private readonly modalService: NgbModal) { }
 
   ngOnInit(): void {

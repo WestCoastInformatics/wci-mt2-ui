@@ -70,7 +70,7 @@ export class TaxonomyTreeComponent {
     loadedChildren: any;
     isAdd: any;
     conceptForDescendantModal: any;
-    upgradeChoice: number;
+    upgradeChoice: number = 2;
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
@@ -269,6 +269,11 @@ export class TaxonomyTreeComponent {
                         console.log("data: ", data);
                         this.sendReloadGridTrigger(true);
                         this.sendTableChangeTrigger(true);
+                        this.sendConceptDetailTrigger(
+                            this.selectedConcept?.code.toString()
+                        );
+
+                     
                     },
                     (error) => {
                         console.log(error);
