@@ -67,10 +67,17 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             });
     }
 
-    displayActiveConcepts($event: any): void {
+    toggleDisplayActiveConcepts($event: any): void {
+
         console.log($event);
         this.showActiveConceptsOnly = $event.checked;
+        this.filterActiveConcepts();
+    }
+
+    filterActiveConcepts(): void {
+
         if (this.showActiveConceptsOnly) {
+
             this.dataSource = this.dataSource.filter((item) => {
                 return item.active ? item : undefined;
             });
@@ -269,6 +276,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
                         this.dataSource = results.items;
                         this.initialResults = this.dataSource;
+                        
                         // tslint:disable-next-line: no-unused-expression
                         if (results.items.length) {
                             this.changeModalSize();
@@ -276,6 +284,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                         } else {
                             this.showResults = false;
                         }
+
+                        this.filterActiveConcepts();
+
                         this.showLoadingSpinner = false;
                     },
                     (error) => {

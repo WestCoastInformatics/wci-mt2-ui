@@ -320,7 +320,11 @@ button.refset-tool-table-action-icon {
 .refset-tool-concept-details-taxonomy-icon {
     padding-left: 0px;
 }
+
 // AG Grid Styles
+.refset_tool_inactive_row {
+    background-color: $inactive_row_color;
+}
 .refset-tool-ag-grid {
     // max-height: 623px;
 

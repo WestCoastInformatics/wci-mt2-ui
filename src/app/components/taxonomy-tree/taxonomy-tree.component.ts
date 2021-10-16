@@ -100,8 +100,8 @@ export class TaxonomyTreeComponent {
 
                 if (CodeUtility.hasValue(this.nodes)) {
                     let treeModel: TreeModel = this.treeComponent?.treeModel;
-                    if (treeModel) {
-                        this.sortTree(treeModel?.nodes);
+                    if (CodeUtility.hasValue(treeModel)) {
+                        this.sortTree(treeModel.nodes);
                     }
                 }
 

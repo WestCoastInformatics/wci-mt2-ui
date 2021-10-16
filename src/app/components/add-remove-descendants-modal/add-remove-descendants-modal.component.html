@@ -4,7 +4,7 @@
             class="modal-title add-remove-descendants-modal-title"
             id="modal-basic-title"
         >
-            Add/Remove Member(s)
+            Add/Remove Member(s) 11
         </h4>
         <button
             type="button"
@@ -19,26 +19,13 @@
         <div class="modal-body add-remove-descendants-modal-body">
             <mat-radio-group
                 aria-labelledby="add-remove-descendants-radio-group-label"
-                class="add-remove-descendants-radio-group"
+                class="add-remove-descendants-radio-group" 
+                [(ngModel)]="selectedOption"
             >
-                <mat-radio-button
-                    class="add-remove-descendants-radio-button"
-                    [value]="descendantsAndSelf"
-                >
-                    {{ '\<\<       (Decendants and Self)' }}
+                <mat-radio-button *ngFor="let option of options" [value]="option.value"> 
+                    {{ option.name}} 
                 </mat-radio-button>
-                <mat-radio-button
-                    class="add-remove-descendants-radio-button"
-                    [value]="descendantsOnly"
-                >
-                    {{ '\<       (Decendants Only) ' }}
-                </mat-radio-button>
-                <mat-radio-button
-                    class="add-remove-descendants-radio-button"
-                    [value]="selfOnly"
-                >
-                    {{ '\=       (Self Only)' }}
-                </mat-radio-button>
+
             </mat-radio-group>
         </div>
     </div>
@@ -54,7 +41,7 @@
             title="Upgrade Members"
             ng-reflect-color="primary"
         >
-            Upgrade Members
+            Upgrade Members 22
         </button>
     </div>
 </ng-template>
