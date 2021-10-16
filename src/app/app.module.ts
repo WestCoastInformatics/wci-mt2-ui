@@ -75,13 +75,16 @@ import { ReadyForPublicationModalComponent } from './components/ready-for-public
 import { ReadyForReviewModalComponent } from './components/ready-for-review-modal/ready-for-review-modal.component';
 import { WorkflowHistoryNotesModalComponent } from './components/workflow-history-notes-modal/workflow-history-notes-modal.component';
 import { AddRemoveDescendantsModalComponent } from './components/add-remove-descendants-modal/add-remove-descendants-modal.component';
+import { AuthGuardGuard } from './services/authentication/auth-guard.guard';
+import { LoginComponent } from './auth/login/login.component';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
-    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
-    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
-    { path: 'projects/refset', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' } },
-    { path: 'edit/refset/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Edit Reference Set', editMode: true } },
+    { path: 'login', component: LoginComponent },
+    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' }, canActivate: [AuthGuardGuard] },
+    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false }, canActivate: [AuthGuardGuard] },
+    { path: 'projects/refset', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
+    { path: 'edit/refset/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Edit Reference Set', editMode: true }, canActivate: [AuthGuardGuard] },
 ];
 
 @NgModule({
@@ -110,7 +113,8 @@ const appRoutes: Routes = [
         ReadyForPublicationModalComponent,
         ReadyForReviewModalComponent,
         WorkflowHistoryNotesModalComponent,
-        AddRemoveDescendantsModalComponent
+        AddRemoveDescendantsModalComponent,
+        LoginComponent
     ],
     imports: [
         RouterModule.forRoot(
