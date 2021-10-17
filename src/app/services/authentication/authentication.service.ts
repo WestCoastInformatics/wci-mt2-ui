@@ -30,7 +30,7 @@ export class AuthenticationService {
     }
 
     logoutUser(): Observable<any> {
-        return this.http.post(`${environment.restUrl}${environment.restContextPath}/logout/${localStorage.getItem('auth_token')}`, {
+        return this.http.post(`${environment.restUrl}${environment.restContextPath}logout/${localStorage.getItem('auth_token')}`, {
 
             },
             {headers: new HttpHeaders(
@@ -42,8 +42,10 @@ export class AuthenticationService {
     }
 
     isAuthenticated(): boolean {
-        const token = localStorage.getItem('auth_token');
-        if (token) {
+        // const token = localStorage.getItem('auth_token');
+        const token = document.cookie.split(';');
+        console.log('token', token);
+        if (token.length > 1) {
             return true;
         } else {
             return false;
