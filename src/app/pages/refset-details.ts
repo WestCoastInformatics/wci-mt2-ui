@@ -174,14 +174,24 @@ export class RefsetDetails {
     }
 
     //***** Framework Functions *****/
-    ngOnInit() {
+    ngOnInit() { 
+
         this.route.data.subscribe((data) => {
             console.log(data.editMode);
 
             this.editMode = data.editMode;
         });
 
-        this.id = this.route.snapshot.paramMap.get("refsetId");
+        this.route.params.subscribe(routeParams => {
+
+            this.id = routeParams.refsetId;
+            this.initializeDetailsPage();
+        });
+    }
+
+    initializeDetailsPage() {
+
+        //this.id = this.route.snapshot.paramMap.get("refsetId");
         this.directUrl = (window.location.host + this.router.url).replace(
             "edit/refset",
             "details"
@@ -421,20 +431,20 @@ export class RefsetDetails {
                 notes
             )
             .subscribe((results) => {
-    console.log("BBB with results: " , results);
+                
                 if (results) {
-console.log("ZZZZZ1 = : " , results.id);
-                    // window.location.reload();
+                    
                     if (action.includes('UNASSIGN')) {
                         this.router.navigateByUrl('projects/refset');
+
                     } else if (this.refsetData.id != results.id) {
-						this.router.navigateByUrl('/edit/refset?refsetId=' + results.id);
+						this.router.navigateByUrl('edit/refset/' + results.id);
 	
                     } else {
-                        this.ngOnInit();
+                        this.initializeDetailsPage();
                     }
                 } else {
-                    this.ngOnInit();
+                    this.initializeDetailsPage();
                     this.changeDetectorRef.detectChanges();
                 }
             }); 
@@ -490,6 +500,7 @@ console.log("ZZZZZ1 = : " , results.id);
                 this.showLoadingSpinner = false;
             });
     }
+
 
     addConcept(concept, isInDetailsParentPanel = false): void {
         console.log("start addition");
@@ -834,7 +845,7 @@ console.log("ZZZZZ1 = : " , results.id);
                     .getMembersList(this.id, restParams)
                     .subscribe(
                         (results) => {
-                            
+
                             this.membersGridNumberOfResults = results.total;
                             console.log(this.membersGridNumberOfResults);
                             if (results.items.length == 0 && pageNumber > 1) {
