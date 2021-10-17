@@ -849,8 +849,8 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
-            <span [hidden]="!numOfResults">
-                &nbsp;{{'(' + numOfResults + ')'}}</span
+            <span [hidden]="!membersGridNumberOfResults">
+                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}</span
             >
             <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
                 <import-from-file-modal
@@ -1106,7 +1106,7 @@
                                         [pageSizeOptions]="membersGridPaging.pageSizeOptions"
                                         [totalKnown]="membersGridPaging.totalKnown"
                                         [manualStateRefresh]="membersGridPaging.manualStateRefresh"
-                                        [numOfResults]="numOfResults"
+                                        [numOfResults]="membersGridNumberOfResults"
                                     >
                                     </app-pagination>
 
@@ -1219,7 +1219,7 @@
                                             [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
                                             [totalKnown]="taxonomySearchGridPaging.totalKnown"
                                             [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
-                                            [numOfResults]="numOfResults"
+                                            [numOfResults]="taxonomySearchNumberOfResults"
                                         >
                                         </app-pagination>
 

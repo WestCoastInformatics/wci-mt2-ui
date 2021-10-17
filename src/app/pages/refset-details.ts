@@ -116,7 +116,8 @@ export class RefsetDetails {
     taxonomySearchGridLastFilter = "";
     taxonomySearchGridLastSort = "";
     originalGridParams: any;
-    numOfResults: number;
+    membersGridNumberOfResults: number;
+    taxonomySearchNumberOfResults: number;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
@@ -635,6 +636,8 @@ console.log("ZZZZZ1 = : " , results.id);
                     .getTaxonomySearch(this.id, restParams)
                     .subscribe(
                         (results) => {
+
+                            this.taxonomySearchNumberOfResults = results.total;
                             this.taxonomySearchResults = results.items;
                             console.log(this.taxonomySearchResults);
                             if (results.items.length == 0 && pageNumber > 1) {
@@ -831,8 +834,9 @@ console.log("ZZZZZ1 = : " , results.id);
                     .getMembersList(this.id, restParams)
                     .subscribe(
                         (results) => {
-                            this.numOfResults = results.total;
-                            console.log(this.numOfResults);
+                            
+                            this.membersGridNumberOfResults = results.total;
+                            console.log(this.membersGridNumberOfResults);
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.membersGridApi.showNoRowsOverlay();
                                 this.membersGridPaging.totalRows =
