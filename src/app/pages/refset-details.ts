@@ -501,6 +501,10 @@ export class RefsetDetails {
             });
     }
 
+    testmeth() {
+        let disable = !this.refsetData?.availableActions?.includes('REVIEW');
+        return disable;
+    }
 
     addConcept(concept, isInDetailsParentPanel = false): void {
         console.log("start addition");

@@ -83,6 +83,7 @@
             <mat-button-toggle
                 class="button-group-edit"
                 [checked]="refsetStatus?.includes('IN_EDIT')"
+                
                 value="Edit"
                 (click)="setWorkflowStatusByAction('Start Editing', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;"
                 >Edit</mat-button-toggle
@@ -90,6 +91,7 @@
             <mat-button-toggle
                 class="button-group-review"
                 [checked]="refsetStatus?.includes('IN_REVIEW')"
+                [disabled]="!this.refsetData?.availableActions?.includes('REVIEW')"
                 value="Review"
                 (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('Reviewing', 'REVIEW')"
                 >Review</mat-button-toggle
@@ -232,8 +234,9 @@
                     </div>
                 </div>
                 <div class="edit-button-group-right-below-sticky-header">
+
                     <button
-                        *ngIf="!readonlyMode"
+                        *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
@@ -246,8 +249,9 @@
                     >
                         Finish Edit
                     </button>
+
                     <button
-                        *ngIf="!readonlyMode"
+                        *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
                         #readyForReviewButton
                         (click)="setWorkflowStatusByAction('Ready for Review', 'REQUEST_REVIEW')"
                         mat-raised-button
@@ -260,8 +264,54 @@
                     >
                         Request Review
                     </button>
-                    <!-- <button
-                        *ngIf="!readonlyMode"
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')"
+                        #acceptRefsetButton
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Accept the Refset', 'ACCEPT_REVIEW')"
+                        class="refset-tool-action-button accept-refset-button"
+                        aria-label="Accept Refset"
+                        title="Accept Refset"
+                        ng-reflect-color="primary"
+                    >
+                        Accept Refset
+                    </button>
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW')"
+                        #rejectRefsetButton
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
+                        class="refset-tool-action-button reject-refset-button"
+                        aria-label="Reject Refset"
+                        title="Reject Refset"
+                        ng-reflect-color="primary"
+                    >
+                        Reject Refset
+                    </button>
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
+                        #unassignButton
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Unassign Refset', 'UNASSIGN')"
+                        class="refset-tool-action-button unassign-button"
+                        aria-label="Unassign"
+                        title="Unassign"
+                        ng-reflect-color="primary"
+                    >
+                        Unassign
+                    </button>
+<!-- 
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                         #readyForPublicationButton
                         (click)="setWorkflowStatusByAction('Ready for Publication', 'REQUEST_PUBLICATION')"
                         mat-raised-button
@@ -277,11 +327,43 @@
                     >
                         Request Publication
                     </button> -->
-                    <ready-for-publication-modal
+
+                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                         [refsetData]="refsetData"
                         [readonlyMode]="readonlyMode"
                     ></ready-for-publication-modal>
+
                     <button
+                        *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
+                        #withdrawPublicationRequest
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Withdraw the publication request', 'FAILS_RVF')"
+                        class="refset-tool-action-button launch-release-button"
+                        aria-label="Withdraw"
+                        title="Withdraw"
+                        ng-reflect-color="primary"
+                    >
+                        Withdraw
+                    </button>
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('REFSET_PUBLISHED')"
+                        #complete Publication
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Complete Publication', 'REFSET_PUBLISHED')"
+                        class="refset-tool-action-button cancel-release-button"
+                        aria-label="Complete Publication"
+                        title="Complete Publication"
+                        ng-reflect-color="primary"
+                    >
+                        Complete Publication
+                    </button>
+
+                    <!-- <button
                         *ngIf="updateToggled"
                         #updateRefsetButton
                         mat-raised-button
@@ -306,78 +388,7 @@
                         ng-reflect-color="primary"
                     >
                         Cancel Update
-                    </button>
-                    <button
-                        *ngIf="reviewToggled"
-                        #acceptRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Accept the Refset', 'ACCEPT_REVIEW')"
-                        class="refset-tool-action-button accept-refset-button"
-                        aria-label="Accept Refset"
-                        title="Accept Refset"
-                        ng-reflect-color="primary"
-                    >
-                        Accept Refset
-                    </button>
-                    <button
-                        *ngIf="reviewToggled"
-                        #rejectRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
-                        class="refset-tool-action-button reject-refset-button"
-                        aria-label="Reject Refset"
-                        title="Reject Refset"
-                        ng-reflect-color="primary"
-                    >
-                        Reject Refset
-                    </button>
-                    <button
-                        *ngIf="reviewToggled"
-                        #unassignButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Unassign Refset', 'UNASSIGN')"
-                        class="refset-tool-action-button unassign-button"
-                        aria-label="Unassign"
-                        title="Unassign"
-                        ng-reflect-color="primary"
-                    >
-                        Unassign
-                    </button>
-                    <button
-                        *ngIf="adminToggled"
-                        #launchReleaseButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
-                        class="refset-tool-action-button launch-release-button"
-                        aria-label="Launch Release"
-                        title="Launch Release"
-                        ng-reflect-color="primary"
-                    >
-                        Launch Release
-                    </button>
-                    <button
-                        disabled
-                        *ngIf="adminToggled"
-                        #cancelReleaseButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Cancel Release', 'UNASSIGN')"
-                        class="refset-tool-action-button cancel-release-button"
-                        aria-label="Cancel Release"
-                        title="Cancel Release"
-                        ng-reflect-color="primary"
-                    >
-                        Cancel Release
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
