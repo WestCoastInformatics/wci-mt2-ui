@@ -145,7 +145,7 @@
                 lock
             </mat-icon>
         </ng-template>
-        <!-- Version Status Templates -->
+        <!-- Workflow Status Templates -->
         <ng-template #directoryversionStatusSection let-params>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
                 <div class="ready-for-review-projects-button"></div>
@@ -171,19 +171,22 @@
                     {{ 'Review Completed' }}
                 </div>
             </ng-container>
-            <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED'">
-                <div class="published-projects-button"></div>
-                <div class="published-projects-text">
-                    {{ 'Published' }}
-                </div>
-            </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_EDIT'">
                 <div class="ready-for-edit-projects-button"></div>
                 <div class="ready-for-edit-projects-text">
                     {{ 'Ready for Edit' }}
                 </div>
             </ng-container>
-            <ng-container *ngIf="!params?.data?.workflowStatus">
+            <!-- Look at Version Status for PUBLISHED -->
+            <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED' ||
+	            params?.data?.versionStatus == 'PUBLISHED'">
+                <div class="published-projects-button"></div>
+                <div class="published-projects-text">
+                    {{ 'Published' }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!params?.data?.workflowStatus &&
+            !params?.data?.versionStatus == 'PUBLISHED'">
                 <div class="published-projects-button"></div>
                 <div class="published-projects-text">
                     {{ params?.value }}
