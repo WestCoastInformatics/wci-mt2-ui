@@ -1,12 +1,13 @@
 <button
     *ngIf="!isDetailsPage"
-    [disabled]="!selectedProject"
+    [disabled]="!selectedProject || disabled"
     mat-raised-button
     color="primary"
     (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
     aria-hidden="false"
     #createRefsetButton
     class="refset-tool-action-button"
+    [ngClass]="{'inactive' : !selectedProject || disabled}"
     aria-label="Create New Refset"
     title="Create New Refset"
     ng-reflect-color="primary"
@@ -14,23 +15,13 @@
     Create New Refset
 </button>
 
-<!-- <button
-    class="button-inactive details-edit-refset-modal"
-    *ngIf="isDetailsPage || editMode"
-    [style.height]="editMode ? '31px' : '31px'"
-    (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
->
-    <img
-        src="assets/notes-icon.svg"
-        alt="notes icon"
-        title="Edit Metadata"
-        aria-label="Edit metadata"
-    />
-</button> -->
 <button
-    class="button-inactive details-edit-refset-modal"
+    class="refset-tool-standard-icon-button details-edit-refset-modal"
     *ngIf="isDetailsPage || editMode"
     [style.height]="editMode ? '31px' : '31px'"
+    [ngClass]="{'inactive' : !selectedProject || disabled}"
+    [disabled]="!selectedProject || disabled"
+    (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
 >
     <img
         src="assets/notes-icon.svg"

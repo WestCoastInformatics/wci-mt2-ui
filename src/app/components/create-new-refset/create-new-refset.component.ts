@@ -43,6 +43,8 @@ export class CreateNewRefsetComponent implements OnInit {
   @Input()
   editMode = false;
   @Input()
+  disabled = false;
+  @Input()
   id: string;
   @Input()
   editModeProperties: {

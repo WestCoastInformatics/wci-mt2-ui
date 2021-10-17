@@ -83,7 +83,7 @@
             <mat-button-toggle
                 class="button-group-edit"
                 [checked]="refsetStatus?.includes('IN_EDIT')"
-                
+                [disabled]="!refsetData?.availableActions?.includes('EDIT')"
                 value="Edit"
                 (click)="setWorkflowStatusByAction('Start Editing', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;"
                 >Edit</mat-button-toggle
@@ -91,7 +91,7 @@
             <mat-button-toggle
                 class="button-group-review"
                 [checked]="refsetStatus?.includes('IN_REVIEW')"
-                [disabled]="!this.refsetData?.availableActions?.includes('REVIEW')"
+                [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
                 value="Review"
                 (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('Reviewing', 'REVIEW')"
                 >Review</mat-button-toggle
@@ -127,20 +127,23 @@
             <div class="col refset-tool-refset-details-title-name">
                 {{refsetData?.name}}
                 <div class="set-of-buttons-non-edit-mode">
+
                     <app-refset-download
                         [isDetailPage]="true"
                         [refset]="refsetData"
+                        [disabled]="!refsetData?.downloadable"
                     ></app-refset-download>
-                    <button class="button-inactive">
+
+                    <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
                         <img
                             src="assets/quote-icon.svg"
                             alt="quote icon"
                             title="View Feedback"
                             aria-label="View Feedback"
-                            (click)="openRefsetFeedback()"
                         />
                     </button>
-                    <button class="button-inactive">
+
+                    <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
                         <img
                             src="assets/compare-refset-icon.svg"
                             alt="notes icon"
@@ -148,12 +151,15 @@
                             aria-label="Compare Refset"
                         />
                     </button>
-                    <create-new-refset
+
+                    <create-new-refset 
+                        [disabled]="!refsetStatus?.includes('IN_EDIT')"
                         [isDetailsPage]="true"
                         [editMode]="editMode"
                         [id]="refsetId"
                         [editModeProperties]="editModeProperties"
                     ></create-new-refset>
+
                 </div>
             </div>
 
@@ -188,34 +194,40 @@
                 >
                     {{refsetData?.name}}
                     <div class="set-of-buttons">
+
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
+                            [disabled]="!refsetData?.downloadable"
                         ></app-refset-download>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
                             <img
                                 src="assets/quote-icon.svg"
                                 alt="quote icon"
                                 title="View Feedback"
                                 aria-label="View Feedback"
-                                (click)="openRefsetFeedback()"
                             />
                         </button>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
                             <img
                                 src="assets/compare-refset-icon.svg"
-                                alt="compare icon"
+                                alt="notes icon"
                                 title="Compare Refset"
-                                aria-label="Compare metadata"
+                                aria-label="Compare Refset"
                             />
                         </button>
-                        <create-new-refset
+
+                        <create-new-refset 
+                            [disabled]="!refsetStatus?.includes('IN_EDIT')"
                             [isDetailsPage]="true"
-                            [id]="refsetId"
                             [editMode]="editMode"
+                            [id]="refsetId"
                             [editModeProperties]="editModeProperties"
                         ></create-new-refset>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}" [disabled]="!refsetStatus?.includes('IN_EDIT')" (click)="openCloneRefset()">
                             <img
                                 src="assets/pages-icon.svg"
                                 alt="pages icon"
@@ -223,7 +235,8 @@
                                 aria-label="Clone refset"
                             />
                         </button>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}" [disabled]="!refsetStatus?.includes('IN_EDIT')" (click)="openDeleteRefset()">
                             <img
                                 src="assets/trash-icon.svg"
                                 alt="trash icon"
@@ -737,6 +750,18 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
+                <ng-template #cloneRefsetDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #deleteRefsetDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #compareRefsetDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
                 <ng-template #refsetArtifactsDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
@@ -752,14 +777,19 @@
                 <div class="metadata-collapsible-container-title">
                     Workflow History
                     <div class="set-of-buttons-workflow-history">
+
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
+
                         <workflow-history-notes-modal
                             [refsetId]="id"
                             [user]="refsetData?.modifiedBy"
+                            [disabled]="!refsetStatus?.includes('IN_EDIT') && !refsetStatus?.includes('IN_REVIEW')"
+                            [status]="refsetStatus"
                         ></workflow-history-notes-modal>
+
                     </div>
                 </div>
                 <img
@@ -987,7 +1017,7 @@
                                             <button
                                                 (click)="openEclBuilder('detailsTableSearchInput')"
                                                 #detailsTaxonomySearchEclButton
-                                                class="refset-tool-standard-action-button refset-tool-search-ecl-button"
+                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
                                             >
                                                 <img
                                                     src="assets/wrench-icon.svg"
@@ -1048,7 +1078,7 @@
                                             <button
                                                 (click)="openEclBuilder('detailsTaxonomySearchInput')"
                                                 #detailsTaxonomySearchEclButton
-                                                class="refset-tool-standard-action-button refset-tool-search-ecl-button"
+                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
                                             >
                                                 <img
                                                     src="assets/wrench-icon.svg"

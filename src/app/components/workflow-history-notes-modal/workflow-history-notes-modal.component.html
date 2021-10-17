@@ -1,5 +1,7 @@
 <button
-    class="button-inactive"
+    class="refset-tool-standard-icon-button"
+    [ngClass]="{'inactive' : disabled}"
+    [disabled]="disabled"
     (click)="openreadyForReviewModal(workflowHistoryNotesDialog)"
 >
     <!-- JESSE: would be ideal if we could say 'edit authoring notes' or 'edit review notes' -->
@@ -17,7 +19,7 @@
             class="modal-title workflow-history-notes-modal-title"
             id="modal-basic-title"
         >
-            Authoring Notes
+            {{title}}
         </h4>
         <button
             type="button"

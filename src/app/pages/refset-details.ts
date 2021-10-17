@@ -124,6 +124,9 @@ export class RefsetDetails {
     @ViewChild("detailsMembersPaging")
     membersPaginationComponent: PaginationComponent;
     @ViewChild("refsetFeedbackDialog") refsetFeedbackDialog: TemplateRef<any>;
+    @ViewChild("cloneRefsetDialog") cloneRefsetDialog: TemplateRef<any>;
+    @ViewChild("deleteRefsetDialog") deleteRefsetDialog: TemplateRef<any>;
+    @ViewChild("compareRefsetDialog") compareRefsetDialog: TemplateRef<any>;
     @ViewChild("refsetVersionNotes") refsetVersionNotes: TemplateRef<any>;
     @ViewChild("refsetAuditDialog") refsetAuditDialog: TemplateRef<any>;
     @ViewChild("refsetArtifactsDialog") refsetArtifactsDialog: TemplateRef<any>;
@@ -444,7 +447,7 @@ export class RefsetDetails {
                         this.initializeDetailsPage();
                     }
                 } else {
-                    
+
                     this.initializeDetailsPage();
                     this.changeDetectorRef.detectChanges();
                 }
@@ -1246,6 +1249,60 @@ export class RefsetDetails {
 
         const dialogData = {
             headerText: `Refset Feedback for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openCloneRefset() {
+        const dialogId = "cloneRefsetDialog";
+
+        const dialogData = {
+            headerText: `Clone Refset ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openDeleteRefset() {
+        const dialogId = "deleteRefsetDialog";
+
+        const dialogData = {
+            headerText: `Delete Refset ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openCompareRefset() {
+        const dialogId = "compareRefsetDialog";
+
+        const dialogData = {
+            headerText: `Compare Refset ${this.refsetData.name} (${this.refsetData.refsetId})`,
             template: this.refsetFeedbackDialog,
             data: this.refsetData,
         };
