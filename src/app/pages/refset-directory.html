@@ -198,32 +198,15 @@
                                             refset-tool-refset-metadata-value
                                         "
                                     >
+                                        {{data?.edition?.name}}
                                         <img
                                             class="refset-tool-edition-flag"
                                             src="{{data?.flagIcon}}"
                                             *ngIf="data?.flagIcon != ''"
-                                            [hidden]="data?.flagIcon"
+                                            [hidden]="!data?.flagIcon"
                                             title="{{data?.editionName}} Flag"
                                             aria-label="{{data?.editionName}} Flag"
                                         />
-                                        {{data?.edition?.name}}
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td
-                                        class="
-                                            refset-tool-refset-metadata-label
-                                        "
-                                    >
-                                        Status:
-                                    </td>
-                                    <td
-                                        class="
-                                            refset-tool-refset-metadata-value
-                                        "
-                                    >
-                                        {{data.status}}
                                     </td>
                                 </tr>
 
@@ -339,6 +322,14 @@
                                         "
                                     >
                                         {{data?.project?.organization?.name}}
+                                        <img
+                                            class="refset-tool-edition-flag"
+                                            src="{{data?.flagIcon}}"
+                                            *ngIf="data?.flagIcon != ''"
+                                            [hidden]="!data?.flagIcon"
+                                            title="{{data?.editionName}} Flag"
+                                            aria-label="{{data?.editionName}} Flag"
+                                        />
                                     </td>
                                 </tr>
 
