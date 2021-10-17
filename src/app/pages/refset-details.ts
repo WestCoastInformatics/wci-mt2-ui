@@ -40,7 +40,7 @@ export class RefsetDetails {
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
-    memberCacheLoaded$ = this.refsetLoaded.asObservable();
+    memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
     tableSearchInput: string;
     versionOptions: any;
     selectedVersion: string;
@@ -194,6 +194,11 @@ export class RefsetDetails {
 
     initializeDetailsPage() {
 
+        this.refsetLoaded = new Subject<boolean>();
+        this.refsetLoaded$ = this.refsetLoaded.asObservable();
+        this.memberCacheLoaded = new Subject<boolean>();
+        this.memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
+        this.showLoadingSpinner = true;
         //this.id = this.route.snapshot.paramMap.get("refsetId");
         this.directUrl = (window.location.host + this.router.url).replace(
             "edit/refset",
@@ -329,6 +334,8 @@ export class RefsetDetails {
                     },
                 },
             };
+            
+            this.showLoadingSpinner = false;
         });
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
@@ -424,7 +431,7 @@ export class RefsetDetails {
 
     setWorkflowStatusByAction(notes: string, action: string): void {
 
-        console.log("AAA ");
+        this.toggleLoadingSpinner(true);
     
         this.workflowService
             .setWorkflowStatusByAction(
@@ -483,7 +490,7 @@ export class RefsetDetails {
     }
 
     loadTaxonomyRoot() {
-        this.showLoadingSpinner = true;
+        
         let restParams = {
             displayType: "taxonomy",
             returnStartingConcept: true,
@@ -503,11 +510,6 @@ export class RefsetDetails {
                 this.showTaxonomySearchTable = true;
                 this.showLoadingSpinner = false;
             });
-    }
-
-    testmeth() {
-        let disable = !this.refsetData?.availableActions?.includes('REVIEW');
-        return disable;
     }
 
     addConcept(concept, isInDetailsParentPanel = false): void {
@@ -1164,9 +1166,6 @@ export class RefsetDetails {
             .getMembersList(this.refsetData.id, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
-                if (this.showLoadingSpinner) {
-                    this.showLoadingSpinner = false;
-                }
             });
     }
 
