@@ -17,21 +17,22 @@ export class AuthenticationService {
     constructor(private http: HttpClient, private authoringService: AuthoringService, private router: Router) {
     }
 
-    login(userName: any, password: any): Observable<any> {
+    // this sends the user to the refset api.
+    login(userName: string, userData: string): Observable<any> {
+        console.log("authservice login for user", userName, " with password ", userData);
         return this.http.post(`${environment.restUrl}${environment.restContextPath}/authenticate/${userName}`, {
-                password
+                    userData
             },
             {headers: new HttpHeaders(
                 {
-                    // 'content-type': 'application/json'
+                    'content-type': 'plain/text'
                 })
             }
         );
     }
 
     logoutUser(): Observable<any> {
-        return this.http.post(`${environment.restUrl}${environment.restContextPath}logout/${localStorage.getItem('auth_token')}`, {
-
+        return this.http.post(`${environment.restUrl}${environment.restContextPath}/logout/${localStorage.getItem('auth_token')}`, {
             },
             {headers: new HttpHeaders(
                 {
@@ -39,27 +40,29 @@ export class AuthenticationService {
                 })
             }
         );
+        this.notAuthenticated();
     }
 
     isAuthenticated(): boolean {
-        // const token = localStorage.getItem('auth_token');
-        const token = document.cookie.split(';');
+        const token = localStorage.getItem('auth_token');
         console.log('token', token);
-        if (token.length > 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (token?.length > 1);
     }
+
     notAuthenticated(): any {
         localStorage.clear();
         this.router.navigate(['/login']);
     }
 
     setUser() {
-        this.http.get<User>('/auth').subscribe(user => {
+        this.http.get<User>('/ims-api/account').subscribe(user => {
             this.user.next(user);
-        });
+        },
+            err => {
+                window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer='
+                    + window.location.href
+            }
+        );
     }
 
     getUser() {
