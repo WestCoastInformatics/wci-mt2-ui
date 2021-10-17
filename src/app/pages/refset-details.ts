@@ -116,7 +116,8 @@ export class RefsetDetails {
     taxonomySearchGridLastFilter = "";
     taxonomySearchGridLastSort = "";
     originalGridParams: any;
-    numOfResults: number;
+    membersGridNumberOfResults: number;
+    taxonomySearchNumberOfResults: number;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
@@ -173,14 +174,24 @@ export class RefsetDetails {
     }
 
     //***** Framework Functions *****/
-    ngOnInit() {
+    ngOnInit() { 
+
         this.route.data.subscribe((data) => {
             console.log(data.editMode);
 
             this.editMode = data.editMode;
         });
 
-        this.id = this.route.snapshot.paramMap.get("refsetId");
+        this.route.params.subscribe(routeParams => {
+
+            this.id = routeParams.refsetId;
+            this.initializeDetailsPage();
+        });
+    }
+
+    initializeDetailsPage() {
+
+        //this.id = this.route.snapshot.paramMap.get("refsetId");
         this.directUrl = (window.location.host + this.router.url).replace(
             "edit/refset",
             "details"
@@ -255,7 +266,9 @@ export class RefsetDetails {
                     field: "name",
                     colId: "result",
                     headerName: "Result",
-                    cellClass: "refset-tool-directory-column-edition",
+                    minWidth: 120,
+                    flex: 1,
+                    cellClass: "refset-tool-taxonomy-search-column-name",
                     valueGetter: this.taxonomyResultValueGetter.bind(this),
                     cellRenderer: "templateRenderer",
                     cellRendererParams: {
@@ -267,7 +280,10 @@ export class RefsetDetails {
                     field: "parents",
                     colId: "path",
                     headerName: "Path",
-                    cellClass: "refset-tool-directory-column-edition",
+                    minWidth: 200,
+                    //width: 600,
+                    flex: 6,
+                    cellClass: "refset-tool-taxonomy-search-column-path",
                     valueGetter: this.taxonomyPathValueGetter.bind(this),
                     cellRenderer: "templateRenderer",
                     cellRendererParams: { template: this.taxonomyPathSection },
@@ -397,12 +413,16 @@ export class RefsetDetails {
     }
 
     private setButtonGroupToggles(results: any): void {
+
         this.refsetStatus = results?.workflowStatus;
         this.readonlyMode = !this.refsetStatus?.includes("IN_EDIT");
         this.reviewToggled = this.refsetStatus?.includes("IN_REVIEW");
     }
 
     setWorkflowStatusByAction(notes: string, action: string): void {
+
+        console.log("AAA ");
+    
         this.workflowService
             .setWorkflowStatusByAction(
                 this.refsetData.id,
@@ -411,19 +431,24 @@ export class RefsetDetails {
                 notes
             )
             .subscribe((results) => {
-                console.log(results);
+                
                 if (results) {
-                    // window.location.reload();
+                    
                     if (action.includes('UNASSIGN')) {
                         this.router.navigateByUrl('projects/refset');
+
+                    } else if (this.refsetData.id != results.id) {
+						this.router.navigateByUrl('edit/refset/' + results.id);
+	
                     } else {
-                        this.ngOnInit();
+                        this.initializeDetailsPage();
                     }
                 } else {
-                    this.ngOnInit();
+                    
+                    this.initializeDetailsPage();
                     this.changeDetectorRef.detectChanges();
                 }
-            });
+            }); 
     }
 
     loadWorkflowHistoryData(): void {
@@ -475,6 +500,11 @@ export class RefsetDetails {
                 this.showTaxonomySearchTable = true;
                 this.showLoadingSpinner = false;
             });
+    }
+
+    testmeth() {
+        let disable = !this.refsetData?.availableActions?.includes('REVIEW');
+        return disable;
     }
 
     addConcept(concept, isInDetailsParentPanel = false): void {
@@ -622,6 +652,8 @@ export class RefsetDetails {
                     .getTaxonomySearch(this.id, restParams)
                     .subscribe(
                         (results) => {
+
+                            this.taxonomySearchNumberOfResults = results.total;
                             this.taxonomySearchResults = results.items;
                             console.log(this.taxonomySearchResults);
                             if (results.items.length == 0 && pageNumber > 1) {
@@ -818,8 +850,9 @@ export class RefsetDetails {
                     .getMembersList(this.id, restParams)
                     .subscribe(
                         (results) => {
-                            this.numOfResults = results.total;
-                            console.log(this.numOfResults);
+
+                            this.membersGridNumberOfResults = results.total;
+                            console.log(this.membersGridNumberOfResults);
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.membersGridApi.showNoRowsOverlay();
                                 this.membersGridPaging.totalRows =

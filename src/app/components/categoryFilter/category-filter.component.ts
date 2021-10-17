@@ -14,7 +14,7 @@ export interface SelectFloatingFilterParams extends IFloatingFilterParams {
 export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComponent<SelectFloatingFilterParams> {
   params: SelectFloatingFilterParams;
   currentValue;
-  
+
  optionNum:number = 0;
   names:Array<any>;
   options:Array<SelectEntry> = [];
@@ -31,8 +31,13 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
     this.options.push(obj);
 	for (let i = 0; i < this.names?.length; i++) {
         let entry = this.names[i];
-    	let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
-    	this.options.push(obj);
+        if  (entry.type === "status") {
+            let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value);
+            this.options.push(obj);
+        } else {
+    	    let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
+            this.options.push(obj);
+        }
 	}
 	console.log(this.options)
   }

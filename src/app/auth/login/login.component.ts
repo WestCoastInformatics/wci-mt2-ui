@@ -24,14 +24,6 @@ export class LoginComponent implements OnInit {
         }
     }
     onSubmit(): any {
-        // if (this.userName === '' || this.userName === undefined || this.userName === null) {
-        //     toastr.error('User Name can not be empty');
-        //     return;
-        // }
-        // if (this.password === '' || this.password === undefined || this.password === null) {
-        //     toastr.error('Password can not be empty');
-        //     return;
-        // }
         this.authService.login(this.userName, this.password).subscribe( data => {
             localStorage.setItem('auth_token', data.authToken);
             this.router.navigate(['directory']);

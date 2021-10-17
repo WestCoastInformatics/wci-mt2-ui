@@ -13,6 +13,7 @@ import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { UiUtility } from "src/app/utilities/ui.utility";
 
 @Component({
     selector: "add-remove-by-concept-modal",
@@ -252,6 +253,13 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     setLoadSpinnerStatus($event): void {
         this.showLoadingSpinner = $event;
+    }
+
+    openEclBuilder(fieldId) {
+        UiUtility.openEclBuilder(
+            fieldId,
+            RefsetUtility.getBranchPath(this.refsetData)
+        );
     }
 
     @Debounce()
