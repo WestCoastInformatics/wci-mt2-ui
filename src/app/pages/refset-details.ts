@@ -1217,7 +1217,7 @@ export class RefsetDetails {
         const dialogId = "refsetAuditDialog";
 
         const dialogData = {
-            headerText: `Refset Audit Trail for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Refset Audit Trail`,
             template: this.refsetAuditDialog,
             data: this.refsetData,
         };
@@ -1235,7 +1235,7 @@ export class RefsetDetails {
         const dialogId = "refsetArtifactsDialog";
 
         const dialogData = {
-            headerText: `Refset Artifacts for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Refset Artifacts`,
             template: this.refsetArtifactsDialog,
             data: this.refsetData,
         };
@@ -1253,7 +1253,7 @@ export class RefsetDetails {
         const dialogId = "refsetFeedbackDialog";
 
         const dialogData = {
-            headerText: `Refset Feedback for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Refset Feedback`,
             template: this.refsetFeedbackDialog,
             data: this.refsetData,
         };
@@ -1271,7 +1271,7 @@ export class RefsetDetails {
         const dialogId = "cloneRefsetDialog";
 
         const dialogData = {
-            headerText: `Clone Refset ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Clone Refset`,
             template: this.refsetFeedbackDialog,
             data: this.refsetData,
         };
@@ -1289,7 +1289,7 @@ export class RefsetDetails {
         const dialogId = "deleteRefsetDialog";
 
         const dialogData = {
-            headerText: `Delete Refset ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Delete Refset`,
             template: this.refsetFeedbackDialog,
             data: this.refsetData,
         };
@@ -1307,7 +1307,7 @@ export class RefsetDetails {
         const dialogId = "compareRefsetDialog";
 
         const dialogData = {
-            headerText: `Compare Refset ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Compare Refset`,
             template: this.refsetFeedbackDialog,
             data: this.refsetData,
         };
