@@ -413,15 +413,15 @@ export class RefsetDetails {
     }
 
     private setButtonGroupToggles(results: any): void {
+
         this.refsetStatus = results?.workflowStatus;
         this.readonlyMode = !this.refsetStatus?.includes("IN_EDIT");
         this.reviewToggled = this.refsetStatus?.includes("IN_REVIEW");
     }
 
     setWorkflowStatusByAction(notes: string, action: string): void {
-    
 
-    console.log("AAA ");
+        console.log("AAA ");
     
         this.workflowService
             .setWorkflowStatusByAction(
@@ -444,6 +444,7 @@ export class RefsetDetails {
                         this.initializeDetailsPage();
                     }
                 } else {
+                    
                     this.initializeDetailsPage();
                     this.changeDetectorRef.detectChanges();
                 }
