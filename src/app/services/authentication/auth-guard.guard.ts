@@ -11,8 +11,10 @@ export class AuthGuardGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      const currentUser = localStorage.getItem('auth_token');
-      if (currentUser) {
+      const token = localStorage.getItem('auth_token');
+      //const currentUser = document.cookie.split(';');
+      console.log('token', token);
+      if (token?.length > 1) {
           return true;
       } else {
           this.authService.notAuthenticated();
