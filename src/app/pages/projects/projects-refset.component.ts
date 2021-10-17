@@ -98,6 +98,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }},            
             { field: 'versionStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus }},
+            { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150},
             // { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer'},
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
