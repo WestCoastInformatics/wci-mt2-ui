@@ -408,6 +408,10 @@ export class RefsetDetails {
     }
 
     setWorkflowStatusByAction(notes: string, action: string): void {
+    
+
+    console.log("AAA ");
+    
         this.workflowService
             .setWorkflowStatusByAction(
                 this.refsetData.id,
@@ -416,11 +420,15 @@ export class RefsetDetails {
                 notes
             )
             .subscribe((results) => {
-                console.log(results);
+    console.log("BBB with results: " , results);
                 if (results) {
+console.log("ZZZZZ1 = : " , results.id);
                     // window.location.reload();
                     if (action.includes('UNASSIGN')) {
                         this.router.navigateByUrl('projects/refset');
+                    } else if (this.refsetData.id != results.id) {
+						this.router.navigateByUrl('/edit/refset?refsetId=' + results.id);
+	
                     } else {
                         this.ngOnInit();
                     }
@@ -428,7 +436,7 @@ export class RefsetDetails {
                     this.ngOnInit();
                     this.changeDetectorRef.detectChanges();
                 }
-            });
+            }); 
     }
 
     loadWorkflowHistoryData(): void {
