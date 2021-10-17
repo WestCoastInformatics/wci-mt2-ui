@@ -156,7 +156,7 @@
             </div>
 
             <div class="current-version-label">Current Version:</div>
-            <div class="row justify-content-end details-version-select" title="Select Version"> 
+            <div class="row justify-content-end details-version-select" title="Select Version">
                 <mat-form-field appearance="fill">
                     <mat-label></mat-label>
                     <mat-select
@@ -973,21 +973,18 @@
                                                 (click)="clearSearch('table')"
                                                 >&#10005;</span
                                             >
-                                            <!-- <button
-                                                mat-raised-button
-                                                color="primary"
+                                            <button
                                                 (click)="openEclBuilder('detailsTableSearchInput')"
-                                                #detailsTableSearchEclButton
-                                                aria-hidden="false"
-                                                class="
-                                                    refset-tool-action-button
-                                                "
-                                                aria-label="Open ECL Builder"
-                                                title="Open ECL Builder"
-                                                ng-reflect-color="primary"
+                                                #detailsTaxonomySearchEclButton
+                                                class="refset-tool-standard-action-button refset-tool-search-ecl-button"
                                             >
-                                                ECL Builder
-                                            </button> -->
+                                                <img
+                                                    src="assets/wrench-icon.svg"
+                                                    alt="wrench icon"
+                                                    title="Open ECL Builder"
+                                                    aria-label="ECL Builder"
+                                                />
+                                            </button>
                                         </div>
 
                                         <div
@@ -1038,19 +1035,16 @@
                                                 >&#10005;</span
                                             >
                                             <button
-                                                mat-raised-button
-                                                color="primary"
                                                 (click)="openEclBuilder('detailsTaxonomySearchInput')"
-                                                aria-hidden="false"
                                                 #detailsTaxonomySearchEclButton
-                                                class="
-                                                    refset-tool-action-button
-                                                "
-                                                aria-label="Open ECL Builder"
-                                                title="Open ECL Builder"
-                                                ng-reflect-color="primary"
+                                                class="refset-tool-standard-action-button refset-tool-search-ecl-button"
                                             >
-                                                ECL Builder
+                                                <img
+                                                    src="assets/wrench-icon.svg"
+                                                    alt="wrench icon"
+                                                    title="Open ECL Builder"
+                                                    aria-label="ECL Builder"
+                                                />
                                             </button>
                                         </div>
 
@@ -1335,7 +1329,7 @@
                                                 "
                                                 *ngIf="conceptDetailParents.length == 0"
                                             >
-                                                No Parents 
+                                                No Parents
                                             </div>
                                         </div>
 
@@ -1729,3 +1723,4 @@
     />
     {{ params?.data?.code }}
 </ng-template>
+<scroll-top></scroll-top>

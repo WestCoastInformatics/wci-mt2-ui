@@ -81,6 +81,20 @@
                                         (click)="clearSearch()"
                                         >&#10005;</span
                                     >
+
+                                    <button
+                                        (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
+                                        #detailsTaxonomySearchEclButton
+                                        class="refset-tool-standard-action-button refset-tool-search-ecl-button"
+                                    >
+                                        <img
+                                            src="assets/wrench-icon.svg"
+                                            alt="wrench icon"
+                                            title="Open ECL Builder"
+                                            aria-label="ECL Builder"
+                                        />
+                                    </button>
+
                                     <section
                                         *ngIf="showResults"
                                         class="
