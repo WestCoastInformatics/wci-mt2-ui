@@ -20,7 +20,9 @@ export class PaginationComponent implements OnChanges {
     @Input() numOfResults: number;
     currentPage: number = 1;
     paginationPages: any = {};
-    showTotal = false;
+    showTotal = true;
+    startRecord: number;
+    endRecord: number;
 
     @ViewChild('paginationFirstPage') firstPageButton: MatButton;
     @ViewChild('paginationPreviousPage') previousPageButton: MatButton;
@@ -35,7 +37,10 @@ export class PaginationComponent implements OnChanges {
         ) {}
 
     getCurrentPage(): number {
+
         this.currentPage = this.gridOptions?.api ? this.gridOptions.api.paginationGetCurrentPage() + 1 : 1;
+        this.startRecord = (this.currentPage * this.pageSize) - (this.pageSize - 1);
+        this.endRecord = this.currentPage * this.pageSize;
         return this.currentPage;
     }
 
