@@ -32,6 +32,7 @@ export class AuthenticationService {
     }
 
     logoutUser(): Observable<any> {
+        this.notAuthenticated();
         return this.http.post(`${environment.restUrl}${environment.restContextPath}logout/${localStorage.getItem('auth_token')}`, {
             },
             {headers: new HttpHeaders(
@@ -40,7 +41,6 @@ export class AuthenticationService {
                 })
             }
         );
-        this.notAuthenticated();
     }
 
     isAuthenticated(): boolean {
