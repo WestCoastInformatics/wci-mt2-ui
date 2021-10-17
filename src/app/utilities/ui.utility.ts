@@ -222,9 +222,9 @@ export class UiUtility {
     static openEclBuilder(fieldId, branch) {
         let field = $('#' + fieldId);
         let eclString = field.val();
-        let snomedBrowserUrl = environment['snowstormApiUrl']
+        let snowstormApiUrl = environment['snowstormApiUrl']
 
-        $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snomedBrowserUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+        $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
         const eclBuilder = document.querySelector('ecl-builder');
 
