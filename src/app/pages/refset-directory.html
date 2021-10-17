@@ -156,11 +156,7 @@
         <ng-template #directoryInfoDialog let-data>
             <div class="container-fluid" id="directoryInformationSection">
                 <div class="row refset-tool-refset-details-title-name" title="{{data.name}}" aria-label="{{data.name}}">
-                    {{data.name}}
-                </div>
-
-                <div class="row refset-tool-refset-details-title-version" title="{{data.versionStatus}}, {{data.versionDate}}" aria-label="{{data.versionStatus}}, {{data.versionDate}}">
-                    {{data.versionStatus}}, {{data.versionDate}}
+                   <p style="font-weight:bold;font-size:20px">{{data.name}}</p>
                 </div>
 
                 <div class="row refset-tool-refset-metadata-section">
