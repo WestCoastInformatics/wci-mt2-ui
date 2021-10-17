@@ -39,6 +39,7 @@ export class TaxonomyTreeComponent {
     configOptions: TreeOptions = {};
     staticOptions: any = { nodeClass: this.styleNodeClass };
     nodes: any[] = [];
+    parentConcept: any;
     loadNodeChildrenProcess: Function = (event) => {};
     @Input()
     editMode = false;
@@ -47,6 +48,8 @@ export class TaxonomyTreeComponent {
     noData: boolean = false;
     @Input()
     isOnDetailsPage = true;
+    @Input()
+    isInDetailsPanel = false;
     @Input() treeId: string = "taxonomyTree";
     @Input() refset: any;
     @Input() rootNode: any;
@@ -70,7 +73,7 @@ export class TaxonomyTreeComponent {
     loadedChildren: any;
     isAdd: any;
     conceptForDescendantModal: any;
-    upgradeChoice: number = 2;
+    upgradeChoice: any = null;
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
@@ -113,11 +116,14 @@ export class TaxonomyTreeComponent {
                 CodeUtility.hasValue(this.rootNode)
             ) {
                 
+                this.parentConcept = this.rootNode;
+
                 // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
                 if (
                     !CodeUtility.hasValue(this.rootNode.children) ||
                     !CodeUtility.hasValue(this.rootNode.children[0].name)
                 ) {
+
                     this.getTreeData();
                 } else {
 
@@ -237,6 +243,7 @@ export class TaxonomyTreeComponent {
         addRemoveDescendantsDialog: NgbModal,
         isAdd
     ) {
+        this.upgradeChoice = concept.code;
         this.isAdd = isAdd;
         this.conceptForDescendantModal = concept;
         this.modalService.open(addRemoveDescendantsDialog, {
@@ -244,82 +251,6 @@ export class TaxonomyTreeComponent {
             keyboard: false,
             windowClass: "add-remove-descendants-modal",
         });
-    }
-
-    async upgradeMembers(): Promise<void> {
-        this.sendloadingSpinnerTrigger(true);
-        let bundleOfIds = "";
-        if (this.isAdd && this.conceptForDescendantModal) {
-            if (this.upgradeChoice == 0) {
-                bundleOfIds = this.conceptForDescendantModal?.code;
-                const children = await this.getChildren(
-                    this.conceptForDescendantModal
-                );
-                for (const child of children) {
-                    bundleOfIds = bundleOfIds + "," + child?.code;
-                }
-            } else if (this.upgradeChoice == 1) {
-                const children = await this.getChildren(
-                    this.conceptForDescendantModal
-                );
-                for (const child of children) {
-                    bundleOfIds = bundleOfIds + "," + child?.code;
-                }
-            } else if (this.upgradeChoice == 2) {
-                bundleOfIds = this.conceptForDescendantModal?.code;
-            }
-            this.refsetService
-                .addRefsetMembers(this.refset.id, "list", bundleOfIds)
-                .subscribe(
-                    (data) => {
-                        console.log("data: ", data);
-                        this.sendReloadGridTrigger(true);
-                        this.sendTableChangeTrigger(true);
-                        this.sendConceptDetailTrigger(
-                            this.selectedConcept?.code.toString()
-                        );
-
-                     
-                    },
-                    (error) => {
-                        console.log(error);
-                        this.sendloadingSpinnerTrigger(false);
-                    }
-                );
-        } else if (!this.isAdd && this.conceptForDescendantModal) {
-            if (this.upgradeChoice == 0) {
-                bundleOfIds = this.conceptForDescendantModal?.code;
-                const children = await this.getChildren(
-                    this.conceptForDescendantModal
-                );
-                for (const child of children) {
-                    bundleOfIds = bundleOfIds + "," + child?.code;
-                }
-            } else if (this.upgradeChoice == 1) {
-                const children = await this.getChildren(
-                    this.conceptForDescendantModal
-                );
-                for (const child of children) {
-                    bundleOfIds = bundleOfIds + "," + child?.code;
-                }
-            } else if (this.upgradeChoice == 2) {
-                bundleOfIds = this.conceptForDescendantModal?.code;
-            }
-            this.refsetService
-                .removeRefsetMembers(this.refset.id, "list", bundleOfIds)
-                .subscribe(
-                    (data) => {
-                        console.log(data);
-                        this.sendReloadGridTrigger(true);
-                        this.sendTableChangeTrigger(true);
-                    },
-                    (error) => {
-                        console.log(error);
-                        this.sendloadingSpinnerTrigger(false);
-                    }
-                );
-        }
-        this.upgradeChoice = 4;
     }
 
     getNodeText(node) {
@@ -538,96 +469,104 @@ export class TaxonomyTreeComponent {
     //     }
     // }
 
-    addConcept(
-        concept,
-        isInDetailsPanel = false,
-        isOnDetailsPage = false,
-        parentConcept,
-        addRemoveDescendantsDialog: NgbModal
+    addRemoveConcept(
+        addConcept: boolean,
+        concept: any = null,
+        addRemoveDescendantsDialog: NgbModal = null,
+        ecl: string = ''
     ): void {
-        if (concept.hasChildren) {
-            this.showDescendantModal(concept, addRemoveDescendantsDialog, true);
-        } else {
-            this.sendloadingSpinnerTrigger(true);
+
+        let conceptId: string = '';
+
+        if (CodeUtility.hasValue(concept)) {
+
+            if (concept.hasChildren) {
+
+                this.showDescendantModal(concept, addRemoveDescendantsDialog, addConcept);
+                return;
+            }
+
+            conceptId = concept.code;
+        }
+                
+        this.sendloadingSpinnerTrigger(true);
+
+        if (addConcept) {
+
             this.refsetService
-                .addRefsetMembers(
-                    this.refset.id,
-                    "list",
-                    concept.code.toString()
-                )
-                .subscribe(
-                    (data) => {
-                        console.log("data: ", data);
-                        this.sendReloadGridTrigger(true);
-                        if (isInDetailsPanel && isOnDetailsPage) {
+            .addRefsetMembers(
+                this.refset.id,
+                null,
+                conceptId,
+                ecl
+            )
+            .subscribe(
+                (data) => {
 
-                            this.sendConceptDetailTrigger(parentConcept);
-                            //this.getTreeData();
-                            this.sendTableChangeTrigger(true);
+                    console.log("data: ", data);
+                    this.processChangedMemberEffects();
+                },
+                (error) => {
+                    console.log(error);
+                    this.sendloadingSpinnerTrigger(false);
+                }
+            );
 
-                        } else if (!isInDetailsPanel) {
-                            this.sendTableChangeTrigger(true);
-                        } else {
-                            this.sendConceptDetailTrigger(
-                                this.selectedConcept?.code.toString()
-                            );
-                        }
-                    },
-                    (error) => {
-                        console.log(error);
-                        this.sendloadingSpinnerTrigger(false);
-                    }
-                );
+        } else {
+
+            this.refsetService
+            .removeRefsetMembers(
+                this.refset.id,
+                null,
+                conceptId,
+                ecl
+            )
+            .subscribe(
+                (data) => {
+
+                    console.log("data: ", data);
+                    this.processChangedMemberEffects();
+                },
+                (error) => {
+                    console.log(error);
+                    this.sendloadingSpinnerTrigger(false);
+                }
+            );
         }
     }
 
-    removeConcept(
-        concept,
-        isInDetailsPanel = false,
-        isOnDetailsPage = false,
-        parentConcept,
-        addRemoveDescendantsDialog: NgbModal
-    ): void {
-        if (concept.hasChildren) {
-            this.showDescendantModal(
-                concept,
-                addRemoveDescendantsDialog,
-                false
-            );
-        } else {
-            this.sendloadingSpinnerTrigger(true);
-            this.refsetService
-                .removeRefsetMembers(
-                    this.refset.id,
-                    "list",
-                    concept.code.toString()
-                )
-                .subscribe(
-                    (data) => {
-                        console.log(data);
-                        this.sendReloadGridTrigger(true);
+    processChangedMemberEffects() {
 
-                        if (isInDetailsPanel && isOnDetailsPage) {
+        this.sendReloadGridTrigger(true);
 
-                            this.sendConceptDetailTrigger(parentConcept);
-                            // this.getTreeData();
-                            this.sendTableChangeTrigger(true);
+        // first if it is one the details page in concept details section
+        if (this.isInDetailsPanel && this.isOnDetailsPage) {
 
-                        } else if (!isInDetailsPanel) {
-                            this.sendTableChangeTrigger(true);
-                        } else {
-                            this.sendConceptDetailTrigger(
-                                this.selectedConcept?.code.toString()
-                            );
-                        }
-                        // this.sendConceptDetailTrigger(this.selectedConcept?.code.toString());
-                    },
-                    (error) => {
-                        console.log(error);
-                        this.sendloadingSpinnerTrigger(false);
-                    }
-                );
+            this.sendTableChangeTrigger(true);
+            this.sendConceptDetailTrigger(this.parentConcept);
+
+        } 
+        
+         // next if it is the main tree on the details page 
+         else if (this.isOnDetailsPage) {
+
+            this.sendTableChangeTrigger(true);
+
+            if (CodeUtility.hasValue(this.selectedConcept)) {
+                this.sendConceptDetailTrigger(this.selectedConcept);
+            }
+        } 
+        
+        // finally if it is the tree in the add/remove dialog
+        else {
+
+            this.sendTableChangeTrigger(true);
+
+            if (CodeUtility.hasValue(this.selectedConcept)) {
+                this.sendConceptDetailTrigger(this.selectedConcept.code);
+            }
         }
+
     }
 
     selectNode(node, suppressChangeEvent) {

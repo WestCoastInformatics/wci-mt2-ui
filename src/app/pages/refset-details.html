@@ -1290,9 +1290,11 @@
                                         [selectedConcept]="selectedConcept"
                                         [options]="taxonomyOptions"
                                         [isOnDetailsPage]="true"
+                                        [isOnDetailsPage]="true"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
                                         (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                                         (conceptDetail)="loadConceptDetail($event)"
+                                        (loadingSpinner)="toggleLoadingSpinner($event)"
                                         (numOfChildren)="numOfChildren = $event"
                                     ></app-taxonomy-tree>
                                 </div>
@@ -1720,8 +1722,10 @@
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode && !readonlyMode"
                                                 [isOnDetailsPage]="true"
+                                                [isInDetailsPanel]="true"
                                                 (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                                                 (conceptDetail)="loadConceptDetail($event)"
+                                                (loadingSpinner)="toggleLoadingSpinner($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
                                         </div>

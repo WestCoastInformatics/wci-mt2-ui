@@ -1127,7 +1127,7 @@ export class RefsetDetails {
             })
             .subscribe((results) => {
                 this.isConceptDetailsLoading = false;
-                this.conceptDetail = concept;
+                this.conceptDetail = results;
                 console.log(results);
 
                 this.conceptDetail.roleGroups = results.roleGroups;
@@ -1170,8 +1170,14 @@ export class RefsetDetails {
             });
     }
 
+    toggleLoadingSpinner(showSpinner: boolean = true) {
+        this.showLoadingSpinner = showSpinner;
+    }
+
     closeConceptDetails() {
+
         this.conceptDetail = null;
+        this.selectedConcept = null;
     }
 
     onTmcChange($event) {}
