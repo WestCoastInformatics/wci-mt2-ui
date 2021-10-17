@@ -54,7 +54,8 @@ export class NavbarComponent implements OnInit {
     logoutUser() {
         this.authenticationService.logoutUser().subscribe( data => {
             this.router.navigate(['login']);
-            localStorage.clear();
+            document.cookie = `csrftoken; expires= ${new Date()}; path=/`;
+            // localStorage.clear();
         }, err => {
         });
     }

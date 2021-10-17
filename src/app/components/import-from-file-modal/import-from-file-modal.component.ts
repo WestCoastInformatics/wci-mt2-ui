@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { RefsetService } from "src/app/services/rest/refset.service";
-import { AngularCsv } from "angular7-csv";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { AngularCsv } from 'angular7-csv';
 
 @Component({
     selector: "import-from-file-modal",

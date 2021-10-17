@@ -16,10 +16,8 @@ export class LoginComponent implements OnInit {
     constructor( private router: Router,
                  private authService: AuthenticationService) {
         if (this.authService.isAuthenticated()) {
-            this.router.navigate(['directory']);
-        }
-        const authToken = localStorage.getItem('auth_token');
-        if (authToken) {
+            console.log('is authenticated');
+            this.router.navigate(['/directory']);
             $('.logout').css('display', 'block');
         } else {
             $('.logout').css('display', 'none');
