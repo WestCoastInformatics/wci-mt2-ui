@@ -22,7 +22,7 @@
                 <img
                 [hidden]="node?.data.memberOfRefset"
                 src="assets/add-symbol-icon.svg"
-                (click)="addConcept(node?.data, true, isOnDetailsPage, node?.parent?.data, addRemoveDescendantsDialog)"
+                (click)="addConcept(node?.data, true, isOnDetailsPage, selectedConcept, addRemoveDescendantsDialog)"
                 width="18px"
                 height="18px"
                 title="Add Member"
@@ -33,7 +33,7 @@
             <img
                 [hidden]="!node?.data.memberOfRefset"
                 src="assets/subtract-symbol-icon.svg"
-                (click)="removeConcept(node?.data, true, isOnDetailsPage, node?.parent?.data, addRemoveDescendantsDialog)"
+                (click)="removeConcept(node?.data, true, isOnDetailsPage, selectedConcept, addRemoveDescendantsDialog)"
                 width="18px"
                 height="18px"
                 title="Remove Member"

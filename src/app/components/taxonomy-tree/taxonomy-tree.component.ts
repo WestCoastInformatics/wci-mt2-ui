@@ -112,34 +112,16 @@ export class TaxonomyTreeComponent {
                 propertyName === "rootNode" &&
                 CodeUtility.hasValue(this.rootNode)
             ) {
-                this.isLoading = true;
-
+                
                 // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
                 if (
                     !CodeUtility.hasValue(this.rootNode.children) ||
                     !CodeUtility.hasValue(this.rootNode.children[0].name)
                 ) {
-                    let depth: number = 1;
-
-                    let restParams = {
-                        displayType: "taxonomy",
-                        depth: depth,
-                        startingConceptId: this.rootNode.code,
-                        language: this.options.language,
-                        offset: 0,
-                        limit: 1000,
-                    };
-
-                    this.refsetService
-                        .getMembersList(this.refset.id, restParams)
-                        .subscribe((results) => {
-                            this.prepareData(results.items);
-                            this.sendnumOfChildrenTrigger(
-                                results?.items?.length
-                            );
-                            console.log(results.items);
-                        });
+                    this.getTreeData();
                 } else {
+
+                    this.isLoading = true;
                     this.prepareData(this.rootNode.children);
                 }
             } else if (propertyName === "manualStateRefresh") {
@@ -147,6 +129,30 @@ export class TaxonomyTreeComponent {
                 this.nodes = [];
             }
         }
+    }
+
+    getTreeData() {
+
+        this.isLoading = true;
+
+        let restParams = {
+            displayType: "taxonomy",
+            depth: 1,
+            startingConceptId: this.rootNode.code,
+            language: this.options.language,
+            offset: 0,
+            limit: 1000,
+        };
+
+        this.refsetService
+            .getMembersList(this.refset.id, restParams)
+            .subscribe((results) => {
+                this.prepareData(results.items);
+                this.sendnumOfChildrenTrigger(
+                    results?.items?.length
+                );
+                console.log(results.items);
+            });
     }
 
     prepareData(data) {
@@ -554,8 +560,11 @@ export class TaxonomyTreeComponent {
                         console.log("data: ", data);
                         this.sendReloadGridTrigger(true);
                         if (isInDetailsPanel && isOnDetailsPage) {
+
                             this.sendConceptDetailTrigger(parentConcept);
+                            //this.getTreeData();
                             this.sendTableChangeTrigger(true);
+
                         } else if (!isInDetailsPanel) {
                             this.sendTableChangeTrigger(true);
                         } else {
@@ -597,9 +606,13 @@ export class TaxonomyTreeComponent {
                     (data) => {
                         console.log(data);
                         this.sendReloadGridTrigger(true);
+
                         if (isInDetailsPanel && isOnDetailsPage) {
+
                             this.sendConceptDetailTrigger(parentConcept);
+                            // this.getTreeData();
                             this.sendTableChangeTrigger(true);
+
                         } else if (!isInDetailsPanel) {
                             this.sendTableChangeTrigger(true);
                         } else {
