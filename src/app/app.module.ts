@@ -161,6 +161,7 @@ const appRoutes: Routes = [
         RestService,
         ConceptsService,
         RefsetService,
+		RefsetDetails,
         PaginationService,
         BreadcrumbService,
         NotificationService,
