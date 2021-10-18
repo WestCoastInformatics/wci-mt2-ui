@@ -209,7 +209,7 @@ export class CreateNewRefsetComponent implements OnInit {
 
     // Add our fruit
     if ((value || '').trim()) {
-      this.selectedTags.push(value);
+      this.tags.push(value);
     }
 
     // Reset the input value
@@ -219,10 +219,10 @@ export class CreateNewRefsetComponent implements OnInit {
   }
 
   remove(data: string): void {
-    const index = this.selectedTags.indexOf(data);
+    const index = this.tags.indexOf(data);
 
     if (index >= 0) {
-      this.selectedTags.splice(index, 1);
+      this.tags.splice(index, 1);
     }
   }
 }
