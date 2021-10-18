@@ -46,6 +46,10 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + `refset/${refsetInternalId}`, params);
     }
 
+    updateRefsetMetadata(refsetInternalId: string, params): Observable<any> {
+        return this.put(this.contextPath + `refset/${refsetInternalId}`, params);
+    }
+
     getRefset(refsetId: string): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId);
     }
