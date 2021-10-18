@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
             {
                 this.userName = data.username;
 
-                localStorage.setItem('user_data', this.userData);
+                localStorage.setItem('user_data', JSON.stringify(this.userData));
 
                 const token = localStorage.getItem('auth_token');
                  console.log("setImsUser token is", token);
