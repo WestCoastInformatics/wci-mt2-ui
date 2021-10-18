@@ -27,10 +27,10 @@ export class CreateNewRefsetComponent implements OnInit {
   selectedParentConcept = undefined;
   selectedNarrative = '';
   selectedTags = [];
+  selectedVersionNotes = '';
   referenceTypes = ['Extensional', 'Intensional', 'External'];
-  versionNotes = ''
   selectedReferenceType = '';
-  selectedAvailability = false;
+  selectedIsPrivate = false;
   showLoadingSpinner = false;
   @Input()
   selectedProject: any;
@@ -51,20 +51,22 @@ export class CreateNewRefsetComponent implements OnInit {
     projectName: string;
     organizationName: string;
     editionName: string;
+    versionNotes: string;
     metadataConcept: string;
     parentConcept: string;
     narrative: string;
     tags: string[];
     referenceType: string;
-    selectedAvailability: boolean;
-    versionDate: any
+    privateRefset: boolean;
+    versionDate: any;
   }
   organizationName: string;
   editionName: string;
   projectName: string;
   narrative: string;
+  versionNotes: string;
   referenceType: string;
-  availability: boolean;
+  privateRefset: boolean;
   versionDate: string;
   refsetConcept: string;
   tags: string[];
@@ -97,9 +99,10 @@ export class CreateNewRefsetComponent implements OnInit {
     this.createdMetaDataConcept = '';
     this.selectedParentConcept = undefined;
     this.selectedNarrative = '';
+    this.selectedVersionNotes = '';
     this.selectedTags = [];
     this.selectedReferenceType = '';
-    this.selectedAvailability = false;
+    this.selectedIsPrivate = false;
   }
 
   setupEditMode(): void {
@@ -113,9 +116,10 @@ export class CreateNewRefsetComponent implements OnInit {
     this.narrative = this.editModeProperties.narrative;
     this.tags = this.editModeProperties.tags;
     this.referenceType = this.editModeProperties.referenceType.substr(0,1) + 
-    this.editModeProperties.referenceType.substr(1).toLowerCase();
-    this.availability = this.editModeProperties.selectedAvailability;
-    this.refsetConcept = this.editModeProperties.metadataConcept
+    	this.editModeProperties.referenceType.substr(1).toLowerCase();
+    this.privateRefset = this.editModeProperties.privateRefset;
+    this.refsetConcept = this.editModeProperties.metadataConcept;
+    this.versionNotes =  this.editModeProperties.versionNotes;
   }
 
   createRefsetObject(): void {
@@ -128,9 +132,10 @@ export class CreateNewRefsetComponent implements OnInit {
       projectId: this.selectedProject?.id,
       narrative: this.selectedNarrative,
       type: this.selectedReferenceType,
+      privateRefset: this.selectedIsPrivate,
       tags: this.selectedTags,
       versionDate: this.selectedBranchVersion,
-      privateRefset: this.selectedAvailability
+      versionNotes: this.selectedVersionNotes
     }).subscribe(refsetId => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
@@ -148,17 +153,20 @@ export class CreateNewRefsetComponent implements OnInit {
     console.log(this.selectedMetaDataConcept ? this.selectedMetaDataConcept : (this.createdMetaDataConcept ? this.createdMetaDataConcept : ''));
     console.log(this.selectedParentConcept);
     console.log(this.selectedNarrative);
+    console.log(this.selectedVersionNotes);
     console.log(this.selectedTags);
     console.log(this.selectedReferenceType);
-    console.log(this.selectedAvailability);
+    console.log(this.selectedIsPrivate);
   }
 
   editRefsetObject(): void {
     this.showLoadingSpinner = true;
-    this.refsetService.editRefsetMembers(this.id, {
-      narrative: this.selectedNarrative,
-      tags: this.selectedTags,
-      versionNotes: this.versionNotes
+    this.refsetService.updateRefsetMetadata(this.id, {
+      narrative: this.narrative,
+      tags: this.tags,
+      versionNotes: this.versionNotes,
+      privateRefset: this.privateRefset,
+      type: this.referenceType
     }).subscribe(refsetId => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);

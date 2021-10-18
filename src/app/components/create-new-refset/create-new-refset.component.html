@@ -324,7 +324,7 @@
                     <div
                         class="
                             col
-                            create-new-refset-label create-new-refset-narrative
+                            create-new-refset-label create-new-refset-flex-weight
                         "
                     >
                         <label>Narrative:</label>
@@ -380,7 +380,7 @@
                             <mat-chip-list #chipList> </mat-chip-list>
                         </mat-form-field>
                         <mat-chip
-                            *ngFor="let selectedTag of selectedTags"
+                            *ngFor="let selectedTag of tags"
                             [selectable]="selectable"
                             [removable]="removable"
                             (removed)="remove(selectedTag)"
@@ -393,8 +393,11 @@
                         </mat-chip>
                     </div>
                 </div>
+                
+                <!-- Type -->
                 <div class="create-new-refset-form-field">
                     <div
+                    *ngIf="editMode"
                         class="
                             col
                             create-new-refset-label
@@ -403,7 +406,27 @@
                     >
                         <label>Reference Set Type:</label>
                     </div>
+                	<div
+                    *ngIf="editMode"
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                        style="padding-left: 25px;"
+                    >
+                        <mat-form-field appearance="none">
+                            <input
+                                style="cursor: default;"
+                                matInput
+                                type="text"
+                                [(ngModel)]="r"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
                     <div
+                    *ngIf="!editMode"
                         class="
                             col
                             create-new-refset-field
@@ -446,11 +469,55 @@
                             create-new-refset-flex-weight
                         "
                     >
-                        <mat-checkbox [(ngModel)]="availability"
+                        <mat-checkbox [(ngModel)]="isPrivate"
                             >Private</mat-checkbox
                         >
                     </div>
                 </div>
+
+
+
+
+
+                <!-- JE -->
+                <div
+                    *ngIf="editMode"
+                 class="create-new-refset-form-field">
+			                   
+			                    <div
+			                        class="
+			                            col
+			                            create-new-refset-label
+			                            create-new-refset-flex-weight
+			                        "
+			                    >
+			                        <label>Version Notes:</label>
+			                    </div>
+									                		
+									                		
+									                		
+                    <div
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <editor
+                            [(ngModel)]="versionNotes"
+                            [init]="{
+                                base_url: '/tinymce',
+                                suffix: '.min',
+                                height: 150,
+                                menubar: false,
+                                plugins: ['lists advlist'],
+                                toolbar:
+                                    'undo redo | bold italic | bullist numlist outdent indent'
+                            }"
+                        ></editor>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

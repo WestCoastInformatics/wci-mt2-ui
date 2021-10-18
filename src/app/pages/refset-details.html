@@ -224,7 +224,7 @@
                             [status]="refsetStatus"
                             [isDetailsPage]="true"
                             [editMode]="editMode"
-                            [id]="refsetId"
+                            [id]="id"
                             [editModeProperties]="editModeProperties"
                         ></create-new-refset>
 
@@ -585,6 +585,7 @@
                             "
                         >
                             <tbody>
+                           		<!-- Version Date with default if empty -->
                                 <tr>
                                     <td
                                         class="
@@ -594,12 +595,19 @@
                                     >
                                         Version Date:
                                     </td>
-                                    <td
+                                    <td *ngIf="refsetData?.versionDate"
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
                                     >
                                         {{refsetData?.versionDate}}
+                                    </td>
+                                    <td *ngIf="!refsetData?.versionDate"
+                                        class="
+                                            refset-tool-refset-metadata-value
+                                        "
+                                    >
+                                        Not yet published
                                     </td>
                                 </tr>
 
@@ -683,15 +691,11 @@
                                         "
                                     >
                                         <ng-container>
-                                            <span
-                                                (click)="openRichTextEditor('versionNotes', 'version notes')"
-                                            >
                                                 <readonly-text-modal
                                                     [shortText]="refsetData?.versionNotesShortText"
                                                     [longText]="refsetData?.versionNotes"
                                                     [title]="'Version Notes'"
                                                 ></readonly-text-modal>
-                                            </span>
                                         </ng-container>
                                     </td>
                                 </tr>
