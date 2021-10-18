@@ -354,8 +354,9 @@ export class RefsetDetails {
                     narrative: this.refsetData?.narrative,
                     tags: this.refsetData?.tags,
                     referenceType: this.refsetData["type"],
-                    selectedAvailability: this.refsetData?.privateRefset,
+                    privateRefset: this.refsetData?.privateRefset,
                     versionDate: this.refsetData?.versionDate,
+                    versionNotes: this.refsetData?.versionNotes,
                 };
             }
             this.refsetData.status = RefsetUtility.getStatus(
