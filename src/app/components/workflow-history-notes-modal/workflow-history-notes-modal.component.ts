@@ -9,8 +9,9 @@ import { WorkflowService } from 'src/app/services/workflow/workflow.service';
   templateUrl: './workflow-history-notes-modal.component.html'
 })
 export class WorkflowHistoryNotesModalComponent implements OnInit {
-  workflowHistoryNotes: string;
   title: string;
+  @Input()
+  workflowHistoryNotes: string;
   @Input()
   refsetId: string;
   @Input()
