@@ -178,8 +178,6 @@ export class CreateNewRefsetComponent implements OnInit {
     return this.selectedProject.name &&
     this.selectedProject.organization.edition.id &&
     this.selectedProject.id &&
-    this.selectedBranchVersion &&
-    this.selectedReferenceType &&
     (this.isSelected > 0);
   }
 

@@ -789,7 +789,7 @@
                             [user]="refsetData?.modifiedBy"
                             [disabled]="!refsetStatus?.includes('IN_EDIT') && !refsetStatus?.includes('IN_REVIEW')"
                             [status]="refsetStatus"
-                            [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0].notes"
+                            [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0]?.notes"
                         ></workflow-history-notes-modal>
 
                     </div>
