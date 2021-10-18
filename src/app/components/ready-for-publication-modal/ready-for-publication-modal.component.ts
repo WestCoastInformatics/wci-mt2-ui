@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
@@ -10,8 +10,9 @@ export class ReadyForPublicationModalComponent implements OnInit {
   @Input()
   refsetData: any;
 
-  @Input()
-  readonlyMode: boolean;
+  @Output()
+  reloadPage = new EventEmitter<boolean>();
+  
   requestForPublicationNotes = '';
   constructor(private readonly modalService: NgbModal,
     private readonly workflowService: WorkflowService) { }
@@ -43,7 +44,7 @@ export class ReadyForPublicationModalComponent implements OnInit {
             console.log(results);
             if (results) {
                 // window.location.reload();
-                this.ngOnInit();
+                this.reloadPage.emit();
             }
         });
 }

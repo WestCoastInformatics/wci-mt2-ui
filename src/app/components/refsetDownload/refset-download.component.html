@@ -2,13 +2,15 @@
     *ngIf="isDetailPage"
     #refsetDownloadButton
     (click)="openDownload(refset.refsetId)"
-    class="button-inactive"
+    class="refset-tool-standard-icon-button"
+    [ngClass]="{'inactive' : disabled}"
+    [disabled]="disabled"
     style="height: 31px;"
 >
     <img
         src="assets/download-icon.svg"
         alt="download icon"
-        title="download button"
+        title="Download Refset"
         aria-label="download button"
     />
 </button>
@@ -22,6 +24,8 @@
     class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted {{
         buttonClasses
     }}"
+    [ngClass]="{'inactive' : disabled}"
+    [disabled]="disabled"
     aria-label="Download Refset"
     title="Download Refset"
 >

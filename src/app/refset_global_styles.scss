@@ -937,16 +937,32 @@ button.refset-tool-table-action-icon {
 // Pagination Styles
 .refset-tool-pagination-container {
     padding: 20px 70px;
-    //display: flex;
-    justify-content: center;
 
-    .row {
-        justify-content: center;
-        margin-top: 5px;
-        margin-bottom: 5px;
+    .refset-tool-pagination-top-row {
+        display: flex;
+    }
+    .refset-tool-pagination-bottom-row {
+        text-align: center;
     }
     button {
         margin: 0 5px;
+    }
+    .refset-tool-pagination-buttons {
+        padding: 0;
+        margin: 5px 0px;
+    }
+    .refset-tool-pagination-total-label {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .refset-tool-pagination-spacer {
+        visibility: hidden;
+        flex: 1;
+        display: flex;
+    }
+    .refset-tool-pagination-count {
+        font-weight: bold;
     }
 }
 
@@ -2003,6 +2019,24 @@ button.refset-tool-table-action-icon {
     margin-left: 15px !important;
 }
 
+.refset-tool-standard-icon-button {
+    width: 39px;
+    height: 31px;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 164, 228, 1);
+    background-color: rgba(255, 255, 255, 1);
+
+    &.inactive {
+        background-color: $inactive_text_color
+    }
+}
+
+.refset-tool-search-ecl-button {
+    margin-left: 5px;
+}
+
 .taxonomy-code-text {
     line-height: normal;
 }
@@ -2278,7 +2312,7 @@ button.refset-tool-table-action-icon {
 }
 
 #addRemoveByConceptHierarchySearchInputField {
-    width: 245px;
+    width: 375px;
 }
 
 .add-remove-concept-hierarchy-modal-table {

@@ -1,11 +1,14 @@
 <button
-    class="button-inactive"
+    class="refset-tool-standard-icon-button"
+    [ngClass]="{'inactive' : disabled}"
+    [disabled]="disabled"
     (click)="openreadyForReviewModal(workflowHistoryNotesDialog)"
 >
+    <!-- JESSE: would be ideal if we could say 'edit authoring notes' or 'edit review notes' -->
     <img
         src="assets/pencil-edit-icon.svg"
-        alt="Edit Workflow History"
-        title="Edit Workflow History"
+        alt="Edit Notes"
+        title="Edit Notes"
         aria-label="Edit Workflow History"
     />
 </button>
@@ -16,7 +19,7 @@
             class="modal-title workflow-history-notes-modal-title"
             id="modal-basic-title"
         >
-            Authoring Notes
+            {{title}}
         </h4>
         <button
             type="button"
@@ -53,7 +56,7 @@
             aria-hidden="false"
             class="refset-tool-action-button request-review-modal-button"
             aria-label="Save"
-            title="Save"
+            title="Save Notes"
             ng-reflect-color="primary"
         >
             Save

@@ -38,6 +38,8 @@ export class RefsetDownloadComponent {
     dialog: DialogService;
     @Input()
     isDetailPage: boolean;
+    @Input()
+    disabled = false;
 
     @ViewChild('refsetDownloadDialog') downloadDialog: TemplateRef<any>;
 

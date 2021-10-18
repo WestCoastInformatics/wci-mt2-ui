@@ -43,6 +43,8 @@ export class CreateNewRefsetComponent implements OnInit {
   @Input()
   editMode = false;
   @Input()
+  disabled = false;
+  @Input()
   id: string;
   @Input()
   editModeProperties: {
@@ -60,6 +62,13 @@ export class CreateNewRefsetComponent implements OnInit {
   organizationName: string;
   editionName: string;
   projectName: string;
+  narrative: string;
+  referenceType: string;
+  availability: boolean;
+  versionDate: string;
+  refsetConcept: string;
+  tags: string[];
+  
   constructor(private modalService: NgbModal,
     private detectChanges: ChangeDetectorRef,
     private router: Router,
@@ -98,13 +107,15 @@ export class CreateNewRefsetComponent implements OnInit {
     this.editionName = this.editModeProperties.editionName;
     this.projectName = this.editModeProperties.projectName;
     this.selectedMetaDataConcept = this.editModeProperties.metadataConcept;
-    this.selectedBranchVersion = this.editModeProperties.versionDate;
+    this.versionDate = this.editModeProperties.versionDate;
     this.createdMetaDataConcept = this.editModeProperties.metadataConcept;
     this.selectedParentConcept = this.editModeProperties.parentConcept;
-    this.selectedNarrative = this.editModeProperties.narrative;
-    this.selectedTags = this.editModeProperties.tags;
-    this.selectedReferenceType = this.editModeProperties.referenceType;
-    this.selectedAvailability = this.editModeProperties.selectedAvailability;
+    this.narrative = this.editModeProperties.narrative;
+    this.tags = this.editModeProperties.tags;
+    this.referenceType = this.editModeProperties.referenceType.substr(0,1) + 
+    this.editModeProperties.referenceType.substr(1).toLowerCase();
+    this.availability = this.editModeProperties.selectedAvailability;
+    this.refsetConcept = this.editModeProperties.metadataConcept
   }
 
   createRefsetObject(): void {

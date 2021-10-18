@@ -34,16 +34,16 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + 'refset/', params);
     }
 
-    addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}`, '');
+    addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '');
+    }
+
+    removeRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '');
     }
 
     editRefsetMembers(refsetInternalId: string, params): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetInternalId}`, params);
-    }
-
-    removeRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}`, '');
     }
 
     getRefset(refsetId: string): Observable<any> {

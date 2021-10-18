@@ -83,9 +83,18 @@
             <mat-button-toggle
                 class="button-group-edit"
                 [checked]="refsetStatus?.includes('IN_EDIT')"
+                [disabled]="!refsetData?.availableActions?.includes('EDIT')"
                 value="Edit"
                 (click)="setWorkflowStatusByAction('Start Editing', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;"
                 >Edit</mat-button-toggle
+            >
+            <mat-button-toggle
+                class="button-group-review"
+                [checked]="refsetStatus?.includes('IN_REVIEW')"
+                [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
+                value="Review"
+                (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('Reviewing', 'REVIEW')"
+                >Review</mat-button-toggle
             >
             <!-- <mat-button-toggle
                 class="button-group-update"
@@ -98,13 +107,6 @@
                 value="Update"
                 disabled
                 >Update</mat-button-toggle
-            >
-            <mat-button-toggle
-                class="button-group-review"
-                [checked]="refsetStatus?.includes('IN_REVIEW')"
-                value="Review"
-                (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('Reviewing', 'REVIEW')"
-                >Review</mat-button-toggle
             >
             <mat-button-toggle class="button-group-admin" value="Admin" disabled
                 >Admin</mat-button-toggle
@@ -125,38 +127,44 @@
             <div class="col refset-tool-refset-details-title-name">
                 {{refsetData?.name}}
                 <div class="set-of-buttons-non-edit-mode">
+
                     <app-refset-download
                         [isDetailPage]="true"
                         [refset]="refsetData"
+                        [disabled]="!refsetData?.downloadable"
                     ></app-refset-download>
-                    <button class="button-inactive">
+
+                    <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
                         <img
                             src="assets/quote-icon.svg"
                             alt="quote icon"
                             title="View Feedback"
                             aria-label="View Feedback"
-                            (click)="openRefsetFeedback()"
                         />
                     </button>
-                    <button class="button-inactive">
+
+                    <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
                         <img
                             src="assets/compare-refset-icon.svg"
                             alt="notes icon"
-                            title="Edit metadata"
-                            aria-label="Edit metadata"
+                            title="Compare Refset"
+                            aria-label="Compare Refset"
                         />
                     </button>
+
                     <create-new-refset
+                        [disabled]="!refsetStatus?.includes('IN_EDIT')"
                         [isDetailsPage]="true"
                         [editMode]="editMode"
                         [id]="refsetId"
                         [editModeProperties]="editModeProperties"
                     ></create-new-refset>
+
                 </div>
             </div>
 
             <div class="current-version-label">Current Version:</div>
-            <div class="row justify-content-end details-version-select">
+            <div class="row justify-content-end details-version-select" title="Select Version">
                 <mat-form-field appearance="fill">
                     <mat-label></mat-label>
                     <mat-select
@@ -186,62 +194,63 @@
                 >
                     {{refsetData?.name}}
                     <div class="set-of-buttons">
+
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
+                            [disabled]="!refsetData?.downloadable"
                         ></app-refset-download>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
                             <img
                                 src="assets/quote-icon.svg"
                                 alt="quote icon"
                                 title="View Feedback"
                                 aria-label="View Feedback"
-                                (click)="openRefsetFeedback()"
                             />
                         </button>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
                             <img
                                 src="assets/compare-refset-icon.svg"
-                                alt="compare icon"
-                                title="Compare metadata"
-                                aria-label="Compare metadata"
+                                alt="notes icon"
+                                title="Compare Refset"
+                                aria-label="Compare Refset"
                             />
                         </button>
+
                         <create-new-refset
+                            [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                            [status]="refsetStatus"
                             [isDetailsPage]="true"
-                            [id]="refsetId"
                             [editMode]="editMode"
+                            [id]="refsetId"
                             [editModeProperties]="editModeProperties"
                         ></create-new-refset>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}" [disabled]="!refsetStatus?.includes('IN_EDIT')" (click)="openCloneRefset()">
                             <img
                                 src="assets/pages-icon.svg"
                                 alt="pages icon"
-                                title="Clone refset"
+                                title="Clone Refset"
                                 aria-label="Clone refset"
                             />
                         </button>
-                        <button class="button-inactive">
+
+                        <button class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}" [disabled]="!refsetStatus?.includes('IN_EDIT')" (click)="openDeleteRefset()">
                             <img
                                 src="assets/trash-icon.svg"
                                 alt="trash icon"
-                                title="Delete refset"
+                                title="Delete Refset"
                                 aria-label="Delete refset"
                             />
                         </button>
                     </div>
-                    <div>
-                        <a class="detail-top-link" (click)="openArtifacts()"
-                            >Artifacts</a
-                        >
-                        <a class="detail-top-link" (click)="openAuditTrail()"
-                            >Audit Trail</a
-                        >
-                    </div>
                 </div>
                 <div class="edit-button-group-right-below-sticky-header">
+
                     <button
-                        *ngIf="!readonlyMode"
+                        *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
@@ -254,8 +263,9 @@
                     >
                         Finish Edit
                     </button>
+
                     <button
-                        *ngIf="!readonlyMode"
+                        *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
                         #readyForReviewButton
                         (click)="setWorkflowStatusByAction('Ready for Review', 'REQUEST_REVIEW')"
                         mat-raised-button
@@ -268,8 +278,54 @@
                     >
                         Request Review
                     </button>
-                    <!-- <button
-                        *ngIf="!readonlyMode"
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')"
+                        #acceptRefsetButton
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Accept the Refset', 'ACCEPT_REVIEW')"
+                        class="refset-tool-action-button accept-refset-button"
+                        aria-label="Accept Refset"
+                        title="Accept Refset"
+                        ng-reflect-color="primary"
+                    >
+                        Accept Refset
+                    </button>
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW')"
+                        #rejectRefsetButton
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
+                        class="refset-tool-action-button reject-refset-button"
+                        aria-label="Reject Refset"
+                        title="Reject Refset"
+                        ng-reflect-color="primary"
+                    >
+                        Reject Refset
+                    </button>
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
+                        #unassignButton
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Unassign Refset', 'UNASSIGN')"
+                        class="refset-tool-action-button unassign-button"
+                        aria-label="Unassign"
+                        title="Unassign"
+                        ng-reflect-color="primary"
+                    >
+                        Unassign
+                    </button>
+<!--
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                         #readyForPublicationButton
                         (click)="setWorkflowStatusByAction('Ready for Publication', 'REQUEST_PUBLICATION')"
                         mat-raised-button
@@ -285,11 +341,43 @@
                     >
                         Request Publication
                     </button> -->
-                    <ready-for-publication-modal
+
+                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                         [refsetData]="refsetData"
-                        [readonlyMode]="readonlyMode"
+                        (reloadPage)="initializeDetailsPage()"
                     ></ready-for-publication-modal>
+
                     <button
+                        *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
+                        #withdrawPublicationRequest
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Withdraw the publication request', 'FAILS_RVF')"
+                        class="refset-tool-action-button launch-release-button"
+                        aria-label="Withdraw"
+                        title="Withdraw Publication Request"
+                        ng-reflect-color="primary"
+                    >
+                        Withdraw Request
+                    </button>
+
+                    <button
+                        *ngIf="this.refsetData?.availableActions?.includes('REFSET_PUBLISHED')"
+                        #complete Publication
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        (click)="setWorkflowStatusByAction('Complete Publication', 'REFSET_PUBLISHED')"
+                        class="refset-tool-action-button cancel-release-button"
+                        aria-label="Complete Publication"
+                        title="Complete Publication"
+                        ng-reflect-color="primary"
+                    >
+                        Complete Publication
+                    </button>
+
+                    <!-- <button
                         *ngIf="updateToggled"
                         #updateRefsetButton
                         mat-raised-button
@@ -314,78 +402,7 @@
                         ng-reflect-color="primary"
                     >
                         Cancel Update
-                    </button>
-                    <button
-                        *ngIf="reviewToggled"
-                        #acceptRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Accept the Refset', 'ACCEPT_REVIEW')"
-                        class="refset-tool-action-button accept-refset-button"
-                        aria-label="Accept Refset"
-                        title="Accept Refset"
-                        ng-reflect-color="primary"
-                    >
-                        Accept Refset
-                    </button>
-                    <button
-                        *ngIf="reviewToggled"
-                        #rejectRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
-                        class="refset-tool-action-button reject-refset-button"
-                        aria-label="Reject Refset"
-                        title="Reject Refset"
-                        ng-reflect-color="primary"
-                    >
-                        Reject Refset
-                    </button>
-                    <button
-                        *ngIf="reviewToggled"
-                        #unassignButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Unassign Refset', 'UNASSIGN')"
-                        class="refset-tool-action-button unassign-button"
-                        aria-label="Unassign"
-                        title="Unassign"
-                        ng-reflect-color="primary"
-                    >
-                        Unassign
-                    </button>
-                    <button
-                        *ngIf="adminToggled"
-                        #launchReleaseButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
-                        class="refset-tool-action-button launch-release-button"
-                        aria-label="Launch Release"
-                        title="Launch Release"
-                        ng-reflect-color="primary"
-                    >
-                        Launch Release
-                    </button>
-                    <button
-                        disabled
-                        *ngIf="adminToggled"
-                        #cancelReleaseButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Cancel Release', 'UNASSIGN')"
-                        class="refset-tool-action-button cancel-release-button"
-                        aria-label="Cancel Release"
-                        title="Cancel Release"
-                        ng-reflect-color="primary"
-                    >
-                        Cancel Release
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -397,14 +414,14 @@
                     <a
                         class="detail-top-link"
                         (click)="openArtifacts()"
-                        title="Artifacts"
+                        title="Open Artifacts List"
                         aria-label="Artifacts"
                         >Artifacts</a
                     >
                     <a
                         class="detail-top-link"
                         (click)="openAuditTrail()"
-                        title="Audit Trail"
+                        title="Open Audit Trail"
                         aria-label="Audit Trail"
                         >Audit Trail</a
                     >
@@ -412,7 +429,7 @@
                 <img
                     src="assets/collapse-plus-icon.svg"
                     alt="Collapse Button"
-                    title="Collapse Button"
+                    title="Collapse Metadata"
                     aria-label="Collapse Button"
                     class="collapse-plus-icon"
                     (click)="metadataCollapseTrigger()"
@@ -438,7 +455,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Refset ID:"
                                         aria-label="Refset ID:"
                                     >
                                         Refset ID:
@@ -447,7 +463,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.refsetId}}"
                                     >
                                         {{refsetData?.refsetId}}
                                     </td>
@@ -458,7 +473,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Edition/Extension:"
                                         aria-label="Edition/Extension:"
                                     >
                                         Edition/Extension:
@@ -467,7 +481,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.editionName}}"
                                     >
                                         {{refsetData?.editionName}}
                                         <img
@@ -486,7 +499,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Type:"
                                         aria-label="Type:"
                                     >
                                         Type:
@@ -496,7 +508,6 @@
                                             refset-tool-refset-metadata-value
                                             capitalize-metadata-value
                                         "
-                                        title="{{capitalizeFirstLetterOfString(refsetData?.type)}}"
                                     >
                                         {{capitalizeFirstLetterOfString(refsetData?.type)}}
                                     </td>
@@ -508,7 +519,6 @@
                                             refset-tool-refset-metadata-label
                                         "
                                         aria-label="Tags:"
-                                        title="Tags:"
                                     >
                                         Tags:
                                     </td>
@@ -516,7 +526,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.tags?.join('; ')}}"
                                     >
                                         {{refsetData?.tags?.join('; ')}}
                                     </td>
@@ -528,7 +537,6 @@
                                             refset-tool-refset-metadata-label
                                         "
                                         aria-label="Narrative:"
-                                        title="Narrative:"
                                     >
                                         Narrative:
                                     </td>
@@ -552,7 +560,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Refset Names:"
                                         aria-label="Refset Names:"
                                     >
                                         Refset Names:
@@ -561,7 +568,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.name}}"
                                     >
                                         {{refsetData?.name}}
                                     </td>
@@ -584,7 +590,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Version Date:"
                                         aria-label="Version Date:"
                                     >
                                         Version Date:
@@ -593,7 +598,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.versionDate}}"
                                     >
                                         {{refsetData?.versionDate}}
                                     </td>
@@ -604,7 +608,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Owner/Organization:"
                                         aria-label="Owner/Organization:"
                                     >
                                         Owner/Organization:
@@ -613,7 +616,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.organizationName}}"
                                     >
                                         {{refsetData?.organizationName}}
                                         <img
@@ -632,7 +634,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Version Status:"
                                         aria-label="Version Status:"
                                     >
                                         Version Status:
@@ -642,7 +643,6 @@
                                             refset-tool-refset-metadata-value
                                             capitalize-metadata-value
                                         "
-                                        title="{{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}"
                                     >
                                         {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
                                     </td>
@@ -653,7 +653,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Direct URL/URI:"
                                         aria-label="Direct URL/URI:"
                                     >
                                         Direct URL/URI:
@@ -662,7 +661,6 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         "
-                                        title="{{refsetData?.url}}"
                                     >
                                         <a [href]="directRoute"
                                             >{{directUrl}}</a
@@ -675,7 +673,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Version Notes:"
                                         aria-label="Version Notes:"
                                     >
                                         Version Notes:
@@ -704,7 +701,6 @@
                                         class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        title="Definition:"
                                         aria-label="Definition:"
                                     >
                                         Definition:
@@ -755,6 +751,18 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
+                <ng-template #cloneRefsetDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #deleteRefsetDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #compareRefsetDialog let-data>
+                    This functionality will be implemented in subsequent phases.
+                </ng-template>
+
                 <ng-template #refsetArtifactsDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
@@ -770,20 +778,26 @@
                 <div class="metadata-collapsible-container-title">
                     Workflow History
                     <div class="set-of-buttons-workflow-history">
+
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
+
                         <workflow-history-notes-modal
                             [refsetId]="id"
                             [user]="refsetData?.modifiedBy"
+                            [disabled]="!refsetStatus?.includes('IN_EDIT') && !refsetStatus?.includes('IN_REVIEW')"
+                            [status]="refsetStatus"
+                            [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0].notes"
                         ></workflow-history-notes-modal>
+
                     </div>
                 </div>
                 <img
                     src="assets/collapse-plus-icon.svg"
                     alt="Collapse Button"
-                    title="Collapse Button"
+                    title="Collapse Workflow History"
                     aria-label="Collapse Button"
                     class="collapse-plus-icon"
                     (click)="workflowCollapseTrigger()"
@@ -878,8 +892,8 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
-            <span [hidden]="!numOfResults">
-                &nbsp;{{'(' + numOfResults + ')'}}</span
+            <span [hidden]="!membersGridNumberOfResults">
+                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}</span
             >
             <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
                 <import-from-file-modal
@@ -902,7 +916,7 @@
                     <img
                         src="assets/wrench-icon.svg"
                         alt="wrench icon"
-                        title="ECL builder"
+                        title="Open ECL Builder"
                         aria-label="ECL Builder"
                     />
                 </button>
@@ -940,7 +954,7 @@
                                             style="padding-left: 5px"
                                             [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay"
                                         >
-                                            <app-column-chooser
+                                            <app-column-chooser title="Select Columns to Display"
                                                 [gridColumnApi]="membersGridColumnApi"
                                                 [useDialog]="useDialog"
                                                 [manualStateRefresh]="membersGridChooserManualStateRefresh"
@@ -994,8 +1008,7 @@
                                                     id="detailsTableSearchInput"
                                                     [(ngModel)]="tableSearchInput"
                                                     (input)="onTableSearchChange()"
-                                                    title="Search (Type at least 3 characters. Example: shou fra)"
-                                                    aria-label="Search (Type at least 3 characters. Example: shou fra)"
+                                                    aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)"
                                                 />
                                             </mat-form-field>
                                             <span
@@ -1003,21 +1016,18 @@
                                                 (click)="clearSearch('table')"
                                                 >&#10005;</span
                                             >
-                                            <!-- <button
-                                                mat-raised-button
-                                                color="primary"
+                                            <button
                                                 (click)="openEclBuilder('detailsTableSearchInput')"
-                                                #detailsTableSearchEclButton
-                                                aria-hidden="false"
-                                                class="
-                                                    refset-tool-action-button
-                                                "
-                                                aria-label="Open ECL Builder"
-                                                title="Open ECL Builder"
-                                                ng-reflect-color="primary"
+                                                #detailsTaxonomySearchEclButton
+                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
                                             >
-                                                ECL Builder
-                                            </button> -->
+                                                <img
+                                                    src="assets/wrench-icon.svg"
+                                                    alt="wrench icon"
+                                                    title="Open ECL Builder"
+                                                    aria-label="ECL Builder"
+                                                />
+                                            </button>
                                         </div>
 
                                         <div
@@ -1042,8 +1052,7 @@
                                                     id="detailsTaxonomySearchInput"
                                                     [(ngModel)]="taxonomySearchInput"
                                                     (input)="onTaxonomySearchChange()"
-                                                    title="Search (Type at least 3 characters. Example: shou fra)"
-                                                    aria-label="Search (Type at least 3 characters. Example: shou fra)"
+                                                    aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)"
                                                 />
                                             </mat-form-field>
                                             <mat-form-field
@@ -1069,19 +1078,16 @@
                                                 >&#10005;</span
                                             >
                                             <button
-                                                mat-raised-button
-                                                color="primary"
                                                 (click)="openEclBuilder('detailsTaxonomySearchInput')"
-                                                aria-hidden="false"
                                                 #detailsTaxonomySearchEclButton
-                                                class="
-                                                    refset-tool-action-button
-                                                "
-                                                aria-label="Open ECL Builder"
-                                                title="Open ECL Builder"
-                                                ng-reflect-color="primary"
+                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
                                             >
-                                                ECL Builder
+                                                <img
+                                                    src="assets/wrench-icon.svg"
+                                                    alt="wrench icon"
+                                                    title="Open ECL Builder"
+                                                    aria-label="ECL Builder"
+                                                />
                                             </button>
                                         </div>
 
@@ -1101,14 +1107,14 @@
                                             >
                                                 <mat-button-toggle
                                                     value="table"
-                                                    title="Table"
+                                                    title="Display Members in a Table"
                                                     aria-label="Table"
                                                     >Table</mat-button-toggle
                                                 >
                                                 <mat-button-toggle
                                                     value="taxonomy"
                                                     title="Taxonomy"
-                                                    aria-label="Taxonomy"
+                                                    aria-label="Display Members in a Taxonomy"
                                                     [disabled]="!showTaxonomySearchTable"
                                                     >{{taxonomyButtonLabel}}</mat-button-toggle
                                                 >
@@ -1143,7 +1149,7 @@
                                         [pageSizeOptions]="membersGridPaging.pageSizeOptions"
                                         [totalKnown]="membersGridPaging.totalKnown"
                                         [manualStateRefresh]="membersGridPaging.manualStateRefresh"
-                                        [numOfResults]="numOfResults"
+                                        [numOfResults]="membersGridNumberOfResults"
                                     >
                                     </app-pagination>
 
@@ -1165,7 +1171,7 @@
                                                             refset-tool-table-action-icon
                                                         "
                                                         aria-label="Open History"
-                                                        title="Open History"
+                                                        title="Open Membership History"
                                                     >
                                                         <mat-icon
                                                             >history</mat-icon
@@ -1183,8 +1189,8 @@
                                                         class="
                                                             refset-tool-table-action-icon
                                                         "
-                                                        aria-label="Open Feedback"
-                                                        title="Open Feedback"
+                                                        aria-label="Open Feedback on Member"
+                                                        title="Open Member Feedback"
                                                     >
                                                         <mat-icon
                                                             >comment-processing-outline</mat-icon
@@ -1256,7 +1262,7 @@
                                             [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
                                             [totalKnown]="taxonomySearchGridPaging.totalKnown"
                                             [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
-                                            [numOfResults]="numOfResults"
+                                            [numOfResults]="taxonomySearchNumberOfResults"
                                         >
                                         </app-pagination>
 
@@ -1286,9 +1292,11 @@
                                         [selectedConcept]="selectedConcept"
                                         [options]="taxonomyOptions"
                                         [isOnDetailsPage]="true"
+                                        [isOnDetailsPage]="true"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
                                         (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                                         (conceptDetail)="loadConceptDetail($event)"
+                                        (loadingSpinner)="toggleLoadingSpinner($event)"
                                         (numOfChildren)="numOfChildren = $event"
                                     ></app-taxonomy-tree>
                                 </div>
@@ -1366,7 +1374,7 @@
                                                 "
                                                 *ngIf="conceptDetailParents.length == 0"
                                             >
-                                                There is no data.
+                                                No Parents
                                             </div>
                                         </div>
 
@@ -1391,7 +1399,7 @@
                                                     (click)="addConcept(parent, true)"
                                                     width="18px"
                                                     height="18px"
-                                                    title="Add"
+                                                    title="Add Member"
                                                     aria-label="Add"
                                                     class="add-symbol-icon"
                                                     alt="Add symbol shown when you're able to add a concept"
@@ -1406,7 +1414,7 @@
                                                     "
                                                     width="18px"
                                                     height="18px"
-                                                    title="Subtract"
+                                                    title="Remove Member"
                                                     aria-label="Subtract"
                                                     class="subtract-symbol-icon"
                                                     alt="Subtract symbol shown when you're able to remove a concept"
@@ -1437,14 +1445,15 @@
                                                 "
                                                 (click)="loadConceptDetail(parent)"
                                             >
+                                            <!--
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
                                                     title="{{parent.fsn}}"
                                                     aria-label="{{parent.fsn}}"
                                                     >{{parent.fsn}}</span
                                                 >
+                                             -->
                                                 <span
-                                                    *ngIf="!this.taxonomyOptions.useFsn"
                                                     title="{{parent.name}}"
                                                     aria-label="{{parent.name}}"
                                                     >{{parent.name}}</span
@@ -1488,7 +1497,7 @@
                                                                 (click)="addConcept(conceptDetail)"
                                                                 width="18px"
                                                                 height="18px"
-                                                                title="Add"
+                                                                title="Add Member"
                                                                 aria-label="Add"
                                                                 class="
                                                                     add-symbol-icon
@@ -1501,7 +1510,7 @@
                                                                 (click)="removeConcept(conceptDetail)"
                                                                 width="18px"
                                                                 height="18px"
-                                                                title="Subtract"
+                                                                title="Remove Member"
                                                                 aria-label="Subtract"
                                                                 class="
                                                                     subtract-symbol-icon
@@ -1535,7 +1544,7 @@
                                                             title="{{conceptDescriptions[0].term}}"
                                                             aria-label="{{conceptDescriptions[0].term}}"
                                                         >
-                                                            {{conceptDescriptions[0].term}}
+                                                            {{getFsn(conceptDescriptions)}}
                                                         </div>
 
                                                         <div
@@ -1553,7 +1562,7 @@
                                                                     refset-tool-concept-details-action-icon
                                                                 "
                                                                 aria-label="Open Concept in New SNOMED Browser Window"
-                                                                title="Open Concept in New SNOMED Browser Window"
+                                                                title="Open Concept in SNOMED Browser Window"
                                                             >
                                                                 <mat-icon
                                                                     >open_in_new</mat-icon
@@ -1561,6 +1570,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
+<br>
 
                                                     <!-- ID -->
                                                     <div
@@ -1589,7 +1599,7 @@
                                                             {{conceptDetail.code}}
                                                         </div>
                                                     </div>
-
+<br>
                                                     <!-- ECL -->
                                                     <div
                                                         class="
@@ -1609,8 +1619,10 @@
                                                             |
                                                         </div>
                                                     </div>
+<br>
 
                                                     <!-- Descriptions -->
+                                                    <!-- FSN -->
                                                     <div
                                                         class="
                                                             row
@@ -1626,7 +1638,7 @@
                                                             title="{{description.languageName}}"
                                                             aria-label="{{description.languageName}}"
                                                         >
-                                                            {{description.languageName}}
+                                                        {{description.languageName.substr(0, description.languageName.indexOf('(')).toLowerCase()}}
                                                         </div>
 
                                                         <div
@@ -1640,6 +1652,8 @@
                                                             {{description.term}}
                                                         </div>
                                                     </div>
+
+													
                                                 </div>
                                             </div>
 
@@ -1657,7 +1671,7 @@
                                                 >
                                                     <span
                                                         class="no-attributes"
-                                                        *ngIf="!conceptDetail.roleGroups.length"
+                                                        *ngIf="!conceptDetail.numRoleGroups"
                                                         >No attributes</span
                                                     >
                                                     <div
@@ -1716,8 +1730,10 @@
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode && !readonlyMode"
                                                 [isOnDetailsPage]="true"
+                                                [isInDetailsPanel]="true"
                                                 (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
                                                 (conceptDetail)="loadConceptDetail($event)"
+                                                (loadingSpinner)="toggleLoadingSpinner($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
                                         </div>
@@ -1740,7 +1756,7 @@
         (click)="addConcept(params?.data)"
         width="18px"
         height="18px"
-        title="Add"
+        title="Add Member"
         aria-label="Add"
         class="add-symbol-icon"
         alt="Add symbol shown when you're able to add a concept"
@@ -1753,10 +1769,11 @@
             "
         width="18px"
         height="18px"
-        title="Subtract"
+        title="Remove Member"
         aria-label="Subtract"
         class="subtract-symbol-icon"
         alt="Subtract symbol shown when you're able to remove a concept"
     />
     {{ params?.data?.code }}
 </ng-template>
+<scroll-top></scroll-top>

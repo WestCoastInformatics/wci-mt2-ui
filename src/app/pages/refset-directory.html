@@ -12,7 +12,7 @@
                 #createRefsetButton
                 class="refset-tool-action-button"
                 aria-label="Create New Refset"
-                title="Create New Refset"
+                title="Open Projects"
                 ng-reflect-color="primary"
                 [routerLink]="['/projects']"
             >
@@ -22,7 +22,7 @@
                 class="col-md-auto refset-tool-directory-chooser-column"
                 *ngIf="showTable"
             >
-                <app-column-chooser
+                <app-column-chooser title="Select Columns to Display"
                     [gridColumnApi]="refsetGridColumnApi"
                     [useDialog]="useDialog"
                 ></app-column-chooser>
@@ -30,7 +30,7 @@
 
             <div class="col-md-auto">
                 <div class="dropdown">
-                    <mat-form-field id="directorySearchInputField">
+                    <mat-form-field id="directorySearchInputField" title="Enter Search Critera">
                         <mat-label class="search-label">{{ metadataAndConcepts ? 'Search metadata and concepts' : 'Search metadata only' }}</mat-label>
                         <input
                             matInput
@@ -40,7 +40,7 @@
                             (keyup)="onSearchChange()"
                             (change)="onSearchChange()"
                         />
-                        <img
+                        <img title="Select Contents to Search"
                             style="
                                 width: 14px;
                                 height: 14px;
@@ -54,7 +54,7 @@
                     <span class="clear-search" (click)="clearSearch()"
                         >&#10005;</span
                     >
-                    <div class="dropdown-content" [class.dropdown-content-show]="toggleDropdown">
+                    <div class="dropdown-content" [class.dropdown-content-show]="toggleDropdown"title="Contents to Search Options">
                         <div class="radio-butons" style="font-size: 12px">
                             <mat-radio-group
                                 aria-label="Select an option"
@@ -76,7 +76,7 @@
                                 aria-hidden="false"
                                 class="refset-tool-action-button"
                                 aria-label="Save"
-                                title="Save"
+                                title="Save Content to Search"
                                 ng-reflect-color="primary"
                                 style="float: right; margin-bottom: 0"
                             >
@@ -85,24 +85,11 @@
                         </div>
                     </div>
                 </div>
-                <button
-                    mat-raised-button
-                    color="primary"
-                    (click)="openEclBuilder('directorySearchInput')"
-                    aria-hidden="false"
-                    #directorySearchEclButton
-                    class="refset-tool-action-button"
-                    aria-label="Open ECL Builder"
-                    title="Open ECL Builder"
-                    ng-reflect-color="primary"
-                >
-                    ECL Builder
-                </button>
             </div>
             <div class="col-md-auto" style="padding-left: 5px">
                 <mat-form-field id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
-                    <mat-select
+                    <mat-select title="Public/Private Refsets"
                         #directoryViewSelect
                         [(value)]="selectedView"
                         (selectionChange)="changedViewFilter()"
@@ -154,7 +141,7 @@
                 #directoryInfoIcon
                 class="refset-tool-table-action-icon"
                 aria-label="View All Refset Metadata"
-                title="View All Refset Metadata {{params?.data?.refsetId}}"
+                title="View Refset Metadata"
                 (click)="openInformation(params.data.refsetId)"
             >
                 <mat-icon>information</mat-icon>
@@ -169,11 +156,7 @@
         <ng-template #directoryInfoDialog let-data>
             <div class="container-fluid" id="directoryInformationSection">
                 <div class="row refset-tool-refset-details-title-name" title="{{data.name}}" aria-label="{{data.name}}">
-                    {{data.name}}
-                </div>
-
-                <div class="row refset-tool-refset-details-title-version" title="{{data.versionStatus}}, {{data.versionDate}}" aria-label="{{data.versionStatus}}, {{data.versionDate}}">
-                    {{data.versionStatus}}, {{data.versionDate}}
+                   <p style="font-weight:bold;font-size:20px">{{data.name}}</p>
                 </div>
 
                 <div class="row refset-tool-refset-metadata-section">
@@ -215,32 +198,15 @@
                                             refset-tool-refset-metadata-value
                                         "
                                     >
+                                        {{data?.edition?.name}}
                                         <img
                                             class="refset-tool-edition-flag"
                                             src="{{data?.flagIcon}}"
                                             *ngIf="data?.flagIcon != ''"
-                                            [hidden]="data?.flagIcon"
+                                            [hidden]="!data?.flagIcon"
                                             title="{{data?.editionName}} Flag"
                                             aria-label="{{data?.editionName}} Flag"
                                         />
-                                        {{data?.edition?.name}}
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td
-                                        class="
-                                            refset-tool-refset-metadata-label
-                                        "
-                                    >
-                                        Status:
-                                    </td>
-                                    <td
-                                        class="
-                                            refset-tool-refset-metadata-value
-                                        "
-                                    >
-                                        {{data.status}}
                                     </td>
                                 </tr>
 
@@ -356,6 +322,14 @@
                                         "
                                     >
                                         {{data?.project?.organization?.name}}
+                                        <img
+                                            class="refset-tool-edition-flag"
+                                            src="{{data?.flagIcon}}"
+                                            *ngIf="data?.flagIcon != ''"
+                                            [hidden]="!data?.flagIcon"
+                                            title="{{data?.editionName}} Flag"
+                                            aria-label="{{data?.editionName}} Flag"
+                                        />
                                     </td>
                                 </tr>
 
@@ -390,7 +364,9 @@
                                             refset-tool-refset-metadata-value
                                         "
                                     >
-                                        {{data.url}}
+                                        <a href='{{directUrl}}' 
+                                            >{{directUrl}}</a
+                                        >
                                     </td>
                                 </tr>
 

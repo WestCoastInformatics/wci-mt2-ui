@@ -40,7 +40,7 @@ export class RefsetDetails {
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
-    memberCacheLoaded$ = this.refsetLoaded.asObservable();
+    memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
     tableSearchInput: string;
     versionOptions: any;
     selectedVersion: string;
@@ -116,13 +116,17 @@ export class RefsetDetails {
     taxonomySearchGridLastFilter = "";
     taxonomySearchGridLastSort = "";
     originalGridParams: any;
-    numOfResults: number;
+    membersGridNumberOfResults: number;
+    taxonomySearchNumberOfResults: number;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
     @ViewChild("detailsMembersPaging")
     membersPaginationComponent: PaginationComponent;
     @ViewChild("refsetFeedbackDialog") refsetFeedbackDialog: TemplateRef<any>;
+    @ViewChild("cloneRefsetDialog") cloneRefsetDialog: TemplateRef<any>;
+    @ViewChild("deleteRefsetDialog") deleteRefsetDialog: TemplateRef<any>;
+    @ViewChild("compareRefsetDialog") compareRefsetDialog: TemplateRef<any>;
     @ViewChild("refsetVersionNotes") refsetVersionNotes: TemplateRef<any>;
     @ViewChild("refsetAuditDialog") refsetAuditDialog: TemplateRef<any>;
     @ViewChild("refsetArtifactsDialog") refsetArtifactsDialog: TemplateRef<any>;
@@ -173,14 +177,29 @@ export class RefsetDetails {
     }
 
     //***** Framework Functions *****/
-    ngOnInit() {
+    ngOnInit() { 
+
         this.route.data.subscribe((data) => {
             console.log(data.editMode);
 
             this.editMode = data.editMode;
         });
 
-        this.id = this.route.snapshot.paramMap.get("refsetId");
+        this.route.params.subscribe(routeParams => {
+
+            this.id = routeParams.refsetId;
+            this.initializeDetailsPage();
+        });
+    }
+
+    initializeDetailsPage() {
+
+        this.refsetLoaded = new Subject<boolean>();
+        this.refsetLoaded$ = this.refsetLoaded.asObservable();
+        this.memberCacheLoaded = new Subject<boolean>();
+        this.memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
+        this.showLoadingSpinner = true;
+        //this.id = this.route.snapshot.paramMap.get("refsetId");
         this.directUrl = (window.location.host + this.router.url).replace(
             "edit/refset",
             "details"
@@ -255,7 +274,9 @@ export class RefsetDetails {
                     field: "name",
                     colId: "result",
                     headerName: "Result",
-                    cellClass: "refset-tool-directory-column-edition",
+                    minWidth: 120,
+                    flex: 1,
+                    cellClass: "refset-tool-taxonomy-search-column-name",
                     valueGetter: this.taxonomyResultValueGetter.bind(this),
                     cellRenderer: "templateRenderer",
                     cellRendererParams: {
@@ -267,7 +288,10 @@ export class RefsetDetails {
                     field: "parents",
                     colId: "path",
                     headerName: "Path",
-                    cellClass: "refset-tool-directory-column-edition",
+                    minWidth: 200,
+                    //width: 600,
+                    flex: 6,
+                    cellClass: "refset-tool-taxonomy-search-column-path",
                     valueGetter: this.taxonomyPathValueGetter.bind(this),
                     cellRenderer: "templateRenderer",
                     cellRendererParams: { template: this.taxonomyPathSection },
@@ -310,6 +334,8 @@ export class RefsetDetails {
                     },
                 },
             };
+            
+            this.showLoadingSpinner = false;
         });
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
@@ -321,13 +347,13 @@ export class RefsetDetails {
             if (this.editMode) {
                 this.editModeProperties = {
                     projectName: this.refsetData["project"]?.name,
-                    organizationName: this.refsetData["organization"]?.name,
-                    editionName: this.refsetData["organization"]?.edition?.name,
+                    organizationName: this.refsetData["project"]?.organization?.name,
+                    editionName: this.refsetData["editionName"],
                     metadataConcept: this.refsetData?.name,
                     parentConcept: this.refsetData?.parentConceptId,
                     narrative: this.refsetData?.narrative,
                     tags: this.refsetData?.tags,
-                    referenceType: this.refsetData?.type,
+                    referenceType: this.refsetData["type"],
                     selectedAvailability: this.refsetData?.privateRefset,
                     versionDate: this.refsetData?.versionDate,
                 };
@@ -397,12 +423,16 @@ export class RefsetDetails {
     }
 
     private setButtonGroupToggles(results: any): void {
+
         this.refsetStatus = results?.workflowStatus;
         this.readonlyMode = !this.refsetStatus?.includes("IN_EDIT");
         this.reviewToggled = this.refsetStatus?.includes("IN_REVIEW");
     }
 
     setWorkflowStatusByAction(notes: string, action: string): void {
+
+        this.toggleLoadingSpinner(true);
+    
         this.workflowService
             .setWorkflowStatusByAction(
                 this.refsetData.id,
@@ -411,19 +441,22 @@ export class RefsetDetails {
                 notes
             )
             .subscribe((results) => {
-                console.log(results);
+                
                 if (results) {
-                    // window.location.reload();
+                    
                     if (action.includes('UNASSIGN')) {
                         this.router.navigateByUrl('projects');
+                    } else if (this.refsetData.id != results.id) {
+						this.router.navigateByUrl('edit/refset/' + results.id);
                     } else {
-                        this.ngOnInit();
+                        this.initializeDetailsPage();
                     }
                 } else {
-                    this.ngOnInit();
+
+                    this.initializeDetailsPage();
                     this.changeDetectorRef.detectChanges();
                 }
-            });
+            }); 
     }
 
     loadWorkflowHistoryData(): void {
@@ -455,7 +488,7 @@ export class RefsetDetails {
     }
 
     loadTaxonomyRoot() {
-        this.showLoadingSpinner = true;
+        
         let restParams = {
             displayType: "taxonomy",
             returnStartingConcept: true,
@@ -622,6 +655,8 @@ export class RefsetDetails {
                     .getTaxonomySearch(this.id, restParams)
                     .subscribe(
                         (results) => {
+
+                            this.taxonomySearchNumberOfResults = results.total;
                             this.taxonomySearchResults = results.items;
                             console.log(this.taxonomySearchResults);
                             if (results.items.length == 0 && pageNumber > 1) {
@@ -818,8 +853,9 @@ export class RefsetDetails {
                     .getMembersList(this.id, restParams)
                     .subscribe(
                         (results) => {
-                            this.numOfResults = results.total;
-                            console.log(this.numOfResults);
+
+                            this.membersGridNumberOfResults = results.total;
+                            console.log(this.membersGridNumberOfResults);
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.membersGridApi.showNoRowsOverlay();
                                 this.membersGridPaging.totalRows =
@@ -1091,11 +1127,12 @@ export class RefsetDetails {
             })
             .subscribe((results) => {
                 this.isConceptDetailsLoading = false;
-                this.conceptDetail = concept;
+                this.conceptDetail = results;
                 console.log(results);
-                
+
                 this.conceptDetail.roleGroups = results.roleGroups;
-                
+                this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
+
                 this.conceptDescriptions = results.descriptions.filter(
                     function (description) {
                         return description != null;
@@ -1127,14 +1164,17 @@ export class RefsetDetails {
             .getMembersList(this.refsetData.id, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
-                if (this.showLoadingSpinner) {
-                    this.showLoadingSpinner = false;
-                }
             });
     }
 
+    toggleLoadingSpinner(showSpinner: boolean = true) {
+        this.showLoadingSpinner = showSpinner;
+    }
+
     closeConceptDetails() {
+
         this.conceptDetail = null;
+        this.selectedConcept = null;
     }
 
     onTmcChange($event) {}
@@ -1175,7 +1215,7 @@ export class RefsetDetails {
         const dialogId = "refsetAuditDialog";
 
         const dialogData = {
-            headerText: `Refset Audit Trail for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Refset Audit Trail`,
             template: this.refsetAuditDialog,
             data: this.refsetData,
         };
@@ -1193,7 +1233,7 @@ export class RefsetDetails {
         const dialogId = "refsetArtifactsDialog";
 
         const dialogData = {
-            headerText: `Refset Artifacts for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Refset Artifacts`,
             template: this.refsetArtifactsDialog,
             data: this.refsetData,
         };
@@ -1211,7 +1251,61 @@ export class RefsetDetails {
         const dialogId = "refsetFeedbackDialog";
 
         const dialogData = {
-            headerText: `Refset Feedback for ${this.refsetData.name} (${this.refsetData.refsetId})`,
+            headerText: `Refset Feedback`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openCloneRefset() {
+        const dialogId = "cloneRefsetDialog";
+
+        const dialogData = {
+            headerText: `Clone Refset`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openDeleteRefset() {
+        const dialogId = "deleteRefsetDialog";
+
+        const dialogData = {
+            headerText: `Delete Refset`,
+            template: this.refsetFeedbackDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openCompareRefset() {
+        const dialogId = "compareRefsetDialog";
+
+        const dialogData = {
+            headerText: `Compare Refset`,
             template: this.refsetFeedbackDialog,
             data: this.refsetData,
         };
@@ -1381,6 +1475,15 @@ export class RefsetDetails {
         return new Date(dateTime).toLocaleDateString() + ' ' + new Date(dateTime).toLocaleTimeString();
     }
 
+	
+    getFsn(descriptions: any)  : string{
+        for (let description of descriptions) {
+        	if (description.languageName.toLowerCase().indexOf("fsn") > 0) {
+				return description.term;
+			}
+		}
+    }
+	
     showMembersSearchBar(): boolean {
         return (
             (this.showTable &&
