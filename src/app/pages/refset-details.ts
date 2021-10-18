@@ -347,13 +347,13 @@ export class RefsetDetails {
             if (this.editMode) {
                 this.editModeProperties = {
                     projectName: this.refsetData["project"]?.name,
-                    organizationName: this.refsetData["organization"]?.name,
-                    editionName: this.refsetData["organization"]?.edition?.name,
+                    organizationName: this.refsetData["project"]?.organization?.name,
+                    editionName: this.refsetData["editionName"],
                     metadataConcept: this.refsetData?.name,
                     parentConcept: this.refsetData?.parentConceptId,
                     narrative: this.refsetData?.narrative,
                     tags: this.refsetData?.tags,
-                    referenceType: this.refsetData?.type,
+                    referenceType: this.refsetData["type"],
                     selectedAvailability: this.refsetData?.privateRefset,
                     versionDate: this.refsetData?.versionDate,
                 };

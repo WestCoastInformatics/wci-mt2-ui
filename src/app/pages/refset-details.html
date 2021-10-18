@@ -221,6 +221,7 @@
 
                         <create-new-refset
                             [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                            [status]="refsetStatus"
                             [isDetailsPage]="true"
                             [editMode]="editMode"
                             [id]="refsetId"

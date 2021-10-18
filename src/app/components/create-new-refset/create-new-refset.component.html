@@ -19,8 +19,6 @@
     class="refset-tool-standard-icon-button details-edit-refset-modal"
     *ngIf="isDetailsPage || editMode"
     [style.height]="editMode ? '31px' : '31px'"
-    [ngClass]="{'inactive' : !selectedProject || disabled}"
-    [disabled]="!selectedProject || disabled"
     (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
 >
     <img
@@ -104,9 +102,7 @@
                                 style="cursor: default;"
                                 matInput
                                 type="text"
-                                [(ngModel)]="
-                                editMode ? organizationName : selectedProject['organization'].name
-                                "
+                                [(ngModel)]="editMode ? organizationName : selectedProject.organization.name"
                                 disabled
                             />
                         </mat-form-field>
@@ -153,7 +149,27 @@
                     >
                         <label>Extension Version Date:</label>
                     </div>
+                	<div
+                    *ngIf="editMode"
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                        style="padding-left: 25px;"
+                    >
+                        <mat-form-field appearance="none">
+                            <input
+                                style="cursor: default;"
+                                matInput
+                                type="text"
+                                [(ngModel)]="!versionDate ? 'Not Yet Versioned' : versionDate"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
                     <div
+                           *ngIf="!editMode"
                         class="
                             col
                             create-new-refset-field
@@ -161,7 +177,8 @@
                         "
                     >
                         <mat-form-field appearance="fill">
-                            <mat-label>Select Extension Version Date</mat-label>
+                            <mat-label>Selected Extension Version Date</mat-label>
+                    
                             <select
                                 matNativeControl
                                 [(ngModel)]="selectedBranchVersion"
@@ -174,12 +191,42 @@
                                 >
                                     {{ existingBranchVersion }}
                                 </option>
-                            </select>
+                            </select> 
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="create-new-refset-form-field">
                     <div
+                    *ngIf="editMode"
+                        class="
+                            col
+                            create-new-refset-label
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <label>Assigned Refset Concept:</label>
+                    </div>
+                	<div
+                    *ngIf="editMode"
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                        style="padding-left: 25px;"
+                    >
+                        <mat-form-field appearance="none">
+                            <input
+                                style="cursor: default;"
+                                matInput
+                                type="text"
+                                [(ngModel)]="refsetConcept"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div
+                    *ngIf="!editMode"
                         class="
                             col
                             create-new-refset-label
@@ -290,7 +337,7 @@
                         "
                     >
                         <editor
-                            [(ngModel)]="selectedNarrative"
+                            [(ngModel)]="narrative"
                             [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
@@ -367,7 +414,7 @@
                             <mat-label>Select Reference Set Type</mat-label>
                             <select
                                 matNativeControl
-                                [(ngModel)]="selectedReferenceType"
+                                [(ngModel)]="referenceType"
                             >
                                 <option
                                     *ngFor="let referenceType of referenceTypes"
@@ -379,7 +426,10 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="create-new-refset-form-field">
+                <div *ngIf="selectedReferenceType === 'Intensional'">
+                    Add Definition Here
+                </div>
+                                <div class="create-new-refset-form-field">
                     <div
                         class="
                             col
@@ -396,7 +446,7 @@
                             create-new-refset-flex-weight
                         "
                     >
-                        <mat-checkbox [(ngModel)]="selectedAvailability"
+                        <mat-checkbox [(ngModel)]="availability"
                             >Private</mat-checkbox
                         >
                     </div>
@@ -431,7 +481,6 @@
             aria-label="Edit Refset"
             title="Edit Metadata"
             ng-reflect-color="primary"
-            disabled
         >
             Edit Refset
         </button>
