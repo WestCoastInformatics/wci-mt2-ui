@@ -64,6 +64,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     metadataAndConcepts = true;
     toggleDropdown = false;
     numOfResults: any;
+    directUrl: string;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     constructor(
@@ -374,6 +375,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
         let refset = this.getRefsetRow(refsetId);
         const dialogId = 'directoryInfoDialog';
+        this.directUrl = (window.location.host + this.router.url).replace("directory", "details/" + refset.id);
 
         if (CodeUtility.hasValue(refset)){
 
