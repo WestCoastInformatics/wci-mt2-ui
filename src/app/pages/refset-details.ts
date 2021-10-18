@@ -1477,6 +1477,15 @@ export class RefsetDetails {
         return new Date(dateTime).toLocaleDateString() + ' ' + new Date(dateTime).toLocaleTimeString();
     }
 
+	
+    getFsn(descriptions: any)  : string{
+        for (let description of descriptions) {
+        	if (description.languageName.toLowerCase().indexOf("fsn") > 0) {
+				return description.term;
+			}
+		}
+    }
+	
     showMembersSearchBar(): boolean {
         return (
             (this.showTable &&

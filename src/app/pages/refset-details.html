@@ -1444,17 +1444,18 @@
                                                 "
                                                 (click)="loadConceptDetail(parent)"
                                             >
+                                            <!--
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
                                                     title="{{parent.fsn}}"
                                                     aria-label="{{parent.fsn}}"
                                                     >{{parent.fsn}}</span
                                                 >
+                                             -->
                                                 <span
-                                                    *ngIf="!this.taxonomyOptions.useFsn"
                                                     title="{{parent.name}}"
-                                                    aria-label="{{parent.name}}"
-                                                    >{{parent.name}}</span
+                                                    aria-label="{{parent.fsn}}"
+                                                    >{{parent.fsn}}</span
                                                 >
                                             </div>
                                         </div>
@@ -1542,7 +1543,7 @@
                                                             title="{{conceptDescriptions[0].term}}"
                                                             aria-label="{{conceptDescriptions[0].term}}"
                                                         >
-                                                            {{conceptDescriptions[0].term}}
+                                                            {{getFsn(conceptDescriptions)}}
                                                         </div>
 
                                                         <div
@@ -1568,6 +1569,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
+<br>
 
                                                     <!-- ID -->
                                                     <div
@@ -1596,7 +1598,7 @@
                                                             {{conceptDetail.code}}
                                                         </div>
                                                     </div>
-
+<br>
                                                     <!-- ECL -->
                                                     <div
                                                         class="
@@ -1616,8 +1618,10 @@
                                                             |
                                                         </div>
                                                     </div>
+<br>
 
                                                     <!-- Descriptions -->
+                                                    <!-- FSN -->
                                                     <div
                                                         class="
                                                             row
@@ -1633,7 +1637,7 @@
                                                             title="{{description.languageName}}"
                                                             aria-label="{{description.languageName}}"
                                                         >
-                                                            {{description.languageName}}
+                                                        {{description.languageName.substr(0, description.languageName.indexOf('(')).toLowerCase()}}
                                                         </div>
 
                                                         <div
@@ -1647,6 +1651,8 @@
                                                             {{description.term}}
                                                         </div>
                                                     </div>
+
+													
                                                 </div>
                                             </div>
 
