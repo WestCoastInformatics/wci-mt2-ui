@@ -76,7 +76,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     //***** Framework Functions *****/
     ngOnInit() {
         this.titleService.setTitle('Refset Tool - Projects');
-        this.breadcrumbService.setBreadcrumbs([{path: '/Projects', label: 'Projects'}, {label: 'Reference Sets'}]);
+        this.breadcrumbService.setBreadcrumbs([{label: 'Projects'}]);
         this.populateProjectList();
     }
 

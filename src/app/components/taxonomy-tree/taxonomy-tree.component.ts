@@ -102,9 +102,7 @@ export class TaxonomyTreeComponent {
                 }
 
                 if (CodeUtility.hasValue(this.nodes)) {
-
                     let treeModel: TreeModel = this.treeComponent?.treeModel;
-
                     if (CodeUtility.hasValue(treeModel)) {
                         this.sortTree(treeModel.nodes);
                     }
@@ -251,6 +249,77 @@ export class TaxonomyTreeComponent {
             keyboard: false,
             windowClass: "add-remove-descendants-modal",
         });
+    }
+
+    async upgradeMembers(): Promise<void> {
+        this.sendloadingSpinnerTrigger(true);
+        let bundleOfIds = "";
+        if (this.isAdd && this.conceptForDescendantModal) {
+            if (this.upgradeChoice == 0) {
+                bundleOfIds = this.conceptForDescendantModal?.code;
+                const children = await this.getChildren(
+                    this.conceptForDescendantModal
+                );
+                for (const child of children) {
+                    bundleOfIds = bundleOfIds + "," + child?.code;
+                }
+            } else if (this.upgradeChoice == 1) {
+                const children = await this.getChildren(
+                    this.conceptForDescendantModal
+                );
+                for (const child of children) {
+                    bundleOfIds = bundleOfIds + "," + child?.code;
+                }
+            } else if (this.upgradeChoice == 2) {
+                bundleOfIds = this.conceptForDescendantModal?.code;
+            }
+            this.refsetService
+                .addRefsetMembers(this.refset.id, "list", bundleOfIds)
+                .subscribe(
+                    (data) => {
+                        console.log("data: ", data);
+                        this.sendReloadGridTrigger(true);
+                        this.sendTableChangeTrigger(true);
+                    },
+                    (error) => {
+                        console.log(error);
+                        this.sendloadingSpinnerTrigger(false);
+                    }
+                );
+        } else if (!this.isAdd && this.conceptForDescendantModal) {
+            if (this.upgradeChoice == 0) {
+                bundleOfIds = this.conceptForDescendantModal?.code;
+                const children = await this.getChildren(
+                    this.conceptForDescendantModal
+                );
+                for (const child of children) {
+                    bundleOfIds = bundleOfIds + "," + child?.code;
+                }
+            } else if (this.upgradeChoice == 1) {
+                const children = await this.getChildren(
+                    this.conceptForDescendantModal
+                );
+                for (const child of children) {
+                    bundleOfIds = bundleOfIds + "," + child?.code;
+                }
+            } else if (this.upgradeChoice == 2) {
+                bundleOfIds = this.conceptForDescendantModal?.code;
+            }
+            this.refsetService
+                .removeRefsetMembers(this.refset.id, "list", bundleOfIds)
+                .subscribe(
+                    (data) => {
+                        console.log(data);
+                        this.sendReloadGridTrigger(true);
+                        this.sendTableChangeTrigger(true);
+                    },
+                    (error) => {
+                        console.log(error);
+                        this.sendloadingSpinnerTrigger(false);
+                    }
+                );
+        }
+        this.upgradeChoice = 4;
     }
 
     getNodeText(node) {

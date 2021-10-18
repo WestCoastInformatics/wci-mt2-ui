@@ -212,7 +212,7 @@ export class RefsetDetails {
             ]);
         } else {
             this.breadcrumbService.setBreadcrumbs([
-                { path: "/projects/refset", label: "Projects" },
+                { path: "/projects", label: "Projects" },
                 { label: "Edit Reference Set" },
             ]);
         }
@@ -445,11 +445,9 @@ export class RefsetDetails {
                 if (results) {
                     
                     if (action.includes('UNASSIGN')) {
-                        this.router.navigateByUrl('projects/refset');
-
+                        this.router.navigateByUrl('projects');
                     } else if (this.refsetData.id != results.id) {
 						this.router.navigateByUrl('edit/refset/' + results.id);
-	
                     } else {
                         this.initializeDetailsPage();
                     }

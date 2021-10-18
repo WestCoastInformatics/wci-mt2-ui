@@ -1816,8 +1816,8 @@ button.refset-tool-table-action-icon {
     padding-left: 118px !important;
 }
 
-::ng-deep .project-drop-down .mat-select-arrow-wrapper {
-    padding-top: 0;
+.project-drop-down .mat-select-arrow-wrapper {
+    padding-top: 0 !important;
 }
 
 ::ng-deep
