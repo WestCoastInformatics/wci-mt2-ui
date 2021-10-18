@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    restUrl: 'http://localhost:8080',
+    restUrl: 'http://local.ihtsdotools.org:8888',
     restContextPath: '/refsetservice/',
     snomedBrowserUrl: 'https://prod-browser.ihtsdotools.org/?perspective=full',
     snowstormApiUrl: 'https://snowstorm.ihtsdotools.org/snowstorm/snomed-ct',
