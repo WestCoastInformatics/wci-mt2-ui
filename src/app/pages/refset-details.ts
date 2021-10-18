@@ -193,7 +193,7 @@ export class RefsetDetails {
             ]);
         } else {
             this.breadcrumbService.setBreadcrumbs([
-                { path: "/projects/refset", label: "Projects" },
+                { path: "/projects", label: "Projects" },
                 { label: "Edit Reference Set" },
             ]);
         }
@@ -415,7 +415,7 @@ export class RefsetDetails {
                 if (results) {
                     // window.location.reload();
                     if (action.includes('UNASSIGN')) {
-                        this.router.navigateByUrl('projects/refset');
+                        this.router.navigateByUrl('projects');
                     } else {
                         this.ngOnInit();
                     }
