@@ -85,7 +85,7 @@
                 [checked]="refsetStatus?.includes('IN_EDIT')"
                 [disabled]="!refsetData?.availableActions?.includes('EDIT')"
                 value="Edit"
-                (click)="setWorkflowStatusByAction('Start Editing', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;"
+                (click)="setWorkflowStatusByAction('', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;"
                 >Edit</mat-button-toggle
             >
             <mat-button-toggle
@@ -93,7 +93,7 @@
                 [checked]="refsetStatus?.includes('IN_REVIEW')"
                 [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
                 value="Review"
-                (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('Reviewing', 'REVIEW')"
+                (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('', 'REVIEW')"
                 >Review</mat-button-toggle
             >
             <!-- <mat-button-toggle
@@ -260,7 +260,7 @@
                         aria-label="Finish Edit"
                         title="Finish Edit"
                         ng-reflect-color="primary"
-                        (click)="setWorkflowStatusByAction('Finished Editing', 'FINISH_EDIT')"
+                        (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')"
                     >
                         Finish Edit
                     </button>
@@ -268,7 +268,7 @@
                     <button
                         *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
                         #readyForReviewButton
-                        (click)="setWorkflowStatusByAction('Ready for Review', 'REQUEST_REVIEW')"
+                        (click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')"
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
@@ -290,7 +290,7 @@
                         aria-label="Withdraw Review Request"
                         title="Withdraw Review Request"
                         ng-reflect-color="primary"
-                        (click)="setWorkflowStatusByAction('Withdraw Review Request', 'WITHDRAW')"
+                        (click)="setWorkflowStatusByAction('', 'WITHDRAW')"
                     >
                         Withdraw Request
                     </button>
@@ -301,7 +301,7 @@
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Accept the Refset', 'ACCEPT_REVIEW')"
+                        (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')"
                         class="refset-tool-action-button accept-refset-button"
                         aria-label="Accept Refset"
                         title="Accept Refset"
@@ -316,7 +316,7 @@
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Reject the Refset', 'REJECT_REVIEW')"
+                        (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')"
                         class="refset-tool-action-button reject-refset-button"
                         aria-label="Reject Refset"
                         title="Reject Refset"
@@ -331,7 +331,7 @@
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Unassign Refset', 'UNASSIGN')"
+                        (click)="setWorkflowStatusByAction('', 'UNASSIGN')"
                         class="refset-tool-action-button unassign-button"
                         aria-label="Unassign"
                         title="Unassign"
@@ -351,7 +351,7 @@
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Withdraw the publication request', 'FAILS_RVF')"
+                        (click)="setWorkflowStatusByAction('', 'FAILS_RVF')"
                         class="refset-tool-action-button launch-release-button"
                         aria-label="Withdraw"
                         title="Withdraw Publication Request"
@@ -366,7 +366,7 @@
                         mat-raised-button
                         color="primary"
                         aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('Complete Publication', 'REFSET_PUBLISHED')"
+                        (click)="setWorkflowStatusByAction('', 'REFSET_PUBLISHED')"
                         class="refset-tool-action-button cancel-release-button"
                         aria-label="Complete Publication"
                         title="Complete Publication"
