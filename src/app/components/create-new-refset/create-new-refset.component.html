@@ -396,10 +396,14 @@
                     </div>
                 </div>
                 
+                
+                
+                
                 <!-- Type -->
-                <div class="create-new-refset-form-field">
+                <div
+	            *ngIf="editMode"
+    	    	    class="create-new-refset-form-field">
                     <div
-                    *ngIf="editMode"
                         class="
                             col
                             create-new-refset-label
@@ -409,7 +413,6 @@
                         <label>Reference Set Type:</label>
                     </div>
                 	<div
-                    *ngIf="editMode"
                         class="
                             col
                             create-new-refset-field
@@ -427,8 +430,20 @@
                             />
                         </mat-form-field>
                     </div>
+                 </div>
+                 
+                 
+                 <div class="create-new-refset-form-field">
                     <div
-                    *ngIf="!editMode"
+                        class="
+                            col
+                            create-new-refset-label
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <label>Reference Set Type:</label>
+                    </div>
+                    <div
                         class="
                             col
                             create-new-refset-field
@@ -439,7 +454,7 @@
                             <mat-label>Select Reference Set Type</mat-label>
                             <select
                                 matNativeControl
-                                [(ngModel)]="referenceType"
+                                [(ngModel)]="selectedReferenceType"
                             >
                                 <option
                                     *ngFor="let referenceType of referenceTypes"
@@ -451,9 +466,90 @@
                         </mat-form-field>
                     </div>
                 </div>
+               
+                
+                
+                
+                <!-- ECL Definintion Declaration -->
                 <div *ngIf="selectedReferenceType === 'Intensional'">
-                    Add Definition Here
-                </div>
+                    <div class="create-new-refset-form-field">
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-label
+	                            create-new-refset-flex-weight
+	                        "
+	                    >
+	                        <label>Define ECL:</label>
+	                    </div>
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-field
+	                            create-new-refset-flex-weight
+	                        "
+	                    >
+	                    
+				            <button
+				                (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
+				                #detailsIntensionalRefsetEclButton
+				                    class="button-inactive"
+				            >
+					            <img
+					                src="assets/wrench-icon.svg"
+					                alt="wrench icon"
+					                title="Open ECL Builder"
+					                aria-label="ECL Builder"
+					            />
+				            </button>
+			            </div>
+					</div>
+				
+				    <div class="create-new-refset-form-field">
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-label
+	                            create-new-refset-flex-weight
+		                        "
+		                    >
+		                	<label>ECL Definition:</label>
+	                    </div>
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-field
+	                            create-new-refset-flex-weight
+	                        "
+	                    >
+	                    
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-field
+	                            create-new-refset-flex-weight
+	                        "
+	                        style="padding-left: 25px;"
+	                    >
+	                        <mat-form-field appearance="none">
+	                            <input
+	                                style="cursor: default;"
+	                                matInput
+	                                type="text"
+	                                [(ngModel)]="TIM_ECL_Definition_as_label_here_please"
+	                                disabled
+	                            />
+	                        </mat-form-field>
+	                    </div>
+	                </div>
+				</div>
+				
+            </div> <!-- ECL -->
+                
+                
+                
+                
+                
                 <div class="create-new-refset-form-field">
                     <div
                         class="

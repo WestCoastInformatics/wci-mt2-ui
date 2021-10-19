@@ -43,6 +43,10 @@ export class AuthenticationService {
         );
     }
 
+    getRefsetUserDetails(): any {
+        return JSON.parse(localStorage.getItem('refset_user'));
+    }
+
     isAuthenticated(): boolean {
         const token = localStorage.getItem('auth_token');
         console.log('token', token);

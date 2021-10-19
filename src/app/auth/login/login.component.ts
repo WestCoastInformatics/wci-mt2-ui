@@ -30,8 +30,10 @@ export class LoginComponent implements OnInit {
     onSubmit(): any {
         this.authService.login(this.userName, this.userData).subscribe( data => {
             localStorage.setItem('auth_token', data.authToken);
+            localStorage.setItem('refset_user', JSON.stringify(data));
             this.router.navigate(['directory']);
             toastr.success('Logged in Successfully');
+
         }, err => {
             //toastr.error(err.error.error);
             console.error(err);
@@ -69,23 +71,16 @@ export class LoginComponent implements OnInit {
             else
             {
                 this.userName = data.username;
-
-                localStorage.setItem('user_data', JSON.stringify(this.userData));
-
                 const token = localStorage.getItem('auth_token');
-                 console.log("setImsUser token is", token);
+                 console.log("token is", token);
                  if (!token || token == null) {
-                    console.log("token is ", token, ", login user")
+                    console.log("token is ", token, ", call onSubmit")
                     this.onSubmit();
                  }
             }
         }, err => {
             toastr.error(err.error.error);
         });
-
-        // if nothing return send user to
-        // https://dev-ims.ihtsdotools.org/#/login?serviceReferer=http%3A%2F%2Flocalhost%3A4200%2Flogin
-
 
         // if previous call shows error
 
