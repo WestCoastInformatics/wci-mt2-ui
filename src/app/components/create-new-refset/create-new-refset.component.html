@@ -322,7 +322,47 @@
                         </mat-radio-group>
                     </div>
                 </div>
-                <div class="create-new-refset-form-field">
+                
+                
+                <!-- NARRATIVE for new refset-->
+                <div 
+            	    *ngIf="!editMode"
+                	class="create-new-refset-form-field">
+                    <div
+                        class="
+                            col
+                            create-new-refset-label create-new-refset-flex-weight
+                        "
+                    >
+                        <label>Narrative:</label>
+                    </div>
+                    <div
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <editor
+                            [(ngModel)]="selectedNarrative"
+                            [init]="{
+                                base_url: '/tinymce',
+                                suffix: '.min',
+                                height: 200,
+                                menubar: false,
+                                plugins: ['lists advlist'],
+                                toolbar:
+                                    'undo redo | bold italic | bullist numlist outdent indent'
+                            }"
+                        ></editor>
+                    </div>
+                </div>
+                
+                
+                <!-- NARRATIVE for update metadata-->
+                <div 
+	                *ngIf="editMode"
+                	class="create-new-refset-form-field">
                     <div
                         class="
                             col
@@ -352,6 +392,11 @@
                         ></editor>
                     </div>
                 </div>
+                <!-- End both NARRATIVEs-->
+                
+
+
+                <!-- Tags -->
                 <div class="create-new-refset-form-field">
                     <div
                         class="
@@ -362,7 +407,49 @@
                     >
                         <label>Reference Set Tags:</label>
                     </div>
+                    
+	
+	                <!-- Tags for new refset-->
                     <div
+	                	*ngIf="!editMode"
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <mat-form-field class="example-chip-list">
+                            <input
+                                placeholder="&nbsp;&nbsp;&nbsp;&nbsp;Add a tag to categorize the refset"
+                                [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="
+                                    separatorKeysCodes
+                                "
+                                [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="add($event)"
+                            />
+                            <mat-chip-list #chipList> </mat-chip-list>
+                        </mat-form-field>
+                        <mat-chip
+                            *ngFor="let selectedTag of selectedTags"
+                            [selectable]="selectable"
+                            [removable]="removable"
+                            (removed)="remove(selectedTag)"
+                            class="mat-elevation-z5"
+                        >
+                            {{ selectedTag }}
+                            <mat-icon matChipRemove *ngIf="removable"
+                                >cancel</mat-icon
+                            >
+                        </mat-chip>
+                    </div>
+                    
+                    
+                    
+                    
+                <!-- Tags for update metadata-->
+                    <div
+	                	*ngIf="editMode"
                         class="
                             col
                             create-new-refset-field
@@ -396,44 +483,13 @@
                     </div>
                 </div>
                 
+				<!-- End Tags -->
                 
                 
-                
-                <!-- Type -->
-                <div
-	            *ngIf="editMode"
-    	    	    class="create-new-refset-form-field">
-                    <div
-                        class="
-                            col
-                            create-new-refset-label
-                            create-new-refset-flex-weight
-                        "
-                    >
-                        <label>Reference Set Type:</label>
-                    </div>
-                	<div
-                        class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        "
-                        style="padding-left: 25px;"
-                    >
-                        <mat-form-field appearance="none">
-                            <input
-                                style="cursor: default;"
-                                matInput
-                                type="text"
-                                [(ngModel)]="referenceType"
-                                disabled
-                            />
-                        </mat-form-field>
-                    </div>
-                 </div>
-                 
-                 
-                 <div class="create-new-refset-form-field">
+                <!-- Refset Type for new refset-->
+                <div 
+                *ngIf="!editMode"
+                	class="create-new-refset-form-field">
                     <div
                         class="
                             col
@@ -467,6 +523,43 @@
                         </mat-form-field>
                     </div>
                 </div>
+               
+                
+                
+                <!-- Refset Type for update metadata-->
+                <div
+	            *ngIf="editMode"
+    	    	    class="create-new-refset-form-field">
+                    <div
+                        class="
+                            col
+                            create-new-refset-label
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <label>Reference Set Type:</label>
+                    </div>
+                	<div
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                        style="padding-left: 25px;"
+                    >
+                        <mat-form-field appearance="none">
+                            <input
+                                style="cursor: default;"
+                                matInput
+                                type="text"
+                                [(ngModel)]="referenceType"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
+                 </div>
+                 
+                 
                 
                 <!-- ECL Definintion Declaration -->
                 <div *ngIf="selectedReferenceType === 'INTENSIONAL'">
@@ -637,6 +730,6 @@
             ng-reflect-color="primary"
         >
             Update Metadata
-        </button>
+        </button> 
     </div>
 </ng-template>

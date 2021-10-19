@@ -221,8 +221,7 @@
                         </button>
 
                         <create-new-refset
-                            [disabled]="!refsetStatus?.includes('IN_EDIT')
-                                || !refsetData?.availableActions?.includes('EDIT')"
+                            [disabled]="!refsetStatus?.includes('IN_EDIT')"
                             [status]="refsetStatus"
                             [isDetailsPage]="true"
                             [editMode]="editMode"
@@ -782,11 +781,13 @@
                     Workflow History
                     <div class="set-of-buttons-workflow-history">
 
+
+<!-- TODO: Should download WF HX table contents, not the refset
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
-
+-->
                         <workflow-history-notes-modal
                             [refsetId]="id"
                             [user]="refsetData?.modifiedBy"
