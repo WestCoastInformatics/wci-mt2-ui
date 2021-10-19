@@ -133,7 +133,8 @@ export class CreateNewRefsetComponent implements OnInit {
 
   createRefsetObject(): void {
     this.showLoadingSpinner = true;
-    this.refsetService.createRefset({
+
+    let params: any = {
       name: this.selectedMetaDataConcept ? this.selectedMetaDataConcept : (this.createdMetaDataConcept ? this.createdMetaDataConcept : ''),
       parentConceptId: this.selectedParentConcept ? this.selectedParentConcept : undefined,
       moduleId: '',
@@ -145,8 +146,13 @@ export class CreateNewRefsetComponent implements OnInit {
       tags: this.selectedTags,
       versionDate: this.selectedBranchVersion,
       versionNotes: this.selectedVersionNotes,
-      definitionClauses: this.generateDefinitionClausesJson(this.selectedDefinitionClauses)
-    }).subscribe(refsetId => {
+    };
+
+    if (this.selectedDefinitionClauses != '') {
+      params.definitionClauses = this.generateDefinitionClausesJson(this.selectedDefinitionClauses);
+    }
+
+    this.refsetService.createRefset(params).subscribe(refsetId => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
     },
@@ -171,7 +177,6 @@ export class CreateNewRefsetComponent implements OnInit {
   }
 
   generateDefinitionClausesJson (definitionClauses: string) {
-
     return [{value: definitionClauses, negated: false}];
   }
 
@@ -181,14 +186,20 @@ export class CreateNewRefsetComponent implements OnInit {
 
   editRefsetObject(): void {
     this.showLoadingSpinner = true;
-    this.refsetService.updateRefsetMetadata(this.id, {
+
+    let params: any = {
       narrative: this.narrative,
       tags: this.tags,
-      definitionClauses: this.generateDefinitionClausesJson(this.selectedDefinitionClauses),
       versionNotes: this.versionNotes,
       privateRefset: this.privateRefset,
       type: this.referenceType
-    }).subscribe(refsetId => {
+    };
+
+    if (this.selectedDefinitionClauses != '') {
+      params.definitionClauses = this.generateDefinitionClausesJson(this.selectedDefinitionClauses);
+    }
+
+    this.refsetService.updateRefsetMetadata(this.id, params).subscribe(refsetId => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
         this.refsetDetails.ngOnInit();
