@@ -153,7 +153,8 @@
                     </button>
 
                     <create-new-refset
-                        [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                        [disabled]="!refsetStatus?.includes('IN_EDIT')
+                            || !refsetData?.availableActions?.includes('EDIT')"
                         [isDetailsPage]="true"
                         [editMode]="editMode"
                         [id]="refsetId"
@@ -220,7 +221,8 @@
                         </button>
 
                         <create-new-refset
-                            [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                            [disabled]="!refsetStatus?.includes('IN_EDIT')
+                                || !refsetData?.availableActions?.includes('EDIT')"
                             [status]="refsetStatus"
                             [isDetailsPage]="true"
                             [editMode]="editMode"
@@ -1657,7 +1659,7 @@
                                                         </div>
                                                     </div>
 
-													
+
                                                 </div>
                                             </div>
 

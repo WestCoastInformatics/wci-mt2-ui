@@ -74,8 +74,10 @@
             Reference Sets
             <span [hidden]="!numOfResults">{{ "(" + numOfResults + ")" }}</span>
         </div>
+
         <div style="display: inline">
             <create-new-refset
+                [disabled]="!user?.roles?.includes('AUTHOR')"
                 [selectedProject]="selectedProject"
                 [existingMetadataConcepts]="existingMetadataConcepts"
                 [existingBranchVersions]="existingBranchVersions"
