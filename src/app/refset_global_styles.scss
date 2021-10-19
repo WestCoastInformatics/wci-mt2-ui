@@ -2889,3 +2889,55 @@ button.refset-tool-table-action-icon {
     display: flex;
     flex-direction: column;
 }
+
+.project-nav {
+    width: 75px;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    height: 55px;
+    margin-bottom: -10px;
+    margin-top: -10px;
+    cursor: pointer;
+}
+
+.projects-icon {
+    padding-top: 10px;
+    padding-left: 18px;
+}
+
+.projects-icon-label {
+    font-size: 9px;
+    color: white;
+    padding-left: 16px;
+}
+
+.directory-nav {
+    width: 75px;
+    border-left: 1px solid white;
+    height: 55px;
+    margin-bottom: -10px;
+    margin-top: -10px;
+    cursor: pointer;
+}
+
+.directory-icon {
+    padding-top: 7px;
+    padding-left: 22px;
+}
+
+.directory-icon-label {
+    font-size: 9px;
+    color: white;
+    padding-left: 16px;
+}
+
+.project-role-and-assignee-label {
+    height: 45px;
+}
+
+.project-role-and-assignee {
+    padding-right: 30px;
+    color: white;
+    position: relative;
+    bottom: -10px;
+}

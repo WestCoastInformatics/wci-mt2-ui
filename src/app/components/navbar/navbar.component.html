@@ -23,11 +23,14 @@
 
         </div>
 
+        <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()"><span class="project-role-and-assignee" *ngIf="getProjectRoleString()">Project Role: {{getProjectRoleString()}}</span></div>
+        <div class="directory-nav" routerLink="/directory"><img class="directory-icon" src="/assets/directory-icon.svg"><span class="directory-icon-label">Directory</span></div>
+        <div class="project-nav" routerLink="/projects"><img class="projects-icon" src="/assets/projects-icon.svg"><span class="projects-icon-label">Projects</span></div>
         <div class="float-right logout">
             <span class="px-2 text-ghost-grey mr-3" style="cursor:pointer;" (click)="logoutUser()">Logout</span>
         </div>
 
-    <div *ngIf="user" class="float-right mx-3">
+    <!-- <div *ngIf="user" class="float-right mx-3">
         <div class="logout d-inline-block m-2" (click)="logout()">
             <span class="px-2 text-ghost-grey">Logout</span>
         </div>
@@ -35,5 +38,5 @@
             <span class="px-2 text-ghost-grey">{{user.firstName}} {{user.lastName}}</span>
             <img class="rounded-circle mx-3" src="/assets/user_logo.png">
         </div>
-    </div>
+    </div> -->
 </nav>
