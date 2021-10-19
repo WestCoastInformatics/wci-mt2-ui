@@ -486,42 +486,10 @@
 				<!-- End Tags -->
                 
                 
-                
-                <!-- Type -->
-                <div
-	            *ngIf="editMode"
-    	    	    class="create-new-refset-form-field">
-                    <div
-                        class="
-                            col
-                            create-new-refset-label
-                            create-new-refset-flex-weight
-                        "
-                    >
-                        <label>Reference Set Type:</label>
-                    </div>
-                	<div
-                        class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        "
-                        style="padding-left: 25px;"
-                    >
-                        <mat-form-field appearance="none">
-                            <input
-                                style="cursor: default;"
-                                matInput
-                                type="text"
-                                [(ngModel)]="referenceType"
-                                disabled
-                            />
-                        </mat-form-field>
-                    </div>
-                 </div>
-                 
-                 
-                 <div class="create-new-refset-form-field">
+                <!-- Refset Type for new refset-->
+                <div 
+                *ngIf="!editMode"
+                	class="create-new-refset-form-field">
                     <div
                         class="
                             col
@@ -557,6 +525,40 @@
                
                 
                 
+                <!-- Refset Type for update metadata-->
+                <div
+	            *ngIf="editMode"
+    	    	    class="create-new-refset-form-field">
+                    <div
+                        class="
+                            col
+                            create-new-refset-label
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <label>Reference Set Type:</label>
+                    </div>
+                	<div
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                        style="padding-left: 25px;"
+                    >
+                        <mat-form-field appearance="none">
+                            <input
+                                style="cursor: default;"
+                                matInput
+                                type="text"
+                                [(ngModel)]="referenceType"
+                                disabled
+                            />
+                        </mat-form-field>
+                    </div>
+                 </div>
+                 
+                 
                 
                 <!-- ECL Definintion Declaration -->
                 <div *ngIf="selectedReferenceType === 'Intensional'">
