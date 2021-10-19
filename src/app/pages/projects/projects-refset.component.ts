@@ -14,6 +14,8 @@ import { ToggleService } from 'src/app/services/toggle-service/toggle.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'projects-refset',
@@ -22,6 +24,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     searchInput: string;
+    user: User;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView: string = 'all';
     refsetGridApi: any;
@@ -41,11 +44,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     showTable: boolean = false;
     refsetData: any;
     dialog: DialogService;
-	versionStatuses: any; 
+	versionStatuses: any;
     initialGridWidth: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
-    
+
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
     @ViewChild('directoryversionStatusSection') versionStatus: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
@@ -68,7 +71,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService,
-        readonly toggleService: ToggleService
+        readonly toggleService: ToggleService,
+        private authService: AuthenticationService
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -77,7 +81,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.titleService.setTitle('Refset Tool - Projects');
         this.breadcrumbService.setBreadcrumbs([{label: 'Projects'}]);
+        this.getUser();
         this.populateProjectList();
+    }
+
+    getUser(): void {
+        this.user = this.authService.getRefsetUserDetails();
     }
 
     populateProjectList(): void {
@@ -96,7 +105,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
 	    this.columnDefs = [
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }},            
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }},
             { field: 'versionStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-version-status', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus }},
             { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150},
             // { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer'},
@@ -131,13 +140,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             },
             rowClassRules: {
                 'refset_tool_grid_inactive_row': function(params) {
-    
+
                     var inactivatedRow = false;
-    
+
                     if (params.data){
                         inactivatedRow = params.data.active == false;
                     }
-    
+
                     return inactivatedRow;
                 }
             }
@@ -242,7 +251,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                         } else {
                             currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
                         }
-                        
+
                         rowParams.successCallback(data, lastRow);
                     } else {
 
@@ -253,7 +262,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     this.refsetGridPaging.manualStateRefresh = new Boolean(true);
                 },
                 error => {
-                    
+
                     this.refsetGridApi.showNoRowsOverlay();
                     rowParams.successCallback([], 0);
                 });
@@ -271,8 +280,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             let label = obj.getAttribute('aria-label');
             let value = label.substring(0, label.indexOf('Filter Input')) + '...';
-            obj.setAttribute('placeholder', value); 
-        }); 
+            obj.setAttribute('placeholder', value);
+        });
 
     }
 
