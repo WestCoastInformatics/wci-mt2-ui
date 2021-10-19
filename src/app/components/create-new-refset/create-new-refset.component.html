@@ -509,6 +509,7 @@
                         <mat-form-field appearance="fill">
                             <mat-label>Select Reference Set Type</mat-label>
                             <select
+                                [disabled]="!selectedBranchVersion"
                                 matNativeControl
                                 [(ngModel)]="selectedReferenceType"
                             >
@@ -561,7 +562,7 @@
                  
                 
                 <!-- ECL Definintion Declaration -->
-                <div *ngIf="selectedReferenceType === 'Intensional'">
+                <div *ngIf="selectedReferenceType === 'INTENSIONAL'">
                     <div class="create-new-refset-form-field">
 	                    <div
 	                        class="
@@ -580,18 +581,18 @@
 	                        "
 	                    >
 	                    
-				            <button
-				                (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
-				                #detailsIntensionalRefsetEclButton
-				                    class="button-inactive"
-				            >
-					            <img
-					                src="assets/wrench-icon.svg"
-					                alt="wrench icon"
-					                title="Open ECL Builder"
-					                aria-label="ECL Builder"
-					            />
-				            </button>
+                        <button
+                            (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
+                            #createRefsetIntensionalEclButton
+                            class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
+                        >
+                            <img
+                                src="assets/wrench-icon.svg"
+                                alt="wrench icon"
+                                title="Open ECL Builder"
+                                aria-label="ECL Builder"
+                            />
+                        </button>
 			            </div>
 					</div>
 				
@@ -613,21 +614,20 @@
 	                        "
 	                    >
 	                    
-	                    <div
+	                    <div style="width: 612px; margin-left: -15px;"
 	                        class="
 	                            col
 	                            create-new-refset-field
 	                            create-new-refset-flex-weight
 	                        "
-	                        style="padding-left: 25px;"
 	                    >
-	                        <mat-form-field appearance="none">
+	                        <mat-form-field class="example-chip-list">
 	                            <input
+                                    #createRefsetDefinitionClausesInput
 	                                style="cursor: default;"
 	                                matInput
-	                                type="text"
-	                                [(ngModel)]="TIM_ECL_Definition_as_label_here_please"
-	                                disabled
+	                                [(ngModel)]="selectedDefinitionClauses"
+                                    id="createRefsetDefinitionClausesInput"
 	                            />
 	                        </mat-form-field>
 	                    </div>
@@ -635,9 +635,6 @@
 				</div>
 				
             </div> <!-- ECL -->
-                
-                
-                
                 
                 
                 <div class="create-new-refset-form-field">
@@ -663,11 +660,6 @@
                     </div>
                 </div>
 
-
-
-
-
-                <!-- JE -->
                 <div
                     *ngIf="editMode"
                  class="create-new-refset-form-field">
@@ -738,6 +730,6 @@
             ng-reflect-color="primary"
         >
             Update Metadata
-        </button>
+        </button> 
     </div>
 </ng-template>
