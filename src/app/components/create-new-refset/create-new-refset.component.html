@@ -20,6 +20,8 @@
     *ngIf="isDetailsPage || editMode"
     [style.height]="editMode ? '31px' : '31px'"
     (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
+    [ngClass]="{'inactive' : disabled}"
+    [disabled]="disabled"
 >
     <img
         src="assets/notes-icon.svg"
