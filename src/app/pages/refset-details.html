@@ -280,6 +280,21 @@
                     </button>
 
                     <button
+                        *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')"
+                        mat-raised-button
+                        color="primary"
+                        aria-hidden="false"
+                        #finishEditButton
+                        class="refset-tool-action-button finish-edit-button"
+                        aria-label="Withdraw Review Request"
+                        title="Withdraw Review Request"
+                        ng-reflect-color="primary"
+                        (click)="setWorkflowStatusByAction('Withdraw Review Request', 'WITHDRAW')"
+                    >
+                        Withdraw Request
+                    </button>
+
+                    <button
                         *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')"
                         #acceptRefsetButton
                         mat-raised-button
@@ -323,24 +338,6 @@
                     >
                         Unassign
                     </button>
-<!--
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
-                        #readyForPublicationButton
-                        (click)="setWorkflowStatusByAction('Ready for Publication', 'REQUEST_PUBLICATION')"
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        class="
-                            refset-tool-action-button
-                            request-publication-button
-                        "
-                        aria-label="Request Publication"
-                        title="Request Publication"
-                        ng-reflect-color="primary"
-                    >
-                        Request Publication
-                    </button> -->
 
                     <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                         [refsetData]="refsetData"
