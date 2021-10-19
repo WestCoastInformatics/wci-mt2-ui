@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { Route, Router } from '@angular/router';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 import { RefsetDetails } from 'src/app/pages/refset-details';
+import { UiUtility } from "src/app/utilities/ui.utility";
 
 
 @Component({
@@ -108,6 +109,14 @@ export class CreateNewRefsetComponent implements OnInit {
     this.selectedReferenceType = '';
     this.selectedIsPrivate = false;
   }
+  
+      openEclBuilder(fieldId) {
+        UiUtility.openEclBuilder(
+            fieldId,
+            'MAIN'
+        );
+    }
+  
 
   setupEditMode(): void {
     this.organizationName = this.editModeProperties.organizationName;

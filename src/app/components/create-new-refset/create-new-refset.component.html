@@ -394,6 +394,9 @@
                     </div>
                 </div>
                 
+                
+                
+                
                 <!-- Type -->
                 <div
 	            *ngIf="editMode"
@@ -462,6 +465,84 @@
                     </div>
                 </div>
                
+                
+                
+                
+                <!-- ECL Definintion Declaration -->
+                <div *ngIf="selectedReferenceType === 'Intensional'">
+                    <div class="create-new-refset-form-field">
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-label
+	                            create-new-refset-flex-weight
+	                        "
+	                    >
+	                        <label>Define ECL:</label>
+	                    </div>
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-field
+	                            create-new-refset-flex-weight
+	                        "
+	                    >
+	                    
+				            <button
+				                (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
+				                #detailsIntensionalRefsetEclButton
+				                    class="button-inactive"
+				            >
+					            <img
+					                src="assets/wrench-icon.svg"
+					                alt="wrench icon"
+					                title="Open ECL Builder"
+					                aria-label="ECL Builder"
+					            />
+				            </button>
+			            </div>
+					</div>
+				
+				    <div class="create-new-refset-form-field">
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-label
+	                            create-new-refset-flex-weight
+		                        "
+		                    >
+		                	<label>ECL Definition:</label>
+	                    </div>
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-field
+	                            create-new-refset-flex-weight
+	                        "
+	                    >
+	                    
+	                    <div
+	                        class="
+	                            col
+	                            create-new-refset-field
+	                            create-new-refset-flex-weight
+	                        "
+	                        style="padding-left: 25px;"
+	                    >
+	                        <mat-form-field appearance="none">
+	                            <input
+	                                style="cursor: default;"
+	                                matInput
+	                                type="text"
+	                                [(ngModel)]="TIM_ECL_Definition_as_label_here_please"
+	                                disabled
+	                            />
+	                        </mat-form-field>
+	                    </div>
+	                </div>
+				</div>
+				
+            </div> <!-- ECL -->
                 
                 
                 
