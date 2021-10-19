@@ -216,25 +216,54 @@ export class CreateNewRefsetComponent implements OnInit {
   }
 
   add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
+	  const input = event.input;
+	  const value = event.value;
+	
+	  if (this.editMode) {
+	  	// Handling update refset metadata
+	  
+	    // Add our tag
+	    if ((value || '').trim()) {
+	      this.tags.push(value);
+	    }
+	
+	    // Reset the input value
+	    if (input) {
+	      input.value = '';
+	    }
+      } else { 
+	    // Handling new refset creation
 
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.tags.push(value);
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+	    // Add our tag
+	    if ((value || '').trim()) {
+	      this.selectedTags.push(value);
+	    }
+	    
+	
+	    // Reset the input value
+	    if (input) {
+	      input.value = '';
+	    }
+	  }
   }
 
-  remove(data: string): void {
-    const index = this.tags.indexOf(data);
 
-    if (index >= 0) {
-      this.tags.splice(index, 1);
+  remove(data: string): void {
+  	if (this.editMode) {
+	    // Handling update refset metadata
+	    const index = this.tags.indexOf(data);
+	
+	    if (index >= 0) {
+	      this.tags.splice(index, 1);
+	    }
+    } else {
+	    // Handling new refset creation
+	    const index = this.selectedTags.indexOf(data);
+	
+	    if (index >= 0) {
+	      this.selectedTags.splice(index, 1);
+	    }
     }
+	    
   }
 }
