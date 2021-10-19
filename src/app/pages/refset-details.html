@@ -221,8 +221,7 @@
                         </button>
 
                         <create-new-refset
-                            [disabled]="!refsetStatus?.includes('IN_EDIT')
-                                || !refsetData?.availableActions?.includes('EDIT')"
+                            [disabled]="!refsetStatus?.includes('IN_EDIT')"
                             [status]="refsetStatus"
                             [isDetailsPage]="true"
                             [editMode]="editMode"
