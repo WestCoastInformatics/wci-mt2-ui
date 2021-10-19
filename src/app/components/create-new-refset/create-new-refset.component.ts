@@ -200,7 +200,9 @@ export class CreateNewRefsetComponent implements OnInit {
     return this.selectedProject.name &&
     this.selectedProject.organization.edition.id &&
     this.selectedProject.id &&
-    (this.isSelected > 0);
+    this.selectedBranchVersion &&
+    this.selectedReferenceType &&
+    ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept);
   }
 
   checkRadioButtonValue(event: any): void {
