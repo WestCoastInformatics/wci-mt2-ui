@@ -30,8 +30,9 @@ export class CreateNewRefsetComponent implements OnInit {
   selectedParentConcept = undefined;
   selectedNarrative = '';
   selectedTags = [];
+  selectedDefinitionClauses = '';
   selectedVersionNotes = '';
-  referenceTypes = ['Extensional', 'Intensional', 'External'];
+  referenceTypes = ['EXTENSIONAL', 'INTENSIONAL', 'EXTERNAL'];
   selectedReferenceType = '';
   selectedIsPrivate = false;
   showLoadingSpinner = false;
@@ -62,6 +63,7 @@ export class CreateNewRefsetComponent implements OnInit {
     referenceType: string;
     privateRefset: boolean;
     versionDate: any;
+    definitionClauses: string;
   }
   organizationName: string;
   editionName: string;
@@ -106,17 +108,10 @@ export class CreateNewRefsetComponent implements OnInit {
     this.selectedNarrative = '';
     this.selectedVersionNotes = '';
     this.selectedTags = [];
+    this.selectedDefinitionClauses = '';
     this.selectedReferenceType = '';
     this.selectedIsPrivate = false;
   }
-  
-      openEclBuilder(fieldId) {
-        UiUtility.openEclBuilder(
-            fieldId,
-            'MAIN'
-        );
-    }
-  
 
   setupEditMode(): void {
     this.organizationName = this.editModeProperties.organizationName;
@@ -133,6 +128,7 @@ export class CreateNewRefsetComponent implements OnInit {
     this.privateRefset = this.editModeProperties.privateRefset;
     this.refsetConcept = this.editModeProperties.metadataConcept;
     this.versionNotes =  this.editModeProperties.versionNotes;
+    this.selectedDefinitionClauses =  this.editModeProperties.definitionClauses;
   }
 
   createRefsetObject(): void {
@@ -148,7 +144,8 @@ export class CreateNewRefsetComponent implements OnInit {
       privateRefset: this.selectedIsPrivate,
       tags: this.selectedTags,
       versionDate: this.selectedBranchVersion,
-      versionNotes: this.selectedVersionNotes
+      versionNotes: this.selectedVersionNotes,
+      definitionClauses: this.generateDefinitionClausesJson(this.selectedDefinitionClauses)
     }).subscribe(refsetId => {
         this.showLoadingSpinner = false;
         this.router.navigate(['/edit/refset', refsetId.refsetInternalId]);
@@ -170,6 +167,16 @@ export class CreateNewRefsetComponent implements OnInit {
     console.log(this.selectedTags);
     console.log(this.selectedReferenceType);
     console.log(this.selectedIsPrivate);
+    console.log(this.selectedDefinitionClauses);
+  }
+
+  generateDefinitionClausesJson (definitionClauses: string) {
+
+    return [{value: definitionClauses, negated: false}];
+  }
+
+  parseDefinitionClausesJson (definitionClauses: any) {
+    return definitionClauses[0].value;
   }
 
   editRefsetObject(): void {
@@ -177,6 +184,7 @@ export class CreateNewRefsetComponent implements OnInit {
     this.refsetService.updateRefsetMetadata(this.id, {
       narrative: this.narrative,
       tags: this.tags,
+      definitionClauses: this.generateDefinitionClausesJson(this.selectedDefinitionClauses),
       versionNotes: this.versionNotes,
       privateRefset: this.privateRefset,
       type: this.referenceType
@@ -194,6 +202,7 @@ export class CreateNewRefsetComponent implements OnInit {
     console.log(this.versionNotes);
     console.log(this.selectedNarrative);
     console.log(this.selectedTags);
+    console.log(this.selectedDefinitionClauses);
   }
 
   isComplete(): boolean {
@@ -236,5 +245,12 @@ export class CreateNewRefsetComponent implements OnInit {
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
+  }
+
+  openEclBuilder(fieldId) {
+    UiUtility.openEclBuilder(
+        fieldId,
+        this.selectedProject.organization.edition.branch + '/' + this.selectedBranchVersion
+    );
   }
 }
