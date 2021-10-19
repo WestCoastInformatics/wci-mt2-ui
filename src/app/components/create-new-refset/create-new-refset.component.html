@@ -322,7 +322,47 @@
                         </mat-radio-group>
                     </div>
                 </div>
-                <div class="create-new-refset-form-field">
+                
+                
+                <!-- NARRATIVE for new refset-->
+                <div 
+            	    *ngIf="!editMode"
+                	class="create-new-refset-form-field">
+                    <div
+                        class="
+                            col
+                            create-new-refset-label create-new-refset-flex-weight
+                        "
+                    >
+                        <label>Narrative:</label>
+                    </div>
+                    <div
+                        class="
+                            col
+                            create-new-refset-field
+                            create-new-refset-flex-weight
+                        "
+                    >
+                        <editor
+                            [(ngModel)]="selectedNarrative"
+                            [init]="{
+                                base_url: '/tinymce',
+                                suffix: '.min',
+                                height: 200,
+                                menubar: false,
+                                plugins: ['lists advlist'],
+                                toolbar:
+                                    'undo redo | bold italic | bullist numlist outdent indent'
+                            }"
+                        ></editor>
+                    </div>
+                </div>
+                
+                
+                <!-- NARRATIVE for update metadata-->
+                <div 
+	                *ngIf="editMode"
+                	class="create-new-refset-form-field">
                     <div
                         class="
                             col
@@ -352,6 +392,8 @@
                         ></editor>
                     </div>
                 </div>
+                <!-- End both NARRATIVEs-->
+                
                 <div class="create-new-refset-form-field">
                     <div
                         class="
