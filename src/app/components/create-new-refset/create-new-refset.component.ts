@@ -186,14 +186,22 @@ export class CreateNewRefsetComponent implements OnInit {
 
   editRefsetObject(): void {
     this.showLoadingSpinner = true;
+    let tagsToPersist : string[];
+    if (this.tags) {
+    	tagsToPersist = this.tags;
+	} else {
+    	tagsToPersist = this.selectedTags;
+	}
 
-    let params: any = {
-      narrative: this.narrative,
-      tags: this.tags,
-      versionNotes: this.versionNotes,
-      privateRefset: this.privateRefset,
-      type: this.referenceType
-    };
+  let params: any = {
+    narrative: this.narrative,
+    tags: tagsToPersist,
+    definitionClauses: this.generateDefinitionClausesJson(this.selectedDefinitionClauses),
+    versionNotes: this.versionNotes,
+    privateRefset: this.privateRefset,
+    type: this.referenceType
+  };
+    	
 
     if (this.selectedDefinitionClauses != '') {
       params.definitionClauses = this.generateDefinitionClausesJson(this.selectedDefinitionClauses);
