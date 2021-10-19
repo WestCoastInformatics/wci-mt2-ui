@@ -174,9 +174,16 @@ export class CreateNewRefsetComponent implements OnInit {
 
   editRefsetObject(): void {
     this.showLoadingSpinner = true;
+    let tagsToPersist : string[];
+    if (this.tags) {
+    	tagsToPersist = this.tags;
+	} else {
+    	tagsToPersist = this.selectedTags;
+	}
+    	 
     this.refsetService.updateRefsetMetadata(this.id, {
       narrative: this.narrative,
-      tags: this.tags,
+      tags: tagsToPersist,
       versionNotes: this.versionNotes,
       privateRefset: this.privateRefset,
       type: this.referenceType
