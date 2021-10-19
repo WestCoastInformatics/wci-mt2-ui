@@ -40,6 +40,30 @@ export class NavbarComponent implements OnInit {
             this.breadcrumbs = breadcrumbs;
             this.changeDetectorRef.detectChanges();
         });
+
+        this.getUser();
+    }
+
+    private getUser(): void {
+        this.user = this.authenticationService.getRefsetUserDetails();
+    }
+
+    showProjectRoleAndAssignee(): boolean {
+        return this.router.url.includes('details') || this.router.url.includes('edit/refset');
+    }
+
+    getProjectRoleString(): string {
+        const projectRoles = [];
+        if (!this.user?.roles) {
+            return '';
+        }
+        for (const role of this.user?.roles) {
+            if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
+                projectRoles.push(role);
+            }
+        }
+
+        return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
     }
 
     navigate(breadcrumbId){

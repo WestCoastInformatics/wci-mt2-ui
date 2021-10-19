@@ -5,19 +5,6 @@
     <!-- Search Bar -->
     <div class="container-fluid">
         <div class="row justify-content-end" style="align-items: baseline">
-            <button
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                #createRefsetButton
-                class="refset-tool-action-button"
-                aria-label="Create New Refset"
-                title="Open Projects"
-                ng-reflect-color="primary"
-                [routerLink]="['/projects']"
-            >
-                Open Projects Page
-            </button>
             <div
                 class="col-md-auto refset-tool-directory-chooser-column"
                 *ngIf="showTable"
