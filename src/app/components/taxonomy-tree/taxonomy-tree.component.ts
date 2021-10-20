@@ -476,13 +476,7 @@ export class TaxonomyTreeComponent {
 
         if (this.isAdd) {
 
-            this.refsetService
-            .addRefsetMembers(
-                this.refset.id,
-                null,
-                conceptId,
-                ecl
-            )
+            this.refsetService.addRefsetMembers(this.refset.id, null, conceptId, ecl)
             .subscribe(
                 (data) => {
 
@@ -497,13 +491,7 @@ export class TaxonomyTreeComponent {
 
         } else {
 
-            this.refsetService
-            .removeRefsetMembers(
-                this.refset.id,
-                null,
-                conceptId,
-                ecl
-            )
+            this.refsetService.removeRefsetMembers(this.refset.id, null, conceptId, ecl)
             .subscribe(
                 (data) => {
 
