@@ -22,7 +22,7 @@
                 <img
                 [hidden]="node?.data.memberOfRefset"
                 src="assets/add-symbol-icon.svg"
-                (click)="addRemoveConcept(true, node?.data, addRemoveDescendantsDialog)"
+                (click)="addRemoveConcept(true, node?.data)"
                 width="18px"
                 height="18px"
                 title="Add Member"
@@ -33,7 +33,7 @@
             <img
                 [hidden]="!node?.data.memberOfRefset"
                 src="assets/subtract-symbol-icon.svg"
-                (click)="addRemoveConcept(false, node?.data, addRemoveDescendantsDialog)"
+                (click)="addRemoveConcept(false, node?.data)"
                 width="18px"
                 height="18px"
                 title="Remove Member"
@@ -67,65 +67,5 @@
         </ng-template>
     </tree-root>
 </div>
-<ng-template #addRemoveDescendantsDialog let-modal>
-    <div class="modal-header add-remove-descendants-modal-header">
-        <h4
-            class="modal-title add-remove-descendants-modal-title"
-            id="modal-basic-title"
-        >
-            Add/Remove Member(s)
-        </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid add-remove-descendants-container-fluid">
-        <div class="modal-body add-remove-descendants-modal-body">
-            <mat-radio-group
-                aria-labelledby="add-remove-descendants-radio-group-label"
-                class="add-remove-descendants-radio-group"
-                [(ngModel)]="upgradeChoice"
-            >
-                <mat-radio-button
-                    class="add-remove-descendants-radio-button"
-                    value="<< {{conceptForDescendantModal?.code}}"
-                >
-                    {{ '\<\<       (Decendants and Self)    |    ' }} <span>{{ conceptForDescendantModal?.code + ' | ' + conceptForDescendantModal?.name }}</span>
-                </mat-radio-button>
-                <mat-radio-button
-                    class="add-remove-descendants-radio-button"
-                    value="< {{conceptForDescendantModal?.code}}"
-                >
-                    {{ '\<       (Decendants Only)    |    ' }} <span>{{ conceptForDescendantModal?.code + ' | ' + conceptForDescendantModal?.name }}</span>
-                </mat-radio-button>
-                <mat-radio-button
-                    class="add-remove-descendants-radio-button"
-                    [value]="conceptForDescendantModal?.code"
-                >
-                    {{ '\=       (Self Only)    |    ' }} <span>{{ conceptForDescendantModal?.code + ' | ' + conceptForDescendantModal?.name }}</span>
-                </mat-radio-button>
-            </mat-radio-group>
-        </div>
-    </div>
-    <div class="modal-footer add-remove-descendants-footer">
-        <button
-            type="button"
-            (click)="modal.close('Upgrade Members'); addRemoveConcept(isAdd, null, null, upgradeChoice)"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button upgrade-members-modal-button"
-            aria-label="Upgrade Members"
-            title="Upgrade Members"
-            ng-reflect-color="primary"
-        >
-            {{isAdd ? 'Add Members' : 'Remove Members'}}
-        </button>
-    </div>
-</ng-template>
+<add-remove-descendants-modal [isAdd]="isAdd" [conceptCode]="conceptForDescendantModal?.code" [conceptName]="conceptForDescendantModal?.name" (selectedEvent)="processAddRemoveDescendantsSelection($event)"></add-remove-descendants-modal>
 <scroll-top></scroll-top>

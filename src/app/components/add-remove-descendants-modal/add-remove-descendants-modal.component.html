@@ -4,7 +4,7 @@
             class="modal-title add-remove-descendants-modal-title"
             id="modal-basic-title"
         >
-            Add/Remove Member(s) 
+            {{actionText}} Member(s)
         </h4>
         <button
             type="button"
@@ -19,30 +19,32 @@
         <div class="modal-body add-remove-descendants-modal-body">
             <mat-radio-group
                 aria-labelledby="add-remove-descendants-radio-group-label"
-                class="add-remove-descendants-radio-group" 
+                class="add-remove-descendants-radio-group"
                 [(ngModel)]="selectedOption"
             >
-                <mat-radio-button *ngFor="let option of options" [value]="option.value"> 
-                    {{ option.name}} 
+                <mat-radio-button *ngFor="let option of options"
+                    class="add-remove-descendants-radio-button"
+                    value="{{option.value + conceptCode}}"
+                >
+                    {{option.display}} <span>{{ conceptCode + ' | ' + conceptName }}</span>
                 </mat-radio-button>
-
+                
             </mat-radio-group>
         </div>
     </div>
     <div class="modal-footer add-remove-descendants-footer">
-    <!-- JESSE -->
         <button
             type="button"
-            (click)="modal.close('Upgrade Members')"
+            (click)="modal.close('Members Selected'); submitForm();"
             mat-raised-button
             color="primary"
             aria-hidden="false"
             class="refset-tool-action-button upgrade-members-modal-button"
-            aria-label="Upgrade Members"
-            title="Upgrade Members"
+            aria-label="{{actionText}} Members"
+            title="{{actionText}} Members"
             ng-reflect-color="primary"
         >
-            Upgrade Members 22
+            {{actionText}} Members
         </button>
     </div>
 </ng-template>
