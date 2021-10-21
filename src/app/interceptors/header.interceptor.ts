@@ -16,27 +16,26 @@ export class HeaderInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        console.log("original outgoing request", request);
-
         if (!request.headers.has('Content-Type')) {
             request = request.clone({
                 headers: request.headers.set('Content-Type', 'application/json'),
             });
         }
 
-        console.log("outgoing request", request);
         request = request.clone({
             withCredentials: true
         });
-        console.log("new outgoing request", request);
 
         return next
-            .handle(request).pipe(
-                tap((ev: HttpEvent<any>) => {
-                    console.log("got an event", ev)
-                    if (ev instanceof HttpResponse) {
-                        console.log('event of type response', ev);
-                    }
+            .handle(request).pipe(tap((event: HttpEvent<any>) => {
+                    
+                    // if (event instanceof HttpResponse) {
+                    //     console.log('HttpResponse: ', event);
+                    // }
+                    
+                    // else if (event instanceof HttpRequest) {
+                    //     console.log('HttpRequest: ', event);
+                    // }
                 })
             );
     }
