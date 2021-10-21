@@ -1157,6 +1157,33 @@
                                     >
                                     </app-pagination>
 
+                                    <!-- Concept Code Templates -->
+                                    <ng-template #conceptCodeSection let-params>
+                                        <img
+                                            [hidden]="params?.data?.memberOfRefset || !editMode || readonlyMode"
+                                            src="assets/add-symbol-icon.svg"
+                                            (click)="addRemoveConcept(true, params?.data, false)"
+                                            width="18px"
+                                            height="18px"
+                                            title="Add Member"
+                                            aria-label="Add"
+                                            class="add-symbol-icon"
+                                            alt="Add symbol shown when you're able to add a concept"
+                                        />
+                                        <img
+                                            [hidden]="!params?.data?.memberOfRefset || !editMode || readonlyMode"
+                                            src="assets/subtract-symbol-icon.svg"
+                                            (click)="addRemoveConcept(false, params?.data, false)"
+                                            width="18px"
+                                            height="18px"
+                                            title="Remove Member"
+                                            aria-label="Subtract"
+                                            class="subtract-symbol-icon"
+                                            alt="Subtract symbol shown when you're able to remove a concept"
+                                        />
+                                        {{ params?.data?.code }}
+                                    </ng-template>
+
                                     <!-- Action Templates -->
                                     <ng-template
                                         #detailsActionSection
@@ -1400,7 +1427,7 @@
                                                         parent?.memberOfRefset || !editMode || readonlyMode
                                                     "
                                                     src="assets/add-symbol-icon.svg"
-                                                    (click)="addConcept(parent, true)"
+                                                    (click)="addRemoveConcept(true, parent, true)"
                                                     width="18px"
                                                     height="18px"
                                                     title="Add Member"
@@ -1413,9 +1440,7 @@
                                                         !parent?.memberOfRefset || !editMode || readonlyMode
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
-                                                    (click)="
-                                                        removeConcept(parent, true)
-                                                    "
+                                                    (click)="addRemoveConcept(false, parent, true)"
                                                     width="18px"
                                                     height="18px"
                                                     title="Remove Member"
@@ -1495,32 +1520,6 @@
                                                                 refset-tool-concept-details-taxonomy-icon
                                                             "
                                                         >
-                                                            <!-- <img
-                                                                [hidden]="conceptDetail?.memberOfRefset || !editMode"
-                                                                src="assets/add-symbol-icon-inverted.svg"
-                                                                (click)="addConcept(conceptDetail)"
-                                                                width="18px"
-                                                                height="18px"
-                                                                title="Add Member"
-                                                                aria-label="Add"
-                                                                class="
-                                                                    add-symbol-icon
-                                                                "
-                                                                alt="Add symbol shown when you're able to add a concept"
-                                                            />
-                                                            <img
-                                                                [hidden]="!conceptDetail?.memberOfRefset || !editMode"
-                                                                src="assets/subtract-symbol-icon-inverted.svg"
-                                                                (click)="removeConcept(conceptDetail)"
-                                                                width="18px"
-                                                                height="18px"
-                                                                title="Remove Member"
-                                                                aria-label="Subtract"
-                                                                class="
-                                                                    subtract-symbol-icon
-                                                                "
-                                                                alt="Subtract symbol shown when you're able to remove a concept"
-                                                            /> -->
                                                             <img
                                                                 [hidden]="!conceptDetail.defined || !editMode"
                                                                 title="Fully Defined"
@@ -1752,32 +1751,7 @@
     </div>
 </div>
 
-<!-- Concept Code Templates -->
-<ng-template #conceptCodeSection let-params>
-    <img
-        [hidden]="params?.data?.memberOfRefset || !editMode || readonlyMode"
-        src="assets/add-symbol-icon.svg"
-        (click)="addConcept(params?.data)"
-        width="18px"
-        height="18px"
-        title="Add Member"
-        aria-label="Add"
-        class="add-symbol-icon"
-        alt="Add symbol shown when you're able to add a concept"
-    />
-    <img
-        [hidden]="!params?.data?.memberOfRefset || !editMode || readonlyMode"
-        src="assets/subtract-symbol-icon.svg"
-        (click)="
-                removeConcept(params?.data)
-            "
-        width="18px"
-        height="18px"
-        title="Remove Member"
-        aria-label="Subtract"
-        class="subtract-symbol-icon"
-        alt="Subtract symbol shown when you're able to remove a concept"
-    />
-    {{ params?.data?.code }}
-</ng-template>
+<add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
+    [refsetInternalId]="refsetData?.id" (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+</add-remove-concepts>
 <scroll-top></scroll-top>

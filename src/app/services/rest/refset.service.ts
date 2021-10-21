@@ -82,7 +82,7 @@ export class RefsetService extends RestService {
         return this.put(this.contextPath + `refset/${refsetId}/workflowNote?&notes=${notes}`, '');
     }
 
-    getMembersList(refsetId: string, params: any): Observable<any> {
+    getConceptList(refsetId: string, params: any): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId + '/members', params);
     }
 

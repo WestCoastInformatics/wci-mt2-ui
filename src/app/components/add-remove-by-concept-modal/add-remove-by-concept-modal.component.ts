@@ -238,7 +238,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         // load the parents
         this.refsetService
-            .getMembersList(this.internalRefsetId, restParams)
+            .getConceptList(this.internalRefsetId, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
                 if (this.showLoadingSpinner) {

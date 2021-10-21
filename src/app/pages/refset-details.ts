@@ -34,7 +34,9 @@ import { MatPaginator } from "@angular/material/paginator";
     selector: "app-refset-details",
     templateUrl: "refset-details.html",
 })
+
 export class RefsetDetails {
+
     id: string;
     refsetId = "";
     refsetLoaded = new Subject<boolean>();
@@ -118,28 +120,6 @@ export class RefsetDetails {
     originalGridParams: any;
     membersGridNumberOfResults: number;
     taxonomySearchNumberOfResults: number;
-
-    @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
-    @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
-    @ViewChild("detailsMembersPaging")
-    membersPaginationComponent: PaginationComponent;
-    @ViewChild("refsetFeedbackDialog") refsetFeedbackDialog: TemplateRef<any>;
-    @ViewChild("cloneRefsetDialog") cloneRefsetDialog: TemplateRef<any>;
-    @ViewChild("deleteRefsetDialog") deleteRefsetDialog: TemplateRef<any>;
-    @ViewChild("compareRefsetDialog") compareRefsetDialog: TemplateRef<any>;
-    @ViewChild("refsetVersionNotes") refsetVersionNotes: TemplateRef<any>;
-    @ViewChild("refsetAuditDialog") refsetAuditDialog: TemplateRef<any>;
-    @ViewChild("refsetArtifactsDialog") refsetArtifactsDialog: TemplateRef<any>;
-    @ViewChild("memberHistoryDialog") memberHistoryDialog: TemplateRef<any>;
-    @ViewChild("memberFeedbackDialog") memberFeedbackDialog: TemplateRef<any>;
-    @ViewChild("detailsMembersTaxonomy")
-    taxonomyMembersComponent: TaxonomyTreeComponent;
-    @ViewChild("taxonomySearchPaginationComponent")
-    taxonomySearchPaginationComponent: PaginationComponent;
-    @ViewChild("taxonomyResultSection") taxonomyResultSection: TemplateRef<any>;
-    @ViewChild("taxonomyPathSection") taxonomyPathSection: TemplateRef<any>;
-    @ViewChild("conceptCodeSection") conceptCodeSection: TemplateRef<any>;
-
     showFullNarrativeText = false;
     showFullNotesText = false;
     editMode = false;
@@ -161,8 +141,30 @@ export class RefsetDetails {
     adminToggled = false;
     workflowHistoryDataSource: MatTableDataSource<any>;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
+    isAdd: Boolean;
+    isAddRemoveInDetailsPanel: Boolean;
+    conceptForAddRemove: any;
+
+    @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
+    @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
+    @ViewChild("detailsMembersPaging") membersPaginationComponent: PaginationComponent;
+    @ViewChild("refsetFeedbackDialog") refsetFeedbackDialog: TemplateRef<any>;
+    @ViewChild("cloneRefsetDialog") cloneRefsetDialog: TemplateRef<any>;
+    @ViewChild("deleteRefsetDialog") deleteRefsetDialog: TemplateRef<any>;
+    @ViewChild("compareRefsetDialog") compareRefsetDialog: TemplateRef<any>;
+    @ViewChild("refsetVersionNotes") refsetVersionNotes: TemplateRef<any>;
+    @ViewChild("refsetAuditDialog") refsetAuditDialog: TemplateRef<any>;
+    @ViewChild("refsetArtifactsDialog") refsetArtifactsDialog: TemplateRef<any>;
+    @ViewChild("memberHistoryDialog") memberHistoryDialog: TemplateRef<any>;
+    @ViewChild("memberFeedbackDialog") memberFeedbackDialog: TemplateRef<any>;
+    @ViewChild("detailsMembersTaxonomy") taxonomyMembersComponent: TaxonomyTreeComponent;
+    @ViewChild("taxonomySearchPaginationComponent") taxonomySearchPaginationComponent: PaginationComponent;
+    @ViewChild("taxonomyResultSection") taxonomyResultSection: TemplateRef<any>;
+    @ViewChild("taxonomyPathSection") taxonomyPathSection: TemplateRef<any>;
+    @ViewChild("conceptCodeSection") conceptCodeSection: TemplateRef<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -502,7 +504,7 @@ export class RefsetDetails {
 
         // load taxonomy root
         this.refsetService
-            .getMembersList(this.refsetData.id, restParams)
+            .getConceptList(this.refsetData.id, restParams)
             .subscribe((results) => {
                 this.membersTaxonomyRoot = results.items[0];
                 this.taxonomyButtonLabel = "Taxonomy";
@@ -535,26 +537,33 @@ export class RefsetDetails {
             );
     }
 
-    removeConcept(concept, isInDetailsPanel = false): void {
+    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
+
+        this.isAdd = new Boolean(addConcept);
+
+        // if this is coming from the parents section than the concept has children
+        if (isInDetailsPanel) {
+            concept.hasChildren = true;
+        }
+        
+        this.conceptForAddRemove = concept;
+        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
+    }
+
+    processChangedMemberEffects = () => {
+
         this.showLoadingSpinner = true;
-        this.refsetService
-            .removeRefsetMembers(this.id, "list", concept.code.toString())
-            .subscribe(
-                (data) => {
-                    console.log(data);
-                    if (!isInDetailsPanel) {
-                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
-                        this.showLoadingSpinner = false;
-                    } else {
-                        this.loadConceptDetail(this.selectedConcept);
-                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
-                    }
-                },
-                (error) => {
-                    console.log(error);
-                    this.showLoadingSpinner = false;
-                }
-            );
+
+        if (this.isAddRemoveInDetailsPanel) {
+
+            this.loadConceptDetail(this.selectedConcept);
+            this.reloadMembersGridAndTaxonomy(this.originalGridParams);
+
+        } else {
+
+            this.reloadMembersGridAndTaxonomy(this.originalGridParams);
+            this.showLoadingSpinner = false;
+        } 
     }
 
     onTaxonomySelected(event) {
@@ -851,7 +860,7 @@ export class RefsetDetails {
                 }
 
                 this.refsetService
-                    .getMembersList(this.id, restParams)
+                    .getConceptList(this.id, restParams)
                     .subscribe(
                         (results) => {
 
@@ -1162,13 +1171,13 @@ export class RefsetDetails {
 
         // load the parents
         this.refsetService
-            .getMembersList(this.refsetData.id, restParams)
+            .getConceptList(this.refsetData.id, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
             });
     }
 
-    toggleLoadingSpinner(showSpinner: boolean = true) {
+    toggleLoadingSpinner = (showSpinner: boolean = true) => {
         this.showLoadingSpinner = showSpinner;
     }
 

@@ -21,7 +21,6 @@ import {
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
-import { AddRemoveDescendantsModalComponent } from "../add-remove-descendants-modal/add-remove-descendants-modal.component";
 
 /**
  * Taxonomy data with nested structure.
@@ -47,8 +46,8 @@ export class TaxonomyTreeComponent {
     noData: boolean = false;
     showLoadingSpinner = false;
     loadedChildren: any;
-    isAdd: boolean;
-    conceptForDescendantModal: any;
+    isAdd: Boolean;
+    conceptForAddRemove: any;
 
     @Input() editMode = false;
     @Input() isOnDetailsPage = true;
@@ -63,11 +62,10 @@ export class TaxonomyTreeComponent {
     @Output() reloadGrid = new EventEmitter<boolean>();
     @Output() tableChange = new EventEmitter<boolean>();
     @Output() conceptDetail = new EventEmitter<any>();
-    @Output() loadingSpinner = new EventEmitter<any>();
+    @Output() loadingSpinner = new EventEmitter<any>(true);
     @Output() numOfChildren = new EventEmitter<any>();
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
-    @ViewChild(AddRemoveDescendantsModalComponent) descendantModal: AddRemoveDescendantsModalComponent;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -144,7 +142,7 @@ export class TaxonomyTreeComponent {
         };
 
         this.refsetService
-            .getMembersList(this.refset.id, restParams)
+            .getConceptList(this.refset.id, restParams)
             .subscribe((results) => {
                 this.prepareData(results.items);
                 this.sendnumOfChildrenTrigger(
@@ -200,7 +198,7 @@ export class TaxonomyTreeComponent {
         };
 
         // need to return a promise or the data to the tree, not an observable
-        let results$: Observable<any> = this.refsetService.getMembersList(
+        let results$: Observable<any> = this.refsetService.getConceptList(
             this.refset.id,
             restParams
         );
@@ -439,7 +437,7 @@ export class TaxonomyTreeComponent {
         this.conceptDetail.emit(value);
     }
 
-    private sendloadingSpinnerTrigger(value: any): void {
+    sendLoadingSpinnerTrigger = (value: any) => {
         console.log(value);
         this.loadingSpinner.emit(value);
     }
@@ -455,58 +453,13 @@ export class TaxonomyTreeComponent {
     //     }
     // }
 
-    addRemoveConcept(addConcept: boolean, concept: any = null, ecl: string = '' ): void {
+    addRemoveConcept(addConcept: boolean, concept: any = null): void {
 
-        let conceptId: string = '';
-        this.isAdd = addConcept;
-        this.conceptForDescendantModal = concept;
-
-        if (CodeUtility.hasValue(concept)) {
-
-            if (concept.hasChildren) {
-
-                this.showDescendantModal();
-                return;
-            }
-
-            conceptId = concept.code;
-        }
-                
-        this.sendloadingSpinnerTrigger(true);
-
-        if (this.isAdd) {
-
-            this.refsetService.addRefsetMembers(this.refset.id, null, conceptId, ecl)
-            .subscribe(
-                (data) => {
-
-                    console.log("data: ", data);
-                    this.processChangedMemberEffects();
-                },
-                (error) => {
-                    console.log(error);
-                    this.sendloadingSpinnerTrigger(false);
-                }
-            );
-
-        } else {
-
-            this.refsetService.removeRefsetMembers(this.refset.id, null, conceptId, ecl)
-            .subscribe(
-                (data) => {
-
-                    console.log("data: ", data);
-                    this.processChangedMemberEffects();
-                },
-                (error) => {
-                    console.log(error);
-                    this.sendloadingSpinnerTrigger(false);
-                }
-            );
-        }
+        this.isAdd = new Boolean(addConcept);
+        this.conceptForAddRemove = concept;
     }
 
-    processChangedMemberEffects() {
+    processChangedMemberEffects = () => {
 
         this.sendReloadGridTrigger(true);
 
@@ -538,14 +491,6 @@ export class TaxonomyTreeComponent {
             }
         }
 
-    }
-
-    showDescendantModal() {
-        this.descendantModal.openAddRemoveDescendantsModal();
-    }
-
-    processAddRemoveDescendantsSelection(ecl: string) {
-        this.addRemoveConcept(this.isAdd, null, ecl);
     }
 
     selectNode(node, suppressChangeEvent) {

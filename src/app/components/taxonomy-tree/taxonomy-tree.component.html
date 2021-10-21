@@ -67,5 +67,7 @@
         </ng-template>
     </tree-root>
 </div>
-<add-remove-descendants-modal [isAdd]="isAdd" [conceptCode]="conceptForDescendantModal?.code" [conceptName]="conceptForDescendantModal?.name" (selectedEvent)="processAddRemoveDescendantsSelection($event)"></add-remove-descendants-modal>
+<add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
+    [refsetInternalId]="refset?.id" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+</add-remove-concepts>
 <scroll-top></scroll-top>
