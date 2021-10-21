@@ -59,7 +59,7 @@
                 class="taxonomy-code-text"
                 [class.bold-if-member]="node?.data?.memberOfRefset && editMode"
                 [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
-                (dblclick)="sendConceptDetailTrigger(isOnDetailsPage ? node.data : node?.data.code.toString());"
+                (dblclick)="sendConceptDetailTrigger(node.data);"
                 title="{{ getNodeText(node) }}"
                 aria-label="{{ getNodeText(node) }}"
                 >{{ getNodeText(node) }}</span

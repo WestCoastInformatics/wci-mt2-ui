@@ -61,6 +61,7 @@ export class TaxonomyTreeComponent {
     @Input() selectedConcept: any;
     @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() loadingSpinner = new EventEmitter<any>(true);
+    @Output() loadConceptDetail = new EventEmitter<any>();
     @Output() numOfChildren = new EventEmitter<any>();
 
     @ViewChild(TreeComponent) treeComponent: TreeComponent;
@@ -422,17 +423,19 @@ export class TaxonomyTreeComponent {
         }
     }
 
-    private sendReloadPageDataTrigger(value: boolean): void {
+    private sendReloadPageDataTrigger(): void {
         this.reloadPageData.emit();
     }
 
     sendLoadingSpinnerTrigger = (value: any) => {
-        console.log(value);
         this.loadingSpinner.emit(value);
     }
 
+    sendConceptDetailTrigger(value: any): void {
+        this.loadConceptDetail.emit(value);
+    }
+
     private sendnumOfChildrenTrigger(value: any): void {
-        console.log(value);
         this.numOfChildren.emit(value);
     }
 
@@ -449,7 +452,7 @@ export class TaxonomyTreeComponent {
     }
 
     processChangedMemberEffects = () => {
-        this.sendReloadPageDataTrigger(true);
+        this.sendReloadPageDataTrigger();
     }
 
     selectNode(node, suppressChangeEvent) {

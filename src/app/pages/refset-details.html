@@ -1325,6 +1325,7 @@
                                         [options]="taxonomyOptions"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
                                         (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                                        (loadConceptDetail)="loadConceptDetail($event)"
                                         (loadingSpinner)="toggleLoadingSpinner($event)"
                                         (numOfChildren)="numOfChildren = $event"
                                     ></app-taxonomy-tree>
@@ -1732,6 +1733,7 @@
                                                 [editMode]="editMode && !readonlyMode"
                                                 (reloadPageData)="reloadMembersGridAndTaxonomy()"
                                                 (loadingSpinner)="toggleLoadingSpinner($event)"
+                                                (loadConceptDetail)="loadConceptDetail($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
                                         </div>

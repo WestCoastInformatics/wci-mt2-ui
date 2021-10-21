@@ -605,6 +605,7 @@
                                                 [manualStateRefresh]="taxonomyManualStateRefresh"
                                                 hasMultipleRootNodes="false"
                                                 (reloadPageData)="processChangedMemberEffects()"
+                                                (loadConceptDetail)="loadConceptDetail($event)"
                                                 (loadingSpinner)="sendLoadingSpinnerTrigger($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
