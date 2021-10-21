@@ -11,8 +11,6 @@
     />
 </button>
 
-<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
-
 <ng-template #addRemoveConceptHierarchyModal let-modal>
     <div class="modal-header add-remove-concept-hierarchy-modal-header">
         <h4
@@ -25,7 +23,7 @@
             type="button"
             class="close"
             aria-label="Close"
-            (click)="modal.dismiss('Cross click'); sendReloadGridTrigger(true);
+            (click)="modal.dismiss('Cross click'); sendReloadPageDataTrigger(true);
             "
         >
             <span aria-hidden="true">&times;</span>
@@ -156,9 +154,7 @@
                                                             concept?.memberOfRefset
                                                         "
                                                         src="assets/add-symbol-icon.svg"
-                                                        (click)="
-                                                            addConcept(concept)
-                                                        "
+                                                        (click)="addRemoveConcept(true, concept, false)"
                                                         title="Add Member"
                                                         aria-label="Add"
                                                         alt="Add symbol shown when you're able to add a concept"
@@ -168,11 +164,7 @@
                                                             !concept?.memberOfRefset
                                                         "
                                                         src="assets/subtract-symbol-icon.svg"
-                                                        (click)="
-                                                            removeConcept(
-                                                                concept
-                                                            )
-                                                        "
+                                                        (click)="addRemoveConcept(false, concept, false)"
                                                         title="Remove Member"
                                                         aria-label="Subtract"
                                                         alt="Subtract symbol shown when you're able to remove a concept"
@@ -366,7 +358,7 @@
                                                         parent?.memberOfRefset
                                                     "
                                                     src="assets/add-symbol-icon.svg"
-                                                    (click)="addConcept(parent, true)"
+                                                    (click)="addRemoveConcept(true, parent, true)"
                                                     width="18px"
                                                     height="18px"
                                                     title="Add Member"
@@ -379,9 +371,7 @@
                                                         !parent?.memberOfRefset
                                                     "
                                                     src="assets/subtract-symbol-icon.svg"
-                                                    (click)="
-                                                        removeConcept(parent, true)
-                                                    "
+                                                    (click)="addRemoveConcept(false, parent, true)"
                                                     width="18px"
                                                     height="18px"
                                                     title="Remove Member"
@@ -466,44 +456,6 @@
                                                                 refset-tool-concept-details-taxonomy-icon
                                                             "
                                                         >
-                                                            <!-- <img
-                                                                [hidden]="
-                                                                    conceptDetail?.memberOfRefset
-                                                                "
-                                                                src="assets/add-symbol-icon.svg"
-                                                                (click)="
-                                                                    addConcept(
-                                                                        conceptDetail
-                                                                    )
-                                                                "
-                                                                width="18px"
-                                                                height="18px"
-                                                                title="Add Member"
-                                                                aria-label="Add"
-                                                                class="
-                                                                    add-symbol-icon
-                                                                "
-                                                                alt="Add symbol shown when you're able to add a concept"
-                                                            />
-                                                            <img
-                                                                [hidden]="
-                                                                    !conceptDetail?.memberOfRefset
-                                                                "
-                                                                src="assets/subtract-symbol-icon.svg"
-                                                                (click)="
-                                                                    removeConcept(
-                                                                        conceptDetail
-                                                                    )
-                                                                "
-                                                                width="18px"
-                                                                height="18px"
-                                                                title="Remove Member"
-                                                                aria-label="Subtract"
-                                                                class="
-                                                                    subtract-symbol-icon
-                                                                "
-                                                                alt="Subtract symbol shown when you're able to remove a concept"
-                                                            /> -->
                                                         </div>
 
                                                         <div
@@ -649,25 +601,11 @@
                                                 [editMode]="editMode"
                                                 [rootNode]="conceptDetail"
                                                 [options]="taxonomyOptions"
-                                                [isOnDetailsPage]="false"
-                                                [isInDetailsPanel]="true"
                                                 [selectedConcept]="selectedConcept"
-                                                [manualStateRefresh]="
-                                                    taxonomyManualStateRefresh
-                                                "
+                                                [manualStateRefresh]="taxonomyManualStateRefresh"
                                                 hasMultipleRootNodes="false"
-                                                (reloadGrid)="
-                                                    sendReloadGridTrigger(true)
-                                                "
-                                                (tableChange)="
-                                                    onTableSearchChange()
-                                                "
-                                                (conceptDetail)="
-                                                    loadConceptDetail($event)
-                                                "
-                                                (loadingSpinner)="
-                                                    setLoadSpinnerStatus($event)
-                                                "
+                                                (reloadPageData)="processChangedMemberEffects()"
+                                                (loadingSpinner)="sendLoadingSpinnerTrigger($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
                                         </div>
@@ -695,4 +633,8 @@
             Search
         </button>
     </div>
+
+    <add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
+        [refsetInternalId]="internalRefsetId" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+    </add-remove-concepts>
 </ng-template>

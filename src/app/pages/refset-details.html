@@ -902,15 +902,16 @@
             <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
                 <import-from-file-modal
                     [internalRefsetId]="id"
-                    (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
+                    (reloadGrid)="reloadMembersGridAndTaxonomy()"
                 ></import-from-file-modal>
                 <import-from-list-modal
                     [internalRefsetId]="id"
-                    (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
+                    (reloadGrid)="reloadMembersGridAndTaxonomy()"
                 ></import-from-list-modal>
                 <add-remove-by-concept-modal
                     [internalRefsetId]="id"
-                    (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
+                    (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                    (loadingSpinner)="toggleLoadingSpinner($event)"
                 ></add-remove-by-concept-modal>
                 <button
                     (click)="openEclBuilder('detailsTableSearchInput')"
@@ -1322,11 +1323,8 @@
                                         [editMode]="editMode && !readonlyMode"
                                         [selectedConcept]="selectedConcept"
                                         [options]="taxonomyOptions"
-                                        [isOnDetailsPage]="true"
-                                        [isOnDetailsPage]="true"
                                         [manualStateRefresh]="taxonomyManualStateRefresh"
-                                        (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
-                                        (conceptDetail)="loadConceptDetail($event)"
+                                        (reloadPageData)="reloadMembersGridAndTaxonomy()"
                                         (loadingSpinner)="toggleLoadingSpinner($event)"
                                         (numOfChildren)="numOfChildren = $event"
                                     ></app-taxonomy-tree>
@@ -1732,10 +1730,7 @@
                                                 [options]="taxonomyOptions"
                                                 hasMultipleRootNodes="false"
                                                 [editMode]="editMode && !readonlyMode"
-                                                [isOnDetailsPage]="true"
-                                                [isInDetailsPanel]="true"
-                                                (reloadGrid)="reloadMembersGridAndTaxonomy(originalGridParams)"
-                                                (conceptDetail)="loadConceptDetail($event)"
+                                                (reloadPageData)="reloadMembersGridAndTaxonomy()"
                                                 (loadingSpinner)="toggleLoadingSpinner($event)"
                                                 (numOfChildren)="numOfChildren = $event"
                                             ></app-taxonomy-tree>
@@ -1751,7 +1746,7 @@
     </div>
 </div>
 
-<add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
+<add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
     [refsetInternalId]="refsetData?.id" (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
 </add-remove-concepts>
 <scroll-top></scroll-top>

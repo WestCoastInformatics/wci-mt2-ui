@@ -59,9 +59,7 @@ export class TaxonomyTreeComponent {
     @Input() manualStateRefresh = false;
     @Input() hasMultipleRootNodes: boolean = false;
     @Input() selectedConcept: any;
-    @Output() reloadGrid = new EventEmitter<boolean>();
-    @Output() tableChange = new EventEmitter<boolean>();
-    @Output() conceptDetail = new EventEmitter<any>();
+    @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() loadingSpinner = new EventEmitter<any>(true);
     @Output() numOfChildren = new EventEmitter<any>();
 
@@ -424,17 +422,8 @@ export class TaxonomyTreeComponent {
         }
     }
 
-    private sendReloadGridTrigger(value: boolean): void {
-        this.reloadGrid.emit(value);
-    }
-
-    private sendTableChangeTrigger(value: boolean): void {
-        this.tableChange.emit(value);
-    }
-
-    sendConceptDetailTrigger(value: any): void {
-        console.log(value);
-        this.conceptDetail.emit(value);
+    private sendReloadPageDataTrigger(value: boolean): void {
+        this.reloadPageData.emit();
     }
 
     sendLoadingSpinnerTrigger = (value: any) => {
@@ -460,37 +449,7 @@ export class TaxonomyTreeComponent {
     }
 
     processChangedMemberEffects = () => {
-
-        this.sendReloadGridTrigger(true);
-
-        // first if it is one the details page in concept details section
-        if (this.isInDetailsPanel && this.isOnDetailsPage) {
-
-            this.sendTableChangeTrigger(true);
-            this.sendConceptDetailTrigger(this.parentConcept);
-
-        } 
-        
-         // next if it is the main tree on the details page 
-         else if (this.isOnDetailsPage) {
-
-            this.sendTableChangeTrigger(true);
-
-            if (CodeUtility.hasValue(this.selectedConcept)) {
-                this.sendConceptDetailTrigger(this.selectedConcept);
-            }
-        } 
-        
-        // finally if it is the tree in the add/remove dialog
-        else {
-
-            this.sendTableChangeTrigger(true);
-
-            if (CodeUtility.hasValue(this.selectedConcept)) {
-                this.sendConceptDetailTrigger(this.selectedConcept.code);
-            }
-        }
-
+        this.sendReloadPageDataTrigger(true);
     }
 
     selectNode(node, suppressChangeEvent) {

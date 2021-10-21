@@ -141,7 +141,7 @@ export class RefsetDetails {
     adminToggled = false;
     workflowHistoryDataSource: MatTableDataSource<any>;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
-    isAdd: Boolean;
+    isConceptBeingAdded: Boolean;
     isAddRemoveInDetailsPanel: Boolean;
     conceptForAddRemove: any;
 
@@ -511,59 +511,6 @@ export class RefsetDetails {
                 this.showTaxonomySearchTable = true;
                 this.showLoadingSpinner = false;
             });
-    }
-
-    addConcept(concept, isInDetailsParentPanel = false): void {
-        console.log("start addition");
-        this.showLoadingSpinner = true;
-        this.refsetService
-            .addRefsetMembers(this.id, "list", concept.code.toString())
-            .subscribe(
-                (data) => {
-                    console.log(data);
-                    if (!isInDetailsParentPanel) {
-                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
-                        this.showLoadingSpinner = false;
-                    } else {
-                        console.log(this.selectedConcept);
-                        this.loadConceptDetail(this.selectedConcept);
-                        this.reloadMembersGridAndTaxonomy(this.originalGridParams);
-                    }
-                },
-                (error) => {
-                    console.log(error);
-                    this.showLoadingSpinner = false;
-                }
-            );
-    }
-
-    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
-
-        this.isAdd = new Boolean(addConcept);
-
-        // if this is coming from the parents section than the concept has children
-        if (isInDetailsPanel) {
-            concept.hasChildren = true;
-        }
-        
-        this.conceptForAddRemove = concept;
-        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
-    }
-
-    processChangedMemberEffects = () => {
-
-        this.showLoadingSpinner = true;
-
-        if (this.isAddRemoveInDetailsPanel) {
-
-            this.loadConceptDetail(this.selectedConcept);
-            this.reloadMembersGridAndTaxonomy(this.originalGridParams);
-
-        } else {
-
-            this.reloadMembersGridAndTaxonomy(this.originalGridParams);
-            this.showLoadingSpinner = false;
-        } 
     }
 
     onTaxonomySelected(event) {
@@ -1071,7 +1018,36 @@ export class RefsetDetails {
 
     //***** General Functions *****/
 
-    reloadMembersGridAndTaxonomy(originalGridParams){
+    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
+
+        this.isConceptBeingAdded = new Boolean(addConcept);
+
+        // if this is coming from the parents section than the concept has children
+        if (isInDetailsPanel) {
+            concept.hasChildren = true;
+        }
+
+        this.conceptForAddRemove = concept;
+        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
+    }
+
+    processChangedMemberEffects = () => {
+
+        this.showLoadingSpinner = true;
+
+        if (this.isAddRemoveInDetailsPanel) {
+
+            this.loadConceptDetail(this.selectedConcept);
+            this.reloadMembersGridAndTaxonomy();
+
+        } else {
+
+            this.reloadMembersGridAndTaxonomy();
+            this.showLoadingSpinner = false;
+        } 
+    }
+    
+    reloadMembersGridAndTaxonomy(){
 
         // reload the members grid
         this.onMembersGridReady(this.originalGridParams)
@@ -1088,9 +1064,10 @@ export class RefsetDetails {
 
         // reload the members taxonomy tree
         this.cacheTaxonomyAncestors();
-        // this.memberCacheLoaded.subscribe((results) => {
-        //     this.reloadTaxonomyTree();
-        // });
+
+        if (this.conceptDetail != null) {
+            this.loadConceptDetail(this.conceptDetail);
+        }
     }
 
     openEclBuilder(fieldId) {

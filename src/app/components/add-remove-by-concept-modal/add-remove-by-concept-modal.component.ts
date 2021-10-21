@@ -20,6 +20,7 @@ import { UiUtility } from "src/app/utilities/ui.utility";
     templateUrl: "./add-remove-by-concept-modal.component.html",
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
+
     searchInput: string;
     searchResults = [];
     displayedColumns: string[] = ["memberOfRefset", "name", "description"];
@@ -30,10 +31,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     initialResults = [];
     selectedRowIndex = -1;
     conceptDetailParents: any;
-    selectedTaxonomyLanguage: string =
-        RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
-        ":" +
-        RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+    selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":"
+        + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
         // onSelect: this.onTaxonomySelected.bind(this),
         useFsn: false,
@@ -45,15 +44,18 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     editMode = true;
     showResults = false;
     conceptSelected: boolean;
-    @Output()
-    reloadGrid = new EventEmitter<boolean>();
-
-    @Input()
-    internalRefsetId: string;
     showLoadingSpinner = false;
     isConceptDetailsLoading = false;
     selectedConcept: any;
     numOfChildren = undefined;
+    isConceptBeingAdded: Boolean;
+    isAddRemoveInDetailsPanel: Boolean;
+    conceptForAddRemove: any;
+
+    @Input() internalRefsetId: string;
+    @Output() reloadPageData = new EventEmitter<boolean>();
+    @Output() loadingSpinner = new EventEmitter<any>(true);
+
     constructor(
         private readonly modalService: NgbModal,
         private refsetService: RefsetService,
@@ -87,64 +89,41 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         }
     }
 
-    sendReloadGridTrigger(value: boolean): void {
-        this.reloadGrid.emit(value);
+    private sendReloadPageDataTrigger(value: boolean): void {
+        this.reloadPageData.emit();
     }
 
-    addConcept(concept, isInDetailsParentPanel = false): void {
-        console.log("start addition");
-        this.showLoadingSpinner = true;
-        this.refsetService
-            .addRefsetMembers(
-                this.internalRefsetId,
-                "list",
-                concept.code.toString()
-            )
-            .subscribe(
-                (data) => {
-                    console.log(data);
-                    if (!isInDetailsParentPanel) {
-                        this.onTableSearchChange();
-                    } else {
-                        this.loadConceptDetailParents(
-                            this.selectedConcept?.code
-                        );
-                    }
-                },
-                (error) => {
-                    console.log(error);
-                    this.showLoadingSpinner = false;
-                }
-            );
+    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
+
+        this.isConceptBeingAdded = new Boolean(addConcept);
+
+        // if this is coming from the parents section than the concept has children
+        if (isInDetailsPanel) {
+            concept.hasChildren = true;
+        }
+
+        this.conceptForAddRemove = concept;
+        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
     }
 
-    removeConcept(concept, isInDetailsParentPanel = false): void {
-        this.showLoadingSpinner = true;
-        this.refsetService
-            .removeRefsetMembers(
-                this.internalRefsetId,
-                "list",
-                concept?.code.toString()
-            )
-            .subscribe(
-                (data) => {
-                    console.log(data);
-                    if (!isInDetailsParentPanel) {
-                        this.onTableSearchChange();
-                    } else {
-                        this.loadConceptDetailParents(
-                            this.selectedConcept?.code
-                        );
-                    }
-                },
-                (error) => {
-                    console.log(error);
-                    this.showLoadingSpinner = false;
-                }
-            );
+    processChangedMemberEffects = () => {
+
+        // reload the search results
+        this.onTableSearchChange();
+
+        // reload the concept details if it is open
+        if (this.conceptDetail != null) {
+            this.loadConceptDetail(this.conceptDetail);
+        }
+
+    }
+
+    sendLoadingSpinnerTrigger = (value: any) => {
+        this.loadingSpinner.emit(value);
     }
 
     openAddRemoveModal(addRemoveConceptHierarchyModal: NgbModal) {
+
         this.refreshModal();
         this.modalService.open(addRemoveConceptHierarchyModal, {
             windowClass: "add-remove-concept-hierarchy-modal-size",
@@ -156,6 +135,58 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             backdrop: "static",
             keyboard: false,
         });
+    }
+
+    selectConcept(concept: any): void {
+
+        this.conceptSelected = true;
+        this.selectedConcept = concept;
+        console.log(concept);
+        this.loadConceptDetail(concept);
+    }
+
+    loadConceptDetail(concept) {
+
+        this.conceptDetail = null;
+        this.isConceptDetailsLoading = true;
+        this.loadConceptDetailParents(concept);
+
+        this.refsetService
+            .getMembersDetails(concept.code, {
+                refsetInternalId: this.internalRefsetId,
+            })
+            .subscribe((results) => {
+
+                this.isConceptDetailsLoading = false;
+                this.conceptDetail = results;
+                this.conceptDescriptions =
+                    this.conceptDetail.descriptions.filter(function(description) {
+                        console.log(description);
+                        return description != null;
+                    });
+
+                RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+            });
+    }
+
+    loadConceptDetailParents(concept) {
+
+        const restParams = {
+            displayType: "taxonomy",
+            returnChildren: false,
+            language: this.getTaxonomyLanguageWithoutType(),
+            depth: 1,
+            startingConceptId: concept.code,
+            offset: 0,
+            limit: 1000,
+        };
+
+        // load the parents
+        this.refsetService
+            .getConceptList(this.internalRefsetId, restParams)
+            .subscribe((results) => {
+                this.conceptDetailParents = results.items;
+            });
     }
 
     changeModalSize(): void {
@@ -176,9 +207,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     refreshModal(): void {
+
         this.clearSearch();
         this.onTableSearchChange(false);
         this.conceptSelected = false;
+        this.conceptDetail = null;
     }
 
     clearSearch(): void {
@@ -187,64 +220,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     highlight(row) {
         this.selectedRowIndex = row.id;
-    }
-
-    selectConcept(concept: any): void {
-        this.conceptSelected = true;
-        this.selectedConcept = concept;
-        console.log(concept);
-        this.isConceptDetailsLoading = true;
-        this.loadConceptDetailParents(concept.code.toString());
-        this.loadConceptDetail(concept.code.toString());
-    }
-
-    loadConceptDetail(concept) {
-        this.conceptDetail = null;
-        this.isConceptDetailsLoading = true;
-
-        this.refsetService
-            .getMembersDetails(concept, {
-                refsetInternalId: this.internalRefsetId,
-            })
-            .subscribe((results) => {
-                this.isConceptDetailsLoading = false;
-                this.conceptDetail = results;
-                this.conceptDescriptions =
-                    this.conceptDetail.descriptions.filter(function (
-                        description
-                    ) {
-                        console.log(description);
-                        return description != null;
-                    });
-
-                RefsetUtility.sortDescriptions(
-                    this.conceptDescriptions,
-                    this.refsetData.edition.fullyQualifiedLanguageRefsets
-                );
-            });
-
-        this.loadConceptDetailParents(concept);
-    }
-    loadConceptDetailParents(conceptId) {
-        const restParams = {
-            displayType: "taxonomy",
-            returnChildren: false,
-            language: this.getTaxonomyLanguageWithoutType(),
-            depth: 1,
-            startingConceptId: conceptId,
-            offset: 0,
-            limit: 1000,
-        };
-
-        // load the parents
-        this.refsetService
-            .getConceptList(this.internalRefsetId, restParams)
-            .subscribe((results) => {
-                this.conceptDetailParents = results.items;
-                if (this.showLoadingSpinner) {
-                    this.showLoadingSpinner = false;
-                }
-            });
     }
 
     getTaxonomyLanguageWithoutType() {
@@ -264,15 +239,17 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
+        
         if (
             !CodeUtility.hasValue(this.searchInput) ||
             (CodeUtility.hasValue(this.searchInput) &&
                 this.searchInput.length > 2)
         ) {
-            if (showLoadingSpinner) {
-                this.showLoadingSpinner = true;
-            }
 
+            if (showLoadingSpinner) {
+                this.loadingSpinner.emit(true);
+            }
+            
             this.refsetService
                 .getConceptSearch(
                     this.internalRefsetId,
@@ -280,6 +257,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 )
                 .subscribe(
                     (results) => {
+
                         console.log(results.items);
 
                         this.dataSource = results.items;
@@ -295,14 +273,17 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
                         this.filterActiveConcepts();
 
-                        this.showLoadingSpinner = false;
+                        if (showLoadingSpinner) {
+                            this.loadingSpinner.emit(false);
+                        }
                     },
                     (error) => {
+
                         this.searchResults = [];
                         this.showResults = false;
                         console.log("errored out");
                         console.log(this.searchInput);
-                        this.showLoadingSpinner = false;
+                        this.loadingSpinner.emit(false);
                     }
                 );
         }
