@@ -55,7 +55,6 @@ export class ImportFromFileModalComponent implements OnInit {
                 return name?.replace(" ", "");
             }
         );
-        console.log(failedIdNamesWithoutWhiteSpace);
         if (this.successfulImport) {
             for (let i = 0; i < this.allIds.length; i++) {
                 ids.push({
@@ -79,7 +78,6 @@ export class ImportFromFileModalComponent implements OnInit {
             }
         }
 
-        console.log(new AngularCsv(ids, "Import Report"));
     }
 
     addMembers(): void {
@@ -96,7 +94,6 @@ export class ImportFromFileModalComponent implements OnInit {
                     );
                 }
             }
-            console.log(listOfIds.join(","));
             this.allIds = listOfIds.join(",").split(",");
             this.numOfIds = listOfIds.join(",").split(",").length;
             this.refsetService
@@ -106,8 +103,6 @@ export class ImportFromFileModalComponent implements OnInit {
                     listOfIds.join(",")
                 )
                 .subscribe((data) => {
-                    console.log("hit");
-                    console.log(data);
                     this.sendReloadGridTrigger(true);
                     this.showLoadingSpinner = false;
                     if (data?.status?.includes("All concepts added")) {
@@ -142,7 +137,6 @@ export class ImportFromFileModalComponent implements OnInit {
                     );
                 }
             }
-            console.log(listOfIds.join(","));
             this.refsetService
                 .removeRefsetMembers(
                     this.internalRefsetId,
@@ -151,12 +145,10 @@ export class ImportFromFileModalComponent implements OnInit {
                 )
                 .subscribe(
                     (data) => {
-                        console.log(data);
                         this.sendReloadGridTrigger(true);
                         this.showLoadingSpinner = false;
                     },
                     (error) => {
-                        console.log(error);
                         this.showLoadingSpinner = false;
                     }
                 );
@@ -170,7 +162,6 @@ export class ImportFromFileModalComponent implements OnInit {
     onFileDropped($event) {
         this.prepareFilesList($event);
         this.uploadedFile = $event[0];
-        console.log($event[0]);
     }
 
     /**
@@ -179,7 +170,6 @@ export class ImportFromFileModalComponent implements OnInit {
     fileBrowseHandler(files) {
         this.prepareFilesList(files);
         this.uploadedFile = files[0];
-        console.log(files[0]);
     }
 
     /**

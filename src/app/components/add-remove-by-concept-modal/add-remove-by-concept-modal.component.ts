@@ -72,7 +72,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     toggleDisplayActiveConcepts($event: any): void {
 
-        console.log($event);
         this.showActiveConceptsOnly = $event.checked;
         this.filterActiveConcepts();
     }
@@ -141,7 +140,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.conceptSelected = true;
         this.selectedConcept = concept;
-        console.log(concept);
         this.loadConceptDetail(concept);
     }
 
@@ -161,7 +159,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 this.conceptDetail = results;
                 this.conceptDescriptions =
                     this.conceptDetail.descriptions.filter(function(description) {
-                        console.log(description);
                         return description != null;
                     });
 
@@ -258,7 +255,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 .subscribe(
                     (results) => {
 
-                        console.log(results.items);
 
                         this.dataSource = results.items;
                         this.initialResults = this.dataSource;
@@ -281,8 +277,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
                         this.searchResults = [];
                         this.showResults = false;
-                        console.log("errored out");
-                        console.log(this.searchInput);
                         this.loadingSpinner.emit(false);
                     }
                 );

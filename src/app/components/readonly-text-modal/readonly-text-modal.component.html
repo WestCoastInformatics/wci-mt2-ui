@@ -1,7 +1,8 @@
 <div class="limit-text-container">
-    <span *ngIf="(shortText)" class="limit-text-30"
-        [innerHTML]="shortText"
-        (click)="openCreateRefsetModal(refsetVersionNotes)">
+    <span *ngIf="shortText"
+          class="limit-text-30"
+          [innerHTML]="shortText"
+          (click)="openCreateRefsetModal(refsetVersionNotes)">
     </span>
 </div>
 
@@ -10,12 +11,10 @@
         <h4 class="modal-title" id="modal-basic-title">
             {{ title }}
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+        <button type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -25,18 +24,16 @@
         </div>
     </div>
     <div class="modal-footer">
-    <!-- JESSE -->
-        <button
-            type="button"
-            (click)="modal.close('Read Only Text Modal')"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button"
-            aria-label="Read Only Text Modal"
-            title="Read Only Text Modal"
-            ng-reflect-color="primary"
-        >
+        <!-- JESSE -->
+        <button type="button"
+                (click)="modal.close('Read Only Text Modal')"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button"
+                aria-label="Read Only Text Modal"
+                title="Read Only Text Modal"
+                ng-reflect-color="primary">
             Close
         </button>
     </div>

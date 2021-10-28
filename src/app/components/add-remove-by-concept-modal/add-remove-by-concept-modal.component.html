@@ -1,225 +1,194 @@
-<button
-    #addRemoveConceptHierarchyButton
-    (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)"
-    class="add-remove-concept-hierarchy-modal-button"
->
-    <img
-        src="assets/mag-icon.svg"
-        alt="magnifying glass icon"
-        title="Search for Concepts to Add"
-        aria-label="Search for concepts"
-    />
+<button #addRemoveConceptHierarchyButton
+        (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)"
+        class="add-remove-concept-hierarchy-modal-button">
+    <img src="assets/mag-icon.svg"
+         alt="magnifying glass icon"
+         title="Search for Concepts to Add"
+         aria-label="Search for concepts" />
 </button>
 
-<ng-template #addRemoveConceptHierarchyModal let-modal>
+<ng-template #addRemoveConceptHierarchyModal
+             let-modal>
     <div class="modal-header add-remove-concept-hierarchy-modal-header">
-        <h4
-            class="modal-title add-remove-concept-hierarchy-modal-title"
-            id="modal-basic-title"
-        >
+        <h4 class="modal-title add-remove-concept-hierarchy-modal-title"
+            id="modal-basic-title">
             Add/Remove By Concept or Hierarchy
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click'); sendReloadPageDataTrigger(true);
-            "
-        >
+        <button type="button"
+                class="close"
+                aria-label="Close"
+                (click)="
+                modal.dismiss('Cross click'); sendReloadPageDataTrigger(true)
+            ">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div
-        class="
+    <div class="
             container-fluid
             add-remove-concept-hierarchy-modal-container-fluid
-        "
-    >
+        ">
         <div class="modal-body add-remove-concept-hierarchy-modal-body">
             <div class="row">
-                <div
-                    class="add-remove-concept-hierarchy-modal-Section-container"
-                >
-                    <as-split direction="horizontal" gutterSize="4">
-                        <as-split-area
-                            [size]="showResults && conceptSelected ? 50 : 100"
-                            [minSize]="25"
-                        >
+                <div class="add-remove-concept-hierarchy-modal-Section-container">
+                    <as-split direction="horizontal"
+                              gutterSize="4">
+                        <as-split-area [size]="showResults && conceptSelected ? 50 : 100"
+                                       [minSize]="25">
                             <div class="refset-tool-details-members-column">
                                 <!-- Search Bar -->
-                                <div
-                                    class="
+                                <div class="
                                         add-remove-concept-hierarchy-modal-search-bar
-                                    "
-                                >
-                                    <mat-form-field
-                                        id="addRemoveByConceptHierarchySearchInputField"
-                                        class="
+                                    ">
+                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField"
+                                                    class="
                                             add-remove-concept-hierarchy-modal-input-field
-                                        "
-                                    >
-                                        <mat-label
-                                            >Search by ID or Keyword</mat-label
-                                        >
-                                        <input
-                                            aria-label="Search by ID or Keyword"
-                                            matInput
-                                            #addRemoveByConceptHierarchySearchInput
-                                            id="addRemoveByConceptHierarchySearchInput"
-                                            [(ngModel)]="searchInput"
-                                            (keyup.enter)="
+                                        ">
+                                        <mat-label>Search by ID or Keyword</mat-label>
+                                        <input aria-label="Search by ID or Keyword"
+                                               matInput
+                                               #addRemoveByConceptHierarchySearchInput
+                                               id="addRemoveByConceptHierarchySearchInput"
+                                               [(ngModel)]="searchInput"
+                                               (keyup.enter)="
                                                 onTableSearchChange()
-                                            "
-                                        />
+                                            " />
                                     </mat-form-field>
-                                    <span
-                                        class="
+                                    <span class="
                                             add-remove-concept-hierarchy-modal-cancel-search
                                         "
-                                        (click)="clearSearch()"
-                                        >&#10005;</span
-                                    >
+                                          (click)="clearSearch()">&#10005;</span>
 
-                                    <button
-                                        (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
-                                        #addRemoveByConceptHierarchySearchEclButton
-                                        class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
-                                    >
-                                        <img
-                                            src="assets/wrench-icon.svg"
-                                            alt="wrench icon"
-                                            title="Open ECL Builder"
-                                            aria-label="ECL Builder"
-                                        />
+                                    <button (click)="
+                                                                                openEclBuilder(
+                                                                                    'addRemoveByConceptHierarchySearchInput'
+                                                                                )
+                                                                            "
+                                            #addRemoveByConceptHierarchySearchEclButton
+                                            class="
+                                            refset-tool-standard-icon-button
+                                            refset-tool-search-ecl-button
+                                        ">
+                                        <img src="assets/wrench-icon.svg"
+                                             alt="wrench icon"
+                                             title="Open ECL Builder"
+                                             aria-label="ECL Builder" />
                                     </button>
 
-                                    <section
-                                        *ngIf="showResults"
-                                        class="
+                                    <section *ngIf="showResults"
+                                             class="
                                             add-remove-concept-hierarchy-modal-active-slider-section
-                                        "
-                                    >
-                                        <div
-                                            class="
+                                        ">
+                                        <div class="
                                                 add-remove-concept-hierarchy-modal-results-title
                                             "
-                                            aria-label="Search results"
-                                        >
+                                             aria-label="Search results">
                                             Search Results
                                         </div>
-                                        <mat-slide-toggle
-                                            class="
+                                        <mat-slide-toggle class="
                                                 add-remove-concept-hierarchy-modal-active-slider
                                             "
-                                            [color]="color"
-                                            [checked]="!checked"
-                                            aria-label="Display Active Concepts Only"
-                                            (change)="
-                                            toggleDisplayActiveConcepts($event)
-                                            "
-                                        >
+                                                          [color]="color"
+                                                          [checked]="!checked"
+                                                          aria-label="Display Active Concepts Only"
+                                                          (change)="
+                                                toggleDisplayActiveConcepts(
+                                                    $event
+                                                )
+                                            ">
                                             Display Active Concepts Only
                                         </mat-slide-toggle>
                                     </section>
                                 </div>
 
-                                <div
-                                    class="
+                                <div class="
                                         add-remove-concept-hierarchy-modal-results-container
                                     "
-                                    *ngIf="showResults"
-                                >
-                                    <div
-                                        class="
+                                     *ngIf="showResults">
+                                    <div class="
                                             add-remove-concept-hierarchy-modal-table
-                                        "
-                                    >
-                                        <table
-                                            mat-table
-                                            [dataSource]="dataSource"
-                                            class="mat-elevation-z8"
-                                        >
-                                            <ng-container
-                                                matColumnDef="memberOfRefset"
-                                            >
-                                                <td
-                                                    class="
+                                        ">
+                                        <table mat-table
+                                               [dataSource]="dataSource"
+                                               class="mat-elevation-z8">
+                                            <ng-container matColumnDef="memberOfRefset">
+                                                <td class="
                                                         add-remove-concept-hierarchy-modal-table-first-column
                                                     "
                                                     mat-cell
-                                                    *matCellDef="let concept"
-                                                >
-                                                    <img
-                                                        [hidden]="
+                                                    *matCellDef="let concept">
+                                                    <img [hidden]="
                                                             concept?.memberOfRefset
                                                         "
-                                                        src="assets/add-symbol-icon.svg"
-                                                        (click)="addRemoveConcept(true, concept, false)"
-                                                        title="Add Member"
-                                                        aria-label="Add"
-                                                        alt="Add symbol shown when you're able to add a concept"
-                                                    />
-                                                    <img
-                                                        [hidden]="
+                                                         src="assets/add-symbol-icon.svg"
+                                                         (click)="
+                                                            addRemoveConcept(
+                                                                true,
+                                                                concept,
+                                                                false
+                                                            )
+                                                        "
+                                                         title="Add Member"
+                                                         aria-label="Add"
+                                                         alt="Add symbol shown when you're able to add a concept" />
+                                                    <img [hidden]="
                                                             !concept?.memberOfRefset
                                                         "
-                                                        src="assets/subtract-symbol-icon.svg"
-                                                        (click)="addRemoveConcept(false, concept, false)"
-                                                        title="Remove Member"
-                                                        aria-label="Subtract"
-                                                        alt="Subtract symbol shown when you're able to remove a concept"
-                                                    />
+                                                         src="assets/subtract-symbol-icon.svg"
+                                                         (click)="
+                                                            addRemoveConcept(
+                                                                false,
+                                                                concept,
+                                                                false
+                                                            )
+                                                        "
+                                                         title="Remove Member"
+                                                         aria-label="Subtract"
+                                                         alt="Subtract symbol shown when you're able to remove a concept" />
                                                 </td>
                                             </ng-container>
 
                                             <!-- Name Column -->
                                             <ng-container matColumnDef="name">
-                                                <td
-                                                    class="
+                                                <td class="
                                                         add-remove-concept-hierarchy-modal-table-second-column
                                                     "
                                                     mat-cell
                                                     *matCellDef="let concept"
                                                     (click)="
                                                         selectConcept(concept)
-                                                    "
-                                                >
-                                                    <div
-                                                        class="
+                                                    ">
+                                                    <div class="
                                                             add-remove-concept-hierarchy-modal-table-second-column-data
-                                                        "
-                                                    >
-                                                        <img
-                                                            *ngIf="
+                                                        ">
+                                                        <img *ngIf="
                                                                 concept?.defined
                                                             "
-                                                            width="12.75px"
-                                                            height="10px"
-                                                            title="Fully Defined"
-                                                            aria-label="Fully Defined"
-                                                            src="/assets/linedTaxonomyIcon.png"
-                                                        />
-                                                        <img
-                                                            *ngIf="
+                                                             width="12.75px"
+                                                             height="10px"
+                                                             title="Fully Defined"
+                                                             aria-label="Fully Defined"
+                                                             src="/assets/linedTaxonomyIcon.png" />
+                                                        <img *ngIf="
                                                                 !concept?.defined
                                                             "
-                                                            width="12.75px"
-                                                            height="10px"
-                                                            title="Primitive"
-                                                            aria-label="Primitive"
-                                                            src="/assets/unlinedTaxonomyIcon.png"
-                                                        />
-                                                        <div
-                                                            class="concept-name"
-                                                            [class.bold-if-member]="concept?.memberOfRefset"
-                                                            [class.greyed-if-not-member]="!concept?.memberOfRefset"
-                                                            title="{{
+                                                             width="12.75px"
+                                                             height="10px"
+                                                             title="Primitive"
+                                                             aria-label="Primitive"
+                                                             src="/assets/unlinedTaxonomyIcon.png" />
+                                                        <div class="concept-name"
+                                                             [class.bold-if-member]="
+                                                                concept?.memberOfRefset
+                                                            "
+                                                             [class.greyed-if-not-member]="
+                                                                !concept?.memberOfRefset
+                                                            "
+                                                             title="{{
                                                                 concept?.name
                                                             }}"
-                                                            aria-label="{{
+                                                             aria-label="{{
                                                                 concept?.name
-                                                            }}"
-                                                        >
+                                                            }}">
                                                             {{ concept?.name }}
                                                         </div>
                                                     </div>
@@ -227,11 +196,8 @@
                                             </ng-container>
 
                                             <!-- Descriptions Column -->
-                                            <ng-container
-                                                matColumnDef="description"
-                                            >
-                                                <td
-                                                    class="
+                                            <ng-container matColumnDef="description">
+                                                <td class="
                                                         add-remove-concept-hierarchy-modal-table-third-column
                                                     "
                                                     mat-cell
@@ -239,18 +205,22 @@
                                                     (click)="
                                                         selectConcept(concept)
                                                     "
-                                                    title="{{concept?.descriptions[0]?.term}}"
-                                                    aria-label="{{concept?.descriptions[0]?.term}}"
-                                                >
-                                                    {{
+                                                    title="{{
                                                         concept?.descriptions[0]
                                                             ?.term
+                                                    }}"
+                                                    aria-label="{{
+                                                        concept?.descriptions[0]
+                                                            ?.term
+                                                    }}">
+                                                    {{
+                                                    concept?.descriptions[0]
+                                                    ?.term
                                                     }}
                                                 </td>
                                             </ng-container>
 
-                                            <tr
-                                                mat-row
+                                            <tr mat-row
                                                 *matRowDef="
                                                     let row;
                                                     columns: displayedColumns
@@ -258,313 +228,268 @@
                                                 class="
                                                     add-remove-concept-hierarchy-modal-results-row
                                                 "
-                                                [ngClass]="{'active-concept': selectedRowIndex == row.id, 'refset_tool_inactive_row': !row.active}"
-                                                (click)="highlight(row)"
-                                            ></tr>
+                                                [ngClass]="{
+                                                    'active-concept':
+                                                        selectedRowIndex ==
+                                                        row.id,
+                                                    refset_tool_inactive_row:
+                                                        !row.active
+                                                }"
+                                                (click)="highlight(row)"></tr>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </as-split-area>
-                        <as-split-area
-                            [size]="showResults && conceptSelected ? 50 : 0"
-                            [minSize]="25"
-                        >
-                            <div
-                                class="refset-tool-concept-details-column"
-                                *ngIf="
+                        <as-split-area [size]="showResults && conceptSelected ? 50 : 0"
+                                       [minSize]="25">
+                            <div class="refset-tool-concept-details-column"
+                                 *ngIf="
                                     isConceptDetailsLoading || conceptSelected
-                                "
-                            >
-                                <div
-                                    class="row"
-                                    *ngIf="isConceptDetailsLoading"
-                                >
+                                ">
+                                <div class="row"
+                                     *ngIf="isConceptDetailsLoading">
                                     <div>Loading...</div>
                                 </div>
 
-                                <div
-                                    *ngIf="
+                                <div *ngIf="
                                         showResults &&
                                         conceptSelected &&
                                         !isConceptDetailsLoading
-                                    "
-                                >
-                                    <div
-                                        class="
+                                    ">
+                                    <div class="
                                             row
                                             align-items-center
                                             no-gutters
-                                        "
-                                    >
-                                        <div
-                                            class="
+                                        ">
+                                        <div class="
                                                 col
                                                 refset-tool-concept-details-title-name
-                                            "
-                                        >
+                                            ">
                                             Concept Details
                                         </div>
                                     </div>
 
                                     <!-- Parents Section -->
-                                    <div
-                                        class="
+                                    <div class="
                                             container-fluid
                                             refset-tool-concept-details-taxonomy-section
                                             add-remove-concept-hierarchy-modal-parent-size
-                                        "
-                                    >
+                                        ">
                                         <div class="row">
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-section-title
-                                                "
-                                            >
+                                                ">
                                                 Parents
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-no-relationships
                                                 "
-                                                *ngIf="
+                                                 *ngIf="
                                                     conceptDetailParents?.length ==
                                                     0
-                                                "
-                                            >
+                                                ">
                                                 No parents
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="
+                                        <div class="
                                                 row
                                                 refset-tool-concept-details-taxonomy-item
                                             "
-                                            *ngFor="
+                                             *ngFor="
                                                 let parent of conceptDetailParents
-                                            "
-                                        >
-                                            <div
-                                                class="
+                                            ">
+                                            <div class="
                                                     refset-tool-concept-details-taxonomy-icon
-                                                "
-                                            >
-                                                <img
-                                                    [hidden]="
+                                                ">
+                                                <img [hidden]="
                                                         parent?.memberOfRefset
                                                     "
-                                                    src="assets/add-symbol-icon.svg"
-                                                    (click)="addRemoveConcept(true, parent, true)"
-                                                    width="18px"
-                                                    height="18px"
-                                                    title="Add Member"
-                                                    aria-label="Add"
-                                                    class="add-symbol-icon"
-                                                    alt="Add symbol shown when you're able to add a concept"
-                                                />
-                                                <img
-                                                    [hidden]="
+                                                     src="assets/add-symbol-icon.svg"
+                                                     (click)="
+                                                        addRemoveConcept(
+                                                            true,
+                                                            parent,
+                                                            true
+                                                        )
+                                                    "
+                                                     width="18px"
+                                                     height="18px"
+                                                     title="Add Member"
+                                                     aria-label="Add"
+                                                     class="add-symbol-icon"
+                                                     alt="Add symbol shown when you're able to add a concept" />
+                                                <img [hidden]="
                                                         !parent?.memberOfRefset
                                                     "
-                                                    src="assets/subtract-symbol-icon.svg"
-                                                    (click)="addRemoveConcept(false, parent, true)"
-                                                    width="18px"
-                                                    height="18px"
-                                                    title="Remove Member"
-                                                    aria-label="Subtract"
-                                                    class="subtract-symbol-icon"
-                                                    alt="Subtract symbol shown when you're able to remove a concept"
-                                                />
-                                                <img
-                                                    *ngIf="parent?.defined"
-                                                    title="Fully Defined"
-                                                    aria-label="Fully Defined"
-                                                    src="/assets/linedTaxonomyIcon.png"
-                                                />
-                                                <img
-                                                    *ngIf="!parent?.defined"
-                                                    title="Primitive"
-                                                    aria-label="Primitive"
-                                                    class="refset-tool-logo p-0"
-                                                    src="/assets/unlinedTaxonomyIcon.png"
-                                                />
+                                                     src="assets/subtract-symbol-icon.svg"
+                                                     (click)="
+                                                        addRemoveConcept(
+                                                            false,
+                                                            parent,
+                                                            true
+                                                        )
+                                                    "
+                                                     width="18px"
+                                                     height="18px"
+                                                     title="Remove Member"
+                                                     aria-label="Subtract"
+                                                     class="subtract-symbol-icon"
+                                                     alt="Subtract symbol shown when you're able to remove a concept" />
+                                                <img *ngIf="parent?.defined"
+                                                     title="Fully Defined"
+                                                     aria-label="Fully Defined"
+                                                     src="/assets/linedTaxonomyIcon.png" />
+                                                <img *ngIf="!parent?.defined"
+                                                     title="Primitive"
+                                                     aria-label="Primitive"
+                                                     class="refset-tool-logo p-0"
+                                                     src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div
-                                                class="
+                                            <div class="
                                                     col
                                                     refset-tool-concept-details-taxonomy-description
                                                 "
-                                                [class.bold-if-member]="concept?.memberOfRefset"
-                                                [class.greyed-if-not-member]="!concept?.memberOfRefset"
-                                            >
-                                                <span
-                                                    *ngIf="
+                                                 [class.bold-if-member]="
+                                                    concept?.memberOfRefset
+                                                "
+                                                 [class.greyed-if-not-member]="
+                                                    !concept?.memberOfRefset
+                                                ">
+                                                <span *ngIf="
                                                         this.taxonomyOptions
                                                             ?.useFsn
-                                                    "
-                                                    >{{
-                                                        parent?.fsn.trim()
-                                                    }}</span
-                                                >
-                                                <span
-                                                    *ngIf="
+                                                    ">{{
+                                                    parent?.fsn.trim()
+                                                    }}</span>
+                                                    <span *ngIf="
                                                         !this.taxonomyOptions
                                                             ?.useFsn
-                                                    "
-                                                    >{{
-                                                        parent?.name.trim()
-                                                    }}</span
-                                                >
+                                                    ">{{
+                                                    parent?.name.trim()
+                                                    }}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Details Section -->
-                                    <div
-                                        class="
+                                    <div class="
                                             container-fluid
                                             refset-tool-concept-details-concept-section
                                             add-remove-concept-hierarchy-modal-details-size
                                         "
-                                        style="height: fit-content;"
-                                    >
+                                         style="height: fit-content">
                                         <div class="row">
                                             <!-- Info Section -->
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-concept-info-column
                                                 "
-                                                [class.refset-tool-concept-details-concept-info-column-status]="
-                                                conceptDetail && !conceptDetail?.active
-                                                "
-                                            >
+                                                 [class.refset-tool-concept-details-concept-info-column-status]="
+                                                    conceptDetail &&
+                                                    !conceptDetail?.active
+                                                ">
                                                 <div class="container-fluid">
                                                     <!-- Name -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-title-row
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 refset-tool-concept-details-taxonomy-icon
-                                                            "
-                                                        >
-                                                        </div>
+                                                            "></div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-name
-                                                            "
-                                                        >
+                                                            ">
                                                             {{
-                                                                conceptDescriptions?.length
-                                                                    ? conceptDescriptions[0]
-                                                                          ?.term
-                                                                    : null
+                                                            conceptDescriptions?.length
+                                                            ? conceptDescriptions[0]
+                                                            ?.term
+                                                            : null
                                                             }}
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col-1
                                                                 refset-tool-concept-details-concept-link
                                                                 text-right
-                                                            "
-                                                        ></div>
+                                                            "></div>
                                                     </div>
 
                                                     <!-- ID -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-row
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 col-3
                                                                 refset-tool-concept-details-concept-id-label
-                                                            "
-                                                        >
+                                                            ">
                                                             SCTID
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-id-text
-                                                            "
-                                                        >
+                                                            ">
                                                             {{
-                                                                conceptDetail?.code
+                                                            conceptDetail?.code
                                                             }}
                                                         </div>
                                                     </div>
 
                                                     <!-- ECL -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-row
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-ecl
-                                                            "
-                                                        >
+                                                            ">
                                                             {{
-                                                                conceptDetail?.code
+                                                            conceptDetail?.code
                                                             }}
                                                             |
                                                             {{
-                                                                conceptDescriptions?.length
-                                                                    ? conceptDescriptions[0]
-                                                                          ?.term
-                                                                    : null
+                                                            conceptDescriptions?.length
+                                                            ? conceptDescriptions[0]
+                                                            ?.term
+                                                            : null
                                                             }}
                                                             |
                                                         </div>
                                                     </div>
 
                                                     <!-- Descriptions -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-row
                                                         "
-                                                        *ngFor="
+                                                         *ngFor="
                                                             let description of conceptDescriptions
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 col-3
                                                                 refset-tool-concept-details-concept-description-language
-                                                            "
-                                                        >
+                                                            ">
                                                             {{
-                                                                description?.languageName
+                                                            description?.languageName
                                                             }}
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-description-text
-                                                            "
-                                                        >
+                                                            ">
                                                             {{
-                                                                description?.term
+                                                            description?.term
                                                             }}
                                                         </div>
                                                     </div>
@@ -574,41 +499,54 @@
                                     </div>
 
                                     <!-- Children Section -->
-                                    <div
-                                        class="
+                                    <div class="
                                             container-fluid
                                             refset-tool-concept-details-taxonomy-section
                                             children-section
                                             add-remove-concept-hierarchy-modal-children-size
-                                        "
-                                    >
+                                        ">
                                         <div class="row">
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-section-title
-                                                "
-                                            >
-                                                Children <span [hidden]="!numOfChildren">{{'(' + numOfChildren + ')'}}</span>
+                                                ">
+                                                Children
+                                                <span [hidden]="!numOfChildren">{{
+                                                    '(' +
+                                                    numOfChildren +
+                                                    ')'
+                                                    }}</span>
                                             </div>
                                         </div>
 
                                         <!-- Children Taxonomy Tree -->
                                         <div class="container-fluid">
-                                            <app-taxonomy-tree
-                                                #childrenMembersTaxonomy
-                                                treeId="childrenMembersTree"
-                                                [refset]="refsetData"
-                                                [editMode]="editMode"
-                                                [rootNode]="conceptDetail"
-                                                [options]="taxonomyOptions"
-                                                [selectedConcept]="selectedConcept"
-                                                [manualStateRefresh]="taxonomyManualStateRefresh"
-                                                hasMultipleRootNodes="false"
-                                                (reloadPageData)="processChangedMemberEffects()"
-                                                (loadConceptDetail)="loadConceptDetail($event)"
-                                                (loadingSpinner)="sendLoadingSpinnerTrigger($event)"
-                                                (numOfChildren)="numOfChildren = $event"
-                                            ></app-taxonomy-tree>
+                                            <app-taxonomy-tree #childrenMembersTaxonomy
+                                                               treeId="childrenMembersTree"
+                                                               [refset]="refsetData"
+                                                               [editMode]="editMode"
+                                                               [rootNode]="conceptDetail"
+                                                               [options]="taxonomyOptions"
+                                                               [selectedConcept]="
+                                                    selectedConcept
+                                                "
+                                                               [manualStateRefresh]="
+                                                    taxonomyManualStateRefresh
+                                                "
+                                                               hasMultipleRootNodes="false"
+                                                               (reloadPageData)="
+                                                    processChangedMemberEffects()
+                                                "
+                                                               (loadConceptDetail)="
+                                                    loadConceptDetail($event)
+                                                "
+                                                               (loadingSpinner)="
+                                                    sendLoadingSpinnerTrigger(
+                                                        $event
+                                                    )
+                                                "
+                                                               (numOfChildren)="
+                                                    numOfChildren = $event
+                                                "></app-taxonomy-tree>
                                         </div>
                                     </div>
                                 </div>
@@ -620,22 +558,25 @@
         </div>
     </div>
     <div class="modal-footer add-remove-concept-hierarchy-modal-footer">
-        <button
-            type="button"
-            (click)="onTableSearchChange()"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button"
-            aria-label="Search"
-            title="Search Concepts"
-            ng-reflect-color="primary"
-        >
+        <button type="button"
+                (click)="onTableSearchChange()"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button"
+                aria-label="Search"
+                title="Search Concepts"
+                ng-reflect-color="primary">
             Search
         </button>
     </div>
 
-    <add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
-        [refsetInternalId]="internalRefsetId" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+    <add-remove-concepts [isAdd]="isConceptBeingAdded"
+                         [conceptCode]="conceptForAddRemove?.code"
+                         [conceptName]="conceptForAddRemove?.name"
+                         [conceptHasChildren]="conceptForAddRemove?.hasChildren"
+                         [refsetInternalId]="internalRefsetId"
+                         (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)"
+                         (processChangedMemberEffects)="processChangedMemberEffects()">
     </add-remove-concepts>
 </ng-template>

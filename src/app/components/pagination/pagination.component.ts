@@ -93,7 +93,6 @@ export class PaginationComponent implements OnChanges {
             return;
         }
 
-        console.log("**** checkButtons");
         this.currentPage = this.getCurrentPage();
 
         if (this.currentPage === 1){

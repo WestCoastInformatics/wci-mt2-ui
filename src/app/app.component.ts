@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, TemplateRef } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewChild,
+    AfterViewInit,
+    TemplateRef,
+} from '@angular/core';
 import 'jquery';
 import { Title } from '@angular/platform-browser';
 import { AuthoringService } from './services/authoring/authoring.service';
@@ -11,23 +17,20 @@ import { TemplateRenderer } from './components/cellRenderers/template.renderer';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent implements OnInit {
-
-
     versions: object;
     environment: string;
 
-    constructor(private authoringService: AuthoringService,
+    constructor(
+        private authoringService: AuthoringService,
         private envService: EnvService,
-        private titleService: Title) {
-    }
+        private titleService: Title
+    ) {}
 
     //***** Framework Functions *****/
     ngOnInit() {
-
         this.titleService.setTitle('Refset Tool');
         this.environment = this.envService.env;
 
@@ -43,7 +46,6 @@ export class AppComponent implements OnInit {
     }
 
     assignFavicon() {
-
         const favicon = $('#favicon');
 
         switch (this.environment) {

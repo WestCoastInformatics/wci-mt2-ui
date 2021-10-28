@@ -1,40 +1,32 @@
-<button
-    class="refset-tool-standard-icon-button"
-    [ngClass]="{'inactive' : disabled}"
-    [disabled]="disabled"
-    (click)="openreadyForReviewModal(workflowHistoryNotesDialog)"
->
+<button class="refset-tool-standard-icon-button"
+        [ngClass]="{ inactive: disabled }"
+        [disabled]="disabled"
+        (click)="openreadyForReviewModal(workflowHistoryNotesDialog)">
     <!-- JESSE: would be ideal if we could say 'edit authoring notes' or 'edit review notes' -->
-    <img
-        src="assets/pencil-edit-icon.svg"
-        alt="Edit Notes"
-        title="Edit Notes"
-        aria-label="Edit Workflow History"
-    />
+    <img src="assets/pencil-edit-icon.svg"
+         alt="Edit Notes"
+         title="Edit Notes"
+         aria-label="Edit Workflow History" />
 </button>
 
-<ng-template #workflowHistoryNotesDialog let-modal>
+<ng-template #workflowHistoryNotesDialog
+             let-modal>
     <div class="modal-header workflow-history-notes-modal-header">
-        <h4
-            class="modal-title workflow-history-notes-modal-title"
-            id="modal-basic-title"
-        >
-            {{title}}
+        <h4 class="modal-title workflow-history-notes-modal-title"
+            id="modal-basic-title">
+            {{ title }}
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+        <button type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="container-fluid workflow-history-notes-container-fluid">
         <div class="modal-body workflow-history-notes-modal-body">
-            <editor
-                [(ngModel)]="workflowHistoryNotes"
-                [init]="{
+            <editor [(ngModel)]="workflowHistoryNotes"
+                    [init]="{
                     base_url: '/tinymce',
                     suffix: '.min',
                     height: 200,
@@ -43,22 +35,19 @@
                     plugins: ['lists advlist'],
                     toolbar:
                         'undo redo | bold italic | bullist numlist outdent indent'
-                }"
-            ></editor>
+                }"></editor>
         </div>
     </div>
     <div class="modal-footer workflow-history-notes-footer">
-        <button
-            type="button"
-            (click)="modal.close('Save'); saveNotes();"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button request-review-modal-button"
-            aria-label="Save"
-            title="Save Notes"
-            ng-reflect-color="primary"
-        >
+        <button type="button"
+                (click)="modal.close('Save'); saveNotes()"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button request-review-modal-button"
+                aria-label="Save"
+                title="Save Notes"
+                ng-reflect-color="primary">
             Save
         </button>
     </div>
