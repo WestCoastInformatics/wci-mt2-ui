@@ -173,46 +173,53 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
-
-        console.log("In onGridReady", this.actionSection);
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
 
         let dataSource = {
             rowCount: null,
             getRows: (rowParams) => {
-
                 this.refsetGridApi.showLoadingOverlay();
 
-                let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+                let pageNumber =
+                    rowParams.endRow /
+                    this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                if (this.selectedView === 'public'){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
-                } else if (this.selectedView === 'private'){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
+                if (this.selectedView === 'public') {
+                    query =
+                        CodeUtility.addIfNotEmpty(query, ' AND ') +
+                        'privateRefset: false';
+                } else if (this.selectedView === 'private') {
+                    query =
+                        CodeUtility.addIfNotEmpty(query, ' AND ') +
+                        'privateRefset: true';
                 }
 
-                console.log("^^^^^^ query after viewFilters: " + query);
-
-                if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+                if (
+                    CodeUtility.hasValue(this.searchInput) &&
+                    this.searchInput.length > 2
+                ) {
+                    query =
+                        CodeUtility.addIfNotEmpty(query, ' AND ') +
+                        this.searchInput;
                 }
 
                 let newFilterString = query;
                 let newSortString = JSON.stringify(sort);
 
                 // if the filters or sort have changed then move to the first page
-                if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
-
+                if (
+                    newFilterString !== this.refsetGridLastFilter ||
+                    newSortString !== this.refsetGridLastSort
+                ) {
                     pageNumber = 1;
                     this.refsetGridApi?.api?.paginationGoToPage(0);
                 }
 
                 // if the filters have changed then reset the total row variables
-                if (newFilterString !== this.refsetGridLastFilter){
-
+                if (newFilterString !== this.refsetGridLastFilter) {
                     this.refsetGridPaging.totalRows = null;
                     this.refsetGridPaging.totalKnown = false;
                 }
@@ -222,123 +229,137 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
-                    offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
+                    offset:
+                        (pageNumber - 1) *
+                        this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
-                }
+                };
 
-                if (CodeUtility.hasValue(query)){
+                if (CodeUtility.hasValue(query)) {
                     restParams.query = query;
                 }
 
-                console.log("^^^^^^ {...restParams, ...sort}: ", {...restParams, ...sort});
-
-                this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
-                    this.numOfResults = results.total;
-                    console.log(this.numOfResults)
-                    if (results.items.length == 0 && pageNumber > 1) {
-
-                        this.refsetGridPaging.totalRows = (this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1));
-                        this.refsetGridPaging.totalKnown = true;
-                        this.paginationComponent.goToPage(pageNumber - 1);
-                        return;
-                    }
-
-                    let data = results.items;
-                    this.refsetData = data;
-
-                    if (data?.length > 0) {
-
-                        this.refsetGridApi.hideOverlay();
-                        let currentRowCount = null;
-                        let lastRow = -1;
-
-                        if (results.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize() || this.refsetGridPaging.totalKnown) {
-
-                            if (results.totalKnown) {
-
-                                lastRow = results.total;
-
-                            } else if (this.refsetGridPaging.totalKnown) {
-
-                                lastRow = this.refsetGridPaging.totalRows;
-                            } else {
-
-                                currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
-                                lastRow = currentRowCount;
+                this.refsetService
+                    .getRefsets({ ...restParams, ...sort })
+                    .subscribe(
+                        (results) => {
+                            this.numOfResults = results.total;
+                            if (results.items.length == 0 && pageNumber > 1) {
+                                this.refsetGridPaging.totalRows =
+                                    this.refsetGridApi.paginationGetPageSize() *
+                                    (pageNumber - 1);
+                                this.refsetGridPaging.totalKnown = true;
+                                this.paginationComponent.goToPage(
+                                    pageNumber - 1
+                                );
+                                return;
                             }
 
-                            this.refsetGridPaging.totalRows = lastRow;
-                            this.refsetGridPaging.totalKnown = true;
+                            let data = results.items;
+                            this.refsetData = data;
 
-                        } else {
-                            currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
+                            if (data?.length > 0) {
+                                this.refsetGridApi.hideOverlay();
+                                let currentRowCount = null;
+                                let lastRow = -1;
+
+                                if (
+                                    results.totalKnown ||
+                                    data.length <
+                                        this.refsetGridApi.paginationGetPageSize() ||
+                                    this.refsetGridPaging.totalKnown
+                                ) {
+                                    if (results.totalKnown) {
+                                        lastRow = results.total;
+                                    } else if (
+                                        this.refsetGridPaging.totalKnown
+                                    ) {
+                                        lastRow =
+                                            this.refsetGridPaging.totalRows;
+                                    } else {
+                                        currentRowCount =
+                                            data.length +
+                                            (pageNumber - 1) *
+                                                this.refsetGridApi.paginationGetPageSize();
+                                        lastRow = currentRowCount;
+                                    }
+
+                                    this.refsetGridPaging.totalRows = lastRow;
+                                    this.refsetGridPaging.totalKnown = true;
+                                } else {
+                                    currentRowCount =
+                                        data.length +
+                                        (pageNumber - 1) *
+                                            this.refsetGridApi.paginationGetPageSize();
+                                }
+
+                                rowParams.successCallback(data, lastRow);
+                            } else {
+                                this.refsetGridApi.showNoRowsOverlay();
+                                rowParams.successCallback([], 0);
+                            }
+
+                            this.refsetGridPaging.manualStateRefresh =
+                                new Boolean(true);
+                        },
+                        (error) => {
+                            this.refsetGridApi.showNoRowsOverlay();
+                            rowParams.successCallback([], 0);
                         }
-
-                        rowParams.successCallback(data, lastRow);
-                    } else {
-
-                        this.refsetGridApi.showNoRowsOverlay();
-                        rowParams.successCallback([], 0);
-                    }
-
-                    this.refsetGridPaging.manualStateRefresh = new Boolean(true);
-                },
-                error => {
-
-                    this.refsetGridApi.showNoRowsOverlay();
-                    rowParams.successCallback([], 0);
-                });
-            }
+                    );
+            },
         };
 
         gridReadyParams.api.setDatasource(dataSource);
 
         // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
-
-            if (obj.attributes['disabled']) { // skip columns with disabled filter
-              return;
+        Array.from(
+            document.querySelectorAll(
+                '.ag-floating-filter-full-body .ag-input-field-input'
+            )
+        ).forEach((obj: any) => {
+            if (obj.attributes['disabled']) {
+                // skip columns with disabled filter
+                return;
             }
 
             let label = obj.getAttribute('aria-label');
-            let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            let value =
+                label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-
-    }
+    };
 
     editionValueGetter = function (params) {
-
-        if (!CodeUtility.hasValue(params?.data)){
+        if (!CodeUtility.hasValue(params?.data)) {
             return '';
         }
 
-        let flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
+        let flagIcon = RefsetUtility.getEditionFlagIcon(
+            params?.data?.edition?.branch
+        );
         params.data.flagIcon = flagIcon;
         return params?.data?.edition?.name;
     };
 
     onGridCellClick = (event) => {
-
-        if (event.column.colId === 'information' || event.column.colId === 'actions') {
-
-
+        if (
+            event.column.colId === 'information' ||
+            event.column.colId === 'actions'
+        ) {
         } else {
-
             let selectedRows = this.refsetGridApi.getSelectedRows();
             let selectedId: string;
-            console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
                 selectedId = selectedRow.id;
-                console.log('Selected Row: ' + selectedRow.refsetId);
             });
 
             this.goToDetailsPage(selectedId);
         }
-    }
+    };
 
     @Debounce()
     changedViewFilter() {

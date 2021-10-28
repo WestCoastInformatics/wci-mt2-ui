@@ -182,8 +182,6 @@ export class RefsetDetails {
     ngOnInit() { 
 
         this.route.data.subscribe((data) => {
-            console.log(data.editMode);
-
             this.editMode = data.editMode;
         });
 
@@ -342,10 +340,8 @@ export class RefsetDetails {
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
             this.setButtonGroupToggles(results);
-            console.log(this.refsetStatus);
             this.refsetId = results?.refsetId;
             this.refsetData = results;
-            console.log(this.refsetData)
             if (this.editMode) {
                 this.editModeProperties = {
                     projectName: this.refsetData["project"]?.name,
@@ -466,7 +462,6 @@ export class RefsetDetails {
         this.refsetService
             .getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified")
             .subscribe((results) => {
-                console.log(results);
                 this.workflowHistoryDataSource = results?.items;
                 this.workflowHistoryDataSource.sort = this.sort;
             });
@@ -615,7 +610,6 @@ export class RefsetDetails {
 
                             this.taxonomySearchNumberOfResults = results.total;
                             this.taxonomySearchResults = results.items;
-                            console.log(this.taxonomySearchResults);
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.taxonomySearchGridPaging.totalRows =
                                     this.taxonomySearchGridApi.paginationGetPageSize() *
@@ -695,7 +689,6 @@ export class RefsetDetails {
         selectedRows.forEach(function (selectedRow, index) {
             selectedId = selectedRow.code;
             selectedPath = selectedRow.parents;
-            console.log("Selected Row: " + selectedId);
         });
 
         this.goToTaxonomyConcept(selectedId, selectedPath);
@@ -812,7 +805,6 @@ export class RefsetDetails {
                         (results) => {
 
                             this.membersGridNumberOfResults = results.total;
-                            console.log(this.membersGridNumberOfResults);
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.membersGridApi.showNoRowsOverlay();
                                 this.membersGridPaging.totalRows =
@@ -995,7 +987,6 @@ export class RefsetDetails {
 
             selectedRows.forEach(function (selectedRow, index) {
                 selectedId = selectedRow.code;
-                console.log("Selected Row: " + selectedId);
             });
 
             let selectedConcept = this.getMemberRow(selectedId);
@@ -1103,7 +1094,6 @@ export class RefsetDetails {
     }
 
     loadConceptDetail(concept) {
-        console.log(concept);
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
@@ -1115,7 +1105,6 @@ export class RefsetDetails {
             .subscribe((results) => {
                 this.isConceptDetailsLoading = false;
                 this.conceptDetail = results;
-                console.log(results);
 
                 this.conceptDetail.roleGroups = results.roleGroups;
                 this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
@@ -1488,7 +1477,6 @@ export class RefsetDetails {
 
     setFullNotesText(show: boolean): void {
         this.showFullNotesText = show;
-        console.log("entered");
     }
 
     removeHtmlTags(value: string): string {

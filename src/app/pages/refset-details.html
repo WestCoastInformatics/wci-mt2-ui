@@ -1,116 +1,96 @@
-<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+<div *ngIf="showLoadingSpinner"
+     class="loading">Loading&#8230;</div>
 
-<div id="refsetDetailsPage" class="container-fluid">
+<div id="refsetDetailsPage"
+     class="container-fluid">
     <!-- Page Title -->
     <!--<div class="container-fluid page-title">
         Reference Set Details
     </div>-->
 
-    <div class="row refset-title sticky-top" *ngIf="editMode">
+    <div class="row refset-title sticky-top"
+         *ngIf="editMode">
         <!-- Section Title -->
         <div class="col-md-auto page-title details-page-title">
             Edit Reference Set
         </div>
-        <mat-horizontal-stepper
-            class="details-page-stepper"
-            [linear]="true"
-            labelPosition="bottom"
-            #stepper
-        >
-            <mat-step
-                [editable]="false"
-                [completed]="refsetStatus?.includes('READY_FOR_EDIT')||
+        <mat-horizontal-stepper class="details-page-stepper"
+                                [linear]="true"
+                                labelPosition="bottom"
+                                #stepper>
+            <mat-step [editable]="false"
+                      [completed]="refsetStatus?.includes('READY_FOR_EDIT')||
                 refsetStatus?.includes('IN_EDIT') ||
                 refsetStatus?.includes('READY_FOR_REVIEW') ||
                 refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
-                refsetStatus?.includes('READY_FOR_PUBLICATION')"
-            >
-            <ng-template matStepperIcon="number">
-                <mat-icon>done</mat-icon>
-              </ng-template>
+                refsetStatus?.includes('READY_FOR_PUBLICATION')">
+                <ng-template matStepperIcon="number">
+                    <mat-icon>done</mat-icon>
+                </ng-template>
                 <ng-template matStepLabel>Ready for Edit</ng-template>
             </mat-step>
-            <mat-step
-                [editable]="false"
-                [completed]="refsetStatus?.includes('IN_EDIT') ||
+            <mat-step [editable]="false"
+                      [completed]="refsetStatus?.includes('IN_EDIT') ||
                 refsetStatus?.includes('READY_FOR_REVIEW') ||
                 refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
-                refsetStatus?.includes('READY_FOR_PUBLICATION')"
-            >
+                refsetStatus?.includes('READY_FOR_PUBLICATION')">
                 <ng-template matStepLabel>In Edit</ng-template>
             </mat-step>
-            <mat-step
-                [editable]="false"
-                [completed]="refsetStatus?.includes('READY_FOR_REVIEW') ||
+            <mat-step [editable]="false"
+                      [completed]="refsetStatus?.includes('READY_FOR_REVIEW') ||
                 refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
-                refsetStatus?.includes('READY_FOR_PUBLICATION')"
-            >
+                refsetStatus?.includes('READY_FOR_PUBLICATION')">
                 <ng-template matStepLabel>Ready for Review</ng-template>
             </mat-step>
-            <mat-step
-                [editable]="false"
-                [completed]="refsetStatus?.includes('IN_REVIEW') ||
+            <mat-step [editable]="false"
+                      [completed]="refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
-                refsetStatus?.includes('READY_FOR_PUBLICATION')"
-            >
+                refsetStatus?.includes('READY_FOR_PUBLICATION')">
                 <ng-template matStepLabel>In Review</ng-template>
             </mat-step>
-            <mat-step
-                [editable]="false"
-                [completed]="refsetStatus?.includes('REVIEW_COMPLETED') ||
-                refsetStatus?.includes('READY_FOR_PUBLICATION')"
-            >
+            <mat-step [editable]="false"
+                      [completed]="refsetStatus?.includes('REVIEW_COMPLETED') ||
+                refsetStatus?.includes('READY_FOR_PUBLICATION')">
                 <ng-template matStepLabel>Review Completed</ng-template>
             </mat-step>
-            <mat-step
-                [editable]="false"
-                [completed]="refsetStatus?.includes('READY_FOR_PUBLICATION')"
-            >
+            <mat-step [editable]="false"
+                      [completed]="refsetStatus?.includes('READY_FOR_PUBLICATION')">
                 <ng-template matStepLabel>Ready for Publication</ng-template>
             </mat-step>
             <ng-template matStepperIcon="done">
                 <mat-icon>done</mat-icon>
-              </ng-template>
+            </ng-template>
         </mat-horizontal-stepper>
-        <mat-button-toggle-group
-            name="fontStyle"
-            aria-label="Font Style"
-            class="details-page-right-button-group"
-        >
-            <mat-button-toggle
-                class="button-group-edit"
-                [checked]="refsetStatus?.includes('IN_EDIT')"
-                [disabled]="!refsetData?.availableActions?.includes('EDIT')"
-                value="Edit"
-                (click)="setWorkflowStatusByAction('', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;"
-                >Edit</mat-button-toggle
-            >
-            <mat-button-toggle
-                class="button-group-review"
-                [checked]="refsetStatus?.includes('IN_REVIEW')"
-                [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
-                value="Review"
-                (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('', 'REVIEW')"
-                >Review</mat-button-toggle
-            >
+        <mat-button-toggle-group name="fontStyle"
+                                 aria-label="Font Style"
+                                 class="details-page-right-button-group">
+            <mat-button-toggle class="button-group-edit"
+                               [checked]="refsetStatus?.includes('IN_EDIT')"
+                               [disabled]="!refsetData?.availableActions?.includes('EDIT')"
+                               value="Edit"
+                               (click)="setWorkflowStatusByAction('', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;">Edit
+            </mat-button-toggle>
+            <mat-button-toggle class="button-group-review"
+                               [checked]="refsetStatus?.includes('IN_REVIEW')"
+                               [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
+                               value="Review"
+                               (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('', 'REVIEW')">Review
+            </mat-button-toggle>
             <!-- <mat-button-toggle
                 class="button-group-update"
                 (click)="adminToggled = false; updateToggled = true; reviewToggled = false; readonlyMode = true;"
                 value="Update"
                 >Update</mat-button-toggle
             > -->
-            <mat-button-toggle
-                class="button-group-update"
-                value="Update"
-                disabled
-                >Update</mat-button-toggle
-            >
-            <mat-button-toggle class="button-group-admin" value="Admin" disabled
-                >Admin</mat-button-toggle
-            >
+            <mat-button-toggle class="button-group-update"
+                               value="Update"
+                               disabled>Update</mat-button-toggle>
+            <mat-button-toggle class="button-group-admin"
+                               value="Admin"
+                               disabled>Admin</mat-button-toggle>
             <!-- <mat-button-toggle
                 class="button-group-admin"
                 (click)="adminToggled = true; updateToggled = false; reviewToggled = false;"
@@ -121,63 +101,53 @@
     </div>
     <div class="refset-title-container">
         <!-- Header Bar -->
-        <div class="row refset-title sticky-top" *ngIf="!editMode">
+        <div class="row refset-title sticky-top"
+             *ngIf="!editMode">
             <!-- Section Title -->
             <!-- <div class="col-md-auto page-title">Reference Set Details</div> -->
             <div class="col refset-tool-refset-details-title-name">
                 {{refsetData?.name}}
                 <div class="set-of-buttons-non-edit-mode">
+                    <app-refset-download [isDetailPage]="true"
+                                         [refset]="refsetData"
+                                         [disabled]="!refsetData?.downloadable"></app-refset-download>
 
-                    <app-refset-download
-                        [isDetailPage]="true"
-                        [refset]="refsetData"
-                        [disabled]="!refsetData?.downloadable"
-                    ></app-refset-download>
-
-                    <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
-                        <img
-                            src="assets/quote-icon.svg"
-                            alt="quote icon"
-                            title="View Feedback"
-                            aria-label="View Feedback"
-                        />
+                    <button class="refset-tool-standard-icon-button"
+                            (click)="openRefsetFeedback()">
+                        <img src="assets/quote-icon.svg"
+                             alt="quote icon"
+                             title="View Feedback"
+                             aria-label="View Feedback" />
                     </button>
 
-                    <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
-                        <img
-                            src="assets/compare-refset-icon.svg"
-                            alt="notes icon"
-                            title="Compare Refset"
-                            aria-label="Compare Refset"
-                        />
+                    <button class="refset-tool-standard-icon-button"
+                            (click)="openCompareRefset()">
+                        <img src="assets/compare-refset-icon.svg"
+                             alt="notes icon"
+                             title="Compare Refset"
+                             aria-label="Compare Refset" />
                     </button>
 
-                    <create-new-refset
-                        [disabled]="!refsetStatus?.includes('IN_EDIT')
+                    <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')
                             || !refsetData?.availableActions?.includes('EDIT')"
-                        [isDetailsPage]="true"
-                        [editMode]="editMode"
-                        [id]="refsetId"
-                        [editModeProperties]="editModeProperties"
-                    ></create-new-refset>
-
+                                       [isDetailsPage]="true"
+                                       [editMode]="editMode"
+                                       [id]="refsetId"
+                                       [editModeProperties]="editModeProperties"></create-new-refset>
                 </div>
             </div>
 
             <div class="current-version-label">Current Version:</div>
-            <div class="row justify-content-end details-version-select" title="Select Version">
+            <div class="row justify-content-end details-version-select"
+                 title="Select Version">
                 <mat-form-field appearance="fill">
                     <mat-label></mat-label>
-                    <mat-select
-                        #detailsVersionSelect
-                        [(value)]="selectedVersion"
-                        (selectionChange)="changeVersion()"
-                        [disableOptionCentering]="true"
-                    >
-                        <mat-option
-                            *ngFor="let option of versionOptions"
-                            [value]="option.value"
-                        >
+                    <mat-select #detailsVersionSelect
+                                [(value)]="selectedVersion"
+                                (selectionChange)="changeVersion()"
+                                [disableOptionCentering]="true">
+                        <mat-option *ngFor="let option of versionOptions"
+                                    [value]="option.value">
                             {{ addSpaceAfterVersionDate(option.display) }}
                         </mat-option>
                     </mat-select>
@@ -186,192 +156,169 @@
         </div>
 
         <!-- Metadata Section -->
-        <div class="metadata-container" *ngIf="editMode">
+        <div class="metadata-container"
+             *ngIf="editMode">
             <div class="container-fluid">
-                <div
-                    class="metadata-name"
-                    title="{{refsetData?.name}}"
-                    aria-label="{{refsetData?.name}}"
-                >
+                <div class="metadata-name"
+                     title="{{refsetData?.name}}"
+                     aria-label="{{refsetData?.name}}">
                     {{refsetData?.name}}
                     <div class="set-of-buttons">
+                        <app-refset-download [isDetailPage]="true"
+                                             [refset]="refsetData"
+                                             [disabled]="!refsetData?.downloadable"></app-refset-download>
 
-                        <app-refset-download
-                            [isDetailPage]="true"
-                            [refset]="refsetData"
-                            [disabled]="!refsetData?.downloadable"
-                        ></app-refset-download>
-
-                        <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
-                            <img
-                                src="assets/quote-icon.svg"
-                                alt="quote icon"
-                                title="View Feedback"
-                                aria-label="View Feedback"
-                            />
+                        <button class="refset-tool-standard-icon-button"
+                                (click)="openRefsetFeedback()">
+                            <img src="assets/quote-icon.svg"
+                                 alt="quote icon"
+                                 title="View Feedback"
+                                 aria-label="View Feedback" />
                         </button>
 
-                        <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
-                            <img
-                                src="assets/compare-refset-icon.svg"
-                                alt="notes icon"
-                                title="Compare Refset"
-                                aria-label="Compare Refset"
-                            />
+                        <button class="refset-tool-standard-icon-button"
+                                (click)="openCompareRefset()">
+                            <img src="assets/compare-refset-icon.svg"
+                                 alt="notes icon"
+                                 title="Compare Refset"
+                                 aria-label="Compare Refset" />
                         </button>
 
-                        <create-new-refset
-                            [disabled]="!refsetStatus?.includes('IN_EDIT')"
-                            [status]="refsetStatus"
-                            [isDetailsPage]="true"
-                            [editMode]="editMode"
-                            [id]="id"
-                            [editModeProperties]="editModeProperties"
-                        ></create-new-refset>
+                        <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                                           [status]="refsetStatus"
+                                           [isDetailsPage]="true"
+                                           [editMode]="editMode"
+                                           [id]="id"
+                                           [editModeProperties]="editModeProperties"></create-new-refset>
 
-                        <button class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}" [disabled]="!refsetStatus?.includes('IN_EDIT')" (click)="openCloneRefset()">
-                            <img
-                                src="assets/pages-icon.svg"
-                                alt="pages icon"
-                                title="Clone Refset"
-                                aria-label="Clone refset"
-                            />
+                        <button class="refset-tool-standard-icon-button"
+                                [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
+                                [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                                (click)="openCloneRefset()">
+                            <img src="assets/pages-icon.svg"
+                                 alt="pages icon"
+                                 title="Clone Refset"
+                                 aria-label="Clone refset" />
                         </button>
 
-                        <button class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}" [disabled]="!refsetStatus?.includes('IN_EDIT')" (click)="openDeleteRefset()">
-                            <img
-                                src="assets/trash-icon.svg"
-                                alt="trash icon"
-                                title="Delete Refset"
-                                aria-label="Delete refset"
-                            />
+                        <button class="refset-tool-standard-icon-button"
+                                [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
+                                [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                                (click)="openDeleteRefset()">
+                            <img src="assets/trash-icon.svg"
+                                 alt="trash icon"
+                                 title="Delete Refset"
+                                 aria-label="Delete refset" />
                         </button>
                     </div>
                 </div>
                 <div class="edit-button-group-right-below-sticky-header">
-
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        #finishEditButton
-                        class="refset-tool-action-button finish-edit-button"
-                        aria-label="Finish Edit"
-                        title="Finish Edit"
-                        ng-reflect-color="primary"
-                        (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            #finishEditButton
+                            class="refset-tool-action-button finish-edit-button"
+                            aria-label="Finish Edit"
+                            title="Finish Edit"
+                            ng-reflect-color="primary"
+                            (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
                         Finish Edit
                     </button>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
-                        #readyForReviewButton
-                        (click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')"
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        class="refset-tool-action-button request-review-button"
-                        aria-label="Request Review"
-                        title="Request Review"
-                        ng-reflect-color="primary"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
+                            #readyForReviewButton
+                            (click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')"
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            class="refset-tool-action-button request-review-button"
+                            aria-label="Request Review"
+                            title="Request Review"
+                            ng-reflect-color="primary">
                         Request Review
                     </button>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')"
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        #finishEditButton
-                        class="refset-tool-action-button finish-edit-button"
-                        aria-label="Withdraw Review Request"
-                        title="Withdraw Review Request"
-                        ng-reflect-color="primary"
-                        (click)="setWorkflowStatusByAction('', 'WITHDRAW')"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')"
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            #finishEditButton
+                            class="refset-tool-action-button finish-edit-button"
+                            aria-label="Withdraw Review Request"
+                            title="Withdraw Review Request"
+                            ng-reflect-color="primary"
+                            (click)="setWorkflowStatusByAction('', 'WITHDRAW')">
                         Withdraw Request
                     </button>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')"
-                        #acceptRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')"
-                        class="refset-tool-action-button accept-refset-button"
-                        aria-label="Accept Refset"
-                        title="Accept Refset"
-                        ng-reflect-color="primary"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')"
+                            #acceptRefsetButton
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')"
+                            class="refset-tool-action-button accept-refset-button"
+                            aria-label="Accept Refset"
+                            title="Accept Refset"
+                            ng-reflect-color="primary">
                         Accept Refset
                     </button>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW')"
-                        #rejectRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')"
-                        class="refset-tool-action-button reject-refset-button"
-                        aria-label="Reject Refset"
-                        title="Reject Refset"
-                        ng-reflect-color="primary"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW')"
+                            #rejectRefsetButton
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')"
+                            class="refset-tool-action-button reject-refset-button"
+                            aria-label="Reject Refset"
+                            title="Reject Refset"
+                            ng-reflect-color="primary">
                         Reject Refset
                     </button>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
-                        #unassignButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('', 'UNASSIGN')"
-                        class="refset-tool-action-button unassign-button"
-                        aria-label="Unassign"
-                        title="Unassign"
-                        ng-reflect-color="primary"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
+                            #unassignButton
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            (click)="setWorkflowStatusByAction('', 'UNASSIGN')"
+                            class="refset-tool-action-button unassign-button"
+                            aria-label="Unassign"
+                            title="Unassign"
+                            ng-reflect-color="primary">
                         Unassign
                     </button>
 
                     <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
-                        [refsetData]="refsetData"
-                        (reloadPage)="initializeDetailsPage()"
-                    ></ready-for-publication-modal>
+                                                 [refsetData]="refsetData"
+                                                 (reloadPage)="initializeDetailsPage()"></ready-for-publication-modal>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
-                        #withdrawPublicationRequest
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('', 'FAILS_RVF')"
-                        class="refset-tool-action-button launch-release-button"
-                        aria-label="Withdraw"
-                        title="Withdraw Publication Request"
-                        ng-reflect-color="primary"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
+                            #withdrawPublicationRequest
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            (click)="setWorkflowStatusByAction('', 'FAILS_RVF')"
+                            class="refset-tool-action-button launch-release-button"
+                            aria-label="Withdraw"
+                            title="Withdraw Publication Request"
+                            ng-reflect-color="primary">
                         Withdraw Request
                     </button>
 
-                    <button
-                        *ngIf="this.refsetData?.availableActions?.includes('REFSET_PUBLISHED')"
-                        #complete Publication
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        (click)="setWorkflowStatusByAction('', 'REFSET_PUBLISHED')"
-                        class="refset-tool-action-button cancel-release-button"
-                        aria-label="Complete Publication"
-                        title="Complete Publication"
-                        ng-reflect-color="primary"
-                    >
+                    <button *ngIf="this.refsetData?.availableActions?.includes('REFSET_PUBLISHED')"
+                            #complete
+                            Publication
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            (click)="setWorkflowStatusByAction('', 'REFSET_PUBLISHED')"
+                            class="refset-tool-action-button cancel-release-button"
+                            aria-label="Complete Publication"
+                            title="Complete Publication"
+                            ng-reflect-color="primary">
                         Complete Publication
                     </button>
 
@@ -409,164 +356,124 @@
             <div class="metadata-collapsible-container-group-header">
                 <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
-                    <a
-                        class="detail-top-link"
-                        (click)="openArtifacts()"
-                        title="Open Artifacts List"
-                        aria-label="Artifacts"
-                        >Artifacts</a
-                    >
-                    <a
-                        class="detail-top-link"
-                        (click)="openAuditTrail()"
-                        title="Open Audit Trail"
-                        aria-label="Audit Trail"
-                        >Audit Trail</a
-                    >
+                    <a class="detail-top-link"
+                       (click)="openArtifacts()"
+                       title="Open Artifacts List"
+                       aria-label="Artifacts">Artifacts</a>
+                    <a class="detail-top-link"
+                       (click)="openAuditTrail()"
+                       title="Open Audit Trail"
+                       aria-label="Audit Trail">Audit Trail</a>
                 </div>
-                <img
-                    src="assets/collapse-plus-icon.svg"
-                    alt="Collapse Button"
-                    title="Collapse Metadata"
-                    aria-label="Collapse Button"
-                    class="collapse-plus-icon"
-                    (click)="metadataCollapseTrigger()"
-                />
+                <img src="assets/collapse-plus-icon.svg"
+                     alt="Collapse Button"
+                     title="Collapse Metadata"
+                     aria-label="Collapse Button"
+                     class="collapse-plus-icon"
+                     (click)="metadataCollapseTrigger()" />
             </div>
-            <div
-                class="container-fluid"
-                id="detailsMetadataSection"
-                [hidden]="hideMetadataTable"
-            >
+            <div class="container-fluid"
+                 id="detailsMetadataSection"
+                 [hidden]="hideMetadataTable">
                 <div class="row refset-tool-refset-metadata-section">
                     <!-- Static Metadata Section -->
                     <div class="col refset-tool-refset-metadata-column">
-                        <table
-                            class="
+                        <table class="
                                 refset-tool-refset-metadata-table
                                 table-striped
-                            "
-                        >
+                            ">
                             <tbody>
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Refset ID:"
-                                    >
+                                        aria-label="Refset ID:">
                                         Refset ID:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{refsetData?.refsetId}}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Edition/Extension:"
-                                    >
+                                        aria-label="Edition/Extension:">
                                         Edition/Extension:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{refsetData?.editionName}}
-                                        <img
-                                            class="refset-tool-edition-flag"
-                                            src="{{refsetData?.flagIcon}}"
-                                            *ngIf="refsetData?.flagIcon != ''"
-                                            [hidden]="!refsetData?.flagIcon"
-                                            title="{{refsetData?.editionName}} Flag"
-                                            aria-label="{{refsetData?.editionName}} Flag"
-                                        />
+                                        <img class="refset-tool-edition-flag"
+                                             src="{{refsetData?.flagIcon}}"
+                                             *ngIf="refsetData?.flagIcon != ''"
+                                             [hidden]="!refsetData?.flagIcon"
+                                             title="{{refsetData?.editionName}} Flag"
+                                             aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Type:"
-                                    >
+                                        aria-label="Type:">
                                         Type:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
                                             capitalize-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{capitalizeFirstLetterOfString(refsetData?.type)}}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Tags:"
-                                    >
+                                        aria-label="Tags:">
                                         Tags:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{refsetData?.tags?.join('; ')}}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Narrative:"
-                                    >
+                                        aria-label="Narrative:">
                                         Narrative:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         <ng-container>
-                                            <readonly-text-modal
-                                                [shortText]="refsetData?.narrativeShortText"
-                                                [longText]="refsetData?.narrative"
-                                                [title]="'Narrative'"
-                                            ></readonly-text-modal>
+                                            <readonly-text-modal [shortText]="refsetData?.narrativeShortText"
+                                                                 [longText]="refsetData?.narrative"
+                                                                 [title]="'Narrative'"></readonly-text-modal>
                                         </ng-container>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Refset Names:"
-                                    >
+                                        aria-label="Refset Names:">
                                         Refset Names:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{refsetData?.name}}
                                     </td>
                                 </tr>
@@ -576,145 +483,111 @@
 
                     <!-- Versioned Metadata Section -->
                     <div class="col refset-tool-refset-metadata-column">
-                        <table
-                            class="
+                        <table class="
                                 refset-tool-refset-metadata-table
                                 table-striped
-                            "
-                        >
+                            ">
                             <tbody>
-                           		<!-- Version Date with default if empty -->
+                                <!-- Version Date with default if empty -->
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Version Date:"
-                                    >
+                                        aria-label="Version Date:">
                                         Version Date:
                                     </td>
                                     <td *ngIf="refsetData?.versionDate"
                                         class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{refsetData?.versionDate}}
                                     </td>
                                     <td *ngIf="!refsetData?.versionDate"
                                         class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         Not yet published
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Owner/Organization:"
-                                    >
+                                        aria-label="Owner/Organization:">
                                         Owner/Organization:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{refsetData?.organizationName}}
-                                        <img
-                                            class="refset-tool-edition-flag"
-                                            src="{{refsetData?.flagIcon}}"
-                                            *ngIf="refsetData?.flagIcon != ''"
-                                            [hidden]="!refsetData?.flagIcon"
-                                            title="{{refsetData?.editionName}} Flag"
-                                            aria-label="{{refsetData?.editionName}} Flag"
-                                        />
+                                        <img class="refset-tool-edition-flag"
+                                             src="{{refsetData?.flagIcon}}"
+                                             *ngIf="refsetData?.flagIcon != ''"
+                                             [hidden]="!refsetData?.flagIcon"
+                                             title="{{refsetData?.editionName}} Flag"
+                                             aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Version Status:"
-                                    >
+                                        aria-label="Version Status:">
                                         Version Status:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
                                             capitalize-metadata-value
-                                        "
-                                    >
+                                        ">
                                         {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Direct URL/URI:"
-                                    >
+                                        aria-label="Direct URL/URI:">
                                         Direct URL/URI:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
-                                        <a [href]="directRoute"
-                                            >{{directUrl}}</a
-                                        >
+                                        ">
+                                        <a [href]="directRoute">{{directUrl}}</a>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Version Notes:"
-                                    >
+                                        aria-label="Version Notes:">
                                         Version Notes:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
+                                        ">
                                         <ng-container>
-                                                <readonly-text-modal
-                                                    [shortText]="refsetData?.versionNotesShortText"
-                                                    [longText]="refsetData?.versionNotes"
-                                                    [title]="'Version Notes'"
-                                                ></readonly-text-modal>
+                                            <readonly-text-modal [shortText]="refsetData?.versionNotesShortText"
+                                                                 [longText]="refsetData?.versionNotes"
+                                                                 [title]="'Version Notes'"></readonly-text-modal>
                                         </ng-container>
                                     </td>
                                 </tr>
 
                                 <tr *ngIf="refsetData?.definition">
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-label
                                         "
-                                        aria-label="Definition:"
-                                    >
+                                        aria-label="Definition:">
                                         Definition:
                                     </td>
-                                    <td
-                                        class="
+                                    <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                    >
-                                        <div
-                                            *ngFor="let definitionClause of refsetData?.definition"
-                                        >
+                                        ">
+                                        <div *ngFor="let definitionClause of refsetData?.definition">
                                             {{definitionClause?.value}}
 
                                             <!-- <span *ngIf="!definitionClause.negated">
@@ -731,10 +604,10 @@
                         </table>
 
                         <!-- Rich Text Editor Dialog -->
-                        <ng-template #detailsRichTextDialog let-data>
-                            <editor
-                                [(ngModel)]="data.text"
-                                [init]="{
+                        <ng-template #detailsRichTextDialog
+                                     let-data>
+                            <editor [(ngModel)]="data.text"
+                                    [init]="{
                         base_url: '/tinymce',
                         suffix: '.min',
                         height: 200,
@@ -743,69 +616,68 @@
                         'lists advlist'
                         ],
                         toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
-                    }"
-                            ></editor>
+                    }"></editor>
                         </ng-template>
                     </div>
                 </div>
 
-                <ng-template #refsetFeedbackDialog let-data>
+                <ng-template #refsetFeedbackDialog
+                             let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #cloneRefsetDialog let-data>
+                <ng-template #cloneRefsetDialog
+                             let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #deleteRefsetDialog let-data>
+                <ng-template #deleteRefsetDialog
+                             let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #compareRefsetDialog let-data>
+                <ng-template #compareRefsetDialog
+                             let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #refsetArtifactsDialog let-data>
+                <ng-template #refsetArtifactsDialog
+                             let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #refsetAuditDialog let-data>
+                <ng-template #refsetAuditDialog
+                             let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
             </div>
         </div>
 
-        <div class="metadata-collapsible-container" *ngIf="editMode">
+        <div class="metadata-collapsible-container"
+             *ngIf="editMode">
             <div class="metadata-collapsible-container-group-header">
                 <div class="metadata-collapsible-container-title">
                     Workflow History
                     <div class="set-of-buttons-workflow-history">
-
-
-<!-- TODO: Should download WF HX table contents, not the refset
+                        <!-- TODO: Should download WF HX table contents, not the refset
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
 -->
-                        <workflow-history-notes-modal
-                            [refsetId]="id"
-                            [user]="refsetData?.modifiedBy"
-                            [disabled]="!refsetStatus?.includes('IN_EDIT') && !refsetStatus?.includes('IN_REVIEW')"
-                            [status]="refsetStatus"
-                            [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0]?.notes"
-                        ></workflow-history-notes-modal>
-
+                        <workflow-history-notes-modal [refsetId]="id"
+                                                      [user]="refsetData?.modifiedBy"
+                                                      [disabled]="!refsetStatus?.includes('IN_EDIT') && !refsetStatus?.includes('IN_REVIEW')"
+                                                      [status]="refsetStatus"
+                                                      [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0]?.notes"></workflow-history-notes-modal>
                     </div>
                 </div>
-                <img
-                    src="assets/collapse-plus-icon.svg"
-                    alt="Collapse Button"
-                    title="Collapse Workflow History"
-                    aria-label="Collapse Button"
-                    class="collapse-plus-icon"
-                    (click)="workflowCollapseTrigger()"
-                />
+                <img src="assets/collapse-plus-icon.svg"
+                     alt="Collapse Button"
+                     title="Collapse Workflow History"
+                     aria-label="Collapse Button"
+                     class="collapse-plus-icon"
+                     (click)="workflowCollapseTrigger()" />
             </div>
             <div [hidden]="hideWorkflowTable">
                 <!-- <mat-form-field appearance="standard">
@@ -814,78 +686,69 @@
                   </mat-form-field> -->
                 <div class="workflow-history-table-container">
                     <div class="mat-elevation-z8">
-                        <table
-                            mat-table
-                            [dataSource]="workflowHistoryDataSource"
-                            matSort
-                        >
+                        <table mat-table
+                               [dataSource]="workflowHistoryDataSource"
+                               matSort>
                             <!-- ID Column -->
                             <ng-container matColumnDef="modified">
-                                <th
-                                    mat-header-cell
+                                <th mat-header-cell
                                     *matHeaderCellDef
-                                    mat-sort-header
-                                >
+                                    mat-sort-header>
                                     Time Stamp
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <td mat-cell
+                                    *matCellDef="let row">
                                     {{ setTimeFormat(row.modified)}}
                                 </td>
                             </ng-container>
 
                             <!-- Progress Column -->
                             <ng-container matColumnDef="userName">
-                                <th
-                                    mat-header-cell
+                                <th mat-header-cell
                                     *matHeaderCellDef
-                                    mat-sort-header
-                                >
+                                    mat-sort-header>
                                     Project Member
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <td mat-cell
+                                    *matCellDef="let row">
                                     {{row.userName}}
                                 </td>
                             </ng-container>
 
                             <!-- Name Column -->
                             <ng-container matColumnDef="workflowStatus">
-                                <th
-                                    mat-header-cell
+                                <th mat-header-cell
                                     *matHeaderCellDef
-                                    mat-sort-header
-                                >
+                                    mat-sort-header>
                                     Workflow Status
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <td mat-cell
+                                    *matCellDef="let row">
                                     {{modifyStatusSyntax(row.workflowStatus)}}
                                 </td>
                             </ng-container>
 
                             <!-- Fruit Column -->
                             <ng-container matColumnDef="notes">
-                                <th
-                                    mat-header-cell
+                                <th mat-header-cell
                                     *matHeaderCellDef
-                                    mat-sort-header
-                                >
+                                    mat-sort-header>
                                     Notes
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <td mat-cell
+                                    *matCellDef="let row">
                                     <span [innerHTML]="row.notes"></span>
                                 </td>
                             </ng-container>
 
-                            <tr
-                                mat-header-row
-                                *matHeaderRowDef="displayedColumns; sticky: true"
-                            ></tr>
-                            <tr
-                                mat-row
-                                *matRowDef="let row; columns: displayedColumns;"
-                            ></tr>
+                            <tr mat-header-row
+                                *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                            <tr mat-row
+                                *matRowDef="let row; columns: displayedColumns;"></tr>
 
                             <!-- Row shown when there is no matching data. -->
-                            <tr class="mat-row" *matNoDataRow>
+                            <tr class="mat-row"
+                                *matNoDataRow>
                                 <!-- <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td> -->
                             </tr>
                         </table>
@@ -897,583 +760,453 @@
         <div class="refset-tool-refset-details-title-name">
             Reference Set Members
             <span [hidden]="!membersGridNumberOfResults">
-                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}</span
-            >
-            <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
-                <import-from-file-modal
-                    [internalRefsetId]="id"
-                    (reloadGrid)="reloadMembersGridAndTaxonomy()"
-                ></import-from-file-modal>
-                <import-from-list-modal
-                    [internalRefsetId]="id"
-                    (reloadGrid)="reloadMembersGridAndTaxonomy()"
-                ></import-from-list-modal>
-                <add-remove-by-concept-modal
-                    [internalRefsetId]="id"
-                    (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                    (loadingSpinner)="toggleLoadingSpinner($event)"
-                ></add-remove-by-concept-modal>
-                <button
-                    (click)="openEclBuilder('detailsTableSearchInput')"
-                    #detailsTableSearchEclButton
-                    class="button-inactive"
-                >
-                    <img
-                        src="assets/wrench-icon.svg"
-                        alt="wrench icon"
-                        title="Open ECL Builder"
-                        aria-label="ECL Builder"
-                    />
+                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}</span>
+            <div class="set-of-buttons"
+                 *ngIf="editMode && !readonlyMode">
+                <import-from-file-modal [internalRefsetId]="id"
+                                        (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
+                <import-from-list-modal [internalRefsetId]="id"
+                                        (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
+                <add-remove-by-concept-modal [internalRefsetId]="id"
+                                             (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                                             (loadingSpinner)="toggleLoadingSpinner($event)"></add-remove-by-concept-modal>
+                <button (click)="openEclBuilder('detailsTableSearchInput')"
+                        #detailsTableSearchEclButton
+                        class="button-inactive">
+                    <img src="assets/wrench-icon.svg"
+                         alt="wrench icon"
+                         title="Open ECL Builder"
+                         aria-label="ECL Builder" />
                 </button>
             </div>
         </div>
 
         <!-- Member Concepts Section -->
-        <div class="container-fluid" id="detailsMemberSection">
-            <div
-                class="row"
-                [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'"
-            >
+        <div class="container-fluid"
+             id="detailsMemberSection">
+            <div class="row"
+                 [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
                 <div class="detailsMemberSection-container">
-                    <as-split direction="horizontal" gutterSize="4">
-                        <as-split-area
-                            [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100"
-                            [minSize]="25"
-                        >
+                    <as-split direction="horizontal"
+                              gutterSize="4">
+                        <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100"
+                                       [minSize]="25">
                             <div class="refset-tool-details-members-column">
                                 <!-- Search Bar -->
                                 <div class="container-fluid pr-0">
-                                    <div
-                                        class="
+                                    <div class="
                                             row
                                             justify-content-start
                                             no-gutters
                                         "
-                                        style="align-items: baseline"
-                                    >
-                                        <div
-                                            class="
+                                         style="align-items: baseline">
+                                        <div class="
                                                 col-md-3
                                                 refset-tool-details-chooser-column
                                             "
-                                            style="padding-left: 5px"
-                                            [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay"
-                                        >
+                                             style="padding-left: 5px"
+                                             [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay">
                                             <app-column-chooser title="Select Columns to Display"
-                                                [gridColumnApi]="membersGridColumnApi"
-                                                [useDialog]="useDialog"
-                                                [manualStateRefresh]="membersGridChooserManualStateRefresh"
-                                            ></app-column-chooser>
+                                                                [gridColumnApi]="membersGridColumnApi"
+                                                                [useDialog]="useDialog"
+                                                                [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
                                         </div>
 
-                                        <div
-                                            class="
+                                        <div class="
                                                 col-md-3
                                                 refset-tool-details-chooser-column
                                             "
-                                            [style.display]="membersTaxonomyDisplay"
-                                        >
-                                            <mat-form-field
-                                                appearance="fill"
-                                                class="format-option-drop-down"
-                                            >
-                                                <mat-select
-                                                    #downloadFormatField
-                                                    [(value)]="selectedTaxonomyLanguage"
-                                                    (selectionChange)="changeTaxonomyLanguage()"
-                                                >
-                                                    <mat-option
-                                                        *ngFor="let option of languageOptions"
-                                                        [value]="option.value"
-                                                    >
+                                             [style.display]="membersTaxonomyDisplay">
+                                            <mat-form-field appearance="fill"
+                                                            class="format-option-drop-down">
+                                                <mat-select #downloadFormatField
+                                                            [(value)]="selectedTaxonomyLanguage"
+                                                            (selectionChange)="changeTaxonomyLanguage()">
+                                                    <mat-option *ngFor="let option of languageOptions"
+                                                                [value]="option.value">
                                                         {{option.display}}
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
 
-                                        <div
-                                            class="col-lg ml-3"
-                                            [style.display]="membersTableDisplay"
-                                        >
-                                            <mat-form-field
-                                                id="detailsTableSearchInputField"
-                                                class="
+                                        <div class="col-lg ml-3"
+                                             [style.display]="membersTableDisplay">
+                                            <mat-form-field id="detailsTableSearchInputField"
+                                                            class="
                                                     refset-tool-details-search-field
-                                                "
-                                            >
-                                                <mat-label
-                                                    >Search (Type at least 3
+                                                ">
+                                                <mat-label>Search (Type at least 3
                                                     characters. Example: shou
-                                                    fra)</mat-label
-                                                >
-                                                <input
-                                                    matInput
-                                                    #detailsTableSearchInput
-                                                    id="detailsTableSearchInput"
-                                                    [(ngModel)]="tableSearchInput"
-                                                    (input)="onTableSearchChange()"
-                                                    aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)"
-                                                />
+                                                    fra)</mat-label>
+                                                <input matInput
+                                                       #detailsTableSearchInput
+                                                       id="detailsTableSearchInput"
+                                                       [(ngModel)]="tableSearchInput"
+                                                       (input)="onTableSearchChange()"
+                                                       aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)" />
                                             </mat-form-field>
-                                            <span
-                                                class="clear-search"
-                                                (click)="clearSearch('table')"
-                                                >&#10005;</span
-                                            >
-                                            <button
-                                                (click)="openEclBuilder('detailsTableSearchInput')"
-                                                #detailsTaxonomySearchEclButton
-                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
-                                            >
-                                                <img
-                                                    src="assets/wrench-icon.svg"
-                                                    alt="wrench icon"
-                                                    title="Open ECL Builder"
-                                                    aria-label="ECL Builder"
-                                                />
+                                            <span class="clear-search"
+                                                  (click)="clearSearch('table')">&#10005;</span>
+                                            <button (click)="openEclBuilder('detailsTableSearchInput')"
+                                                    #detailsTaxonomySearchEclButton
+                                                    class="
+                                                    refset-tool-standard-icon-button
+                                                    refset-tool-search-ecl-button
+                                                ">
+                                                <img src="assets/wrench-icon.svg"
+                                                     alt="wrench icon"
+                                                     title="Open ECL Builder"
+                                                     aria-label="ECL Builder" />
                                             </button>
                                         </div>
 
-                                        <div
-                                            class="col-lg ml-3"
-                                            [style.display]="membersTaxonomyDisplay"
-                                        >
-                                            <mat-form-field
-                                                id="detailsTaxonomySearchInputField"
-                                                class="
+                                        <div class="col-lg ml-3"
+                                             [style.display]="membersTaxonomyDisplay">
+                                            <mat-form-field id="detailsTaxonomySearchInputField"
+                                                            class="
                                                     refset-tool-details-search-field
                                                 "
-                                                *ngIf="showMembersSearchBar()"
-                                            >
-                                                <mat-label
-                                                    >Search (Type at least 3
+                                                            *ngIf="showMembersSearchBar()">
+                                                <mat-label>Search (Type at least 3
                                                     characters. Example: shou
-                                                    fra)</mat-label
-                                                >
-                                                <input
-                                                    matInput
-                                                    #detailsTaxonomySearchInput
-                                                    id="detailsTaxonomySearchInput"
-                                                    [(ngModel)]="taxonomySearchInput"
-                                                    (input)="onTaxonomySearchChange()"
-                                                    aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)"
-                                                />
+                                                    fra)</mat-label>
+                                                <input matInput
+                                                       #detailsTaxonomySearchInput
+                                                       id="detailsTaxonomySearchInput"
+                                                       [(ngModel)]="taxonomySearchInput"
+                                                       (input)="onTaxonomySearchChange()"
+                                                       aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)" />
                                             </mat-form-field>
-                                            <mat-form-field
-                                                id="detailsTaxonomySearchInputField"
-                                                class="
+                                            <mat-form-field id="detailsTaxonomySearchInputField"
+                                                            class="
                                                     refset-tool-details-search-field
                                                 "
-                                                *ngIf="!showMembersSearchBar()"
-                                            >
-                                                <input
-                                                    matInput
-                                                    #detailsTaxonomySearchInput
-                                                    id="detailsTaxonomySearchInput"
-                                                    [(ngModel)]="taxonomySearchInput"
-                                                    (input)="onTaxonomySearchChange()"
-                                                    disabled
-                                                />
+                                                            *ngIf="!showMembersSearchBar()">
+                                                <input matInput
+                                                       #detailsTaxonomySearchInput
+                                                       id="detailsTaxonomySearchInput"
+                                                       [(ngModel)]="taxonomySearchInput"
+                                                       (input)="onTaxonomySearchChange()"
+                                                       disabled />
                                             </mat-form-field>
-                                            <span
-                                                class="clear-search"
-                                                (click)="clearSearch('taxonomy')"
-                                                *ngIf="showMembersSearchBar()"
-                                                >&#10005;</span
-                                            >
-                                            <button
-                                                (click)="openEclBuilder('detailsTaxonomySearchInput')"
-                                                #detailsTaxonomySearchEclButton
-                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button"
-                                            >
-                                                <img
-                                                    src="assets/wrench-icon.svg"
-                                                    alt="wrench icon"
-                                                    title="Open ECL Builder"
-                                                    aria-label="ECL Builder"
-                                                />
+                                            <span class="clear-search"
+                                                  (click)="clearSearch('taxonomy')"
+                                                  *ngIf="showMembersSearchBar()">&#10005;</span>
+                                            <button (click)="openEclBuilder('detailsTaxonomySearchInput')"
+                                                    #detailsTaxonomySearchEclButton
+                                                    class="
+                                                    refset-tool-standard-icon-button
+                                                    refset-tool-search-ecl-button
+                                                ">
+                                                <img src="assets/wrench-icon.svg"
+                                                     alt="wrench icon"
+                                                     title="Open ECL Builder"
+                                                     aria-label="ECL Builder" />
                                             </button>
                                         </div>
 
-                                        <div
-                                            class="col-md-3"
-                                            style="display: contents"
-                                        >
-                                            <mat-button-toggle-group
-                                                class="
+                                        <div class="col-md-3"
+                                             style="display: contents">
+                                            <mat-button-toggle-group class="
                                                     refset-tool-toggle-buttons
                                                 "
-                                                #detailsMembersListMode
-                                                name="membersListMode"
-                                                aria-label="Members List Mode"
-                                                (change)="onChangeMembersListMode()"
-                                                [(ngModel)]="selectedMembersListMode"
-                                            >
-                                                <mat-button-toggle
-                                                    value="table"
-                                                    title="Display Members in a Table"
-                                                    aria-label="Table"
-                                                    >Table</mat-button-toggle
-                                                >
-                                                <mat-button-toggle
-                                                    value="taxonomy"
-                                                    title="Taxonomy"
-                                                    aria-label="Display Members in a Taxonomy"
-                                                    [disabled]="!showTaxonomySearchTable"
-                                                    >{{taxonomyButtonLabel}}</mat-button-toggle
-                                                >
+                                                                     #detailsMembersListMode
+                                                                     name="membersListMode"
+                                                                     aria-label="Members List Mode"
+                                                                     (change)="onChangeMembersListMode()"
+                                                                     [(ngModel)]="selectedMembersListMode">
+                                                <mat-button-toggle value="table"
+                                                                   title="Display Members in a Table"
+                                                                   aria-label="Table">Table</mat-button-toggle>
+                                                <mat-button-toggle value="taxonomy"
+                                                                   title="Taxonomy"
+                                                                   aria-label="Display Members in a Taxonomy"
+                                                                   [disabled]="!showTaxonomySearchTable">{{taxonomyButtonLabel}}</mat-button-toggle>
                                             </mat-button-toggle-group>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Members Table -->
-                                <div
-                                    class="container-fluid"
-                                    [style.display]="membersTableDisplay"
-                                >
-                                    <ag-grid-angular
-                                        #detailsMembersTable
-                                        *ngIf="showTable"
-                                        class="
+                                <div class="container-fluid"
+                                     [style.display]="membersTableDisplay">
+                                    <ag-grid-angular #detailsMembersTable
+                                                     *ngIf="showTable"
+                                                     class="
                                             ag-theme-alpine
                                             refset-tool-ag-grid
                                         "
-                                        [columnDefs]="membersColumnDefs"
-                                        [gridOptions]="membersGridOptions"
-                                    >
+                                                     [columnDefs]="membersColumnDefs"
+                                                     [gridOptions]="membersGridOptions">
                                     </ag-grid-angular>
 
-                                    <app-pagination
-                                        #detailsMembersPaging
-                                        *ngIf="showTable"
-                                        [pageSize]="membersGridPaging.pageSize"
-                                        [gridOptions]="membersGridOptions"
-                                        [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
-                                        [pageSizeOptions]="membersGridPaging.pageSizeOptions"
-                                        [totalKnown]="membersGridPaging.totalKnown"
-                                        [manualStateRefresh]="membersGridPaging.manualStateRefresh"
-                                        [numOfResults]="membersGridNumberOfResults"
-                                    >
+                                    <app-pagination #detailsMembersPaging
+                                                    *ngIf="showTable"
+                                                    [pageSize]="membersGridPaging.pageSize"
+                                                    [gridOptions]="membersGridOptions"
+                                                    [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
+                                                    [pageSizeOptions]="membersGridPaging.pageSizeOptions"
+                                                    [totalKnown]="membersGridPaging.totalKnown"
+                                                    [manualStateRefresh]="membersGridPaging.manualStateRefresh"
+                                                    [numOfResults]="membersGridNumberOfResults">
                                     </app-pagination>
 
                                     <!-- Concept Code Templates -->
-                                    <ng-template #conceptCodeSection let-params>
-                                        <img
-                                            [hidden]="params?.data?.memberOfRefset || !editMode || readonlyMode"
-                                            src="assets/add-symbol-icon.svg"
-                                            (click)="addRemoveConcept(true, params?.data, false)"
-                                            width="18px"
-                                            height="18px"
-                                            title="Add Member"
-                                            aria-label="Add"
-                                            class="add-symbol-icon"
-                                            alt="Add symbol shown when you're able to add a concept"
-                                        />
-                                        <img
-                                            [hidden]="!params?.data?.memberOfRefset || !editMode || readonlyMode"
-                                            src="assets/subtract-symbol-icon.svg"
-                                            (click)="addRemoveConcept(false, params?.data, false)"
-                                            width="18px"
-                                            height="18px"
-                                            title="Remove Member"
-                                            aria-label="Subtract"
-                                            class="subtract-symbol-icon"
-                                            alt="Subtract symbol shown when you're able to remove a concept"
-                                        />
+                                    <ng-template #conceptCodeSection
+                                                 let-params>
+                                        <img [hidden]="params?.data?.memberOfRefset || !editMode || readonlyMode"
+                                             src="assets/add-symbol-icon.svg"
+                                             (click)="addRemoveConcept(true, params?.data, false)"
+                                             width="18px"
+                                             height="18px"
+                                             title="Add Member"
+                                             aria-label="Add"
+                                             class="add-symbol-icon"
+                                             alt="Add symbol shown when you're able to add a concept" />
+                                        <img [hidden]="!params?.data?.memberOfRefset || !editMode || readonlyMode"
+                                             src="assets/subtract-symbol-icon.svg"
+                                             (click)="addRemoveConcept(false, params?.data, false)"
+                                             width="18px"
+                                             height="18px"
+                                             title="Remove Member"
+                                             aria-label="Subtract"
+                                             class="subtract-symbol-icon"
+                                             alt="Subtract symbol shown when you're able to remove a concept" />
                                         {{ params?.data?.code }}
                                     </ng-template>
 
                                     <!-- Action Templates -->
-                                    <ng-template
-                                        #detailsActionSection
-                                        let-params
-                                    >
+                                    <ng-template #detailsActionSection
+                                                 let-params>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-2">
-                                                    <button
-                                                        mat-icon-button
-                                                        *ngIf="params?.data?.historyVisible"
-                                                        (click)="openMemberHistory(params.data.code)"
-                                                        aria-hidden="false"
-                                                        #detailsDownloadIcon
-                                                        class="
+                                                    <button mat-icon-button
+                                                            *ngIf="params?.data?.historyVisible"
+                                                            (click)="openMemberHistory(params.data.code)"
+                                                            aria-hidden="false"
+                                                            #detailsDownloadIcon
+                                                            class="
                                                             refset-tool-table-action-icon
                                                         "
-                                                        aria-label="Open History"
-                                                        title="Open Membership History"
-                                                    >
-                                                        <mat-icon
-                                                            >history</mat-icon
-                                                        >
+                                                            aria-label="Open History"
+                                                            title="Open Membership History">
+                                                        <mat-icon>history</mat-icon>
                                                     </button>
                                                 </div>
 
                                                 <div class="col-2">
-                                                    <button
-                                                        mat-icon-button
-                                                        *ngIf="params?.data?.feedbackVisible"
-                                                        (click)="openMemberFeedback(params.data.code)"
-                                                        aria-hidden="false"
-                                                        #detailsFeedbackIcon
-                                                        class="
+                                                    <button mat-icon-button
+                                                            *ngIf="params?.data?.feedbackVisible"
+                                                            (click)="openMemberFeedback(params.data.code)"
+                                                            aria-hidden="false"
+                                                            #detailsFeedbackIcon
+                                                            class="
                                                             refset-tool-table-action-icon
                                                         "
-                                                        aria-label="Open Feedback on Member"
-                                                        title="Open Member Feedback"
-                                                    >
-                                                        <mat-icon
-                                                            >comment-processing-outline</mat-icon
-                                                        >
+                                                            aria-label="Open Feedback on Member"
+                                                            title="Open Member Feedback">
+                                                        <mat-icon>comment-processing-outline</mat-icon>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </ng-template>
 
-                                    <ng-template #memberHistoryDialog let-data>
+                                    <ng-template #memberHistoryDialog
+                                                 let-data>
                                         <div class="container-fluid">
-                                            <div
-                                                class="refset-tool-dialog-name"
-                                            >
+                                            <div class="refset-tool-dialog-name">
                                                 {{data.name}}
                                             </div>
 
-                                            <ag-grid-angular
-                                                #memberHistoryTable
-                                                id="memberHistoryGrid"
-                                                class="
+                                            <ag-grid-angular #memberHistoryTable
+                                                             id="memberHistoryGrid"
+                                                             class="
                                                     ag-theme-alpine
                                                     refset-tool-ag-grid
                                                 "
-                                                [columnDefs]="data.columnDefs"
-                                                [gridOptions]="data.gridOptions"
-                                            >
+                                                             [columnDefs]="data.columnDefs"
+                                                             [gridOptions]="data.gridOptions">
                                             </ag-grid-angular>
                                         </div>
                                     </ng-template>
 
-                                    <ng-template #memberFeedbackDialog let-data>
+                                    <ng-template #memberFeedbackDialog
+                                                 let-data>
                                         This functionality will be implemented
                                         in subsequent phases.
                                     </ng-template>
                                 </div>
 
                                 <!-- Members Taxonomy Tree -->
-                                <div
-                                    class="container-fluid"
-                                    [style.display]="membersTaxonomyDisplay"
-                                >
-                                    <div
-                                        #memberTaxonomySearchResults
-                                        class="container-fluid"
-                                        [style.display]="taxonomySearchDisplay"
-                                    >
+                                <div class="container-fluid"
+                                     [style.display]="membersTaxonomyDisplay">
+                                    <div #memberTaxonomySearchResults
+                                         class="container-fluid"
+                                         [style.display]="taxonomySearchDisplay">
                                         <!-- Taxonomy Search Results Grid -->
-                                        <ag-grid-angular
-                                            id="taxonomySearchTable"
-                                            #taxonomySearchTable
-                                            *ngIf="showTaxonomySearchTable"
-                                            class="
+                                        <ag-grid-angular id="taxonomySearchTable"
+                                                         #taxonomySearchTable
+                                                         *ngIf="showTaxonomySearchTable"
+                                                         class="
                                                 ag-theme-alpine
                                                 refset-tool-ag-grid
                                             "
-                                            [columnDefs]="taxonomySearchColumnDefs"
-                                            [gridOptions]="taxonomySearchGridOptions"
-                                        >
+                                                         [columnDefs]="taxonomySearchColumnDefs"
+                                                         [gridOptions]="taxonomySearchGridOptions">
                                         </ag-grid-angular>
 
-                                        <app-pagination
-                                            #taxonomySearchPaginationComponent
-                                            *ngIf="showTaxonomySearchTable"
-                                            [pageSize]="taxonomySearchGridPaging.pageSize"
-                                            [gridOptions]="taxonomySearchGridOptions"
-                                            [numberOfPages]="taxonomySearchGridApi?.paginationGetTotalPages()"
-                                            [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
-                                            [totalKnown]="taxonomySearchGridPaging.totalKnown"
-                                            [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
-                                            [numOfResults]="taxonomySearchNumberOfResults"
-                                        >
+                                        <app-pagination #taxonomySearchPaginationComponent
+                                                        *ngIf="showTaxonomySearchTable"
+                                                        [pageSize]="taxonomySearchGridPaging.pageSize"
+                                                        [gridOptions]="taxonomySearchGridOptions"
+                                                        [numberOfPages]="taxonomySearchGridApi?.paginationGetTotalPages()"
+                                                        [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
+                                                        [totalKnown]="taxonomySearchGridPaging.totalKnown"
+                                                        [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
+                                                        [numOfResults]="taxonomySearchNumberOfResults">
                                         </app-pagination>
 
                                         <!-- Result Template -->
-                                        <ng-template
-                                            #taxonomyResultSection
-                                            let-params
-                                        >
+                                        <ng-template #taxonomyResultSection
+                                                     let-params>
                                             {{params?.value}}
                                         </ng-template>
 
                                         <!-- Path Template -->
-                                        <ng-template
-                                            #taxonomyPathSection
-                                            let-params
-                                        >
+                                        <ng-template #taxonomyPathSection
+                                                     let-params>
                                             {{params?.value}}
                                         </ng-template>
                                     </div>
 
-                                    <app-taxonomy-tree
-                                        #detailsMembersTaxonomy
-                                        treeId="detailsMembersTree"
-                                        [refset]="refsetData"
-                                        [rootNode]="membersTaxonomyRoot"
-                                        [editMode]="editMode && !readonlyMode"
-                                        [selectedConcept]="selectedConcept"
-                                        [options]="taxonomyOptions"
-                                        [manualStateRefresh]="taxonomyManualStateRefresh"
-                                        (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                                        (loadConceptDetail)="loadConceptDetail($event)"
-                                        (loadingSpinner)="toggleLoadingSpinner($event)"
-                                        (numOfChildren)="numOfChildren = $event"
-                                    ></app-taxonomy-tree>
+                                    <app-taxonomy-tree #detailsMembersTaxonomy
+                                                       treeId="detailsMembersTree"
+                                                       [refset]="refsetData"
+                                                       [rootNode]="membersTaxonomyRoot"
+                                                       [editMode]="editMode && !readonlyMode"
+                                                       [selectedConcept]="selectedConcept"
+                                                       [options]="taxonomyOptions"
+                                                       [manualStateRefresh]="taxonomyManualStateRefresh"
+                                                       (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                                                       (loadConceptDetail)="loadConceptDetail($event)"
+                                                       (loadingSpinner)="toggleLoadingSpinner($event)"
+                                                       (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
                                 </div>
                             </div>
                         </as-split-area>
-                        <as-split-area
-                            [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0"
-                            [minSize]="isConceptDetailsLoading || conceptDetail ? 25 : 0"
-                        >
-                            <div
-                                class="refset-tool-concept-details-column"
-                                *ngIf="isConceptDetailsLoading || conceptDetail"
-                            >
-                                <div
-                                    class="row"
-                                    *ngIf="isConceptDetailsLoading"
-                                >
+                        <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0"
+                                       [minSize]="isConceptDetailsLoading || conceptDetail ? 25 : 0">
+                            <div class="refset-tool-concept-details-column"
+                                 *ngIf="isConceptDetailsLoading || conceptDetail">
+                                <div class="row"
+                                     *ngIf="isConceptDetailsLoading">
                                     <div>Loading...</div>
                                 </div>
 
                                 <div *ngIf="conceptDetail">
-                                    <div
-                                        class="
+                                    <div class="
                                             row
                                             align-items-center
                                             no-gutters
-                                        "
-                                    >
-                                        <div
-                                            class="
+                                        ">
+                                        <div class="
                                                 col
                                                 refset-tool-concept-details-title-name
-                                            "
-                                        >
+                                            ">
                                             Concept Details
                                         </div>
 
                                         <div class="col text-right">
-                                            <button
-                                                mat-icon-button
-                                                (click)="closeConceptDetails()"
-                                                aria-hidden="false"
-                                                class="
+                                            <button mat-icon-button
+                                                    (click)="closeConceptDetails()"
+                                                    aria-hidden="false"
+                                                    class="
                                                     refset-tool-table-action-icon
                                                 "
-                                                aria-label="Close Concept Details"
-                                                title="Close Concept Details"
-                                            >
+                                                    aria-label="Close Concept Details"
+                                                    title="Close Concept Details">
                                                 <mat-icon>close</mat-icon>
                                             </button>
                                         </div>
                                     </div>
 
                                     <!-- Parents Section -->
-                                    <div
-                                        class="
+                                    <div class="
                                             container-fluid
                                             refset-tool-concept-details-taxonomy-section
-                                        "
-                                    >
+                                        ">
                                         <div class="row">
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-section-title
-                                                "
-                                            >
+                                                ">
                                                 Parents
                                             </div>
                                         </div>
 
                                         <div class="row">
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-no-relationships
                                                 "
-                                                *ngIf="conceptDetailParents.length == 0"
-                                            >
+                                                 *ngIf="conceptDetailParents.length == 0">
                                                 No Parents
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="
+                                        <div class="
                                                 row
                                                 refset-tool-concept-details-taxonomy-item
                                             "
-                                            *ngFor="let parent of conceptDetailParents"
-                                        >
-                                            <div
-                                                class="
+                                             *ngFor="let parent of conceptDetailParents">
+                                            <div class="
                                                     refset-tool-concept-details-taxonomy-icon
                                                 "
-                                                [class.taxonomy-icon-edit-mode]="editMode && !readonlyMode"
-                                            >
-                                                <img
-                                                    [hidden]="
+                                                 [class.taxonomy-icon-edit-mode]="editMode && !readonlyMode">
+                                                <img [hidden]="
                                                         parent?.memberOfRefset || !editMode || readonlyMode
                                                     "
-                                                    src="assets/add-symbol-icon.svg"
-                                                    (click)="addRemoveConcept(true, parent, true)"
-                                                    width="18px"
-                                                    height="18px"
-                                                    title="Add Member"
-                                                    aria-label="Add"
-                                                    class="add-symbol-icon"
-                                                    alt="Add symbol shown when you're able to add a concept"
-                                                />
-                                                <img
-                                                    [hidden]="
+                                                     src="assets/add-symbol-icon.svg"
+                                                     (click)="addRemoveConcept(true, parent, true)"
+                                                     width="18px"
+                                                     height="18px"
+                                                     title="Add Member"
+                                                     aria-label="Add"
+                                                     class="add-symbol-icon"
+                                                     alt="Add symbol shown when you're able to add a concept" />
+                                                <img [hidden]="
                                                         !parent?.memberOfRefset || !editMode || readonlyMode
                                                     "
-                                                    src="assets/subtract-symbol-icon.svg"
-                                                    (click)="addRemoveConcept(false, parent, true)"
-                                                    width="18px"
-                                                    height="18px"
-                                                    title="Remove Member"
-                                                    aria-label="Subtract"
-                                                    class="subtract-symbol-icon"
-                                                    alt="Subtract symbol shown when you're able to remove a concept"
-                                                />
-                                                <img
-                                                    *ngIf="parent.defined"
-                                                    title="Fully Defined"
-                                                    aria-label="Fully Defined"
-                                                    src="/assets/linedTaxonomyIcon.png"
-                                                />
-                                                <img
-                                                    *ngIf="!parent.defined"
-                                                    title="Primitive"
-                                                    aria-label="Primitive"
-                                                    class="
+                                                     src="assets/subtract-symbol-icon.svg"
+                                                     (click)="addRemoveConcept(false, parent, true)"
+                                                     width="18px"
+                                                     height="18px"
+                                                     title="Remove Member"
+                                                     aria-label="Subtract"
+                                                     class="subtract-symbol-icon"
+                                                     alt="Subtract symbol shown when you're able to remove a concept" />
+                                                <img *ngIf="parent.defined"
+                                                     title="Fully Defined"
+                                                     aria-label="Fully Defined"
+                                                     src="/assets/linedTaxonomyIcon.png" />
+                                                <img *ngIf="!parent.defined"
+                                                     title="Primitive"
+                                                     aria-label="Primitive"
+                                                     class="
                                                         refset-tool-logo
                                                         mr-2
                                                         p-0
                                                     "
-                                                    src="/assets/unlinedTaxonomyIcon.png"
-                                                />
+                                                     src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div
-                                                class="
+                                            <div class="
                                                     col
                                                     refset-tool-concept-details-taxonomy-description
                                                 "
-                                                (click)="loadConceptDetail(parent)"
-                                            >
-                                            <!--
+                                                 (click)="loadConceptDetail(parent)">
+                                                <!--
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
                                                     title="{{parent.fsn}}"
@@ -1481,215 +1214,164 @@
                                                     >{{parent.fsn}}</span
                                                 >
                                              -->
-                                                <span
-                                                    title="{{parent.name}}"
-                                                    aria-label="{{parent.name}}"
-                                                    >{{parent.name}}</span
-                                                >
+                                                <span title="{{parent.name}}"
+                                                      aria-label="{{parent.name}}">{{parent.name}}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Details Section -->
-                                    <div
-                                        class="
+                                    <div class="
                                             container-fluid
                                             refset-tool-concept-details-concept-section
-                                        "
-                                    >
+                                        ">
                                         <div class="row">
                                             <!-- Info Section -->
-                                            <div
-                                                class="
+                                            <div class="
                                                     col
                                                     refset-tool-concept-details-concept-info-column
                                                 "
-                                                [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active"
-                                            >
+                                                 [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active">
                                                 <div class="container-fluid">
                                                     <!-- Name -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-title-row
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 refset-tool-concept-details-taxonomy-icon
-                                                            "
-                                                        >
-                                                            <img
-                                                                [hidden]="!conceptDetail.defined || !editMode"
-                                                                title="Fully Defined"
-                                                                aria-label="Fully Defined"
-                                                                src="/assets/linedTaxonomyIcon.png"
-                                                            />
-                                                            <img
-                                                                *ngIf="!conceptDetail.defined || !editMode"
-                                                                title="Primitive"
-                                                                aria-label="Primitive"
-                                                                class="
+                                                            ">
+                                                            <img [hidden]="!conceptDetail.defined || !editMode"
+                                                                 title="Fully Defined"
+                                                                 aria-label="Fully Defined"
+                                                                 src="/assets/linedTaxonomyIcon.png" />
+                                                            <img *ngIf="!conceptDetail.defined || !editMode"
+                                                                 title="Primitive"
+                                                                 aria-label="Primitive"
+                                                                 class="
                                                                     refset-tool-logo
                                                                     mr-2
                                                                     p-0
                                                                 "
-                                                                src="/assets/unlinedTaxonomyIcon.png"
-                                                            />
+                                                                 src="/assets/unlinedTaxonomyIcon.png" />
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-name
                                                             "
-                                                            title="{{conceptDescriptions[0].term}}"
-                                                            aria-label="{{conceptDescriptions[0].term}}"
-                                                        >
+                                                             title="{{conceptDescriptions[0].term}}"
+                                                             aria-label="{{conceptDescriptions[0].term}}">
                                                             {{getFsn(conceptDescriptions)}}
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col-1
                                                                 refset-tool-concept-details-concept-link
                                                                 text-right
-                                                            "
-                                                        >
-                                                            <button
-                                                                mat-icon-button
-                                                                (click)="openInNewWindow(conceptDetail.code)"
-                                                                aria-hidden="false"
-                                                                class="
+                                                            ">
+                                                            <button mat-icon-button
+                                                                    (click)="openInNewWindow(conceptDetail.code)"
+                                                                    aria-hidden="false"
+                                                                    class="
                                                                     refset-tool-concept-details-action-icon
                                                                 "
-                                                                aria-label="Open Concept in New SNOMED Browser Window"
-                                                                title="Open Concept in SNOMED Browser Window"
-                                                            >
-                                                                <mat-icon
-                                                                    >open_in_new</mat-icon
-                                                                >
+                                                                    aria-label="Open Concept in New SNOMED Browser Window"
+                                                                    title="Open Concept in SNOMED Browser Window">
+                                                                <mat-icon>open_in_new</mat-icon>
                                                             </button>
                                                         </div>
                                                     </div>
-<br>
+                                                    <br />
 
                                                     <!-- ID -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-row
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 col-3
                                                                 refset-tool-concept-details-concept-id-label
-                                                            "
-                                                        >
+                                                            ">
                                                             SCTID
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-id-text
                                                             "
-                                                            title="{{conceptDetail.code}}"
-                                                            aria-label="{{conceptDetail.code}}"
-                                                        >
+                                                             title="{{conceptDetail.code}}"
+                                                             aria-label="{{conceptDetail.code}}">
                                                             {{conceptDetail.code}}
                                                         </div>
                                                     </div>
-<br>
+                                                    <br />
                                                     <!-- ECL -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-row
-                                                        "
-                                                    >
-                                                        <div
-                                                            class="
+                                                        ">
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-ecl
-                                                            "
-                                                        >
+                                                            ">
                                                             {{conceptDetail.code}}
                                                             |
                                                             {{conceptDescriptions[0].term}}
                                                             |
                                                         </div>
                                                     </div>
-<br>
+                                                    <br />
 
                                                     <!-- Descriptions -->
                                                     <!-- FSN -->
-                                                    <div
-                                                        class="
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-concept-row
                                                         "
-                                                        *ngFor="let description of conceptDescriptions"
-                                                    >
-                                                        <div
-                                                            class="
+                                                         *ngFor="let description of conceptDescriptions">
+                                                        <div class="
                                                                 col-3
                                                                 refset-tool-concept-details-concept-description-language
                                                             "
-                                                            title="{{description.languageName}}"
-                                                            aria-label="{{description.languageName}}"
-                                                        >
-                                                        {{description.languageName.substr(0, description.languageName.indexOf('(')).toLowerCase()}}
+                                                             title="{{description.languageName}}"
+                                                             aria-label="{{description.languageName}}">
+                                                            {{description.languageName.substr(0,
+                                                            description.languageName.indexOf('(')).toLowerCase()}}
                                                         </div>
 
-                                                        <div
-                                                            class="
+                                                        <div class="
                                                                 col
                                                                 refset-tool-concept-details-concept-description-text
                                                             "
-                                                            title="{{description.term}}"
-                                                            aria-label="{{description.term}}"
-                                                        >
+                                                             title="{{description.term}}"
+                                                             aria-label="{{description.term}}">
                                                             {{description.term}}
                                                         </div>
                                                     </div>
-
-
                                                 </div>
                                             </div>
 
                                             <!-- Roles Section -->
-                                            <div
-                                                class="
+                                            <div class="
                                                     col
                                                     refset-tool-concept-details-concept-roles-column
                                                 "
-                                                [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length"
-                                            >
-                                                <div
-                                                    class="container-fluid"
-                                                    *ngIf="true"
-                                                >
-                                                    <span
-                                                        class="no-attributes"
-                                                        *ngIf="!conceptDetail.numRoleGroups"
-                                                        >No attributes</span
-                                                    >
-                                                    <div
-                                                        class="
+                                                 [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length">
+                                                <div class="container-fluid"
+                                                     *ngIf="true">
+                                                    <span class="no-attributes"
+                                                          *ngIf="!conceptDetail.numRoleGroups">No attributes</span>
+                                                    <div class="
                                                             row
                                                             refset-tool-concept-details-role-row
                                                         "
-                                                        *ngFor="let role of conceptDetail.roleGroups | keyvalue"
-                                                    >
-                                                        <div
-                                                            class="
+                                                         *ngFor="let role of conceptDetail.roleGroups | keyvalue">
+                                                        <div class="
                                                                 row
                                                                 refset-tool-concept-details-role-details
                                                             "
-                                                            *ngFor="let detail of role.value"
-                                                        >
+                                                             *ngFor="let detail of role.value">
                                                             {{detail}}
                                                         </div>
                                                     </div>
@@ -1699,43 +1381,35 @@
                                     </div>
 
                                     <!-- Children Section -->
-                                    <div
-                                        class="
+                                    <div class="
                                             container-fluid
                                             refset-tool-concept-details-taxonomy-section
                                             children-section
-                                        "
-                                    >
+                                        ">
                                         <div class="row">
-                                            <div
-                                                class="
+                                            <div class="
                                                     refset-tool-concept-details-section-title
-                                                "
-                                            >
+                                                ">
                                                 Children
-                                                <span [hidden]="!numOfChildren"
-                                                    >{{'(' + numOfChildren +
-                                                    ')'}}</span
-                                                >
+                                                <span [hidden]="!numOfChildren">{{'(' + numOfChildren +
+                                                    ')'}}</span>
                                             </div>
                                         </div>
 
                                         <!-- Children Taxonomy Tree -->
                                         <div class="container-fluid">
-                                            <app-taxonomy-tree
-                                                #childrenMembersTaxonomy
-                                                treeId="childrenMembersTree"
-                                                [refset]="refsetData"
-                                                [rootNode]="conceptDetail"
-                                                [selectedConcept]="selectedConcept"
-                                                [options]="taxonomyOptions"
-                                                hasMultipleRootNodes="false"
-                                                [editMode]="editMode && !readonlyMode"
-                                                (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                                                (loadingSpinner)="toggleLoadingSpinner($event)"
-                                                (loadConceptDetail)="loadConceptDetail($event)"
-                                                (numOfChildren)="numOfChildren = $event"
-                                            ></app-taxonomy-tree>
+                                            <app-taxonomy-tree #childrenMembersTaxonomy
+                                                               treeId="childrenMembersTree"
+                                                               [refset]="refsetData"
+                                                               [rootNode]="conceptDetail"
+                                                               [selectedConcept]="selectedConcept"
+                                                               [options]="taxonomyOptions"
+                                                               hasMultipleRootNodes="false"
+                                                               [editMode]="editMode && !readonlyMode"
+                                                               (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                                                               (loadingSpinner)="toggleLoadingSpinner($event)"
+                                                               (loadConceptDetail)="loadConceptDetail($event)"
+                                                               (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
                                         </div>
                                     </div>
                                 </div>
@@ -1748,7 +1422,12 @@
     </div>
 </div>
 
-<add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
-    [refsetInternalId]="refsetData?.id" (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+<add-remove-concepts [isAdd]="isConceptBeingAdded"
+                     [conceptCode]="conceptForAddRemove?.code"
+                     [conceptName]="conceptForAddRemove?.name"
+                     [conceptHasChildren]="conceptForAddRemove?.hasChildren"
+                     [refsetInternalId]="refsetData?.id"
+                     (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)"
+                     (processChangedMemberEffects)="processChangedMemberEffects()">
 </add-remove-concepts>
 <scroll-top></scroll-top>

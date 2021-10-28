@@ -1,62 +1,50 @@
 <!-- <app-side-bar></app-side-bar> -->
-<div id="refsetProjectsPage" class="container-fluid">
+<div id="refsetProjectsPage"
+     class="container-fluid">
     <div class="row refset-title">
-        <div
-            class="col-md-auto page-title"
-            style="margin-right: 20px; color: #555555; padding-left: 60px"
-        >
+        <div class="col-md-auto page-title"
+             style="margin-right: 20px; color: #555555; padding-left: 60px">
             Projects
         </div>
-        <div
-            class="row justify-content-end details-version-select"
-            style="margin-left: 20px"
-        >
-            <mat-form-field appearance="outline" class="project-drop-down">
+        <div class="row justify-content-end details-version-select"
+             style="margin-left: 20px">
+            <mat-form-field appearance="outline"
+                            class="project-drop-down">
                 <mat-label>Choose Project</mat-label>
-                <mat-select
-                    #detailsVersionSelect
-                    [disableOptionCentering]="true"
-                    [(value)]="selectedProject"
-                    (selectionChange)="onGridReady(originalGridParams)"
-                >
-                    <mat-option
-                        *ngFor="let project of projects"
-                        [value]="project"
-                        style="z-index: 3"
-                    >
+                <mat-select #detailsVersionSelect
+                            [disableOptionCentering]="true"
+                            [(value)]="selectedProject"
+                            (selectionChange)="onGridReady(originalGridParams)">
+                    <mat-option *ngFor="let project of projects"
+                                [value]="project"
+                                style="z-index: 3">
                         {{ project.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
-        <div
-            class="col-md-auto page-title"
-            *ngIf="selectedProject"
-            style="
+        <div class="col-md-auto page-title"
+             *ngIf="selectedProject"
+             style="
                 margin-right: 20px;
                 color: #555555;
                 padding-left: 60px;
                 font-size: 14px;
-            "
-        >
-            <b>Project Name: </b
-            ><span>{{selectedProject?.name +
+            ">
+            <b>Project Name: </b><span>{{selectedProject?.name +
                 &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
 
-            <b>Organization Name: </b
-            ><span>{{selectedProject?.organization?.name +
-                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            <b>Organization Name: </b><span>{{selectedProject?.organization?.name +
+                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
 
-            <b>Status: </b
-            ><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
-                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
+                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
             <!-- <b>Project Role(s): </b><span>Author</span> -->
         </div>
     </div>
 
     <!-- Page Title -->
-    <div
-        style="
+    <div style="
             width: 100%;
             justify-content: space-between;
             display: flex;
@@ -65,89 +53,76 @@
             align-items: baseline;
             padding-left: 15px;
         "
-        [class.container-toggled]="toggleService.isToggled"
-    >
-        <div
-            class="container-fluid page-title"
-            style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)"
-        >
+         [class.container-toggled]="toggleService.isToggled">
+        <div class="container-fluid page-title"
+             style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)">
             Reference Sets
-            <span [hidden]="!numOfResults">{{ "(" + numOfResults + ")" }}</span>
+            <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
         </div>
 
         <div style="display: inline">
-            <create-new-refset
-                [disabled]="!user?.roles?.includes('AUTHOR')"
-                [selectedProject]="selectedProject"
-                [existingMetadataConcepts]="existingMetadataConcepts"
-                [existingBranchVersions]="existingBranchVersions"
-            ></create-new-refset>
+            <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR')"
+                               [selectedProject]="selectedProject"
+                               [existingMetadataConcepts]="existingMetadataConcepts"
+                               [existingBranchVersions]="existingBranchVersions"></create-new-refset>
         </div>
         <div style="display: inline; padding-left: 10px">
-            <button
-                disabled
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                #createRefsetButton
-                class="refset-tool-action-button isDisabled"
-                aria-label="Bulk Publication"
-                title="Bulk Publication"
-                ng-reflect-color="primary"
-            >
+            <button disabled
+                    mat-raised-button
+                    color="primary"
+                    aria-hidden="false"
+                    #createRefsetButton
+                    class="refset-tool-action-button isDisabled"
+                    aria-label="Bulk Publication"
+                    title="Bulk Publication"
+                    ng-reflect-color="primary">
                 Bulk Publication
             </button>
         </div>
     </div>
 
     <!-- Refset Table -->
-    <div
-        class="container-fluid"
-        [class.container-toggled]="toggleService.isToggled"
-    >
-        <ag-grid-angular
-            #directoryTable
-            *ngIf="showTable"
-            class="
+    <div class="container-fluid"
+         [class.container-toggled]="toggleService.isToggled">
+        <ag-grid-angular #directoryTable
+                         *ngIf="showTable"
+                         class="
                 ag-theme-alpine
                 refset-tool-ag-grid refset-tool-ag-grid-filter
             "
-            [columnDefs]="columnDefs"
-            [gridOptions]="refsetGridOptions"
-            style="width: 100%"
-        >
+                         [columnDefs]="columnDefs"
+                         [gridOptions]="refsetGridOptions"
+                         style="width: 100%">
         </ag-grid-angular>
 
-        <app-pagination
-            #directoryPaging
-            [pageSize]="refsetGridPaging.pageSize"
-            [gridOptions]="refsetGridOptions"
-            [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
-            [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-            [totalKnown]="refsetGridPaging.totalKnown"
-            [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
-            [numOfResults]="numOfResults"
-        >
+        <app-pagination #directoryPaging
+                        [pageSize]="refsetGridPaging.pageSize"
+                        [gridOptions]="refsetGridOptions"
+                        [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
+                        [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+                        [totalKnown]="refsetGridPaging.totalKnown"
+                        [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+                        [numOfResults]="numOfResults">
         </app-pagination>
 
         <!-- Name Templates -->
         <!-- Jesse: What is the private refset icon? -->
-        <ng-template #directoryNameSection let-params>
+        <ng-template #directoryNameSection
+                     let-params>
             {{ params?.value }}
 
-            <mat-icon
-                *ngIf="params?.data?.privateRefset"
-                aria-hidden="false"
-                #directoryPrivateIcon
-                class="refset-tool-table-action-icon"
-                aria-label="Private Refset"
-                title="Private Refset"
-            >
+            <mat-icon *ngIf="params?.data?.privateRefset"
+                      aria-hidden="false"
+                      #directoryPrivateIcon
+                      class="refset-tool-table-action-icon"
+                      aria-label="Private Refset"
+                      title="Private Refset">
                 lock
             </mat-icon>
         </ng-template>
         <!-- Workflow Status Templates -->
-        <ng-template #directoryversionStatusSection let-params>
+        <ng-template #directoryversionStatusSection
+                     let-params>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
                 <div class="ready-for-review-projects-button"></div>
                 <div class="ready-for-review-projects-text">
@@ -179,15 +154,19 @@
                 </div>
             </ng-container>
             <!-- Look at Version Status for PUBLISHED -->
-            <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED' ||
-	            params?.data?.versionStatus == 'PUBLISHED'">
+            <ng-container *ngIf="
+                                            params?.data?.workflowStatus == 'PUBLISHED' ||
+                                            params?.data?.versionStatus == 'PUBLISHED'
+                                        ">
                 <div class="published-projects-button"></div>
                 <div class="published-projects-text">
                     {{ 'Published' }}
                 </div>
             </ng-container>
-            <ng-container *ngIf="!params?.data?.workflowStatus &&
-            !params?.data?.versionStatus == 'PUBLISHED'">
+            <ng-container *ngIf="
+                                            !params?.data?.workflowStatus &&
+                                            !params?.data?.versionStatus == 'PUBLISHED'
+                                        ">
                 <div class="published-projects-button"></div>
                 <div class="published-projects-text">
                     {{ params?.value }}

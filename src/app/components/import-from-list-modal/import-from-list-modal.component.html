@@ -48,23 +48,25 @@
             </div>
             <mat-form-field class="add-by-list-text-area" appearance="outline">
                 <p *ngIf="!successfulImport && showBanner">
-                    <ngb-alert type="warning" (click)="showBanner = false">
+                    <ngb-alert type="warning"
+                               (click)="showBanner = false">
                         <div class="warning-header">
                             <span class="material-icons warning-logo">
                                 warning
                             </span>
                             <div class="warning-body">
                                 <strong>Warning!</strong><br /><br />
-                                {{failedIds}}/{{numOfIds}} IDs entered are invalid and have not been
-                                added to the reference set.
-                                <br /><br />Import/export report available for
-                                download.
+                                {{ failedIds }}/{{ numOfIds }} IDs entered are
+                                invalid and have not been added to the reference
+                                set. <br /><br />Import/export report available
+                                for download.
                             </div>
-                        </div></ngb-alert
-                    >
+                        </div>
+                        </ngb-alert>
                 </p>
                 <p *ngIf="successfulImport && showBanner">
-                    <ngb-alert type="success" (click)="showBanner = false">
+                    <ngb-alert type="success"
+                               (click)="showBanner = false">
                         <div class="success-header">
                             <span class="material-icons success-logo">
                                 warning
@@ -75,62 +77,53 @@
                                 <br /><br />Import/export report available for
                                 download.
                             </div>
-                        </div></ngb-alert
-                    >
+                        </div>
+                        </ngb-alert>
                 </p>
-                <textarea
-                    matInput
-                    class="import-from-list-text-area"
-                    [(ngModel)]="listOfIds"
-                >
-test</textarea
-                >
+                <textarea matInput
+                          class="import-from-list-text-area"
+                          [(ngModel)]="listOfIds">
+                test</textarea>
             </mat-form-field>
         </div>
     </div>
     <div class="modal-footer import-from-list-modal-footer">
-        <button
-            type="button"
-            (click)="addMembers()"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button"
-            aria-label="Add Members"
-            title="Add Members"
-            ng-reflect-color="primary"
-        >
+        <button type="button"
+                (click)="addMembers()"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button"
+                aria-label="Add Members"
+                title="Add Members"
+                ng-reflect-color="primary">
             Add Members
         </button>
-        <button
-            type="button"
-            (click)="removeMembers()"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="
-                refset-tool-action-button
-                import-from-list-remove-members-button
-            "
-            aria-label="Remove Members"
-            title="Remove Members"
-            ng-reflect-color="primary"
-        >
+        <button type="button"
+                (click)="removeMembers()"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="
+                                refset-tool-action-button
+                                import-from-list-remove-members-button
+                            "
+                aria-label="Remove Members"
+                title="Remove Members"
+                ng-reflect-color="primary">
             Remove Members
         </button>
-        <button
-        *ngIf="showBanner"
-        type="button"
-        (click)="createImportReport();"
-        mat-raised-button
-        color="primary"
-        aria-hidden="false"
-        class="refset-tool-action-download-report-button"
-        aria-label="Import Details Report"
-        title="Import Details Report"
-        ng-reflect-color="primary"
-    >
-        Download Report
-    </button>
+        <button *ngIf="showBanner"
+                type="button"
+                (click)="createImportReport()"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-download-report-button"
+                aria-label="Import Details Report"
+                title="Import Details Report"
+                ng-reflect-color="primary">
+            Download Report
+        </button>
     </div>
 </ng-template>

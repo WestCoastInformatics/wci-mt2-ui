@@ -8,37 +8,43 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class AuthenticationService {
-
     private user = new Subject<User>();
 
-    constructor(private http: HttpClient, private authoringService: AuthoringService, private router: Router) {
-    }
+    constructor(
+        private http: HttpClient,
+        private authoringService: AuthoringService,
+        private router: Router
+    ) {}
 
     // this sends the user to the refset api.
     login(userName: string, userData: string): Observable<any> {
-        console.log("authservice login for user", userName, " with password ", userData);
-        return this.http.post(`${environment.restUrl}${environment.restContextPath}/authenticate/${userName}`, {
-                    userData
+        return this.http.post(
+            `${environment.restUrl}${environment.restContextPath}/authenticate/${userName}`,
+            {
+                userData,
             },
-            {headers: new HttpHeaders(
-                {
-                    'content-type': 'plain/text'
-                })
+            {
+                headers: new HttpHeaders({
+                    'content-type': 'plain/text',
+                }),
             }
         );
     }
 
     logoutUser(): Observable<any> {
         this.notAuthenticated();
-        return this.http.post(`${environment.restUrl}${environment.restContextPath}logout/${localStorage.getItem('auth_token')}`, {
-            },
-            {headers: new HttpHeaders(
-                {
+        return this.http.post(
+            `${environment.restUrl}${
+                environment.restContextPath
+            }logout/${localStorage.getItem('auth_token')}`,
+            {},
+            {
+                headers: new HttpHeaders({
                     // 'content-type': 'application/json'
-                })
+                }),
             }
         );
     }
@@ -49,8 +55,7 @@ export class AuthenticationService {
 
     isAuthenticated(): boolean {
         const token = localStorage.getItem('auth_token');
-        console.log('token', token);
-        return (token?.length > 1);
+        return token?.length > 1;
     }
 
     notAuthenticated(): any {
@@ -59,12 +64,14 @@ export class AuthenticationService {
     }
 
     setUser() {
-        this.http.get<User>('/ims-api/account').subscribe(user => {
-            this.user.next(user);
-        },
-            err => {
-                window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer='
-                    + window.location.href
+        this.http.get<User>('/ims-api/account').subscribe(
+            (user) => {
+                this.user.next(user);
+            },
+            (err) => {
+                window.location.href =
+                    'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' +
+                    window.location.href;
             }
         );
     }
@@ -75,6 +82,8 @@ export class AuthenticationService {
 
     logout() {
         window.location.href =
-            this.authoringService.uiConfiguration.endpoints.imsEndpoint + 'logout?serviceReferer=' + window.location.href;
+            this.authoringService.uiConfiguration.endpoints.imsEndpoint +
+            'logout?serviceReferer=' +
+            window.location.href;
     }
 }

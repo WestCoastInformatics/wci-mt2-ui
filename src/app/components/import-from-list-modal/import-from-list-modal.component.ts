@@ -42,12 +42,6 @@ export class ImportFromListModalComponent {
 
     addMembers(): void {
         this.showLoadingSpinner = true;
-        console.log(
-            this.listOfIds
-                ?.replaceAll(" ", ",")
-                .replaceAll("\n", ",")
-                .split(",").length
-        );
         this.allIds = this.listOfIds
             ?.replaceAll(" ", ",")
             .replaceAll("\n", ",")
@@ -66,7 +60,6 @@ export class ImportFromListModalComponent {
                     .trim()
             )
             .subscribe((data) => {
-                console.log(data);
                 this.showLoadingSpinner = false;
                 this.sendReloadGridTrigger(true);
                 this.listOfIds = "";
@@ -87,9 +80,6 @@ export class ImportFromListModalComponent {
 
     removeMembers(): void {
         this.showLoadingSpinner = true;
-        console.log(
-            this.listOfIds.replaceAll(" ", ",").replaceAll("\n", ",").trim()
-        );
 
         this.refsetService
             .removeRefsetMembers(
@@ -99,12 +89,10 @@ export class ImportFromListModalComponent {
             )
             .subscribe(
                 (data) => {
-                    console.log(data);
                     this.showLoadingSpinner = false;
                     this.sendReloadGridTrigger(true);
                 },
                 (error) => {
-                    console.log(error);
                     this.showLoadingSpinner = false;
                 }
             );
@@ -118,7 +106,6 @@ export class ImportFromListModalComponent {
         const failedIdNamesWithoutWhiteSpace = this.failedIdNames.map((name) => {
           return name?.replace(' ', '');
         })
-        console.log(failedIdNamesWithoutWhiteSpace)
         if (this.successfulImport) {
             for (let i = 0; i < this.allIds.length; i++) {
                 ids.push({
@@ -141,8 +128,6 @@ export class ImportFromListModalComponent {
                 }
             }
         }
-
-        console.log(new AngularCsv(ids, "Import Report"));
     }
 
     openImportFromListModal(importFromListDialog: NgbModal) {

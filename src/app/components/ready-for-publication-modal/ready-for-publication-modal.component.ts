@@ -41,7 +41,6 @@ export class ReadyForPublicationModalComponent implements OnInit {
             notes
         )
         .subscribe((results) => {
-            console.log(results);
             if (results) {
                 // window.location.reload();
                 this.reloadPage.emit();

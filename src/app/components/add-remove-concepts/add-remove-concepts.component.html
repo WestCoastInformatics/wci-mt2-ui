@@ -1,50 +1,42 @@
-<ng-template #addRemoveDescendantsDialog let-modal>
+<ng-template #addRemoveDescendantsDialog
+             let-modal>
     <div class="modal-header add-remove-descendants-modal-header">
-        <h4
-            class="modal-title add-remove-descendants-modal-title"
-            id="modal-basic-title"
-        >
-            {{actionText}} Member(s)
+        <h4 class="modal-title add-remove-descendants-modal-title"
+            id="modal-basic-title">
+            {{ actionText }} Member(s)
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+        <button type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="container-fluid add-remove-descendants-container-fluid">
         <div class="modal-body add-remove-descendants-modal-body">
-            <mat-radio-group
-                aria-labelledby="add-remove-descendants-radio-group-label"
-                class="add-remove-descendants-radio-group"
-                [(ngModel)]="selectedOption"
-            >
+            <mat-radio-group aria-labelledby="add-remove-descendants-radio-group-label"
+                             class="add-remove-descendants-radio-group"
+                             [(ngModel)]="selectedOption">
                 <mat-radio-button *ngFor="let option of options"
-                    class="add-remove-descendants-radio-button"
-                    value="{{option.value + conceptCode}}"
-                >
-                    {{option.display}} <span>{{ conceptCode + ' | ' + conceptName }}</span>
+                                  class="add-remove-descendants-radio-button"
+                                  value="{{ option.value + conceptCode }}">
+                    {{ option.display }}
+                    <span>{{ conceptCode + ' | ' + conceptName }}</span>
                 </mat-radio-button>
-                
             </mat-radio-group>
         </div>
     </div>
     <div class="modal-footer add-remove-descendants-footer">
-        <button
-            type="button"
-            (click)="modal.close('Members Selected'); addRemoveConcept();"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button upgrade-members-modal-button"
-            aria-label="{{actionText}} Members"
-            title="{{actionText}} Members"
-            ng-reflect-color="primary"
-        >
-            {{actionText}} Members
+        <button type="button"
+                (click)="modal.close('Members Selected'); addRemoveConcept()"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button upgrade-members-modal-button"
+                aria-label="{{ actionText }} Members"
+                title="{{ actionText }} Members"
+                ng-reflect-color="primary">
+            {{ actionText }} Members
         </button>
     </div>
 </ng-template>

@@ -91,7 +91,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     populateProjectList(): void {
         this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=false').subscribe(project => {
-            console.log(project.items);
             this.projects = project.items;
         });
     }
@@ -207,11 +206,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     filterModel: rowParams.filterModel,
                     query: this.selectedProject?.organization?.name ? this.selectedProject?.organization?.name : 'zzzzzzzzzzzz'
                 }
-                console.log('query');
-                console.log(this.selectedProject?.organization?.name)
 
                 this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
-                    console.log(results.total)
                     this.numOfResults = results.total;
                     if (results.items.length == 0 && pageNumber > 1) {
 
@@ -305,11 +301,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             let selectedRows = this.refsetGridApi.getSelectedRows();
             let selectedId: string;
-            console.log(selectedRows);
 
             selectedRows.forEach(function (selectedRow, index) {
                 selectedId = selectedRow.id;
-                console.log('Selected Row: ' + selectedRow.refsetId);
             });
 
             this.goToEditRefsetPage(selectedId);
@@ -345,7 +339,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         if (this.selectedProject) {
             this.refsetService.getRefsetConcepts(`branch=${this.selectedProject?.organization?.edition?.branch.toString()}&areParentConcepts=${areParentConcepts}`).subscribe(results => {
                 this.existingMetadataConcepts = results.items ? results.items : undefined;
-                console.log(this.existingMetadataConcepts);
             });
         }
     }
