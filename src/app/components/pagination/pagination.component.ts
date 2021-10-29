@@ -41,6 +41,7 @@ export class PaginationComponent implements OnChanges {
         this.currentPage = this.gridOptions?.api ? this.gridOptions.api.paginationGetCurrentPage() + 1 : 1;
         this.startRecord = (this.currentPage * this.pageSize) - (this.pageSize - 1);
         this.endRecord = this.currentPage * this.pageSize;
+        this.endRecord = this.numOfResults < this.endRecord ? this.numOfResults : this.endRecord;
         return this.currentPage;
     }
 
