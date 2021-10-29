@@ -342,6 +342,7 @@ export class RefsetDetails {
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
             this.refsetData = results;
+            this.refsetService.setRefsetInformation(this.refsetData?.assignedUser ? true : false);
             if (this.editMode) {
                 this.editModeProperties = {
                     projectName: this.refsetData["project"]?.name,

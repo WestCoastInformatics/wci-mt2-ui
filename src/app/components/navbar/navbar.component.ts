@@ -5,6 +5,7 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { RefsetService } from 'src/app/services/rest/refset.service';
 
 @Component({
     selector: 'app-navbar',
@@ -23,7 +24,8 @@ export class NavbarComponent implements OnInit {
         private breadcrumbService: BreadcrumbService,
         private domSanitizer: DomSanitizer,
         private router: Router,
-        private changeDetectorRef: ChangeDetectorRef) {
+        private changeDetectorRef: ChangeDetectorRef,
+        private readonly refsetService: RefsetService) {
 
         this.authToken = localStorage.getItem('auth_token');
 
@@ -86,5 +88,9 @@ export class NavbarComponent implements OnInit {
 
     logout() {
         this.authenticationService.logout();
+    }
+
+    isAssigned(): boolean {
+        return this.refsetService.isAssigned;
     }
 }
