@@ -48,6 +48,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     initialGridWidth: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
+    showLoadingSpinner = false;
 
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
     @ViewChild('directoryversionStatusSection') versionStatus: TemplateRef<any>;
@@ -79,6 +80,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
+        this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Projects');
         this.breadcrumbService.setBreadcrumbs([{label: 'Projects'}]);
         this.getUser();
@@ -151,9 +153,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             }
         };
 
-        this.showTable = true
+            this.showTable = true
         this.changeDetectorRef.detectChanges();
-});
+        });
     }
 
 
@@ -256,6 +258,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     }
 
                     this.refsetGridPaging.manualStateRefresh = new Boolean(true);
+                    this.showLoadingSpinner = false;
                 },
                 error => {
 
@@ -359,5 +362,19 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         }
 
         return stringValue;
+    }
+
+    getProjectRoleString(): string {
+        const projectRoles = [];
+        if (!this.user?.roles) {
+            return '';
+        }
+        for (const role of this.user?.roles) {
+            if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
+                projectRoles.push(role);
+            }
+        }
+
+        return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
     }
 }

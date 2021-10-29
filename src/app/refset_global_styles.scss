@@ -2931,13 +2931,22 @@ button.refset-tool-table-action-icon {
     padding-left: 16px;
 }
 
-.project-role-and-assignee-label {
+.project-role-label {
     height: 45px;
 }
 
-.project-role-and-assignee {
+.project-role {
     padding-right: 30px;
     color: white;
     position: relative;
-    bottom: -10px;
+}
+
+.project-assignee {
+    padding-right: 30px;
+    color: white;
+    position: relative;
+}
+
+.project-role-and-assignee-label {
+    display: grid;
 }

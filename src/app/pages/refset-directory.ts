@@ -52,6 +52,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     initialGridWidth: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
+    showLoadingSpinner = false;
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -80,6 +81,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
+        this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
     }
@@ -160,7 +162,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.showTable = true
         this.changeDetectorRef.detectChanges();
         // this.overrideHeaderScroll();
-});
+        });
     }
 
     showDropdown(): void {
@@ -303,12 +305,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                             this.refsetGridPaging.manualStateRefresh =
                                 new Boolean(true);
+                                this.showLoadingSpinner = false;
                         },
                         (error) => {
                             this.refsetGridApi.showNoRowsOverlay();
                             rowParams.successCallback([], 0);
                         }
-                    );
+                );
             },
         };
 
