@@ -16,7 +16,7 @@
                 <mat-select #detailsVersionSelect
                             [disableOptionCentering]="true"
                             [(value)]="selectedProject"
-                            (selectionChange)="onGridReady(originalGridParams)">
+                            (selectionChange)="showRefsets()">
                     <mat-option *ngFor="let project of projects"
                                 [value]="project"
                                 style="z-index: 3">
@@ -63,8 +63,8 @@
         </div>
 
         <div style="display: inline">
-            <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR')"
-                               [selectedProject]="selectedProject"
+            <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR') || !selectedProject"
+                               [inputProperties]="createRefsetProperties"
                                [existingMetadataConcepts]="existingMetadataConcepts"
                                [existingBranchVersions]="existingBranchVersions"></create-new-refset>
         </div>
@@ -86,8 +86,7 @@
     <!-- Refset Table -->
     <div class="container-fluid"
          [class.container-toggled]="toggleService.isToggled">
-        <ag-grid-angular #directoryTable
-                         *ngIf="showTable"
+        <ag-grid-angular *ngIf="showTable" #directoryTable
                          class="
                 ag-theme-alpine
                 refset-tool-ag-grid refset-tool-ag-grid-filter
@@ -97,7 +96,7 @@
                          style="width: 100%">
         </ag-grid-angular>
 
-        <app-pagination #directoryPaging
+        <app-pagination *ngIf="showTable" #directoryPaging
                         [pageSize]="refsetGridPaging.pageSize"
                         [gridOptions]="refsetGridOptions"
                         [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"

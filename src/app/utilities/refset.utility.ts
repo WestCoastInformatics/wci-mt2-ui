@@ -8,6 +8,9 @@ export class RefsetUtility {
     static DEFAULT_LANGUAGE_REFSET = '900000000000509007';
     static DEFAULT_LANGUAGE_TYPE = 'PT';
     static DEFAULT_ACCEPT_LANGUAGE = RefsetUtility.DEFAULT_LANGUAGE_CODE + '-X-' + RefsetUtility.DEFAULT_LANGUAGE_REFSET;
+    static INTENSIONAL = 'INTENSIONAL';
+    static EXTENSIONAL = 'EXTENSIONAL';
+    static EXTERNAL = 'EXTERNAL';
 
     static getVersionOptions(refset, valueField: string = "id") {
 

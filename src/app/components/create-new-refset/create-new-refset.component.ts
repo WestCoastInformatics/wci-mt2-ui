@@ -8,15 +8,15 @@ import { Route, Router } from '@angular/router';
 import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { UiUtility } from "src/app/utilities/ui.utility";
-
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
     selector: 'create-new-refset',
     templateUrl: './create-new-refset.component.html',
 })
 export class CreateNewRefsetComponent implements OnInit {
-    dummydata = ['Your Usual Project', 'test2', 'test3'];
-    selectedValue = this.dummydata[0];
+
     visible = true;
     selectable = true;
     removable = true;
@@ -30,41 +30,12 @@ export class CreateNewRefsetComponent implements OnInit {
     selectedParentConcept = undefined;
     selectedNarrative = '';
     selectedTags = [];
-    selectedDefinitionClauses = '';
+    definitionClauses = [];
     selectedVersionNotes = '';
-    referenceTypes = ['EXTENSIONAL', 'INTENSIONAL', 'EXTERNAL'];
+    referenceTypes = [RefsetUtility.EXTENSIONAL, RefsetUtility.INTENSIONAL, RefsetUtility.EXTERNAL];
     selectedReferenceType = '';
     selectedIsPrivate = false;
     showLoadingSpinner = false;
-    @Input()
-    selectedProject: any;
-    @Input()
-    existingMetadataConcepts: any;
-    @Input()
-    existingBranchVersions: any;
-    @Input()
-    isDetailsPage = false;
-    @Input()
-    editMode = false;
-    @Input()
-    disabled = false;
-    @Input()
-    id: string;
-    @Input()
-    editModeProperties: {
-        projectName: string;
-        organizationName: string;
-        editionName: string;
-        versionNotes: string;
-        metadataConcept: string;
-        parentConcept: string;
-        narrative: string;
-        tags: string[];
-        referenceType: string;
-        privateRefset: boolean;
-        versionDate: any;
-        definitionClauses: string;
-    };
     organizationName: string;
     editionName: string;
     projectName: string;
@@ -75,6 +46,26 @@ export class CreateNewRefsetComponent implements OnInit {
     versionDate: string;
     refsetConcept: string;
     tags: string[];
+    INTENSIONAL = RefsetUtility.INTENSIONAL;
+
+    @Input() existingMetadataConcepts: any;
+    @Input() existingBranchVersions: any;
+    @Input() isDetailsPage = false;
+    @Input() editMode = false;
+    @Input() disabled = false;
+    @Input() refsetId: string;
+    @Input() inputProperties: {
+        project?: any;
+        versionNotes?: string;
+        metadataConcept?: string;
+        parentConcept?: string;
+        narrative?: string;
+        tags?: string[];
+        referenceType?: string;
+        privateRefset?: boolean;
+        versionDate?: any;
+        definitionClauses?: [];
+    };
 
     constructor(
         private modalService: NgbModal,
@@ -88,10 +79,15 @@ export class CreateNewRefsetComponent implements OnInit {
     ngOnInit(): void {}
 
     openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
+
+        this.resetModal();
+
         if (this.editMode) {
             this.setupEditMode();
         }
-        if (this.selectedProject || this.isDetailsPage) {
+
+        if (CodeUtility.hasValue(this.inputProperties.project)) {
+
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
                 backdrop: 'static',
@@ -101,6 +97,7 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     resetModal(): void {
+
         this.isSelected = 0;
         this.selectedMetaDataConcept = '';
         this.selectedBranchVersion = '';
@@ -109,32 +106,37 @@ export class CreateNewRefsetComponent implements OnInit {
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
-        this.selectedDefinitionClauses = '';
+        this.definitionClauses = [{value: '', negated: false}];
         this.selectedReferenceType = '';
         this.selectedIsPrivate = false;
     }
 
     setupEditMode(): void {
-        this.organizationName = this.editModeProperties.organizationName;
-        this.editionName = this.editModeProperties.editionName;
-        this.projectName = this.editModeProperties.projectName;
-        this.selectedMetaDataConcept = this.editModeProperties.metadataConcept;
-        this.versionDate = this.editModeProperties.versionDate;
-        this.createdMetaDataConcept = this.editModeProperties.metadataConcept;
-        this.selectedParentConcept = this.editModeProperties.parentConcept;
-        this.narrative = this.editModeProperties.narrative;
-        this.tags = this.editModeProperties.tags;
+
+        let inputs = JSON.parse(JSON.stringify(this.inputProperties));
+
+        this.organizationName = inputs.project.organization.name;
+        this.editionName = inputs.project.organization.edition.name;
+        this.projectName = inputs.project.organization.name;
+        this.selectedMetaDataConcept = inputs.metadataConcept;
+        this.versionDate = inputs.versionDate;
+        this.createdMetaDataConcept = inputs.metadataConcept;
+        this.selectedParentConcept = inputs.parentConcept;
+        this.narrative = inputs.narrative;
+        this.tags = inputs.tags;
         this.referenceType =
-            this.editModeProperties.referenceType.substr(0, 1) +
-            this.editModeProperties.referenceType.substr(1).toLowerCase();
-        this.privateRefset = this.editModeProperties.privateRefset;
-        this.refsetConcept = this.editModeProperties.metadataConcept;
-        this.versionNotes = this.editModeProperties.versionNotes;
-        this.selectedDefinitionClauses =
-            this.editModeProperties.definitionClauses;
+            inputs.referenceType.substr(0, 1) +
+            inputs.referenceType.substr(1).toLowerCase();
+        this.privateRefset = inputs.privateRefset;
+        this.refsetConcept = inputs.metadataConcept;
+        this.versionNotes = inputs.versionNotes;
+        this.selectedReferenceType = inputs.referenceType;
+        this.definitionClauses = inputs.definitionClauses;
+        //this.detectChanges.detectChanges();
     }
 
     createRefsetObject(): void {
+
         this.showLoadingSpinner = true;
 
         let params: any = {
@@ -147,8 +149,8 @@ export class CreateNewRefsetComponent implements OnInit {
                 ? this.selectedParentConcept
                 : undefined,
             moduleId: '',
-            editionId: this.selectedProject?.organization?.edition?.id,
-            projectId: this.selectedProject?.id,
+            editionId: this.inputProperties.project.organization.edition.id,
+            projectId: this.inputProperties.project.id,
             narrative: this.selectedNarrative,
             type: this.selectedReferenceType,
             privateRefset: this.selectedIsPrivate,
@@ -157,10 +159,8 @@ export class CreateNewRefsetComponent implements OnInit {
             versionNotes: this.selectedVersionNotes,
         };
 
-        if (this.selectedDefinitionClauses != '') {
-            params.definitionClauses = this.generateDefinitionClausesJson(
-                this.selectedDefinitionClauses
-            );
+        if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+            params.definitionClauses = this.definitionClauses;
         }
 
         this.refsetService.createRefset(params).subscribe(
@@ -177,7 +177,9 @@ export class CreateNewRefsetComponent implements OnInit {
         );
     }
 
-    generateDefinitionClausesJson(definitionClauses: string) {
+    generateDefinitionClausesJson(definitionClauses: []) {
+
+        for (let definitionClause of definitionClauses)
         return [{ value: definitionClauses, negated: false }];
     }
 
@@ -186,8 +188,10 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     editRefsetObject(): void {
+
         this.showLoadingSpinner = true;
         let tagsToPersist: string[];
+
         if (this.tags) {
             tagsToPersist = this.tags;
         } else {
@@ -197,22 +201,17 @@ export class CreateNewRefsetComponent implements OnInit {
         let params: any = {
             narrative: this.narrative,
             tags: tagsToPersist,
-            definitionClauses: this.generateDefinitionClausesJson(
-                this.selectedDefinitionClauses
-            ),
             versionNotes: this.versionNotes,
             privateRefset: this.privateRefset,
             type: this.referenceType,
         };
 
-        if (this.selectedDefinitionClauses != '') {
-            params.definitionClauses = this.generateDefinitionClausesJson(
-                this.selectedDefinitionClauses
-            );
+        if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+            params.definitionClauses = this.definitionClauses;
         }
 
-        this.refsetService.updateRefsetMetadata(this.id, params).subscribe(
-            (refsetId) => {
+        this.refsetService.updateRefsetMetadata(this.refsetId, params).subscribe( (refsetId) => {
+
                 this.showLoadingSpinner = false;
                 this.router.navigate([
                     '/edit/refset',
@@ -227,34 +226,36 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isComplete(): boolean {
+
         return (
-            this.selectedProject.name &&
-            this.selectedProject.organization.edition.id &&
-            this.selectedProject.id &&
-            this.selectedBranchVersion &&
-            this.selectedReferenceType &&
-            ((this.createdMetaDataConcept && this.selectedParentConcept) ||
-                this.selectedMetaDataConcept)
+            this.selectedBranchVersion && this.selectedReferenceType &&
+            ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept)
         );
     }
 
     checkRadioButtonValue(event: any): void {
+
         this.isSelected = event.value;
+
         if (event.value === '1') {
+
             this.createdMetaDataConcept = '';
             this.selectedParentConcept = '';
+
         } else if (event.value === '2') {
             this.selectedMetaDataConcept = '';
         }
+
         this.detectChanges.detectChanges();
     }
 
     add(event: MatChipInputEvent): void {
+
         const input = event.input;
         const value = event.value;
 
+        // Handling update refset metadata
         if (this.editMode) {
-            // Handling update refset metadata
 
             // Add our tag
             if ((value || '').trim()) {
@@ -265,8 +266,10 @@ export class CreateNewRefsetComponent implements OnInit {
             if (input) {
                 input.value = '';
             }
-        } else {
-            // Handling new refset creation
+        } 
+
+        // Handling new refset creation
+        else {
 
             // Add our tag
             if ((value || '').trim()) {
@@ -281,15 +284,20 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     remove(data: string): void {
+
+        // Handling update refset metadata
         if (this.editMode) {
-            // Handling update refset metadata
+            
             const index = this.tags.indexOf(data);
 
             if (index >= 0) {
                 this.tags.splice(index, 1);
             }
-        } else {
-            // Handling new refset creation
+        } 
+        
+        // Handling new refset creation
+        else {
+            
             const index = this.selectedTags.indexOf(data);
 
             if (index >= 0) {
@@ -299,11 +307,11 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     openEclBuilder(fieldId) {
+
         UiUtility.openEclBuilder(
             fieldId,
-            this.selectedProject.organization.edition.branch +
-                '/' +
-                this.selectedBranchVersion
+            this.inputProperties.project.organization.edition.branch +
+                '/' + this.selectedBranchVersion
         );
     }
 }

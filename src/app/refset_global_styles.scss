@@ -841,7 +841,7 @@ button.refset-tool-table-action-icon {
     top: 2px;
 }
 .createNewRefsetDialog > .modal-dialog {
-    max-width: 900px;
+    max-width: 1200px;
 }
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
@@ -1150,8 +1150,9 @@ button.refset-tool-table-action-icon {
 }
 
 .col.create-new-refset-field {
-    width: 700px;
-    max-width: 700px;
+    width: 900px;
+    max-width: 900px;
+
     mat-form-field {
         width: 100%;
     }
@@ -1161,6 +1162,10 @@ button.refset-tool-table-action-icon {
         margin-bottom: 5px;
         border-radius: 8px;
         background: white;
+    }
+    .refset_tool_ecl_definition_field {
+        width: calc(100% - 60px);
+        margin-right: 5px;
     }
 }
 

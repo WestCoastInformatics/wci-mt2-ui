@@ -49,6 +49,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     showFullNarrativeText = false;
     showFullNotesText = false;
     showLoadingSpinner = false;
+    createRefsetProperties: any = {};
 
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
     @ViewChild('directoryversionStatusSection') versionStatus: TemplateRef<any>;
@@ -97,6 +98,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
     }
     ngAfterViewInit() {
+
 		forkJoin(
         	this.refsetService.getVersionStatuses(),
 			this.refsetService.getEditions(),
@@ -153,13 +155,27 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             }
         };
 
-            this.showTable = true
+        this.showLoadingSpinner = false;
         this.changeDetectorRef.detectChanges();
         });
     }
 
+    showRefsets() {
+
+        if (this.originalGridParams) {
+            this.onGridReady(this.originalGridParams);
+        } else {
+            this.showTable = true;
+        }
+    }
 
     onGridReady = (gridReadyParams) => {
+
+        if (!this.selectedProject) {
+            return;
+        }
+
+        this.createRefsetProperties = {project: this.selectedProject, definitionClauses: [{value: '', negated: false}]};
         this.getConceptDropdownData(false);
         this.getBranchVersions();
         this.originalGridParams = gridReadyParams;
@@ -206,7 +222,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
-                    query: this.selectedProject?.organization?.name ? this.selectedProject?.organization?.name : 'zzzzzzzzzzzz'
+                    query: this.selectedProject?.organization?.name
                 }
 
                 this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {

@@ -127,7 +127,7 @@ export class RefsetDetails {
     taxonomyGridParams: any;
     showLoadingSpinner = false;
     selectedConcept: any;
-    editModeProperties: any;
+    editMetadataProperties: any;
     directUrl: string;
     directRoute: string;
     numOfChildren = undefined;
@@ -339,25 +339,31 @@ export class RefsetDetails {
         });
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
+
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
             this.refsetData = results;
             this.refsetService.setRefsetInformation(this.refsetData?.assignedUser ? true : false);
+
             if (this.editMode) {
-                this.editModeProperties = {
-                    projectName: this.refsetData["project"]?.name,
-                    organizationName: this.refsetData["project"]?.organization?.name,
-                    editionName: this.refsetData["editionName"],
-                    metadataConcept: this.refsetData?.name,
-                    parentConcept: this.refsetData?.parentConceptId,
-                    narrative: this.refsetData?.narrative,
-                    tags: this.refsetData?.tags,
-                    referenceType: this.refsetData["type"],
-                    privateRefset: this.refsetData?.privateRefset,
-                    versionDate: this.refsetData?.versionDate,
-                    versionNotes: this.refsetData?.versionNotes,
+
+                this.editMetadataProperties = {
+                    project: this.refsetData.project,
+                    metadataConcept: this.refsetData.name,
+                    parentConcept: this.refsetData.parentConceptId,
+                    narrative: this.refsetData.narrative,
+                    tags: this.refsetData.tags,
+                    referenceType: this.refsetData.type,
+                    privateRefset: this.refsetData.privateRefset,
+                    versionDate: this.refsetData.versionDate,
+                    versionNotes: this.refsetData.versionNotes
                 };
+
+                if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
+                    this.editMetadataProperties.definitionClauses = this.refsetData.definitionClauses;
+                }
             }
+
             this.refsetData.status = RefsetUtility.getStatus(
                 this.refsetData.active
             );

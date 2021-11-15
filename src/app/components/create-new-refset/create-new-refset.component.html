@@ -1,12 +1,12 @@
 <button *ngIf="!isDetailsPage"
-        [disabled]="!selectedProject || disabled"
+        [disabled]="disabled"
         mat-raised-button
         color="primary"
-        (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
+        (click)="openCreateRefsetModal(createNewRefsetDialog);"
         aria-hidden="false"
         #createRefsetButton
         class="refset-tool-action-button"
-        [ngClass]="{ inactive: !selectedProject || disabled }"
+        [ngClass]="{ inactive: disabled }"
         aria-label="Create New Refset"
         title="Create New Refset"
         ng-reflect-color="primary">
@@ -16,7 +16,7 @@
 <button class="refset-tool-standard-icon-button details-edit-refset-modal"
         *ngIf="isDetailsPage || editMode"
         [style.height]="editMode ? '31px' : '31px'"
-        (click)="openCreateRefsetModal(createNewRefsetDialog); resetModal()"
+        (click)="openCreateRefsetModal(createNewRefsetDialog);"
         [ngClass]="{ inactive: disabled }"
         [disabled]="disabled">
     <img src="assets/notes-icon.svg"
@@ -68,42 +68,26 @@
                             <input style="cursor: default"
                                    matInput
                                    type="text"
-                                   [(ngModel)]="
-                                    editMode
-                                        ? projectName
-                                        : selectedProject.name
-                                "
+                                   [(ngModel)]="inputProperties.project.name"
                                    disabled />
                         </mat-form-field>
                     </div>
                 </div>
+
                 <div class="create-new-refset-form-field">
-                    <div class="
-                            col
-                            create-new-refset-label
-                            create-new-refset-flex-weight
-                        ">
+
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
                         <label>Owner/Organization:</label>
                     </div>
-                    <div class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        "
-                         style="padding-left: 25px">
+
+                    <div class="col create-new-refset-field create-new-refset-flex-weight" style="padding-left: 25px">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default"
-                                   matInput
-                                   type="text"
-                                   [(ngModel)]="
-                                    editMode
-                                        ? organizationName
-                                        : selectedProject.organization.name
-                                "
-                                   disabled />
+                            <input style="cursor: default" matInput type="text" disabled
+                                   [(ngModel)]="inputProperties.project.organization.name"/>
                         </mat-form-field>
                     </div>
                 </div>
+
                 <div class="create-new-refset-form-field">
                     <div class="
                             col
@@ -122,12 +106,7 @@
                             <input style="cursor: default"
                                    matInput
                                    type="text"
-                                   [(ngModel)]="
-                                    editMode
-                                        ? editionName
-                                        : selectedProject['organization']
-                                              .edition.name
-                                "
+                                   [(ngModel)]="inputProperties.project.organization.edition.name"
                                    disabled />
                         </mat-form-field>
                     </div>
@@ -451,102 +430,68 @@
                 </div>
 
                 <!-- ECL Definintion Declaration -->
-                <div *ngIf="selectedReferenceType === 'INTENSIONAL'">
-                    <div class="create-new-refset-form-field">
-                        <div class="
-                                                                                col
-                                                                                create-new-refset-label
-                                                                                create-new-refset-flex-weight
-                            ">
-                            <label>Define ECL:</label>
-                        </div>
-                        <div class="
-                                                                                col
-                                                                                create-new-refset-field
-                                                                                create-new-refset-flex-weight
-                            ">
-                            <button (click)="
-                                    openEclBuilder(
-                                        'createRefsetDefinitionClausesInput'
-                                    )
-                                "
-                                    #createRefsetIntensionalEclButton
-                                    class="
-                                    refset-tool-standard-icon-button
-                                    refset-tool-search-ecl-button
-                                ">
-                                <img src="assets/wrench-icon.svg"
-                                     alt="wrench icon"
-                                     title="Open ECL Builder"
-                                     aria-label="ECL Builder" />
-                            </button>
+
+                <div class="create-new-refset-form-field" *ngIf="selectedReferenceType === INTENSIONAL">
+
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
+                        <label>ECL Definition:</label>
+                    </div>
+
+                    <div class="col create-new-refset-field create-new-refset-flex-weight">
+
+                        <div *ngFor="let clause of definitionClauses; index as i"> 
+
+                            <span *ngIf="i == 0">
+
+                                <mat-form-field class="refset_tool_ecl_definition_field">
+                                    <input style="cursor: default" matInput [(ngModel)]="clause.value" id="createRefsetDefinitionClausesInput" #createRefsetDefinitionClausesInput/>
+                                </mat-form-field>
+                                <input type="hidden" [(ngModel)]="clause.negated" value="false">
+
+                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" #createRefsetIntensionalEclButton class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                    <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder"/>
+                                </button>
+                            </span>
+
+                            <span *ngIf="i > 0" class="refset-tool-flex-row">
+
+                                <div class="refset_tool_ecl_definition_field">
+                                    <span *ngIf="clause.negated">MINUS </span>
+                                    {{clause.value}}
+                                </div>
+
+                                <button (click)="removeDefinitionClause(i)" #createRefsetIntensionalEclButton class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                    <img src="assets/subtract-symbol-icon.svg"
+                                        width="18px"
+                                        height="18px"
+                                        title="Remove Definition Clause"
+                                        aria-label="Remove Definition Clause"
+                                        class="subtract-symbol-icon"
+                                        alt="Subtract symbol to Remove Definition Clause" />
+                                </button>
+                            </span>
                         </div>
                     </div>
 
-                    <div class="create-new-refset-form-field">
-                        <div class="
-                                                                                col
-                                                                                create-new-refset-label
-                                                                                create-new-refset-flex-weight
-                            ">
-                            <label>ECL Definition:</label>
-                        </div>
-                        <div class="
-                                                                                col
-                                                                                create-new-refset-field
-                                                                                create-new-refset-flex-weight
-                            ">
-                            <div style="width: 612px; margin-left: -15px"
-                                 class="
-                                    col
-                                    create-new-refset-field
-                                    create-new-refset-flex-weight
-                                ">
-                                <mat-form-field class="example-chip-list">
-                                    <input #createRefsetDefinitionClausesInput
-                                           style="cursor: default"
-                                           matInput
-                                           [(ngModel)]="selectedDefinitionClauses"
-                                           id="createRefsetDefinitionClausesInput" />
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- ECL -->
 
                 <div class="create-new-refset-form-field">
-                    <div class="
-                            col
-                            create-new-refset-label
-                            create-new-refset-flex-weight
-                        ">
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
                         <label>Availability:</label>
                     </div>
-                    <div class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        ">
+                    <div class="col create-new-refset-field create-new-refset-flex-weight">
                         <mat-checkbox [(ngModel)]="isPrivate">Private</mat-checkbox>
                     </div>
                 </div>
 
                 <div *ngIf="editMode"
                      class="create-new-refset-form-field">
-                    <div class="
-                                                                    col
-                                                                    create-new-refset-label
-                                                                    create-new-refset-flex-weight
-                        ">
+                     <div class="col create-new-refset-label create-new-refset-flex-weight">
                         <label>Version Notes:</label>
                     </div>
 
-                    <div class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        ">
+                    <div class="col create-new-refset-field create-new-refset-flex-weight">
                         <editor [(ngModel)]="versionNotes"
                                 [init]="{
                                 base_url: '/tinymce',

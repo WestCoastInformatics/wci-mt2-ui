@@ -131,8 +131,8 @@
                             || !refsetData?.availableActions?.includes('EDIT')"
                                        [isDetailsPage]="true"
                                        [editMode]="editMode"
-                                       [id]="refsetId"
-                                       [editModeProperties]="editModeProperties"></create-new-refset>
+                                       [refsetId]="refsetId"
+                                       [inputProperties]="editMetadataProperties"></create-new-refset>
                 </div>
             </div>
 
@@ -187,8 +187,8 @@
                                            [status]="refsetStatus"
                                            [isDetailsPage]="true"
                                            [editMode]="editMode"
-                                           [id]="id"
-                                           [editModeProperties]="editModeProperties"></create-new-refset>
+                                           [refsetId]="id"
+                                           [inputProperties]="editMetadataProperties"></create-new-refset>
 
                         <button class="refset-tool-standard-icon-button"
                                 [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
