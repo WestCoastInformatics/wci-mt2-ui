@@ -2,13 +2,11 @@ import {
     Component,
     EventEmitter,
     Input,
-    OnInit,
     Output,
-    ViewEncapsulation,
 } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
-import { AngularCsv } from "angular7-csv";
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: "import-from-list-modal",
@@ -41,6 +39,9 @@ export class ImportFromListModalComponent {
     }
 
     addMembers(): void {
+        if (!this.listOfIds?.length) {
+            return;
+        }
         this.showLoadingSpinner = true;
         this.allIds = this.listOfIds
             ?.replaceAll(" ", ",")
@@ -58,8 +59,15 @@ export class ImportFromListModalComponent {
                     ?.replaceAll(" ", ",")
                     .replaceAll("\n", ",")
                     .trim()
-            )
-            .subscribe((data) => {
+            ).pipe(
+                catchError((err) => {
+                    if (err) {
+                        this.showLoadingSpinner = false;
+                    }
+
+                  return err;
+                })
+              ).subscribe((data) => {
                 this.showLoadingSpinner = false;
                 this.sendReloadGridTrigger(true);
                 this.listOfIds = "";
@@ -79,15 +87,25 @@ export class ImportFromListModalComponent {
     }
 
     removeMembers(): void {
+        if (!this.listOfIds?.length) {
+            return;
+        }
         this.showLoadingSpinner = true;
 
         this.refsetService
             .removeRefsetMembers(
                 this.internalRefsetId,
                 "list",
-                this.listOfIds.replaceAll(" ", ",").replaceAll("\n", ",").trim()
-            )
-            .subscribe(
+                this.listOfIds?.replaceAll(" ", ",")?.replaceAll("\n", ",")?.trim()
+            ).pipe(
+                catchError((err) => {
+                    if (err) {
+                        this.showLoadingSpinner = false;
+                    }
+
+                  return err;
+                })
+              ).subscribe(
                 (data) => {
                     this.showLoadingSpinner = false;
                     this.sendReloadGridTrigger(true);

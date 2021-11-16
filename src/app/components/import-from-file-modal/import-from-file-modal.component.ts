@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { AngularCsv } from 'angular7-csv';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: "import-from-file-modal",
@@ -101,8 +101,15 @@ export class ImportFromFileModalComponent implements OnInit {
                     this.internalRefsetId,
                     "list",
                     listOfIds.join(",")
-                )
-                .subscribe((data) => {
+            ).pipe(
+                catchError((err) => {
+                    if (err) {
+                        this.showLoadingSpinner = false;
+                    }
+
+                  return err;
+                })
+              ).subscribe((data) => {
                     this.sendReloadGridTrigger(true);
                     this.showLoadingSpinner = false;
                     if (data?.status?.includes("All concepts added")) {
@@ -120,7 +127,11 @@ export class ImportFromFileModalComponent implements OnInit {
                     }
                 });
         };
-        fileReader.readAsText(this.uploadedFile);
+        if (this.uploadedFile) {
+            fileReader.readAsText(this.uploadedFile);
+        } else {
+            this.showLoadingSpinner = false;
+        }
     }
 
     removeMembers(): void {
@@ -142,8 +153,15 @@ export class ImportFromFileModalComponent implements OnInit {
                     this.internalRefsetId,
                     "list",
                     listOfIds.join(",")
-                )
-                .subscribe(
+                ).pipe(
+                    catchError((err) => {
+                        if (err) {
+                            this.showLoadingSpinner = false;
+                        }
+    
+                      return err;
+                    })
+                  ).subscribe(
                     (data) => {
                         this.sendReloadGridTrigger(true);
                         this.showLoadingSpinner = false;
@@ -153,7 +171,11 @@ export class ImportFromFileModalComponent implements OnInit {
                     }
                 );
         };
-        fileReader.readAsText(this.uploadedFile);
+        if (this.uploadedFile) {
+            fileReader.readAsText(this.uploadedFile);
+        } else {
+            this.showLoadingSpinner = false;
+        }
     }
 
     /**

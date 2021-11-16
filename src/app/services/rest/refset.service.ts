@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Refset } from 'src/app/models/refset';
 import { Observable } from 'rxjs';
-import { RestService, RestWrapper } from './rest.service';
+import { RestService } from './rest.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { environment } from 'src/environments/environment';
+import { NotificationService } from '../notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +15,8 @@ export class RefsetService extends RestService {
     contextPath = '/refsetservice/';
     isAssigned = false;
 
-    constructor(http: HttpClient) {
-        super(http);
+    constructor(http: HttpClient, notificationService: NotificationService) {
+        super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
             this.contextPath = environment.restContextPath;
