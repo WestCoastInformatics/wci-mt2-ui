@@ -5,6 +5,7 @@ import {
     Input,
     OnInit,
     Output,
+    SimpleChanges,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -40,7 +41,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     };
     conceptDetail: any;
     conceptDescriptions: any;
-    refsetData: any;
     editMode = true;
     showResults = false;
     conceptSelected: boolean;
@@ -50,9 +50,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     numOfChildren = undefined;
     isConceptBeingAdded: Boolean;
     isAddRemoveInDetailsPanel: Boolean;
+    addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
+    refsetInternalId: string;
 
-    @Input() internalRefsetId: string;
+    @Input() refset: any;
     @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() loadingSpinner = new EventEmitter<any>(true);
 
@@ -63,12 +65,18 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.refsetService
-            .getRefset(this.internalRefsetId)
-            .subscribe((results) => {
-                this.refsetData = results;
-            });
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+
+		for (const propertyName in changes) {
+
+			if (propertyName === "refset" && CodeUtility.hasValue(this.refset)) {
+				
+                this.refsetInternalId = this.refset.id;
+			}
+		}
+	}
 
     toggleDisplayActiveConcepts($event: any): void {
 
@@ -92,17 +100,18 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.reloadPageData.emit();
     }
 
-    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
+    addRemoveConcept(params: any): void {
 
-        this.isConceptBeingAdded = new Boolean(addConcept);
+        this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
-        if (isInDetailsPanel) {
-            concept.hasChildren = true;
+        if (params.isInDetailsPanel) {
+            params.concept.hasChildren = true;
         }
 
-        this.conceptForAddRemove = concept;
-        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
+        this.conceptForAddRemove = params.concept;
+        this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+        this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
     processChangedMemberEffects = () => {
@@ -151,7 +160,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.refsetService
             .getMembersDetails(concept.code, {
-                refsetInternalId: this.internalRefsetId,
+                refsetInternalId: this.refsetInternalId,
             })
             .subscribe((results) => {
 
@@ -162,7 +171,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                         return description != null;
                     });
 
-                RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+                RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refset.edition.fullyQualifiedLanguageRefsets);
             });
     }
 
@@ -180,7 +189,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         // load the parents
         this.refsetService
-            .getConceptList(this.internalRefsetId, restParams)
+            .getConceptList(this.refsetInternalId, restParams)
             .subscribe((results) => {
                 this.conceptDetailParents = results.items;
             });
@@ -230,7 +239,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     openEclBuilder(fieldId) {
         UiUtility.openEclBuilder(
             fieldId,
-            RefsetUtility.getBranchPath(this.refsetData)
+            RefsetUtility.getBranchPath(this.refset)
         );
     }
 
@@ -249,7 +258,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             
             this.refsetService
                 .getConceptSearch(
-                    this.internalRefsetId,
+                    this.refsetInternalId,
                     `limit=500&editing=true&offset=0&query=${this.searchInput}`
                 )
                 .subscribe(

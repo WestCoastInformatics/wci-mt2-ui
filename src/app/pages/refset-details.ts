@@ -143,6 +143,7 @@ export class RefsetDetails {
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
     isConceptBeingAdded: Boolean;
     isAddRemoveInDetailsPanel: Boolean;
+    addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
@@ -1016,17 +1017,18 @@ export class RefsetDetails {
 
     //***** General Functions *****/
 
-    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
+    addRemoveConcept(params: any): void {
 
-        this.isConceptBeingAdded = new Boolean(addConcept);
+        this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
-        if (isInDetailsPanel) {
-            concept.hasChildren = true;
+        if (params.isInDetailsPanel) {
+            params.concept.hasChildren = true;
         }
 
-        this.conceptForAddRemove = concept;
-        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
+        this.conceptForAddRemove = params.concept;
+        this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+        this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
     processChangedMemberEffects = () => {

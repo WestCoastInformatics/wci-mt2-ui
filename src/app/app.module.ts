@@ -75,6 +75,7 @@ import { ReadyForPublicationModalComponent } from './components/ready-for-public
 import { ReadyForReviewModalComponent } from './components/ready-for-review-modal/ready-for-review-modal.component';
 import { WorkflowHistoryNotesModalComponent } from './components/workflow-history-notes-modal/workflow-history-notes-modal.component';
 import { AddRemoveConceptsComponent } from './components/add-remove-concepts/add-remove-concepts.component';
+import { AddRemoveConceptsIconsComponent } from './components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AuthGuardGuard } from './services/authentication/auth-guard.guard';
 import { LoginComponent } from './auth/login/login.component';
 
@@ -114,6 +115,7 @@ const appRoutes: Routes = [
         ReadyForReviewModalComponent,
         WorkflowHistoryNotesModalComponent,
         AddRemoveConceptsComponent,
+        AddRemoveConceptsIconsComponent,
         LoginComponent
     ],
     imports: [

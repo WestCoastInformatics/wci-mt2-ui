@@ -19,28 +19,7 @@
 >
         <ng-template #treeNodeTemplate let-node let-index="index">
             <ng-container *ngIf="editMode">
-                <img
-                [hidden]="node?.data.memberOfRefset"
-                src="assets/add-symbol-icon.svg"
-                (click)="addRemoveConcept(true, node?.data)"
-                width="18px"
-                height="18px"
-                title="Add Member"
-                aria-label="Add"
-                class="add-symbol-icon"
-                alt="Add symbol shown when you're able to add a concept"
-            />
-            <img
-                [hidden]="!node?.data.memberOfRefset"
-                src="assets/subtract-symbol-icon.svg"
-                (click)="addRemoveConcept(false, node?.data)"
-                width="18px"
-                height="18px"
-                title="Remove Member"
-                aria-label="Subtract"
-                class="subtract-symbol-icon"
-                alt="Subtract symbol shown when you're able to remove a concept"
-            />
+                <add-remove-concepts-icons [concept]="node?.data" [isInDetailsPanel]="isInDetailsPanel" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
             </ng-container>
             <img
                 *ngIf="node.data.defined"
@@ -68,6 +47,6 @@
     </tree-root>
 </div>
 <add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
-    [refsetInternalId]="refset?.id" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+    [refset]="refset" [definitionExceptionType]="addRemoveDefinitionExceptionType" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
 </add-remove-concepts>
 <scroll-top></scroll-top>

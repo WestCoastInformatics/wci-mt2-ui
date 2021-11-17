@@ -111,39 +111,8 @@
                                                [dataSource]="dataSource"
                                                class="mat-elevation-z8">
                                             <ng-container matColumnDef="memberOfRefset">
-                                                <td class="
-                                                        add-remove-concept-hierarchy-modal-table-first-column
-                                                    "
-                                                    mat-cell
-                                                    *matCellDef="let concept">
-                                                    <img [hidden]="
-                                                            concept?.memberOfRefset
-                                                        "
-                                                         src="assets/add-symbol-icon.svg"
-                                                         (click)="
-                                                            addRemoveConcept(
-                                                                true,
-                                                                concept,
-                                                                false
-                                                            )
-                                                        "
-                                                         title="Add Member"
-                                                         aria-label="Add"
-                                                         alt="Add symbol shown when you're able to add a concept" />
-                                                    <img [hidden]="
-                                                            !concept?.memberOfRefset
-                                                        "
-                                                         src="assets/subtract-symbol-icon.svg"
-                                                         (click)="
-                                                            addRemoveConcept(
-                                                                false,
-                                                                concept,
-                                                                false
-                                                            )
-                                                        "
-                                                         title="Remove Member"
-                                                         aria-label="Subtract"
-                                                         alt="Subtract symbol shown when you're able to remove a concept" />
+                                                <td class="add-remove-concept-hierarchy-modal-table-first-column" mat-cell *matCellDef="let concept">
+                                                    <add-remove-concepts-icons [concept]="concept" [isInDetailsPanel]="false" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
                                                 </td>
                                             </ng-container>
 
@@ -303,47 +272,15 @@
                                              *ngFor="
                                                 let parent of conceptDetailParents
                                             ">
-                                            <div class="
-                                                    refset-tool-concept-details-taxonomy-icon
-                                                ">
-                                                <img [hidden]="
-                                                        parent?.memberOfRefset
-                                                    "
-                                                     src="assets/add-symbol-icon.svg"
-                                                     (click)="
-                                                        addRemoveConcept(
-                                                            true,
-                                                            parent,
-                                                            true
-                                                        )
-                                                    "
-                                                     width="18px"
-                                                     height="18px"
-                                                     title="Add Member"
-                                                     aria-label="Add"
-                                                     class="add-symbol-icon"
-                                                     alt="Add symbol shown when you're able to add a concept" />
-                                                <img [hidden]="
-                                                        !parent?.memberOfRefset
-                                                    "
-                                                     src="assets/subtract-symbol-icon.svg"
-                                                     (click)="
-                                                        addRemoveConcept(
-                                                            false,
-                                                            parent,
-                                                            true
-                                                        )
-                                                    "
-                                                     width="18px"
-                                                     height="18px"
-                                                     title="Remove Member"
-                                                     aria-label="Subtract"
-                                                     class="subtract-symbol-icon"
-                                                     alt="Subtract symbol shown when you're able to remove a concept" />
+                                            <div class="refset-tool-concept-details-taxonomy-icon">
+
+                                                <add-remove-concepts-icons [concept]="parent" [isInDetailsPanel]="true" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
+                                                
                                                 <img *ngIf="parent?.defined"
                                                      title="Fully Defined"
                                                      aria-label="Fully Defined"
                                                      src="/assets/linedTaxonomyIcon.png" />
+
                                                 <img *ngIf="!parent?.defined"
                                                      title="Primitive"
                                                      aria-label="Primitive"
@@ -522,7 +459,7 @@
                                         <div class="container-fluid">
                                             <app-taxonomy-tree #childrenMembersTaxonomy
                                                                treeId="childrenMembersTree"
-                                                               [refset]="refsetData"
+                                                               [refset]="refset"
                                                                [editMode]="editMode"
                                                                [rootNode]="conceptDetail"
                                                                [options]="taxonomyOptions"
@@ -575,7 +512,8 @@
                          [conceptCode]="conceptForAddRemove?.code"
                          [conceptName]="conceptForAddRemove?.name"
                          [conceptHasChildren]="conceptForAddRemove?.hasChildren"
-                         [refsetInternalId]="internalRefsetId"
+                         [refset]="refset"
+                         [definitionExceptionType]="addRemoveDefinitionExceptionType"
                          (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)"
                          (processChangedMemberEffects)="processChangedMemberEffects()">
     </add-remove-concepts>
