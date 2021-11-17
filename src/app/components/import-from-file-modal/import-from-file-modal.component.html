@@ -130,6 +130,7 @@
         style="align-self: center"
     >
         <button
+            *ngIf="!showBanner"
             type="button"
             (click)="addMembers()"
             mat-raised-button
@@ -143,6 +144,7 @@
             Add Members
         </button>
         <button
+            *ngIf="!showBanner"
             type="button"
             (click)="removeMembers()"
             mat-raised-button

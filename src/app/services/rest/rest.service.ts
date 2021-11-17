@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { environment } from 'src/environments/environment';
+import { catchError } from 'rxjs/operators';
+import { NotificationService } from '../notification.service';
 
 export class RestWrapper<T> {
     totalResults: number;
@@ -19,7 +21,8 @@ export class RestService {
 
     restUrl = environment.restUrl;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+    private readonly notificationService: NotificationService) {
     }
 
     makeCall(url: string, method: string = 'get'): Observable<any> {
@@ -44,15 +47,38 @@ export class RestService {
 
         queryString = CodeUtility.addIfNotEmpty(queryString, '?', false);
 
-        return this.http.get<any>(this.restUrl + url + queryString);
+        return this.http.get<any>(this.restUrl + url + queryString).pipe(
+            catchError((err) => {
+                const definedError = err?.error?.error ? err?.error?.error : err?.statusText;
+                // tslint:disable-next-line: max-line-length
+                this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+
+              return err;
+            })
+          );
     }
 
     post(url: string, params: any): Observable<any> {
-            return this.http.post<any>(this.restUrl + url, params);
+            return this.http.post<any>(this.restUrl + url, params).pipe(
+                catchError((err) => {
+                    const definedError = err.error.error ? err.error.error : err.statusText;
+                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+
+                    return err;
+                })
+              );
     }
 
     put(url: string, params: any): Observable<any> {
-        return this.http.put<any>(this.restUrl + url, params);
+        return this.http.put<any>(this.restUrl + url, params).pipe(
+            catchError((err) => {
+                const definedError = err?.error?.error ? err?.error?.error : err?.statusText;
+                // tslint:disable-next-line: max-line-length
+                this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+
+              return err;
+            })
+          );
     }
 
     getHttpClient(): HttpClient {

@@ -48,7 +48,7 @@
             </div>
             <mat-form-field class="add-by-list-text-area" appearance="outline">
                 <p *ngIf="!successfulImport && showBanner">
-                    <ngb-alert type="warning"
+                    <ngb-alert [dismissible]="false" type="warning"
                                (click)="showBanner = false">
                         <div class="warning-header">
                             <span class="material-icons warning-logo">
@@ -65,7 +65,7 @@
                         </ngb-alert>
                 </p>
                 <p *ngIf="successfulImport && showBanner">
-                    <ngb-alert type="success"
+                    <ngb-alert [dismissible]="false" type="success"
                                (click)="showBanner = false">
                         <div class="success-header">
                             <span class="material-icons success-logo">
@@ -88,7 +88,9 @@
         </div>
     </div>
     <div class="modal-footer import-from-list-modal-footer">
-        <button type="button"
+        <button 
+                *ngIf="!showBanner"
+                type="button"
                 (click)="addMembers()"
                 mat-raised-button
                 color="primary"
@@ -99,7 +101,9 @@
                 ng-reflect-color="primary">
             Add Members
         </button>
-        <button type="button"
+        <button 
+                *ngIf="!showBanner"
+                type="button"
                 (click)="removeMembers()"
                 mat-raised-button
                 color="primary"
