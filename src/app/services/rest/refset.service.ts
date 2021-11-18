@@ -47,6 +47,10 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&conceptIds=${conceptIds}&ecl=${ecl}`, '');
     }
 
+    removeRefsetDefinitionException(refsetInternalId: string, definitionExceptionID: string): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/removeDefinitionException/${definitionExceptionID}`, '');
+    }
+
     editRefsetMembers(refsetInternalId: string, params): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetInternalId}`, params);
     }

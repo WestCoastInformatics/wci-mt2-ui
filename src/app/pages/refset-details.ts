@@ -26,6 +26,7 @@ import { WorkflowService } from "../services/workflow/workflow.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
+import { Refset } from "../models/refset";
 
 /**
  * @title Tree with nested nodes
@@ -261,6 +262,16 @@ export class RefsetDetails {
             };
 
             this.showTable = true;
+
+            // If the member grid data is present manually reload the grid or it won't update
+            if (CodeUtility.hasValue(this.membersGridData)) {
+                this.onMembersGridReady(this.originalGridParams);
+            }
+
+            // If concept details is loaded manually reload it
+            if (CodeUtility.hasValue(this.conceptDetail)) {
+                this.loadConceptDetail(this.conceptDetail);
+            }
         });
 
         // call forkJoin on returned observables
@@ -1035,16 +1046,23 @@ export class RefsetDetails {
 
         this.showLoadingSpinner = true;
 
-        if (this.isAddRemoveInDetailsPanel) {
-
-            this.loadConceptDetail(this.selectedConcept);
-            this.reloadMembersGridAndTaxonomy();
+        if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
+            this.initializeDetailsPage();
 
         } else {
 
-            this.reloadMembersGridAndTaxonomy();
-            this.showLoadingSpinner = false;
-        } 
+            if (this.isAddRemoveInDetailsPanel) {
+
+                this.loadConceptDetail(this.selectedConcept);
+                this.reloadMembersGridAndTaxonomy();
+    
+            } else {
+    
+                this.reloadMembersGridAndTaxonomy();
+                this.showLoadingSpinner = false;
+            } 
+        }
+        
     }
     
     reloadMembersGridAndTaxonomy(){

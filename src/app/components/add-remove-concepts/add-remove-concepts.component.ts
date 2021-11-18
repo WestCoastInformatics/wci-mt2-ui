@@ -22,6 +22,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() isAdd: boolean;
 	@Input() refset: any;
 	@Input() definitionExceptionType: string;
+	@Input() definitionExceptionId: string;
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
@@ -85,8 +86,48 @@ export class AddRemoveConceptsComponent implements OnInit {
                 
         this.sendLoadingSpinnerTrigger.emit(true);
 
-		// if this is not an intensional refset
-		if (this.refset.type != RefsetUtility.INTENSIONAL) {
+		// if this is an intensional refset
+		if (this.refset.type == RefsetUtility.INTENSIONAL) {
+
+			if (this.isAdd) {
+
+				let encodedPipe = '%7C';
+				ecl = this.conceptCode + ' ' + encodedPipe + ' ' + this.conceptName + ' ' + encodedPipe;
+				
+				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe(
+					
+					(data) => {
+	
+						console.log("data: ", data);
+						this.processChangedMemberEffects.emit();
+					},
+					(error) => {
+	
+						console.log(error);
+						this.sendLoadingSpinnerTrigger.emit(false);
+					}
+				);
+	
+			} else {
+	
+				this.refsetService.removeRefsetDefinitionException(this.refsetInternalId, this.definitionExceptionId).subscribe(
+	
+					(data) => {
+	
+						console.log("data: ", data);
+						this.processChangedMemberEffects.emit();
+					},
+					(error) => {
+	
+						console.log(error);
+						this.sendLoadingSpinnerTrigger.emit(false);
+					}
+				);
+			}
+		}
+
+		// if this is an extensional or external refset
+		else {
 
 			if (this.isAdd) {
 
@@ -122,45 +163,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 			}
 		}
 
-		// if this is an intensional refset
-		else {
-
-			if (this.isAdd) {
-
-				let encodedPipe = '%7C';
-				ecl = this.conceptCode + ' ' + encodedPipe + ' ' + this.conceptName + ' ' + encodedPipe;
-				
-				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe(
-					
-					(data) => {
-	
-						console.log("data: ", data);
-						this.processChangedMemberEffects.emit();
-					},
-					(error) => {
-	
-						console.log(error);
-						this.sendLoadingSpinnerTrigger.emit(false);
-					}
-				);
-	
-			} else {
-	
-				this.refsetService.removeRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
-	
-					(data) => {
-	
-						console.log("data: ", data);
-						this.processChangedMemberEffects.emit();
-					},
-					(error) => {
-	
-						console.log(error);
-						this.sendLoadingSpinnerTrigger.emit(false);
-					}
-				);
-			}
-		}
+		
     }
 
 	openAddRemoveDescendantsModal() {

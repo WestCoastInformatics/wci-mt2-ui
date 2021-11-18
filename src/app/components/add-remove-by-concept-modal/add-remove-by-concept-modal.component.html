@@ -288,16 +288,8 @@
                                                      src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div class="
-                                                    col
-                                                    refset-tool-concept-details-taxonomy-description
-                                                "
-                                                 [class.bold-if-member]="
-                                                    concept?.memberOfRefset
-                                                "
-                                                 [class.greyed-if-not-member]="
-                                                    !concept?.memberOfRefset
-                                                ">
+                                            <div class="col refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
+                                                 [class.greyed-if-not-member]="!parent?.memberOfRefset">
                                                 <span *ngIf="
                                                         this.taxonomyOptions
                                                             ?.useFsn
@@ -514,6 +506,7 @@
                          [conceptHasChildren]="conceptForAddRemove?.hasChildren"
                          [refset]="refset"
                          [definitionExceptionType]="addRemoveDefinitionExceptionType"
+                         [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
                          (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)"
                          (processChangedMemberEffects)="processChangedMemberEffects()">
     </add-remove-concepts>

@@ -183,12 +183,9 @@
                                  aria-label="Compare Refset" />
                         </button>
 
-                        <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')"
-                                           [status]="refsetStatus"
-                                           [isDetailsPage]="true"
-                                           [editMode]="editMode"
-                                           [refsetId]="id"
-                                           [inputProperties]="editMetadataProperties"></create-new-refset>
+                        <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
+                            [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
+                        </create-new-refset>
 
                         <button class="refset-tool-standard-icon-button"
                                 [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
@@ -1159,11 +1156,8 @@
                                                      src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div class="
-                                                    col
-                                                    refset-tool-concept-details-taxonomy-description
-                                                "
-                                                 (click)="loadConceptDetail(parent)">
+                                            <div class="col refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset" 
+                                                [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
                                                 <!--
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
@@ -1386,6 +1380,7 @@
                      [conceptHasChildren]="conceptForAddRemove?.hasChildren"
                      [refset]="refsetData"
                      [definitionExceptionType]="addRemoveDefinitionExceptionType"
+                     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
                      (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)"
                      (processChangedMemberEffects)="processChangedMemberEffects()">
 </add-remove-concepts>

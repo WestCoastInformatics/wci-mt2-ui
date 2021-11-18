@@ -1,6 +1,7 @@
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <div class="container-fluid refset-tool-taxonomy" style="margin-left: -30px; height: fit-content;">
+    
     <div class="row" *ngIf="isLoading">
         <div>Loading...</div>
     </div>
@@ -9,44 +10,29 @@
         <div>No children</div>
     </div>
 
-    <tree-root
-        [id]="treeId"
-        [nodes]="nodes"
-        [options]="configOptions"
-        (activate)="configOptions.onSelect($event)"
-        (updateData)="onInitTree($event)"
-        (loadNodeChildren)="onLoadNodeChildren($event)"
->
+    <tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)" (loadNodeChildren)="onLoadNodeChildren($event)">
+
         <ng-template #treeNodeTemplate let-node let-index="index">
+
             <ng-container *ngIf="editMode">
                 <add-remove-concepts-icons [concept]="node?.data" [isInDetailsPanel]="isInDetailsPanel" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
             </ng-container>
-            <img
-                *ngIf="node.data.defined"
-                title="Fully Defined"
-                aria-label="Fully Defined"
-                src="/assets/linedTaxonomyIcon.png"
-            />
-            <img
-                *ngIf="!node.data.defined"
-                title="Primitive"
-                aria-label="Primitive"
-                src="/assets/unlinedTaxonomyIcon.png"
-            />
-            <span
-                id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}"
-                class="taxonomy-code-text"
-                [class.bold-if-member]="node?.data?.memberOfRefset && editMode"
-                [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
-                (dblclick)="sendConceptDetailTrigger(node.data);"
-                title="{{ getNodeText(node) }}"
-                aria-label="{{ getNodeText(node) }}"
-                >{{ getNodeText(node) }}</span
-            >
+
+            <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+            <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
+
+            <span id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}" class="taxonomy-code-text" 
+                [class.bold-if-member]="node?.data?.memberOfRefset && editMode" [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
+                (dblclick)="sendConceptDetailTrigger(node.data);" title="{{ getNodeText(node) }}" aria-label="{{ getNodeText(node) }}">
+                {{ getNodeText(node) }}
+            </span>
+
         </ng-template>
     </tree-root>
 </div>
+
 <add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
-    [refset]="refset" [definitionExceptionType]="addRemoveDefinitionExceptionType" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+    [refset]="refset" [definitionExceptionType]="addRemoveDefinitionExceptionType" [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
 </add-remove-concepts>
+
 <scroll-top></scroll-top>
