@@ -88,45 +88,19 @@
         </div>
     </div>
     <div class="modal-footer import-from-list-modal-footer">
-        <button 
-                *ngIf="!showBanner"
-                type="button"
-                (click)="addMembers()"
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                class="refset-tool-action-button"
-                aria-label="Add Members"
-                title="Add Members"
-                ng-reflect-color="primary">
+
+        <button *ngIf="!showBanner" type="button" (click)="addMembers()" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
+                aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
             Add Members
         </button>
-        <button 
-                *ngIf="!showBanner"
-                type="button"
-                (click)="removeMembers()"
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                class="
-                                refset-tool-action-button
-                                import-from-list-remove-members-button
-                            "
-                aria-label="Remove Members"
-                title="Remove Members"
-                ng-reflect-color="primary">
+
+        <button *ngIf="!showBanner && !isIntensional" type="button" (click)="removeMembers()" mat-raised-button color="primary" aria-hidden="false"
+                class="refset-tool-action-button import-from-list-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="primary">
             Remove Members
         </button>
-        <button *ngIf="showBanner"
-                type="button"
-                (click)="createImportReport()"
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                class="refset-tool-action-download-report-button"
-                aria-label="Import Details Report"
-                title="Import Details Report"
-                ng-reflect-color="primary">
+
+        <button *ngIf="showBanner" type="button" (click)="createImportReport()" mat-raised-button color="primary" aria-hidden="false" aria-label="Import Details Report"
+                class="refset-tool-action-download-report-button" title="Import Details Report" ng-reflect-color="primary">
             Download Report
         </button>
     </div>

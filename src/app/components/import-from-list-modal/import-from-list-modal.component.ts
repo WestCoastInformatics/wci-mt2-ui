@@ -13,21 +13,22 @@ import { catchError } from 'rxjs/operators';
     templateUrl: "./import-from-list-modal.component.html",
 })
 export class ImportFromListModalComponent {
+
     files: any[] = [];
     listOfIds: any;
     showLoadingSpinner = false;
-
-    @Input()
-    internalRefsetId: string;
-
-    @Output()
-    reloadGrid = new EventEmitter<boolean>();
     showBanner = false;
     successfulImport = false;
     numOfIds: any;
     failedIds: any;
     allIds: string[];
     failedIdNames: string[];
+
+    @Input() internalRefsetId: string;
+    @Input() isIntensional: boolean = false;
+
+    @Output() reloadGrid = new EventEmitter<boolean>();
+    
 
     constructor(
         private modalService: NgbModal,

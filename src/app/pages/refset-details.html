@@ -752,27 +752,26 @@
                 </div>
             </div>
         </div>
+
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
+
             Reference Set Members
             <span [hidden]="!membersGridNumberOfResults">
-                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}</span>
-            <div class="set-of-buttons"
-                 *ngIf="editMode && !readonlyMode">
-                <import-from-file-modal [internalRefsetId]="id"
-                                        (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
-                <import-from-list-modal [internalRefsetId]="id"
-                                        (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
-                <add-remove-by-concept-modal [refset]="refsetData"
-                                             (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                                             (loadingSpinner)="toggleLoadingSpinner($event)"></add-remove-by-concept-modal>
-                <button (click)="openEclBuilder('detailsTableSearchInput')"
-                        #detailsTableSearchEclButton
-                        class="button-inactive">
-                    <img src="assets/wrench-icon.svg"
-                         alt="wrench icon"
-                         title="Open ECL Builder"
-                         aria-label="ECL Builder" />
+                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}
+            </span>
+
+            <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
+
+                <import-from-file-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
+
+                <import-from-list-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
+
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="reloadMembersGridAndTaxonomy()" (loadingSpinner)="toggleLoadingSpinner($event)">
+                </add-remove-by-concept-modal>
+
+                <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput')" class="button-inactive">
+                    <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
                 </button>
             </div>
         </div>

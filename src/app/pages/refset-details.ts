@@ -40,6 +40,7 @@ export class RefsetDetails {
 
     id: string;
     refsetId = "";
+    isIntensional: boolean = false;
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
@@ -354,6 +355,7 @@ export class RefsetDetails {
 
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
+            this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetData = results;
             this.refsetService.setRefsetInformation(this.refsetData?.assignedUser ? true : false);
 

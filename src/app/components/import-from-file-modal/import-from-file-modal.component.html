@@ -144,7 +144,7 @@
             Add Members
         </button>
         <button
-            *ngIf="!showBanner"
+            *ngIf="!showBanner && !isIntensional"
             type="button"
             (click)="removeMembers()"
             mat-raised-button
