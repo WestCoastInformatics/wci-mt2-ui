@@ -14,8 +14,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	actionText: string;
 	refsetInternalId: string;
 	options = [
-		{ value: '<< ', display: '\<\<       (Decendants and Self)' },
-		{ value: '< ', display: '\<       (Decendants Only) ' },
+		{ value: '<< ', display: '\<\<       (Descendants and Self)' },
+		{ value: '< ', display: '\<       (Descendants Only) ' },
 		{ value: '', display: '\=       (Self Only)' }
 	];
 
