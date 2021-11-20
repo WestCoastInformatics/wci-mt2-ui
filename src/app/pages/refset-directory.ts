@@ -137,7 +137,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             },
             enableBrowserTooltips: true,
             defaultColDef: {
-                sortable: false,
+                sortable: true,
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },

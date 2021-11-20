@@ -133,7 +133,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 				'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
-                sortable: false,
+                sortable: true,
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
