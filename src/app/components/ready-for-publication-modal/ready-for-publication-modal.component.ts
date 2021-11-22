@@ -22,8 +22,8 @@ export class ReadyForPublicationModalComponent implements OnInit {
 
   openreadyForPublicationModal(readyForPublicationDialog: NgbModal) {
     this.modalService.open(readyForPublicationDialog, {
-      backdrop : 'static',
-      keyboard : false,
+      backdrop: 'static',
+      keyboard: false,
       windowClass: 'ready-for-publication-modal'
     });
   }
