@@ -363,10 +363,18 @@
                        title="Open Audit Trail"
                        aria-label="Audit Trail">Audit Trail</a>
                 </div>
-                <img src="assets/collapse-plus-icon.svg"
+                <img src="assets/collapse-minus-icon.svg"
+                    *ngIf="!hideMetadataTable"
                      alt="Collapse Button"
                      title="Collapse Metadata"
                      aria-label="Collapse Button"
+                     class="collapse-minus-icon"
+                     (click)="metadataCollapseTrigger()" />
+                <img src="assets/collapse-plus-icon.svg"
+                    *ngIf="hideMetadataTable"
+                     alt="Uncollapse Button"
+                     title="Uncollapse Metadata"
+                     aria-label="Uncollapse Button"
                      class="collapse-plus-icon"
                      (click)="metadataCollapseTrigger()" />
             </div>
@@ -670,10 +678,18 @@
                                                       [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0]?.notes"></workflow-history-notes-modal>
                     </div>
                 </div>
-                <img src="assets/collapse-plus-icon.svg"
+                <img src="assets/collapse-minus-icon.svg"
+                    *ngIf="!hideWorkflowTable"
                      alt="Collapse Button"
                      title="Collapse Workflow History"
                      aria-label="Collapse Button"
+                     class="collapse-minus-icon"
+                     (click)="workflowCollapseTrigger()" />
+                <img src="assets/collapse-plus-icon.svg"
+                     *ngIf="hideWorkflowTable"
+                     alt="Uncollapse Button"
+                     title="Uncollapse Workflow History"
+                     aria-label="Uncollapse Button"
                      class="collapse-plus-icon"
                      (click)="workflowCollapseTrigger()" />
             </div>
