@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
         }
         for (const role of this.user?.roles) {
             if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
-                projectRoles.push(role);
+                projectRoles.push(role.toLowerCase().charAt(0).toUpperCase() + role.toLowerCase().slice(1));
             }
         }
 
