@@ -73,7 +73,7 @@
                                              title="Open ECL Builder"
                                              aria-label="ECL Builder" />
                                     </button>
-
+                                        <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults"
                                              class="
                                             add-remove-concept-hierarchy-modal-active-slider-section

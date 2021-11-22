@@ -57,6 +57,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     @Input() refset: any;
     @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() loadingSpinner = new EventEmitter<any>(true);
+    showNoResultsLabel = false;
 
     constructor(
         private readonly modalService: NgbModal,
@@ -218,6 +219,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.onTableSearchChange(false);
         this.conceptSelected = false;
         this.conceptDetail = null;
+        this.showResults = false;
+        this.showNoResultsLabel = false;
     }
 
     clearSearch(): void {
@@ -245,17 +248,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
-        
         if (
-            !CodeUtility.hasValue(this.searchInput) ||
+            CodeUtility.hasValue(this.searchInput) ||
             (CodeUtility.hasValue(this.searchInput) &&
                 this.searchInput.length > 2)
         ) {
-
             if (showLoadingSpinner) {
                 this.loadingSpinner.emit(true);
             }
-            
+
             this.refsetService
                 .getConceptSearch(
                     this.refsetInternalId,
@@ -267,15 +268,16 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
                         this.dataSource = results.items;
                         this.initialResults = this.dataSource;
-                        
+
                         // tslint:disable-next-line: no-unused-expression
                         if (results.items.length) {
                             this.changeModalSize();
                             this.showResults = true;
+                            this.showNoResultsLabel = false;
                         } else {
                             this.showResults = false;
+                            this.showNoResultsLabel = true;
                         }
-
                         this.filterActiveConcepts();
 
                         if (showLoadingSpinner) {
