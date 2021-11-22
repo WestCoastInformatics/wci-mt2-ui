@@ -1,0 +1,21 @@
+<img [hidden]="!showAdd || hidden"
+        src="assets/add-symbol-icon.svg"
+        (click)="onSelection(true)"
+        width="18px"
+        height="18px"
+        title="Add {{actionText}}"
+        aria-label="Add"
+        class="add-symbol-icon"
+        alt="Add symbol shown when you're able to add a concept" 
+/>
+
+<img [hidden]="showAdd || hidden"
+        src="assets/subtract-symbol-icon.svg"
+        (click)="onSelection(false)"
+        width="18px"
+        height="18px"
+        title="Remove {{actionText}}"
+        aria-label="Subtract"
+        class="subtract-symbol-icon"
+        alt="Subtract symbol shown when you're able to remove a concept" 
+/>

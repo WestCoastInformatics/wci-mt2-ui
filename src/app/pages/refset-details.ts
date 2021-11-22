@@ -26,6 +26,7 @@ import { WorkflowService } from "../services/workflow/workflow.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
+import { Refset } from "../models/refset";
 
 /**
  * @title Tree with nested nodes
@@ -39,6 +40,7 @@ export class RefsetDetails {
 
     id: string;
     refsetId = "";
+    isIntensional: boolean = false;
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
@@ -143,6 +145,7 @@ export class RefsetDetails {
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
     isConceptBeingAdded: Boolean;
     isAddRemoveInDetailsPanel: Boolean;
+    addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     reviewNotesAdded = false;
 
@@ -261,6 +264,16 @@ export class RefsetDetails {
             };
 
             this.showTable = true;
+
+            // If the member grid data is present manually reload the grid or it won't update
+            if (CodeUtility.hasValue(this.membersGridData)) {
+                this.onMembersGridReady(this.originalGridParams);
+            }
+
+            // If concept details is loaded manually reload it
+            if (CodeUtility.hasValue(this.conceptDetail)) {
+                this.loadConceptDetail(this.conceptDetail);
+            }
         });
 
         // call forkJoin on returned observables
@@ -343,6 +356,7 @@ export class RefsetDetails {
 
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
+            this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetData = results;
             this.refsetService.setRefsetInformation(this.refsetData?.assignedUser ? true : false);
 
@@ -1025,33 +1039,41 @@ export class RefsetDetails {
 
     //***** General Functions *****/
 
-    addRemoveConcept(addConcept: boolean, concept: any = null, isInDetailsPanel: boolean = false): void {
+    addRemoveConcept(params: any): void {
 
-        this.isConceptBeingAdded = new Boolean(addConcept);
+        this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
-        if (isInDetailsPanel) {
-            concept.hasChildren = true;
+        if (params.isInDetailsPanel) {
+            params.concept.hasChildren = true;
         }
 
-        this.conceptForAddRemove = concept;
-        this.isAddRemoveInDetailsPanel = isInDetailsPanel;
+        this.conceptForAddRemove = params.concept;
+        this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+        this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
     processChangedMemberEffects = () => {
 
         this.showLoadingSpinner = true;
 
-        if (this.isAddRemoveInDetailsPanel) {
-
-            this.loadConceptDetail(this.selectedConcept);
-            this.reloadMembersGridAndTaxonomy();
+        if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
+            this.initializeDetailsPage();
 
         } else {
 
-            this.reloadMembersGridAndTaxonomy();
-            this.showLoadingSpinner = false;
-        } 
+            if (this.isAddRemoveInDetailsPanel) {
+
+                this.loadConceptDetail(this.selectedConcept);
+                this.reloadMembersGridAndTaxonomy();
+    
+            } else {
+    
+                this.reloadMembersGridAndTaxonomy();
+                this.showLoadingSpinner = false;
+            } 
+        }
+        
     }
     
     reloadMembersGridAndTaxonomy(){

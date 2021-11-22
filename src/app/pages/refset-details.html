@@ -183,12 +183,9 @@
                                  aria-label="Compare Refset" />
                         </button>
 
-                        <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')"
-                                           [status]="refsetStatus"
-                                           [isDetailsPage]="true"
-                                           [editMode]="editMode"
-                                           [refsetId]="id"
-                                           [inputProperties]="editMetadataProperties"></create-new-refset>
+                        <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
+                            [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
+                        </create-new-refset>
 
                         <button class="refset-tool-standard-icon-button"
                                 [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
@@ -757,27 +754,26 @@
                 </div>
             </div>
         </div>
+
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name">
+
             Reference Set Members
             <span [hidden]="!membersGridNumberOfResults">
-                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}</span>
-            <div class="set-of-buttons"
-                 *ngIf="editMode && !readonlyMode">
-                <import-from-file-modal [internalRefsetId]="id"
-                                        (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
-                <import-from-list-modal [internalRefsetId]="id"
-                                        (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
-                <add-remove-by-concept-modal [internalRefsetId]="id"
-                                             (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                                             (loadingSpinner)="toggleLoadingSpinner($event)"></add-remove-by-concept-modal>
-                <button (click)="openEclBuilder('detailsTableSearchInput')"
-                        #detailsTableSearchEclButton
-                        class="button-inactive">
-                    <img src="assets/wrench-icon.svg"
-                         alt="wrench icon"
-                         title="Open ECL Builder"
-                         aria-label="ECL Builder" />
+                &nbsp;{{'(' + membersGridNumberOfResults + ')'}}
+            </span>
+
+            <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
+
+                <import-from-file-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
+
+                <import-from-list-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
+
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="reloadMembersGridAndTaxonomy()" (loadingSpinner)="toggleLoadingSpinner($event)">
+                </add-remove-by-concept-modal>
+
+                <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput')" class="button-inactive">
+                    <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
                 </button>
             </div>
         </div>
@@ -954,27 +950,11 @@
                                     </app-pagination>
 
                                     <!-- Concept Code Templates -->
-                                    <ng-template #conceptCodeSection
-                                                 let-params>
-                                        <img [hidden]="params?.data?.memberOfRefset || !editMode || readonlyMode"
-                                             src="assets/add-symbol-icon.svg"
-                                             (click)="addRemoveConcept(true, params?.data, false)"
-                                             width="18px"
-                                             height="18px"
-                                             title="Add Member"
-                                             aria-label="Add"
-                                             class="add-symbol-icon"
-                                             alt="Add symbol shown when you're able to add a concept" />
-                                        <img [hidden]="!params?.data?.memberOfRefset || !editMode || readonlyMode"
-                                             src="assets/subtract-symbol-icon.svg"
-                                             (click)="addRemoveConcept(false, params?.data, false)"
-                                             width="18px"
-                                             height="18px"
-                                             title="Remove Member"
-                                             aria-label="Subtract"
-                                             class="subtract-symbol-icon"
-                                             alt="Subtract symbol shown when you're able to remove a concept" />
+                                    <ng-template #conceptCodeSection let-params>
+
+                                        <add-remove-concepts-icons [concept]="params?.data" [hidden]="!editMode || readonlyMode" [isInDetailsPanel]="false" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
                                         {{ params?.data?.code }}
+                                        
                                     </ng-template>
 
                                     <!-- Action Templates -->
@@ -1161,52 +1141,24 @@
                                                 refset-tool-concept-details-taxonomy-item
                                             "
                                              *ngFor="let parent of conceptDetailParents">
-                                            <div class="
-                                                    refset-tool-concept-details-taxonomy-icon
-                                                "
-                                                 [class.taxonomy-icon-edit-mode]="editMode && !readonlyMode">
-                                                <img [hidden]="
-                                                        parent?.memberOfRefset || !editMode || readonlyMode
-                                                    "
-                                                     src="assets/add-symbol-icon.svg"
-                                                     (click)="addRemoveConcept(true, parent, true)"
-                                                     width="18px"
-                                                     height="18px"
-                                                     title="Add Member"
-                                                     aria-label="Add"
-                                                     class="add-symbol-icon"
-                                                     alt="Add symbol shown when you're able to add a concept" />
-                                                <img [hidden]="
-                                                        !parent?.memberOfRefset || !editMode || readonlyMode
-                                                    "
-                                                     src="assets/subtract-symbol-icon.svg"
-                                                     (click)="addRemoveConcept(false, parent, true)"
-                                                     width="18px"
-                                                     height="18px"
-                                                     title="Remove Member"
-                                                     aria-label="Subtract"
-                                                     class="subtract-symbol-icon"
-                                                     alt="Subtract symbol shown when you're able to remove a concept" />
+                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode && !readonlyMode">
+
+                                                <add-remove-concepts-icons [concept]="parent" [hidden]="!editMode || readonlyMode" [isInDetailsPanel]="true" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
+
                                                 <img *ngIf="parent.defined"
                                                      title="Fully Defined"
                                                      aria-label="Fully Defined"
                                                      src="/assets/linedTaxonomyIcon.png" />
+
                                                 <img *ngIf="!parent.defined"
                                                      title="Primitive"
                                                      aria-label="Primitive"
-                                                     class="
-                                                        refset-tool-logo
-                                                        mr-2
-                                                        p-0
-                                                    "
+                                                     class="refset-tool-logo mr-2 p-0"
                                                      src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div class="
-                                                    col
-                                                    refset-tool-concept-details-taxonomy-description
-                                                "
-                                                 (click)="loadConceptDetail(parent)">
+                                            <div class="col refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset" 
+                                                [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
                                                 <!--
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
@@ -1427,7 +1379,9 @@
                      [conceptCode]="conceptForAddRemove?.code"
                      [conceptName]="conceptForAddRemove?.name"
                      [conceptHasChildren]="conceptForAddRemove?.hasChildren"
-                     [refsetInternalId]="refsetData?.id"
+                     [refset]="refsetData"
+                     [definitionExceptionType]="addRemoveDefinitionExceptionType"
+                     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
                      (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)"
                      (processChangedMemberEffects)="processChangedMemberEffects()">
 </add-remove-concepts>

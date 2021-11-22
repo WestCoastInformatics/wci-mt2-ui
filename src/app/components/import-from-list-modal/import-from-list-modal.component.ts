@@ -13,21 +13,22 @@ import { catchError } from 'rxjs/operators';
     templateUrl: "./import-from-list-modal.component.html",
 })
 export class ImportFromListModalComponent {
+
     files: any[] = [];
     listOfIds: any;
     showLoadingSpinner = false;
-
-    @Input()
-    internalRefsetId: string;
-
-    @Output()
-    reloadGrid = new EventEmitter<boolean>();
     showBanner = false;
     successfulImport = false;
     numOfIds: any;
     failedIds: any;
     allIds: string[];
     failedIdNames: string[];
+
+    @Input() internalRefsetId: string;
+    @Input() isIntensional: boolean = false;
+
+    @Output() reloadGrid = new EventEmitter<boolean>();
+    
 
     constructor(
         private modalService: NgbModal,
@@ -39,43 +40,40 @@ export class ImportFromListModalComponent {
     }
 
     addMembers(): void {
+
         if (!this.listOfIds?.length) {
             return;
         }
-        this.showLoadingSpinner = true;
-        this.allIds = this.listOfIds
-            ?.replaceAll(" ", ",")
-            .replaceAll("\n", ",")
-            .split(",");
-        this.numOfIds = this.listOfIds
-            ?.replaceAll(" ", ",")
-            .replaceAll("\n", ",")
-            .split(",").length;
-        this.refsetService
-            .addRefsetMembers(
-                this.internalRefsetId,
-                "list",
-                this.listOfIds
-                    ?.replaceAll(" ", ",")
-                    .replaceAll("\n", ",")
-                    .trim()
-            ).pipe(
-                catchError((err) => {
-                    if (err) {
-                        this.showLoadingSpinner = false;
-                    }
 
-                  return err;
-                })
-              ).subscribe((data) => {
+        this.showLoadingSpinner = true;
+        const commaRegex = /,+/ig;
+        let allIdsString = this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").trim();
+        this.allIds = allIdsString.split(",");
+        this.numOfIds = this.allIds.length;
+
+        this.refsetService.addRefsetMembers(this.internalRefsetId, "list", allIdsString)
+            .pipe(catchError((err) => {
+
+                if (err) {
+                    this.showLoadingSpinner = false;
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+
                 this.showLoadingSpinner = false;
                 this.sendReloadGridTrigger(true);
                 this.listOfIds = "";
                 // this.successfulImport = true;
+
                 if (data?.status?.includes("All concepts added")) {
+
                     this.showBanner = true;
                     this.successfulImport = true;
+
                 } else {
+
                     this.failedIdNames = data?.error
                         .replace("Unable to add concepts ", "")
                         .split(",");
@@ -87,26 +85,25 @@ export class ImportFromListModalComponent {
     }
 
     removeMembers(): void {
+
         if (!this.listOfIds?.length) {
             return;
         }
+
         this.showLoadingSpinner = true;
+        const commaRegex = /,+/ig;
 
-        this.refsetService
-            .removeRefsetMembers(
-                this.internalRefsetId,
-                "list",
-                this.listOfIds?.replaceAll(" ", ",")?.replaceAll("\n", ",")?.trim()
-            ).pipe(
-                catchError((err) => {
-                    if (err) {
-                        this.showLoadingSpinner = false;
-                    }
+        this.refsetService.removeRefsetMembers(this.internalRefsetId, "list", this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").trim())
+            .pipe(catchError((err) => {
 
-                  return err;
-                })
-              ).subscribe(
-                (data) => {
+                if (err) {
+                    this.showLoadingSpinner = false;
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+                
                     this.showLoadingSpinner = false;
                     this.sendReloadGridTrigger(true);
                 },

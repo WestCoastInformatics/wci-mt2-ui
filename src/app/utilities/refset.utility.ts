@@ -11,6 +11,8 @@ export class RefsetUtility {
     static INTENSIONAL = 'INTENSIONAL';
     static EXTENSIONAL = 'EXTENSIONAL';
     static EXTERNAL = 'EXTERNAL';
+    static INCLUSION = 'INCLUSION';
+    static EXCLUSION = 'EXCLUSION';
 
     static getVersionOptions(refset, valueField: string = "id") {
 

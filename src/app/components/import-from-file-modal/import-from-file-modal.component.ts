@@ -8,21 +8,22 @@ import { catchError } from 'rxjs/operators';
     templateUrl: "./import-from-file-modal.component.html",
 })
 export class ImportFromFileModalComponent implements OnInit {
+
     files: any[] = [];
     uploadedFile: any;
     showLoadingSpinner = false;
-
-    @Input()
-    internalRefsetId: string;
-
-    @Output()
-    reloadGrid = new EventEmitter<boolean>();
     showBanner = false;
     successfulImport = false;
     numOfIds: any;
     failedIds: any;
     allIds: string[];
     failedIdNames: string[];
+
+    @Input() internalRefsetId: string;
+    @Input() isIntensional: boolean = false;
+
+    @Output() reloadGrid = new EventEmitter<boolean>();
+    
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService
@@ -81,6 +82,7 @@ export class ImportFromFileModalComponent implements OnInit {
     }
 
     addMembers(): void {
+        
         this.showLoadingSpinner = true;
         const listOfIds = [];
         const fileReader = new FileReader();
@@ -94,13 +96,16 @@ export class ImportFromFileModalComponent implements OnInit {
                     );
                 }
             }
-            this.allIds = listOfIds.join(",").split(",");
-            this.numOfIds = listOfIds.join(",").split(",").length;
+
+            let allIdsString = listOfIds.join(",");
+            this.allIds = allIdsString.split(",");
+            this.numOfIds = this.allIds.length;
+
             this.refsetService
                 .addRefsetMembers(
                     this.internalRefsetId,
                     "list",
-                    listOfIds.join(",")
+                    allIdsString
             ).pipe(
                 catchError((err) => {
                     if (err) {

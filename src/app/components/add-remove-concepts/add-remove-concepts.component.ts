@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, Template
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 @Component({
 	selector: 'add-remove-concepts',
@@ -11,14 +12,17 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 	selectedOption: string;
 	actionText: string;
+	refsetInternalId: string;
 	options = [
-		{ value: '<< ', display: '\<\<       (Decendants and Self)' },
-		{ value: '< ', display: '\<       (Decendants Only) ' },
+		{ value: '<< ', display: '\<\<       (Descendants and Self)' },
+		{ value: '< ', display: '\<       (Descendants Only) ' },
 		{ value: '', display: '\=       (Self Only)' }
 	];
 
 	@Input() isAdd: boolean;
-	@Input() refsetInternalId: string;
+	@Input() refset: any;
+	@Input() definitionExceptionType: string;
+	@Input() definitionExceptionId: string;
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
@@ -53,6 +57,9 @@ export class AddRemoveConceptsComponent implements OnInit {
 					this.resetComponent();
 					this.addRemoveConcept();
 				}
+			
+			} else if (propertyName === "refset") {
+				this.refsetInternalId = this.refset?.id;
 			}
 		}
 	}
@@ -68,7 +75,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 
         if (ecl == '' && CodeUtility.hasValue(this.conceptCode)) {
 
-            if (this.conceptHasChildren) {
+            if (this.conceptHasChildren && this.refset.type != RefsetUtility.INTENSIONAL) {
 
                 this.openAddRemoveDescendantsModal();
                 return;
@@ -79,38 +86,84 @@ export class AddRemoveConceptsComponent implements OnInit {
                 
         this.sendLoadingSpinnerTrigger.emit(true);
 
-        if (this.isAdd) {
+		// if this is an intensional refset
+		if (this.refset.type == RefsetUtility.INTENSIONAL) {
 
-            this.refsetService.addRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
-                
-                (data) => {
+			if (this.isAdd) {
 
-                    console.log("data: ", data);
-                    this.processChangedMemberEffects.emit();
-                },
-                (error) => {
+				let encodedPipe = '%7C';
+				ecl = this.conceptCode + ' ' + encodedPipe + ' ' + this.conceptName + ' ' + encodedPipe;
+				
+				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe(
+					
+					(data) => {
+	
+						console.log("data: ", data);
+						this.processChangedMemberEffects.emit();
+					},
+					(error) => {
+	
+						console.log(error);
+						this.sendLoadingSpinnerTrigger.emit(false);
+					}
+				);
+	
+			} else {
+	
+				this.refsetService.removeRefsetDefinitionException(this.refsetInternalId, this.definitionExceptionId).subscribe(
+	
+					(data) => {
+	
+						console.log("data: ", data);
+						this.processChangedMemberEffects.emit();
+					},
+					(error) => {
+	
+						console.log(error);
+						this.sendLoadingSpinnerTrigger.emit(false);
+					}
+				);
+			}
+		}
 
-                    console.log(error);
-                    this.sendLoadingSpinnerTrigger.emit(false);
-                }
-            );
+		// if this is an extensional or external refset
+		else {
 
-        } else {
+			if (this.isAdd) {
 
-            this.refsetService.removeRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
+				this.refsetService.addRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
+					
+					(data) => {
+	
+						console.log("data: ", data);
+						this.processChangedMemberEffects.emit();
+					},
+					(error) => {
+	
+						console.log(error);
+						this.sendLoadingSpinnerTrigger.emit(false);
+					}
+				);
+	
+			} else {
+	
+				this.refsetService.removeRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
+	
+					(data) => {
+	
+						console.log("data: ", data);
+						this.processChangedMemberEffects.emit();
+					},
+					(error) => {
+	
+						console.log(error);
+						this.sendLoadingSpinnerTrigger.emit(false);
+					}
+				);
+			}
+		}
 
-                (data) => {
-
-                    console.log("data: ", data);
-                    this.processChangedMemberEffects.emit();
-                },
-                (error) => {
-
-                    console.log(error);
-                    this.sendLoadingSpinnerTrigger.emit(false);
-                }
-            );
-        }
+		
     }
 
 	openAddRemoveDescendantsModal() {

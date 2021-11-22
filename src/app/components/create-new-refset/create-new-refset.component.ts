@@ -217,7 +217,8 @@ export class CreateNewRefsetComponent implements OnInit {
                     '/edit/refset',
                     refsetId.refsetInternalId,
                 ]);
-                this.refsetDetails.ngOnInit();
+                
+                this.refsetDetails.initializeDetailsPage();
             },
             (error) => {
                 this.showLoadingSpinner = false;

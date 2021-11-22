@@ -48,6 +48,7 @@ export class TaxonomyTreeComponent {
     loadedChildren: any;
     isAdd: Boolean;
     conceptForAddRemove: any;
+    addRemoveDefinitionExceptionType: string;
 
     @Input() editMode = false;
     @Input() isOnDetailsPage = true;
@@ -445,10 +446,11 @@ export class TaxonomyTreeComponent {
     //     }
     // }
 
-    addRemoveConcept(addConcept: boolean, concept: any = null): void {
+    addRemoveConcept(params: any): void {
 
-        this.isAdd = new Boolean(addConcept);
-        this.conceptForAddRemove = concept;
+        this.isAdd = new Boolean(params.addConcept);
+        this.conceptForAddRemove = params.concept;
+        this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
     }
 
     processChangedMemberEffects = () => {
