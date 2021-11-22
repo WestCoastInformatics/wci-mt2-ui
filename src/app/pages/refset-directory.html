@@ -134,9 +134,11 @@
             <div class="container-fluid"
                  id="directoryInformationSection">
                 <div class="row refset-tool-refset-details-title-name"
+                    style="display: block;"
                      title="{{data.name}}"
                      aria-label="{{data.name}}">
-                    <p style="font-weight:bold;font-size:20px">{{data.name}}</p>
+                    <p style="font-size:14px; margin-bottom: 0px;">{{data.name}}</p>
+                    <p style="font-size:14px"><span *ngIf="data?.versionStatus">{{data?.versionStatus}}</span><span *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
                 </div>
 
                 <div class="row refset-tool-refset-metadata-section">
@@ -213,19 +215,10 @@
                                     </td>
                                     <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                        (mouseenter)="setFullNarrativeText(true)"
-                                        (mouseleave)="setFullNarrativeText(false)">
-                                        <ng-container *ngIf="showFullNarrativeText">
+                                        ">
+                                        <ng-container>
                                             <span [innerHTML]="data?.narrative">
                                             </span>
-                                        </ng-container>
-                                        <ng-container *ngIf="!showFullNarrativeText">
-                                            <div class="limit-text-container">
-                                                <span class="limit-text-30"
-                                                      [innerHTML]="data?.narrative">
-                                                </span>
-                                            </div>
                                         </ng-container>
                                     </td>
                                 </tr>
@@ -306,19 +299,10 @@
                                     </td>
                                     <td class="
                                             refset-tool-refset-metadata-value
-                                        "
-                                        (mouseenter)="setFullNotesText(true)"
-                                        (mouseleave)="setFullNotesText(false)">
-                                        <ng-container *ngIf="showFullNotesText">
+                                        ">
+                                        <ng-container>
                                             <span [innerHTML]="data?.versionNotes">
                                             </span>
-                                        </ng-container>
-                                        <ng-container *ngIf="!showFullNotesText">
-                                            <div class="limit-text-container">
-                                                <span class="limit-text-30"
-                                                      [innerHTML]="data?.versionNotes">
-                                                </span>
-                                            </div>
                                         </ng-container>
                                     </td>
                                 </tr>

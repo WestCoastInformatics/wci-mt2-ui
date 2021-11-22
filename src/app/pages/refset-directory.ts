@@ -425,7 +425,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         //refset.tags = CodeUtility.removeFinal(tags, ';');
         const dialogData = {
             dialogId: dialogId,
-            showCancel: true,
+            showCancel: false,
             cancelText: 'Close',
             confirmText: 'View Complete Refset',
             showTitle: false,
@@ -437,7 +437,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         const dialogOptions = {
             id: dialogId,
             width: '1000px',
-            disableClose: false
+            disableClose: true
         }
 
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
