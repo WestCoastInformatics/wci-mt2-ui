@@ -769,6 +769,10 @@ button.refset-tool-table-action-icon {
         > .toggle-children {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
+    .tree-node.refset-tool-taxonomy-no-members-in-branch {
+        margin-left: 10px;
+    }
+
     .tree-node img {
         width: 12.75px;
         height: 10.5px;
@@ -777,6 +781,21 @@ button.refset-tool-table-action-icon {
         top: 0px;
     }
 
+    .tree-node {
+        .add-symbol-icon,
+        .subtract-symbol-icon {
+            width: 18px !important;
+            height: 18px !important;
+        }
+    }
+
+    add-remove-concepts-icons {
+        .add-symbol-icon,
+        .subtract-symbol-icon {
+            width: 18px !important;
+            height: 18px !important;
+        }
+    }
     // Tree Component Overrides
     .toggle-children-wrapper {
         padding: 0px;
@@ -863,7 +882,18 @@ button.refset-tool-table-action-icon {
     img {
         width: 12.75px;
         height: 10.5px;
+        align-self: center;
     }
+
+    .add-symbol-icon,
+    .subtract-symbol-icon {
+        width: 18px !important;
+        height: 18px !important;
+    }
+}
+
+.refset-tool-concept-details-taxonomy-description {
+    margin-left: 10px;
 }
 .refset-tool-concept-details-concept-name {
     font-size: 15px;
@@ -2904,6 +2934,13 @@ button.refset-tool-table-action-icon {
 .add-remove-descendants-radio-group {
     display: flex;
     flex-direction: column;
+}
+
+.add-remove-descendants-radio-button {
+    .mat-radio-label {
+        white-space: normal;
+        align-items: normal;
+    }
 }
 
 .project-nav {
