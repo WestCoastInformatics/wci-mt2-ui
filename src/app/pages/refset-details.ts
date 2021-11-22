@@ -144,6 +144,7 @@ export class RefsetDetails {
     isConceptBeingAdded: Boolean;
     isAddRemoveInDetailsPanel: Boolean;
     conceptForAddRemove: any;
+    reviewNotesAdded = false;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
@@ -471,9 +472,17 @@ export class RefsetDetails {
             .subscribe((results) => {
                 this.workflowHistoryDataSource = results?.items;
                 this.workflowHistoryDataSource.sort = this.sort;
+                this.checkReviewNotesStatus(this.workflowHistoryDataSource);
             });
     };
 
+    checkReviewNotesStatus(workflowHistoryDataSource: any): void {
+        workflowHistoryDataSource?.forEach((source) => {
+            if (source?.workflowStatus === 'IN_REVIEW' && source?.notes?.length) {
+                this.reviewNotesAdded = true;
+            }
+        });
+    }
     //***** Members Taxonomy Functions  *****/
     cacheTaxonomyAncestors() {
 

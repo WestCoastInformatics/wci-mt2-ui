@@ -264,7 +264,7 @@
                         Accept Refset
                     </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW')"
+                    <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && reviewNotesAdded"
                             #rejectRefsetButton
                             mat-raised-button
                             color="primary"
@@ -276,6 +276,8 @@
                             ng-reflect-color="primary">
                         Reject Refset
                     </button>
+
+                    <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"></review-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
                             #unassignButton

@@ -2581,7 +2581,7 @@ button.refset-tool-table-action-icon {
 }
 
 
-.ready-for-review-modal-body {
+.review-modal-body {
     background-color: #f5f5f6;
     padding: 28px !important;
     text-align: center;
@@ -2592,11 +2592,11 @@ button.refset-tool-table-action-icon {
     }
 }
 
-.ready-for-review-modal > .modal-dialog > .modal-content {
+.review-modal > .modal-dialog > .modal-content {
     width: 700px;
 }
 
-.ready-for-review-modal-title {
+.review-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
     font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
@@ -2607,7 +2607,7 @@ button.refset-tool-table-action-icon {
     padding: 30px !important;
 }
 
-.ready-for-review-modal-header {
+.review-modal-header {
     border: none !important;
     padding-left: 30px !important;
     padding-bottom: 30px !important;
@@ -2884,6 +2884,18 @@ button.refset-tool-table-action-icon {
 .warning-body,
 .success-body {
     padding-left: 15px;
+}
+
+.warning-review-body {
+    text-align: left;
+}
+
+.warning-review-footer {
+    text-align: right;
+    text-decoration: underline;
+    font-weight: bold;
+    color: #856404;
+    cursor: pointer;
 }
 
 .refset-tool-action-download-report-button {
