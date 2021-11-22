@@ -491,6 +491,10 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.close-button button.refset-tool-table-action-icon {
+    color: #666 !important;
+}
+
 .isDisabled {
     .mat-raised-button.mat-primary {
         background-color: lightgrey !important;
