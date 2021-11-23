@@ -136,7 +136,7 @@
                 </div>
             </div>
 
-            <div class="current-version-label">Current Version:</div>
+            <!-- <div class="current-version-label">Current Version:</div> -->
             <div class="row justify-content-end details-version-select"
                  title="Select Version">
                 <mat-form-field appearance="fill">
@@ -481,6 +481,20 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.name}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="
+                                            refset-tool-refset-metadata-label
+                                        "
+                                        aria-label="Project:">
+                                        Project:
+                                    </td>
+                                    <td class="
+                                            refset-tool-refset-metadata-value
+                                        ">
+                                        {{refsetData?.project?.name}}
                                     </td>
                                 </tr>
                             </tbody>
