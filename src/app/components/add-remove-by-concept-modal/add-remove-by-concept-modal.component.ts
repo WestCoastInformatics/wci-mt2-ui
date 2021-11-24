@@ -260,7 +260,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             this.refsetService
                 .getConceptSearch(
                     this.refsetInternalId,
-                    `limit=500&editing=true&offset=0&query=${this.searchInput}`
+                    `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`
                 )
                 .subscribe(
                     (results) => {
