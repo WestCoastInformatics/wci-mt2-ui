@@ -1,91 +1,92 @@
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
+    <!-- Search Bar -->
+    <div class="container-fluid sticky-top top-search-bar">
+        <div class="row justify-content-end"
+             style="align-items: baseline">
+             <div class="page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div>
+            <div class="dropdown-group"><div class="col-md-auto refset-tool-directory-chooser-column"
+                *ngIf="showTable">
+               <app-column-chooser title="Select Columns to Display"
+                                   [gridColumnApi]="refsetGridColumnApi"
+                                   [useDialog]="useDialog"></app-column-chooser>
+           </div>
+
+           <div class="col-md-auto">
+               <div class="dropdown">
+                   <mat-form-field id="directorySearchInputField"
+                                   title="Enter Search Critera">
+                       <mat-label class="search-label">{{ metadataAndConcepts ? 'Search metadata and concepts' : 'Search metadata only' }}</mat-label>
+                       <input matInput
+                              #directorySearchInput
+                              id="directorySearchInput"
+                              [(ngModel)]="searchInput"
+                              (keyup)="onSearchChange()"
+                              (change)="onSearchChange()" />
+                       <img title="Select Contents to Search"
+                            style="
+                               width: 14px;
+                               height: 14px;
+                               position: absolute;
+                               left: 310px;
+                           "
+                            src="assets/empty-filter.png"
+                            (click)="showDropdown()" />
+                   </mat-form-field>
+                   <span class="clear-search"
+                         (click)="clearSearch()">&#10005;</span>
+                   <div class="dropdown-content"
+                        [class.dropdown-content-show]="toggleDropdown"
+                        title="Contents to Search Options">
+                       <div class="radio-butons"
+                            style="font-size: 12px">
+                           <mat-radio-group aria-label="Select an option"
+                                            style="display: grid"
+                                            (change)="searchSelectionRadioResult($event)">
+                               <mat-radio-button value="true"
+                                                 checked>Search metadata and
+                                   concepts</mat-radio-button>
+                               <mat-radio-button value="false"
+                                                 disableRipple>Search metadata only</mat-radio-button>
+                           </mat-radio-group>
+                           <button mat-raised-button
+                                   color="primary"
+                                   (click)="showDropdown()"
+                                   aria-hidden="false"
+                                   class="refset-tool-action-button"
+                                   aria-label="Save"
+                                   title="Save Content to Search"
+                                   ng-reflect-color="primary"
+                                   style="float: right; margin-bottom: 0">
+                               Save
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="col-md-auto"
+                style="padding-left: 5px">
+               <mat-form-field id="directoryViewFilterField"
+                               appearance="fill">
+                   <mat-label></mat-label>
+                   <mat-select title="Public/Private Refsets"
+                               #directoryViewSelect
+                               [(value)]="selectedView"
+                               (selectionChange)="changedViewFilter()">
+                       <mat-option *ngFor="let option of viewOptions"
+                                   [value]="option.value">
+                           {{option.display}}
+                       </mat-option>
+                   </mat-select>
+               </mat-form-field>
+           </div></div>
+        </div>
+    </div>
+    
 <div id="refsetDirectoryPage"
      class="container-fluid">
     <!-- Page Title -->
-    <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div>
-
-    <!-- Search Bar -->
-    <div class="container-fluid">
-        <div class="row justify-content-end"
-             style="align-items: baseline">
-            <div class="col-md-auto refset-tool-directory-chooser-column"
-                 *ngIf="showTable">
-                <app-column-chooser title="Select Columns to Display"
-                                    [gridColumnApi]="refsetGridColumnApi"
-                                    [useDialog]="useDialog"></app-column-chooser>
-            </div>
-
-            <div class="col-md-auto">
-                <div class="dropdown">
-                    <mat-form-field id="directorySearchInputField"
-                                    title="Enter Search Critera">
-                        <mat-label class="search-label">{{ metadataAndConcepts ? 'Search metadata and concepts' : 'Search metadata only' }}</mat-label>
-                        <input matInput
-                               #directorySearchInput
-                               id="directorySearchInput"
-                               [(ngModel)]="searchInput"
-                               (keyup)="onSearchChange()"
-                               (change)="onSearchChange()" />
-                        <img title="Select Contents to Search"
-                             style="
-                                width: 14px;
-                                height: 14px;
-                                position: absolute;
-                                left: 310px;
-                            "
-                             src="assets/empty-filter.png"
-                             (click)="showDropdown()" />
-                    </mat-form-field>
-                    <span class="clear-search"
-                          (click)="clearSearch()">&#10005;</span>
-                    <div class="dropdown-content"
-                         [class.dropdown-content-show]="toggleDropdown"
-                         title="Contents to Search Options">
-                        <div class="radio-butons"
-                             style="font-size: 12px">
-                            <mat-radio-group aria-label="Select an option"
-                                             style="display: grid"
-                                             (change)="searchSelectionRadioResult($event)">
-                                <mat-radio-button value="true"
-                                                  checked>Search metadata and
-                                    concepts</mat-radio-button>
-                                <mat-radio-button value="false"
-                                                  disableRipple>Search metadata only</mat-radio-button>
-                            </mat-radio-group>
-                            <button mat-raised-button
-                                    color="primary"
-                                    (click)="showDropdown()"
-                                    aria-hidden="false"
-                                    class="refset-tool-action-button"
-                                    aria-label="Save"
-                                    title="Save Content to Search"
-                                    ng-reflect-color="primary"
-                                    style="float: right; margin-bottom: 0">
-                                Save
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-auto"
-                 style="padding-left: 5px">
-                <mat-form-field id="directoryViewFilterField"
-                                appearance="fill">
-                    <mat-label></mat-label>
-                    <mat-select title="Public/Private Refsets"
-                                #directoryViewSelect
-                                [(value)]="selectedView"
-                                (selectionChange)="changedViewFilter()">
-                        <mat-option *ngFor="let option of viewOptions"
-                                    [value]="option.value">
-                            {{option.display}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-    </div>
+    <!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
     <!-- Refset Table -->
     <div class="container-fluid">

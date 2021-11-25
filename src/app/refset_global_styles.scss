@@ -582,6 +582,22 @@ button.refset-tool-table-action-icon {
     padding-left: 30px;
 }
 
+.top-search-bar {
+    top: 60px !important;
+    background-color: white;
+    box-shadow: 0 4px 2px -2px grey;
+    .page-title {
+        padding-left: 3rem;
+    }
+    .justify-content-end {
+        justify-content: space-between !important;
+    }
+    .dropdown-group {
+        display: inline-flex !important;
+        padding-right: 3rem;
+    }
+}
+
 #refsetDetailsPage .page-title {
     padding-left: 30px;
 }
