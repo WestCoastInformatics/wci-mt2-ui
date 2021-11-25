@@ -2589,8 +2589,8 @@ button.refset-tool-table-action-icon {
 }
 
 .details-page-stepper {
-    zoom: 0.8;
-    // margin-left: 250px;
+    zoom: 0.7;
+    margin-top: -25px;
 }
 
 .edit-button-group-right-below-sticky-header {
@@ -2600,6 +2600,11 @@ button.refset-tool-table-action-icon {
 .allowed-file-types {
     color: red;
     font-size: smaller;
+}
+
+.mat-step-label {
+    width: 100px !important;
+    white-space: normal !important;
 }
 
 .launch-release-button,

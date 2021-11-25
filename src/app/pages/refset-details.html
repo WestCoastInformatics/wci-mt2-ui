@@ -27,7 +27,12 @@
                 <ng-template matStepperIcon="number">
                     <mat-icon>done</mat-icon>
                 </ng-template>
-                <ng-template matStepLabel>Ready for Edit</ng-template>
+                <ng-template matStepLabel><span [style.color]="refsetStatus?.includes('READY_FOR_EDIT')||
+                    refsetStatus?.includes('IN_EDIT') ||
+                    refsetStatus?.includes('READY_FOR_REVIEW') ||
+                    refsetStatus?.includes('IN_REVIEW') ||
+                    refsetStatus?.includes('REVIEW_COMPLETED') ||
+                    refsetStatus?.includes('READY_FOR_PUBLICATION') ? '#00a9e0' : 'rgba(0, 0, 0, 0.87)'">Ready for Edit</span></ng-template>
             </mat-step>
             <mat-step [editable]="false"
                       [completed]="refsetStatus?.includes('IN_EDIT') ||
@@ -35,29 +40,39 @@
                 refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
                 refsetStatus?.includes('READY_FOR_PUBLICATION')">
-                <ng-template matStepLabel>In Edit</ng-template>
+                <ng-template matStepLabel><span [style.color]="refsetStatus?.includes('IN_EDIT') ||
+                    refsetStatus?.includes('READY_FOR_REVIEW') ||
+                    refsetStatus?.includes('IN_REVIEW') ||
+                    refsetStatus?.includes('REVIEW_COMPLETED') ||
+                    refsetStatus?.includes('READY_FOR_PUBLICATION') ? '#00a9e0' : 'rgba(0, 0, 0, 0.87)'">In Edit</span></ng-template>
             </mat-step>
             <mat-step [editable]="false"
                       [completed]="refsetStatus?.includes('READY_FOR_REVIEW') ||
                 refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
                 refsetStatus?.includes('READY_FOR_PUBLICATION')">
-                <ng-template matStepLabel>Ready for Review</ng-template>
+                <ng-template matStepLabel><span [style.color]="refsetStatus?.includes('READY_FOR_REVIEW') ||
+                    refsetStatus?.includes('IN_REVIEW') ||
+                    refsetStatus?.includes('REVIEW_COMPLETED') ||
+                    refsetStatus?.includes('READY_FOR_PUBLICATION') ? '#00a9e0' : 'rgba(0, 0, 0, 0.87)'">Ready for Review</span></ng-template>
             </mat-step>
             <mat-step [editable]="false"
                       [completed]="refsetStatus?.includes('IN_REVIEW') ||
                 refsetStatus?.includes('REVIEW_COMPLETED') ||
                 refsetStatus?.includes('READY_FOR_PUBLICATION')">
-                <ng-template matStepLabel>In Review</ng-template>
+                <ng-template matStepLabel><span [style.color]="refsetStatus?.includes('IN_REVIEW') ||
+                    refsetStatus?.includes('REVIEW_COMPLETED') ||
+                    refsetStatus?.includes('READY_FOR_PUBLICATION') ? '#00a9e0' : 'rgba(0, 0, 0, 0.87)'">In Review</span></ng-template>
             </mat-step>
             <mat-step [editable]="false"
                       [completed]="refsetStatus?.includes('REVIEW_COMPLETED') ||
                 refsetStatus?.includes('READY_FOR_PUBLICATION')">
-                <ng-template matStepLabel>Review Completed</ng-template>
+                <ng-template matStepLabel><span [style.color]="refsetStatus?.includes('REVIEW_COMPLETED') ||
+                    refsetStatus?.includes('READY_FOR_PUBLICATION') ? '#00a9e0' : 'rgba(0, 0, 0, 0.87)'">Review Completed</span></ng-template>
             </mat-step>
             <mat-step [editable]="false"
                       [completed]="refsetStatus?.includes('READY_FOR_PUBLICATION')">
-                <ng-template matStepLabel>Ready for Publication</ng-template>
+                <ng-template matStepLabel><span [style.color]="refsetStatus?.includes('READY_FOR_PUBLICATION') ? '#00a9e0' : 'rgba(0, 0, 0, 0.87)'">Ready for Publication</span></ng-template>
             </mat-step>
             <ng-template matStepperIcon="done">
                 <mat-icon>done</mat-icon>
