@@ -649,10 +649,14 @@ button.refset-tool-table-action-icon {
 #refsetDetailsPage .refset-tool-refset-details-title-name {
     padding-left: 15px;
     //padding-top:37px;
-    padding-bottom: 15px;
+    // padding-bottom: 15px;
     font-size: 1.25rem;
     display: flex;
     font-weight: 500;
+}
+
+#refsetDetailsPage .refset-data-name {
+    padding-left: 3rem;
 }
 
 #refsetDetailsPage .refset-tool-refset-metadata-column {
@@ -671,6 +675,9 @@ button.refset-tool-table-action-icon {
     width: 225px;
 }
 
+.details-version-select {
+    padding-right: 3rem;
+}
 #refsetDetailsPage .refset-title {
     background: white;
     top: 60px;

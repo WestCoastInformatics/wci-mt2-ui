@@ -98,62 +98,61 @@
             > -->
         </mat-button-toggle-group>
     </div>
+            <!-- Header Bar -->
+            <div class="row refset-title sticky-top"
+            *ngIf="!editMode">
+           <!-- Section Title -->
+           <!-- <div class="col-md-auto page-title">Reference Set Details</div> -->
+           <div class="col refset-tool-refset-details-title-name refset-data-name">
+               {{refsetData?.name}}
+               <div class="set-of-buttons-non-edit-mode">
+                   <app-refset-download [isDetailPage]="true"
+                                        [refset]="refsetData"
+                                        [disabled]="!refsetData?.downloadable"></app-refset-download>
+
+                   <!-- <button class="refset-tool-standard-icon-button"
+                           (click)="openRefsetFeedback()">
+                       <img src="assets/quote-icon.svg"
+                            alt="quote icon"
+                            title="View Feedback"
+                            aria-label="View Feedback" />
+                   </button> -->
+
+                   <button class="refset-tool-standard-icon-button"
+                           (click)="openCompareRefset()">
+                       <img src="assets/compare-refset-icon.svg"
+                            alt="notes icon"
+                            title="Compare Refset"
+                            aria-label="Compare Refset" />
+                   </button>
+
+                   <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')
+                           || !refsetData?.availableActions?.includes('EDIT')"
+                                      [isDetailsPage]="true"
+                                      [editMode]="editMode"
+                                      [refsetId]="refsetId"
+                                      [inputProperties]="editMetadataProperties"></create-new-refset>
+               </div>
+           </div>
+
+           <!-- <div class="current-version-label">Current Version:</div> -->
+           <div class="row justify-content-end details-version-select"
+                title="Select Version">
+               <mat-form-field appearance="fill">
+                   <mat-label></mat-label>
+                   <mat-select #detailsVersionSelect
+                               [(value)]="selectedVersion"
+                               (selectionChange)="changeVersion()"
+                               [disableOptionCentering]="true">
+                       <mat-option *ngFor="let option of versionOptions"
+                                   [value]="option.value">
+                           {{ addSpaceAfterVersionDate(option.display) }}
+                       </mat-option>
+                   </mat-select>
+               </mat-form-field>
+           </div>
+       </div>
     <div class="refset-title-container">
-        <!-- Header Bar -->
-        <div class="row refset-title sticky-top"
-             *ngIf="!editMode">
-            <!-- Section Title -->
-            <!-- <div class="col-md-auto page-title">Reference Set Details</div> -->
-            <div class="col refset-tool-refset-details-title-name">
-                {{refsetData?.name}}
-                <div class="set-of-buttons-non-edit-mode">
-                    <app-refset-download [isDetailPage]="true"
-                                         [refset]="refsetData"
-                                         [disabled]="!refsetData?.downloadable"></app-refset-download>
-
-                    <!-- <button class="refset-tool-standard-icon-button"
-                            (click)="openRefsetFeedback()">
-                        <img src="assets/quote-icon.svg"
-                             alt="quote icon"
-                             title="View Feedback"
-                             aria-label="View Feedback" />
-                    </button> -->
-
-                    <button class="refset-tool-standard-icon-button"
-                            (click)="openCompareRefset()">
-                        <img src="assets/compare-refset-icon.svg"
-                             alt="notes icon"
-                             title="Compare Refset"
-                             aria-label="Compare Refset" />
-                    </button>
-
-                    <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')
-                            || !refsetData?.availableActions?.includes('EDIT')"
-                                       [isDetailsPage]="true"
-                                       [editMode]="editMode"
-                                       [refsetId]="refsetId"
-                                       [inputProperties]="editMetadataProperties"></create-new-refset>
-                </div>
-            </div>
-
-            <!-- <div class="current-version-label">Current Version:</div> -->
-            <div class="row justify-content-end details-version-select"
-                 title="Select Version">
-                <mat-form-field appearance="fill">
-                    <mat-label></mat-label>
-                    <mat-select #detailsVersionSelect
-                                [(value)]="selectedVersion"
-                                (selectionChange)="changeVersion()"
-                                [disableOptionCentering]="true">
-                        <mat-option *ngFor="let option of versionOptions"
-                                    [value]="option.value">
-                            {{ addSpaceAfterVersionDate(option.display) }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-
         <!-- Metadata Section -->
         <div class="metadata-container"
              *ngIf="editMode">
