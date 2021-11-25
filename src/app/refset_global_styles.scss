@@ -1104,7 +1104,7 @@ button.refset-tool-table-action-icon {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: white;
+    background-color: white !important;
 }
 
 // ------------> look for references to this color and get rid of (theming)
