@@ -23,6 +23,7 @@ export class ImportFromFileModalComponent implements OnInit {
     @Input() isIntensional: boolean = false;
 
     @Output() reloadGrid = new EventEmitter<boolean>();
+    disableFileUpload = true;
     
     constructor(
         private modalService: NgbModal,
@@ -38,6 +39,7 @@ export class ImportFromFileModalComponent implements OnInit {
     openImportFromFileModal(importFromFileDialog: NgbModal) {
         this.showBanner = false;
         this.files = [];
+        this.disableFileUpload = true;
         this.modalService.open(importFromFileDialog, {
             backdrop: "static",
             keyboard: false,
@@ -186,17 +188,23 @@ export class ImportFromFileModalComponent implements OnInit {
     /**
      * on file drop handler
      */
-    onFileDropped($event) {
-        this.prepareFilesList($event);
-        this.uploadedFile = $event[0];
+    onFileDropped(files) {
+        if (files[0]?.name.includes('.txt') || files[0]?.name.includes('.rf2')) {
+            this.prepareFilesList(files);
+            this.uploadedFile = files[0];
+            this.disableFileUpload = false;
+        }
     }
 
     /**
      * handle file from browsing
      */
     fileBrowseHandler(files) {
-        this.prepareFilesList(files);
-        this.uploadedFile = files[0];
+        if (files[0]?.name.includes('.txt') || files[0]?.name.includes('.rf2')) {
+            this.prepareFilesList(files);
+            this.uploadedFile = files[0];
+            this.disableFileUpload = false;
+        }
     }
 
     /**
@@ -205,6 +213,7 @@ export class ImportFromFileModalComponent implements OnInit {
      */
     deleteFile(index: number) {
         this.files.splice(index, 1);
+        this.disableFileUpload = true;
     }
 
     /**
@@ -216,10 +225,10 @@ export class ImportFromFileModalComponent implements OnInit {
                 return;
             } else {
                 const progressInterval = setInterval(() => {
-                    if (this.files[index].progress === 100) {
+                    if (this.files[index]?.progress === 100) {
                         clearInterval(progressInterval);
                         this.uploadFilesSimulator(index + 1);
-                    } else {
+                    } else if (this.files[index]) {
                         this.files[index].progress += 5;
                     }
                 }, 200);

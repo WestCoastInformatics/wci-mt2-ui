@@ -89,6 +89,7 @@
                     class="import-from-file-drop-down-label"
                     >Browse for file</label
                 >
+                <div class="allowed-file-types">*Allowed file types: .rf2, .txt</div>
             </div>
             <div class="files-list-file-import">
                 <div
@@ -131,6 +132,7 @@
     >
         <button
             *ngIf="!showBanner"
+            [disabled]="disableFileUpload"
             type="button"
             (click)="addMembers()"
             mat-raised-button
@@ -145,6 +147,7 @@
         </button>
         <button
             *ngIf="!showBanner && !isIntensional"
+            [disabled]="disableFileUpload"
             type="button"
             (click)="removeMembers()"
             mat-raised-button

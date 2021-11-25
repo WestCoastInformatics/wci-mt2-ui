@@ -652,6 +652,7 @@ button.refset-tool-table-action-icon {
     padding-bottom: 15px;
     font-size: 1.25rem;
     display: flex;
+    font-weight: 500;
 }
 
 #refsetDetailsPage .refset-tool-refset-metadata-column {
@@ -2151,6 +2152,7 @@ button.refset-tool-table-action-icon {
     > .container-fluid
     > .metadata-name {
     display: flex;
+    font-weight: 500;
 }
 
 #refsetDetailsPage
@@ -2581,10 +2583,15 @@ button.refset-tool-table-action-icon {
 
 .details-page-stepper {
     zoom: 0.8;
-    margin-left: 250px;
+    // margin-left: 250px;
 }
 
 .edit-button-group-right-below-sticky-header {
+}
+
+.allowed-file-types {
+    color: red;
+    font-size: smaller;
 }
 
 .launch-release-button,
