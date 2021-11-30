@@ -138,8 +138,8 @@
                     style="display: block;"
                      title="{{data.name}}"
                      aria-label="{{data.name}}">
-                    <p style="font-size:14px; margin-bottom: 0px;">{{data.name}}</p>
-                    <p style="font-size:14px"><span *ngIf="data?.versionStatus">{{data?.versionStatus}}</span><span *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
+                    <p style="font-size:18px; margin-bottom: 0px;">{{data.name}}</p>
+                    <p style="font-size:16px"><span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
                 </div>
 
                 <div class="row refset-tool-refset-metadata-section">

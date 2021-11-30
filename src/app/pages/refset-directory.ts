@@ -504,4 +504,14 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     setFullNotesText(show: boolean): void {
         this.showFullNotesText = show;
     }
+
+    capitalizeFirstLetterOfString(stringValue: string): string {
+        if (stringValue) {
+            return stringValue.toLowerCase().replace(/(?:^|\s|[-"'([{])+\S/g, (c) =>
+                c.toUpperCase()
+            );
+        }
+
+        return stringValue;
+    }
 }
