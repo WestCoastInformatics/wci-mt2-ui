@@ -223,6 +223,20 @@
                     </div>
                 </div>
                 <div class="edit-button-group-right-below-sticky-header">
+
+                    <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            #finishEditButton
+                            class="refset-tool-action-button cancel-edit-button"
+                            aria-label="Cancle Edit"
+                            title="Cancle Edit"
+                            ng-reflect-color="primary"
+                            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT')">
+                        Cancle Edit
+                    </button>
+
                     <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
                             mat-raised-button
                             color="primary"
