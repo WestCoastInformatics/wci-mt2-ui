@@ -1220,7 +1220,7 @@ button.refset-tool-table-action-icon {
         width: 100%;
     }
     mat-chip {
-        zoom: 0.8;
+        transform: scale(0.8);
         margin-right: 5px;
         margin-bottom: 5px;
         border-radius: 8px;
@@ -2605,7 +2605,7 @@ button.refset-tool-table-action-icon {
 }
 
 .details-page-stepper {
-    zoom: 0.7;
+    transform: scale(0.7);
     margin-top: -25px;
 }
 
