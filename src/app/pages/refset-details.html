@@ -827,7 +827,7 @@
 
                 <import-from-list-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
 
-                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="reloadMembersGridAndTaxonomy()" (loadingSpinner)="toggleLoadingSpinner($event)">
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)">
                 </add-remove-by-concept-modal>
 
                 <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput')" class="button-inactive">
@@ -1129,7 +1129,7 @@
                                                        [selectedConcept]="selectedConcept"
                                                        [options]="taxonomyOptions"
                                                        [manualStateRefresh]="taxonomyManualStateRefresh"
-                                                       (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                                                       (reloadPageData)="processChangedMemberEffects()"
                                                        (loadConceptDetail)="loadConceptDetail($event)"
                                                        (loadingSpinner)="toggleLoadingSpinner($event)"
                                                        (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
@@ -1417,7 +1417,7 @@
                                                                [options]="taxonomyOptions"
                                                                hasMultipleRootNodes="false"
                                                                [editMode]="editMode && !readonlyMode"
-                                                               (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                                                               (reloadPageData)="processChangedMemberEffects()"
                                                                (loadingSpinner)="toggleLoadingSpinner($event)"
                                                                (loadConceptDetail)="loadConceptDetail($event)"
                                                                (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
