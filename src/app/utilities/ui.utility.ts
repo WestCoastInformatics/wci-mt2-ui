@@ -221,8 +221,13 @@ export class UiUtility {
     // Function to open SNOMED ECL Builder
     static openEclBuilder(fieldId, branch) {
         let field = $('#' + fieldId);
-        let eclString = field.val();
-        let snowstormApiUrl = environment['snowstormApiUrl']
+        let eclString: any = field.val();
+        let snowstormApiUrl = environment['snowstormApiUrl'];
+        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
+
+        if (!regex.test(eclString)) {
+            eclString = '';
+        }
 
         $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
