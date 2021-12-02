@@ -26,13 +26,9 @@ export class RefsetUtility {
                 value = version.date;
             }
 
-            let option: any = { value: value, display: version.date + '(' + version.status?.charAt(0) + version.status?.slice(1).toLowerCase() + ')' };
-            
-            if (refset.versionStatus.toLowerCase() == 'in development'){
-                option.value = CodeUtility.getCurrentDate();
-            }
-
-            if (version.date === this.getVersionDate(refset)) {
+            let option: any = { value: value, display: version.date + ' (' + version.status?.charAt(0) + version.status?.slice(1).toLowerCase() + ')' };
+        
+            if (version.date === this.getVersionDate(refset) || (refset.versionStatus.toLowerCase() == 'in development' && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
                 option.selected = true;
             }
 
