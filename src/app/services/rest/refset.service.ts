@@ -13,7 +13,7 @@ export class RefsetService extends RestService {
 
     taxonomyRootNode: any = null;
     contextPath = '/refsetservice/';
-    isAssigned = false;
+    assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
         super(http, notificationService);
@@ -146,7 +146,7 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/versions');
     }
 
-    setRefsetInformation(isAssigned: boolean): void {
-        this.isAssigned = isAssigned;
+    setRefsetInformation(refsetData: any): void {
+        this.assignedUser = refsetData?.assignedUser;
     }
 }

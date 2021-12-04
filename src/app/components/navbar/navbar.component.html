@@ -23,7 +23,7 @@
 
         </div>
 
-        <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()"><span class="project-assignee">Assignee: {{ isAssigned() ? 'Assigned' : 'Unassigned'}}</span><span class="project-role" *ngIf="getProjectRoleString()">Project Role: {{getProjectRoleString()}}</span></div>
+        <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()"><span class="project-assignee">Assignee: {{ assignedUser() }}</span><span class="project-role" *ngIf="getProjectRoleString()">Project Role: {{getProjectRoleString()}}</span></div>
         <div class="directory-nav" routerLink="/directory"><img class="directory-icon" src="/assets/directory-icon.svg"><span class="directory-icon-label">Directory</span></div>
         <div class="project-nav" routerLink="/projects"><img class="projects-icon" src="/assets/projects-icon.svg"><span class="projects-icon-label">Projects</span></div>
         <div class="float-right logout">

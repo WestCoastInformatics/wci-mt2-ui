@@ -90,7 +90,7 @@ export class NavbarComponent implements OnInit {
         this.authenticationService.logout();
     }
 
-    isAssigned(): boolean {
-        return this.refsetService.isAssigned;
+    assignedUser(): string {
+        return this.refsetService.assignedUser;
     }
 }

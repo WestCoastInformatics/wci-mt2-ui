@@ -353,12 +353,12 @@ export class RefsetDetails {
         });
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
-
+            console.log(results);
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
             this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetData = results;
-            this.refsetService.setRefsetInformation(this.refsetData?.assignedUser ? true : false);
+            this.refsetService.setRefsetInformation(this.refsetData);
 
             if (this.editMode) {
 
