@@ -63,6 +63,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     metadataAndConcepts = true;
+    selectedMetadataAndConcepts = 'true';
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
@@ -83,7 +84,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     ngOnInit() {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
-        this.breadcrumbService.setBreadcrumbs([{label: 'Directory'}]);
+        this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
+        this.getStorageItems();
     }
 
     ngAfterViewInit() {
@@ -163,6 +165,16 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.changeDetectorRef.detectChanges();
         // this.overrideHeaderScroll();
         });
+    }
+
+    getStorageItems(): void {
+        if (sessionStorage.getItem('searchFilter')) {
+            this.metadataAndConcepts = sessionStorage.getItem('searchFilter') === 'true';
+            this.selectedMetadataAndConcepts = sessionStorage.getItem('searchFilter');
+        }
+        if (sessionStorage.getItem('recentSearch')) {
+            this.searchInput = sessionStorage.getItem('recentSearch');
+        }
     }
 
     showDropdown(): void {
@@ -486,15 +498,16 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     @Debounce()
     onSearchChange() {
-
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
             this.refsetGridApi.purgeInfiniteCache();
+            sessionStorage.setItem('recentSearch', this.searchInput);
         }
     }
 
     searchSelectionRadioResult(event: any): void {
         this.metadataAndConcepts = event.value === 'true';
         this.refsetGridApi.purgeInfiniteCache();
+        sessionStorage.setItem('searchFilter', this.metadataAndConcepts.toString());
     }
 
     setFullNarrativeText(show: boolean): void {

@@ -42,6 +42,7 @@
                             style="font-size: 12px">
                            <mat-radio-group aria-label="Select an option"
                                             style="display: grid"
+                                            [(ngModel)]="selectedMetadataAndConcepts"
                                             (change)="searchSelectionRadioResult($event)">
                                <mat-radio-button value="true"
                                                  checked>Search metadata and
@@ -108,7 +109,8 @@
                         [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
                         [totalKnown]="refsetGridPaging.totalKnown"
                         [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
-                        [numOfResults]="numOfResults">
+                        [numOfResults]="numOfResults"
+                        [isDirectoryPage]="true">
         </app-pagination>
 
         <!-- Information Templates -->

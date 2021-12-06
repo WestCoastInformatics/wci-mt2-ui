@@ -156,8 +156,16 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         };
 
         this.showLoadingSpinner = false;
+        this.getStorageItems();
         this.changeDetectorRef.detectChanges();
         });
+    }
+
+    getStorageItems(): void {
+        if (sessionStorage.getItem('selectedProject')) {
+            this.selectedProject = JSON.parse(sessionStorage.getItem('selectedProject'));
+            this.showRefsets();
+        }
     }
 
     showRefsets() {
@@ -167,6 +175,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
             this.showTable = true;
         }
+        sessionStorage.setItem('selectedProject', JSON.stringify(this.selectedProject));
     }
 
     onGridReady = (gridReadyParams) => {

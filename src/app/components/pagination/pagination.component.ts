@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Component, Input, OnChanges, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { AgGridAngular } from 'ag-grid-angular';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -9,7 +9,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 })
 
 // AG Grid page numbers are 0 based, all other page variables here are 1 based
-export class PaginationComponent implements OnChanges {
+export class PaginationComponent implements OnChanges, AfterViewInit {
 
     @Input() pageSize: number = 0;
     @Input() gridOptions;
@@ -18,6 +18,9 @@ export class PaginationComponent implements OnChanges {
     @Input() totalKnown = false;
     @Input() manualStateRefresh = false;
     @Input() numOfResults: number;
+    @Input() isDetailPage = false;
+    @Input() isDirectoryPage = false;
+
     currentPage: number = 1;
     paginationPages: any = {};
     showTotal = true;
@@ -80,6 +83,18 @@ export class PaginationComponent implements OnChanges {
         // }
 
         this.changeState();
+        if (changes.numberOfPages) {
+            this.getStorageItems();
+        }
+        this.changeDetectorRef.detectChanges();
+    }
+
+    getStorageItems(): void {
+        if (sessionStorage.getItem('detailsPageSize') && this.isDetailPage) {
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('detailsPageSize')));
+        } else if (sessionStorage.getItem('directoryPageSize') && this.isDirectoryPage) {
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')));
+        }
     }
 
     changeState(currentPage: number = this.getCurrentPage()) { 
@@ -157,12 +172,18 @@ export class PaginationComponent implements OnChanges {
     }
 
     setPageSize(pageSize: number) {
-
-        this.gridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
-        this.gridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
-        this.gridOptions.api.paginationSetPageSize(pageSize);
-        this.gridOptions.api.purgeInfiniteCache();
-        this.gridOptions.api.paginationGoToPage(0);
+        if (this.isDetailPage) {
+            sessionStorage.setItem('detailsPageSize', pageSize.toString());
+        } else if (this.isDirectoryPage) {
+            sessionStorage.setItem('directoryPageSize', pageSize.toString());
+        }
+        if (this.gridOptions.api.gridCore.rowModel.cacheParams) {
+            this.gridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
+            this.gridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
+            this.gridOptions.api.paginationSetPageSize(pageSize);
+            this.gridOptions.api.purgeInfiniteCache();
+            this.gridOptions.api.paginationGoToPage(0);
+        }
 
         this.pageSize = pageSize;
     }
