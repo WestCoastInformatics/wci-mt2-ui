@@ -1,6 +1,4 @@
 import {
-    AfterContentChecked,
-    AfterContentInit,
     ChangeDetectorRef,
     Component,
     TemplateRef,
@@ -1535,5 +1533,9 @@ export class RefsetDetails {
         } else {
             this.hideWorkflowTable = true;
         }
+    }
+
+    setDescriptions(refsetData: any): Array<string> {
+        return refsetData?.descriptions;
     }
 }

@@ -508,7 +508,7 @@
                                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        {{refsetData?.name}}
+                                        <span *ngFor="let description of setDescriptions(refsetData)">{{ description?.term }}<br></span>
                                     </td>
                                 </tr>
 
