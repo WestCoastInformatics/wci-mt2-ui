@@ -231,7 +231,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
-                    query: this.selectedProject?.organization?.name
+                    query: query
                 }
 
                 this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
