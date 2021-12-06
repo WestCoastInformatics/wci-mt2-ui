@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
-        private readonly refsetService: RefsetService) {
+        readonly refsetService: RefsetService) {
 
         this.authToken = localStorage.getItem('auth_token');
 
@@ -91,6 +91,6 @@ export class NavbarComponent implements OnInit {
     }
 
     assignedUser(): string {
-        return this.refsetService.assignedUser;
+        return this.refsetService.assignedUser ? this.refsetService.assignedUser : 'Unassigned';
     }
 }

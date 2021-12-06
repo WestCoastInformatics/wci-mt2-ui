@@ -184,7 +184,7 @@ export class RefsetDetails {
     ngOnInit() { 
 
         this.route.data.subscribe((data) => {
-            this.editMode = data.editMode;
+            this.refsetService.editMode = this.editMode = data.editMode;
         });
 
         this.route.params.subscribe(routeParams => {
@@ -1545,4 +1545,5 @@ export class RefsetDetails {
     setDescriptions(refsetData: any): Array<string> {
         return refsetData?.descriptions;
     }
+
 }
