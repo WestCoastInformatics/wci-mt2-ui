@@ -85,17 +85,17 @@
                                [checked]="refsetStatus?.includes('IN_EDIT')"
                                [disabled]="!refsetData?.availableActions?.includes('EDIT')"
                                value="Edit"
-                               (click)="setWorkflowStatusByAction('', 'EDIT'); readonlyMode = false; updateToggled = false; adminToggled = false; reviewToggled = false;">Edit
+                               (click)="setWorkflowStatusByAction('', 'EDIT');">Edit
             </mat-button-toggle>
             <mat-button-toggle class="button-group-review"
                                [checked]="refsetStatus?.includes('IN_REVIEW')"
                                [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
                                value="Review"
-                               (click)="adminToggled = false; reviewToggled = true; readonlyMode = true; updateToggled = false; setWorkflowStatusByAction('', 'REVIEW')">Review
+                               (click)="setWorkflowStatusByAction('', 'REVIEW')">Review
             </mat-button-toggle>
             <!-- <mat-button-toggle
                 class="button-group-update"
-                (click)="adminToggled = false; updateToggled = true; reviewToggled = false; readonlyMode = true;"
+                (click)="adminToggled = false; updateToggled = true;"
                 value="Update"
                 >Update</mat-button-toggle
             > -->
@@ -107,70 +107,64 @@
                                disabled>Admin</mat-button-toggle>
             <!-- <mat-button-toggle
                 class="button-group-admin"
-                (click)="adminToggled = true; updateToggled = false; reviewToggled = false;"
+                (click)="adminToggled = true; updateToggled = false;"
                 value="Admin"
                 >Admin</mat-button-toggle
             > -->
         </mat-button-toggle-group>
     </div>
-            <!-- Header Bar -->
-            <div class="row refset-title sticky-top"
-            *ngIf="!editMode">
-           <!-- Section Title -->
-           <!-- <div class="col-md-auto page-title">Reference Set Details</div> -->
-           <div class="col refset-tool-refset-details-title-name refset-data-name">
-               {{refsetData?.name}}
-               <div class="set-of-buttons-non-edit-mode">
-                   <app-refset-download [isDetailPage]="true"
+
+    <!-- Read Only Header Bar -->
+    <div class="row refset-title sticky-top" *ngIf="!editMode">
+        <!-- Section Title -->
+        <!-- <div class="col-md-auto page-title">Reference Set Details</div> -->
+        <div class="col refset-tool-refset-details-title-name refset-data-name">
+            {{refsetData?.name}}
+            <div class="set-of-buttons-non-edit-mode">
+                <app-refset-download [isDetailPage]="true"
                                         [refset]="refsetData"
                                         [disabled]="!refsetData?.downloadable"></app-refset-download>
 
-                   <!-- <button class="refset-tool-standard-icon-button"
-                           (click)="openRefsetFeedback()">
-                       <img src="assets/quote-icon.svg"
+                <!-- <button class="refset-tool-standard-icon-button"
+                        (click)="openRefsetFeedback()">
+                    <img src="assets/quote-icon.svg"
                             alt="quote icon"
                             title="View Feedback"
                             aria-label="View Feedback" />
-                   </button> -->
+                </button> -->
 
-                   <button class="refset-tool-standard-icon-button"
-                           (click)="openCompareRefset()">
-                       <img src="assets/compare-refset-icon.svg"
+                <button class="refset-tool-standard-icon-button"
+                        (click)="openCompareRefset()">
+                    <img src="assets/compare-refset-icon.svg"
                             alt="notes icon"
                             title="Compare Refset"
                             aria-label="Compare Refset" />
-                   </button>
+                </button>
+            </div>
+        </div>
 
-                   <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')
-                           || !refsetData?.availableActions?.includes('EDIT')"
-                                      [isDetailsPage]="true"
-                                      [editMode]="editMode"
-                                      [refsetId]="refsetId"
-                                      [inputProperties]="editMetadataProperties"></create-new-refset>
-               </div>
-           </div>
+        <!-- <div class="current-version-label">Current Version:</div> -->
+        <div class="row justify-content-end details-version-select" title="Select Version">
+            <mat-form-field appearance="fill">
+                <mat-label></mat-label>
+                <mat-select #detailsVersionSelect
+                            [(value)]="selectedVersion"
+                            (selectionChange)="changeVersion()"
+                            [disableOptionCentering]="true">
+                    <mat-option *ngFor="let option of versionOptions"
+                                [value]="option.value">
+                        {{ addSpaceAfterVersionDate(option.display) }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div> 
 
-           <!-- <div class="current-version-label">Current Version:</div> -->
-           <div class="row justify-content-end details-version-select"
-                title="Select Version">
-               <mat-form-field appearance="fill">
-                   <mat-label></mat-label>
-                   <mat-select #detailsVersionSelect
-                               [(value)]="selectedVersion"
-                               (selectionChange)="changeVersion()"
-                               [disableOptionCentering]="true">
-                       <mat-option *ngFor="let option of versionOptions"
-                                   [value]="option.value">
-                           {{ addSpaceAfterVersionDate(option.display) }}
-                       </mat-option>
-                   </mat-select>
-               </mat-form-field>
-           </div>
-       </div>
+    <!-- Refset Name Bar -->
     <div class="refset-title-container">
+
         <!-- Metadata Section -->
-        <div class="metadata-container"
-             *ngIf="editMode">
+        <div class="metadata-container" *ngIf="editMode">
             <div class="container-fluid">
                 <div class="metadata-name"
                      title="{{refsetData?.name}}"
@@ -197,13 +191,13 @@
                                  aria-label="Compare Refset" />
                         </button>
 
-                        <create-new-refset [disabled]="!refsetStatus?.includes('IN_EDIT')" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
+                        <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
                             [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
                         </create-new-refset>
 
                         <button class="refset-tool-standard-icon-button"
-                                [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
-                                [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                                [ngClass]="{'inactive' : !allowedToEdit}"
+                                [disabled]="!allowedToEdit"
                                 (click)="openCloneRefset()">
                             <img src="assets/pages-icon.svg"
                                  alt="pages icon"
@@ -212,8 +206,8 @@
                         </button>
 
                         <button class="refset-tool-standard-icon-button"
-                                [ngClass]="{'inactive' : !refsetStatus?.includes('IN_EDIT')}"
-                                [disabled]="!refsetStatus?.includes('IN_EDIT')"
+                                [ngClass]="{'inactive' : !allowedToEdit}"
+                                [disabled]="!allowedToEdit"
                                 (click)="openDeleteRefset()">
                             <img src="assets/trash-icon.svg"
                                  alt="trash icon"
@@ -715,7 +709,7 @@
 -->
                         <workflow-history-notes-modal [refsetId]="id"
                                                       [user]="refsetData?.modifiedBy"
-                                                      [disabled]="!refsetStatus?.includes('IN_EDIT') && !refsetStatus?.includes('IN_REVIEW')"
+                                                      [disabled]="!allowedToEdit && !allowedToReview"
                                                       [status]="refsetStatus"
                                                       [workflowHistoryNotes]="workflowHistoryDataSource?.reverse()[0]?.notes"></workflow-history-notes-modal>
                     </div>
@@ -821,7 +815,7 @@
                 &nbsp;{{'(' + membersGridNumberOfResults + ')'}}
             </span>
 
-            <div class="set-of-buttons" *ngIf="editMode && !readonlyMode">
+            <div class="set-of-buttons" *ngIf="allowedToEdit">
 
                 <import-from-file-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
 
@@ -1010,7 +1004,7 @@
                                     <!-- Concept Code Templates -->
                                     <ng-template #conceptCodeSection let-params>
 
-                                        <add-remove-concepts-icons [concept]="params?.data" [hidden]="!editMode || readonlyMode" [isInDetailsPanel]="false" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
+                                        <add-remove-concepts-icons [concept]="params?.data" [hidden]="!allowedToEdit" [isInDetailsPanel]="false" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
                                         {{ params?.data?.code }}
                                         
                                     </ng-template>
@@ -1125,7 +1119,7 @@
                                                        treeId="detailsMembersTree"
                                                        [refset]="refsetData"
                                                        [rootNode]="membersTaxonomyRoot"
-                                                       [editMode]="editMode && !readonlyMode"
+                                                       [editMode]="allowedToEdit"
                                                        [selectedConcept]="selectedConcept"
                                                        [options]="taxonomyOptions"
                                                        [manualStateRefresh]="taxonomyManualStateRefresh"
@@ -1199,9 +1193,9 @@
                                                 refset-tool-concept-details-taxonomy-item
                                             "
                                              *ngFor="let parent of conceptDetailParents">
-                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode && !readonlyMode">
+                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
 
-                                                <add-remove-concepts-icons [concept]="parent" [hidden]="!editMode || readonlyMode" [isInDetailsPanel]="true" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
+                                                <add-remove-concepts-icons [concept]="parent" [hidden]="!allowedToEdit" [isInDetailsPanel]="true" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
 
                                                 <img *ngIf="parent.defined"
                                                      title="Fully Defined"
@@ -1416,7 +1410,7 @@
                                                                [selectedConcept]="selectedConcept"
                                                                [options]="taxonomyOptions"
                                                                hasMultipleRootNodes="false"
-                                                               [editMode]="editMode && !readonlyMode"
+                                                               [editMode]="allowedToEdit"
                                                                (reloadPageData)="processChangedMemberEffects()"
                                                                (loadingSpinner)="toggleLoadingSpinner($event)"
                                                                (loadConceptDetail)="loadConceptDetail($event)"

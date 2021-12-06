@@ -123,7 +123,6 @@ export class RefsetDetails {
     showFullNarrativeText = false;
     showFullNotesText = false;
     editMode = false;
-    readonlyMode = true;
     taxonomyGridParams: any;
     showLoadingSpinner = false;
     selectedConcept: any;
@@ -137,7 +136,6 @@ export class RefsetDetails {
     workflowHistoryColumnDefs: any;
     refsetStatus: string;
     updateToggled = false;
-    reviewToggled = false;
     adminToggled = false;
     workflowHistoryDataSource: MatTableDataSource<any>;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
@@ -146,6 +144,8 @@ export class RefsetDetails {
     addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     reviewNotesAdded = false;
+    allowedToEdit = false;
+    allowedToReview = false;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
@@ -351,14 +351,24 @@ export class RefsetDetails {
         });
 
         this.refsetService.getRefset(this.id).subscribe((results) => {
+
             console.log(results);
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
             this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetData = results;
             this.refsetService.setRefsetInformation(this.refsetData);
+            this.allowedToEdit = false;
+            this.allowedToReview = false;
 
             if (this.editMode) {
+
+                if (this.refsetData?.availableActions?.includes('FINISH_EDIT')) {
+                    this.allowedToEdit = true;
+
+                } else if (this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')) {
+                    this.allowedToReview = true;
+                }
 
                 this.editMetadataProperties = {
                     project: this.refsetData.project,
@@ -442,10 +452,7 @@ export class RefsetDetails {
     }
 
     private setButtonGroupToggles(results: any): void {
-
         this.refsetStatus = results?.workflowStatus;
-        this.readonlyMode = !this.refsetStatus?.includes("IN_EDIT");
-        this.reviewToggled = this.refsetStatus?.includes("IN_REVIEW");
     }
 
     setWorkflowStatusByAction(notes: string, action: string): void {
