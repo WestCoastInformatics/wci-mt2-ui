@@ -6,15 +6,19 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    TemplateRef,
+    ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { catchError } from 'rxjs/operators';
 import { Debounce } from "src/app/decorators/debounce.decorator";
 import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: "add-remove-by-concept-modal",
@@ -57,7 +61,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     @Input() refset: any;
     @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() loadingSpinner = new EventEmitter<any>(true);
+    @ViewChild("importFromListDialog") importFromListDialog: TemplateRef<any>;
     showNoResultsLabel = false;
+    eclString: any;
 
     constructor(
         private readonly modalService: NgbModal,
@@ -239,13 +245,91 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.showLoadingSpinner = $event;
     }
 
+    // openEclBuilder(fieldId) {
+    //     UiUtility.openEclBuilder(
+    //         fieldId,
+    //         RefsetUtility.getBranchPath(this.refset)
+    //     );
+    // }
+
     openEclBuilder(fieldId) {
-        UiUtility.openEclBuilder(
-            fieldId,
-            RefsetUtility.getBranchPath(this.refset)
-        );
+        let field = $('#' + fieldId);
+        let eclString: any = field.val();
+        let snowstormApiUrl = environment['snowstormApiUrl'];
+        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
+
+        if (!regex.test(eclString)) {
+            eclString = '';
+        }
+
+        $('body').append('<ecl-builder id="ecl-builder" branch=' + RefsetUtility.getBranchPath(this.refset) + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+
+        const eclBuilder = document.querySelector('ecl-builder');
+
+        eclBuilder.addEventListener('output', (event: any) => {
+            this.eclString = event.detail;
+            this.openImportFromListModal(this.importFromListDialog)
+        });
     }
 
+    openImportFromListModal(importFromListDialog: any) {
+        this.modalService.open(importFromListDialog, {
+            backdrop: "static",
+            keyboard: false,
+        });
+    }
+
+    addMembers(): void {
+
+        if (!this.eclString?.length) {
+            return;
+        }
+
+        this.showLoadingSpinner = true;
+
+        this.refsetService.addRefsetMembers(this.refsetInternalId, "list", '', this.eclString)
+            .pipe(catchError((err) => {
+
+                if (err) {
+                    this.showLoadingSpinner = false;
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+
+                this.showLoadingSpinner = false;
+                this.eclString = "";
+            });
+    }
+
+    removeMembers(): void {
+
+        if (!this.eclString?.length) {
+            return;
+        }
+
+        this.showLoadingSpinner = true;
+
+        this.refsetService.removeRefsetMembers(this.refsetInternalId, "list", '', this.eclString)
+            .pipe(catchError((err) => {
+
+                if (err) {
+                    this.showLoadingSpinner = false;
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+                
+                    this.showLoadingSpinner = false;
+                },
+                (error) => {
+                    this.showLoadingSpinner = false;
+                }
+            );
+    }
+    
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
         if (

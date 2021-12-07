@@ -83,7 +83,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         // }
 
         this.changeState();
-        if (changes.numberOfPages) {
+        if (changes.numberOfPages && this.numOfResults > 0) {
             this.getStorageItems();
         }
         this.changeDetectorRef.detectChanges();
