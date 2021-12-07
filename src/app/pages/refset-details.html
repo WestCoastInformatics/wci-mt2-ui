@@ -81,30 +81,19 @@
         <mat-button-toggle-group name="fontStyle"
                                  aria-label="Font Style"
                                  class="details-page-right-button-group">
-            <mat-button-toggle class="button-group-edit"
-                               [checked]="refsetStatus?.includes('IN_EDIT')"
-                               [disabled]="!refsetData?.availableActions?.includes('EDIT')"
-                               value="Edit"
-                               (click)="setWorkflowStatusByAction('', 'EDIT');">Edit
-            </mat-button-toggle>
-            <mat-button-toggle class="button-group-review"
-                               [checked]="refsetStatus?.includes('IN_REVIEW')"
-                               [disabled]="!refsetData?.availableActions?.includes('REVIEW')"
-                               value="Review"
-                               (click)="setWorkflowStatusByAction('', 'REVIEW')">Review
-            </mat-button-toggle>
+            
             <!-- <mat-button-toggle
                 class="button-group-update"
                 (click)="adminToggled = false; updateToggled = true;"
                 value="Update"
                 >Update</mat-button-toggle
             > -->
-            <mat-button-toggle class="button-group-update"
+            <!-- <mat-button-toggle class="button-group-update"
                                value="Update"
                                disabled>Update</mat-button-toggle>
             <mat-button-toggle class="button-group-admin"
                                value="Admin"
-                               disabled>Admin</mat-button-toggle>
+                               disabled>Admin</mat-button-toggle> -->
             <!-- <mat-button-toggle
                 class="button-group-admin"
                 (click)="adminToggled = true; updateToggled = false;"
@@ -218,12 +207,25 @@
                 </div>
                 <div class="edit-button-group-right-below-sticky-header">
 
+                    <button *ngIf="this.refsetData?.availableActions?.includes('EDIT')"
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            #editButton
+                            class="refset-tool-action-button refset-action-button"
+                            aria-label="Edit"
+                            title="Edit"
+                            ng-reflect-color="primary"
+                            (click)="setWorkflowStatusByAction('', 'EDIT')">
+                        Edit
+                    </button>
+
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                             mat-raised-button
                             color="primary"
                             aria-hidden="false"
-                            #finishEditButton
-                            class="refset-tool-action-button cancel-edit-button"
+                            #cancelEditButton
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Cancel Edit"
                             title="Cancel Edit"
                             ng-reflect-color="primary"
@@ -236,7 +238,7 @@
                             color="primary"
                             aria-hidden="false"
                             #finishEditButton
-                            class="refset-tool-action-button finish-edit-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Finish Edit"
                             title="Finish Edit"
                             ng-reflect-color="primary"
@@ -250,11 +252,24 @@
                             mat-raised-button
                             color="primary"
                             aria-hidden="false"
-                            class="refset-tool-action-button request-review-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Request Review"
                             title="Request Review"
                             ng-reflect-color="primary">
                         Request Review
+                    </button>
+
+                    <button *ngIf="this.refsetData?.availableActions?.includes('REVIEW')"
+                            #reviewButton
+                            (click)="setWorkflowStatusByAction('', 'REVIEW')"
+                            mat-raised-button
+                            color="primary"
+                            aria-hidden="false"
+                            class="refset-tool-action-button refset-action-button"
+                            aria-label="Review"
+                            title="Review"
+                            ng-reflect-color="primary">
+                        Review
                     </button>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')"
@@ -262,7 +277,7 @@
                             color="primary"
                             aria-hidden="false"
                             #finishEditButton
-                            class="refset-tool-action-button finish-edit-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Withdraw Review Request"
                             title="Withdraw Review Request"
                             ng-reflect-color="primary"
@@ -276,7 +291,7 @@
                             color="primary"
                             aria-hidden="false"
                             (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')"
-                            class="refset-tool-action-button accept-refset-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Accept Refset"
                             title="Accept Refset"
                             ng-reflect-color="primary">
@@ -284,16 +299,16 @@
                     </button>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && reviewNotesAdded"
-                            #rejectRefsetButton
                             mat-raised-button
                             color="primary"
                             aria-hidden="false"
-                            (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')"
-                            class="refset-tool-action-button reject-refset-button"
+                            #rejectRefsetButton
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Reject Refset"
                             title="Reject Refset"
-                            ng-reflect-color="primary">
-                        Reject Refset
+                            ng-reflect-color="primary"
+                            (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
+                            Reject Refset
                     </button>
 
                     <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"></review-modal>
@@ -304,7 +319,7 @@
                             color="primary"
                             aria-hidden="false"
                             (click)="setWorkflowStatusByAction('', 'UNASSIGN')"
-                            class="refset-tool-action-button unassign-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Unassign"
                             title="Unassign"
                             ng-reflect-color="primary">
@@ -321,7 +336,7 @@
                             color="primary"
                             aria-hidden="false"
                             (click)="setWorkflowStatusByAction('', 'FAILS_RVF')"
-                            class="refset-tool-action-button launch-release-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Withdraw"
                             title="Withdraw Publication Request"
                             ng-reflect-color="primary">
@@ -335,7 +350,7 @@
                             color="primary"
                             aria-hidden="false"
                             (click)="setWorkflowStatusByAction('', 'REFSET_PUBLISHED')"
-                            class="refset-tool-action-button cancel-release-button"
+                            class="refset-tool-action-button refset-action-button"
                             aria-label="Complete Publication"
                             title="Complete Publication"
                             ng-reflect-color="primary">

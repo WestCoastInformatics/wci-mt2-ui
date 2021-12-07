@@ -2245,14 +2245,6 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage
     > .refset-title-container
-    > .metadata-container
-    > .container-fluid
-    > .finish-edit-button {
-    margin-bottom: -5px;
-}
-
-#refsetDetailsPage
-    > .refset-title-container
     > .refset-tool-refset-details-title-name
     > .set-of-buttons {
     height: 33px;
@@ -2623,19 +2615,10 @@ button.refset-tool-table-action-icon {
     white-space: normal !important;
 }
 
-.launch-release-button,
-.cancel-release-button,
-.finish-edit-button,
-.cancel-edit-button,
-.request-review-button,
-.request-publication-button,
-.update-refset-button,
-.unassign-button,
-.reject-refset-button,
-.accept-refset-button,
-.cancel-update-button {
+#refsetDetailsPage .refset-title-container .edit-button-group-right-below-sticky-header .refset-action-button {
     margin-left: 10px !important;
     width: 165px !important;
+    margin-bottom: -5px !important;
 }
 
 .ready-for-publication-modal-body {
