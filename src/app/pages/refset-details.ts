@@ -1551,7 +1551,8 @@ export class RefsetDetails {
         return refsetData?.descriptions;
     }
 
-    openEclBuilder(fieldId) {
+    // This is here only because the service is static, remember to move back to the utility service after the demo.
+    openEclBuilder(fieldId: string, isSearch: boolean = true) {
         let field = $('#' + fieldId);
         let eclString: any = field.val();
         let snowstormApiUrl = environment['snowstormApiUrl'];
@@ -1566,8 +1567,18 @@ export class RefsetDetails {
         const eclBuilder = document.querySelector('ecl-builder');
 
         eclBuilder.addEventListener('output', (event: any) => {
-            this.eclString = event.detail;
-            this.openImportFromListModal(this.importFromListDialog)
+
+            if (isSearch) {
+                field.val(event.detail);
+
+                const customEvent = document.createEvent('Event');
+                customEvent.initEvent('input', true, true);
+
+                field[0].dispatchEvent(customEvent);
+            } else {
+                this.eclString = event.detail;
+                this.openImportFromListModal(this.importFromListDialog);
+            }
         });
     }
 

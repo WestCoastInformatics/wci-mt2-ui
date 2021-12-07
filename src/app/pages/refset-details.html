@@ -839,7 +839,7 @@
                 <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)">
                 </add-remove-by-concept-modal>
 
-                <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput')" class="button-inactive">
+                <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput', false)" class="button-inactive">
                     <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
                 </button>
             </div>
@@ -1490,7 +1490,7 @@
             Add
         </button>
 
-        <button *ngIf="!isIntensional" type="button" (click)="removeMembers()" mat-raised-button color="primary" aria-hidden="false"
+        <button type="button" (click)="removeMembers()" mat-raised-button color="primary" aria-hidden="false"
                 class="refset-tool-action-button import-from-list-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="primary">
             Remove
         </button>
