@@ -62,8 +62,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-    metadataAndConcepts = true;
-    selectedMetadataAndConcepts = 'true';
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
@@ -143,7 +141,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-                suppressMenu: false,
+                suppressMenu: true,
                 menuTabs: ['columnsMenuTab'],
                 resizable: true
             },
@@ -168,10 +166,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     }
 
     getStorageItems(): void {
-        if (sessionStorage.getItem('searchFilter')) {
-            this.metadataAndConcepts = sessionStorage.getItem('searchFilter') === 'true';
-            this.selectedMetadataAndConcepts = sessionStorage.getItem('searchFilter');
-        }
         if (sessionStorage.getItem('recentSearch')) {
             this.searchInput = sessionStorage.getItem('recentSearch');
         }
@@ -246,7 +240,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     offset:
                         (pageNumber - 1) *
                         this.refsetGridApi.paginationGetPageSize(),
-                    searchConcepts: this.metadataAndConcepts,
+                    searchConcepts: true,
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 };
@@ -502,12 +496,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             this.refsetGridApi.purgeInfiniteCache();
             sessionStorage.setItem('recentSearch', this.searchInput);
         }
-    }
-
-    searchSelectionRadioResult(event: any): void {
-        this.metadataAndConcepts = event.value === 'true';
-        this.refsetGridApi.purgeInfiniteCache();
-        sessionStorage.setItem('searchFilter', this.metadataAndConcepts.toString());
     }
 
     setFullNarrativeText(show: boolean): void {
