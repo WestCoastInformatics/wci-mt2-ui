@@ -139,7 +139,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-                suppressMenu: false,
+                suppressMenu: true,
                 menuTabs: ['columnsMenuTab'],
                 resizable: true
             },
