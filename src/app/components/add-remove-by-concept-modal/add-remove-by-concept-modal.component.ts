@@ -287,7 +287,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.showLoadingSpinner = true;
 
-        this.refsetService.addRefsetMembers(this.refsetInternalId, "list", '', this.eclString)
+        this.refsetService.addRefsetMembers(this.refsetInternalId, "list", '', escape(this.eclString))
             .pipe(catchError((err) => {
 
                 if (err) {
@@ -311,7 +311,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.showLoadingSpinner = true;
 
-        this.refsetService.removeRefsetMembers(this.refsetInternalId, "list", '', this.eclString)
+        this.refsetService.removeRefsetMembers(this.refsetInternalId, "list", '', escape(this.eclString))
             .pipe(catchError((err) => {
 
                 if (err) {
