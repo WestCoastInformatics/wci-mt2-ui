@@ -1586,7 +1586,7 @@ export class RefsetDetails {
 
         this.showLoadingSpinner = true;
 
-        this.refsetService.addRefsetMembers(this.refsetId, "list", '', this.eclString)
+        this.refsetService.addRefsetMembers(this.refsetData?.id, "list", '', escape(this.eclString))
             .pipe(catchError((err) => {
 
                 if (err) {
@@ -1611,7 +1611,7 @@ export class RefsetDetails {
 
         this.showLoadingSpinner = true;
 
-        this.refsetService.removeRefsetMembers(this.refsetId, "list", '', this.eclString)
+        this.refsetService.removeRefsetMembers(this.refsetData?.id, "list", '', escape(this.eclString))
             .pipe(catchError((err) => {
 
                 if (err) {
