@@ -25,6 +25,8 @@ import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 import { Refset } from "../models/refset";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { catchError } from 'rxjs/operators';
 
 /**
  * @title Tree with nested nodes
@@ -164,8 +166,10 @@ export class RefsetDetails {
     @ViewChild("taxonomyResultSection") taxonomyResultSection: TemplateRef<any>;
     @ViewChild("taxonomyPathSection") taxonomyPathSection: TemplateRef<any>;
     @ViewChild("conceptCodeSection") conceptCodeSection: TemplateRef<any>;
+    @ViewChild("importFromListDialog") importFromListDialog: TemplateRef<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
+    eclString: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -175,7 +179,8 @@ export class RefsetDetails {
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService,
-        private readonly workflowService: WorkflowService
+        private readonly workflowService: WorkflowService,
+        private readonly modalService: NgbModal
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -1104,12 +1109,12 @@ export class RefsetDetails {
         }
     }
 
-    openEclBuilder(fieldId) {
-        UiUtility.openEclBuilder(
-            fieldId,
-            RefsetUtility.getBranchPath(this.refsetData)
-        );
-    }
+    // openEclBuilder(fieldId) {
+    //     UiUtility.openEclBuilder(
+    //         fieldId,
+    //         RefsetUtility.getBranchPath(this.refsetData)
+    //     );
+    // }
 
     shortenNoteFields() {
         if (CodeUtility.hasValue(this.refsetData)) {
@@ -1546,4 +1551,83 @@ export class RefsetDetails {
         return refsetData?.descriptions;
     }
 
+    openEclBuilder(fieldId) {
+        let field = $('#' + fieldId);
+        let eclString: any = field.val();
+        let snowstormApiUrl = environment['snowstormApiUrl'];
+        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
+
+        if (!regex.test(eclString)) {
+            eclString = '';
+        }
+
+        $('body').append('<ecl-builder id="ecl-builder" branch=' + RefsetUtility.getBranchPath(this.refsetData) + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+
+        const eclBuilder = document.querySelector('ecl-builder');
+
+        eclBuilder.addEventListener('output', (event: any) => {
+            this.eclString = event.detail;
+            this.openImportFromListModal(this.importFromListDialog)
+        });
+    }
+
+    openImportFromListModal(importFromListDialog: any) {
+        this.modalService.open(importFromListDialog, {
+            backdrop: "static",
+            keyboard: false,
+        });
+    }
+
+    addMembers(): void {
+
+        if (!this.eclString?.length) {
+            return;
+        }
+
+        this.showLoadingSpinner = true;
+
+        this.refsetService.addRefsetMembers(this.refsetId, "list", '', this.eclString)
+            .pipe(catchError((err) => {
+
+                if (err) {
+                    this.showLoadingSpinner = false;
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+
+                this.showLoadingSpinner = false;
+                this.reloadMembersGridAndTaxonomy();
+                this.eclString = "";
+            });
+    }
+
+    removeMembers(): void {
+
+        if (!this.eclString?.length) {
+            return;
+        }
+
+        this.showLoadingSpinner = true;
+
+        this.refsetService.removeRefsetMembers(this.refsetId, "list", '', this.eclString)
+            .pipe(catchError((err) => {
+
+                if (err) {
+                    this.showLoadingSpinner = false;
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+                
+                    this.showLoadingSpinner = false;
+                    this.reloadMembersGridAndTaxonomy();
+                },
+                (error) => {
+                    this.showLoadingSpinner = false;
+                }
+            );
+    }
 }

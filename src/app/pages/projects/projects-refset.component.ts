@@ -16,6 +16,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { User } from '../../models/user';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'projects-refset',
@@ -74,7 +75,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService,
         readonly toggleService: ToggleService,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
+        private readonly modalService: NgbModal
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -402,4 +404,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
     }
+
+    openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {
+        this.modalService.open(workflowDiagramModal, {
+          backdrop : 'static',
+          keyboard : false,
+          windowClass: 'workflow-diagram-modal'
+        });
+      }
 }

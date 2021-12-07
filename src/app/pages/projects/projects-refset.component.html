@@ -62,6 +62,13 @@
             <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
         </div>
 
+        <div style="display: inline; padding-right: 10px; cursor: pointer;"
+        (click)="openWorkflowDiagramModal(workflowDiagramDialog)">
+            <img src="assets/help-icon.svg"
+            alt="Display Workflow Diagram"
+            title="Display Workflow Diagram"
+            aria-label="Display Workflow Diagram" />
+        </div>
         <div style="display: inline">
             <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR') || !selectedProject"
                                [inputProperties]="createRefsetProperties"
@@ -177,3 +184,31 @@
     </div>
 </div>
 <scroll-top></scroll-top>
+
+<ng-template #workflowDiagramDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <h4
+            class="modal-title review-modal-title"
+            id="modal-basic-title"
+        >
+            Workflow Diagram
+        </h4>
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <img src="assets/Workflow.drawio_landscape_all_black.jpg"
+            alt="Workflow Diagram"
+            title="Workflow Diagram"
+            aria-label="Workflow Diagram"
+            style="max-width: 100%; max-height: 100%;" />
+        </div>
+    </div>
+</ng-template>

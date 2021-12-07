@@ -2669,6 +2669,14 @@ button.refset-tool-table-action-icon {
     width: 700px;
 }
 
+.workflow-diagram-modal > .modal-dialog > .modal-content {
+    width: 1000px;
+}
+
+.workflow-diagram-modal > .modal-dialog {
+    display: table;
+}
+
 .review-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
