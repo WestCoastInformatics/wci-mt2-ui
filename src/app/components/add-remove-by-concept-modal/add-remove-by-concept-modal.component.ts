@@ -267,67 +267,13 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         const eclBuilder = document.querySelector('ecl-builder');
 
         eclBuilder.addEventListener('output', (event: any) => {
-            this.eclString = event.detail;
-            this.openImportFromListModal(this.importFromListDialog)
+            field.val(event.detail);
+
+            const customEvent = document.createEvent('Event');
+            customEvent.initEvent('input', true, true);
+
+            field[0].dispatchEvent(customEvent);
         });
-    }
-
-    openImportFromListModal(importFromListDialog: any) {
-        this.modalService.open(importFromListDialog, {
-            backdrop: "static",
-            keyboard: false,
-        });
-    }
-
-    addMembers(): void {
-
-        if (!this.eclString?.length) {
-            return;
-        }
-
-        this.showLoadingSpinner = true;
-
-        this.refsetService.addRefsetMembers(this.refsetInternalId, "list", '', escape(this.eclString))
-            .pipe(catchError((err) => {
-
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-
-                this.showLoadingSpinner = false;
-                this.eclString = "";
-            });
-    }
-
-    removeMembers(): void {
-
-        if (!this.eclString?.length) {
-            return;
-        }
-
-        this.showLoadingSpinner = true;
-
-        this.refsetService.removeRefsetMembers(this.refsetInternalId, "list", '', escape(this.eclString))
-            .pipe(catchError((err) => {
-
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-                
-                    this.showLoadingSpinner = false;
-                },
-                (error) => {
-                    this.showLoadingSpinner = false;
-                }
-            );
     }
     
     @Debounce()
