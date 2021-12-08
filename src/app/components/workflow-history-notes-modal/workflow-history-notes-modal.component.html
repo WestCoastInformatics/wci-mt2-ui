@@ -25,22 +25,24 @@
     </div>
     <div class="container-fluid workflow-history-notes-container-fluid">
         <div class="modal-body workflow-history-notes-modal-body">
-            <editor [(ngModel)]="workflowHistoryNotes"
+            <editor #workflowHistoryNotesEditor
+                    id="workflowHistoryNotesEditor"
+                    [(ngModel)]="workflowHistoryNotes"
                     [init]="{
                     base_url: '/tinymce',
                     suffix: '.min',
                     height: 200,
                     menubar: false,
                     placeholder: 'Enter your notes',
-                    plugins: ['lists advlist'],
+                    plugins: ['lists advlist wordcount'],
                     toolbar:
-                        'undo redo | bold italic | bullist numlist outdent indent'
+                        'undo redo | bold italic | bullist numlist outdent indent | wordcount'
                 }"></editor>
         </div>
     </div>
     <div class="modal-footer workflow-history-notes-footer">
         <button type="button"
-                (click)="modal.close('Save'); saveNotes()"
+                (click)="saveNotes(modal)"
                 mat-raised-button
                 color="primary"
                 aria-hidden="false"

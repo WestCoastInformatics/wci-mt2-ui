@@ -139,7 +139,8 @@ export class RefsetDetails {
     refsetStatus: string;
     updateToggled = false;
     adminToggled = false;
-    workflowHistoryDataSource: MatTableDataSource<any>;
+    workflowHistoryDataSource: any;
+    workflowHistoryNotes: string;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
     isConceptBeingAdded: Boolean;
     isAddRemoveInDetailsPanel: Boolean;
@@ -494,8 +495,10 @@ export class RefsetDetails {
         this.refsetService
             .getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified")
             .subscribe((results) => {
+
                 this.workflowHistoryDataSource = results?.items;
                 this.workflowHistoryDataSource.sort = this.sort;
+                this.workflowHistoryNotes = this.workflowHistoryDataSource[this.workflowHistoryDataSource.length - 1].notes;
                 this.checkReviewNotesStatus(this.workflowHistoryDataSource);
             });
     };

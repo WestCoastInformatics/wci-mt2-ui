@@ -89,7 +89,7 @@ export class RefsetService extends RestService {
     }
 
     updateWorkflowStatus(refsetId: string, notes: string): Observable<any> {
-        return this.put(this.contextPath + `refset/${refsetId}/workflowNote?&notes=${notes}`, '');
+        return this.put(this.contextPath + `refset/${refsetId}/workflowNote`, notes);
     }
 
     getConceptList(refsetId: string, params: any): Observable<any> {
