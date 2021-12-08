@@ -45,6 +45,7 @@ export class RefsetDetails {
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
     memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
+    inEditButtonPrefix = '';
     tableSearchInput: string;
     versionOptions: any;
     selectedVersion: string;
@@ -371,6 +372,7 @@ export class RefsetDetails {
 
                 if (this.refsetData?.availableActions?.includes('FINISH_EDIT')) {
                     this.allowedToEdit = true;
+                    this.inEditButtonPrefix = "Save and ";
 
                 } else if (this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')) {
                     this.allowedToReview = true;

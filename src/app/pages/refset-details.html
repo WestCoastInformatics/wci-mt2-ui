@@ -226,11 +226,11 @@
                             aria-hidden="false"
                             #cancelEditButton
                             class="refset-tool-action-button refset-action-button"
-                            aria-label="Cancel Edit"
-                            title="Cancel Edit"
+                            aria-label="Undo Changes"
+                            title="Undo Changes"
                             ng-reflect-color="primary"
                             (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT')">
-                        Cancel Edit
+                        Undo Changes
                     </button>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
@@ -239,11 +239,11 @@
                             aria-hidden="false"
                             #finishEditButton
                             class="refset-tool-action-button refset-action-button"
-                            aria-label="Finish Edit"
-                            title="Finish Edit"
+                            aria-label="Save Changes"
+                            title="Save Changes"
                             ng-reflect-color="primary"
                             (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
-                        Finish Edit
+                        Save Changes
                     </button>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
@@ -256,7 +256,7 @@
                             aria-label="Request Review"
                             title="Request Review"
                             ng-reflect-color="primary">
-                        Request Review
+                            {{inEditButtonPrefix}} Request Review
                     </button>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('REVIEW')"
