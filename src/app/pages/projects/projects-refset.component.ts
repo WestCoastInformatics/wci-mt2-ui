@@ -203,9 +203,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2){
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
-                }
+                query = CodeUtility.addIfNotEmpty(query, ' AND ') + "editionShortName:" + this.selectedProject.organization.edition.shortName;
+
 
                 let newFilterString = query;
                 let newSortString = JSON.stringify(sort);
