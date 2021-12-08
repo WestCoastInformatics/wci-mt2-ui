@@ -208,6 +208,7 @@ export class RefsetDetails {
         this.memberCacheLoaded = new Subject<boolean>();
         this.memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
         this.showLoadingSpinner = true;
+        this.inEditButtonPrefix = '';
         //this.id = this.route.snapshot.paramMap.get("refsetId");
         this.directUrl = (window.location.host + this.router.url).replace(
             "edit/refset",

@@ -7,13 +7,14 @@ import { WorkflowService } from 'src/app/services/workflow/workflow.service';
   templateUrl: './ready-for-publication-modal.component.html'
 })
 export class ReadyForPublicationModalComponent implements OnInit {
-  @Input()
-  refsetData: any;
 
-  @Output()
-  reloadPage = new EventEmitter<boolean>();
+  @Input() refsetData: any;
+  @Input() labelPrefix: string;
+
+  @Output() reloadPage = new EventEmitter<boolean>();
   
   requestForPublicationNotes = '';
+  
   constructor(private readonly modalService: NgbModal,
     private readonly workflowService: WorkflowService) { }
 

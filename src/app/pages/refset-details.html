@@ -226,8 +226,8 @@
                             aria-hidden="false"
                             #cancelEditButton
                             class="refset-tool-action-button refset-action-button"
-                            aria-label="Undo Changes"
-                            title="Undo Changes"
+                            aria-label="Undo all changes since last save"
+                            title="Undo all changes since last save"
                             ng-reflect-color="primary"
                             (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT')">
                         Undo Changes
@@ -239,8 +239,8 @@
                             aria-hidden="false"
                             #finishEditButton
                             class="refset-tool-action-button refset-action-button"
-                            aria-label="Save Changes"
-                            title="Save Changes"
+                            aria-label="Save changes and finish edit"
+                            title="Save changes and finish edit"
                             ng-reflect-color="primary"
                             (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
                         Save Changes
@@ -253,8 +253,8 @@
                             color="primary"
                             aria-hidden="false"
                             class="refset-tool-action-button refset-action-button"
-                            aria-label="Request Review"
-                            title="Request Review"
+                            attr.aria-label="{{inEditButtonPrefix}} Request Review"
+                            title="{{inEditButtonPrefix}} Request Review"
                             ng-reflect-color="primary">
                             {{inEditButtonPrefix}} Request Review
                     </button>
@@ -328,6 +328,7 @@
 
                     <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                                                  [refsetData]="refsetData"
+                                                 [labelPrefix]="inEditButtonPrefix"
                                                  (reloadPage)="initializeDetailsPage()"></ready-for-publication-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
