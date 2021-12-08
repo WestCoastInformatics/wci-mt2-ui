@@ -1611,6 +1611,7 @@ export class RefsetDetails {
                 this.showLoadingSpinner = false;
                 this.reloadMembersGridAndTaxonomy();
                 this.eclString = "";
+                this.modalService.dismissAll();
             });
     }
 
@@ -1633,8 +1634,9 @@ export class RefsetDetails {
 
             })).subscribe((data) => {
                 
-                    this.showLoadingSpinner = false;
-                    this.reloadMembersGridAndTaxonomy();
+                this.showLoadingSpinner = false;
+                this.reloadMembersGridAndTaxonomy();
+                this.modalService.dismissAll();
                 },
                 (error) => {
                     this.showLoadingSpinner = false;
