@@ -501,7 +501,7 @@ export class RefsetDetails {
 
                 this.workflowHistoryDataSource = results?.items;
                 this.workflowHistoryDataSource.sort = this.sort;
-                this.workflowHistoryNotes = this.workflowHistoryDataSource[this.workflowHistoryDataSource.length - 1].notes;
+                this.workflowHistoryNotes = this.workflowHistoryDataSource[this.workflowHistoryDataSource.length - 1]?.notes;
                 this.checkReviewNotesStatus(this.workflowHistoryDataSource);
             });
     };

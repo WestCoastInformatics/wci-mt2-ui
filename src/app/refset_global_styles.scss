@@ -561,12 +561,16 @@ button.refset-tool-table-action-icon {
     padding-left: 2px;
 }
 
-.refset-tool-directory-column-version-status .ag-cell-value {
+.refset-tool-directory-column-workflow-status .ag-cell-value {
     text-transform: lowercase;
 }
 
-.refset-tool-directory-column-version-status .ag-cell-value::first-letter {
+.refset-tool-directory-column-workflow-status .ag-cell-value::first-letter {
     text-transform: uppercase;
+}
+
+#refsetProjectsPage .refset-tool-directory-column-workflow-status .ag-cell-value {
+    text-transform: none;
 }
 
 .capitalize-metadata-value {
@@ -2695,103 +2699,51 @@ button.refset-tool-table-action-icon {
     padding-bottom: 30px !important;
 }
 
-.ready-for-review-projects-button {
-    width: 136px;
-    height: 31px;
-    position: absolute;
-    background: inherit;
-    background-color: rgba(211, 95, 125, 1);
-    border-radius: 12px;
-    top: 10px;
-}
-
-.ready-for-review-projects-text {
-    position: absolute;
-    top: 0px;
-    left: 30px;
-    padding: 2px 2px 2px 2px;
-    width: 100%;
-    color: #FFFFFF;
-}
-
-.ready-for-edit-projects-button {
-    width: 136px;
-    height: 31px;
-    position: absolute;
-    background: inherit;
-    background-color: rgba(202, 176, 39, 1);
-    border-radius: 12px;
-    top: 10px;
-}
-
-.ready-for-edit-projects-text {
-    position: absolute;
-    top: 0px;
-    left: 30px;
-    padding: 2px 2px 2px 2px;
-    width: 100%;
-    color: #FFFFFF;
-}
-
-.review-completed-projects-button {
-    width: 136px;
-    height: 31px;
-    position: absolute;
-    background: inherit;
-    background-color: rgba(198, 48, 75, 1);
-    border-radius: 12px;
-    top: 10px;
-}
-
-.review-completed-projects-text {
-    position: absolute;
-    top: 0px;
-    left: 25px;
-    padding: 2px 2px 2px 2px;
-    width: 100%;
-    color: #FFFFFF;
-}
-
-.in-edit-projects-button {
-    width: 70px;
-    height: 31px;
-    position: absolute;
-    background: inherit;
-    background-color: rgba(147, 124, 1, 1);
-    border-radius: 12px;
-    top: 10px;
-}
-
-.in-edit-projects-text {
-    position: absolute;
-    top: 0px;
-    left: 30px;
-    padding: 2px 2px 2px 2px;
-    width: 100%;
-    color: #FFFFFF;
-}
-
-.ready-for-publication-projects-button {
+@mixin refset-listing-workflow-button {
     width: 160px;
     height: 31px;
     position: absolute;
     background: inherit;
-    background-color: rgba(150, 72, 176, 1);
     border-radius: 12px;
     top: 10px;
 }
+.ready-for-review-projects-button {
+    @include refset-listing-workflow-button;
+    background-color: rgba(211, 95, 125, 1);
+}
 
-.ready-for-publication-projects-text {
+.in-review-projects-button {
+    @include refset-listing-workflow-button;
+    background-color: rgb(201, 76, 96);
+}
+
+.review-completed-projects-button {
+    @include refset-listing-workflow-button;
+    background-color: rgba(198, 48, 75, 1);
+}
+
+.ready-for-edit-projects-button {
+    @include refset-listing-workflow-button;
+    background-color: rgba(202, 176, 39, 1);
+}
+
+.in-edit-projects-button {
+    @include refset-listing-workflow-button;
+    background-color: rgba(147, 124, 1, 1);
+}
+
+.ready-for-publication-projects-button {
+    @include refset-listing-workflow-button;
+    background-color: rgba(150, 72, 176, 1);
+}
+
+.refset-listing-workflow-button-text {
     position: absolute;
     top: 0px;
     left: 30px;
     padding: 2px 2px 2px 2px;
     width: 100%;
     color: #FFFFFF;
-}
-
-#refsetProjectsPage .refset-tool-directory-column-version-status .ag-cell-value {
-    text-transform: none;
 }
 
 .metadata-collapsible-container {

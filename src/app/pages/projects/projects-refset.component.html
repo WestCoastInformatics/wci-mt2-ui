@@ -94,10 +94,7 @@
     <div class="container-fluid"
          [class.container-toggled]="toggleService.isToggled">
         <ag-grid-angular *ngIf="showTable" #directoryTable
-                         class="
-                ag-theme-alpine
-                refset-tool-ag-grid refset-tool-ag-grid-filter
-            "
+                         class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                          [columnDefs]="columnDefs"
                          [gridOptions]="refsetGridOptions"
                          style="width: 100%">
@@ -129,57 +126,36 @@
             </mat-icon>
         </ng-template>
         <!-- Workflow Status Templates -->
-        <ng-template #directoryversionStatusSection
-                     let-params>
-            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
-                <div class="ready-for-review-projects-button"></div>
-                <div class="ready-for-review-projects-text">
-                    {{ 'Ready for Review' }}
-                </div>
-            </ng-container>
-            <ng-container *ngIf="params?.data?.workflowStatus == 'IN_EDIT'">
-                <div class="in-edit-projects-button"></div>
-                <div class="in-edit-projects-text">
-                    {{ 'In Edit' }}
-                </div>
-            </ng-container>
-            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_PUBLICATION'">
-                <div class="ready-for-publication-projects-button"></div>
-                <div class="ready-for-publication-projects-text">
-                    {{ 'Ready for Publication' }}
-                </div>
-            </ng-container>
-            <ng-container *ngIf="params?.data?.workflowStatus == 'REVIEW_COMPLETED'">
-                <div class="review-completed-projects-button"></div>
-                <div class="review-completed-projects-text">
-                    {{ 'Review Completed' }}
-                </div>
+        <ng-template #directoryversionStatusSection let-params>
+            
+            <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED'">
+                <div>Published</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_EDIT'">
                 <div class="ready-for-edit-projects-button"></div>
-                <div class="ready-for-edit-projects-text">
-                    {{ 'Ready for Edit' }}
-                </div>
+                <div class="refset-listing-workflow-button-text">Ready for Edit</div>
             </ng-container>
-            <!-- Look at Version Status for PUBLISHED -->
-            <ng-container *ngIf="
-                                            params?.data?.workflowStatus == 'PUBLISHED' ||
-                                            params?.data?.versionStatus == 'PUBLISHED'
-                                        ">
-                <div class="published-projects-button"></div>
-                <div class="published-projects-text">
-                    {{ 'Published' }}
-                </div>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'IN_EDIT'">
+                <div class="in-edit-projects-button"></div>
+                <div class="refset-listing-workflow-button-text">In Edit</div>
             </ng-container>
-            <ng-container *ngIf="
-                                            !params?.data?.workflowStatus &&
-                                            !params?.data?.versionStatus == 'PUBLISHED'
-                                        ">
-                <div class="published-projects-button"></div>
-                <div class="published-projects-text">
-                    {{ params?.value }}
-                </div>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
+                <div class="ready-for-review-projects-button"></div>
+                <div class="refset-listing-workflow-button-text">Ready for Review</div>
             </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'IN_REVIEW'">
+                <div class="in-review-projects-button"></div>
+                <div class="refset-listing-workflow-button-text">In Review</div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'REVIEW_COMPLETED'">
+                <div class="review-completed-projects-button"></div>
+                <div class="refset-listing-workflow-button-text">Review Completed</div>
+            </ng-container>
+            <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_PUBLICATION'">
+                <div class="ready-for-publication-projects-button"></div>
+                <div class="refset-listing-workflow-button-text">Ready for Publication</div>
+            </ng-container>
+            
         </ng-template>
     </div>
 </div>
