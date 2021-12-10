@@ -8,10 +8,12 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
 
 @Injectable()
 export class HeaderInterceptor implements HttpInterceptor {
-    constructor() {
+
+    constructor(private authService: AuthenticationService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -25,6 +27,12 @@ export class HeaderInterceptor implements HttpInterceptor {
         request = request.clone({
             withCredentials: true
         });
+
+        const allCookies = document.cookie;
+
+        if (!allCookies.includes('ims-ihtsdo')) {
+            this.authService.notAuthenticated();
+        }
 
         return next
             .handle(request).pipe(tap((event: HttpEvent<any>) => {

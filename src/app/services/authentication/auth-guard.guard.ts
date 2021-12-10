@@ -7,18 +7,19 @@ import {AuthenticationService} from './authentication.service';
   providedIn: 'root'
 })
 export class AuthGuardGuard implements CanActivate {
+
   constructor(private authService: AuthenticationService) {}
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+
         const token = localStorage.getItem('auth_token');
-        //const currentUser = document.cookie.split(';');
-        if (token?.length > 1) {
+
+        if (this.authService.isAuthenticated()) {
             return true;
         } else {
+          
             this.authService.notAuthenticated();
             return false;
         }
     }
-
 }

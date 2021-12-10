@@ -91,7 +91,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     }
 
     getUser(): void {
-        this.user = this.authService.getRefsetUserDetails();
+        this.user = this.authService.getUser();
     }
 
     populateProjectList(): void {

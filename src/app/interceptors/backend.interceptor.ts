@@ -16,8 +16,8 @@ import { RefsetService } from '../services/rest/refset.service';
 import { UiUtility } from '../utilities/ui.utility';
 
 const userData: User[] = [
-    { firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', username: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith' },
-    { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', username: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
+    { firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', userName: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith' },
+    { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', userName: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
 ];
 
 const taxonomySearchResults: any[] = [
@@ -397,7 +397,7 @@ export class BackendInterceptor implements HttpInterceptor {
         function authenticate() {
 
             const { username, password } = body;
-            const user = userData.find(u => u.username === username && u.password === password);
+            const user = userData.find(u => u.userName === username && u.password === password);
 
             if (!user) {
                 return error('Username or password is incorrect');

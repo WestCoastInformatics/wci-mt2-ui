@@ -16,9 +16,12 @@ export class NavbarComponent implements OnInit {
 
     environment: string;
     user: User;
+    userRoles: any;
     userSubscription: Subscription;
     breadcrumbs;
     authToken: any;
+    guestUser: string;
+    isUserLoggedIn =  false;
 
     constructor(private authenticationService: AuthenticationService,
         private breadcrumbService: BreadcrumbService,
@@ -28,14 +31,15 @@ export class NavbarComponent implements OnInit {
         readonly refsetService: RefsetService) {
 
         this.authToken = localStorage.getItem('auth_token');
-
+        this.guestUser = authenticationService.GUEST_USER;
         this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
-        //this.userSubscription = this.authenticationService.getUser().subscribe(data => this.user = data);
 
+        this.userSubscription = this.authenticationService.userSubject.subscribe(data => {
+            this.setUserInfo();
+        });
     }
 
     ngOnInit() {
-        //this.authenticationService.setUser();
 
         this.breadcrumbService.getBreadcrumbs().subscribe(breadcrumbs => {
 
@@ -43,11 +47,14 @@ export class NavbarComponent implements OnInit {
             this.changeDetectorRef.detectChanges();
         });
 
-        this.getUser();
+        this.setUserInfo();
     }
 
-    private getUser(): void {
-        this.user = this.authenticationService.getRefsetUserDetails();
+    setUserInfo() {
+
+        this.user = this.authenticationService.getUser();
+        this.userRoles = this.user?.roles;
+        this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
     }
 
     showProjectRoleAndAssignee(): boolean {
@@ -55,11 +62,15 @@ export class NavbarComponent implements OnInit {
     }
 
     getProjectRoleString(): string {
+
         const projectRoles = [];
+
         if (!this.user?.roles) {
             return '';
         }
+
         for (const role of this.user?.roles) {
+
             if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
                 projectRoles.push(role.toLowerCase().charAt(0).toUpperCase() + role.toLowerCase().slice(1));
             }
@@ -78,16 +89,15 @@ export class NavbarComponent implements OnInit {
     }
 
     logoutUser() {
-        this.authenticationService.logoutUser().subscribe( data => {
-            this.router.navigate(['login']);
-            document.cookie = `csrftoken; expires= ${new Date()}; path=/`;
-            // localStorage.clear();
-        }, err => {
-        });
+        this.authenticationService.logoutUser();
     }
 
     logout() {
         this.authenticationService.logout();
+    }
+
+    login() {
+        this.router.navigate(['/login']);
     }
 
     assignedUser(): string {

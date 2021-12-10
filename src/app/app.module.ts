@@ -82,8 +82,8 @@ import { ReviewModalComponent } from './components/review-modal/review-modal.com
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
     { path: 'login', component: LoginComponent },
-    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' }, canActivate: [AuthGuardGuard] },
-    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false }, canActivate: [AuthGuardGuard] },
+    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
+    { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
     { path: 'projects', component: ProjectsRefsetComponent, canActivate: [AuthGuardGuard] },
     { path: 'edit/refset/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Edit Reference Set', editMode: true }, canActivate: [AuthGuardGuard] },
 ];
