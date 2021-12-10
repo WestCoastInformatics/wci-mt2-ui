@@ -789,16 +789,17 @@ button.refset-tool-table-action-icon {
         //font-weight: normal;
         //color: $inactive_text_color;
     }
-    .tree-node.refset-tool-taxonomy-relation-members
-        > tree-node-wrapper
-        > .node-wrapper
-        > tree-node-expander
-        > .toggle-children-wrapper
-        > .toggle-children {
-        background-image: url("/assets/circled_chevron_right_icon.svg");
+    .node-wrapper tree-node-expander {
+        display: none;
+        .custom-inner-chevron {
+            display: block;
+            padding-right: 10px;
+            margin-left: -15px;
+        }
     }
+
     .tree-node.refset-tool-taxonomy-no-members-in-branch {
-        margin-left: 10px;
+        margin-left: 25px;
     }
 
     .tree-node img {
@@ -832,14 +833,14 @@ button.refset-tool-table-action-icon {
         background-image: url("/assets/chevron_right_icon.svg");
         height: 18px;
         width: 29.25px;
-        top: -3px;
+        top: 5px;
     }
     // used for when there are no children
     .toggle-children-placeholder {
         background-image: url("/assets/remove_icon.svg");
         height: 18px;
         width: 29.25px;
-        top: 2px;
+        top: 5px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
