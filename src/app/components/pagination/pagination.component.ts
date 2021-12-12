@@ -95,6 +95,11 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         } else if (sessionStorage.getItem('directoryPageSize') && this.isDirectoryPage) {
             this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')));
         }
+        if (sessionStorage.getItem('lastPageNumberDetails') && this.isDetailPage) {
+            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDetails')));
+        } else if (sessionStorage.getItem('lastPageNumberDiretory') && this.isDirectoryPage) {
+            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDiretory')));
+        }
     }
 
     changeState(currentPage: number = this.getCurrentPage()) { 
@@ -144,7 +149,11 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
     }
 
     goToPage(index: number) {
-
+        if (this.isDetailPage) {
+            sessionStorage.setItem('lastPageNumberDetails', index.toString());
+        } else if (this.isDirectoryPage) {
+            sessionStorage.setItem('lastPageNumberDirectory', index.toString());
+        }
         this.gridOptions.api.paginationGoToPage(index - 1);
 
         if (!this.manualStateRefresh){
@@ -152,8 +161,12 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         }
     }
 
-    goToNext() {
-
+    goToNext(index: number) {
+        if (this.isDetailPage) {
+            sessionStorage.setItem('lastPageNumberDetails', index.toString());
+        } else if (this.isDirectoryPage) {
+            sessionStorage.setItem('lastPageNumberDirectory', index.toString());
+        }
         this.gridOptions.api.paginationGoToNextPage();
         
         if (!this.manualStateRefresh){
@@ -161,8 +174,12 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         }
     }
 
-    goToPrevious() {
-
+    goToPrevious(index: number) {
+        if (this.isDetailPage) {
+            sessionStorage.setItem('lastPageNumberDetails', index.toString());
+        } else if (this.isDirectoryPage) {
+            sessionStorage.setItem('lastPageNumberDirectory', index.toString());
+        }
         this.gridOptions.api.paginationGoToPreviousPage();
         this.paginationPages = this.pagerService.getPager(this.numberOfPages, this.getCurrentPage(), this.totalKnown);
         
