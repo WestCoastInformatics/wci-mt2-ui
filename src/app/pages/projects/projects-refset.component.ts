@@ -95,20 +95,27 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     }
 
     populateProjectList(): void {
+
         this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=false').subscribe(project => {
+
             this.projects = project.items;
+            this.getStorageItems();
         });
     }
+
     ngAfterViewInit() {
 
-		forkJoin(
+        forkJoin(
         	this.refsetService.getVersionStatuses(),
-			this.refsetService.getEditions(),
+			//this.refsetService.getEditions(),
 		).subscribe(([results]) => {
 
             this.versionStatuses = results;
+            this.showLoadingSpinner = false;
+            this.changeDetectorRef.detectChanges();
+        });
 
-	    this.columnDefs = [
+        this.columnDefs = [
             { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
             { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }},
             { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150},
@@ -116,6 +123,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
         ];
+
         this.refsetGridOptions = {
             context: { componentParent: this },
             pagination: true,
@@ -131,7 +139,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             onGridReady: this.onGridReady,
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent
+                'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
                 sortable: true,
@@ -155,17 +163,26 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 }
             }
         };
-
-        this.showLoadingSpinner = false;
-        this.getStorageItems();
-        this.changeDetectorRef.detectChanges();
-        });
     }
 
     getStorageItems(): void {
-        if (sessionStorage.getItem('selectedProject')) {
-            this.selectedProject = JSON.parse(sessionStorage.getItem('selectedProject'));
-            this.showRefsets();
+
+        if (sessionStorage.getItem('selectedProjectId')) {
+
+            let storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
+
+            for (let project of this.projects) {
+
+                if (project.id == storedProjectId) {
+                    
+                    this.selectedProject = project;
+                    this.showRefsets();
+                    return;
+                }
+            }
+
+            // if the stored project ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedProjectId');
         }
     }
 
@@ -176,7 +193,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
             this.showTable = true;
         }
-        sessionStorage.setItem('selectedProject', JSON.stringify(this.selectedProject));
+
+        sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
     }
 
     onGridReady = (gridReadyParams) => {

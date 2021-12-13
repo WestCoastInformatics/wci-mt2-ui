@@ -6,8 +6,7 @@ import { Subject } from 'rxjs';
 import { AuthoringService } from '../authoring/authoring.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-
-declare var toastr: any;
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Injectable({
     providedIn: 'root',
@@ -21,7 +20,8 @@ export class AuthenticationService {
     constructor(
         private http: HttpClient,
         private authoringService: AuthoringService,
-        private router: Router
+        private router: Router,
+        private readonly notificationService: NotificationService
     ) {}
 
     imsLogin(successCallback: Function = this.handleImsSuccess) {
@@ -53,10 +53,10 @@ export class AuthenticationService {
                 document.cookie = this.getAuthCookie();
                 this.router.navigate(['directory']);
                 this.userSubject.next(userData);
-                toastr.success('Logged in Successfully');
+                this.notificationService.show('Logged in Successfully', null, 'success', {timeOut: 5000, extendedTimeOut: 0});
             },
             (err) => {
-                //toastr.error(err.error.error);
+                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
                 console.error(err);
             }
         );
