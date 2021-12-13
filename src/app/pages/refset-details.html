@@ -635,7 +635,7 @@
                                     </td>
                                 </tr>
 
-                                <tr *ngIf="refsetData?.definition">
+                                <tr *ngIf="refsetData?.definitionClauses && refsetData?.type === 'INTENSIONAL'">
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         "
@@ -645,7 +645,7 @@
                                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        <div *ngFor="let definitionClause of refsetData?.definition">
+                                        <div *ngFor="let definitionClause of refsetData?.definitionClauses">
                                             {{definitionClause?.value}}
 
                                             <!-- <span *ngIf="!definitionClause.negated">
