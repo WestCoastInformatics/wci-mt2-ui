@@ -118,11 +118,11 @@ export class ImportFromListModalComponent {
           name: 'Concept',
           status: 'Status',
         }];
-        const failedIdNamesWithoutWhiteSpace = this.failedIdNames.map((name) => {
+        const failedIdNamesWithoutWhiteSpace = this.failedIdNames?.map((name) => {
           return name?.replace(' ', '');
         })
         if (this.successfulImport) {
-            for (let i = 0; i < this.allIds.length; i++) {
+            for (let i = 0; i < this.allIds?.length; i++) {
                 ids.push({
                     name: this.allIds[i],
                     status: "SUCCESS",
@@ -130,7 +130,7 @@ export class ImportFromListModalComponent {
             }
         } else {
             for (let i = 0; i < this.allIds.length; i++) {
-                if (failedIdNamesWithoutWhiteSpace.includes(this.allIds[i])) {
+                if (failedIdNamesWithoutWhiteSpace?.includes(this.allIds[i])) {
                     ids.push({
                         name: this.allIds[i],
                         status: "Failed",
