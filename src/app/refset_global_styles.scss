@@ -2709,17 +2709,17 @@ button.refset-tool-table-action-icon {
 }
 .ready-for-review-projects-button {
     @include refset-listing-workflow-button;
-    background-color: rgba(211, 95, 125, 1);
+    background-color: #c05d72;
 }
 
 .in-review-projects-button {
     @include refset-listing-workflow-button;
-    background-color: rgb(201, 76, 96);
+    background-color: #a4303f;
 }
 
 .review-completed-projects-button {
     @include refset-listing-workflow-button;
-    background-color: rgba(198, 48, 75, 1);
+    background-color: #7b2232;
 }
 
 .ready-for-edit-projects-button {
