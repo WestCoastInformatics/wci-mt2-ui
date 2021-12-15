@@ -745,9 +745,7 @@
                   </mat-form-field> -->
                 <div class="workflow-history-table-container">
                     <div class="mat-elevation-z8">
-                        <table mat-table
-                               [dataSource]="workflowHistoryDataSource"
-                               matSort>
+                        <table mat-table [dataSource]="workflowHistoryDataSource" matSort matSortActive="modified" matSortDirection="desc">
                             <!-- ID Column -->
                             <ng-container matColumnDef="modified">
                                 <th mat-header-cell
