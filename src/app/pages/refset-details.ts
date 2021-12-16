@@ -500,7 +500,7 @@ export class RefsetDetails {
 
             this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
             this.workflowHistoryDataSource.sort = this.sort;
-            this.workflowHistoryNotes = this.workflowHistoryDataSource.data[this.workflowHistoryDataSource.data.length - 1]?.notes;
+            this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
             
             this.workflowHistoryDataSource?.data?.forEach((source) => {
 
