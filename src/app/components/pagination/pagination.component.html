@@ -30,7 +30,7 @@
                 {{paginationPages.totalPages}}
             </button>
 
-            <button #paginationNextPage mat-raised-button (click)="goToNext(currentPage + 1)" title="Go To Next Page" attr.aria-label="Go To Next Page {{currentPage + 1}}">
+            <button #paginationNextPage mat-raised-button (click)="manualStateRefresh=true;goToNext(currentPage + 1)" title="Go To Next Page" attr.aria-label="Go To Next Page {{currentPage + 1}}">
                 <mat-icon aria-hidden="false">arrow_right</mat-icon>
             </button>
 
