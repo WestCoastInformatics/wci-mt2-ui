@@ -10,6 +10,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
     selector: 'create-new-refset',
@@ -73,7 +74,8 @@ export class CreateNewRefsetComponent implements OnInit {
         private router: Router,
         private refsetService: RefsetService,
         private readonly workflowService: WorkflowService,
-        private readonly refsetDetails: RefsetDetails
+        private readonly refsetDetails: RefsetDetails,
+        private readonly notificationService: NotificationService
     ) {}
 
     ngOnInit(): void {}
@@ -164,12 +166,18 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         this.refsetService.createRefset(params).subscribe(
-            (refsetId) => {
+            (status) => {
+
                 this.showLoadingSpinner = false;
-                this.router.navigate([
-                    '/edit/refset',
-                    refsetId.refsetInternalId,
-                ]);
+
+                if (status.error) {
+
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                    return;
+                }
+
+                this.modalService.dismissAll();
+                this.router.navigate(['/edit/refset', status.refsetInternalId,]);
             },
             (error) => {
                 this.showLoadingSpinner = false;
@@ -210,14 +218,18 @@ export class CreateNewRefsetComponent implements OnInit {
             params.definitionClauses = this.definitionClauses;
         }
 
-        this.refsetService.updateRefsetMetadata(this.refsetId, params).subscribe( (refsetId) => {
+        this.refsetService.updateRefsetMetadata(this.refsetId, params).subscribe( (status) => {
 
                 this.showLoadingSpinner = false;
-                this.router.navigate([
-                    '/edit/refset',
-                    refsetId.refsetInternalId,
-                ]);
-                
+
+                if (status.error) {
+
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                    return;
+                }
+
+                this.modalService.dismissAll();
+                this.router.navigate(['/edit/refset', status.refsetInternalId,]);
                 this.refsetDetails.initializeDetailsPage();
             },
             (error) => {
@@ -228,10 +240,19 @@ export class CreateNewRefsetComponent implements OnInit {
 
     isComplete(): boolean {
 
-        return (
-            this.selectedBranchVersion && this.selectedReferenceType &&
-            ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept)
-        );
+        let typeCheck = false;
+        
+        if (this.selectedReferenceType == RefsetUtility.EXTENSIONAL) {
+            typeCheck = true;
+            console.log("EXTENSIONAL typeCheck: " + typeCheck);
+        } else if (this.selectedReferenceType == RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
+            typeCheck = true;
+            console.log("EXTENSIONAL INTENSIONAL: " + typeCheck);
+            console.log("this.definitionClauses: ", this.definitionClauses);
+        }
+
+
+        return (this.selectedBranchVersion && typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
     }
 
     checkRadioButtonValue(event: any): void {

@@ -495,24 +495,22 @@ export class RefsetDetails {
     }
 
     loadWorkflowHistoryData(): void {
-        this.refsetService
-            .getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified")
-            .subscribe((results) => {
 
-                this.workflowHistoryDataSource = results?.items;
-                this.workflowHistoryDataSource.sort = this.sort;
-                this.workflowHistoryNotes = this.workflowHistoryDataSource[this.workflowHistoryDataSource.length - 1]?.notes;
-                this.checkReviewNotesStatus(this.workflowHistoryDataSource);
+        this.refsetService.getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified&sortAscending=false").subscribe((results) => {
+
+            this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
+            this.workflowHistoryDataSource.sort = this.sort;
+            this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
+            
+            this.workflowHistoryDataSource?.data?.forEach((source) => {
+
+                if (source?.workflowStatus === 'IN_REVIEW' && source?.notes?.length) {
+                    this.reviewNotesAdded = true;
+                }
             });
+        });
     };
 
-    checkReviewNotesStatus(workflowHistoryDataSource: any): void {
-        workflowHistoryDataSource?.forEach((source) => {
-            if (source?.workflowStatus === 'IN_REVIEW' && source?.notes?.length) {
-                this.reviewNotesAdded = true;
-            }
-        });
-    }
     //***** Members Taxonomy Functions  *****/
     cacheTaxonomyAncestors() {
 

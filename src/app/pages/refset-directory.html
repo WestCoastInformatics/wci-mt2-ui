@@ -274,7 +274,7 @@
                                     </td>
                                 </tr>
 
-                                <tr *ngIf="data?.definition">
+                                <tr *ngIf="data?.definitionClauses?.length > 0">
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         ">
@@ -283,16 +283,9 @@
                                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        <div *ngFor="let definitionClause of data.definition">
+                                        <div *ngFor="let definitionClause of data.definitionClauses">
+                                            <span *ngIf="definitionClause.negated">MINUS </span>
                                             {{definitionClause.value}}
-
-                                            <!-- <span *ngIf="!definitionClause.negated">
-                                                <mat-icon class="refset-tool-table-icon refset-tool-add refset-tool-definition-icon" aria-label="Inclusion Clause" title="Inclusion Clause">add_circle</mat-icon>
-                                            </span>
-
-                                            <span *ngIf="definitionClause.negated">
-                                                <mat-icon class="refset-tool-table-icon refset-tool-delete refset-tool-definition-icon" aria-label="Exclusion Clause" title="Exclusion Clause">remove_circle</mat-icon>
-                                            </span> -->
                                         </div>
                                     </td>
                                 </tr>
