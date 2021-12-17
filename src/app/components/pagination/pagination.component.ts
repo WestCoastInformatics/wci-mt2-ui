@@ -191,6 +191,9 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
             this.gridOptions.api.paginationSetPageSize(pageSize);
             this.gridOptions.api.purgeInfiniteCache();
             this.gridOptions.api.paginationGoToPage(0);
+        } else {
+            this.gridOptions.api.paginationSetPageSize(pageSize);
+            this.gridOptions.api.paginationGoToPage(0);
         }
 
         this.pageSize = pageSize;
