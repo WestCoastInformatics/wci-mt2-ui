@@ -4,6 +4,7 @@ import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -102,7 +103,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             let editionsArray = this.editions?.items;
             this.organizations = organizationResults;
             let organizationsArray = this.organizations?.items;
-
+            
 	    this.columnDefs = [
             { field: 'id', tooltipField: 'id', colId: 'information', headerName: '', width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
             { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
@@ -115,7 +116,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
             { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 140, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
-            { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+            floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}},
             { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
         ];
         this.refsetGridOptions = {
@@ -133,7 +135,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             onGridReady: this.onGridReady,
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent
+				'categoryFilterComponent': CategoryFilterComponent,
+				'dateTextFilterComponent': DateTextFilterComponent
             },
             enableBrowserTooltips: true,
             defaultColDef: {
