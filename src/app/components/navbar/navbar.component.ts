@@ -52,9 +52,16 @@ export class NavbarComponent implements OnInit {
 
     setUserInfo() {
 
+        let userWasLoggedin = this.isUserLoggedIn;
+
         this.user = this.authenticationService.getUser();
         this.userRoles = this.user?.roles;
         this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
+
+        // if the user is now logged out and on a page that requires being logged in, then send them to the directory
+        if (userWasLoggedin && !this.isUserLoggedIn && (this.router.url.includes('project') || this.router.url.includes('edit/refset'))) {
+            this.router.navigateByUrl('directory');
+        }
     }
 
     showProjectRoleAndAssignee(): boolean {
