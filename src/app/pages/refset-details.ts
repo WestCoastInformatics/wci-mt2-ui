@@ -83,6 +83,7 @@ export class RefsetDetails {
         totalRows: null,
         manualStateRefresh: new Boolean(true),
     };
+    membersGridLastQuery = "";
     membersGridLastFilter = "";
     membersGridLastSort = "";
     showTable: boolean;
@@ -236,12 +237,9 @@ export class RefsetDetails {
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
-                suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 suppressPaginationPanel: true,
                 paginationPageSize: this.membersGridPaging.pageSize,
-                cacheBlockSize: this.membersGridPaging.pageSize,
-                maxBlocksInCache: 1,
-                rowModelType: "infinite",
                 rowSelection: "single",
                 enableCellTextSelection: true,
                 onCellClicked: this.onMembersGridCellClick,
@@ -251,7 +249,7 @@ export class RefsetDetails {
                     templateRenderer: TemplateRenderer,
                 },
                 defaultColDef: {
-                    sortable: false,
+                    sortable: true,
                     resizable: true,
                     suppressMenu: true,
                 },
@@ -774,228 +772,194 @@ export class RefsetDetails {
 
     //***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
+        
         this.originalGridParams = gridReadyParams;
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
+        let membersData = [];
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
-        let dataSource = {
-            rowCount: null,
-            getRows: (rowParams) => {
-                this.membersGridApi.showLoadingOverlay();
+        this.membersGridApi.showLoadingOverlay();
 
-                let pageNumber =
-                    rowParams.endRow /
-                    this.membersGridApi.paginationGetPageSize();
-                let query = UiUtility.formatFilterData(rowParams.filterModel);
-                let sort = UiUtility.formatSortData(rowParams.sortModel);
+        let pageNumber =this.membersGridApi.paginationGetCurrentPage() + 1;
+        let query = "";
+        let filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
+        let sort = UiUtility.formatSortData(gridReadyParams.sortModel);
 
-                if (
-                    CodeUtility.hasValue(this.tableSearchInput) &&
-                    this.tableSearchInput.length > 2
-                ) {
-                    query =
-                        CodeUtility.addIfNotEmpty(query, " AND ") +
-                        this.tableSearchInput;
-                } else if (
-                    this.tableSearchInput &&
-                    !CodeUtility.hasValue(this.tableSearchInput)
-                ) {
-                    this.membersGridApi.showNoRowsOverlay();
-                    rowParams.successCallback([], 0);
-                    return;
-                }
+        if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2) {
+            query = this.tableSearchInput;
 
-                let newFilterString = query;
-                let newSortString = JSON.stringify(sort);
+        } else if (this.tableSearchInput && !CodeUtility.hasValue(this.tableSearchInput)) {
 
-                // if the filters or sort have changed then move to the first page
-                if (
-                    newFilterString !== this.membersGridLastFilter ||
-                    newSortString !== this.membersGridLastSort
-                ) {
-                    pageNumber = 1;
-                    this.membersGridApi?.api?.paginationGoToPage(0);
-                }
+            this.membersGridApi.showNoRowsOverlay();
+            this.membersGridApi.setRowData([]);
+            return;
+        }
 
-                // if the filters have changed then reset the total row variables
-                if (newFilterString !== this.membersGridLastFilter) {
-                    this.membersGridPaging.totalRows = null;
-                    this.membersGridPaging.totalKnown = false;
-                }
+        let newQueryString = query;
+        let newFilterString = filter;
+        let newSortString = JSON.stringify(sort);
 
-                this.membersGridLastFilter = newFilterString;
-                this.membersGridLastSort = newSortString;
+        // if the query has changed then move to the first page
+        if (newQueryString !== this.membersGridLastQuery) {
 
-                let restParams: any = {
-                    sortModel: rowParams.sortModel,
-                    limit: this.membersGridApi.paginationGetPageSize(),
-                    offset: pageNumber - 1,
-                    displayType: "list",
-                };
+            pageNumber = 1;
+            this.membersGridPaging.totalRows = null;
+            this.membersGridPaging.totalKnown = false;
+            this.membersGridApi?.api?.paginationGoToPage(0);
+        }
 
-                if (CodeUtility.hasValue(query)) {
-                    restParams.query = query;
-                }
+        this.membersGridLastQuery = newQueryString;
+        this.membersGridLastFilter = newFilterString;
+        this.membersGridLastSort = newSortString;
 
-                // if editing enable the return of hasChildren data in the list
-                if (this.editMode) {
-                    restParams.editing = true;
-                }
-
-                this.refsetService
-                    .getConceptList(this.id, restParams)
-                    .subscribe(
-                        (results) => {
-
-                            this.membersGridNumberOfResults = results.total;
-                            if (results.items.length == 0 && pageNumber > 1) {
-                                this.membersGridApi.showNoRowsOverlay();
-                                this.membersGridPaging.totalRows =
-                                    this.membersGridApi.paginationGetPageSize() *
-                                    (pageNumber - 1);
-                                this.membersGridPaging.totalKnown = true;
-                                this.membersPaginationComponent.goToPage(
-                                    pageNumber - 1
-                                );
-                                return;
-                            }
-
-                            let data = results.items.filter((item) => {
-                                return item.active ? item : undefined;
-                            });
-                            this.membersGridData = data;
-
-                            if (!data.length) {
-                                this.membersGridApi.showNoRowsOverlay();
-                                rowParams.successCallback([], 0);
-                                return;
-                            }
-
-                            this.membersColumnDefs = [
-                                {
-                                    field: "code",
-                                    colId: "code",
-                                    headerName: "Concept ID",
-                                    minWidth: 120,
-                                    width: 140,
-                                    cellClass:
-                                        "refset-tool-details-column-concept-id",
-                                    cellRenderer: "templateRenderer",
-                                    cellRendererParams: {
-                                        template: this.conceptCodeSection,
-                                    },
-                                    tooltipField: "code",
-                                },
-                            ];
-
-                            for (
-                                let i = 0;
-                                i < this.languageOptions.length;
-                                i++
-                            ) {
-                                let language = this.languageOptions[i];
-                                let minWidth =
-                                    language.value === "101FSN" ? 250 : 190;
-                                this.membersColumnDefs.push({
-                                    field: i.toString(),
-                                    flex: 1,
-                                    minWidth: minWidth,
-                                    colId: language.value,
-                                    headerName: language.display,
-                                    cellClass:
-                                        "refset-tool-details-column-description",
-                                    valueGetter: this.descriptionValueGetter,
-                                    tooltipField: i.toString(),
-                                });
-                            }
-
-                            this.membersColumnDefs.push(
-                                ...[
-                                    {
-                                        field: "memberEffectiveTime",
-                                        colId: "modified",
-                                        flex: 1,
-                                        minWidth: 150,
-                                        headerName: "Modified Date",
-                                        cellClass:
-                                            "refset-tool-details-column-modified-date",
-                                        valueGetter:
-                                            UiUtility.gridDateValueGetter,
-                                        tooltipField: "memberEffectiveTime",
-                                    },
-                                    {
-                                        field: "active",
-                                        colId: "actions",
-                                        headerName: "",
-                                        width: 120,
-                                        minWidth: 120,
-                                        cellClass:
-                                            "refset-tool-details-column-actions",
-                                        cellRenderer: "templateRenderer",
-                                        cellRendererParams: {
-                                            template: this.actionSection,
-                                        },
-                                        filter: false,
-                                        pinned: "right",
-                                        tooltipField: "active",
-                                    },
-                                ]
-                            );
-
-                            if (data.length > 0) {
-                                this.membersGridApi.hideOverlay();
-                                let currentRowCount = null;
-                                let lastRow = -1;
-
-                                if (
-                                    results.totalKnown ||
-                                    data.length <
-                                        this.membersGridApi.paginationGetPageSize() ||
-                                    this.membersGridPaging.totalKnown
-                                ) {
-                                    if (results.totalKnown) {
-                                        lastRow = results.total;
-                                    } else if (
-                                        this.membersGridPaging.totalKnown
-                                    ) {
-                                        lastRow =
-                                            this.membersGridPaging.totalRows;
-                                    } else {
-                                        currentRowCount =
-                                            data.length +
-                                            (pageNumber - 1) *
-                                                this.membersGridApi.paginationGetPageSize();
-                                        lastRow = currentRowCount;
-                                    }
-
-                                    this.membersGridPaging.totalRows = lastRow;
-                                    this.membersGridPaging.totalKnown = true;
-                                } else {
-                                    currentRowCount =
-                                        data.length +
-                                        (pageNumber - 1) *
-                                            this.membersGridApi.paginationGetPageSize();
-                                }
-
-                                rowParams.successCallback(data, lastRow);
-                            } else {
-                                this.membersGridApi.showNoRowsOverlay();
-                                rowParams.successCallback([], 0);
-                            }
-
-                            this.membersGridPaging.manualStateRefresh =
-                                new Boolean(true);
-                        },
-                        (error) => {
-                            this.membersGridApi.showNoRowsOverlay();
-                            rowParams.successCallback([], 0);
-                        }
-                    );
-            },
+        let restParams: any = {
+            sortModel: gridReadyParams.sortModel,
+            displayType: "list",
+            limit: this.membersGridApi.paginationGetPageSize(),
+            offset: pageNumber - 1
         };
 
-        gridReadyParams.api.setDatasource(dataSource);
+        if (CodeUtility.hasValue(query)) {
+            restParams.query = query;
+        }
+
+        // if editing enable the return of hasChildren data in the list
+        if (this.editMode) {
+            restParams.editing = true;
+        }
+
+        this.refsetService.getConceptList(this.id, restParams).subscribe((results) => {
+
+            this.membersGridNumberOfResults = results.total;
+
+            if (results.items.length == 0 && pageNumber > 1) {
+
+                this.membersGridApi.showNoRowsOverlay();
+                this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
+                this.membersGridPaging.totalKnown = true;
+                this.membersPaginationComponent.goToPage(pageNumber - 1);
+                return;
+            }
+
+            let data = results.items.filter((item) => {
+                return item.active ? item : undefined;
+            });
+
+            this.membersGridData = data;
+
+            if (!data.length) {
+
+                this.membersGridApi.showNoRowsOverlay();
+                this.membersGridApi.setRowData([]);
+                return;
+            }
+
+            this.membersColumnDefs = [
+                {
+                    field: "code",
+                    colId: "code",
+                    headerName: "Concept ID",
+                    minWidth: 120,
+                    width: 140,
+                    cellClass:
+                        "refset-tool-details-column-concept-id",
+                    cellRenderer: "templateRenderer",
+                    cellRendererParams: {
+                        template: this.conceptCodeSection,
+                    },
+                    tooltipField: "code",
+                },
+            ];
+
+            for (let i = 0; i < this.languageOptions.length; i++) {
+
+                let language = this.languageOptions[i];
+                let minWidth =
+                    language.value === "101FSN" ? 250 : 190;
+                this.membersColumnDefs.push({
+                    field: i.toString(),
+                    flex: 1,
+                    minWidth: minWidth,
+                    colId: language.value,
+                    headerName: language.display,
+                    cellClass:
+                        "refset-tool-details-column-description",
+                    valueGetter: this.descriptionValueGetter,
+                    tooltipField: i.toString(),
+                });
+            }
+
+            this.membersColumnDefs.push(
+                ...[
+                    {
+                        field: "memberEffectiveTime",
+                        colId: "modified",
+                        flex: 1,
+                        minWidth: 150,
+                        headerName: "Modified Date",
+                        cellClass:
+                            "refset-tool-details-column-modified-date",
+                        valueGetter:
+                            UiUtility.gridDateValueGetter,
+                        tooltipField: "memberEffectiveTime",
+                        sort: "desc"
+                    },
+                    {
+                        field: "active",
+                        colId: "actions",
+                        headerName: "",
+                        width: 120,
+                        minWidth: 120,
+                        cellClass:
+                            "refset-tool-details-column-actions",
+                        cellRenderer: "templateRenderer",
+                        cellRendererParams: {
+                            template: this.actionSection,
+                        },
+                        filter: false,
+                        pinned: "right",
+                        tooltipField: "active",
+                        sortable: false
+                    },
+                ]
+            );
+
+            if (data.length > 0) {
+
+                this.membersGridApi.hideOverlay();
+                let lastRow = -1;
+
+                if (results.totalKnown || data.length < this.membersGridApi.paginationGetPageSize() || this.membersGridPaging.totalKnown) {
+
+                    if (results.totalKnown) {
+                        lastRow = results.total;
+
+                    } else if (this.membersGridPaging.totalKnown) {
+                        lastRow = this.membersGridPaging.totalRows;
+                    } else {
+
+                        lastRow = data.length + (pageNumber - 1) * this.membersGridApi.paginationGetPageSize();
+                    }
+
+                    this.membersGridPaging.totalRows = lastRow;
+                    this.membersGridPaging.totalKnown = true;
+                }
+
+                this.membersGridApi.setRowData(data);
+
+            } else {
+
+                this.membersGridApi.showNoRowsOverlay();
+            }
+
+            this.membersGridPaging.manualStateRefresh = new Boolean(true);
+        },
+        (error) => {
+
+            this.membersGridApi.showNoRowsOverlay();
+            this.membersGridApi.setRowData([]);
+        });
 
         // set placeholders on the grid floating filter fields
         Array.from(
@@ -1047,7 +1011,8 @@ export class RefsetDetails {
             (CodeUtility.hasValue(this.tableSearchInput) &&
                 this.tableSearchInput.length > 2)
         ) {
-            this.membersGridApi.purgeInfiniteCache();
+            //this.membersGridApi.purgeInfiniteCache();
+            this.onMembersGridReady(this.originalGridParams);
         }
     }
 

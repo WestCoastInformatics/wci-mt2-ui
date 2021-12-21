@@ -228,6 +228,17 @@ export class CodeUtility {
         }
     }
 
+    static isDateValid(dateString: string, format: string = this.DATE_FORMAT_REVERSE) {
+
+        let date = moment(dateString, format, true);
+
+        if (date.isValid()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /*
      * compareDates - return a positive number of milliseconds if the first date is after the second, otherwise a negative number.
      */

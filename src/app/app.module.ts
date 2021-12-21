@@ -44,6 +44,7 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 import { ImportFromFileModalComponent } from './components/import-from-file-modal/import-from-file-modal.component';
@@ -103,6 +104,7 @@ const appRoutes: Routes = [
         RefsetDirectory,
         RefsetDetails,
 		CategoryFilterComponent,
+        DateTextFilterComponent,
 		CreateNewRefsetComponent,
 		ProjectsRefsetComponent,
         ImportFromFileModalComponent,

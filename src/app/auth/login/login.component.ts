@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
                 this.router.navigate(['directory']);
-                toastr.success('Logged in Successfully');
             },
             (err) => {
                 //toastr.error(err.error.error);

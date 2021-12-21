@@ -6,6 +6,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
     selector: 'app-navbar',
@@ -28,7 +29,8 @@ export class NavbarComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
-        readonly refsetService: RefsetService) {
+        readonly refsetService: RefsetService, 
+        private readonly notificationService: NotificationService) {
 
         this.authToken = localStorage.getItem('auth_token');
         this.guestUser = authenticationService.GUEST_USER;
@@ -52,9 +54,21 @@ export class NavbarComponent implements OnInit {
 
     setUserInfo() {
 
+        let userWasLoggedin = this.isUserLoggedIn;
+
         this.user = this.authenticationService.getUser();
         this.userRoles = this.user?.roles;
         this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
+
+        // if the user is now logged out and on a page that requires being logged in, then send them to the directory
+        if (userWasLoggedin && !this.isUserLoggedIn) {
+
+            if (this.router.url.includes('project') || this.router.url.includes('edit/refset')) {
+                this.router.navigateByUrl('directory');
+            }
+
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', {timeOut: 5000, extendedTimeOut: 0});
+        }
     }
 
     showProjectRoleAndAssignee(): boolean {

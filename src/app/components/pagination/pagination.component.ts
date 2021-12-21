@@ -155,10 +155,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
         }
         this.gridOptions.api.paginationGoToPage(index - 1);
-
-        if (!this.manualStateRefresh){
-            this.changeState(index);
-        }
+        this.changeState(index);
     }
 
     goToNext(index: number) {
@@ -168,10 +165,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
         }
         this.gridOptions.api.paginationGoToNextPage();
-        
-        if (!this.manualStateRefresh){
-            this.changeState();
-        }
+        this.changeState();
     }
 
     goToPrevious(index: number) {
@@ -182,10 +176,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         }
         this.gridOptions.api.paginationGoToPreviousPage();
         this.paginationPages = this.pagerService.getPager(this.numberOfPages, this.getCurrentPage(), this.totalKnown);
-        
-        if (!this.manualStateRefresh){
-            this.changeState();
-        }
+        this.changeState();
     }
 
     setPageSize(pageSize: number) {
@@ -199,6 +190,9 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
             this.gridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
             this.gridOptions.api.paginationSetPageSize(pageSize);
             this.gridOptions.api.purgeInfiniteCache();
+            this.gridOptions.api.paginationGoToPage(0);
+        } else {
+            this.gridOptions.api.paginationSetPageSize(pageSize);
             this.gridOptions.api.paginationGoToPage(0);
         }
 

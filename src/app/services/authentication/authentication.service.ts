@@ -53,7 +53,6 @@ export class AuthenticationService {
                 document.cookie = this.getAuthCookie();
                 this.router.navigate(['directory']);
                 this.userSubject.next(userData);
-                this.notificationService.show('Logged in Successfully', null, 'success', {timeOut: 5000, extendedTimeOut: 0});
             },
             (err) => {
                 this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
