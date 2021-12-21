@@ -352,11 +352,10 @@
                                 </mat-form-field>
                                 <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
-                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
-                                    #createRefsetIntensionalEclButton
-                                    class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
-                                    <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder"
-                                        aria-label="ECL Builder" />
+                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" [disabled]="!selectedBranchVersion" [ngClass]="{'inactive' : !selectedBranchVersion}"
+                                    #createRefsetIntensionalEclButton class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                    <img src="assets/wrench-icon.svg" alt="wrench icon" aria-label="ECL Builder" 
+                                        [title]="selectedBranchVersion ? 'Open ECL Builder' : 'Must select an Extension Version Date'" />
                                 </button>
                             </span>
 
