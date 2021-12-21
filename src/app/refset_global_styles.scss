@@ -3019,6 +3019,12 @@ button.refset-tool-table-action-icon {
     display: grid;
 }
 
+// Material Overlay
 .cdk-global-overlay-wrapper, .cdk-overlay-container {
-    z-index: 10000 !important;
-    }
+    z-index: 2000 !important;
+}
+
+// Material Select Field Dropdown Overlays
+.cdk-overlay-connected-position-bounding-box {
+    z-index: 2100 !important;
+}

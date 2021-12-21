@@ -1,65 +1,35 @@
-<div mat-dialog-title
-     class="refset-tool-dialog-title">
-    <div *ngIf="config.showTitle"
-         id="{{ id }}Title">
+<div mat-dialog-title class="refset-tool-dialog-title">
+
+    <div *ngIf="config.showTitle" id="{{ id }}Title">
         {{ config.headerText }}
     </div>
 
     <div class="refset-tool-close-button">
-        <button *ngIf="config.showCloseIcon"
-                mat-icon-button
-                aria-hidden="false"
-                aria-label="Close Dialog"
-                (click)="cancel()">
+        <button *ngIf="config.showCloseIcon" mat-icon-button aria-hidden="false" aria-label="Close Dialog" (click)="cancel()">
             <mat-icon>close</mat-icon>
         </button>
     </div>
+
 </div>
 
-<div mat-dialog-content
-     class="refset-tool-dialog-content">
-    <ng-container [ngTemplateOutlet]="config.template"
-                  [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
+<div mat-dialog-content class="refset-tool-dialog-content">
+    <ng-container [ngTemplateOutlet]="config.template" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
 </div>
 
-<div mat-dialog-actions
-     class="refset-tool-dialog-actions"
-     id="{{ id }}Actions">
-    <button mat-raised-button
-            *ngIf="config.showCancel"
-            id="{{ id }}Cancel"
-            mat-button
-            (click)="cancel()">
-        {{ config.cancelText }}
-        <mat-icon *ngIf="config.cancelIcon"
-                  role="img"
-                  class="
-                        refset-tool-dialog-cancel-icon
-                        mat-icon
-                        notranslate
-                        material-icons
-                        mat-icon-no-color
-                    "
-                  aria-hidden="true"
-                  data-mat-icon-type="font">{{ config.cancelIcon }}
+<div mat-dialog-actions class="refset-tool-dialog-actions" id="{{ id }}Actions">
+
+    <button mat-raised-button *ngIf="config.showCancel" id="{{ id }}Cancel" mat-button (click)="cancel()">
+        <mat-icon *ngIf="config.cancelIcon" role="img" class="refset-tool-dialog-cancel-icon mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">
+            {{ config.cancelIcon }}
         </mat-icon>
+        {{ config.cancelText }}
     </button>
-    <button mat-raised-button
-            color="primary"
-            id="{{ id }}Confirm"
-            (click)="confirm()">
-        <mat-icon *ngIf="config.confirmIcon"
-                  role="img"
-                  class="
-                    refset-tool-dialog-confirm-icon
-                    mat-icon
-                    notranslate
-                    material-icons
-                    mat-icon-no-color
-                "
-                  aria-hidden="true"
-                  data-mat-icon-type="font">{{ config.confirmIcon }}
+
+    <button mat-raised-button color="primary" id="{{ id }}Confirm" (click)="confirm()">
+        <mat-icon *ngIf="config.confirmIcon" role="img" class="refset-tool-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">
+            {{ config.confirmIcon }}
         </mat-icon>
         {{ config.confirmText }}
     </button>
+
 </div>
