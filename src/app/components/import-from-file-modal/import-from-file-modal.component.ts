@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { catchError } from 'rxjs/operators';
+import { JsontocsvService } from 'src/app/services/export-services/jsontocsv.service';
 
 @Component({
     selector: "import-from-file-modal",
@@ -27,7 +28,8 @@ export class ImportFromFileModalComponent implements OnInit {
     
     constructor(
         private modalService: NgbModal,
-        private refsetService: RefsetService
+        private refsetService: RefsetService,
+        private readonly jsontocsv: JsontocsvService
     ) {}
 
     ngOnInit(): void {}
@@ -47,12 +49,7 @@ export class ImportFromFileModalComponent implements OnInit {
     }
 
     createImportReport(): void {
-        const ids = [
-            {
-                name: "Concept",
-                status: "Status",
-            },
-        ];
+        const ids = [];
         const failedIdNamesWithoutWhiteSpace = this.failedIdNames.map(
             (name) => {
                 return name?.replace(" ", "");
@@ -61,26 +58,26 @@ export class ImportFromFileModalComponent implements OnInit {
         if (this.successfulImport) {
             for (let i = 0; i < this.allIds.length; i++) {
                 ids.push({
-                    name: this.allIds[i],
-                    status: "SUCCESS",
+                    Concept: this.allIds[i],
+                    Status: "SUCCESS",
                 });
             }
         } else {
             for (let i = 0; i < this.allIds.length; i++) {
                 if (failedIdNamesWithoutWhiteSpace.includes(this.allIds[i])) {
                     ids.push({
-                        name: this.allIds[i],
-                        status: "Failed",
+                        Concept: this.allIds[i],
+                        Status: "Failed",
                     });
                 } else {
                     ids.push({
-                        name: this.allIds[i],
-                        status: "SUCCESS",
+                        Concept: this.allIds[i],
+                        Status: "SUCCESS",
                     });
                 }
             }
         }
-
+        this.jsontocsv.downloadFile(ids);
     }
 
     addMembers(): void {

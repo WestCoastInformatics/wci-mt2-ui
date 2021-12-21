@@ -43,7 +43,7 @@
     <div class="container-fluid import-from-list-container-fluid">
         <div class="modal-body import-from-list-modal-body">
             <div class="import-from-list-list-text">
-                Enter a list of member IDs. Use a comma or whitespace delimited
+                Enter a list of SctIds. Use a comma or whitespace delimited
                 numeric identifiers.
             </div>
             <mat-form-field class="add-by-list-text-area" appearance="outline">
@@ -56,10 +56,9 @@
                             </span>
                             <div class="warning-body">
                                 <strong>Warning!</strong><br /><br />
-                                {{ failedIds }}/{{ numOfIds }} IDs entered are
+                                {{ failedIds }}/{{ numOfIds }} SctIds entered are
                                 invalid and have not been added to the reference
-                                set. <br /><br />Import/export report available
-                                for download.
+                                set. <br /><br />List of valid/invalid SctIds is available for download.
                             </div>
                         </div>
                         </ngb-alert>
@@ -72,10 +71,9 @@
                                 warning
                             </span>
                             <div class="success-body">
-                                <strong>Success!</strong><br /><br />All IDs
+                                <strong>Success!</strong><br /><br />All SctIds
                                 have been added to the reference set.
-                                <br /><br />Import/export report available for
-                                download.
+                                <br /><br />List of valid/invalid SctIds is available for download.
                             </div>
                         </div>
                         </ngb-alert>

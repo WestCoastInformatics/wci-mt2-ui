@@ -7,6 +7,7 @@ import {
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { catchError } from 'rxjs/operators';
+import { JsontocsvService } from 'src/app/services/export-services/jsontocsv.service';
 
 @Component({
     selector: "import-from-list-modal",
@@ -32,7 +33,8 @@ export class ImportFromListModalComponent {
 
     constructor(
         private modalService: NgbModal,
-        private refsetService: RefsetService
+        private refsetService: RefsetService,
+        private readonly jsontocsv: JsontocsvService
     ) {}
 
     private sendReloadGridTrigger(value: boolean): void {
@@ -114,35 +116,33 @@ export class ImportFromListModalComponent {
     }
 
     createImportReport(): void {
-        const ids = [{
-          name: 'Concept',
-          status: 'Status',
-        }];
+        const ids = [];
         const failedIdNamesWithoutWhiteSpace = this.failedIdNames?.map((name) => {
           return name?.replace(' ', '');
         })
         if (this.successfulImport) {
             for (let i = 0; i < this.allIds?.length; i++) {
                 ids.push({
-                    name: this.allIds[i],
-                    status: "SUCCESS",
+                    Concept: this.allIds[i],
+                    Status: "SUCCESS",
                 });
             }
         } else {
             for (let i = 0; i < this.allIds.length; i++) {
                 if (failedIdNamesWithoutWhiteSpace?.includes(this.allIds[i])) {
                     ids.push({
-                        name: this.allIds[i],
-                        status: "Failed",
+                        Concept: this.allIds[i],
+                        Status: "Failed",
                     });
                 } else {
                     ids.push({
-                        name: this.allIds[i],
-                        status: "SUCCESS",
+                        Concept: this.allIds[i],
+                        Status: "SUCCESS",
                     });
                 }
             }
         }
+        this.jsontocsv.downloadFile(ids);
     }
 
     openImportFromListModal(importFromListDialog: NgbModal) {
