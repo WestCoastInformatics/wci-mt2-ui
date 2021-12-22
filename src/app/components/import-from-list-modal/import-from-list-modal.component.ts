@@ -20,10 +20,9 @@ export class ImportFromListModalComponent {
     showLoadingSpinner = false;
     showBanner = false;
     successfulImport = false;
-    numOfIds: any;
-    failedIds: any;
+    failedIds: string[];
     allIds: string[];
-    failedIdNames: string[];
+    messageModifier: string;
 
     @Input() internalRefsetId: string;
     @Input() isIntensional: boolean = false;
@@ -41,19 +40,30 @@ export class ImportFromListModalComponent {
         this.reloadGrid.emit(value);
     }
 
-    addMembers(): void {
+    callMemberOperation(operation: string): void {
 
         if (!this.listOfIds?.length) {
             return;
+        }
+
+        let operationFunction: Function;
+
+        if (operation == 'add') {
+
+            this.messageModifier = "added to";
+            operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
+        } else {
+
+            this.messageModifier = "removed from";
+            operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
         }
 
         this.showLoadingSpinner = true;
         const commaRegex = /,+/ig;
         let allIdsString = this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").trim();
         this.allIds = allIdsString.split(",");
-        this.numOfIds = this.allIds.length;
 
-        this.refsetService.addRefsetMembers(this.internalRefsetId, "list", allIdsString)
+        operationFunction(this.internalRefsetId, "list", allIdsString)
             .pipe(catchError((err) => {
 
                 if (err) {
@@ -63,61 +73,32 @@ export class ImportFromListModalComponent {
                 return err;
 
             })).subscribe((data) => {
-
-                this.showLoadingSpinner = false;
-                this.sendReloadGridTrigger(true);
-                this.listOfIds = "";
-                // this.successfulImport = true;
-
-                if (data?.status?.includes("All concepts added")) {
-
-                    this.showBanner = true;
-                    this.successfulImport = true;
-
-                } else {
-
-                    this.failedIdNames = data?.error
-                        .replace("Unable to add concepts ", "")
-                        .split(",");
-                    this.failedIds = data?.error.split(",").length;
-                    this.showBanner = true;
-                    this.successfulImport = false;
-                }
+                this.processOperationReturn(data);
             });
     }
 
-    removeMembers(): void {
+    processOperationReturn(data) { 
 
-        if (!this.listOfIds?.length) {
-            return;
+        this.showLoadingSpinner = false;
+        this.sendReloadGridTrigger(true);
+        this.listOfIds = "";
+
+        if (data?.status?.includes("All concepts")) {
+
+            this.showBanner = true;
+            this.successfulImport = true;
+
+        } else {
+
+            this.failedIds = data?.error.replace(/Unable to .* concepts /i, "").split(",");
+            this.showBanner = true;
+            this.successfulImport = false;
         }
-
-        this.showLoadingSpinner = true;
-        const commaRegex = /,+/ig;
-
-        this.refsetService.removeRefsetMembers(this.internalRefsetId, "list", this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").trim())
-            .pipe(catchError((err) => {
-
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-                
-                    this.showLoadingSpinner = false;
-                    this.sendReloadGridTrigger(true);
-                },
-                (error) => {
-                    this.showLoadingSpinner = false;
-                }
-            );
     }
 
     createImportReport(): void {
         const ids = [];
-        const failedIdNamesWithoutWhiteSpace = this.failedIdNames?.map((name) => {
+        const failedIdsWithoutWhiteSpace = this.failedIds?.map((name) => {
           return name?.replace(' ', '');
         })
         if (this.successfulImport) {
@@ -129,7 +110,7 @@ export class ImportFromListModalComponent {
             }
         } else {
             for (let i = 0; i < this.allIds.length; i++) {
-                if (failedIdNamesWithoutWhiteSpace?.includes(this.allIds[i])) {
+                if (failedIdsWithoutWhiteSpace?.includes(this.allIds[i])) {
                     ids.push({
                         Concept: this.allIds[i],
                         Status: "Failed",

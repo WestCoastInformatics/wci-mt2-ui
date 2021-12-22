@@ -1,178 +1,103 @@
-<button
-    #importFromFileButton
-    (click)="openImportFromFileModal(importFromFileDialog)"
-    class="import-from-file-button"
->
-    <img
-        src="assets/import-file-upload-icon.svg"
-        alt="Document symbol denoting an upload icon"
-        title="Import File"
-        aria-label="Import file"
-    />
+<button #importFromFileButton (click)="openImportFromFileModal(importFromFileDialog)" class="import-from-file-button">
+    <img src="assets/import-file-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
 </button>
 
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #importFromFileDialog let-modal>
+
     <div class="modal-header import-from-file-modal-header">
-        <h4
-            class="modal-title import-from-file-modal-title"
-            id="modal-basic-title"
-        >
+
+        <h4 class="modal-title import-from-file-modal-title" id="modal-basic-title">
             Add or Remove Members From File
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+
     <div class="container-fluid import-from-file-container-fluid">
         <div class="modal-body import-from-file-modal-body">
+
             <p *ngIf="!successfulImport && showBanner">
-                <ngb-alert type="warning" (click)="showBanner = false">
+                <ngb-alert [dismissible]="false" type="warning" (click)="showBanner = false">
                     <div class="warning-header">
-                        <span class="material-icons warning-logo">
-                            warning
-                        </span>
+                        <span class="material-icons warning-logo">warning</span>
                         <div class="warning-body">
-                            <strong>Warning!</strong><br /><br />
-                            {{ failedIds }}/{{ numOfIds }} SctIds entered are
-                            invalid and have not been added to the reference
-                            set. <br /><br />List of valid/invalid SctIds is available for download.
-                        </div>
-                    </div></ngb-alert
-                >
-            </p>
-            <p *ngIf="successfulImport && showBanner">
-                <ngb-alert type="success" (click)="showBanner = false">
-                    <div class="success-header">
-                        <span class="material-icons success-logo">
-                            warning
-                        </span>
-                        <div class="success-body">
-                            <strong>Success!</strong><br /><br />All SctIds have
-                            been added to the reference set.
+                            <strong>Warning!</strong>
+                            <br /><br />{{ failedIds.length }}/{{ allIds.length }} SctIds entered are invalid and have not been {{ messageModifier }} the reference set. 
                             <br /><br />List of valid/invalid SctIds is available for download.
                         </div>
-                    </div></ngb-alert
-                >
+                    </div>
+                </ngb-alert>
             </p>
-            <div
-                class="container-file-import"
-                dragAndDrop
-                (fileDropped)="onFileDropped($event)"
-            >
-                <input
-                    type="file"
-                    #fileDropRef
-                    id="fileDropRef"
-                    multiple
-                    (change)="fileBrowseHandler($event.target.files)"
-                />
-                <img
-                    src="assets/import-file-upload-icon2.svg"
-                    alt="Document symbol denoting an upload icon"
-                    title="Import File"
-                    aria-label="Import file"
-                />
+
+            <p *ngIf="successfulImport && showBanner">
+                <ngb-alert [dismissible]="false" type="success" (click)="showBanner = false">
+                    <div class="success-header">
+                        <span class="material-icons success-logo">check_circle</span>
+                        <div class="success-body">
+                            <strong>Success!</strong>
+                            <br /><br />All SctIds have been {{ messageModifier }} the reference set.
+                            <br /><br />List of valid/invalid SctIds is available for download.
+                        </div>
+                    </div>
+                </ngb-alert>
+            </p>
+
+            <div class="container-file-import" dragAndDrop (fileDropped)="onFileDropped($event)">
+
+                <input type="file" #fileDropRef id="fileDropRef" multiple [value]="fileInput" (change)="fileBrowseHandler($event.target.files)" />
+                <img src="assets/import-file-upload-icon2.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
 
                 <h3>Drag and drop file here</h3>
                 <h3>or</h3>
-                <label
-                    for="fileDropRef"
-                    class="import-from-file-drop-down-label"
-                    >Browse for file</label
-                >
+
+                <label for="fileDropRef" class="import-from-file-drop-down-label">Browse for file</label>
                 <div class="allowed-file-types">*Allowed file types: .rf2, .txt</div>
             </div>
+
             <div class="files-list-file-import">
-                <div
-                    class="single-file"
-                    *ngFor="let file of files; let i = index"
-                >
+
+                <div class="single-file" *ngFor="let file of files; let i = index">
+
                     <div class="file-icon">
-                        <img
-                            src="assets/doc-upload-icon.svg"
-                            alt="Document symbol denoting an uploaded file"
-                        />
+                        <img src="assets/doc-upload-icon.svg" alt="Document symbol denoting an uploaded file" />
                     </div>
+
                     <div class="info">
-                        <h4 class="name">
-                            {{ file?.name }}
-                        </h4>
-                        <p class="size">
-                            {{ formatBytes(file?.size) }}
-                        </p>
-                        <app-progress
-                            [progress]="file?.progress"
-                        ></app-progress>
+                        <h4 class="name">{{ file?.name }}</h4>
+                        <p class="size">{{ formatBytes(file?.size) }}</p>
+                        <app-progress [progress]="file?.progress"></app-progress>
                     </div>
 
                     <div class="delete" (click)="deleteFile(i)">
-                        <img
-                            src="assets/doc-delete-icon.svg"
-                            alt="Document symbol denoting a trash can to delete files"
-                            title="Remove File"
-                            aria-label="Delete file"
-                        />
+                        <img src="assets/doc-delete-icon.svg" alt="Document symbol denoting a trash can to delete files" title="Remove File" aria-label="Delete file" />
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-    <div
-        class="modal-footer import-from-file-modal-footer"
-        style="align-self: center"
-    >
-        <button
-            *ngIf="!showBanner"
-            [disabled]="disableFileUpload"
-            type="button"
-            (click)="addMembers()"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button"
-            aria-label="Add Members"
-            title="Add Members"
-            ng-reflect-color="primary"
-        >
+
+    <div class="modal-footer import-from-file-modal-footer" style="align-self: center">
+
+        <button *ngIf="!showBanner" [disabled]="disableFileUpload" type="button" (click)="callMemberOperation('add')" mat-raised-button color="primary" aria-hidden="false"
+                class="refset-tool-action-button" aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
             Add Members
         </button>
-        <button
-            *ngIf="!showBanner && !isIntensional"
-            [disabled]="disableFileUpload"
-            type="button"
-            (click)="removeMembers()"
-            mat-raised-button
-            color="primary"
-            aria-hidden="false"
-            class="refset-tool-action-button"
-            aria-label="Remove Members"
-            title="Remove Members"
-            ng-reflect-color="primary"
-            style="margin-left: 15px"
-        >
+
+        <button *ngIf="!showBanner && !isIntensional" [disabled]="disableFileUpload" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="primary"
+                aria-hidden="false" class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="primary" style="margin-left: 15px">
             Remove Members
         </button>
-        <button
-            *ngIf="showBanner"
-            type="button"
-            (click)="createImportReport()"
-            mat-raised-button
-            color="primary"
-            style="margin-top: 0px !important; margin-left: 16px !important"
-            aria-hidden="false"
-            class="refset-tool-action-download-report-button"
-            aria-label="Import Details Report"
-            title="Import Details Report"
-            ng-reflect-color="primary"
-        >
+
+        <button *ngIf="showBanner" type="button" (click)="createImportReport()" mat-raised-button color="primary" style="margin-top: 0px !important; margin-left: 16px !important"
+                aria-hidden="false" class="refset-tool-action-download-report-button" aria-label="Import Details Report" title="Import Details Report" ng-reflect-color="primary">
             Download Report
         </button>
+
     </div>
+
 </ng-template>

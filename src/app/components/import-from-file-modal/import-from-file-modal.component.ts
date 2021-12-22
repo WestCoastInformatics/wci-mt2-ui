@@ -15,22 +15,18 @@ export class ImportFromFileModalComponent implements OnInit {
     showLoadingSpinner = false;
     showBanner = false;
     successfulImport = false;
-    numOfIds: any;
-    failedIds: any;
+    failedIds: string[] = [];
     allIds: string[];
-    failedIdNames: string[];
+    messageModifier: string;
+    disableFileUpload = true;
+    fileInput = '';
 
     @Input() internalRefsetId: string;
     @Input() isIntensional: boolean = false;
 
     @Output() reloadGrid = new EventEmitter<boolean>();
-    disableFileUpload = true;
     
-    constructor(
-        private modalService: NgbModal,
-        private refsetService: RefsetService,
-        private readonly jsontocsv: JsontocsvService
-    ) {}
+    constructor(private modalService: NgbModal, private refsetService: RefsetService, private readonly jsonToCsv: JsontocsvService ) {}
 
     ngOnInit(): void {}
 
@@ -39,6 +35,7 @@ export class ImportFromFileModalComponent implements OnInit {
     }
 
     openImportFromFileModal(importFromFileDialog: NgbModal) {
+
         this.showBanner = false;
         this.files = [];
         this.disableFileUpload = true;
@@ -48,89 +45,60 @@ export class ImportFromFileModalComponent implements OnInit {
         });
     }
 
-    createImportReport(): void {
-        const ids = [];
-        const failedIdNamesWithoutWhiteSpace = this.failedIdNames.map(
-            (name) => {
-                return name?.replace(" ", "");
-            }
-        );
-        if (this.successfulImport) {
-            for (let i = 0; i < this.allIds.length; i++) {
-                ids.push({
-                    Concept: this.allIds[i],
-                    Status: "SUCCESS",
-                });
-            }
-        } else {
-            for (let i = 0; i < this.allIds.length; i++) {
-                if (failedIdNamesWithoutWhiteSpace.includes(this.allIds[i])) {
-                    ids.push({
-                        Concept: this.allIds[i],
-                        Status: "Failed",
-                    });
-                } else {
-                    ids.push({
-                        Concept: this.allIds[i],
-                        Status: "SUCCESS",
-                    });
-                }
-            }
-        }
-        this.jsontocsv.downloadFile(ids);
-    }
-
-    addMembers(): void {
+    callMemberOperation(operation: string): void {
         
         this.showLoadingSpinner = true;
         const listOfIds = [];
         const fileReader = new FileReader();
+
         fileReader.onload = (e) => {
+
             for (const line of fileReader.result.toString().split(/[\r\n]+/)) {
+
                 if (line.split("\t")[5] !== "referencedComponentId") {
-                    listOfIds.push(
-                        line.split("\t")[5]
-                            ? line.split("\t")[5]
-                            : line.split("\t")[0].replace(",", "").trim()
-                    );
+
+                    // if this is an RF2 get the 5th column, otherwise it is just a list of IDs
+                    if (line.split("\t")[5]) {
+                        listOfIds.push(line.split("\t")[5]);
+                    } else {
+                        listOfIds.push(line.split("\t")[0].replace(",", "").trim());
+                    }
                 }
             }
 
             let allIdsString = listOfIds.join(",");
             this.allIds = allIdsString.split(",");
-            this.numOfIds = this.allIds.length;
 
-            this.refsetService
-                .addRefsetMembers(
-                    this.internalRefsetId,
-                    "list",
-                    allIdsString
-            ).pipe(
-                catchError((err) => {
-                    if (err) {
-                        this.showLoadingSpinner = false;
-                    }
+            if (!this.allIds?.length) {
+                return;
+            }
 
-                  return err;
-                })
-              ).subscribe((data) => {
-                    this.sendReloadGridTrigger(true);
+            let operationFunction: Function;
+
+            if (operation == 'add') {
+
+                this.messageModifier = "added to";
+                operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
+            } else {
+
+                this.messageModifier = "removed from";
+                operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
+            }
+
+            operationFunction(this.internalRefsetId, "list", allIdsString)
+            .pipe(catchError((err) => {
+
+                if (err) {
                     this.showLoadingSpinner = false;
-                    if (data?.status?.includes("All concepts added")) {
-                        this.showLoadingSpinner = false;
-                        this.showBanner = true;
-                        this.successfulImport = true;
-                    } else {
-                        this.showLoadingSpinner = false;
-                        this.failedIdNames = data?.error
-                            .replace("Unable to add concepts ", "")
-                            .split(",");
-                        this.failedIds = data?.error.split(",").length;
-                        this.showBanner = true;
-                        this.successfulImport = false;
-                    }
-                });
+                }
+
+                return err;
+
+            })).subscribe((data) => {
+                this.processOperationReturn(data);
+            });
         };
+
         if (this.uploadedFile) {
             fileReader.readAsText(this.uploadedFile);
         } else {
@@ -138,55 +106,61 @@ export class ImportFromFileModalComponent implements OnInit {
         }
     }
 
-    removeMembers(): void {
-        this.showLoadingSpinner = true;
-        const listOfIds = [];
-        const fileReader = new FileReader();
-        fileReader.onload = (e) => {
-            for (const line of fileReader.result.toString().split(/[\r\n]+/)) {
-                if (line.split("\t")[5] !== "referencedComponentId") {
-                    listOfIds.push(
-                        line.split("\t")[5]
-                            ? line.split("\t")[5]
-                            : line.split("\t")[0].replace(",", "").trim()
-                    );
+    processOperationReturn(data) { 
+
+        this.showLoadingSpinner = false;
+        this.sendReloadGridTrigger(true);
+        this.files = [];
+        this.disableFileUpload = true;
+        this.fileInput = '';
+
+        if (data?.status?.includes("All concepts")) {
+
+            this.showBanner = true;
+            this.successfulImport = true;
+
+        } else {
+
+            this.failedIds = data?.error.replace(/Unable to .* concepts /i, "").split(",");
+            this.showBanner = true;
+            this.successfulImport = false;
+        }
+    }
+
+    createImportReport(): void {
+
+        const ids = [];
+        const failedIdsWithoutWhiteSpace = this.failedIds.map((name) => {
+            return name?.replace(" ", "");
+        });
+
+        if (this.successfulImport) {
+
+            for (let i = 0; i < this.allIds.length; i++) {
+                ids.push({Concept: this.allIds[i], Status: "SUCCESS"});
+            }
+        } else {
+
+            for (let i = 0; i < this.allIds.length; i++) {
+
+                if (failedIdsWithoutWhiteSpace.includes(this.allIds[i])) {
+                    ids.push({Concept: this.allIds[i],Status: "Failed"});
+                } else {
+                    ids.push({Concept: this.allIds[i], Status: "SUCCESS"});
                 }
             }
-            this.refsetService
-                .removeRefsetMembers(
-                    this.internalRefsetId,
-                    "list",
-                    listOfIds.join(",")
-                ).pipe(
-                    catchError((err) => {
-                        if (err) {
-                            this.showLoadingSpinner = false;
-                        }
-    
-                      return err;
-                    })
-                  ).subscribe(
-                    (data) => {
-                        this.sendReloadGridTrigger(true);
-                        this.showLoadingSpinner = false;
-                    },
-                    (error) => {
-                        this.showLoadingSpinner = false;
-                    }
-                );
-        };
-        if (this.uploadedFile) {
-            fileReader.readAsText(this.uploadedFile);
-        } else {
-            this.showLoadingSpinner = false;
         }
+
+        this.jsonToCsv.downloadFile(ids);
     }
 
     /**
      * on file drop handler
      */
     onFileDropped(files) {
+
         if (files[0]?.name.includes('.txt') || files[0]?.name.includes('.rf2')) {
+
             this.prepareFilesList(files);
             this.uploadedFile = files[0];
             this.disableFileUpload = false;
@@ -197,7 +171,9 @@ export class ImportFromFileModalComponent implements OnInit {
      * handle file from browsing
      */
     fileBrowseHandler(files) {
+
         if (files[0]?.name.includes('.txt') || files[0]?.name.includes('.rf2')) {
+
             this.prepareFilesList(files);
             this.uploadedFile = files[0];
             this.disableFileUpload = false;
@@ -209,6 +185,7 @@ export class ImportFromFileModalComponent implements OnInit {
      * @param index (File index)
      */
     deleteFile(index: number) {
+
         this.files.splice(index, 1);
         this.disableFileUpload = true;
     }
@@ -217,14 +194,20 @@ export class ImportFromFileModalComponent implements OnInit {
      * Simulate the upload process
      */
     uploadFilesSimulator(index: number) {
+
         setTimeout(() => {
+
             if (index === this.files.length) {
                 return;
             } else {
+
                 const progressInterval = setInterval(() => {
+
                     if (this.files[index]?.progress === 100) {
+
                         clearInterval(progressInterval);
                         this.uploadFilesSimulator(index + 1);
+
                     } else if (this.files[index]) {
                         this.files[index].progress += 5;
                     }
@@ -238,10 +221,13 @@ export class ImportFromFileModalComponent implements OnInit {
      * @param files (Files List)
      */
     prepareFilesList(files: Array<any>) {
+
         for (const item of files) {
+
             item.progress = 0;
             this.files.push(item);
         }
+
         this.uploadFilesSimulator(0);
     }
 
@@ -251,15 +237,17 @@ export class ImportFromFileModalComponent implements OnInit {
      * @param decimals (Decimals point)
      */
     formatBytes(bytes, decimals) {
+
         if (bytes === 0) {
             return "0 Bytes";
         }
-        const k = 1024;
+
+        const suffixThreshold = 1024;
         const dm = decimals <= 0 ? 0 : decimals || 2;
-        const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return (
-            parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
-        );
+        const suffixes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+        const suffixIndex = Math.floor(Math.log(bytes) / Math.log(suffixThreshold));
+        const sizeNumber = parseFloat((bytes / Math.pow(suffixThreshold, suffixIndex)).toFixed(dm));
+
+        return (sizeNumber + " " + suffixes[suffixIndex]);
     }
 }

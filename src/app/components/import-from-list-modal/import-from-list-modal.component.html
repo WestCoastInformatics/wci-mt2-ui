@@ -24,75 +24,67 @@
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #importFromListDialog let-modal>
+
     <div class="modal-header import-from-list-modal-header">
-        <h4
-            class="modal-title import-from-list-modal-title"
-            id="modal-basic-title"
-        >
+
+        <h4 class="modal-title import-from-list-modal-title" id="modal-basic-title">
             Add or Remove Members By List
         </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
+
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+
     <div class="container-fluid import-from-list-container-fluid">
         <div class="modal-body import-from-list-modal-body">
+
             <div class="import-from-list-list-text">
-                Enter a list of SctIds. Use a comma or whitespace delimited
-                numeric identifiers.
+                Enter a list of SctIds. Use a comma or whitespace delimited numeric identifiers.
             </div>
+
             <mat-form-field class="add-by-list-text-area" appearance="outline">
+
                 <p *ngIf="!successfulImport && showBanner">
-                    <ngb-alert [dismissible]="false" type="warning"
-                               (click)="showBanner = false">
+                    <ngb-alert [dismissible]="false" type="warning" (click)="showBanner = false">
                         <div class="warning-header">
-                            <span class="material-icons warning-logo">
-                                warning
-                            </span>
+                            <span class="material-icons warning-logo">warning</span>
                             <div class="warning-body">
-                                <strong>Warning!</strong><br /><br />
-                                {{ failedIds }}/{{ numOfIds }} SctIds entered are
-                                invalid and have not been added to the reference
-                                set. <br /><br />List of valid/invalid SctIds is available for download.
-                            </div>
-                        </div>
-                        </ngb-alert>
-                </p>
-                <p *ngIf="successfulImport && showBanner">
-                    <ngb-alert [dismissible]="false" type="success"
-                               (click)="showBanner = false">
-                        <div class="success-header">
-                            <span class="material-icons success-logo">
-                                warning
-                            </span>
-                            <div class="success-body">
-                                <strong>Success!</strong><br /><br />All SctIds
-                                have been added to the reference set.
+                                <strong>Warning!</strong>
+                                <br /><br />{{ failedIds.length }}/{{ allIds.length }} SctIds entered are invalid and have not been {{ messageModifier }} the reference set. 
                                 <br /><br />List of valid/invalid SctIds is available for download.
                             </div>
                         </div>
-                        </ngb-alert>
+                    </ngb-alert>
                 </p>
-                <textarea matInput
-                          class="import-from-list-text-area"
-                          [(ngModel)]="listOfIds">
-                test</textarea>
+
+                <p *ngIf="successfulImport && showBanner">
+                    <ngb-alert [dismissible]="false" type="success" (click)="showBanner = false">
+                        <div class="success-header">
+                            <span class="material-icons success-logo">check_circle</span>
+                            <div class="success-body">
+                                <strong>Success!</strong>
+                                <br /><br />All SctIds have been {{ messageModifier }} the reference set.
+                                <br /><br />List of valid/invalid SctIds is available for download.
+                            </div>
+                        </div>
+                    </ngb-alert>
+                </p>
+
+                <textarea matInput class="import-from-list-text-area" [(ngModel)]="listOfIds">test</textarea>
             </mat-form-field>
+
         </div>
     </div>
+
     <div class="modal-footer import-from-list-modal-footer">
 
-        <button *ngIf="!showBanner" type="button" (click)="addMembers()" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
+        <button *ngIf="!showBanner" type="button" (click)="callMemberOperation('add')" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
                 aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
             Add Members
         </button>
 
-        <button *ngIf="!showBanner && !isIntensional" type="button" (click)="removeMembers()" mat-raised-button color="primary" aria-hidden="false"
+        <button *ngIf="!showBanner && !isIntensional" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="primary" aria-hidden="false"
                 class="refset-tool-action-button import-from-list-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="primary">
             Remove Members
         </button>
@@ -102,4 +94,5 @@
             Download Report
         </button>
     </div>
+    
 </ng-template>
