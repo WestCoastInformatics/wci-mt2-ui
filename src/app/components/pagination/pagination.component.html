@@ -2,7 +2,7 @@
 
     <div class="refset-tool-pagination-top-row">
 
-        <div class="refset-tool-pagination-spacer">&nbsp;</div> 
+        <div class="refset-tool-pagination-spacer">&nbsp;</div>
 
         <div class="refset-tool-pagination-buttons">
 
@@ -41,9 +41,12 @@
         </div>
 
         <div class="refset-tool-pagination-total-label ">
-            <div *ngIf="showTotal && totalKnown">
-                Showing <span class="refset-tool-pagination-count">{{startRecord}}</span> to <span class="refset-tool-pagination-count">{{endRecord}}</span> 
+            <div *ngIf="showTotal && totalKnown && numOfResults > 0">
+                Showing <span class="refset-tool-pagination-count">{{startRecord}}</span> to <span class="refset-tool-pagination-count">{{endRecord}}</span>
                 of <span class="refset-tool-pagination-count">{{this.numOfResults}}</span> results
+            </div>
+            <div *ngIf="numOfResults == 0">
+                No Results to Show
             </div>
         </div>
 
