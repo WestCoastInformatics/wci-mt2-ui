@@ -2080,7 +2080,7 @@ button.refset-tool-table-action-icon {
 }
 
 .import-from-list-text-area {
-    height: 250px;
+    height: 50px;
 }
 
 .import-from-list-modal-footer {
@@ -2943,7 +2943,10 @@ button.refset-tool-table-action-icon {
 }
 
 .refset-tool-action-download-report-button {
-    margin-top: 16px !important;
+    width: min-content;
+    align-self: center;
+    margin-bottom: 10px !important;
+    margin-top: -15px !important;
 }
 
 .add-remove-descendants-radio-group {

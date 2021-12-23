@@ -7,8 +7,10 @@
 <ng-template #importFromFileDialog let-modal>
 
     <div class="modal-header import-from-file-modal-header">
-
-        <h4 class="modal-title import-from-file-modal-title" id="modal-basic-title">
+        <h4
+            class="modal-title import-from-file-modal-title"
+            id="modal-basic-title"
+        >
             Add or Remove Members From File
         </h4>
 
@@ -16,40 +18,63 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <p *ngIf="!successfulImport && showBanner">
+        <ngb-alert [dismissible]="false" type="warning" (click)="showBanner = false">
+            <div class="warning-header">
+                <span class="material-icons warning-logo">warning</span>
+                <div class="warning-body">
+                    <strong>Warning!</strong>
+                    <br />{{ failedIds.length }}/{{ allIds.length }} SctIds entered are invalid and have not been {{ messageModifier }} the reference set. 
+                    <br />List of valid/invalid SctIds is available for download.
+                </div>
+            </div>
+        </ngb-alert>
+    </p>
 
+    <p *ngIf="successfulImport && showBanner">
+        <ngb-alert [dismissible]="false" type="success" (click)="showBanner = false">
+            <div class="success-header">
+                <span class="material-icons success-logo">check_circle</span>
+                <div class="success-body">
+                    <strong>Success!</strong>
+                    <br />All SctIds have been {{ messageModifier }} the reference set.
+                    <br />List of valid SctIds is available for download.
+                </div>
+            </div>
+        </ngb-alert>
+    </p>
+    <button *ngIf="showBanner"
+            type="button"
+            (click)="createImportReport()"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-download-report-button"
+            aria-label="Import Details Report"
+            title="Import Details Report"
+            ng-reflect-color="primary">
+        Download Report
+    </button>
     <div class="container-fluid import-from-file-container-fluid">
         <div class="modal-body import-from-file-modal-body">
-
-            <p *ngIf="!successfulImport && showBanner">
-                <ngb-alert [dismissible]="false" type="warning" (click)="showBanner = false">
-                    <div class="warning-header">
-                        <span class="material-icons warning-logo">warning</span>
-                        <div class="warning-body">
-                            <strong>Warning!</strong>
-                            <br /><br />{{ failedIds.length }}/{{ allIds.length }} SctIds entered are invalid and have not been {{ messageModifier }} the reference set. 
-                            <br /><br />List of valid/invalid SctIds is available for download.
-                        </div>
-                    </div>
-                </ngb-alert>
-            </p>
-
-            <p *ngIf="successfulImport && showBanner">
-                <ngb-alert [dismissible]="false" type="success" (click)="showBanner = false">
-                    <div class="success-header">
-                        <span class="material-icons success-logo">check_circle</span>
-                        <div class="success-body">
-                            <strong>Success!</strong>
-                            <br /><br />All SctIds have been {{ messageModifier }} the reference set.
-                            <br /><br />List of valid/invalid SctIds is available for download.
-                        </div>
-                    </div>
-                </ngb-alert>
-            </p>
-
-            <div class="container-file-import" dragAndDrop (fileDropped)="onFileDropped($event)">
-
-                <input type="file" #fileDropRef id="fileDropRef" multiple [value]="fileInput" (change)="fileBrowseHandler($event.target.files)" />
-                <img src="assets/import-file-upload-icon2.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
+            <div
+                class="container-file-import"
+                dragAndDrop
+                (fileDropped)="onFileDropped($event)"
+            >
+                <input
+                    type="file"
+                    #fileDropRef
+                    id="fileDropRef"
+                    multiple
+                    (change)="fileBrowseHandler($event.target.files)"
+                />
+                <img
+                    src="assets/import-file-upload-icon2.svg"
+                    alt="Document symbol denoting an upload icon"
+                    title="Import File"
+                    aria-label="Import file"
+                />
 
                 <h3>Drag and drop file here</h3>
                 <h3>or</h3>
@@ -80,23 +105,37 @@
 
         </div>
     </div>
-
-    <div class="modal-footer import-from-file-modal-footer" style="align-self: center">
-
-        <button *ngIf="!showBanner" [disabled]="disableFileUpload" type="button" (click)="callMemberOperation('add')" mat-raised-button color="primary" aria-hidden="false"
-                class="refset-tool-action-button" aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
-            Add Members
-        </button>
-
-        <button *ngIf="!showBanner && !isIntensional" [disabled]="disableFileUpload" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="primary"
-                aria-hidden="false" class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="primary" style="margin-left: 15px">
-            Remove Members
-        </button>
-
-        <button *ngIf="showBanner" type="button" (click)="createImportReport()" mat-raised-button color="primary" style="margin-top: 0px !important; margin-left: 16px !important"
-                aria-hidden="false" class="refset-tool-action-download-report-button" aria-label="Import Details Report" title="Import Details Report" ng-reflect-color="primary">
-            Download Report
-        </button>
+    <div
+        class="modal-footer import-from-file-modal-footer"
+        style="align-self: center"
+    >
+    <button *ngIf="!showBanner"
+            [disabled]="disableFileUpload"
+            type="button"
+            (click)="callMemberOperation('add')"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Add Members"
+            title="Add Members"
+            ng-reflect-color="primary">
+        Add Members
+    </button>
+    
+    <button *ngIf="!showBanner && !isIntensional"
+            [disabled]="disableFileUpload"
+            type="button"
+            (click)="callMemberOperation('remove')"
+            mat-raised-button
+            color="primary"
+            aria-hidden="false"
+            class="refset-tool-action-button"
+            aria-label="Remove Members"
+            ng-reflect-color="primary"
+            style="margin-left: 15px">
+        Remove Members
+    </button>
 
     </div>
 
