@@ -186,7 +186,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onGridReady = (gridReadyParams) => {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
-
+        this.onResize(undefined);
         let dataSource = {
             rowCount: null,
             getRows: (rowParams) => {
@@ -517,5 +517,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
 
         return stringValue;
+    }
+
+    onResize(event) {
+        let gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0].clientWidth;
+        document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
     }
 }

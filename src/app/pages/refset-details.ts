@@ -1626,4 +1626,12 @@ export class RefsetDetails {
                 }
             );
     }
+
+    openAlertModal(alertDialog: NgbModal) {
+        this.modalService.open(alertDialog, {
+          backdrop : 'static',
+          keyboard : false,
+          windowClass: 'alert-modal'
+        });
+    }
 }

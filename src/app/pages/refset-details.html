@@ -208,10 +208,9 @@
                             aria-label="Undo all changes since last save"
                             title="Undo all changes since last save"
                             ng-reflect-color="primary"
-                            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT')">
+                            (click)="openAlertModal(alertDialog)">
                         Undo Changes
                     </button>
-
                     <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
                             mat-raised-button
                             color="primary"
@@ -1381,6 +1380,49 @@
         <button type="button" (click)="removeMembers(); modal.close('Remove Selected');" mat-raised-button color="primary" aria-hidden="false"
                 class="refset-tool-action-button import-from-list-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="primary">
             Remove
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #alertDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <div>Are you sure you want to undo the changes?</div>
+        </div>
+    </div>
+    <div class="modal-footer ready-for-review-footer">
+        <button type="button"
+                (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click')"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button"
+                aria-label="Yes"
+                title="Yes"
+                ng-reflect-color="primary"
+                style="margin-right: 20px;">
+            Yes
+        </button>
+        <button type="button"
+                (click)="modal.dismiss('No click')"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button"
+                aria-label="No"
+                title="No"
+                ng-reflect-color="primary">
+            No
         </button>
     </div>
 </ng-template>

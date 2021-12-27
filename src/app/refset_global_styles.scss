@@ -14,6 +14,7 @@ body {
     display: flex;
     flex-direction: column;
     letter-spacing: 0.5px;
+    overflow-x: hidden;
 }
 
 @-moz-document url-prefix() {
@@ -592,7 +593,7 @@ button.refset-tool-table-action-icon {
 }
 
 .top-search-bar {
-    top: 60px !important;
+    top: 70px !important;
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     .page-title {
@@ -705,7 +706,7 @@ button.refset-tool-table-action-icon {
 }
 #refsetDetailsPage .refset-title {
     background: white;
-    top: 60px;
+    top: 70px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
     z-index: 1000;
@@ -2085,7 +2086,7 @@ button.refset-tool-table-action-icon {
 }
 
 .import-from-list-text-area {
-    height: 250px;
+    height: 50px;
 }
 
 .import-from-list-modal-footer {
@@ -2298,7 +2299,7 @@ button.refset-tool-table-action-icon {
 #refsetProjectsPage > .refset-title {
     align-items: baseline;
     position: sticky;
-    top: 60px;
+    top: 70px;
     z-index: 2;
     background-color: white;
     padding-top: 10px;
@@ -2950,7 +2951,10 @@ button.refset-tool-table-action-icon {
 }
 
 .refset-tool-action-download-report-button {
-    margin-top: 16px !important;
+    width: min-content;
+    align-self: center;
+    margin-bottom: 10px !important;
+    margin-top: -15px !important;
 }
 
 .add-remove-descendants-radio-group {
@@ -3034,4 +3038,20 @@ button.refset-tool-table-action-icon {
 // Material Select Field Dropdown Overlays
 .cdk-overlay-connected-position-bounding-box {
     z-index: 2100 !important;
+}
+
+#refsetDirectoryPage {
+    .ag-theme-alpine .ag-header {
+        top: 130px;
+        position: fixed;
+        width: auto;
+        z-index: 99;
+    }
+    .ag-theme-alpine .ag-root-wrapper {
+         border: none!important;
+         top: 100px;
+    }
+    .refset-tool-pagination-container {
+        padding-top: 130px;
+    }
 }
