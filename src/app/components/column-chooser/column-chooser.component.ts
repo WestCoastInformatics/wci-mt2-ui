@@ -20,6 +20,7 @@ export class ColumnChooserComponent {
     columns = [];
     selectedColumns = [];
     @Input() gridColumnApi;
+    @Input() disabled: boolean = false;
     @Input() useDialog: boolean = true;
     @Input() manualStateRefresh = false;
     @ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;

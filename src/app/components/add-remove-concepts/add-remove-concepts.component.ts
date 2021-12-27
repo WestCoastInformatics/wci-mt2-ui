@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
 	selector: 'add-remove-concepts',
@@ -11,6 +14,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 export class AddRemoveConceptsComponent implements OnInit {
 
 	selectedOption: string;
+	openedModel: NgbModalRef;
 	actionText: string;
 	refsetInternalId: string;
 	options = [
@@ -26,13 +30,13 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
-	@Output() sendLoadingSpinnerTrigger = new EventEmitter<any>(true);
-	@Output() processChangedMemberEffects = new EventEmitter<any>(true);
+	@Input() processChangedMemberFunction: () => void;
+	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() selectedEvent = new EventEmitter<string>();
 
 	@ViewChild("addRemoveDescendantsDialog") dialogSection: TemplateRef<any>;
 
-	constructor(private readonly modalService: NgbModal, private refsetService: RefsetService) { }
+	constructor(private readonly modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) { }
 
 	ngOnInit(): void {
 	}
@@ -68,6 +72,13 @@ export class AddRemoveConceptsComponent implements OnInit {
 
         let conceptId: string = '';
 		let ecl = '';
+		let description: string;
+
+		if (this.openedModel != null) {
+
+			this.openedModel.close();
+			this.openedModel = null;
+		}
 
 		if (CodeUtility.hasValue(this.selectedOption)){
 			ecl = this.selectedOption;
@@ -84,7 +95,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 			conceptId = this.conceptCode;
         }
                 
-        this.sendLoadingSpinnerTrigger.emit(true);
+        this.changeLockedStatus.emit(true);
 
 		// if this is an intensional refset
 		if (this.refset.type == RefsetUtility.INTENSIONAL) {
@@ -93,82 +104,53 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 				let encodedPipe = '%7C';
 				ecl = this.conceptCode + ' ' + encodedPipe + ' ' + this.conceptName + ' ' + encodedPipe;
-				
-				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe(
-					
-					(data) => {
-	
-						console.log("data: ", data);
-						this.processChangedMemberEffects.emit();
-					},
-					(error) => {
-	
-						console.log(error);
-						this.sendLoadingSpinnerTrigger.emit(false);
-					}
-				);
+				description = 'added to';
+
+				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe();
 	
 			} else {
 	
-				this.refsetService.removeRefsetDefinitionException(this.refsetInternalId, this.definitionExceptionId).subscribe(
-	
-					(data) => {
-	
-						console.log("data: ", data);
-						this.processChangedMemberEffects.emit();
-					},
-					(error) => {
-	
-						console.log(error);
-						this.sendLoadingSpinnerTrigger.emit(false);
-					}
-				);
+				description = 'removed from';
+				this.refsetService.removeRefsetDefinitionException(this.refsetInternalId, this.definitionExceptionId).subscribe();
 			}
 		}
 
-		// if this is an extensional or external refset
+		// else if this is an extensional or external refset
 		else {
+
+			let operationFunction: Function;
 
 			if (this.isAdd) {
 
-				this.refsetService.addRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
-					
-					(data) => {
-	
-						console.log("data: ", data);
-						this.processChangedMemberEffects.emit();
-					},
-					(error) => {
-	
-						console.log(error);
-						this.sendLoadingSpinnerTrigger.emit(false);
-					}
-				);
-	
+				description = 'added to';
+				operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
 			} else {
-	
-				this.refsetService.removeRefsetMembers(this.refsetInternalId, null, conceptId, ecl).subscribe(
-	
-					(data) => {
-	
-						console.log("data: ", data);
-						this.processChangedMemberEffects.emit();
-					},
-					(error) => {
-	
-						console.log(error);
-						this.sendLoadingSpinnerTrigger.emit(false);
-					}
-				);
+
+				description = 'removed from';
+				operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
 			}
+
+			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
-		
+		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
     }
+
+	callMemberChangeFunction = () => {
+		this.processChangedMemberFunction();
+	}
+
+	viewRefset = (refsetId) => {
+
+		if (this.router.url.includes('edit/refset/' + refsetId)) {
+
+		}
+		this.router.navigateByUrl('edit/refset/' + refsetId);
+	}
 
 	openAddRemoveDescendantsModal() {
 
-		this.modalService.open(this.dialogSection, {
+		this.openedModel = this.modalService.open(this.dialogSection, {
 			backdrop: 'static',
 			keyboard: false,
 			windowClass: 'add-remove-descendants-modal'

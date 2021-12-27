@@ -32,8 +32,9 @@
     </tree-root>
 </div>
 
-<add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
-    [refset]="refset" [definitionExceptionType]="addRemoveDefinitionExceptionType" [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)" (processChangedMemberEffects)="processChangedMemberEffects()">
+<add-remove-concepts [isAdd]="isAdd" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren"
+    [refset]="refset" [definitionExceptionType]="addRemoveDefinitionExceptionType" [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" 
+    [processChangedMemberFunction]="processChangedMemberFunction" (changeLockedStatus)="sendChangeLockedStatus($event)">
 </add-remove-concepts>
 
 <scroll-top></scroll-top>

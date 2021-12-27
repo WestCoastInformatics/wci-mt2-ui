@@ -151,6 +151,7 @@ export class RefsetDetails {
     reviewNotesAdded = false;
     allowedToEdit = false;
     allowedToReview = false;
+    isLocked = false;
 
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
@@ -204,6 +205,7 @@ export class RefsetDetails {
 
     initializeDetailsPage() {
 
+        this.isLocked = false;
         this.refsetLoaded = new Subject<boolean>();
         this.refsetLoaded$ = this.refsetLoaded.asObservable();
         this.memberCacheLoaded = new Subject<boolean>();
@@ -449,8 +451,14 @@ export class RefsetDetails {
                 console.log("Error loading refset details data.");
             }
 
-            this.refsetLoaded.next(true);
-            this.refsetLoaded.complete();
+            if (this.refsetData.locked){
+                this.changeLockedStatus(true);
+            } else {
+
+                this.refsetLoaded.next(true);
+                this.refsetLoaded.complete();
+            }
+            
         });
         
         this.cacheTaxonomyAncestors();
@@ -1032,8 +1040,16 @@ export class RefsetDetails {
         this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
+    changeLockedStatus(lock: boolean) {
+
+        this.isLocked = lock;
+        this.toggleLoadingSpinner(false);
+        UiUtility.toggleLockedSections(lock);
+    }
+
     processChangedMemberEffects = () => {
 
+        this.changeLockedStatus(false);
         this.showLoadingSpinner = true;
 
         if (this.refsetData.type == RefsetUtility.INTENSIONAL) {

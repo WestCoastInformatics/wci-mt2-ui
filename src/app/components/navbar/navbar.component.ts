@@ -7,6 +7,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-navbar',
@@ -26,7 +27,7 @@ export class NavbarComponent implements OnInit {
 
     constructor(private authenticationService: AuthenticationService,
         private breadcrumbService: BreadcrumbService,
-        private domSanitizer: DomSanitizer,
+        private readonly modalService: NgbModal,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         readonly refsetService: RefsetService, 
@@ -67,6 +68,7 @@ export class NavbarComponent implements OnInit {
                 this.router.navigateByUrl('directory');
             }
 
+            this.modalService.dismissAll();
             this.notificationService.show('Your session has expired and you have been logged out', null, 'info', {timeOut: 5000, extendedTimeOut: 0});
         }
     }

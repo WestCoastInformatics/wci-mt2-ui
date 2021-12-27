@@ -131,6 +131,11 @@ strong {
 // <--- Manual Flex Styles END
 
 // General Page Styles
+.refset-tool-disable-section {
+    pointer-events: none;
+    opacity: 0.4;
+    user-select: none;
+}
 .refset-tool-rounded-borders {
     border-radius: 5px;
     border-style: solid;
@@ -2604,6 +2609,8 @@ button.refset-tool-table-action-icon {
 .details-page-stepper {
     transform: scale(0.7);
     margin-top: -25px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .edit-button-group-right-below-sticky-header {

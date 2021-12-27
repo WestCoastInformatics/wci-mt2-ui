@@ -10,8 +10,8 @@ import {
     ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { catchError } from 'rxjs/operators';
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { Router } from '@angular/router';
 import { Debounce } from "src/app/decorators/debounce.decorator";
 import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetService } from "src/app/services/rest/refset.service";
@@ -36,10 +36,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     initialResults = [];
     selectedRowIndex = -1;
     conceptDetailParents: any;
-    selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":"
-        + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+    selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
-        // onSelect: this.onTaxonomySelected.bind(this),
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
     };
@@ -57,18 +55,20 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     refsetInternalId: string;
+    openedModel: NgbModalRef;
+    isLocked = false;
+    showNoResultsLabel = false;
+    eclString: any;
 
     @Input() refset: any;
     @Output() reloadPageData = new EventEmitter<boolean>();
-    @Output() loadingSpinner = new EventEmitter<any>(true);
-    @ViewChild("importFromListDialog") importFromListDialog: TemplateRef<any>;
-    showNoResultsLabel = false;
-    eclString: any;
+    @Output() loadingSpinner = new EventEmitter<boolean>(true);
+    @Output() changeLockedStatus = new EventEmitter<boolean>(true);
 
     constructor(
         private readonly modalService: NgbModal,
         private refsetService: RefsetService,
-        private changeDetector: ChangeDetectorRef
+        private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -121,7 +121,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
-    processChangedMemberEffects = () => {
+    public processChangedMemberEffects = () => {
+
+        this.isLocked = false;
+        UiUtility.toggleLockedSections(false);
+
+        // if this modal is closed and the same refset is still open then refsesh the page
+        if (!this.modalService.hasOpenModals() && this.router.url.includes('edit/refset/' + this.refsetInternalId)) {
+            this.sendReloadPageDataTrigger(true);
+        }
 
         // reload the search results
         this.onTableSearchChange();
@@ -137,10 +145,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.loadingSpinner.emit(value);
     }
 
+    sendChangeLockedStatus = (value: boolean) => {
+
+        this.isLocked = value;
+        this.changeLockedStatus.emit(value);
+    }
+
     openAddRemoveModal(addRemoveConceptHierarchyModal: NgbModal) {
 
-        this.refreshModal();
-        this.modalService.open(addRemoveConceptHierarchyModal, {
+        this.openedModel = this.modalService.open(addRemoveConceptHierarchyModal, {
             windowClass: "add-remove-concept-hierarchy-modal-size",
             animation: true,
             beforeDismiss: () => {
@@ -150,6 +163,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             backdrop: "static",
             keyboard: false,
         });
+    }
+
+    closeModal() {
+
+        if (!this.isLocked) {
+            this.sendReloadPageDataTrigger(true);
+        }
+
+        this.openedModel.dismiss();
     }
 
     selectConcept(concept: any): void {
@@ -222,7 +244,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     refreshModal(): void {
 
         this.clearSearch();
-        this.onTableSearchChange(false);
+        this.isLocked = false;
         this.conceptSelected = false;
         this.conceptDetail = null;
         this.showResults = false;

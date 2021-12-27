@@ -1,6 +1,8 @@
 import { CodeUtility } from "./code.utility";
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from "src/environments/environment";
+import { RefsetService } from "../services/rest/refset.service";
+import { Router } from "@angular/router";
 
 export class UiUtility {
 
@@ -241,6 +243,73 @@ export class UiUtility {
             const customEvent = document.createEvent('Event');
             customEvent.initEvent('input', true, true);
             field[0].dispatchEvent(customEvent);
+        });
+    }
+
+    // Function for background processesing of lengthy refset tasks, and notification to user of the status of those tasks
+    static manageNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+
+		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
+				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+		let notification = notificationService.show(message, null, 'info', {timeOut: 0, extendedTimeOut: 0});
+		let viewRefsetButton = `<button [onclick]="viewRefset('${ refsetId }'">View Refset</button>`;
+		let callNumber = 0;
+		let callDelay = 1000;
+		let successMessageTimeout = 0;
+
+		let checkIfFinished = () => {
+
+			callNumber++;
+
+			if (callNumber == 20) {
+				callDelay = 4000;
+
+			} else if (callNumber == 30) {
+				callDelay = 15000;
+			}
+			refsetService.isRefsetLocked(refsetInternalId).subscribe(
+
+				(isLocked) => {
+
+					if (isLocked) {
+						setTimeout(checkIfFinished, callDelay);
+					} else {
+
+						notificationService.close(notification);
+
+						if (router.url.includes('edit/refset/' + refsetInternalId)) {
+
+							viewRefsetButton = '';
+							successMessageTimeout = 5000;
+							callbackFunction();
+						}
+						
+						notificationService.show('Members have finished being ' + description + ' refset ' + refsetId + '. You may continue editing the refset. ' + viewRefsetButton, null, 'success', {timeOut: successMessageTimeout, extendedTimeOut: 0});
+					}
+				},
+				(error) => {
+
+					console.log(error);
+					notificationService.show('There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator. ' + viewRefsetButton, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+				}
+			);
+		};
+
+		checkIfFinished();
+	}
+
+    static toggleLockedSections(lock: boolean) {
+
+        let containingDiv = $('.refset-tool-lockable');
+
+        if (lock) {
+            containingDiv.addClass('refset-tool-disable-section');
+        } else {
+            containingDiv.removeClass('refset-tool-disable-section');
+        }
+
+        containingDiv.find('input, select, button').each(function () {
+            $(this).prop('disabled', lock);
         });
     }
 

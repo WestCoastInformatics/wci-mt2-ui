@@ -14,12 +14,7 @@
             id="modal-basic-title">
             Add/Remove By Concept or Hierarchy
         </h4>
-        <button type="button"
-                class="close"
-                aria-label="Close"
-                (click)="
-                modal.dismiss('Cross click'); sendReloadPageDataTrigger(true)
-            ">
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -27,7 +22,7 @@
             container-fluid
             add-remove-concept-hierarchy-modal-container-fluid
         ">
-        <div class="modal-body add-remove-concept-hierarchy-modal-body">
+        <div class="modal-body add-remove-concept-hierarchy-modal-body refset-tool-lockable">
             <div class="row">
                 <div class="add-remove-concept-hierarchy-modal-Section-container">
                     <as-split direction="horizontal"
@@ -451,27 +446,14 @@
                                                                [editMode]="editMode"
                                                                [rootNode]="conceptDetail"
                                                                [options]="taxonomyOptions"
-                                                               [selectedConcept]="
-                                                    selectedConcept
-                                                "
-                                                               [manualStateRefresh]="
-                                                    taxonomyManualStateRefresh
-                                                "
+                                                               [selectedConcept]="selectedConcept"
+                                                               [manualStateRefresh]="taxonomyManualStateRefresh"
                                                                hasMultipleRootNodes="false"
-                                                               (reloadPageData)="
-                                                    processChangedMemberEffects()
-                                                "
-                                                               (loadConceptDetail)="
-                                                    loadConceptDetail($event)
-                                                "
-                                                               (loadingSpinner)="
-                                                    sendLoadingSpinnerTrigger(
-                                                        $event
-                                                    )
-                                                "
-                                                               (numOfChildren)="
-                                                    numOfChildren = $event
-                                                "></app-taxonomy-tree>
+                                                               [processChangedMemberFunction]="processChangedMemberEffects"
+                                                               (loadConceptDetail)="loadConceptDetail($event)"
+                                                               (changeLockedStatus)="sendChangeLockedStatus($event)"
+                                                               (numOfChildren)="numOfChildren = $event">
+                                            </app-taxonomy-tree>
                                         </div>
                                     </div>
                                 </div>
@@ -482,7 +464,8 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer add-remove-concept-hierarchy-modal-footer">
+
+    <div class="modal-footer add-remove-concept-hierarchy-modal-footer refset-tool-lockable">
         <button type="button"
                 (click)="onTableSearchChange()"
                 mat-raised-button
@@ -503,48 +486,8 @@
                          [refset]="refset"
                          [definitionExceptionType]="addRemoveDefinitionExceptionType"
                          [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
-                         (sendLoadingSpinnerTrigger)="sendLoadingSpinnerTrigger($event)"
-                         (processChangedMemberEffects)="processChangedMemberEffects()">
+                         (changeLockedStatus)="sendChangeLockedStatus($event)"
+                         (processChangedMemberEffects)="processChangedMemberEffects()"
+                         [processChangedMemberFunction]="processChangedMemberEffects">
     </add-remove-concepts>
-</ng-template>
-<ng-template #importFromListDialog let-modal>
-    <div class="modal-header import-from-list-modal-header">
-        <h4
-            class="modal-title import-from-list-modal-title"
-            id="modal-basic-title"
-        >
-            Add or Remove
-        </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid import-from-list-container-fluid">
-        <div class="modal-body import-from-list-modal-body">
-            <div class="import-from-list-list-text">
-            </div>
-            <mat-form-field class="add-by-list-text-area" appearance="outline">
-                <textarea matInput
-                          class="import-from-list-text-area"
-                          [(ngModel)]="eclString"></textarea>
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="modal-footer import-from-list-modal-footer">
-
-        <button type="button" (click)="addMembers()" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
-                aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
-            Add
-        </button>
-
-        <button *ngIf="!isIntensional" type="button" (click)="removeMembers()" mat-raised-button color="primary" aria-hidden="false"
-                class="refset-tool-action-button import-from-list-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="primary">
-            Remove
-        </button>
-    </div>
 </ng-template>

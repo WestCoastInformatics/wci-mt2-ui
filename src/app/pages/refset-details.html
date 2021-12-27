@@ -78,29 +78,7 @@
                 <mat-icon>done</mat-icon>
             </ng-template>
         </mat-horizontal-stepper>
-        <mat-button-toggle-group name="fontStyle"
-                                 aria-label="Font Style"
-                                 class="details-page-right-button-group">
-            
-            <!-- <mat-button-toggle
-                class="button-group-update"
-                (click)="adminToggled = false; updateToggled = true;"
-                value="Update"
-                >Update</mat-button-toggle
-            > -->
-            <!-- <mat-button-toggle class="button-group-update"
-                               value="Update"
-                               disabled>Update</mat-button-toggle>
-            <mat-button-toggle class="button-group-admin"
-                               value="Admin"
-                               disabled>Admin</mat-button-toggle> -->
-            <!-- <mat-button-toggle
-                class="button-group-admin"
-                (click)="adminToggled = true; updateToggled = false;"
-                value="Admin"
-                >Admin</mat-button-toggle
-            > -->
-        </mat-button-toggle-group>
+
     </div>
 
     <!-- Read Only Header Bar -->
@@ -136,12 +114,8 @@
         <div class="row justify-content-end details-version-select" title="Select Version">
             <mat-form-field appearance="fill">
                 <mat-label></mat-label>
-                <mat-select #detailsVersionSelect
-                            [(value)]="selectedVersion"
-                            (selectionChange)="changeVersion()"
-                            [disableOptionCentering]="true">
-                    <mat-option *ngFor="let option of versionOptions"
-                                [value]="option.value">
+                <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion()" disableOptionCentering="true" [disabled]="isLocked">
+                    <mat-option *ngFor="let option of versionOptions" [value]="option.value">
                         {{ addSpaceAfterVersionDate(option.display) }}
                     </mat-option>
                 </mat-select>
@@ -150,7 +124,12 @@
     </div> 
 
     <!-- Refset Name Bar -->
-    <div class="refset-title-container">
+    <div id="refsetLockBanner" class="container-fluid" *ngIf="isLocked">
+        This refset is locked while edits are processing.
+    </div>
+
+    <!-- Refset Name Bar -->
+    <div class="refset-title-container refset-tool-lockable">
 
         <!-- Metadata Section -->
         <div class="metadata-container" *ngIf="editMode">
@@ -828,7 +807,7 @@
 
                 <import-from-list-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
 
-                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)">
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)">
                 </add-remove-by-concept-modal>
 
                 <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput', false)" class="button-inactive">
@@ -838,149 +817,66 @@
         </div>
 
         <!-- Member Concepts Section -->
-        <div class="container-fluid"
-             id="detailsMemberSection">
-            <div class="row"
-                 [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
+        <div class="container-fluid" id="detailsMemberSection">
+            <div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
+
                 <div class="detailsMemberSection-container">
-                    <as-split direction="horizontal"
-                              gutterSize="4">
-                        <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100"
-                                       [minSize]="25">
+                    <as-split direction="horizontal" gutterSize="4">
+                        <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="25">
+
                             <div class="refset-tool-details-members-column">
+
                                 <!-- Search Bar -->
                                 <div class="container-fluid pr-0">
-                                    <div class="
-                                            row
-                                            justify-content-start
-                                            no-gutters
-                                        "
-                                         style="align-items: baseline">
-                                        <div class="
-                                                col-md-3
-                                                refset-tool-details-chooser-column
-                                            "
-                                             style="padding-left: 5px"
-                                             [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay">
-                                            <app-column-chooser title="Select Columns to Display"
-                                                                [gridColumnApi]="membersGridColumnApi"
-                                                                [useDialog]="useDialog"
-                                                                [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
+                                    <div class="row justify-content-start no-gutters" style="align-items: baseline">
+
+                                        <div class="col-md-3 refset-tool-details-chooser-column" style="padding-left: 5px" 
+                                            [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay">
+                                            <app-column-chooser title="Select Columns to Display" [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [disabled]="isLocked"
+                                                    [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
                                         </div>
 
-                                        <div class="
-                                                col-md-3
-                                                refset-tool-details-chooser-column
-                                            "
-                                             [style.display]="membersTaxonomyDisplay">
-                                            <mat-form-field appearance="fill"
-                                                            class="format-option-drop-down">
-                                                <mat-select #downloadFormatField
-                                                            [(value)]="selectedTaxonomyLanguage"
-                                                            (selectionChange)="changeTaxonomyLanguage()">
-                                                    <mat-option *ngFor="let option of languageOptions"
-                                                                [value]="option.value">
+                                        <div class="col-md-3 refset-tool-details-chooser-column" [style.display]="membersTaxonomyDisplay">
+                                            <mat-form-field appearance="fill" class="format-option-drop-down">
+                                                <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
+                                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
                                                         {{option.display}}
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
 
-                                        <div class="col-lg ml-3"
-                                             [style.display]="membersTableDisplay">
-                                            <mat-form-field id="detailsTableSearchInputField"
-                                                            class="
-                                                    refset-tool-details-search-field
-                                                ">
-                                                <mat-label>Search (Type at least 3
-                                                    characters. Example: shou
-                                                    fra)</mat-label>
-                                                <input matInput
-                                                       #detailsTableSearchInput
-                                                       id="detailsTableSearchInput"
-                                                       [(ngModel)]="tableSearchInput"
-                                                       (input)="onTableSearchChange()"
-                                                       aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)" />
+                                        <div class="col-lg ml-3" [style.display]="membersTableDisplay">
+                                            <mat-form-field class="refset-tool-details-search-field">
+                                                <mat-label>Search (Type at least 3 characters. Example: shou fra)</mat-label>
+                                                <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
                                             </mat-form-field>
-                                            <span class="clear-search"
-                                                  (click)="clearSearch('table')">&#10005;</span>
-                                            <button (click)="openEclBuilder('detailsTableSearchInput')"
-                                                    #detailsTaxonomySearchEclButton
-                                                    class="
-                                                    refset-tool-standard-icon-button
-                                                    refset-tool-search-ecl-button
-                                                ">
-                                                <img src="assets/wrench-icon.svg"
-                                                     alt="wrench icon"
-                                                     title="Open ECL Builder"
-                                                     aria-label="ECL Builder" />
+                                            <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
+                                            <button (click)="openEclBuilder('detailsTableSearchInput')" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                                <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
                                             </button>
                                         </div>
 
-                                        <div class="col-lg ml-3"
-                                             [style.display]="membersTaxonomyDisplay">
-                                            <mat-form-field id="detailsTaxonomySearchInputField"
-                                                            class="
-                                                    refset-tool-details-search-field
-                                                "
-                                                            *ngIf="showMembersSearchBar()">
-                                                <mat-label>Search (Type at least 3
-                                                    characters. Example: shou
-                                                    fra)</mat-label>
-                                                <input matInput
-                                                       #detailsTaxonomySearchInput
-                                                       id="detailsTaxonomySearchInput"
-                                                       [(ngModel)]="taxonomySearchInput"
-                                                       (input)="onTaxonomySearchChange()"
-                                                       aria-label="Enter Search Criteria (Type at least 3 characters. Example: shou fra)" />
+                                        <div class="col-lg ml-3" [style.display]="membersTaxonomyDisplay">
+                                            <mat-form-field class="refset-tool-details-search-field" *ngIf="showMembersSearchBar()">
+                                                <mat-label>Search (Type at least 3 characters. Example: shou fra)</mat-label>
+                                                <input matInput id="detailsTaxonomySearchInput" [(ngModel)]="taxonomySearchInput" (input)="onTaxonomySearchChange()" [disabled]="!showMembersSearchBar()" />
                                             </mat-form-field>
-                                            <mat-form-field id="detailsTaxonomySearchInputField"
-                                                            class="
-                                                    refset-tool-details-search-field
-                                                "
-                                                            *ngIf="!showMembersSearchBar()">
-                                                <input matInput
-                                                       #detailsTaxonomySearchInput
-                                                       id="detailsTaxonomySearchInput"
-                                                       [(ngModel)]="taxonomySearchInput"
-                                                       (input)="onTaxonomySearchChange()"
-                                                       disabled />
-                                            </mat-form-field>
-                                            <span class="clear-search"
-                                                  (click)="clearSearch('taxonomy')"
-                                                  *ngIf="showMembersSearchBar()">&#10005;</span>
-                                            <button (click)="openEclBuilder('detailsTaxonomySearchInput')"
-                                                    #detailsTaxonomySearchEclButton
-                                                    class="
-                                                    refset-tool-standard-icon-button
-                                                    refset-tool-search-ecl-button
-                                                ">
-                                                <img src="assets/wrench-icon.svg"
-                                                     alt="wrench icon"
-                                                     title="Open ECL Builder"
-                                                     aria-label="ECL Builder" />
+                                            <span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
+                                            <button (click)="openEclBuilder('detailsTaxonomySearchInput')" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                                <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
                                             </button>
                                         </div>
 
-                                        <div class="col-md-3"
-                                             style="display: contents">
-                                            <mat-button-toggle-group class="
-                                                    refset-tool-toggle-buttons
-                                                "
-                                                                     #detailsMembersListMode
-                                                                     name="membersListMode"
-                                                                     aria-label="Members List Mode"
-                                                                     (change)="onChangeMembersListMode()"
-                                                                     [(ngModel)]="selectedMembersListMode">
-                                                <mat-button-toggle value="table"
-                                                                   title="Display Members in a Table"
-                                                                   aria-label="Table">Table</mat-button-toggle>
-                                                <mat-button-toggle value="taxonomy"
-                                                                   title="Taxonomy"
-                                                                   aria-label="Display Members in a Taxonomy"
-                                                                   [disabled]="!showTaxonomySearchTable">{{taxonomyButtonLabel}}</mat-button-toggle>
+                                        <div class="col-md-3" style="display: contents">
+                                            <mat-button-toggle-group class="refset-tool-toggle-buttons" name="membersListMode" aria-label="Members List Mode" (change)="onChangeMembersListMode()" [(ngModel)]="selectedMembersListMode">
+                                                <mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
+                                                <mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
+                                                    {{taxonomyButtonLabel}}
+                                                </mat-button-toggle>
                                             </mat-button-toggle-group>
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -1131,9 +1027,9 @@
                                                        [selectedConcept]="selectedConcept"
                                                        [options]="taxonomyOptions"
                                                        [manualStateRefresh]="taxonomyManualStateRefresh"
-                                                       (reloadPageData)="processChangedMemberEffects()"
+                                                       [processChangedMemberFunction]="processChangedMemberEffects"
                                                        (loadConceptDetail)="loadConceptDetail($event)"
-                                                       (loadingSpinner)="toggleLoadingSpinner($event)"
+                                                       (changeLockedStatus)="changeLockedStatus($event)"
                                                        (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
                                 </div>
                             </div>
@@ -1419,8 +1315,8 @@
                                                                [options]="taxonomyOptions"
                                                                hasMultipleRootNodes="false"
                                                                [editMode]="allowedToEdit"
-                                                               (reloadPageData)="processChangedMemberEffects()"
-                                                               (loadingSpinner)="toggleLoadingSpinner($event)"
+                                                               [processChangedMemberFunction]="processChangedMemberEffects"
+                                                               (changeLockedStatus)="changeLockedStatus($event)"
                                                                (loadConceptDetail)="loadConceptDetail($event)"
                                                                (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
                                         </div>
@@ -1442,8 +1338,8 @@
                      [refset]="refsetData"
                      [definitionExceptionType]="addRemoveDefinitionExceptionType"
                      [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
-                     (sendLoadingSpinnerTrigger)="toggleLoadingSpinner($event)"
-                     (processChangedMemberEffects)="processChangedMemberEffects()">
+                     (changeLockedStatus)="changeLockedStatus($event)"
+                     [processChangedMemberFunction]="processChangedMemberEffects">
 </add-remove-concepts>
 <scroll-top></scroll-top>
 

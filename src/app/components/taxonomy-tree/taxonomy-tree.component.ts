@@ -60,8 +60,8 @@ export class TaxonomyTreeComponent {
     @Input() manualStateRefresh = false;
     @Input() hasMultipleRootNodes: boolean = false;
     @Input() selectedConcept: any;
-    @Output() reloadPageData = new EventEmitter<boolean>();
-    @Output() loadingSpinner = new EventEmitter<any>(true);
+    @Input() processChangedMemberFunction: () => void;
+    @Output() changeLockedStatus = new EventEmitter<any>(true);
     @Output() loadConceptDetail = new EventEmitter<any>();
     @Output() numOfChildren = new EventEmitter<any>();
 
@@ -424,12 +424,8 @@ export class TaxonomyTreeComponent {
         }
     }
 
-    private sendReloadPageDataTrigger(): void {
-        this.reloadPageData.emit();
-    }
-
-    sendLoadingSpinnerTrigger = (value: any) => {
-        this.loadingSpinner.emit(value);
+    sendChangeLockedStatus = (value: any) => {
+        this.changeLockedStatus.emit(value);
     }
 
     sendConceptDetailTrigger(value: any): void {
@@ -451,10 +447,6 @@ export class TaxonomyTreeComponent {
         this.isAdd = new Boolean(params.addConcept);
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
-    }
-
-    processChangedMemberEffects = () => {
-        this.sendReloadPageDataTrigger();
     }
 
     selectNode(node, suppressChangeEvent) {
