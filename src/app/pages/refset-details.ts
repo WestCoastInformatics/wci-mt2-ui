@@ -41,6 +41,7 @@ export class RefsetDetails {
     id: string;
     refsetId = "";
     isIntensional: boolean = false;
+    refsetBranchPath: string;
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
@@ -364,6 +365,7 @@ export class RefsetDetails {
             this.setButtonGroupToggles(results);
             this.refsetId = results?.refsetId;
             this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
+            this.refsetBranchPath = RefsetUtility.getBranchPath(results)
             this.refsetData = results;
             this.refsetService.setRefsetInformation(this.refsetData);
             this.allowedToEdit = false;
@@ -1094,12 +1096,9 @@ export class RefsetDetails {
         }
     }
 
-    // openEclBuilder(fieldId) {
-    //     UiUtility.openEclBuilder(
-    //         fieldId,
-    //         RefsetUtility.getBranchPath(this.refsetData)
-    //     );
-    // }
+    openEclBuilder(fieldId) {
+        UiUtility.openEclBuilder(fieldId, this.refsetBranchPath);
+    }
 
     shortenNoteFields() {
         if (CodeUtility.hasValue(this.refsetData)) {
@@ -1439,7 +1438,7 @@ export class RefsetDetails {
             "&conceptId1=" +
             conceptId +
             "&edition=" +
-            RefsetUtility.getBranchPath(this.refsetData);
+            this.refsetBranchPath;
         window.open(snomedBrowserUrl);
     }
 
@@ -1536,99 +1535,8 @@ export class RefsetDetails {
         return refsetData?.descriptions;
     }
 
-    // This is here only because the service is static, remember to move back to the utility service after the demo.
-    openEclBuilder(fieldId: string, isSearch: boolean = true) {
-        let field = $('#' + fieldId);
-        let eclString: any = field.val();
-        let snowstormApiUrl = environment['snowstormApiUrl'];
-        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
-
-        if (!regex.test(eclString)) {
-            eclString = '';
-        }
-
-        $('body').append('<ecl-builder id="ecl-builder" branch=' + RefsetUtility.getBranchPath(this.refsetData) + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
-
-        const eclBuilder = document.querySelector('ecl-builder');
-
-        eclBuilder.addEventListener('output', (event: any) => {
-
-            if (isSearch) {
-                field.val(event.detail);
-
-                const customEvent = document.createEvent('Event');
-                customEvent.initEvent('input', true, true);
-
-                field[0].dispatchEvent(customEvent);
-            } else {
-                this.eclString = event.detail;
-                this.openImportFromListModal(this.importFromListDialog);
-            }
-        });
-    }
-
-    openImportFromListModal(importFromListDialog: any) {
-        this.modalService.open(importFromListDialog, {
-            backdrop: "static",
-            keyboard: false,
-        });
-    }
-
-    addMembers(): void {
-
-        if (!this.eclString?.length) {
-            return;
-        }
-
-        this.showLoadingSpinner = true;
-
-        this.refsetService.addRefsetMembers(this.refsetData?.id, "list", '', escape(this.eclString))
-            .pipe(catchError((err) => {
-
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-
-                this.showLoadingSpinner = false;
-                this.reloadMembersGridAndTaxonomy();
-                this.eclString = "";
-            });
-    }
-
-    removeMembers(): void {
-
-        if (!this.eclString?.length) {
-            return;
-        }
-
-        this.showLoadingSpinner = true;
-
-        this.refsetService.removeRefsetMembers(this.refsetData?.id, "list", '', escape(this.eclString))
-            .pipe(catchError((err) => {
-
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-                
-                this.showLoadingSpinner = false;
-                this.reloadMembersGridAndTaxonomy();
-                },
-                (error) => {
-                    this.showLoadingSpinner = false;
-                }
-            );
-    }
-
-    openAlertModal(alertDialog: NgbModal) {
-        this.modalService.open(alertDialog, {
+    openUndoEditModal(undoEditDialog: NgbModal) {
+        this.modalService.open(undoEditDialog, {
           backdrop : 'static',
           keyboard : false,
           windowClass: 'alert-modal'

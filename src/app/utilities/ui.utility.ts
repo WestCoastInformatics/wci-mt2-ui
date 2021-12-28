@@ -1,10 +1,14 @@
 import { CodeUtility } from "./code.utility";
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from "src/environments/environment";
-import { RefsetService } from "../services/rest/refset.service";
+import { RefsetService } from "src/app/services/rest/refset.service";
 import { Router } from "@angular/router";
+import { IToastButton } from "src/app/components/notification/notification.component";
 
 export class UiUtility {
+
+    static router: Router;
+    static memberChangeData = {};
 
     /*
      * resizeGridColumns - return a element object having been passed either a element object or element selector string
@@ -252,10 +256,15 @@ export class UiUtility {
 		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
 				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
 		let notification = notificationService.show(message, null, 'info', {timeOut: 0, extendedTimeOut: 0});
-		let viewRefsetButton = `<button [onclick]="viewRefset('${ refsetId }'">View Refset</button>`;
+
+		let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
+		let downloadReportButton : IToastButton = {id: 'download', title: 'Download Report', data: {}};
+        let buttons = [downloadReportButton];
 		let callNumber = 0;
 		let callDelay = 1000;
 		let successMessageTimeout = 0;
+        this.router = router;
+        this.memberChangeData[refsetId] = {refset: refsetId, statuses: []};
 
 		let checkIfFinished = () => {
 
@@ -269,9 +278,9 @@ export class UiUtility {
 			}
 			refsetService.isRefsetLocked(refsetInternalId).subscribe(
 
-				(isLocked) => {
+				(data) => {
 
-					if (isLocked) {
+					if (CodeUtility.testBoolean(data)) {
 						setTimeout(checkIfFinished, callDelay);
 					} else {
 
@@ -279,23 +288,118 @@ export class UiUtility {
 
 						if (router.url.includes('edit/refset/' + refsetInternalId)) {
 
-							viewRefsetButton = '';
 							successMessageTimeout = 5000;
-							callbackFunction();
-						}
-						
-						notificationService.show('Members have finished being ' + description + ' refset ' + refsetId + '. You may continue editing the refset. ' + viewRefsetButton, null, 'success', {timeOut: successMessageTimeout, extendedTimeOut: 0});
+							callbackFunction(data);
+						} else {
+                            buttons.unshift(viewRefsetButton);
+                        }
+
+						let conceptArray = Object.keys(data);
+
+                        for (let conceptID of conceptArray) {
+
+                            let conceptStatus: any = data[conceptID];
+                            this.memberChangeData[refsetId].statuses.push({Concept: conceptID, Operation: conceptStatus.operation, Status: conceptStatus.status});
+                        }
+
+                        message = 'Members have finished being ' + description + ' refset ' + refsetId + '. You may continue editing the refset. ';
+
+						notificationService
+                            .show(message, null, 'success', {timeOut: 0, extendedTimeOut: 0}, buttons)
+                            .onAction.subscribe(button => {
+
+                                if (button.id == 'download') {
+                                    this.createMemberChangeReport(refsetId);
+
+                                } else if (button.id == 'view') {
+                                    this.viewRefset(refsetInternalId, true);
+                                }
+                            });
 					}
 				},
 				(error) => {
 
 					console.log(error);
-					notificationService.show('There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator. ' + viewRefsetButton, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                    message = 'There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator.';
+					notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
 				}
 			);
 		};
 
 		checkIfFinished();
+	}
+
+    static createMemberChangeReport(refsetId: string): void {
+
+        let memberStatuses = this.memberChangeData[refsetId].statuses;
+        let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
+
+        this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
+
+        let clearRefsetStatus = () => {
+            this.memberChangeData[refsetId] = {refset: refsetId, statuses: []};
+        };
+
+        setTimeout(clearRefsetStatus, 10000);
+    }
+
+    static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
+
+        const csvData = this.convertToCsv(data, headerlist);
+        const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+        const downloadLink = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
+        
+        if (isSafariBrowser) {
+            downloadLink.setAttribute('target', '_blank');
+        }
+
+        downloadLink.setAttribute('href', url);
+        downloadLink.setAttribute('download', fileName + '.csv');
+        downloadLink.style.visibility = 'hidden';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+    
+    static convertToCsv(objectArray, headerList) {
+
+         const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
+         let csvString = '';
+         let row = '#,';
+    
+         for (const index in headerList) {
+             row += headerList[index] + ',';
+         }
+
+         row = row.slice(0, -1);
+         csvString += row + '\r\n';
+
+         for (let i = 0; i < array.length; i++) {
+
+             let line = (i + 1) + '';
+
+             for (const index in headerList) {
+
+                const head = headerList[index];
+                 line += ',' + array[i][head];
+             }
+
+             csvString += line + '\r\n';
+         }
+
+         return csvString;
+     }
+
+    static viewRefset (refsetInternalId, editMode: boolean = false) {
+
+		if (editMode) {
+            this.router.navigateByUrl('edit/refset/' + refsetInternalId);
+		} else {
+            this.router.navigateByUrl('details/' + refsetInternalId);
+        }
 	}
 
     static toggleLockedSections(lock: boolean) {

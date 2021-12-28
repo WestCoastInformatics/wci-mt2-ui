@@ -1487,11 +1487,6 @@ button.refset-tool-table-action-icon {
 
 @import "~src/variables.scss";
 
-::ng-deep #importFromFileDialog ngb-modal-window .modal-content {
-    max-width: 551px !important;
-    max-height: 605px !important;
-}
-
 .container-file-import {
     height: 200px;
     padding: 1rem;
@@ -1618,19 +1613,6 @@ button.refset-tool-table-action-icon {
 
     100% {
         transform: translate(1px, -2px) rotate(-1deg);
-    }
-}
-
-@import "~src/variables.scss";
-
-::ng-deep import-from-file-modal {
-    .modal-content {
-        max-width: 551px !important;
-        max-height: 605px !important;
-    }
-
-    .mat-form-field-appearance-outline .mat-form-field-outline {
-        background-color: white !important;
     }
 }
 
@@ -1982,42 +1964,48 @@ button.refset-tool-table-action-icon {
     padding-right: 30px !important;
 }
 
-.import-from-file-button {
-    width: 39px;
-    height: 31px;
-    box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: rgba(0, 164, 228, 1);
-    background-color: rgba(255, 255, 255, 1);
-    padding-left: 3px;
-}
 
-.import-from-file-modal-header {
+.import-from-modal-header {
     border: none !important;
     padding-left: 30px !important;
     padding-bottom: 30px !important;
 }
 
-.import-from-file-modal-title {
+.import-from-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
 }
 
-.import-from-file-container-fluid {
+.import-from-container-fluid {
     padding: 30px !important;
     padding-bottom: 0px !important;
     padding-top: 0px !important;
 }
 
-.import-from-file-modal-body {
+.import-from-modal-body {
     background-color: rgba(245, 245, 246, 1);
     padding: 30px !important;
     border-radius: 5px;
     font-size: 14px;
-    text-align: center;
+    text-align: -webkit-center;
+}
+
+.import-from-label {
+    width: 300px;
+    text-align: left;
+    font-size: 13px;
+    padding-bottom: 20px !important;
+}
+
+.import-from-modal-footer {
+    border: none !important;
+    padding: 30px !important;
+    align-self: center;
+}
+
+.import-from-remove-members-button {
+    margin-left: 15px !important;
 }
 
 .import-from-file-drop-down {
@@ -2031,71 +2019,34 @@ button.refset-tool-table-action-icon {
 .file-icon {
     width: 50px;
 }
-.import-from-file-modal-footer {
-    border: none;
-    padding: 30px;
+
+ngb-modal-window .modal-dialog .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: white;
 }
 
-.import-from-list-button {
-    width: 39px;
-    height: 31px;
-    box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: rgba(0, 164, 228, 1);
-    background-color: rgba(255, 255, 255, 1);
-}
-
-.import-from-list-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
-
-.import-from-list-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
-}
-
-.import-from-list-modal-body {
-    background-color: rgba(245, 245, 246, 1);
-    padding: 28px !important;
-    border-radius: 5px;
-    font-size: 14px;
-    text-align: center;
-    text-align: -webkit-center;
-}
-
-.import-from-list-container-fluid {
-    padding: 30px !important;
-    padding-bottom: 0px !important;
-    padding-top: 0px !important;
-}
-
-.import-from-list-list-text {
-    width: 300px;
-    text-align: left;
-    font-size: 13px;
-    padding-bottom: 20px !important;
-}
-
-.add-by-list-text-area {
+.import-from-list-field {
     width: 300px;
 }
 
 .import-from-list-text-area {
-    height: 50px;
+    height: 100px;
 }
 
-.import-from-list-modal-footer {
-    border: none !important;
-    padding: 30px !important;
+ngb-modal-window .import-from-ecl-modal.modal-dialog {
+    width: 1000px;
+    max-width: 1000px;
 }
 
-.import-from-list-remove-members-button {
-    margin-left: 15px !important;
+.import-from-ecl-label {
+    width: 800px;
+}
+
+.import-from-ecl-field {
+    width: 800px;
+}
+
+.import-from-ecl-text-area {
+    height: 100px;
 }
 
 .refset-tool-standard-icon-button {

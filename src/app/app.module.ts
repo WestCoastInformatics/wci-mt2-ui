@@ -47,13 +47,14 @@ import { NotificationComponent } from 'src/app/components/notification/notificat
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
-import { ImportFromFileModalComponent } from './components/import-from-file-modal/import-from-file-modal.component';
-import { ImportFromListModalComponent } from './components/import-from-list-modal/import-from-list-modal.component';
+import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
+import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
+import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
-import { ProjectsRefsetComponent } from './pages/projects/projects-refset.component';
+import { ProjectsRefsetComponent } from 'src/app/pages/projects/projects-refset.component';
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -67,18 +68,18 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { SideBarModule } from './components/side-bar/side-bar.module';
-import { dragAndDropDirective } from './directives/drag-and-drop.directive';
-import { AddRemoveByConceptModalComponent } from './components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
-import { ScrollTopComponent } from './components/scroll-top/scroll-top.component';
-import { ReadonlyTextModalComponent } from './components/readonly-text-modal/readonly-text-modal.component';
-import { ReadyForPublicationModalComponent } from './components/ready-for-publication-modal/ready-for-publication-modal.component';
-import { WorkflowHistoryNotesModalComponent } from './components/workflow-history-notes-modal/workflow-history-notes-modal.component';
-import { AddRemoveConceptsComponent } from './components/add-remove-concepts/add-remove-concepts.component';
-import { AddRemoveConceptsIconsComponent } from './components/add-remove-concepts-icons/add-remove-concepts-icons.component';
-import { AuthGuardGuard } from './services/authentication/auth-guard.guard';
-import { LoginComponent } from './auth/login/login.component';
-import { ReviewModalComponent } from './components/review-modal/review-modal.component';
+import { SideBarModule } from 'src/app/components/side-bar/side-bar.module';
+import { dragAndDropDirective } from 'src/app/directives/drag-and-drop.directive';
+import { AddRemoveByConceptModalComponent } from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
+import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
+import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
+import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
+import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
+import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
+import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
+import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
+import { LoginComponent } from 'src/app/auth/login/login.component';
+import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 
 const appRoutes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'directory' },
@@ -109,6 +110,7 @@ const appRoutes: Routes = [
 		ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
+        ImportFromEclModalComponent,
         dragAndDropDirective,
         AddRemoveByConceptModalComponent,
         ScrollTopComponent,

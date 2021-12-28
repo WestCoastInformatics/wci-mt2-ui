@@ -208,7 +208,7 @@
                             aria-label="Undo all changes since last save"
                             title="Undo all changes since last save"
                             ng-reflect-color="primary"
-                            (click)="openAlertModal(alertDialog)">
+                            (click)="openUndoEditModal(undoEditDialog)">
                         Undo Changes
                     </button>
                     <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
@@ -802,16 +802,17 @@
 
             <div class="set-of-buttons" *ngIf="allowedToEdit">
 
-                <import-from-file-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-file-modal>
+                <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
+                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
 
-                <import-from-list-modal *ngIf="!isIntensional" [internalRefsetId]="id" (reloadGrid)="reloadMembersGridAndTaxonomy()"></import-from-list-modal>
+                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
+                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-list-modal>
 
-                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)">
-                </add-remove-by-concept-modal>
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)"
+                    (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
 
-                <button *ngIf="!isIntensional"  #detailsTableSearchEclButton (click)="openEclBuilder('detailsTableSearchInput', false)" class="button-inactive">
-                    <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
-                </button>
+                <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
+                    (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </div>
         </div>
 
@@ -1342,49 +1343,7 @@
 </add-remove-concepts>
 <scroll-top></scroll-top>
 
-<ng-template #importFromListDialog let-modal>
-    <div class="modal-header import-from-list-modal-header">
-        <h4
-            class="modal-title import-from-list-modal-title"
-            id="modal-basic-title"
-        >
-            Add or Remove
-        </h4>
-        <button
-            type="button"
-            class="close"
-            aria-label="Close"
-            (click)="modal.dismiss('Cross click')"
-        >
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid import-from-list-container-fluid">
-        <div class="modal-body import-from-list-modal-body">
-            <div class="import-from-list-list-text">
-            </div>
-            <mat-form-field class="add-by-list-text-area" appearance="outline">
-                <textarea matInput
-                          class="import-from-list-text-area"
-                          [(ngModel)]="eclString"></textarea>
-            </mat-form-field>
-        </div>
-    </div>
-    <div class="modal-footer import-from-list-modal-footer">
-
-        <button type="button" (click)="addMembers(); modal.close('Add Selected');" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
-                aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
-            Add
-        </button>
-
-        <button type="button" (click)="removeMembers(); modal.close('Remove Selected');" mat-raised-button color="primary" aria-hidden="false"
-                class="refset-tool-action-button import-from-list-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="primary">
-            Remove
-        </button>
-    </div>
-</ng-template>
-
-<ng-template #alertDialog let-modal>
+<ng-template #undoEditDialog let-modal>
     <div class="modal-header review-modal-header">
         <button
             type="button"

@@ -27,7 +27,7 @@
         "@briebug/jest-schematic": "^3.1.0",
         "@circlon/angular-tree-component": "^11.0.3",
         "@fortawesome/fontawesome-free": "^5.13.0",
-        "@ng-bootstrap/ng-bootstrap": "^9.0.2",
+        "@ng-bootstrap/ng-bootstrap": "^9.1.0",
         "@schematics/angular": "^11.2.1",
         "@tinymce/tinymce-angular": "^4.2.2",
         "@types/jquery": "^3.5.1",

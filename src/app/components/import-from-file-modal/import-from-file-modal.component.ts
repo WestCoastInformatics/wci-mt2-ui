@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { catchError } from 'rxjs/operators';
-import { JsontocsvService } from 'src/app/services/export-services/jsontocsv.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Router } from '@angular/router';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: "import-from-file-modal",
@@ -12,34 +14,26 @@ export class ImportFromFileModalComponent implements OnInit {
 
     files: any[] = [];
     uploadedFile: any;
-    showLoadingSpinner = false;
-    showBanner = false;
-    successfulImport = false;
-    failedIds: string[] = [];
     allIds: string[];
-    messageModifier: string;
-    disableFileUpload = true;
+    disableActionButtons = true;
     fileInput = '';
+    openedModel: NgbModalRef;
 
-    @Input() internalRefsetId: string;
+    @Input() refsetInternalId: string;
+    @Input() refsetId: string;
     @Input() isIntensional: boolean = false;
-
-    @Output() reloadGrid = new EventEmitter<boolean>();
+    @Output() reloadPageData = new EventEmitter<boolean>();
+    @Output() changeLockedStatus = new EventEmitter<any>(true);
     
-    constructor(private modalService: NgbModal, private refsetService: RefsetService, private readonly jsonToCsv: JsontocsvService ) {}
+    constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) {}
 
     ngOnInit(): void {}
 
-    private sendReloadGridTrigger(value: boolean): void {
-        this.reloadGrid.emit(value);
-    }
-
     openImportFromFileModal(importFromFileDialog: NgbModal) {
 
-        this.showBanner = false;
         this.files = [];
-        this.disableFileUpload = true;
-        this.modalService.open(importFromFileDialog, {
+        this.disableActionButtons = true;
+        this.openedModel = this.modalService.open(importFromFileDialog, {
             backdrop: "static",
             keyboard: false,
         });
@@ -47,9 +41,10 @@ export class ImportFromFileModalComponent implements OnInit {
 
     callMemberOperation(operation: string): void {
         
-        this.showLoadingSpinner = true;
         const listOfIds = [];
         const fileReader = new FileReader();
+        let messageModifier = "";
+        let operationFunction: Function;
 
         fileReader.onload = (e) => {
 
@@ -67,91 +62,45 @@ export class ImportFromFileModalComponent implements OnInit {
             }
 
             let allIdsString = listOfIds.join(",");
-            this.allIds = allIdsString.split(",");
 
-            if (!this.allIds?.length) {
+            if (listOfIds.length == 0) {
                 return;
             }
 
-            let operationFunction: Function;
+            this.changeLockedStatus.emit(true);
 
             if (operation == 'add') {
 
-                this.messageModifier = "added to";
+                messageModifier = "added to";
                 operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
             } else {
 
-                this.messageModifier = "removed from";
+                messageModifier = "removed from";
                 operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
             }
 
-            operationFunction(this.internalRefsetId, "list", allIdsString)
-            .pipe(catchError((err) => {
+            operationFunction(this.refsetInternalId, "list", allIdsString).subscribe();
 
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-                this.processOperationReturn(data);
-            });
+            UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
         };
 
         if (this.uploadedFile) {
             fileReader.readAsText(this.uploadedFile);
-        } else {
-            this.showLoadingSpinner = false;
         }
     }
 
-    processOperationReturn(data) { 
+    processOperationReturn = (data) => { 
 
-        this.showLoadingSpinner = false;
-        this.sendReloadGridTrigger(true);
+        this.changeLockedStatus.emit(false);
+
+        // if the same refset is still open then refsesh the page
+        if (this.router.url.includes('edit/refset/' + this.refsetInternalId)) {
+            this.reloadPageData.emit(true);
+        }
+
         this.files = [];
-        this.disableFileUpload = true;
+        this.disableActionButtons = true;
         this.fileInput = '';
-
-        if (data?.status?.includes("All concepts")) {
-
-            this.showBanner = true;
-            this.successfulImport = true;
-
-        } else {
-
-            this.failedIds = data?.error.replace(/Unable to .* concepts /i, "").split(",");
-            this.showBanner = true;
-            this.successfulImport = false;
-        }
-    }
-
-    createImportReport(): void {
-
-        const ids = [];
-        const failedIdsWithoutWhiteSpace = this.failedIds.map((name) => {
-            return name?.replace(" ", "");
-        });
-
-        if (this.successfulImport) {
-
-            for (let i = 0; i < this.allIds.length; i++) {
-                ids.push({Concept: this.allIds[i], Status: "SUCCESS"});
-            }
-        } else {
-
-            for (let i = 0; i < this.allIds.length; i++) {
-
-                if (failedIdsWithoutWhiteSpace.includes(this.allIds[i])) {
-                    ids.push({Concept: this.allIds[i],Status: "Failed"});
-                } else {
-                    ids.push({Concept: this.allIds[i], Status: "SUCCESS"});
-                }
-            }
-        }
-
-        this.jsonToCsv.downloadFile(ids);
     }
 
     /**
@@ -163,7 +112,7 @@ export class ImportFromFileModalComponent implements OnInit {
 
             this.prepareFilesList(files);
             this.uploadedFile = files[0];
-            this.disableFileUpload = false;
+            this.disableActionButtons = false;
         }
     }
 
@@ -176,7 +125,7 @@ export class ImportFromFileModalComponent implements OnInit {
 
             this.prepareFilesList(files);
             this.uploadedFile = files[0];
-            this.disableFileUpload = false;
+            this.disableActionButtons = false;
         }
     }
 
@@ -187,7 +136,7 @@ export class ImportFromFileModalComponent implements OnInit {
     deleteFile(index: number) {
 
         this.files.splice(index, 1);
-        this.disableFileUpload = true;
+        this.disableActionButtons = true;
     }
 
     /**

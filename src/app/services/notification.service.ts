@@ -1,6 +1,7 @@
 import { Injectable, SecurityContext } from '@angular/core';
 import { ActiveToast, ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { IToastButton } from '../components/notification/notification.component';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class NotificationService {
         private readonly sanitizer: DomSanitizer
     ) { }
 
-    show(message: string, title: string = null, type: string = 'info', config: any = {}): ActiveToast<any> {
+    show(message: string, title: string = null, type: string = 'info', config: any = {}, buttons: IToastButton[] = []): ActiveToast<any> {
 
         let additonalConfig = {
             'timeOut': 25000,
@@ -21,19 +22,17 @@ export class NotificationService {
             'tapToDismiss': false,
             'closeButton': true,
         };
+
+        const toast = this.toastr.show(message, title, {...additonalConfig, ...config}, 'toast-' + type);
+
+        if (buttons.length > 0) {
+            toast.toastRef.componentInstance.buttons = buttons;
+        }
         
-        return this.toastr.show(
-            message, 
-            title, 
-            {
-                ...additonalConfig,
-                ...config,
-            },
-            'toast-' + type
-        );
+        return toast;
     }
 
-    showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}): ActiveToast<any> {
+    showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}, buttons: IToastButton[] = []): ActiveToast<any> {
 
         let additonalConfig = {
             'extendedTimeOut': 0,
@@ -44,15 +43,7 @@ export class NotificationService {
             'progressAnimation': 'increasing'
         };
 
-        let toast : ActiveToast<any> = this.show(
-            message, 
-            title, 
-            'info',
-            {
-                ...additonalConfig,
-                ...config,
-            }
-        );
+        const toast = this.show(message, title, 'info', {...additonalConfig, ...config}, buttons);
 
         this.setProgressLength(toast, 0);
         return toast;

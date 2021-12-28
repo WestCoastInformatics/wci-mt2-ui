@@ -19,6 +19,10 @@
     {{ message }}
 </div>
 
+<a *ngFor="let button of buttons" class="btn btn-sm button" (click)="action(button)">
+    {{button.title}}
+</a>
+
 <div *ngIf="options.progressBar">
     <div class="toast-progress" [style.width]="width + '%'"></div>
 </div>

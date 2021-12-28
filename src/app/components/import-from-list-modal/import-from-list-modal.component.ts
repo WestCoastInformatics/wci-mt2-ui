@@ -1,13 +1,10 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-} from "@angular/core";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { catchError } from 'rxjs/operators';
-import { JsontocsvService } from 'src/app/services/export-services/jsontocsv.service';
+import { UiUtility } from "src/app/utilities/ui.utility";
+import { NotificationService } from "src/app/services/notification.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "import-from-list-modal",
@@ -15,30 +12,21 @@ import { JsontocsvService } from 'src/app/services/export-services/jsontocsv.ser
 })
 export class ImportFromListModalComponent {
 
-    files: any[] = [];
     listOfIds: any;
-    showLoadingSpinner = false;
-    showBanner = false;
-    successfulImport = false;
-    failedIds: string[];
-    allIds: string[];
-    messageModifier: string;
+    openedModel: NgbModalRef;
 
-    @Input() internalRefsetId: string;
+    @Input() refsetInternalId: string;
+    @Input() refsetId: string;
     @Input() isIntensional: boolean = false;
-
-    @Output() reloadGrid = new EventEmitter<boolean>();
+    @Output() reloadPageData = new EventEmitter<boolean>();
+    @Output() changeLockedStatus = new EventEmitter<any>(true);
     
-
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
-        private readonly jsontocsv: JsontocsvService
+        private notificationService: NotificationService, 
+        private router: Router
     ) {}
-
-    private sendReloadGridTrigger(value: boolean): void {
-        this.reloadGrid.emit(value);
-    }
 
     callMemberOperation(operation: string): void {
 
@@ -46,90 +34,46 @@ export class ImportFromListModalComponent {
             return;
         }
 
+        this.changeLockedStatus.emit(true);
+
         let operationFunction: Function;
+        let messageModifier = "";
 
         if (operation == 'add') {
 
-            this.messageModifier = "added to";
+            messageModifier = "added to";
             operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
         } else {
 
-            this.messageModifier = "removed from";
+            messageModifier = "removed from";
             operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
         }
 
-        this.showLoadingSpinner = true;
         const commaRegex = /,+/ig;
         let allIdsString = this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").trim();
-        this.allIds = allIdsString.split(",");
 
-        operationFunction(this.internalRefsetId, "list", allIdsString)
-            .pipe(catchError((err) => {
+        operationFunction(this.refsetInternalId, "list", allIdsString).subscribe();
 
-                if (err) {
-                    this.showLoadingSpinner = false;
-                }
-
-                return err;
-
-            })).subscribe((data) => {
-                this.processOperationReturn(data);
-            });
+        UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn(data) { 
+    processOperationReturn = (data) => { 
 
-        this.showLoadingSpinner = false;
-        this.sendReloadGridTrigger(true);
+        this.changeLockedStatus.emit(false);
+
+        // if the same refset is still open then refsesh the page
+        if (this.router.url.includes('edit/refset/' + this.refsetInternalId)) {
+            this.reloadPageData.emit(true);
+        }
+
         this.listOfIds = "";
-
-        if (data?.status?.includes("All concepts")) {
-
-            this.showBanner = true;
-            this.successfulImport = true;
-
-        } else {
-
-            this.failedIds = data?.error.replace(/Unable to .* concepts /i, "").split(",");
-            this.showBanner = true;
-            this.successfulImport = false;
-        }
-    }
-
-    createImportReport(): void {
-        const ids = [];
-        const failedIdsWithoutWhiteSpace = this.failedIds?.map((name) => {
-          return name?.replace(' ', '');
-        })
-        if (this.successfulImport) {
-            for (let i = 0; i < this.allIds?.length; i++) {
-                ids.push({
-                    Concept: this.allIds[i],
-                    Status: "SUCCESS",
-                });
-            }
-        } else {
-            for (let i = 0; i < this.allIds.length; i++) {
-                if (failedIdsWithoutWhiteSpace?.includes(this.allIds[i])) {
-                    ids.push({
-                        Concept: this.allIds[i],
-                        Status: "Failed",
-                    });
-                } else {
-                    ids.push({
-                        Concept: this.allIds[i],
-                        Status: "SUCCESS",
-                    });
-                }
-            }
-        }
-        this.jsontocsv.downloadFile(ids);
     }
 
     openImportFromListModal(importFromListDialog: NgbModal) {
+
         this.listOfIds = undefined;
-        this.showBanner = false;
-        this.modalService.open(importFromListDialog, {
+
+        this.openedModel = this.modalService.open(importFromListDialog, {
             backdrop: "static",
             keyboard: false,
         });

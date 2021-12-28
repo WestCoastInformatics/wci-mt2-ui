@@ -140,14 +140,6 @@ export class AddRemoveConceptsComponent implements OnInit {
 		this.processChangedMemberFunction();
 	}
 
-	viewRefset = (refsetId) => {
-
-		if (this.router.url.includes('edit/refset/' + refsetId)) {
-
-		}
-		this.router.navigateByUrl('edit/refset/' + refsetId);
-	}
-
 	openAddRemoveDescendantsModal() {
 
 		this.openedModel = this.modalService.open(this.dialogSection, {
