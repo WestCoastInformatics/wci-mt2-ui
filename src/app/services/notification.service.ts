@@ -21,6 +21,7 @@ export class NotificationService {
             'enableHtml': true,
             'tapToDismiss': false,
             'closeButton': true,
+            'toastClass': 'refset-tool-notification'
         };
 
         const toast = this.toastr.show(message, title, {...additonalConfig, ...config}, 'toast-' + type);

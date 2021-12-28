@@ -1334,12 +1334,18 @@ button.refset-tool-table-action-icon {
 }
 
 // Notification Styles
-.refset-tool-notification {
-    border-color: green;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
+#toast-container.toast-container > div.refset-tool-notification {
     width: 400px;
-    height: 30px;
+
+    .refset-tool-notification-button {
+        background-color: $cerulean;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin: 10px 5px;
+        font-weight: 500;
+        color: white;
+        font-size: 14px;
+    }
 }
 
 .example-chip-list {
@@ -2556,6 +2562,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         background-color: #00a9e0;
         width: 75px;
     }
+}
+
+#refsetLockBanner {
+    font-size: large;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .details-page-stepper {

@@ -294,6 +294,7 @@ export class UiUtility {
                             buttons.unshift(viewRefsetButton);
                         }
 
+                        let notificationType = 'success';
 						let conceptArray = Object.keys(data);
 
                         for (let conceptID of conceptArray) {
@@ -302,19 +303,42 @@ export class UiUtility {
                             this.memberChangeData[refsetId].statuses.push({Concept: conceptID, Operation: conceptStatus.operation, Status: conceptStatus.status});
                         }
 
-                        message = 'Members have finished being ' + description + ' refset ' + refsetId + '. You may continue editing the refset. ';
+                        if (conceptArray.length > 0) {
+                            
+                            let dataString = JSON.stringify(data);
+                            let someFailed = dataString.includes('Failed');
+                            let someSucceeded = dataString.includes('Success');
+                            let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
 
-						notificationService
-                            .show(message, null, 'success', {timeOut: 0, extendedTimeOut: 0}, buttons)
-                            .onAction.subscribe(button => {
+                            if (!someFailed && someSucceeded) {
+                                message = 'All members were successfully ' + messageEnd;
 
-                                if (button.id == 'download') {
-                                    this.createMemberChangeReport(refsetId);
+                            } else if (someFailed && !someSucceeded) {
 
-                                } else if (button.id == 'view') {
-                                    this.viewRefset(refsetInternalId, true);
-                                }
-                            });
+                                notificationType = 'error';
+                                message = 'No members were able to be ' + messageEnd;
+                            } else {
+
+                                notificationType = 'warning';
+                                message = 'Some members were not able to be ' + messageEnd;
+                            }
+                        }
+
+						notification = notificationService.show(message, null, notificationType, {timeOut: 0, extendedTimeOut: 0}, buttons);
+
+                        notification.onAction.subscribe(button => {
+
+                            if (button.id == 'download') {
+                                this.createMemberChangeReport(refsetId);
+
+                            } else if (button.id == 'view') {
+                                this.viewRefset(refsetInternalId, true);
+                            }
+                        });
+
+                        notification.onHidden.subscribe( () => {
+                            this.memberChangeData[refsetId] = {refset: refsetId, statuses: []};
+                        });
 					}
 				},
 				(error) => {
@@ -335,12 +359,6 @@ export class UiUtility {
         let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
 
         this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
-
-        let clearRefsetStatus = () => {
-            this.memberChangeData[refsetId] = {refset: refsetId, statuses: []};
-        };
-
-        setTimeout(clearRefsetStatus, 10000);
     }
 
     static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
