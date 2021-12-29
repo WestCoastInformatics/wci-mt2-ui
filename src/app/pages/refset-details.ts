@@ -389,7 +389,7 @@ export class RefsetDetails {
                     tags: this.refsetData.tags,
                     referenceType: this.refsetData.type,
                     privateRefset: this.refsetData.privateRefset,
-                    versionDate: this.refsetData.versionDate,
+                    versionDate: this.refsetData.editOriginBranchPath.split('/')[1],
                     versionNotes: this.refsetData.versionNotes
                 };
 
