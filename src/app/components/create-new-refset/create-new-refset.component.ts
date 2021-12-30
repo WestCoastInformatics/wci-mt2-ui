@@ -25,7 +25,7 @@ export class CreateNewRefsetComponent implements OnInit {
     selectedRadioButton = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     isSelected = 0;
-    selectedMetaDataConcept = '';
+    selectedMetaDataConcept: any;
     selectedBranchVersion = '';
     createdMetaDataConcept = '';
     selectedParentConcept = undefined;
@@ -140,17 +140,27 @@ export class CreateNewRefsetComponent implements OnInit {
     createRefsetObject(): void {
 
         this.showLoadingSpinner = true;
+        let name = '';
+        let refsetId = null;
+        let parentConceptId = null;
+
+        if (this.selectedParentConcept) {
+            parentConceptId = this.selectedParentConcept;
+        }
+
+        if (this.selectedMetaDataConcept) {
+
+            name = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
+            refsetId = this.existingMetadataConcepts[this.selectedMetaDataConcept].code;
+        } else {
+            name = this.createdMetaDataConcept;
+        }
 
         let params: any = {
-            name: this.selectedMetaDataConcept
-                ? this.selectedMetaDataConcept
-                : this.createdMetaDataConcept
-                ? this.createdMetaDataConcept
-                : '',
-            parentConceptId: this.selectedParentConcept
-                ? this.selectedParentConcept
-                : undefined,
+            name: name,
+            parentConceptId: parentConceptId,
             moduleId: '',
+            refsetId: refsetId,
             editionId: this.inputProperties.project.organization.edition.id,
             projectId: this.inputProperties.project.id,
             narrative: this.selectedNarrative,

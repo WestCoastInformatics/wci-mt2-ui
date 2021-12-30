@@ -19,9 +19,6 @@ import { environment } from 'src/environments/environment';
 
 export class RefsetDownloadComponent {
 
-    @Input() refset;
-    @Input() buttonClasses: String = '';
-    
     formatOptions: any[];
     contentOptions: any[];
     languageOptions: any[];
@@ -36,10 +33,11 @@ export class RefsetDownloadComponent {
     selectedVersionDate = '';
     refsetsExportableAsFreeset: string[];
     dialog: DialogService;
-    @Input()
-    isDetailPage: boolean;
-    @Input()
-    disabled = false;
+
+    @Input() refset;
+    @Input() buttonClasses: String = '';
+    @Input() isDetailPage: boolean;
+    @Input() disabled = false;
 
     @ViewChild('refsetDownloadDialog') downloadDialog: TemplateRef<any>;
 

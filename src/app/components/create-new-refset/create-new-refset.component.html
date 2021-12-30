@@ -149,9 +149,7 @@
                             <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
                                 <mat-label>Choose existing metadata concept</mat-label>
                                 <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
-                                    <option *ngFor="
-                                            let existingMetadataConcept of existingMetadataConcepts
-                                        " [value]="existingMetadataConcept?.name">
+                                    <option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
                                         {{ existingMetadataConcept?.name }}
                                     </option>
                                 </select>
