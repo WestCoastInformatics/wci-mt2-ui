@@ -80,10 +80,12 @@ import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-c
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
+import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 
 const appRoutes: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: 'directory' },
+    // { path: '', pathMatch: 'full', redirectTo: '' },
     { path: 'login', component: LoginComponent },
+    { path: '', component: LandingPageComponent },
     { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
     { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
     { path: 'projects', component: ProjectsRefsetComponent, canActivate: [AuthGuardGuard] },
@@ -107,7 +109,7 @@ const appRoutes: Routes = [
 		CategoryFilterComponent,
         DateTextFilterComponent,
 		CreateNewRefsetComponent,
-		ProjectsRefsetComponent,
+        ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
         ImportFromEclModalComponent,
@@ -120,7 +122,8 @@ const appRoutes: Routes = [
         WorkflowHistoryNotesModalComponent,
         AddRemoveConceptsComponent,
         AddRemoveConceptsIconsComponent,
-        LoginComponent
+        LoginComponent,
+        LandingPageComponent
     ],
     imports: [
         RouterModule.forRoot(

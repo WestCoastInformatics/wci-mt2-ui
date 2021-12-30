@@ -38,7 +38,8 @@ export class AuthenticationService {
                 }
             },
             (err) => {
-                window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + window.location.href;
+                let correctUrl = window.location.href.split('/')[1] === '' ? window.location.href + '/login' : window.location.href
+                window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + correctUrl;
             }
         );
     }
@@ -108,17 +109,17 @@ export class AuthenticationService {
             (data) => {
 
                 document.cookie = this.getAuthCookie(true);
-                this.router.navigate(['/directory']);
+                this.router.navigate(['/']);
             },
             (err) => {
-                this.router.navigate(['/directory']);
+                this.router.navigate(['/']);
             }
         );
 
         
 
         const parsedUrl = new URL(window.location.href);
-        const baseUrl = parsedUrl.origin + '/directory';
+        const baseUrl = parsedUrl.origin + '/';
         this.test();
     }
 
