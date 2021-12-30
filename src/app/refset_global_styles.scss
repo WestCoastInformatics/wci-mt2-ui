@@ -327,12 +327,23 @@ button.refset-tool-table-action-icon {
     padding-left: 0px;
 }
 
+.refset-tool-details-member-taxonomy{
+    height: 800px;
+}
+
 // AG Grid Styles
 .refset_tool_inactive_row {
     background-color: $inactive_row_color;
 }
 .refset-tool-ag-grid {
-    // max-height: 623px;
+
+    &.ten-rows {
+        height: 575px;
+    }
+
+    &.more-than-ten-rows {
+        height: 800px;
+    }
 
     .ag-row.refset_tool_grid_inactive_row {
         background-color: $inactive_row_color;
@@ -772,7 +783,7 @@ button.refset-tool-table-action-icon {
 }
 // Taxonomy Styles
 .refset-tool-taxonomy {
-    height: 623px;
+    
     margin-bottom: 15px;
     display: block;
     padding-left: 0px;

@@ -883,10 +883,8 @@
                                      [style.display]="membersTableDisplay">
                                     <ag-grid-angular #detailsMembersTable
                                                      *ngIf="showTable"
-                                                     class="
-                                            ag-theme-alpine
-                                            refset-tool-ag-grid
-                                        "
+                                                     class="ag-theme-alpine refset-tool-ag-grid"
+                                                     [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
                                                      [columnDefs]="membersColumnDefs"
                                                      [gridOptions]="membersGridOptions">
                                     </ag-grid-angular>
@@ -976,19 +974,15 @@
                                 </div>
 
                                 <!-- Members Taxonomy Tree -->
-                                <div class="container-fluid"
-                                     [style.display]="membersTaxonomyDisplay">
-                                    <div #memberTaxonomySearchResults
-                                         class="container-fluid"
-                                         [style.display]="taxonomySearchDisplay">
+                                <div class="container-fluid refset-tool-details-member-taxonomy" [style.display]="membersTaxonomyDisplay">
+
+                                    <div #memberTaxonomySearchResults class="container-fluid" [style.display]="taxonomySearchDisplay">
+
                                         <!-- Taxonomy Search Results Grid -->
                                         <ag-grid-angular id="taxonomySearchTable"
                                                          #taxonomySearchTable
                                                          *ngIf="showTaxonomySearchTable"
-                                                         class="
-                                                ag-theme-alpine
-                                                refset-tool-ag-grid
-                                            "
+                                                         class="ag-theme-alpine refset-tool-ag-grid"
                                                          [columnDefs]="taxonomySearchColumnDefs"
                                                          [gridOptions]="taxonomySearchGridOptions">
                                         </ag-grid-angular>
@@ -1005,14 +999,12 @@
                                         </app-pagination>
 
                                         <!-- Result Template -->
-                                        <ng-template #taxonomyResultSection
-                                                     let-params>
+                                        <ng-template #taxonomyResultSection let-params>
                                             {{params?.value}}
                                         </ng-template>
 
                                         <!-- Path Template -->
-                                        <ng-template #taxonomyPathSection
-                                                     let-params>
+                                        <ng-template #taxonomyPathSection let-params>
                                             {{params?.value}}
                                         </ng-template>
                                     </div>
@@ -1028,7 +1020,8 @@
                                                        [processChangedMemberFunction]="processChangedMemberEffects"
                                                        (loadConceptDetail)="loadConceptDetail($event)"
                                                        (changeLockedStatus)="changeLockedStatus($event)"
-                                                       (numOfChildren)="numOfChildren = $event"></app-taxonomy-tree>
+                                                       (numOfChildren)="numOfChildren = $event">
+                                    </app-taxonomy-tree>
                                 </div>
                             </div>
                         </as-split-area>

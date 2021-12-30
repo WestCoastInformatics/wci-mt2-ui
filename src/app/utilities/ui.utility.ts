@@ -436,7 +436,7 @@ export class UiUtility {
     }
 
     //***** AG Grid Function to apply data and paging to table *****/
-    static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams) {
+    static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 
         if (results.items.length > 0) {
 
@@ -462,11 +462,19 @@ export class UiUtility {
 
             }
 
-            rowParams.successCallback(results.items, lastRow);
+            if (serverPaging) {
+                rowParams.successCallback(results.items, lastRow);
+            } else {
+                gridApi.setRowData(results.items);
+            }
+            
         } else {
 
             gridApi.showNoRowsOverlay();
-            rowParams.successCallback(results.items, 0);
+
+            if (serverPaging) {
+                rowParams.successCallback(results.items, 0);
+            }
         }
 
         pagingParams.manualStateRefresh = new Boolean(true);

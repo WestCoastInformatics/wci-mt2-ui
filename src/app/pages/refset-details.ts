@@ -292,6 +292,15 @@ export class RefsetDetails {
 
             this.taxonomySearchColumnDefs = [
                 {
+                    field: "code",
+                    colId: "code",
+                    headerName: "Concept ID",
+                    minWidth: 120,
+                    flex: 1,
+                    cellClass: "refset-tool-taxonomy-search-column-name",
+                    tooltipField: "code",
+                },
+                {
                     field: "name",
                     colId: "result",
                     headerName: "Result",
@@ -305,30 +314,27 @@ export class RefsetDetails {
                     },
                     tooltipField: "name",
                 },
-                {
-                    field: "parents",
-                    colId: "path",
-                    headerName: "Path",
-                    minWidth: 200,
-                    //width: 600,
-                    flex: 6,
-                    cellClass: "refset-tool-taxonomy-search-column-path",
-                    valueGetter: this.taxonomyPathValueGetter.bind(this),
-                    cellRenderer: "templateRenderer",
-                    cellRendererParams: { template: this.taxonomyPathSection },
-                    tooltipField: "parents",
-                },
+                // {
+                //     field: "parents",
+                //     colId: "path",
+                //     headerName: "Path",
+                //     minWidth: 200,
+                //     //width: 600,
+                //     flex: 6,
+                //     cellClass: "refset-tool-taxonomy-search-column-path",
+                //     valueGetter: this.taxonomyPathValueGetter.bind(this),
+                //     cellRenderer: "templateRenderer",
+                //     cellRendererParams: { template: this.taxonomyPathSection },
+                //     tooltipField: "parents",
+                // },
             ];
 
             this.taxonomySearchGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
-                suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 suppressPaginationPanel: true,
                 paginationPageSize: this.taxonomySearchGridPaging.pageSize,
-                cacheBlockSize: this.taxonomySearchGridPaging.pageSize,
-                maxBlocksInCache: 1,
-                rowModelType: "infinite",
                 rowSelection: "single",
                 onCellClicked: this.onTaxonomySearchGridCellClick,
                 onGridReady: this.onTaxonomySearchGridReady,
@@ -594,106 +600,75 @@ export class RefsetDetails {
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
+
         this.taxonomySearchGridApi = gridReadyParams.api;
         this.taxonomySearchGridColumnApi = gridReadyParams.columnApi;
         this.taxonomyGridParams = gridReadyParams;
 
-        let dataSource = {
-            rowCount: null,
-            getRows: (rowParams) => {
-                if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
-                    this.taxonomySearchGridApi.showNoRowsOverlay();
-                    rowParams.successCallback([], 0);
-                    return;
-                }
+        if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
 
-                this.taxonomySearchGridApi.showLoadingOverlay();
+            this.taxonomySearchGridApi.showNoRowsOverlay();
+            this.taxonomySearchGridApi.setRowData([]);
+            return;
+        }
 
-                let pageNumber =
-                    rowParams.endRow /
-                    this.taxonomySearchGridApi.paginationGetPageSize();
-                let query = "";
-                let sort = UiUtility.formatSortData(rowParams.sortModel);
+        this.taxonomySearchGridApi.showLoadingOverlay();
 
-                if (
-                    CodeUtility.hasValue(this.taxonomySearchInput) &&
-                    this.taxonomySearchInput.length > 2
-                ) {
-                    query =
-                        CodeUtility.addIfNotEmpty(query, " AND ") +
-                        this.taxonomySearchInput;
-                }
+        let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
+        let query = "";
 
-                let newFilterString = query;
-                let newSortString = JSON.stringify(sort);
+        if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
+            query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
+        }
 
-                // if the filters or sort have changed then move to the first page
-                if (
-                    newFilterString !== this.taxonomySearchGridLastFilter ||
-                    newSortString !== this.taxonomySearchGridLastSort
-                ) {
-                    pageNumber = 1;
-                    this.taxonomySearchGridApi.api?.paginationGoToPage(0);
-                }
+        let newFilterString = query;
 
-                // if the filters have changed then reset the total row variables
-                if (newFilterString !== this.taxonomySearchGridLastFilter) {
-                    this.taxonomySearchGridPaging.totalRows = null;
-                    this.taxonomySearchGridPaging.totalKnown = false;
-                }
+        // if the filters or sort have changed then move to the first page
+        if (newFilterString !== this.taxonomySearchGridLastFilter) {
 
-                this.taxonomySearchGridLastFilter = newFilterString;
-                this.taxonomySearchGridLastSort = newSortString;
+            pageNumber = 1;
+            this.taxonomySearchGridPaging.totalRows = null;
+            this.taxonomySearchGridPaging.totalKnown = false;
+            this.taxonomySearchGridApi.api?.paginationGoToPage(0);
+        }
 
-                let restParams: any = {
-                    sortModel: rowParams.sortModel,
-                    limit: this.taxonomySearchGridApi.paginationGetPageSize(),
-                    offset: pageNumber - 1,
-                };
+        this.taxonomySearchGridLastFilter = newFilterString;
 
-                if (CodeUtility.hasValue(query)) {
-                    restParams.query = query;
-                }
-
-                this.refsetService
-                    .getTaxonomySearch(this.id, restParams)
-                    .subscribe(
-                        (results) => {
-
-                            this.taxonomySearchNumberOfResults = results.total;
-                            this.taxonomySearchResults = results.items;
-                            if (results.items.length == 0 && pageNumber > 1) {
-                                this.taxonomySearchGridPaging.totalRows =
-                                    this.taxonomySearchGridApi.paginationGetPageSize() *
-                                    (pageNumber - 1);
-                                this.taxonomySearchGridPaging.totalKnown = true;
-                                this.taxonomySearchPaginationComponent.goToPage(
-                                    pageNumber - 1
-                                );
-                                return;
-                            }
-
-                            UiUtility.applyServerPagedGridResults(
-                                results,
-                                this.taxonomySearchGridApi,
-                                this.taxonomySearchGridPaging,
-                                pageNumber,
-                                rowParams
-                            );
-                        },
-                        (error) => {
-                            this.taxonomySearchResults = [];
-                            this.taxonomySearchGridApi.showNoRowsOverlay();
-                            rowParams.successCallback([], 0);
-                        }
-                    );
-            },
+        let restParams: any = {
+            limit: this.taxonomySearchGridApi.paginationGetPageSize(),
+            offset: pageNumber - 1,
         };
 
-        gridReadyParams.api.setDatasource(dataSource);
+        if (CodeUtility.hasValue(query)) {
+            restParams.query = query;
+        }
+
+        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe((results) => {
+
+            this.taxonomySearchNumberOfResults = results.total;
+            this.taxonomySearchResults = results.items;
+
+            if (results.items.length == 0 && pageNumber > 1) {
+
+                this.taxonomySearchGridApi.showNoRowsOverlay();
+                this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
+                this.taxonomySearchGridPaging.totalKnown = true;
+                this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                return;
+            }
+
+            UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
+        },
+        (error) => {
+
+            this.taxonomySearchResults = [];
+            this.taxonomySearchGridApi.showNoRowsOverlay();
+            this.taxonomySearchGridApi.setRowData([]);
+        });
     };
 
     taxonomyPathValueGetter = function (params) {
+
         if (!CodeUtility.hasValue(params.data)) {
             return "";
         }
@@ -701,9 +676,9 @@ export class RefsetDetails {
         let pathString = "";
 
         for (let pathConcept of params.data.parents) {
+
             let parentText = this.getTaxonomySearchDescription(pathConcept);
-            pathString =
-                CodeUtility.addIfNotEmpty(pathString, " > ") + parentText;
+            pathString = CodeUtility.addIfNotEmpty(pathString, " > ") + parentText;
         }
 
         return pathString;
@@ -718,9 +693,9 @@ export class RefsetDetails {
     };
 
     getTaxonomySearchDescription(concept) {
+
         let text = "";
-        let choosenDescription =
-            concept.descriptions[this.selectedTaxonomyLanguageIndex];
+        let choosenDescription = concept.descriptions[this.selectedTaxonomyLanguageIndex];
 
         if (choosenDescription != null) {
             text = choosenDescription.term;
@@ -734,44 +709,42 @@ export class RefsetDetails {
     }
 
     onTaxonomySearchGridCellClick = (event) => {
+
         let selectedRows = this.taxonomySearchGridApi.getSelectedRows();
-        let selectedId: string;
+        let selectedConcept;
         let selectedPath: any;
 
         selectedRows.forEach(function (selectedRow, index) {
-            selectedId = selectedRow.code;
-            selectedPath = selectedRow.parents;
+            selectedConcept = selectedRow;
         });
 
-        this.goToTaxonomyConcept(selectedId, selectedPath);
+        this.loadConceptDetail(selectedConcept);
+
+        this.refsetService.getMemberAncestorConcepts(this.id, selectedConcept.code).subscribe((result) => {
+            this.goToTaxonomyConcept(selectedConcept.code, result.parents);
+        });
     };
 
     @Debounce()
     onTaxonomySearchChange() {
-        let showSearch =
-            CodeUtility.hasValue(this.taxonomySearchInput) &&
-            (this.taxonomySearchResults.length > 0 ||
-                this.taxonomySearchInput.length > 2);
+
+        let showSearch = CodeUtility.hasValue(this.taxonomySearchInput) && (this.taxonomySearchResults.length > 0 || this.taxonomySearchInput.length > 2);
 
         if (showSearch) {
+
             this.taxonomySearchDisplay = "block";
 
             if (this.taxonomySearchInput.length > 2) {
-                this.taxonomySearchGridApi.purgeInfiniteCache();
+                this.onTaxonomySearchGridReady(this.taxonomyGridParams);
             }
+
         } else {
             this.taxonomySearchDisplay = "none";
         }
     }
 
     goToTaxonomyConcept(selectedConcept, selectedPath) {
-        this.taxonomyMembersComponent.findNodeInTree(
-            selectedConcept,
-            selectedPath,
-            undefined,
-            true,
-            false
-        );
+        this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, undefined, true, true);
     }
 
     reloadTaxonomyTree() {
@@ -791,10 +764,9 @@ export class RefsetDetails {
 
         this.membersGridApi.showLoadingOverlay();
 
-        let pageNumber =this.membersGridApi.paginationGetCurrentPage() + 1;
+        let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = "";
         let filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
-        let sort = UiUtility.formatSortData(gridReadyParams.sortModel);
 
         if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2) {
             query = this.tableSearchInput;
@@ -808,7 +780,6 @@ export class RefsetDetails {
 
         let newQueryString = query;
         let newFilterString = filter;
-        let newSortString = JSON.stringify(sort);
 
         // if the query has changed then move to the first page
         if (newQueryString !== this.membersGridLastQuery) {
@@ -821,10 +792,8 @@ export class RefsetDetails {
 
         this.membersGridLastQuery = newQueryString;
         this.membersGridLastFilter = newFilterString;
-        this.membersGridLastSort = newSortString;
 
         let restParams: any = {
-            sortModel: gridReadyParams.sortModel,
             displayType: "list",
             limit: this.membersGridApi.paginationGetPageSize(),
             offset: pageNumber - 1
@@ -852,9 +821,7 @@ export class RefsetDetails {
                 return;
             }
 
-            let data = results.items.filter((item) => {
-                return item.active ? item : undefined;
-            });
+            let data = results.items;
 
             this.membersGridData = data;
 
@@ -935,35 +902,8 @@ export class RefsetDetails {
                 ]
             );
 
-            if (data.length > 0) {
+            UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
 
-                this.membersGridApi.hideOverlay();
-                let lastRow = -1;
-
-                if (results.totalKnown || data.length < this.membersGridApi.paginationGetPageSize() || this.membersGridPaging.totalKnown) {
-
-                    if (results.totalKnown) {
-                        lastRow = results.total;
-
-                    } else if (this.membersGridPaging.totalKnown) {
-                        lastRow = this.membersGridPaging.totalRows;
-                    } else {
-
-                        lastRow = data.length + (pageNumber - 1) * this.membersGridApi.paginationGetPageSize();
-                    }
-
-                    this.membersGridPaging.totalRows = lastRow;
-                    this.membersGridPaging.totalKnown = true;
-                }
-
-                this.membersGridApi.setRowData(data);
-
-            } else {
-
-                this.membersGridApi.showNoRowsOverlay();
-            }
-
-            this.membersGridPaging.manualStateRefresh = new Boolean(true);
         },
         (error) => {
 
@@ -1021,9 +961,18 @@ export class RefsetDetails {
             (CodeUtility.hasValue(this.tableSearchInput) &&
                 this.tableSearchInput.length > 2)
         ) {
-            //this.membersGridApi.purgeInfiniteCache();
             this.onMembersGridReady(this.originalGridParams);
         }
+    }
+
+    getMembersGridPageSize() {
+
+        let size = this.membersGridPaging.pageSize;
+
+        if (this.membersGridApi) {
+            size = this.membersGridApi.paginationGetPageSize();
+        }
+        return size;
     }
 
     //***** General Functions *****/
@@ -1113,10 +1062,13 @@ export class RefsetDetails {
     }
 
     getMemberRow(memberId: string) {
+
         let concept;
 
         for (let i = 0; i < this.membersGridData.length; i++) {
+
             if (this.membersGridData[i].code == memberId) {
+
                 concept = this.membersGridData[i];
                 break;
             }
@@ -1126,37 +1078,32 @@ export class RefsetDetails {
     }
 
     loadConceptDetail(concept) {
+
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
 
-        this.refsetService
-            .getMembersDetails(concept?.code, {
-                refsetInternalId: this.refsetData.id,
-            })
-            .subscribe((results) => {
-                this.isConceptDetailsLoading = false;
-                this.conceptDetail = results;
+        this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe((results) => {
 
-                this.conceptDetail.roleGroups = results.roleGroups;
-                this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
+            this.isConceptDetailsLoading = false;
+            this.conceptDetail = results;
+            this.conceptDetail.roleGroups = results.roleGroups;
+            this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
 
-                this.conceptDescriptions = results.descriptions.filter(
-                    function (description) {
-                        return description != null;
-                    }
-                );
+            this.conceptDescriptions = results.descriptions.filter(
+                function (description) {
+                    return description != null;
+                }
+            );
 
-                RefsetUtility.sortDescriptions(
-                    this.conceptDescriptions,
-                    this.refsetData.edition.fullyQualifiedLanguageRefsets
-                );
-            });
+            RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+        });
 
         this.loadConceptDetailParents(concept?.code);
     }
 
     loadConceptDetailParents(conceptId) {
+
         let restParams = {
             displayType: "taxonomy",
             returnChildren: false,
@@ -1168,11 +1115,9 @@ export class RefsetDetails {
         };
 
         // load the parents
-        this.refsetService
-            .getConceptList(this.refsetData.id, restParams)
-            .subscribe((results) => {
-                this.conceptDetailParents = results.items;
-            });
+        this.refsetService.getConceptList(this.refsetData.id, restParams).subscribe((results) => {
+            this.conceptDetailParents = results.items;
+        });
     }
 
     toggleLoadingSpinner = (showSpinner: boolean = true) => {
