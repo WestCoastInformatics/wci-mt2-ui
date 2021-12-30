@@ -61,7 +61,7 @@ export class ImportFromFileModalComponent implements OnInit {
                 }
             }
 
-            let allIdsString = listOfIds.join(",");
+            let allIdsString = listOfIds.join(",").replace(/[^,\-\_a-zA-Z0-9]/g, '');
 
             if (listOfIds.length == 0) {
                 return;

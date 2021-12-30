@@ -50,7 +50,7 @@ export class ImportFromListModalComponent {
         }
 
         const commaRegex = /,+/ig;
-        let allIdsString = this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").trim();
+        let allIdsString = this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").replaceAll(/[^,\-\_a-zA-Z0-9]/g, '').trim();
 
         operationFunction(this.refsetInternalId, "list", allIdsString).subscribe();
 
