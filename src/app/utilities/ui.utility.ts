@@ -303,12 +303,14 @@ export class UiUtility {
                             this.memberChangeData[refsetId].statuses.push({Concept: conceptID, Operation: conceptStatus.operation, Status: conceptStatus.status});
                         }
 
+                        let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
+
                         if (conceptArray.length > 0) {
                             
                             let dataString = JSON.stringify(data);
                             let someFailed = dataString.includes('Failed');
                             let someSucceeded = dataString.includes('Success');
-                            let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
+                            
 
                             if (!someFailed && someSucceeded) {
                                 message = 'All members were successfully ' + messageEnd;
@@ -322,6 +324,12 @@ export class UiUtility {
                                 notificationType = 'warning';
                                 message = 'Some members were not able to be ' + messageEnd;
                             }
+                        } else {
+
+                            notificationType = 'warning';
+                            message = 'There were no concepts in the request. Make sure you do not have special characters included (ie: % $ # ect.). You may continue editing the refset.';
+                            buttons.pop();
+
                         }
 
 						notification = notificationService.show(message, null, notificationType, {timeOut: 0, extendedTimeOut: 0}, buttons);
