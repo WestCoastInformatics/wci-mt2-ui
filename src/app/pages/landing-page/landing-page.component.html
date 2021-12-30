@@ -23,7 +23,7 @@
                 </button>
             </div>
             <br>
-            <p class="landing-page-guest-has-account">Already have an account? <a class="landing-page-log-in-link" (click)="isGuestMode = false">Log In</a></p>
+            <p class="landing-page-guest-has-account">Already have an account? <a class="landing-page-log-in-link" (click)="login()">Log In</a></p>
         </div>
         <div *ngIf="!isGuestMode">
             <div class="landing-page-login-form">
