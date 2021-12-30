@@ -1,0 +1,57 @@
+<div class="landing-page-container">
+    <div class="landing-page-top-bar-center"><img src="/assets/small_logo.png" class="landing-page-tool-logo"><span class="landing-page-title-text">Reference Set Tool 2.0</span></div>
+    <div class="landing-page-top-bar-left"></div>
+    <div class="landing-page-top-bar-right"></div>
+    <div class="landing-page-info-section">
+        <p class="landing-page-text-1">Welcome to SNOMED International Tools and the Next Generation Reference Set Tool!</p>
+        <br>
+        <p class="landing-page-text-2">Introductory Paragraph, something like.... The IHTSDO Reference Set Management Tool is easy to use web-solutions Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. e</p>
+        <p class="landing-page-text-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <ul class="landing-page-text-4">
+                <li>Search or browse refsets</li>
+                <li>Create, manage and publish reference sets</li>
+                <li>Compare reference sets between versions</li>
+                <li>Enhanced collaboration features</li>
+            </ul>        
+    </div>
+    <div class="landing-page-login-section">
+        <div *ngIf="isGuestMode">
+            <div class="landing-page-guest-access">
+                <button class="landing-page-guest-access-button" [routerLink]="['/directory']"
+                [routerLinkActive]="['active']">
+                Access as Guest
+                </button>
+            </div>
+            <br>
+            <p class="landing-page-guest-has-account">Already have an account? <a class="landing-page-log-in-link" (click)="isGuestMode = false">Log In</a></p>
+        </div>
+        <div *ngIf="!isGuestMode">
+            <div class="landing-page-login-form">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <input type="text" placeholder="Username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" disabled />
+                        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                            <div *ngIf="f.username.errors.required">Username is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" disabled/>
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                            <div *ngIf="f.password.errors.required">Password is required</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <mat-checkbox class="landing-page-checkbox">Remember Me</mat-checkbox>
+                    </div>
+                    <div class="landing-page-guest-access form-group">
+                        <button class="landing-page-guest-access-button" (click)="login()">
+                        Log In
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <p class="landing-page-guest-has-account">Don't have an account? <a class="landing-page-log-in-link" (click)="isGuestMode = true">Proceed as a Guest</a></p>
+        </div>
+    </div>
+  </div>

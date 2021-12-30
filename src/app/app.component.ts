@@ -1,19 +1,12 @@
 import {
     Component,
-    OnInit,
-    ViewChild,
-    AfterViewInit,
-    TemplateRef,
+    OnInit
 } from '@angular/core';
 import 'jquery';
 import { Title } from '@angular/platform-browser';
 import { AuthoringService } from './services/authoring/authoring.service';
 import { EnvService } from './services/environment/env.service';
-import { RouterOutlet } from '@angular/router';
-import { Observable } from 'rxjs';
-
-import { TemplateRenderer } from './components/cellRenderers/template.renderer';
-
+import { Router, RoutesRecognized } from '@angular/router';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -22,12 +15,14 @@ import { TemplateRenderer } from './components/cellRenderers/template.renderer';
 export class AppComponent implements OnInit {
     versions: object;
     environment: string;
+    isLanding = false;
 
     constructor(
         private authoringService: AuthoringService,
         private envService: EnvService,
-        private titleService: Title
-    ) {}
+        private titleService: Title,
+        private router: Router
+    ) { }
 
     //***** Framework Functions *****/
     ngOnInit() {
@@ -43,6 +38,11 @@ export class AppComponent implements OnInit {
         // });
 
         this.assignFavicon();
+        this.router.events.subscribe((event: any) => {
+            if (event instanceof RoutesRecognized) {
+                this.isLanding = event.url.split('/')[1] === '';
+            }
+          });
     }
 
     assignFavicon() {

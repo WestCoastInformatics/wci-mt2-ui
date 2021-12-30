@@ -3019,3 +3019,106 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         padding-top: 130px;
     }
 }
+
+.landing-page-container {
+    display: grid;
+    grid-template-columns: 0.7fr 1.6fr 0.7fr;
+    grid-template-rows: 0.3fr 1.3fr 1.4fr;
+    grid-auto-columns: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "landing-page-top-bar-left landing-page-top-bar-center landing-page-top-bar-right"
+      ". landing-page-info-section ."
+      ". landing-page-login-section .";
+    background-image: url("/assets/rt2-landing-bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    margin-bottom: -6rem;
+    overflow: unset;
+    color: white;
+  }
+  
+.landing-page-top-bar-center {
+    grid-area: landing-page-top-bar-center;
+    padding-top: 18px;
+    background-color: gray;
+    font-size: 16px;
+}
+
+.landing-page-top-bar-left {
+    grid-area: landing-page-top-bar-left;
+    background-color: gray;
+}
+
+.landing-page-top-bar-right {
+    grid-area: landing-page-top-bar-right;
+    background-color: gray;
+}
+
+.landing-page-info-section {
+    grid-area: landing-page-info-section;
+    padding-top: 30px;
+}
+  
+.landing-page-login-section {
+    grid-area: landing-page-login-section;
+    justify-self: center;
+    padding-top: 20px;
+}
+
+.landing-page-text-1 {
+    font-size: 19px;
+}
+
+.landing-page-text-2 {
+    
+}
+
+.landing-page-text-3 {
+    
+}
+
+.landing-page-text-4 {
+    
+}
+
+.landing-page-guest-access {
+    text-align-last: center;
+}
+
+.landing-page-guest-access-button {
+    background-color: royalblue;
+    color: white;
+    width: 220px;
+    height: 25px;
+    font-size: 10px;
+}
+
+.landing-page-guest-has-account {
+    color: black;
+}
+
+.landing-page-log-in-link {
+    cursor: pointer;
+}
+
+.landing-page-tool-logo {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    margin-top: -6px;
+}
+
+.landing-page-title-text {
+
+}
+
+.landing-page-login-form {
+
+}
+
+.landing-page-checkbox {
+    color: black;
+}
