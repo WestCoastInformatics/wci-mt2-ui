@@ -37,19 +37,19 @@ export class RefsetService extends RestService {
     }
 
     addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '');
+        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
     }
 
     removeRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '');
+        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
     }
 
     addRefsetDefinitionExceptions(refsetInternalId: string, fileType: string, definitionExceptionType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&conceptIds=${conceptIds}&ecl=${ecl}`, '');
+        return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
     }
 
     removeRefsetDefinitionException(refsetInternalId: string, definitionExceptionID: string): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/removeDefinitionException/${definitionExceptionID}`, '');
+        return this.post(this.contextPath + `refset/${refsetInternalId}/removeDefinitionException/${definitionExceptionID}`, '', true);
     }
 
     editRefsetMembers(refsetInternalId: string, params): Observable<any> {
