@@ -38,7 +38,7 @@ export class AuthenticationService {
                 }
             },
             (err) => {
-                let correctUrl = window.location.href.split('/')[1] === '' ? window.location.href + '/login' : window.location.href
+                const correctUrl = !window.location.href.includes('/login') ? window.location.href + '/login' : window.location.href;
                 window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + correctUrl;
             }
         );
