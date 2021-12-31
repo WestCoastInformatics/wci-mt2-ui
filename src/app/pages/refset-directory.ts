@@ -249,7 +249,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 };
 
                 if (CodeUtility.hasValue(query)) {
-                    query = query.replace('/', '%2F');
+                    query = query.replace('/', ' ');
                     restParams.query = query;
                 }
 
