@@ -35,7 +35,6 @@ export class CreateNewRefsetComponent implements OnInit {
     selectedVersionNotes = '';
     referenceTypes = [RefsetUtility.EXTENSIONAL, RefsetUtility.INTENSIONAL, RefsetUtility.EXTERNAL];
     selectedReferenceType = '';
-    selectedIsPrivate = false;
     showLoadingSpinner = false;
     organizationName: string;
     editionName: string;
@@ -110,7 +109,7 @@ export class CreateNewRefsetComponent implements OnInit {
         this.selectedTags = [];
         this.definitionClauses = [{value: '', negated: false}];
         this.selectedReferenceType = '';
-        this.selectedIsPrivate = false;
+        this.privateRefset = false;
     }
 
     setupEditMode(): void {
@@ -165,7 +164,7 @@ export class CreateNewRefsetComponent implements OnInit {
             projectId: this.inputProperties.project.id,
             narrative: this.selectedNarrative,
             type: this.selectedReferenceType,
-            privateRefset: this.selectedIsPrivate,
+            privateRefset: this.privateRefset,
             tags: this.selectedTags,
             versionDate: this.selectedBranchVersion,
             versionNotes: this.selectedVersionNotes,
