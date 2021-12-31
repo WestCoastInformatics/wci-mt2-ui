@@ -649,13 +649,18 @@ export class RefsetDetails {
             this.taxonomySearchNumberOfResults = results.total;
             this.taxonomySearchResults = results.items;
 
-            if (results.items.length == 0 && pageNumber > 1) {
+            if (results.items.length == 0) {
 
                 this.taxonomySearchGridApi.showNoRowsOverlay();
                 this.taxonomySearchGridApi.setRowData([]);
-                this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
-                this.taxonomySearchGridPaging.totalKnown = true;
-                this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+
+                if (pageNumber > 1) {
+
+                    this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
+                    this.taxonomySearchGridPaging.totalKnown = true;
+                    this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                }
+
                 return;
             }
 
@@ -813,25 +818,22 @@ export class RefsetDetails {
 
         this.refsetService.getConceptList(this.id, restParams).subscribe((results) => {
 
+            let data = results.items;
+            this.membersGridData = data;
             this.membersGridNumberOfResults = results.total;
 
-            if (results.items.length == 0 && pageNumber > 1) {
-
-                this.membersGridApi.showNoRowsOverlay();
-                this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
-                this.membersGridPaging.totalKnown = true;
-                this.membersPaginationComponent.goToPage(pageNumber - 1);
-                return;
-            }
-
-            let data = results.items;
-
-            this.membersGridData = data;
-
-            if (!data.length) {
+            if (results.items.length == 0) {
 
                 this.membersGridApi.showNoRowsOverlay();
                 this.membersGridApi.setRowData([]);
+
+                if (pageNumber > 1) {
+                        
+                    this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
+                    this.membersGridPaging.totalKnown = true;
+                    this.membersPaginationComponent.goToPage(pageNumber - 1);
+                }
+
                 return;
             }
 
