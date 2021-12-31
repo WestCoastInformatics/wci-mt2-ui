@@ -267,35 +267,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.showLoadingSpinner = $event;
     }
 
-    // openEclBuilder(fieldId) {
-    //     UiUtility.openEclBuilder(
-    //         fieldId,
-    //         RefsetUtility.getBranchPath(this.refset)
-    //     );
-    // }
-
     openEclBuilder(fieldId) {
-        let field = $('#' + fieldId);
-        let eclString: any = field.val();
-        let snowstormApiUrl = environment['snowstormApiUrl'];
-        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
-
-        if (!regex.test(eclString)) {
-            eclString = '';
-        }
-
-        $('body').append('<ecl-builder id="ecl-builder" branch=' + RefsetUtility.getBranchPath(this.refset) + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
-
-        const eclBuilder = document.querySelector('ecl-builder');
-
-        eclBuilder.addEventListener('output', (event: any) => {
-            field.val(event.detail);
-
-            const customEvent = document.createEvent('Event');
-            customEvent.initEvent('input', true, true);
-
-            field[0].dispatchEvent(customEvent);
-        });
+        UiUtility.openEclBuilder(fieldId, RefsetUtility.getBranchPath(this.refset));
     }
     
     @Debounce()

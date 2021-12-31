@@ -226,6 +226,7 @@ export class UiUtility {
 
     // Function to open SNOMED ECL Builder
     static openEclBuilder(fieldId, branch) {
+        
         let field = $('#' + fieldId);
         let eclString: any = field.val();
         let snowstormApiUrl = environment['snowstormApiUrl'];
