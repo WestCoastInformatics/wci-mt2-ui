@@ -619,6 +619,7 @@ export class RefsetDetails {
 
         if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
             query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
+            query = query.replace(/\/|-/g, ' ');
         }
 
         let newFilterString = query;
@@ -651,6 +652,7 @@ export class RefsetDetails {
             if (results.items.length == 0 && pageNumber > 1) {
 
                 this.taxonomySearchGridApi.showNoRowsOverlay();
+                this.taxonomySearchGridApi.setRowData([]);
                 this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
                 this.taxonomySearchGridPaging.totalKnown = true;
                 this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
@@ -770,6 +772,7 @@ export class RefsetDetails {
 
         if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2) {
             query = this.tableSearchInput;
+            query = query.replace(/\/|-/g, ' ');
 
         } else if (this.tableSearchInput && !CodeUtility.hasValue(this.tableSearchInput)) {
 
