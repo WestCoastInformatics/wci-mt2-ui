@@ -530,7 +530,7 @@
                                         class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        {{refsetData?.versionDate ? refsetData?.versionDate : refsetData?.editOriginBranchPath.split('/')[1]}}
+                                        {{refsetData?.versionDate ? refsetData?.versionDate : refsetData?.editOriginBranchPath.split('/').pop()}}
                                     </td>
                                     <td *ngIf="!refsetData?.editOriginBranchPath && !refsetData?.versionDate"
                                         class="

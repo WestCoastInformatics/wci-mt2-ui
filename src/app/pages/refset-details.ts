@@ -395,7 +395,7 @@ export class RefsetDetails {
                     tags: this.refsetData.tags,
                     referenceType: this.refsetData.type,
                     privateRefset: this.refsetData.privateRefset,
-                    versionDate: this.refsetData.versionDate ? this.refsetData.versionDate : this.refsetData.editOriginBranchPath.split('/')[1],
+                    versionDate: this.refsetData.versionDate ? this.refsetData.versionDate : this.refsetData.editOriginBranchPath.split('/').pop(),
                     versionNotes: this.refsetData.versionNotes
                 };
 
