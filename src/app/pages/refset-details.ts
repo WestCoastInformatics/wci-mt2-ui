@@ -619,6 +619,7 @@ export class RefsetDetails {
 
         if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
             query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
+            query = query.replace(/\//g, ' ');
         }
 
         let newFilterString = query;
@@ -648,12 +649,18 @@ export class RefsetDetails {
             this.taxonomySearchNumberOfResults = results.total;
             this.taxonomySearchResults = results.items;
 
-            if (results.items.length == 0 && pageNumber > 1) {
+            if (results.items.length == 0) {
 
                 this.taxonomySearchGridApi.showNoRowsOverlay();
-                this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
-                this.taxonomySearchGridPaging.totalKnown = true;
-                this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                this.taxonomySearchGridApi.setRowData([]);
+
+                if (pageNumber > 1) {
+
+                    this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
+                    this.taxonomySearchGridPaging.totalKnown = true;
+                    this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                }
+
                 return;
             }
 
@@ -770,6 +777,7 @@ export class RefsetDetails {
 
         if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2) {
             query = this.tableSearchInput;
+            query = query.replace(/\//g, ' ');
 
         } else if (this.tableSearchInput && !CodeUtility.hasValue(this.tableSearchInput)) {
 
@@ -810,25 +818,22 @@ export class RefsetDetails {
 
         this.refsetService.getConceptList(this.id, restParams).subscribe((results) => {
 
+            let data = results.items;
+            this.membersGridData = data;
             this.membersGridNumberOfResults = results.total;
 
-            if (results.items.length == 0 && pageNumber > 1) {
-
-                this.membersGridApi.showNoRowsOverlay();
-                this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
-                this.membersGridPaging.totalKnown = true;
-                this.membersPaginationComponent.goToPage(pageNumber - 1);
-                return;
-            }
-
-            let data = results.items;
-
-            this.membersGridData = data;
-
-            if (!data.length) {
+            if (results.items.length == 0) {
 
                 this.membersGridApi.showNoRowsOverlay();
                 this.membersGridApi.setRowData([]);
+
+                if (pageNumber > 1) {
+                        
+                    this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
+                    this.membersGridPaging.totalKnown = true;
+                    this.membersPaginationComponent.goToPage(pageNumber - 1);
+                }
+
                 return;
             }
 

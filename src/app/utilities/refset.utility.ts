@@ -57,15 +57,13 @@ export class RefsetUtility {
 
     static getBranchPath(refset): string {
 
-        let date = '';
-        let branchPath = "";
-        let pathDate = "";
+        let branchPath = refset.branchPath;
 
-        if (refset.versionDate != null) {
-            pathDate = "/" + refset.versionDate;
+        if (refset.versionStatus == 'IN DEVELOPMENT') {
+            branchPath = refset.edition.branch
         }
 
-        return branchPath = refset.edition.branch + pathDate;
+        return branchPath;
     }
 
     static getStatus(active) {
