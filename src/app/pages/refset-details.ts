@@ -820,7 +820,7 @@ export class RefsetDetails {
 
             let data = results.items;
             this.membersGridData = data;
-            this.membersGridNumberOfResults = results.total;
+            this.membersGridNumberOfResults = this.membersGridNumberOfResults ? this.membersGridNumberOfResults : results.total;
 
             if (results.items.length == 0) {
 
