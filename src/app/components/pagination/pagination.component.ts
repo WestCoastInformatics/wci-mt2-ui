@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { AgGridAngular } from 'ag-grid-angular';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -9,7 +9,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 })
 
 // AG Grid page numbers are 0 based, all other page variables here are 1 based
-export class PaginationComponent implements OnChanges, AfterViewInit {
+export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     @Input() pageSize: number = 0;
     @Input() gridOptions;
@@ -32,6 +32,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
     @ViewChild('paginationNextPage') nextPageButton: MatButton;
     @ViewChild('paginationLastPage') lastPageButton: MatButton;
     @ViewChildren('paginationPageNumber') pageNumberButtons: QueryList<MatButton>;
+    activeGridOptions: any;
     
 
     constructor(
@@ -41,11 +42,16 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
 
     getCurrentPage(): number {
 
-        this.currentPage = this.gridOptions?.api ? this.gridOptions.api.paginationGetCurrentPage() + 1 : 1;
+        this.currentPage = this.activeGridOptions?.api ? this.activeGridOptions.api.paginationGetCurrentPage() + 1 : 1;
         this.startRecord = (this.currentPage * this.pageSize) - (this.pageSize - 1);
         this.endRecord = this.currentPage * this.pageSize;
         this.endRecord = this.numOfResults < this.endRecord ? this.numOfResults : this.endRecord;
         return this.currentPage;
+    }
+
+    ngOnInit(): void {
+        console.log(this.gridOptions)
+        this.activeGridOptions = this.gridOptions;
     }
 
     ngAfterViewInit() {
@@ -154,7 +160,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
         }
-        this.gridOptions.api.paginationGoToPage(index - 1);
+        this.activeGridOptions.api.paginationGoToPage(index - 1);
         this.changeState(index);
     }
 
@@ -164,7 +170,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
         }
-        this.gridOptions.api.paginationGoToNextPage();
+        this.activeGridOptions.api.paginationGoToNextPage();
         this.changeState();
     }
 
@@ -174,7 +180,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
         }
-        this.gridOptions.api.paginationGoToPreviousPage();
+        this.activeGridOptions.api.paginationGoToPreviousPage();
         this.paginationPages = this.pagerService.getPager(this.numberOfPages, this.getCurrentPage(), this.totalKnown);
         this.changeState();
     }
@@ -185,15 +191,15 @@ export class PaginationComponent implements OnChanges, AfterViewInit {
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('directoryPageSize', pageSize.toString());
         }
-        if (this.gridOptions.api.gridCore.rowModel.cacheParams) {
-            this.gridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
-            this.gridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
-            this.gridOptions.api.paginationSetPageSize(pageSize);
-            this.gridOptions.api.purgeInfiniteCache();
-            this.gridOptions.api.paginationGoToPage(0);
+        if (this.activeGridOptions.api.gridCore.rowModel.cacheParams) {
+            this.activeGridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
+            this.activeGridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
+            this.activeGridOptions.api.paginationSetPageSize(pageSize);
+            this.activeGridOptions.api.purgeInfiniteCache();
+            this.activeGridOptions.api.paginationGoToPage(0);
         } else {
-            this.gridOptions.api.paginationSetPageSize(pageSize);
-            this.gridOptions.api.paginationGoToPage(0);
+            this.activeGridOptions.api.paginationSetPageSize(pageSize);
+            this.activeGridOptions.api.paginationGoToPage(0);
         }
 
         this.pageSize = pageSize;
