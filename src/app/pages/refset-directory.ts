@@ -66,6 +66,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
+    numOfMembers: any;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     constructor(
@@ -257,7 +258,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     .getRefsets({ ...restParams, ...sort })
                     .subscribe(
                         (results) => {
+                            this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
                             this.numOfResults = results.total;
+
                             if (results.items.length == 0 && pageNumber > 1) {
                                 this.refsetGridPaging.totalRows =
                                     this.refsetGridApi.paginationGetPageSize() *

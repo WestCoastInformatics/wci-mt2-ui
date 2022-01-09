@@ -175,6 +175,7 @@ export class RefsetDetails {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
+    membersGridNumberOfMembers: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -820,7 +821,9 @@ export class RefsetDetails {
 
             let data = results.items;
             this.membersGridData = data;
-            this.membersGridNumberOfResults = this.membersGridNumberOfResults ? this.membersGridNumberOfResults : results.total;
+            this.membersGridNumberOfMembers = this.membersGridNumberOfMembers ? this.membersGridNumberOfMembers : results.total;
+            this.membersGridNumberOfResults = results.total;
+
 
             if (results.items.length == 0) {
 
