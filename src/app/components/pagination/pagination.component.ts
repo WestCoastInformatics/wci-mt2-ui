@@ -20,7 +20,9 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @Input() numOfResults: number;
     @Input() isDetailPage = false;
     @Input() isDirectoryPage = false;
-
+    @Input() isProjectsPage = false;
+    @Input() refsetId;
+    @Input() isSelectedProject;
     currentPage: number = 1;
     paginationPages: any = {};
     showTotal = true;
@@ -33,6 +35,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @ViewChild('paginationLastPage') lastPageButton: MatButton;
     @ViewChildren('paginationPageNumber') pageNumberButtons: QueryList<MatButton>;
     activeGridOptions: any;
+    showAll: boolean;
     
 
     constructor(
@@ -51,6 +54,9 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     ngOnInit(): void {
         this.activeGridOptions = this.gridOptions;
+        this.cleanseStorageItems();
+        this.getStorageItems();
+        sessionStorage.setItem('lastRefsetId', this.refsetId?.toString());
     }
 
     ngAfterViewInit() {
@@ -88,22 +94,48 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         // }
         this.activeGridOptions = this.activeGridOptions ? this.activeGridOptions : changes.gridOptions.currentValue;
         this.changeState();
-        if (changes.numberOfPages && this.numOfResults > 0) {
+        // if (changes.numberOfPages && this.numOfResults > 0) {
+        //     this.getStorageItems();
+        // }
+        if (changes.isSelectedProject) {
+            this.cleanseStorageItems();
             this.getStorageItems();
         }
         this.changeDetectorRef.detectChanges();
     }
 
+    cleanseStorageItems(): void {
+        if (!this.isSelectedProject) {
+            sessionStorage.removeItem('projectsPageSize');
+            sessionStorage.removeItem('projectsPageShowAll');
+            sessionStorage.removeItem('lastPageNumberProjects');
+        }
+        if (sessionStorage.getItem('lastRefsetId') !== this.refsetId?.toString()) {
+            sessionStorage.removeItem('detailsPageSize');
+            sessionStorage.removeItem('detailsPageShowAll');
+            sessionStorage.removeItem('lastPageNumberDetails');
+            sessionStorage.removeItem('lastRefsetId');
+        }
+    }
+
     getStorageItems(): void {
         if (sessionStorage.getItem('detailsPageSize') && this.isDetailPage) {
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('detailsPageSize')));
+            this.showAll = eval(sessionStorage.getItem('detailsPageShowAll'));
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('detailsPageSize')), this.showAll);
         } else if (sessionStorage.getItem('directoryPageSize') && this.isDirectoryPage) {
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')));
+            this.showAll = eval(sessionStorage.getItem('directoryPageShowAll'));
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')), this.showAll);
+        } else if (sessionStorage.getItem('projectsPageSize') && this.isProjectsPage) {
+            this.showAll = eval(sessionStorage.getItem('projectsPageShowAll'));
+            console.log(this.showAll)
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('projectsPageSize')), this.showAll);
         }
         if (sessionStorage.getItem('lastPageNumberDetails') && this.isDetailPage) {
             this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDetails')));
-        } else if (sessionStorage.getItem('lastPageNumberDiretory') && this.isDirectoryPage) {
-            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDiretory')));
+        } else if (sessionStorage.getItem('lastPageNumberDirectory') && this.isDirectoryPage) {
+            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDirectory')));
+        } else if (sessionStorage.getItem('lastPageNumberProjects') && this.isProjectsPage) {
+            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberProjects')));
         }
     }
 
@@ -158,8 +190,10 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             sessionStorage.setItem('lastPageNumberDetails', index.toString());
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
+        } else if (this.isProjectsPage) {
+            sessionStorage.setItem('lastPageNumberProjects', index.toString());
         }
-        this.activeGridOptions.api.paginationGoToPage(index - 1);
+        this.activeGridOptions?.api.paginationGoToPage(index - 1);
         this.changeState(index);
     }
 
@@ -168,6 +202,8 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             sessionStorage.setItem('lastPageNumberDetails', index.toString());
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
+        } else if (this.isProjectsPage) {
+            sessionStorage.setItem('lastPageNumberProjects', index.toString());
         }
         this.activeGridOptions.api.paginationGoToNextPage();
         this.changeState();
@@ -178,27 +214,37 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             sessionStorage.setItem('lastPageNumberDetails', index.toString());
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('lastPageNumberDirectory', index.toString());
+        } else if (this.isProjectsPage) {
+            sessionStorage.setItem('lastPageNumberProjects', index.toString());
         }
         this.activeGridOptions.api.paginationGoToPreviousPage();
         this.paginationPages = this.pagerService.getPager(this.numberOfPages, this.getCurrentPage(), this.totalKnown);
         this.changeState();
     }
 
-    setPageSize(pageSize: number) {
+    setPageSize(pageSize: number, showAll = false) {
+        this.showAll = showAll;
         if (this.isDetailPage) {
             sessionStorage.setItem('detailsPageSize', pageSize.toString());
+            sessionStorage.setItem('detailsPageShowAll', this.showAll.toString());
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('directoryPageSize', pageSize.toString());
+            sessionStorage.setItem('directoryPageShowAll', showAll.toString());
+        } else if (this.isProjectsPage) {
+            sessionStorage.setItem('projectsPageSize', pageSize.toString());
+            sessionStorage.setItem('projectsPageShowAll', showAll.toString());
         }
-        if (this.activeGridOptions.api.gridCore.rowModel.cacheParams) {
-            this.activeGridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
-            this.activeGridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
-            this.activeGridOptions.api.paginationSetPageSize(pageSize);
-            this.activeGridOptions.api.purgeInfiniteCache();
-            this.activeGridOptions.api.paginationGoToPage(0);
-        } else {
-            this.activeGridOptions.api.paginationSetPageSize(pageSize);
-            this.activeGridOptions.api.paginationGoToPage(0);
+        if (this.activeGridOptions) {
+            if (this.activeGridOptions.api.gridCore.rowModel.cacheParams) {
+                this.activeGridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
+                this.activeGridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
+                this.activeGridOptions.api.paginationSetPageSize(pageSize);
+                this.activeGridOptions.api.purgeInfiniteCache();
+                this.activeGridOptions.api.paginationGoToPage(0);
+            } else {
+                this.activeGridOptions.api.paginationSetPageSize(pageSize);
+                this.activeGridOptions.api.paginationGoToPage(0);
+            }
         }
 
         this.pageSize = pageSize;

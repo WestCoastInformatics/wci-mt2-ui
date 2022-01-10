@@ -67,6 +67,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     existingMetadataConcepts: any;
     existingBranchVersions: any;
     numOfResults: number;
+    isSelectedProject: boolean;
 
     constructor(
         private router: Router,
@@ -193,7 +194,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
             this.showTable = true;
         }
-
+        this.isSelectedProject = JSON.stringify(this.selectedProject.id) === sessionStorage.getItem('selectedProjectId');
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
     }
 
@@ -245,7 +246,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
-                    offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
+                    // offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
