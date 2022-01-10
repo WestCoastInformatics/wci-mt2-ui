@@ -176,6 +176,7 @@ export class RefsetDetails {
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
     membersGridNumberOfMembers: any;
+    resetRefsetTotal = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -743,6 +744,7 @@ export class RefsetDetails {
             this.taxonomySearchDisplay = "block";
 
             if (this.taxonomySearchInput.length > 2) {
+                this.resetRefsetTotal = false;
                 this.onTaxonomySearchGridReady(this.taxonomyGridParams);
             }
 
@@ -821,7 +823,7 @@ export class RefsetDetails {
 
             let data = results.items;
             this.membersGridData = data;
-            this.membersGridNumberOfMembers = this.membersGridNumberOfMembers ? this.membersGridNumberOfMembers : results.total;
+            this.membersGridNumberOfMembers = this.membersGridNumberOfMembers && !this.resetRefsetTotal ? this.membersGridNumberOfMembers : results.total;
             this.membersGridNumberOfResults = results.total;
 
 
@@ -969,6 +971,7 @@ export class RefsetDetails {
             (CodeUtility.hasValue(this.tableSearchInput) &&
                 this.tableSearchInput.length > 2)
         ) {
+            this.resetRefsetTotal = false;
             this.onMembersGridReady(this.originalGridParams);
         }
     }
@@ -1017,12 +1020,11 @@ export class RefsetDetails {
         } else {
 
             if (this.isAddRemoveInDetailsPanel) {
-
                 this.loadConceptDetail(this.selectedConcept);
                 this.reloadMembersGridAndTaxonomy();
     
             } else {
-    
+                this.resetRefsetTotal = true;
                 this.reloadMembersGridAndTaxonomy();
                 this.showLoadingSpinner = false;
             } 
@@ -1033,7 +1035,7 @@ export class RefsetDetails {
     reloadMembersGridAndTaxonomy(){
 
         // reload the members grid
-        this.onMembersGridReady(this.originalGridParams)
+        this.onMembersGridReady(this.originalGridParams);
         this.memberCacheLoaded = new Subject<boolean>();
 
         var allObservables = {

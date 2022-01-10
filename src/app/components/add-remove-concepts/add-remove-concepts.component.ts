@@ -32,6 +32,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptHasChildren: boolean;
 	@Input() processChangedMemberFunction: () => void;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
+	@Output() onMembersGridReady = new EventEmitter<any>();
 	@Output() selectedEvent = new EventEmitter<string>();
 
 	@ViewChild("addRemoveDescendantsDialog") dialogSection: TemplateRef<any>;
@@ -134,6 +135,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		}
 
 		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
+        this.onMembersGridReady.emit();
     }
 
 	callMemberChangeFunction = () => {
