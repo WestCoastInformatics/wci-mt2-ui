@@ -50,7 +50,6 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.gridOptions)
         this.activeGridOptions = this.gridOptions;
     }
 
@@ -87,7 +86,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         //         break;
         //     }
         // }
-
+        this.activeGridOptions = this.activeGridOptions ? this.activeGridOptions : changes.gridOptions.currentValue;
         this.changeState();
         if (changes.numberOfPages && this.numOfResults > 0) {
             this.getStorageItems();
