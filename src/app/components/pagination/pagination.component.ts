@@ -107,12 +107,12 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     cleanseStorageItems(): void {
         if (!this.isSelectedProject) {
             sessionStorage.removeItem('projectsPageSize');
-            sessionStorage.removeItem('projectsPageShowAll');
+            // sessionStorage.removeItem('projectsPageShowAll');
             sessionStorage.removeItem('lastPageNumberProjects');
         }
         if (sessionStorage.getItem('lastRefsetId') !== this.refsetId?.toString()) {
             sessionStorage.removeItem('detailsPageSize');
-            sessionStorage.removeItem('detailsPageShowAll');
+            // sessionStorage.removeItem('detailsPageShowAll');
             sessionStorage.removeItem('lastPageNumberDetails');
             sessionStorage.removeItem('lastRefsetId');
         }
@@ -120,15 +120,14 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     getStorageItems(): void {
         if (sessionStorage.getItem('detailsPageSize') && this.isDetailPage) {
-            this.showAll = eval(sessionStorage.getItem('detailsPageShowAll'));
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('detailsPageSize')), this.showAll);
+            // this.showAll = eval(sessionStorage.getItem('detailsPageShowAll'));
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('detailsPageSize')));
         } else if (sessionStorage.getItem('directoryPageSize') && this.isDirectoryPage) {
-            this.showAll = eval(sessionStorage.getItem('directoryPageShowAll'));
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')), this.showAll);
+            // this.showAll = eval(sessionStorage.getItem('directoryPageShowAll'));
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')));
         } else if (sessionStorage.getItem('projectsPageSize') && this.isProjectsPage) {
-            this.showAll = eval(sessionStorage.getItem('projectsPageShowAll'));
-            console.log(this.showAll)
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('projectsPageSize')), this.showAll);
+            // this.showAll = eval(sessionStorage.getItem('projectsPageShowAll'));
+            this.setPageSize(Number.parseInt(sessionStorage.getItem('projectsPageSize')));
         }
         if (sessionStorage.getItem('lastPageNumberDetails') && this.isDetailPage) {
             this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDetails')));
@@ -226,13 +225,13 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         this.showAll = showAll;
         if (this.isDetailPage) {
             sessionStorage.setItem('detailsPageSize', pageSize.toString());
-            sessionStorage.setItem('detailsPageShowAll', this.showAll.toString());
+            // sessionStorage.setItem('detailsPageShowAll', this.showAll.toString());
         } else if (this.isDirectoryPage) {
             sessionStorage.setItem('directoryPageSize', pageSize.toString());
-            sessionStorage.setItem('directoryPageShowAll', showAll.toString());
+            // sessionStorage.setItem('directoryPageShowAll', showAll.toString());
         } else if (this.isProjectsPage) {
             sessionStorage.setItem('projectsPageSize', pageSize.toString());
-            sessionStorage.setItem('projectsPageShowAll', showAll.toString());
+            // sessionStorage.setItem('projectsPageShowAll', showAll.toString());
         }
         if (this.activeGridOptions) {
             if (this.activeGridOptions.api.gridCore.rowModel.cacheParams) {
