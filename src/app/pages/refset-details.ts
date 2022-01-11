@@ -815,7 +815,7 @@ export class RefsetDetails {
         }
 
         // if editing enable the return of hasChildren data in the list
-        if (this.editMode) {
+        if (this.allowedToEdit) {
             restParams.editing = true;
         }
 
