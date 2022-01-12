@@ -246,7 +246,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
-                    // offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
+                    offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: this.metadataAndConcepts,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
