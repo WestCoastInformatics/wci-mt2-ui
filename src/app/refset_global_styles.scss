@@ -788,14 +788,6 @@ button.refset-tool-table-action-icon {
     display: block;
     padding-left: 0px;
     padding-right: 0px;
-
-    .tree-node.refset-tool-taxonomy-is-member
-        > tree-node-wrapper
-        > .node-wrapper
-        > .node-content-wrapper {
-        font-weight: bold;
-        color: $standard_font_color;
-    }
     .tree-node.refset-tool-taxonomy-is-not-member
         > tree-node-wrapper
         > .node-wrapper
@@ -803,6 +795,13 @@ button.refset-tool-table-action-icon {
         font-weight: normal;
         color: $standard_font_color;
     }
+    .tree-node.refset-tool-taxonomy-is-member
+    > tree-node-wrapper
+    > .node-wrapper
+    > .node-content-wrapper {
+    font-weight: bold !important;
+    color: $standard_font_color !important;
+}
     .tree-node.refset-tool-taxonomy-no-members-in-branch
         > tree-node-wrapper
         > .node-wrapper
