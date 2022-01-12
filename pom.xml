@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ihtsdo.otf</groupId>
     <artifactId>snomed-refset-ui</artifactId>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.4</version>
     <properties>
         <packageName>${project.artifactId}</packageName>
     </properties>
