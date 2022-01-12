@@ -198,10 +198,7 @@ export class TaxonomyTreeComponent {
         };
 
         // need to return a promise or the data to the tree, not an observable
-        let results$: Observable<any> = this.refsetService.getConceptList(
-            this.refset.id,
-            restParams
-        );
+        let results$: Observable<any> = this.refsetService.getConceptList(this.refset.id, restParams);
         let resultData: any = await lastValueFrom(results$);
         let data = resultData.items;
         RefsetUtility.setEmptyChildrenNull(data);

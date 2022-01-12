@@ -382,6 +382,7 @@ export class RefsetDetails {
             if (this.editMode) {
 
                 if (this.refsetData?.availableActions?.includes('FINISH_EDIT')) {
+
                     this.allowedToEdit = true;
                     this.inEditButtonPrefix = "Save and ";
 
@@ -406,54 +407,40 @@ export class RefsetDetails {
                 }
             }
 
-            this.refsetData.status = RefsetUtility.getStatus(
-                this.refsetData.active
-            );
-            this.titleService.setTitle(
-                "Refset Tool - Refset Details: " + this.refsetId
-            );
-            let languages =
-                this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
+            this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
+            this.titleService.setTitle("Refset Tool - Refset Details: " + this.refsetId);
+
+            let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
             let languageRefsetOptions = [];
-            this.refsetData.versionDate = CodeUtility.formatJsonDate(
-                this.refsetData?.versionDate,
-                CodeUtility.DATE_FORMAT_REVERSE
-            );
-            this.versionOptions = RefsetUtility.getVersionOptions(
-                this.refsetData
-            );
+
+            this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
+            this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData);
             this.selectedVersion = this.id;
-            this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(
-                this.refsetData.edition.branch
-            );
+            this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
 
             for (let language of languages) {
+
                 let type = "PT";
 
                 if (language.qualifiedLanguageCode.indexOf("FSN") >= 0) {
                     type = "FSN";
                 }
 
-                let languageValue =
-                    language.languageCode +
-                    "-X-" +
-                    language.languageRefset +
-                    ":" +
-                    type;
+                let languageValue = language.languageCode + "-X-" + language.languageRefset + ":" + type;
 
                 if (CodeUtility.testBoolean(language.default)) {
                     this.selectedTaxonomyLanguage = languageValue;
                 }
 
-                languageRefsetOptions.push({
-                    value: languageValue,
-                    display: language.qualifiedLanguageCode,
-                });
+                languageRefsetOptions.push({value: languageValue, display: language.qualifiedLanguageCode});
             }
 
             if (languageRefsetOptions.length > 0) {
                 this.languageOptions = languageRefsetOptions;
             }
+
+            this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
+            this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
 
             if (CodeUtility.hasValue(this.refsetData)) {
                 this.shortenNoteFields();
@@ -472,7 +459,6 @@ export class RefsetDetails {
         });
         
         this.cacheTaxonomyAncestors();
-
         this.loadWorkflowHistoryData();
     }
 
@@ -574,12 +560,13 @@ export class RefsetDetails {
     }
 
     changeTaxonomyLanguage() {
+
         this.selectedTaxonomyLanguageIndex = this.languageOptions.findIndex(
             (option) => option.value === this.selectedTaxonomyLanguage
         );
+
         this.taxonomySearchGridApi.refreshCells();
-        this.taxonomyOptions.useFsn =
-            this.getTaxonomyLanguageType().toLowerCase() == "fsn";
+        this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
         this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
 
         // reload the members taxonomy tree
@@ -587,6 +574,7 @@ export class RefsetDetails {
 
         // if concept details is present reload the concept details child tree
         if (CodeUtility.hasValue(this.conceptDetail)) {
+            
             delete this.conceptDetail.children;
             this.conceptDetail = CodeUtility.clone(this.conceptDetail);
             this.loadConceptDetailParents(this.conceptDetail.code);
