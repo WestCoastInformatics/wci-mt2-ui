@@ -577,7 +577,7 @@ export class RefsetDetails {
             
             delete this.conceptDetail.children;
             this.conceptDetail = CodeUtility.clone(this.conceptDetail);
-            this.loadConceptDetailParents(this.conceptDetail.code);
+            this.loadConceptDetailParents(this.conceptDetail);
         }
     }
 
@@ -1097,17 +1097,23 @@ export class RefsetDetails {
             RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
         });
 
-        this.loadConceptDetailParents(concept?.code);
+        this.loadConceptDetailParents(concept);
     }
 
-    loadConceptDetailParents(conceptId) {
+    loadConceptDetailParents(concept) {
+
+        this.conceptDetailParents = [];
+        
+        if (!concept?.active) {
+            return;
+        }
 
         let restParams = {
             displayType: "taxonomy",
             returnChildren: false,
             language: this.getTaxonomyLanguageWithoutType(),
             depth: 1,
-            startingConceptId: conceptId,
+            startingConceptId: concept.code,
             offset: 0,
             limit: 1000,
         };

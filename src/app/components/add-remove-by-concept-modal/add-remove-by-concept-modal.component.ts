@@ -206,6 +206,12 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     loadConceptDetailParents(concept) {
 
+        this.conceptDetailParents = [];
+
+        if (!concept?.active) {
+            return;
+        }
+
         const restParams = {
             displayType: "taxonomy",
             returnChildren: false,
@@ -217,11 +223,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         };
 
         // load the parents
-        this.refsetService
-            .getConceptList(this.refsetInternalId, restParams)
-            .subscribe((results) => {
-                this.conceptDetailParents = results.items;
-            });
+        this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
+            this.conceptDetailParents = results.items;
+        });
     }
 
     changeModalSize(): void {

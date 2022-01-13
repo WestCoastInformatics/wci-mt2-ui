@@ -81,8 +81,11 @@ export class TaxonomyTreeComponent {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+
         for (const propertyName in changes) {
+
             if (propertyName === "options") {
+
                 this.configOptions = {
                     ...this.staticOptions,
                     ...TreeOptionDefaults,
@@ -95,25 +98,29 @@ export class TaxonomyTreeComponent {
                 }
 
                 if (CodeUtility.hasValue(this.nodes)) {
+
                     let treeModel: TreeModel = this.treeComponent?.treeModel;
+
                     if (CodeUtility.hasValue(treeModel)) {
                         this.sortTree(treeModel.nodes);
                     }
                 }
 
                 this.changeDetectorRef.detectChanges();
-            } else if (
-                propertyName === "rootNode" &&
-                CodeUtility.hasValue(this.rootNode)
-            ) {
+
+            } else if (propertyName === "rootNode" && CodeUtility.hasValue(this.rootNode)) {
                 
+                if (!this.rootNode.active) {
+
+                    this.isLoading = false;
+                    this.noData = true;
+                    return;
+                }
+
                 this.parentConcept = this.rootNode;
 
                 // if there should be children and aren't, or the children don't have descriptions - then fetch all the info for the children
-                if (
-                    !CodeUtility.hasValue(this.rootNode.children) ||
-                    !CodeUtility.hasValue(this.rootNode.children[0].name)
-                ) {
+                if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].name)) {
 
                     this.getTreeData();
                 } else {
@@ -121,7 +128,9 @@ export class TaxonomyTreeComponent {
                     this.isLoading = true;
                     this.prepareData(this.rootNode.children);
                 }
+
             } else if (propertyName === "manualStateRefresh") {
+
                 this.isLoading = true;
                 this.nodes = [];
             }
@@ -141,26 +150,26 @@ export class TaxonomyTreeComponent {
             limit: 1000,
         };
 
-        this.refsetService
-            .getConceptList(this.refset.id, restParams)
-            .subscribe((results) => {
-                this.prepareData(results.items);
-                this.sendnumOfChildrenTrigger(
-                    results?.items?.length
-                );
-                console.log(results.items);
-            });
+        this.refsetService.getConceptList(this.refset.id, restParams).subscribe((results) => {
+
+            this.prepareData(results.items);
+            this.sendnumOfChildrenTrigger(results?.items?.length);
+            console.log(results.items);
+        });
     }
 
     prepareData(data) {
+
         RefsetUtility.setEmptyChildrenNull(data);
 
         if (this.hasMultipleRootNodes) {
+
             this.rootNode = data;
             this.sortNodes(this.rootNode);
             this.sortTree(this.rootNode);
             this.nodes = this.rootNode;
         } else {
+
             this.rootNode.children = data;
             this.sortTree([this.rootNode]);
             this.nodes = [this.rootNode];
