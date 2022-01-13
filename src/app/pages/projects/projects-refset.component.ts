@@ -244,6 +244,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 this.refsetGridLastFilter = newFilterString;
                 this.refsetGridLastSort = newSortString;
 
+                query = query.replace(/\//g, '%2F');
+                
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
