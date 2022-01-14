@@ -64,7 +64,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     selectedProject: any;
     context: Context;
     originalGridParams: any;
-    existingMetadataConcepts: any;
     existingBranchVersions: any;
     numOfResults: number;
     isSelectedProject: boolean;
@@ -205,7 +204,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         }
 
         this.createRefsetProperties = {project: this.selectedProject, definitionClauses: [{value: '', negated: false}]};
-        this.getConceptDropdownData(false);
         this.getBranchVersions();
         this.originalGridParams = gridReadyParams;
         this.refsetGridApi = gridReadyParams.api;
@@ -382,14 +380,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         }
 
         return refset;
-    }
-
-    private getConceptDropdownData(areParentConcepts: boolean): void {
-        if (this.selectedProject) {
-            this.refsetService.getRefsetConcepts(`branch=${this.selectedProject?.organization?.edition?.branch.toString()}&areParentConcepts=${areParentConcepts}`).subscribe(results => {
-                this.existingMetadataConcepts = results.items ? results.items : undefined;
-            });
-        }
     }
 
     private getBranchVersions(): void {

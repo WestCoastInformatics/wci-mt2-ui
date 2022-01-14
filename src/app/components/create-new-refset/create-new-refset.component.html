@@ -137,15 +137,13 @@
                         ">
                         <label><span *ngIf="!editMode" class="mandatory-field">*</span>Assign Refset Concept:</label>
                     </div>
-                    <div *ngIf="!editMode" class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        ">
+
+                    <div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
+
                         <mat-radio-group>
-                            <mat-radio-button style="padding-right: 30px" value="1"
-                                (change)="checkRadioButtonValue($event)">Choose an existing metadata
-                                concept</mat-radio-button>
+
+                            <mat-radio-button style="padding-right: 30px" value="1" (change)="checkRadioButtonValue($event)">Choose an existing metadata concept</mat-radio-button>
+
                             <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
                                 <mat-label>Choose existing metadata concept</mat-label>
                                 <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
@@ -154,29 +152,28 @@
                                     </option>
                                 </select>
                             </mat-form-field>
-                            <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">Create a new concept
-                            </mat-radio-button>
+
+                            <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">Create a new concept</mat-radio-button>
+
                             <mat-form-field appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
                                 <mat-label>Choose parent concept</mat-label>
                                 <select matNativeControl [(ngModel)]="selectedParentConcept">
-                                    <option *ngFor="
-                                            let existingMetadataConcept of existingMetadataConcepts
-                                        " [value]="existingMetadataConcept?.code">
-                                        {{ existingMetadataConcept?.name }}
+                                    <option *ngFor="let parentConcept of parentConcepts" [value]="parentConcept?.code">
+                                        {{ parentConcept?.name }}
                                     </option>
                                 </select>
                             </mat-form-field>
-                            <mat-form-field class="example-form-field" appearance="fill"
-                                [hidden]="isSelected == 1 || isSelected == 0">
-                                <input matInput type="text" placeholder="Enter the name of the new concept"
-                                    [(ngModel)]="createdMetaDataConcept" />
-                                <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
-                                    (click)="value2a = ''">
+
+                            <mat-form-field class="example-form-field" appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
+                                <input matInput type="text" placeholder="Enter the name of the new concept" [(ngModel)]="createdMetaDataConcept" />
+                                <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear" (click)="value2a = ''">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </mat-form-field>
+
                         </mat-radio-group>
                     </div>
+                    
                 </div>
 
                 <!-- NARRATIVE for new refset-->

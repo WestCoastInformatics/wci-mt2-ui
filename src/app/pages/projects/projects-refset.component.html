@@ -70,10 +70,8 @@
             aria-label="Display Workflow Diagram" />
         </div>
         <div style="display: inline">
-            <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR') || !selectedProject"
-                               [inputProperties]="createRefsetProperties"
-                               [existingMetadataConcepts]="existingMetadataConcepts"
-                               [existingBranchVersions]="existingBranchVersions"></create-new-refset>
+            <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
+            </create-new-refset>
         </div>
         <div style="display: inline; padding-left: 10px">
             <button disabled

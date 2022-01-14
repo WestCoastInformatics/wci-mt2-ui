@@ -47,8 +47,9 @@ export class CreateNewRefsetComponent implements OnInit {
     refsetConcept: string;
     tags: string[];
     INTENSIONAL = RefsetUtility.INTENSIONAL;
+    existingMetadataConcepts: any;
+    parentConcepts: any;
 
-    @Input() existingMetadataConcepts: any;
     @Input() existingBranchVersions: any;
     @Input() isDetailsPage = false;
     @Input() editMode = false;
@@ -88,6 +89,14 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         if (CodeUtility.hasValue(this.inputProperties.project)) {
+
+            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.organization.edition.branch.toString()}&areParentConcepts=false`).subscribe(results => {
+                this.existingMetadataConcepts = results.items ? results.items : undefined;
+            });
+
+            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.organization.edition.branch.toString()}&areParentConcepts=true`).subscribe(results => {
+                this.parentConcepts = results.items ? results.items : undefined;
+            });
 
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
