@@ -1,18 +1,17 @@
-<div mat-dialog-title class="refset-tool-dialog-title">
-
-    <div *ngIf="config.showTitle" id="{{ id }}Title">
-        {{ config.headerText }}
-    </div>
-
-    <div class="refset-tool-close-button">
-        <button *ngIf="config.showCloseIcon" mat-icon-button aria-hidden="false" aria-label="Close Dialog" (click)="cancel()">
-            <mat-icon>close</mat-icon>
-        </button>
-    </div>
-
-</div>
-
 <div mat-dialog-content class="refset-tool-dialog-content">
+    <div mat-dialog-title class="refset-tool-dialog-title">
+
+        <div *ngIf="config.showTitle" id="{{ id }}Title">
+            {{ config.headerText }}
+        </div>
+    
+        <div class="refset-tool-close-button">
+            <button *ngIf="config.showCloseIcon" mat-icon-button aria-hidden="false" aria-label="Close Dialog" (click)="cancel()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    
+    </div>
     <ng-container [ngTemplateOutlet]="config.template" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
 </div>
 
