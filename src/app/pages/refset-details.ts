@@ -133,7 +133,6 @@ export class RefsetDetails {
     selectedConcept: any;
     editMetadataProperties: any;
     directUrl: string;
-    directRoute: string;
     numOfChildren = undefined;
     hideMetadataTable = false;
     hideWorkflowTable = true;
@@ -220,7 +219,6 @@ export class RefsetDetails {
             "edit/refset",
             "details"
         );
-        this.directRoute = this.router.url.replace("edit/refset", "details");
         if (!this.editMode) {
             this.breadcrumbService.setBreadcrumbs([
                 { path: "/directory", label: "Directory" },

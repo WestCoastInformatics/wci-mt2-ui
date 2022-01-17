@@ -527,4 +527,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         let gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0].clientWidth;
         document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
     }
+
+    setDescriptions(refsetData: any): Array<string> {
+        return refsetData?.descriptions;
+    }
 }

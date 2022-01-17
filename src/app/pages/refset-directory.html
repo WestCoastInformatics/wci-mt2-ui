@@ -189,6 +189,13 @@
                                         </ng-container>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td class="refset-tool-refset-metadata-label"aria-label="Refset Names:">Refset Names:</td>
+                                    <td class="refset-tool-refset-metadata-value">
+                                        <span *ngFor="let description of setDescriptions(data)">{{ description?.term }}<br></span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -254,7 +261,7 @@
                                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        <a href='{{directUrl}}'>{{directUrl}}</a>
+                                        <a href='https://{{directUrl}}'>{{directUrl}}</a>
                                     </td>
                                 </tr>
 
