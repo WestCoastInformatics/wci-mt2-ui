@@ -411,6 +411,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     openInformation(refsetId: string) {
 
         let refset = this.getRefsetRow(refsetId);
+        this.refsetService.getRefset(refset.id).subscribe((results) => {
+            refset.descriptions = results.descriptions;
         const dialogId = 'directoryInfoDialog';
         this.directUrl = (window.location.host + this.router.url).replace("directory", "details/" + refset.id);
 
@@ -460,6 +462,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             if (data) {
                 this.goToDetailsPage(refset.id);
             }
+            });
         });
     }
 
