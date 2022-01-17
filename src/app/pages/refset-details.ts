@@ -283,6 +283,7 @@ export class RefsetDetails {
             if (CodeUtility.hasValue(this.conceptDetail)) {
                 this.loadConceptDetail(this.conceptDetail);
             }
+            this.onChangeMembersListMode();
         });
 
         // call forkJoin on returned observables
@@ -732,6 +733,7 @@ export class RefsetDetails {
             this.taxonomySearchDisplay = "block";
 
             if (this.taxonomySearchInput.length > 2) {
+                sessionStorage.setItem(`${this.refsetId}-taxonomy-search`, this.taxonomySearchInput);
                 this.resetRefsetTotal = false;
                 this.onTaxonomySearchGridReady(this.taxonomyGridParams);
             }
@@ -959,6 +961,10 @@ export class RefsetDetails {
             (CodeUtility.hasValue(this.tableSearchInput) &&
                 this.tableSearchInput.length > 2)
         ) {
+            if (this.refsetId) {
+                sessionStorage.setItem(`${this.refsetId}-members-search`, this.tableSearchInput);
+            }
+
             this.resetRefsetTotal = false;
             this.onMembersGridReady(this.originalGridParams);
         }
@@ -1300,9 +1306,25 @@ export class RefsetDetails {
         if (this.selectedMembersListMode == "table") {
             this.membersTableDisplay = "inline-block";
             this.membersTaxonomyDisplay = "none";
+            this.loadStoredMembersSearch();
         } else {
             this.membersTableDisplay = "none";
             this.membersTaxonomyDisplay = "inline-block";
+            this.loadStoredTaxonomySearch();
+        }
+    }
+
+    loadStoredMembersSearch(): void {
+        if (sessionStorage.getItem(`${this.refsetId}-members-search`)) {
+            this.tableSearchInput = sessionStorage.getItem(`${this.refsetId}-members-search`);
+            this.onTableSearchChange();
+        }
+    }
+
+    loadStoredTaxonomySearch(): void {
+        if (sessionStorage.getItem(`${this.refsetId}-taxonomy-search`)) {
+            this.taxonomySearchInput = sessionStorage.getItem(`${this.refsetId}-taxonomy-search`);
+            this.onTaxonomySearchChange();
         }
     }
 
