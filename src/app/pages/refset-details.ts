@@ -1426,6 +1426,15 @@ export class RefsetDetails {
         }
     }
 
+    getRoleString(): string {
+
+        if (!this.refsetData) {
+            return '';
+        }
+        
+        return UiUtility.getRoleString(this.refsetData.roles);
+    }
+
     addSpaceAfterVersionDate(stringValue: string): string {
         if (stringValue?.includes("(")) {
             return stringValue.split("(").join(" (");

@@ -400,18 +400,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         return stringValue;
     }
 
-    getProjectRoleString(): string {
-        const projectRoles = [];
-        if (!this.user?.roles) {
+    getRoleString(): string {
+
+        if (!this.selectedProject) {
             return '';
         }
-        for (const role of this.user?.roles) {
-            if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
-                projectRoles.push(role);
-            }
-        }
-
-        return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
+        
+        return UiUtility.getRoleString(this.selectedProject.roles);
     }
 
     openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {

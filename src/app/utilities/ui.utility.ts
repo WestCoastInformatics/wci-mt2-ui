@@ -444,6 +444,24 @@ export class UiUtility {
         });
     }
 
+    static getRoleString(roles = []): string {
+
+        const rolesToShow = [];
+
+        for (const role of roles) {
+
+            if (role == 'VIEWER') {
+                continue;
+            }
+
+            rolesToShow.push(role);
+        }
+
+        rolesToShow.sort();
+        
+        return rolesToShow.join(', ');
+    }
+
     //***** AG Grid Function to apply data and paging to table *****/
     static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 

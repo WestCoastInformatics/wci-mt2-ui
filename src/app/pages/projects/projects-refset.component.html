@@ -41,7 +41,7 @@
 
             <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
                 &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-            <b>Project Role(s): </b><span>{{ getProjectRoleString()}}</span>
+            <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
         </div>
     </div>
 
@@ -70,7 +70,7 @@
             aria-label="Display Workflow Diagram" />
         </div>
         <div style="display: inline">
-            <create-new-refset [disabled]="!user?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
+            <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
             </create-new-refset>
         </div>
         <div style="display: inline; padding-left: 10px">

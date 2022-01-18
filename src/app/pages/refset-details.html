@@ -1,25 +1,25 @@
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
-<div id="refsetDetailsPage"
-     class="container-fluid">
+<div id="refsetDetailsPage" class="container-fluid">
     <!-- Page Title -->
     <!--<div class="container-fluid page-title">
         Reference Set Details
     </div>-->
 
     <div class="row refset-title sticky-top" *ngIf="editMode">
-
+        
         <!-- Section Title -->
-        <div class="col-md-auto page-title details-page-title">
+        <div class="col-4 page-title details-page-title">
             Edit Reference Set
+            &nbsp;&nbsp;|&nbsp;&nbsp; <span class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
         </div>
 
         <!-- Refset Name Bar -->
-        <div id="refsetLockBanner" *ngIf="isLocked">
+        <div id="refsetLockBanner" class="col-4" *ngIf="isLocked">
             This refset is locked while edits are processing.
         </div>
 
-        <mat-horizontal-stepper class="details-page-stepper" [linear]="true" labelPosition="bottom" #stepper  *ngIf="!isLocked">
+        <mat-horizontal-stepper class="col-4 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper  *ngIf="!isLocked">
             <mat-step [editable]="false"
                       [completed]="refsetStatus?.includes('READY_FOR_EDIT')||
                 refsetStatus?.includes('IN_EDIT') ||
@@ -81,6 +81,11 @@
                 <mat-icon>done</mat-icon>
             </ng-template>
         </mat-horizontal-stepper>
+
+        <!-- Spacer Column -->
+        <div class="col-4">
+            &nbsp;
+        </div>
 
     </div>
 
