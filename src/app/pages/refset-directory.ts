@@ -85,7 +85,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
-        this.getStorageItems();
     }
 
     ngAfterViewInit() {
@@ -167,12 +166,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.changeDetectorRef.detectChanges();
         // this.overrideHeaderScroll();
         });
-    }
-
-    getStorageItems(): void {
-        if (sessionStorage.getItem('recentSearch')) {
-            this.searchInput = sessionStorage.getItem('recentSearch');
-        }
     }
 
     showDropdown(): void {
@@ -504,7 +497,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onSearchChange() {
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
             this.refsetGridApi.purgeInfiniteCache();
-            sessionStorage.setItem('recentSearch', this.searchInput);
         }
     }
 

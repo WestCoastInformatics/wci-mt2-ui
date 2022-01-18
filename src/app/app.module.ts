@@ -19,7 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { RouterModule, Routes } from '@angular/router';
+import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
 import { HeaderInterceptor } from 'src/app/interceptors/header.interceptor';
@@ -29,6 +29,7 @@ import { TreeModule } from '@circlon/angular-tree-component';
 import { AgGridModule } from 'ag-grid-angular';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { ToastNoAnimationModule } from 'ngx-toastr';
+import { CustomReuseStrategy } from './custom-route-reuse-strategy';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
@@ -184,7 +185,8 @@ const appRoutes: Routes = [
             provide: HTTP_INTERCEPTORS,
             useClass: BackendInterceptor,
             multi: true
-        }
+        },
+        { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
     ],
     bootstrap: [AppComponent],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

@@ -99,7 +99,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=false').subscribe(project => {
 
             this.projects = project.items;
-            this.getStorageItems();
         });
     }
 
@@ -165,27 +164,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         };
     }
 
-    getStorageItems(): void {
-
-        if (sessionStorage.getItem('selectedProjectId')) {
-
-            let storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
-
-            for (let project of this.projects) {
-
-                if (project.id == storedProjectId) {
-                    
-                    this.selectedProject = project;
-                    this.showRefsets();
-                    return;
-                }
-            }
-
-            // if the stored project ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedProjectId');
-        }
-    }
-
     showRefsets() {
 
         if (this.originalGridParams) {
@@ -193,8 +171,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
             this.showTable = true;
         }
-        this.isSelectedProject = JSON.stringify(this.selectedProject.id) === sessionStorage.getItem('selectedProjectId');
-        sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
     }
 
     onGridReady = (gridReadyParams) => {

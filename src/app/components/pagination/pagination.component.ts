@@ -54,9 +54,6 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     ngOnInit(): void {
         this.activeGridOptions = this.gridOptions;
-        this.cleanseStorageItems();
-        this.getStorageItems();
-        sessionStorage.setItem('lastRefsetId', this.refsetId?.toString());
     }
 
     ngAfterViewInit() {
@@ -97,45 +94,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         // if (changes.numberOfPages && this.numOfResults > 0) {
         //     this.getStorageItems();
         // }
-        if (changes.isSelectedProject) {
-            this.cleanseStorageItems();
-            this.getStorageItems();
-        }
         this.changeDetectorRef.detectChanges();
-    }
-
-    cleanseStorageItems(): void {
-        if (!this.isSelectedProject) {
-            sessionStorage.removeItem('projectsPageSize');
-            // sessionStorage.removeItem('projectsPageShowAll');
-            sessionStorage.removeItem('lastPageNumberProjects');
-        }
-        if (sessionStorage.getItem('lastRefsetId') !== this.refsetId?.toString()) {
-            sessionStorage.removeItem('detailsPageSize');
-            // sessionStorage.removeItem('detailsPageShowAll');
-            sessionStorage.removeItem('lastPageNumberDetails');
-            sessionStorage.removeItem('lastRefsetId');
-        }
-    }
-
-    getStorageItems(): void {
-        if (sessionStorage.getItem('detailsPageSize') && this.isDetailPage) {
-            // this.showAll = eval(sessionStorage.getItem('detailsPageShowAll'));
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('detailsPageSize')));
-        } else if (sessionStorage.getItem('directoryPageSize') && this.isDirectoryPage) {
-            // this.showAll = eval(sessionStorage.getItem('directoryPageShowAll'));
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('directoryPageSize')));
-        } else if (sessionStorage.getItem('projectsPageSize') && this.isProjectsPage) {
-            // this.showAll = eval(sessionStorage.getItem('projectsPageShowAll'));
-            this.setPageSize(Number.parseInt(sessionStorage.getItem('projectsPageSize')));
-        }
-        if (sessionStorage.getItem('lastPageNumberDetails') && this.isDetailPage) {
-            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDetails')));
-        } else if (sessionStorage.getItem('lastPageNumberDirectory') && this.isDirectoryPage) {
-            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberDirectory')));
-        } else if (sessionStorage.getItem('lastPageNumberProjects') && this.isProjectsPage) {
-            this.goToPage(Number.parseInt(sessionStorage.getItem('lastPageNumberProjects')));
-        }
     }
 
     changeState(currentPage: number = this.getCurrentPage()) { 
@@ -185,37 +144,16 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     }
 
     goToPage(index: number) {
-        if (this.isDetailPage) {
-            sessionStorage.setItem('lastPageNumberDetails', index.toString());
-        } else if (this.isDirectoryPage) {
-            sessionStorage.setItem('lastPageNumberDirectory', index.toString());
-        } else if (this.isProjectsPage) {
-            sessionStorage.setItem('lastPageNumberProjects', index.toString());
-        }
         this.activeGridOptions?.api.paginationGoToPage(index - 1);
         this.changeState(index);
     }
 
     goToNext(index: number) {
-        if (this.isDetailPage) {
-            sessionStorage.setItem('lastPageNumberDetails', index.toString());
-        } else if (this.isDirectoryPage) {
-            sessionStorage.setItem('lastPageNumberDirectory', index.toString());
-        } else if (this.isProjectsPage) {
-            sessionStorage.setItem('lastPageNumberProjects', index.toString());
-        }
         this.activeGridOptions.api.paginationGoToNextPage();
         this.changeState();
     }
 
     goToPrevious(index: number) {
-        if (this.isDetailPage) {
-            sessionStorage.setItem('lastPageNumberDetails', index.toString());
-        } else if (this.isDirectoryPage) {
-            sessionStorage.setItem('lastPageNumberDirectory', index.toString());
-        } else if (this.isProjectsPage) {
-            sessionStorage.setItem('lastPageNumberProjects', index.toString());
-        }
         this.activeGridOptions.api.paginationGoToPreviousPage();
         this.paginationPages = this.pagerService.getPager(this.numberOfPages, this.getCurrentPage(), this.totalKnown);
         this.changeState();
@@ -223,16 +161,6 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     setPageSize(pageSize: number, showAll = false) {
         this.showAll = showAll;
-        if (this.isDetailPage) {
-            sessionStorage.setItem('detailsPageSize', pageSize.toString());
-            // sessionStorage.setItem('detailsPageShowAll', this.showAll.toString());
-        } else if (this.isDirectoryPage) {
-            sessionStorage.setItem('directoryPageSize', pageSize.toString());
-            // sessionStorage.setItem('directoryPageShowAll', showAll.toString());
-        } else if (this.isProjectsPage) {
-            sessionStorage.setItem('projectsPageSize', pageSize.toString());
-            // sessionStorage.setItem('projectsPageShowAll', showAll.toString());
-        }
         if (this.activeGridOptions) {
             if (this.activeGridOptions.api.gridCore.rowModel.cacheParams) {
                 this.activeGridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
