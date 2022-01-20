@@ -45,11 +45,7 @@ export class AuthenticationService {
 
     generateImsUrl(endpoint: string): string {
 
-        let url = window.location.href;
-                
-        if (!url.includes('/login')) {
-            url += '/login';
-        }
+        let url = window.location.origin + '/login';
         
         if (!window.location.origin.includes("local")) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
@@ -115,18 +111,9 @@ export class AuthenticationService {
             }
         );
 
-        let logOutPath = this.generateImsUrl('logout');
+        document.cookie = this.getAuthCookie(true);
+        window.location.href = this.generateImsUrl('logout')
 
-        this.http.post<any>(logOutPath, '').subscribe(
-            (data) => {
-
-                document.cookie = this.getAuthCookie(true);
-                this.router.navigate(['/']);
-            },
-            (err) => {
-                this.router.navigate(['/']);
-            }
-        );
 
         
 
