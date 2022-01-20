@@ -39,8 +39,11 @@ export class AuthenticationService {
             },
             (err) => {
                 
-                const correctUrl = !window.location.href.includes('/login') ? window.location.href + '/login' : window.location.href;
-                //window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + correctUrl;
+                let correctUrl = window.location.href;
+                
+                if (!correctUrl.includes('/login')) {
+                    correctUrl += '/login';
+                }
                 
                 if (!window.location.host.includes("local")) {
                     window.location.href = window.location.origin.replace('rt2', 'ims') + '/#/login?serviceReferer=' + correctUrl;
@@ -154,9 +157,5 @@ export class AuthenticationService {
 
     getUser() {
         return JSON.parse(localStorage.getItem('refset_user'));
-    }
-
-    logout() {
-        window.location.href = this.authoringService.uiConfiguration.endpoints.imsEndpoint + 'logout?serviceReferer=' + window.location.href;
     }
 }
