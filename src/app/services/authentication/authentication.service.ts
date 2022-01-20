@@ -38,20 +38,26 @@ export class AuthenticationService {
                 }
             },
             (err) => {
-                
-                let correctUrl = window.location.href;
-                
-                if (!correctUrl.includes('/login')) {
-                    correctUrl += '/login';
-                }
-                
-                if (!window.location.host.includes("local")) {
-                    window.location.href = window.location.origin.replace('rt2', 'ims') + '/#/login?serviceReferer=' + correctUrl;
-                } else { 
-                    window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + correctUrl;
-                }
+                window.location.href = this.generateImsUrl('login');
             }
         );
+    }
+
+    generateImsUrl(endpoint: string): string {
+
+        let url = window.location.href;
+                
+        if (!url.includes('/login')) {
+            url += '/login';
+        }
+        
+        if (!window.location.origin.includes("local")) {
+            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
+        } else { 
+            url = 'https://dev-ims.ihtsdotools.org/#/' + endpoint + '?serviceReferer=' + url;
+        }
+
+        return url;
     }
 
     handleImsSuccess(userData) {
@@ -109,7 +115,7 @@ export class AuthenticationService {
             }
         );
 
-        let logOutPath = '/ims-api/api/account/logout';
+        let logOutPath = this.generateImsUrl('logout');
 
         this.http.post<any>(logOutPath, '').subscribe(
             (data) => {
