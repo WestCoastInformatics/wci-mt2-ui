@@ -43,7 +43,7 @@ export class AuthenticationService {
                 //window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + correctUrl;
                 
                 if (!window.location.host.includes("local")) {
-                    window.location.href = window.location.host.replace('rt2', 'ims') + '/#/login?serviceReferer=' + correctUrl;
+                    window.location.href = window.location.origin.replace('rt2', 'ims') + '/#/login?serviceReferer=' + correctUrl;
                 } else { 
                     window.location.href = 'https://dev-ims.ihtsdotools.org/#/login?serviceReferer=' + correctUrl;
                 }
