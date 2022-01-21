@@ -238,6 +238,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         (pageNumber - 1) *
                         this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: true,
+                    showInDevelopment: false,
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 };

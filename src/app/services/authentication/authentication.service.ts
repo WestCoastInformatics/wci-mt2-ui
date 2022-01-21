@@ -114,12 +114,7 @@ export class AuthenticationService {
         document.cookie = this.getAuthCookie(true);
         window.location.href = this.generateImsUrl('logout')
 
-
-        
-
-        const parsedUrl = new URL(window.location.href);
-        const baseUrl = parsedUrl.origin + '/';
-        this.test();
+        //this.test();
     }
 
     isAuthenticated(): boolean {
@@ -130,6 +125,8 @@ export class AuthenticationService {
 
     test(){
 
+        const parsedUrl = new URL(window.location.href);
+        const baseUrl = parsedUrl.origin + '/';
         let config = this.authoringService.uiConfiguration;
         console.log('uiConfiguration - next two lines:');
         console.log(config);
