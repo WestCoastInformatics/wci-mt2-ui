@@ -18,10 +18,8 @@ export class NavbarComponent implements OnInit {
 
     environment: string;
     user: User;
-    userRoles: any;
     userSubscription: Subscription;
     breadcrumbs;
-    authToken: any;
     guestUser: string;
     isUserLoggedIn =  false;
 
@@ -33,7 +31,6 @@ export class NavbarComponent implements OnInit {
         readonly refsetService: RefsetService, 
         private readonly notificationService: NotificationService) {
 
-        this.authToken = localStorage.getItem('auth_token');
         this.guestUser = authenticationService.GUEST_USER;
         this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
 
@@ -58,19 +55,9 @@ export class NavbarComponent implements OnInit {
         let userWasLoggedin = this.isUserLoggedIn;
 
         this.user = this.authenticationService.getUser();
-        this.userRoles = this.user?.roles;
         this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
 
-        // if the user is now logged out and on a page that requires being logged in, then send them to the directory
-        if (userWasLoggedin && !this.isUserLoggedIn) {
-
-            if (this.router.url.includes('project') || this.router.url.includes('edit/refset')) {
-                this.router.navigateByUrl('directory');
-            }
-
-            this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', {timeOut: 5000, extendedTimeOut: 0});
-        }
+        
     }
 
     showProjectRoleAndAssignee(): boolean {

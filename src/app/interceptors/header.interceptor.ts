@@ -30,7 +30,7 @@ export class HeaderInterceptor implements HttpInterceptor {
 
         const allCookies = document.cookie;
 
-        if (!allCookies.includes('ims-ihtsdo')) {
+        if (!this.authService.isAuthenticated()) {
             this.authService.notAuthenticated();
         }
 

@@ -7,6 +7,7 @@ import { AuthoringService } from '../authoring/authoring.service';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable({
     providedIn: 'root',
@@ -14,12 +15,15 @@ import { NotificationService } from 'src/app/services/notification.service';
 export class AuthenticationService {
 
     GUEST_USER = 'Guest';
+    LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
+    IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
     authCookie = {name: 'rt2-auth', path: '/'}
+    isUserLoggedIn =  false;
 
     constructor(
         private http: HttpClient,
-        private authoringService: AuthoringService,
+        private readonly modalService: NgbModal,
         private router: Router,
         private readonly notificationService: NotificationService
     ) {}
@@ -31,7 +35,6 @@ export class AuthenticationService {
             (user) => {
 
                 user.userName = user.login;
-                console.log('user is ------------------', user);
 
                 if (user != null) {
                     this.handleImsSuccess(user);
@@ -50,7 +53,7 @@ export class AuthenticationService {
         if (!window.location.origin.includes("local")) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
         } else { 
-            url = 'https://dev-ims.ihtsdotools.org/#/' + endpoint + '?serviceReferer=' + url;
+            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
         }
 
         return url;
@@ -63,9 +66,9 @@ export class AuthenticationService {
 
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
-                document.cookie = this.getAuthCookie();
                 this.router.navigate(['directory']);
                 this.userSubject.next(userData);
+                this.isUserLoggedIn = true;
             },
             (err) => {
                 this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
@@ -89,21 +92,10 @@ export class AuthenticationService {
         );
     }
 
-    getAuthCookie(expire: boolean = false) {
-
-        let cookie = 'rt2-auth=; path=/; domain=' + location.host + '; SameSite=None';
-
-        if (expire) {
-            cookie += '; Max-Age=0;'
-        }
-        return cookie
-    }
-
     logoutUser() {
 
         let loggedInUser = localStorage.getItem('auth_token');
         this.notAuthenticated();
-        document.cookie = `csrftoken; expires= ${new Date()}; path=/`;
 
         this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser,{}).subscribe(
             (data) => {
@@ -111,38 +103,39 @@ export class AuthenticationService {
             }
         );
 
-        document.cookie = this.getAuthCookie(true);
         window.location.href = this.generateImsUrl('logout')
-
-        //this.test();
     }
 
     isAuthenticated(): boolean {
-
+        
+        let cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
         const token = localStorage.getItem('auth_token');
-        return token?.length > 1 && token != this.GUEST_USER;
-    }
 
-    test(){
-
-        const parsedUrl = new URL(window.location.href);
-        const baseUrl = parsedUrl.origin + '/';
-        let config = this.authoringService.uiConfiguration;
-        console.log('uiConfiguration - next two lines:');
-        console.log(config);
-        console.log(config?.endpoints?.imsEndpoint);
+        return cookieFound && token != null;
     }
 
     notAuthenticated(): any {
 
         localStorage.clear();
         
+        let userWasLoggedin = this.isUserLoggedIn;
         let user = new User();
         user.userName = this.GUEST_USER;
-        localStorage.setItem('refset_user', JSON.stringify(user));
-        localStorage.setItem('auth_token', this.GUEST_USER);
+        this.isUserLoggedIn = false;
 
+        localStorage.setItem('refset_user', JSON.stringify(user));
         this.userSubject.next(user);
+
+        // if the user is on a page that requires being logged in, then send them to the directory
+        if (this.router.url.includes('project') || this.router.url.includes('edit/refset')) {
+            this.router.navigateByUrl('directory');
+        }
+
+        if (userWasLoggedin) {
+
+            this.modalService.dismissAll();
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', {timeOut: 5000, extendedTimeOut: 0});
+        }
     }
 
     getUser() {
