@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
 @Component({
   selector: 'review-modal',
@@ -7,9 +9,21 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ReviewModalComponent implements OnInit {
 
-  constructor(private readonly modalService: NgbModal) { }
+  @Output() setWorkflowStatus = new EventEmitter<boolean>();
+  private reviewNotes = '';
+  id: string;
+
+  constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private workflowService: WorkflowService) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(routeParams => {
+
+      this.id = routeParams.refsetId;
+  });
+  }
+
+  checkIfNoteAdded(): boolean {
+    return this.reviewNotes.replace(/<\/?p[^>]*>/g, '')?.length > 0;
   }
 
   openReviewModal(reviewDialog: NgbModal) {
@@ -18,5 +32,12 @@ export class ReviewModalComponent implements OnInit {
       keyboard : false,
       windowClass: 'review-modal'
     });
+  }
+
+  addNoteAndSetWorkflowStatus(): void {
+    if (this.checkIfNoteAdded()) {
+      this.workflowService.saveNotes(this.id, this.reviewNotes);
+      this.setWorkflowStatus.emit(true);
+    }
   }
 }

@@ -501,13 +501,11 @@ export class RefsetDetails {
             this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
             this.workflowHistoryDataSource.sort = this.sort;
             this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
-            
-            this.workflowHistoryDataSource?.data?.forEach((source) => {
 
-                if (source?.workflowStatus === 'IN_REVIEW' && source?.notes?.length) {
-                    this.reviewNotesAdded = true;
-                }
-            });
+            const source = this.workflowHistoryDataSource?.data[0];
+            if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
+                this.reviewNotesAdded = true;
+            }
         });
     };
 

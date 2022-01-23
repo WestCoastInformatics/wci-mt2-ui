@@ -288,7 +288,7 @@
                             Reject Refset
                     </button>
 
-                    <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"></review-modal>
+                    <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')"></review-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
                             #unassignButton
