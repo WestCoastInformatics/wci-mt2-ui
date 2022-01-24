@@ -288,7 +288,7 @@
                             Reject Refset
                     </button>
 
-                    <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"></review-modal>
+                    <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')"></review-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
                             #unassignButton
@@ -829,13 +829,22 @@
                                 <div class="container-fluid pr-0">
                                     <div class="row justify-content-start no-gutters" style="align-items: baseline">
 
-                                        <div class="col-md-3 refset-tool-details-chooser-column" style="padding-left: 5px" 
-                                            [style.display]="membersTableDisplay === 'inline-block' ? 'contents' : membersTableDisplay">
-                                            <app-column-chooser title="Select Columns to Display" [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [disabled]="isLocked"
-                                                    [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
+                                        <div class="refset-tool-details-chooser-column" style="padding-left: 5px" 
+                                        [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
+                                        <div class="refset-tool-details-chooser-column">
+                                            <mat-form-field appearance="fill" class="format-option-drop-down">
+                                                <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
+                                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
+                                                        {{option.display}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <app-column-chooser title="Select Columns to Display" [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [disabled]="isLocked"
+                                                [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
                                         </div>
 
-                                        <div class="col-md-3 refset-tool-details-chooser-column" [style.display]="membersTaxonomyDisplay">
+                                        <div class="refset-tool-details-chooser-column" [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field appearance="fill" class="format-option-drop-down">
                                                 <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
                                                     <mat-option *ngFor="let option of languageOptions" [value]="option.value">
