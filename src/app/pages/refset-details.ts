@@ -237,6 +237,7 @@ export class RefsetDetails {
         };
 
         this.refsetLoaded$.subscribe((loaded) => {
+
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -285,6 +286,7 @@ export class RefsetDetails {
 
         // call forkJoin on returned observables
         forkJoin(allObservables).subscribe(({ refsetLoaded, memberCacheLoaded }) => {
+
             console.log("refsetLoaded: " + refsetLoaded);
             console.log('memberCacheLoaded: ' + memberCacheLoaded);
 
@@ -365,7 +367,7 @@ export class RefsetDetails {
             this.showLoadingSpinner = false;
         });
 
-        this.refsetService.getRefset(this.id).subscribe((results) => {
+        this.refsetService.getRefset(this.id).subscribe({next: (results) => {
 
             console.log(results);
             this.setButtonGroupToggles(results);
@@ -454,7 +456,10 @@ export class RefsetDetails {
                 this.refsetLoaded.complete();
             }
             
-        });
+        },
+        error: (error) => {
+            this.toggleLoadingSpinner(false);
+        }});
         
         this.cacheTaxonomyAncestors();
         this.loadWorkflowHistoryData();
@@ -468,30 +473,26 @@ export class RefsetDetails {
 
         this.toggleLoadingSpinner(true);
     
-        this.workflowService
-            .setWorkflowStatusByAction(
-                this.refsetData.id,
-                this.refsetData.modifiedBy,
-                action,
-                notes
-            )
-            .subscribe((results) => {
+        this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({next: (results) => {
                 
-                if (results) {
-                    
-                    if (action.includes('UNASSIGN')) {
-                        this.router.navigateByUrl('projects');
-                    } else if (this.refsetData.id != results.id) {
-						this.router.navigateByUrl('edit/refset/' + results.id);
-                    } else {
-                        this.initializeDetailsPage();
-                    }
+            if (results) {
+                
+                if (action.includes('UNASSIGN')) {
+                    this.router.navigateByUrl('projects');
+                } else if (this.refsetData.id != results.id) {
+                    this.router.navigateByUrl('edit/refset/' + results.id);
                 } else {
-
                     this.initializeDetailsPage();
-                    this.changeDetectorRef.detectChanges();
                 }
-            }); 
+            } else {
+
+                this.initializeDetailsPage();
+                this.changeDetectorRef.detectChanges();
+            }
+        },
+        error: (error) => {
+            this.toggleLoadingSpinner(false);
+        }}); 
     }
 
     loadWorkflowHistoryData(): void {
@@ -514,7 +515,7 @@ export class RefsetDetails {
     //***** Members Taxonomy Functions  *****/
     cacheTaxonomyAncestors() {
 
-        this.refsetService.cacheMemberAncestors(this.id).subscribe(results => {
+        this.refsetService.cacheMemberAncestors(this.id).subscribe({next: results => {
 
             let success = results?.success;
 
@@ -526,7 +527,10 @@ export class RefsetDetails {
 
             this.memberCacheLoaded.next(true);
             this.memberCacheLoaded.complete();
-        });
+        },
+        error: (error) => {
+            this.toggleLoadingSpinner(false);
+        }});
     }
 
     loadTaxonomyRoot() {
@@ -542,14 +546,15 @@ export class RefsetDetails {
         };
 
         // load taxonomy root
-        this.refsetService
-            .getConceptList(this.refsetData.id, restParams)
-            .subscribe((results) => {
-                this.membersTaxonomyRoot = results.items[0];
-                this.taxonomyButtonLabel = "Taxonomy";
-                this.showTaxonomySearchTable = true;
-                this.showLoadingSpinner = false;
-            });
+        this.refsetService.getConceptList(this.refsetData.id, restParams).subscribe({next: (results) => {
+            this.membersTaxonomyRoot = results.items[0];
+            this.taxonomyButtonLabel = "Taxonomy";
+            this.showTaxonomySearchTable = true;
+            this.showLoadingSpinner = false;
+        },
+        error: (error) => {
+            this.toggleLoadingSpinner(false);
+        }});
     }
 
     onTaxonomySelected(event) {
@@ -632,7 +637,7 @@ export class RefsetDetails {
             restParams.query = query;
         }
 
-        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe((results) => {
+        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({next: (results) => {
 
             this.taxonomySearchNumberOfResults = results.total;
             this.taxonomySearchResults = results.items;
@@ -654,12 +659,13 @@ export class RefsetDetails {
 
             UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
         },
-        (error) => {
+        error: (error) => {
 
             this.taxonomySearchResults = [];
             this.taxonomySearchGridApi.showNoRowsOverlay();
             this.taxonomySearchGridApi.setRowData([]);
-        });
+            this.toggleLoadingSpinner(false);
+        }});
     };
 
     taxonomyPathValueGetter = function (params) {
@@ -805,7 +811,7 @@ export class RefsetDetails {
             restParams.editing = true;
         }
 
-        this.refsetService.getConceptList(this.id, restParams).subscribe((results) => {
+        this.refsetService.getConceptList(this.id, restParams).subscribe({next: (results) => {
 
             let data = results.items;
             this.membersGridData = data;
@@ -901,11 +907,12 @@ export class RefsetDetails {
             UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
 
         },
-        (error) => {
+        error: (error) => {
 
             this.membersGridApi.showNoRowsOverlay();
             this.membersGridApi.setRowData([]);
-        });
+            this.toggleLoadingSpinner(false);
+        }});
 
         // set placeholders on the grid floating filter fields
         Array.from(
@@ -1079,7 +1086,7 @@ export class RefsetDetails {
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
 
-        this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe((results) => {
+        this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
             this.conceptDetail = results;
@@ -1093,7 +1100,12 @@ export class RefsetDetails {
             );
 
             RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
-        });
+        },
+        error: (error) => {
+
+            this.isConceptDetailsLoading = false;
+            this.toggleLoadingSpinner(false);
+        }});
 
         this.loadConceptDetailParents(concept);
     }

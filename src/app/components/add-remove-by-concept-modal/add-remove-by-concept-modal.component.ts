@@ -277,49 +277,41 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
-        if (
-            CodeUtility.hasValue(this.searchInput) ||
-            (CodeUtility.hasValue(this.searchInput) &&
-                this.searchInput.length > 2)
-        ) {
+
+        if (CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+
             if (showLoadingSpinner) {
                 this.loadingSpinner.emit(true);
             }
 
-            this.refsetService
-                .getConceptSearch(
-                    this.refsetInternalId,
-                    `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`
-                )
-                .subscribe(
-                    (results) => {
+            this.refsetService.getConceptSearch(this.refsetInternalId, `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({next: (results) => {
 
+                this.dataSource = results.items;
+                this.initialResults = this.dataSource;
 
-                        this.dataSource = results.items;
-                        this.initialResults = this.dataSource;
+                // tslint:disable-next-line: no-unused-expression
+                if (results.items.length) {
 
-                        // tslint:disable-next-line: no-unused-expression
-                        if (results.items.length) {
-                            this.changeModalSize();
-                            this.showResults = true;
-                            this.showNoResultsLabel = false;
-                        } else {
-                            this.showResults = false;
-                            this.showNoResultsLabel = true;
-                        }
-                        this.filterActiveConcepts();
+                    this.changeModalSize();
+                    this.showResults = true;
+                    this.showNoResultsLabel = false;
+                } else {
+                    
+                    this.showResults = false;
+                    this.showNoResultsLabel = true;
+                }
+                this.filterActiveConcepts();
 
-                        if (showLoadingSpinner) {
-                            this.loadingSpinner.emit(false);
-                        }
-                    },
-                    (error) => {
+                if (showLoadingSpinner) {
+                    this.loadingSpinner.emit(false);
+                }
+            },
+            error: (error) => {
 
-                        this.searchResults = [];
-                        this.showResults = false;
-                        this.loadingSpinner.emit(false);
-                    }
-                );
+                this.searchResults = [];
+                this.showResults = false;
+                this.loadingSpinner.emit(false);
+            }});
         }
     }
 }

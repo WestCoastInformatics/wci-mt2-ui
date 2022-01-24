@@ -150,12 +150,17 @@ export class TaxonomyTreeComponent {
             limit: 1000,
         };
 
-        this.refsetService.getConceptList(this.refset.id, restParams).subscribe((results) => {
+        this.refsetService.getConceptList(this.refset.id, restParams).subscribe({next: (results) => {
 
             this.prepareData(results.items);
             this.sendnumOfChildrenTrigger(results?.items?.length);
             console.log(results.items);
-        });
+        },
+        error: (error) => {
+            
+            this.isLoading = false;
+            this.showLoadingSpinner = false;
+        }});
     }
 
     prepareData(data) {
@@ -197,6 +202,7 @@ export class TaxonomyTreeComponent {
     }
 
     async getChildren(node: any) {
+
         let restParams = {
             displayType: "taxonomy",
             depth: 1,

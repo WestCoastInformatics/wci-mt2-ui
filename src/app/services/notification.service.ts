@@ -2,6 +2,7 @@ import { Injectable, SecurityContext } from '@angular/core';
 import { ActiveToast, ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { IToastButton } from '../components/notification/notification.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable({
     providedIn: 'root'
@@ -97,7 +98,49 @@ export class NotificationService {
         return this.sanitizer.sanitize(SecurityContext.HTML, this.sanitizer.bypassSecurityTrustHtml(text));
     }
 
+    handleDuplicates(type = 'error', message = '', consolidate = false) {
 
+        let allToasts: ActiveToast<any>[] = this.toastr.toasts;
+        let toastInstances: ActiveToast<any>[] = [];
+        let consolidatedMessage = '';
+
+        for (let i = 0; i < allToasts.length; i++) {
+
+            const toast = allToasts[i];
+            const instance = toast.toastRef.componentInstance;
+
+            if (instance.toastClasses.includes(type)) {
+                toastInstances.push(toast);
+            }
+        }
+
+        if (toastInstances.length <= 1) {
+            return;
+        }
+
+        for (let i = 0; i < toastInstances.length; i++) {
+            
+            const toast = toastInstances[i];
+            const instance = toast.toastRef.componentInstance;
+
+            if (consolidatedMessage == '') {
+                consolidatedMessage = (i + 1) + ': ' + instance.message;
+            
+            } else if (instance.message != message && instance.message.includes(message)) {
+                consolidatedMessage += '<br>' + (i + 1) + ': ' + instance.message;
+            }
+
+            toast.toastRef.close();
+            instance.remove();
+        }
+
+        if (!consolidate) {
+            consolidatedMessage = message;
+        }
+
+        const newToast = this.show(consolidatedMessage, null, type, {timeOut: 0, extendedTimeOut: 0});
+        return newToast;
+    }
 
     private setProgressLength(toast: ActiveToast<any>, progress: number) {
         

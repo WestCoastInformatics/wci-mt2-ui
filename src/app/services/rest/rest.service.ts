@@ -21,9 +21,7 @@ export class RestService {
 
     restUrl = environment.restUrl;
 
-    constructor(private http: HttpClient,
-    private readonly notificationService: NotificationService) {
-    }
+    constructor(private http: HttpClient, private readonly notificationService: NotificationService) {}
 
     makeCall(url: string, method: string = 'get'): Observable<any> {
         return this.http[method]<any>(url);
@@ -53,7 +51,9 @@ export class RestService {
                 if (!ignoreErrors) {
 
                     const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                    let message = 'There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError;
+                    this.notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                    this.notificationService.handleDuplicates('error', message);
 
                     return err;
                 } else {

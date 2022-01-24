@@ -17,6 +17,7 @@ export class RefsetService extends RestService {
     editMode = false;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
+        
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
