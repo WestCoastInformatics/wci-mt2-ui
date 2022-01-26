@@ -7,7 +7,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
-
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 /**
  * @title Tree with nested nodes
@@ -44,20 +44,26 @@ export class RefsetDownloadComponent {
     constructor(
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        private authenticationService: AuthenticationService
     ) {
-
         this.refsetsExportableAsFreeset = environment.refsetsExportableAsFreeset.split(',');
     }
 
     //***** General Functions *****/
     openDownload(refsetId: string) {
+
         this.hideSections();
 
-        this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'rf2_with_names', display: 'RF2 With Names' }, { value: 'sctids', display: 'List Of Sct IDs' }];
+        this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'sctids', display: 'List Of Sct IDs' }];
+
+        if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+
+            this.formatOptions.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
+        }
 
         if (this.refsetsExportableAsFreeset.includes(refsetId)) {
-            this.formatOptions.splice(2, 0, { value: 'free_set', display: 'Free Set' });
+            this.formatOptions.splice(-1, 0, { value: 'free_set', display: 'Free Set' });
         }
 
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
