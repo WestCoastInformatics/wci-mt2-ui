@@ -455,6 +455,8 @@ export class RefsetDetails {
                 this.refsetLoaded.next(true);
                 this.refsetLoaded.complete();
             }
+
+            this.showLoadingSpinner = false;
             
         },
         error: (error) => {
