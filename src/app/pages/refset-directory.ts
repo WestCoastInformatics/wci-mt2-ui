@@ -464,6 +464,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
             this.searchInput = '';
             this.onSearchChange();
+            this.paginationComponent.setPageSize(10);
         }
     }
 
