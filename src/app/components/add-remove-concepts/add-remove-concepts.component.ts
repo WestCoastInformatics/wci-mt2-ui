@@ -135,7 +135,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		}
 
 		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
-        this.onMembersGridReady.emit();
+        //this.onMembersGridReady.emit();
     }
 
 	callMemberChangeFunction = () => {

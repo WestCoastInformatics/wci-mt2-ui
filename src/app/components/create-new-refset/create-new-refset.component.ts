@@ -270,7 +270,7 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
 
-        return (this.selectedBranchVersion && typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
+        return ((this.editMode || this.selectedBranchVersion) && typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
     }
 
     checkRadioButtonValue(event: any): void {
@@ -348,10 +348,6 @@ export class CreateNewRefsetComponent implements OnInit {
 
     openEclBuilder(fieldId) {
 
-        UiUtility.openEclBuilder(
-            fieldId,
-            this.inputProperties.project.organization.edition.branch +
-                '/' + this.selectedBranchVersion
-        );
+        UiUtility.openEclBuilder(fieldId, this.inputProperties.project.organization.edition.branch);
     }
 }

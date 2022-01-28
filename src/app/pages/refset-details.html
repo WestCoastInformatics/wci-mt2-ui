@@ -531,13 +531,13 @@
                                         aria-label="Version Date:">
                                         Version Date:
                                     </td>
-                                    <td *ngIf="refsetData?.versionDate || refsetData?.editOriginBranchPath"
+                                    <td *ngIf="refsetData?.versionDate"
                                         class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        {{refsetData?.versionDate ? refsetData?.versionDate : refsetData?.editOriginBranchPath.split('/').pop()}}
+                                        {{refsetData?.versionDate}}
                                     </td>
-                                    <td *ngIf="!refsetData?.editOriginBranchPath && !refsetData?.versionDate"
+                                    <td *ngIf="!refsetData?.versionDate"
                                         class="
                                             refset-tool-refset-metadata-value
                                         ">

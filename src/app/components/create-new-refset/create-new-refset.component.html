@@ -347,8 +347,7 @@
                                 </mat-form-field>
                                 <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
-                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" [disabled]="!selectedBranchVersion" [ngClass]="{'inactive' : !selectedBranchVersion}"
-                                    #createRefsetIntensionalEclButton class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
                                     <img src="assets/wrench-icon.svg" alt="wrench icon" aria-label="ECL Builder" 
                                         [title]="selectedBranchVersion ? 'Open ECL Builder' : 'Must select an Extension Version Date'" />
                                 </button>
@@ -361,12 +360,9 @@
                                     {{clause.value}}
                                 </div>
 
-                                <button (click)="definitionClauses.splice(i, 1)" #createRefsetIntensionalEclButton
-                                    class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                                <button (click)="definitionClauses.splice(i, 1)" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
                                     <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px"
-                                        title="Remove Definition Clause" aria-label="Remove Definition Clause"
-                                        class="subtract-symbol-icon"
-                                        alt="Subtract symbol to Remove Definition Clause" />
+                                        title="Remove Definition Clause" aria-label="Remove Definition Clause" class="subtract-symbol-icon" alt="Subtract symbol to Remove Definition Clause" />
                                 </button>
                             </span>
                         </div>
