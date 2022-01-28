@@ -1006,6 +1006,7 @@ export class RefsetDetails {
 
         this.changeLockedStatus(false);
         this.showLoadingSpinner = true;
+        this.taxonomyManualStateRefresh = new Boolean("true");
 
         if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
             this.initializeDetailsPage();
