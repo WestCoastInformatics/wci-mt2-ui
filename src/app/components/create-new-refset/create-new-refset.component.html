@@ -81,39 +81,6 @@
                     </div>
                 </div>
                 <div class="create-new-refset-form-field">
-                    <div class="
-                            col
-                            create-new-refset-label
-                            create-new-refset-flex-weight
-                        ">
-                        <label><span *ngIf="!editMode" class="mandatory-field">*</span>Extension Version Date:</label>
-                    </div>
-                    <div *ngIf="editMode" class="
-                            col
-                            create-new-refset-field
-                            create-new-refset-flex-weight
-                        " style="padding-left: 25px">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="
-                                    !versionDate
-                                        ? 'Not Yet Versioned'
-                                        : versionDate
-                                " disabled />
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Selected Extension Version Date</mat-label>
-
-                            <select matNativeControl [(ngModel)]="selectedBranchVersion">
-                                <option *ngFor="let existingBranchVersion of existingBranchVersions" [value]="existingBranchVersion">
-                                    {{ existingBranchVersion }}
-                                </option>
-                            </select>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="create-new-refset-form-field">
                     <div *ngIf="editMode" class="
                             col
                             create-new-refset-label
@@ -349,7 +316,7 @@
 
                                 <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
                                     <img src="assets/wrench-icon.svg" alt="wrench icon" aria-label="ECL Builder" 
-                                        [title]="selectedBranchVersion ? 'Open ECL Builder' : 'Must select an Extension Version Date'" />
+                                        title="Open ECL Builder" />
                                 </button>
                             </span>
 
