@@ -148,7 +148,7 @@ export class RefsetDownloadComponent {
                 console.log("Download Form Data: ", data);
 
                 let description = 'Refset ' +  this.refset.refsetId + ' download';
-                let notification = this.notificationService.show('Your ' + description + ' is being generated. Do not leave this window or you will need to start again', null, 'info', {timeOut: 0, extendedTimeOut: 0});
+                let notification = this.notificationService.show('Your ' + description + ' is being generated.', null, 'info', {timeOut: 0, extendedTimeOut: 0});
                 let fileNameDate: any = this.selectedVersionDate;
 
                 if (fileNameDate == '') {
