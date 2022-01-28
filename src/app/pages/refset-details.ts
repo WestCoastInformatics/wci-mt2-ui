@@ -274,7 +274,7 @@ export class RefsetDetails {
             this.showTable = true;
 
             // If the member grid data is present manually reload the grid or it won't update
-            if (CodeUtility.hasValue(this.membersGridData)) {
+            if (CodeUtility.hasValue(this.originalGridParams)) {
                 this.onMembersGridReady(this.originalGridParams);
             }
 
