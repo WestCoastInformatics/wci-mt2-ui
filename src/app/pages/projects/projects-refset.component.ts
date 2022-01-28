@@ -96,7 +96,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     populateProjectList(): void {
 
-        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=false').subscribe(project => {
+        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(project => {
 
             this.projects = project.items;
         });
@@ -195,7 +195,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                query = CodeUtility.addIfNotEmpty(query, ' AND ') + "editionShortName:" + this.selectedProject.organization.edition.shortName;
+                query = CodeUtility.addIfNotEmpty(query, ' AND ') + "projectId:" + this.selectedProject.id;
 
 
                 let newFilterString = query;
