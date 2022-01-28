@@ -829,10 +829,14 @@ button.refset-tool-table-action-icon {
         > .toggle-children {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
-    .tree-node.refset-tool-taxonomy-no-members-in-branch {
-        margin-left: 25px;
+    .tree-node {
+        .refset-tool-taxonomy-no-members-in-branch {
+            margin-left: 25px;
+        }
+        .refset-tool-taxonomy-is-member {
+            margin-left: 25px;
+        }
     }
-
     .tree-node img {
         width: 12.75px;
         height: 10.5px;
