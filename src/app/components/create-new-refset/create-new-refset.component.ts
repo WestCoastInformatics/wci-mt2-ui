@@ -26,7 +26,6 @@ export class CreateNewRefsetComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     isSelected = 0;
     selectedMetaDataConcept: any;
-    selectedBranchVersion = '';
     createdMetaDataConcept = '';
     selectedParentConcept = undefined;
     selectedNarrative = '';
@@ -110,7 +109,6 @@ export class CreateNewRefsetComponent implements OnInit {
 
         this.isSelected = 0;
         this.selectedMetaDataConcept = '';
-        this.selectedBranchVersion = '';
         this.createdMetaDataConcept = '';
         this.selectedParentConcept = undefined;
         this.selectedNarrative = '';
@@ -175,7 +173,6 @@ export class CreateNewRefsetComponent implements OnInit {
             type: this.selectedReferenceType,
             privateRefset: this.privateRefset,
             tags: this.selectedTags,
-            versionDate: this.selectedBranchVersion,
             versionNotes: this.selectedVersionNotes,
         };
 
@@ -270,7 +267,7 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
 
-        return ((this.editMode || this.selectedBranchVersion) && typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
+        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
     }
 
     checkRadioButtonValue(event: any): void {
