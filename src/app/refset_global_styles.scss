@@ -691,7 +691,13 @@ button.refset-tool-table-action-icon {
     // padding-bottom: 15px;
     font-size: 1.25rem;
     display: flex;
-    font-weight: 500;
+    font-weight: bold;
+}
+
+#refsetDetailsPage {
+    .refset-member-title {
+        font-weight: bold;
+    }
 }
 
 #refsetDetailsPage .refset-data-name {
@@ -2176,7 +2182,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     > .container-fluid
     > .metadata-name {
     display: flex;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 #refsetDetailsPage
@@ -3173,4 +3179,12 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .download-modal-container {
     float: left;
+}
+
+.edit-refset-button {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #00a4e4;
+    border-radius: 3px;
+    margin-left: 15px;
 }
