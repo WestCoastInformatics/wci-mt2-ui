@@ -1118,15 +1118,15 @@
 
                                             <div class="col refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset" 
                                                 [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
-                                                <!--
+                                                
                                                 <span
                                                     *ngIf="this.taxonomyOptions.useFsn"
                                                     title="{{parent.fsn}}"
                                                     aria-label="{{parent.fsn}}"
                                                     >{{parent.fsn}}</span
                                                 >
-                                             -->
-                                                <span title="{{parent.name}}"
+                                            
+                                                <span *ngIf="!this.taxonomyOptions.useFsn" title="{{parent.name}}"
                                                       aria-label="{{parent.name}}">{{parent.name}}</span>
                                             </div>
                                         </div>
