@@ -68,6 +68,11 @@ export class RefsetDetails {
         ":" +
         RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     selectedTaxonomyLanguageIndex = 0;
+    selectedConceptDetailLanguage: string =
+    RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
+    ":" +
+    RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+    selectedConceptDetailLanguageIndex = 0;
     membersGridChooserManualStateRefresh = new Boolean(true);
     useDialog = false;
     selectedMembersListMode = "table"; //taxonomy
@@ -100,6 +105,11 @@ export class RefsetDetails {
     membersTaxonomyRoot: any[] = [];
     taxonomyManualStateRefresh: Boolean = new Boolean(false);
     taxonomyOptions: TreeOptions = {
+        onSelect: this.onTaxonomySelected.bind(this),
+        useFsn: false,
+        language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
+    };
+    conceptDetailsOptions: TreeOptions = {
         onSelect: this.onTaxonomySelected.bind(this),
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
@@ -568,9 +578,10 @@ export class RefsetDetails {
             (option) => option.value === this.selectedTaxonomyLanguage
         );
 
+        this.selectedConceptDetailLanguage = this.selectedTaxonomyLanguage;
         this.taxonomySearchGridApi.refreshCells();
-        this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
-        this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
+        this.taxonomyOptions.useFsn = this.conceptDetailsOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
+        this.taxonomyOptions.language = this.conceptDetailsOptions.language = this.getTaxonomyLanguageWithoutType();
 
         // reload the members taxonomy tree
         this.reloadTaxonomyTree();
@@ -584,12 +595,38 @@ export class RefsetDetails {
         }
     }
 
+    changeConceptDetailsLanguage() {
+
+        this.selectedConceptDetailLanguageIndex = this.languageOptions.findIndex(
+            (option) => option.value === this.selectedConceptDetailLanguage
+        );
+
+        this.conceptDetailsOptions.useFsn = this.getConceptDetailLanguageType().toLowerCase() == "fsn";
+        this.conceptDetailsOptions.language = this.getConceptDetailLanguageWithoutType();
+
+        // if concept details is present reload the concept details child tree
+        if (CodeUtility.hasValue(this.conceptDetail)) {
+            
+            delete this.conceptDetail.children;
+            this.conceptDetail = CodeUtility.clone(this.conceptDetail);
+            this.loadConceptDetailParents(this.conceptDetail, this.getConceptDetailLanguageWithoutType());
+        }
+    }
+
     getTaxonomyLanguageWithoutType() {
         return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
     }
 
     getTaxonomyLanguageType() {
         return this.selectedTaxonomyLanguage.replace(/^.*:/, "");
+    }
+
+    getConceptDetailLanguageWithoutType() {
+        return this.selectedConceptDetailLanguage.replace(/:.*$/, "");
+    }
+
+    getConceptDetailLanguageType() {
+        return this.selectedConceptDetailLanguage.replace(/^.*:/, "");
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
@@ -1111,7 +1148,7 @@ export class RefsetDetails {
         this.loadConceptDetailParents(concept);
     }
 
-    loadConceptDetailParents(concept) {
+    loadConceptDetailParents(concept, language = this.getTaxonomyLanguageWithoutType()) {
 
         this.conceptDetailParents = [];
         
@@ -1122,7 +1159,7 @@ export class RefsetDetails {
         let restParams = {
             displayType: "taxonomy",
             returnChildren: false,
-            language: this.getTaxonomyLanguageWithoutType(),
+            language: language,
             depth: 1,
             startingConceptId: concept.code,
             offset: 0,

@@ -832,15 +832,6 @@
 
                                         <div class="refset-tool-details-chooser-column" style="padding-left: 5px" 
                                         [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
-                                        <div class="refset-tool-details-chooser-column">
-                                            <mat-form-field appearance="fill" class="format-option-drop-down">
-                                                <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
-                                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
-                                                        {{option.display}}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
                                         <app-column-chooser title="Select Columns to Display" [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog" [disabled]="isLocked"
                                                 [manualStateRefresh]="membersGridChooserManualStateRefresh"></app-column-chooser>
                                         </div>
@@ -1048,25 +1039,24 @@
                                 </div>
 
                                 <div *ngIf="conceptDetail">
-                                    <div class="
-                                            row
-                                            align-items-center
-                                            no-gutters
-                                        ">
-                                        <div class="
-                                                col
-                                                refset-tool-concept-details-title-name
-                                            ">
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col refset-tool-concept-details-title-name concept-details-header">
                                             Concept Details
                                         </div>
-
-                                        <div class="col text-right close-button">
+                                        <div class="refset-tool-details-chooser-column">
+                                            <mat-form-field appearance="fill" class="format-option-drop-down concept-details-header">
+                                                <mat-select [(value)]="selectedConceptDetailLanguage" (selectionChange)="changeConceptDetailsLanguage()" [disabled]="isLocked">
+                                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
+                                                        {{option.display}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="text-right close-button">
                                             <button mat-icon-button
                                                     (click)="closeConceptDetails()"
                                                     aria-hidden="false"
-                                                    class="
-                                                    refset-tool-table-action-icon
-                                                "
+                                                    class="refset-tool-table-action-icon concept-details-header"
                                                     aria-label="Close Concept Details"
                                                     title="Close Concept Details">
                                                 <mat-icon>close</mat-icon>
@@ -1121,13 +1111,13 @@
                                                 [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
                                                 
                                                 <span
-                                                    *ngIf="this.taxonomyOptions.useFsn"
+                                                    *ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
                                                     title="{{parent.fsn}}"
                                                     aria-label="{{parent.fsn}}"
                                                     >{{parent.fsn}}</span
                                                 >
                                             
-                                                <span *ngIf="!this.taxonomyOptions.useFsn" title="{{parent.name}}"
+                                                <span *ngIf="(!this.taxonomyOptions.useFsn && !this.conceptDetailsOptions.useFsn) || !this.conceptDetailsOptions.useFsn" title="{{parent.name}}"
                                                       aria-label="{{parent.name}}">{{parent.name}}</span>
                                             </div>
                                         </div>
@@ -1316,7 +1306,7 @@
                                                                [refset]="refsetData"
                                                                [rootNode]="conceptDetail"
                                                                [selectedConcept]="selectedConcept"
-                                                               [options]="taxonomyOptions"
+                                                               [options]="conceptDetailsOptions"
                                                                hasMultipleRootNodes="false"
                                                                [editMode]="allowedToEdit"
                                                                [processChangedMemberFunction]="processChangedMemberEffects"
