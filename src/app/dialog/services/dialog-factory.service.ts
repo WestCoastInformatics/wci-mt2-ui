@@ -20,9 +20,7 @@ export class DialogFactoryService<T = undefined> {
 
     constructor(private dialog: MatDialog) { }
 
-    open(
-        dialogData: DialogData, options: DialogOptions = {}): DialogService<T> 
-    {
+    open(dialogData: DialogData, options: DialogOptions = {}): DialogService<T> {
 
         const configData = {
             ...DialogOptionDefaults,

@@ -19,6 +19,8 @@ export class DialogComponent<T> {
     id: string;
     confirmIcon: string;
     cancelIcon: string;
+    isDisabled = true;
+    disableChannel = new BroadcastChannel('disable-button-channel');
 
     constructor(
         private dialogRef: MatDialogRef<DialogComponent<T>>,
@@ -36,6 +38,10 @@ export class DialogComponent<T> {
         if (CodeUtility.hasValue(this.config.cancelIcon)) {
             this.cancelIcon = this.data.cancelIcon;
         }
+        this.disableChannel.onmessage = (message) => {
+            this.isDisabled = message.data;
+            console.log(this.isDisabled);
+        };
     }
 
     @HostListener("keydown.esc")

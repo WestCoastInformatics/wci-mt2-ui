@@ -90,7 +90,7 @@
                     <div><label class="in-form-label">From:</label></div>
 
                     <mat-form-field appearance="fill" class="delta-select">
-                        <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom">
+                        <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom" (selectionChange)="changeComparisonFrom(data)">
                             <mat-option *ngFor="let option of data.comparisonFromOptions" [value]="option.value">
                                 {{ addSpaceAfterVersionDate(option.display) }}
                             </mat-option>

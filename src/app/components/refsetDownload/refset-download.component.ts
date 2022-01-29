@@ -3,7 +3,6 @@ import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
@@ -33,6 +32,7 @@ export class RefsetDownloadComponent {
     selectedVersionDate = '';
     refsetsExportableAsFreeset: string[];
     dialog: DialogService;
+    disableChannel = new BroadcastChannel('disable-button-channel');
 
     @Input() refset;
     @Input() buttonClasses: String = '';
@@ -216,6 +216,7 @@ export class RefsetDownloadComponent {
     }
 
     showDeltaOption(formData): boolean {
+        this.disableDownloadButton(formData);
         return (formData.selectedFormat === 'rf2' || formData.selectedFormat === 'rf2_with_names')
     }
 
@@ -228,6 +229,7 @@ export class RefsetDownloadComponent {
             this.showContent = false;
             formData.selectedContent = '';
         }
+        this.disableDownloadButton(formData);
     }
 
     showLanguageSection(formData) {
@@ -237,6 +239,7 @@ export class RefsetDownloadComponent {
         } else {
             this.showLanguages = false;
         }
+        this.disableDownloadButton(formData);
     }
 
     showVersionSection(formData) {
@@ -249,6 +252,7 @@ export class RefsetDownloadComponent {
         } else {
             this.showVersions = false;
         }
+        this.disableDownloadButton(formData);
     }
 
     showComparisonSection(formData) {
@@ -260,6 +264,7 @@ export class RefsetDownloadComponent {
             this.showComparison = false;
             formData.selectedComparisonFrom = '';
         }
+        this.disableDownloadButton(formData);
     }
 
     showMetadataSection(formData) {
@@ -269,28 +274,33 @@ export class RefsetDownloadComponent {
         } else {
             this.showMetadata = true;
         }
+        this.disableDownloadButton(formData);
     }
 
     changeFormat(formData) {
-
+        console.log(formData)
         this.showSections(formData);
+        this.disableDownloadButton(formData);
+    }
+
+    disableDownloadButton(formData): void {
+        if (((formData.selectedFormat == 'rf2' || formData.selectedFormat == 'rf2_with_names') && formData.selectedContent == 'snapshot')) {
+            this.disableChannel.postMessage(false);
+        } else if ((formData.selectedFormat == 'rf2' || formData.selectedFormat == 'rf2_with_names') && formData.selectedContent == 'delta' && formData.selectedComparisonFrom) {
+            this.disableChannel.postMessage(false);
+        } else if (formData.selectedFormat == 'sctids') {
+            this.disableChannel.postMessage(false);
+        } else {
+            this.disableChannel.postMessage(true);
+        }
     }
 
     changeContent(formData) {
-
         this.showSections(formData);
     }
 
     changeComparisonFrom(formData) {
-
-        // let selectedFrom = formData.selectedComparisonFrom;
-        // let toOptions = this.versionOptions.slice(0, selectedFrom - 1);
-
-        // if (formData.selectedComparisonTo >= selectedFrom){
-        //     formData.selectedComparisonTo = '';
-        // }
-
-        // formData.comparisonToOptions = toOptions;
+        this.disableDownloadButton(formData);
     }
 
     addSpaceAfterVersionDate(stringValue: string): string {

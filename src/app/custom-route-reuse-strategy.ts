@@ -39,7 +39,6 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
     let url = route.url.join("/") || route.parent.url.join("/");
-    console.log(url)
       if (this.back && url !== 'projects') {
           this.back = false;
         return !!route.routeConfig && !!this.handlers[url];
