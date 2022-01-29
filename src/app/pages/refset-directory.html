@@ -337,7 +337,7 @@
                 <div class="row">
                     <div class="column-download-button">
                         <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [class.centerDownload]="!params?.data?.downloadable" 
-                                             [disabled]="!params?.data?.downloadable || params?.data?.versionStatus == 'IN DEVELOPMENT'" [refset]="getRefsetRow(params.data.refsetId)">
+                                             [disabled]="!params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)">
                         </app-refset-download>
                     </div>
 
