@@ -962,11 +962,6 @@ button.refset-tool-table-action-icon {
 .refset-tool-concept-details-concept-name {
     font-size: 15px;
 }
-
-.refset-tool-concept-details-concept-section {
-    margin-bottom: 5px;
-    padding: 0px;
-}
 .refset-tool-concept-details-section-title {
     font-weight: 400;
 }
@@ -988,6 +983,13 @@ button.refset-tool-table-action-icon {
     > .row
     > .refset-tool-concept-details-concept-info-column {
     width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.add-remove-concept-hierarchy-modal-details-size {
+    padding-right: 15px;
+    padding-left: 15px;
 }
 .refset-tool-concept-details-concept-info-column-status {
     background-color: lightpink;
@@ -1010,6 +1012,12 @@ button.refset-tool-table-action-icon {
     background-color: rgba(30, 144, 255, 0.17);
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
+}
+.refset-tool-concept-details-concept-section {
+    margin-bottom: 5px;
+    padding: 0px;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
 }
 .no-attributes {
     opacity: 30%;
@@ -2468,6 +2476,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         margin-left: 10px;
         margin-right: 10px;
     }
+    overflow-x: hidden;
 }
 
 .refset-tool-taxonomy {

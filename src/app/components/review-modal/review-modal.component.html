@@ -38,17 +38,26 @@
          <div class="warning-review-body">
              <strong>Warning!</strong><br /><br />
              Review notes have not been made or recorded. A reason must be included if the reference set changes are rejected.
-             <br><br>
-             <mat-form-field class="review-notes-text-area" appearance="outline">
-                <textarea matInput class="" [(ngModel)]="reviewNotes"></textarea>
-            </mat-form-field>
-            <br><br>
-            <div class="warning-review-footer" [class.set-reject-review-cursor-disabled]="!checkIfNoteAdded()" (click)="checkIfNoteAdded() ? modal.dismiss('Cross click') : return; addNoteAndSetWorkflowStatus();">Add notes now</div>
          </div>
      </div>
      </ngb-alert>
+     <div class="">
+        <editor [(ngModel)]="reviewNotes" [init]="{ base_url: '/tinymce', suffix: '.min', height: 200, menubar: false, plugins: ['lists advlist'], toolbar:'undo redo | bold italic | bullist numlist outdent indent'}"></editor>
+    </div>
         </div>
     </div>
     <div class="modal-footer ready-for-review-footer">
+        <button #rejectRefsetNotesButton
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button refset-action-button"
+                aria-label="Reject Refset"
+                title="Reject Refset"
+                [disabled]="!checkIfNoteAdded()"
+                (click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus();"
+                ng-reflect-color="primary">
+            Save & Finish
+        </button>
     </div>
 </ng-template>
