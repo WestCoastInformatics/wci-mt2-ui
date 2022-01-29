@@ -53,6 +53,13 @@ export class RefsetDownloadComponent {
     //***** General Functions *****/
     openDownload(refsetId: string) {
 
+        this.formatOptions = [];
+        this.contentOptions = [];
+        this.languageOptions = [];
+        this.versionOptions = [];
+        this.comparisonFromOptions = [];
+        this.comparisonToOptions = [];
+
         this.hideSections();
 
         this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'sctids', display: 'List Of Sct IDs' }];
@@ -75,7 +82,7 @@ export class RefsetDownloadComponent {
         this.comparisonToOptions = this.versionOptions;
         let versionDate = RefsetUtility.getVersionDate(this.refset);
         this.selectedVersionDate = CodeUtility.formatJsonDate(versionDate, CodeUtility.DATE_FORMAT_REVERSE);
-        let selectedVersionDateIndex = this.versionOptions.findIndex((element) => { element.value == this.selectedVersionDate });
+        let selectedVersionDateIndex = this.versionOptions.findIndex((element) => { return element.value == this.selectedVersionDate; });
 
         for (let language of this.refset?.edition?.fullyQualifiedLanguageRefsets) {
 
@@ -295,7 +302,8 @@ export class RefsetDownloadComponent {
     }
 
     shouldShowDeltaContentLabel(): boolean {
-        if (this.comparisonToOptions.length === 1 && this.comparisonFromOptions.length === 1) {
+
+        if (this.comparisonFromOptions.length == 0) {
 
             return false;
         } else {
