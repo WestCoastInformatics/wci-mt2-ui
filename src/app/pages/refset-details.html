@@ -158,10 +158,6 @@
                                  aria-label="Compare Refset" />
                         </button>
 
-                        <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
-                            [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
-                        </create-new-refset>
-
                         <button class="refset-tool-standard-icon-button"
                                 [ngClass]="{'inactive' : !allowedToEdit}"
                                 [disabled]="!allowedToEdit"
@@ -369,6 +365,11 @@
             <div class="metadata-collapsible-container-group-header">
                 <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
+                    <div class="edit-refset-button">
+                        <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
+                            [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
+                        </create-new-refset>
+                    </div>
                     <a class="detail-top-link"
                        (click)="openArtifacts()"
                        title="Open Artifacts List"
@@ -792,7 +793,7 @@
         </div>
 
         <!-- Section Title -->
-        <div class="refset-tool-refset-details-title-name">
+        <div class="refset-tool-refset-details-title-name refset-member-title">
 
             Reference Set Members
             <span [hidden]="!membersGridNumberOfMembers">
