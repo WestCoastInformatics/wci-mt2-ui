@@ -365,7 +365,7 @@
             <div class="metadata-collapsible-container-group-header">
                 <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
-                    <div class="edit-refset-button">
+                    <div *ngIf="editMode" class="edit-refset-button">
                         <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
                             [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
                         </create-new-refset>
