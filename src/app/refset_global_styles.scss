@@ -697,6 +697,7 @@ button.refset-tool-table-action-icon {
 #refsetDetailsPage {
     .refset-member-title {
         font-weight: bold;
+        padding-left: 0px;
     }
 }
 
@@ -2183,6 +2184,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     > .metadata-name {
     display: flex;
     font-weight: bold;
+    margin-left: -15px;
 }
 
 #refsetDetailsPage
