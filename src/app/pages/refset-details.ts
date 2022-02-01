@@ -26,6 +26,7 @@ import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { catchError } from 'rxjs/operators';
 
 /**
@@ -261,11 +262,15 @@ export class RefsetDetails {
                 onNewColumnsLoaded: this.onMembersColumnsLoaded.bind(this),
                 frameworkComponents: {
                     templateRenderer: TemplateRenderer,
+                    'dateTextFilterComponent': DateTextFilterComponent
                 },
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
                     suppressMenu: true,
+                    filter: true,
+                    floatingFilter: true,
+                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 },
                 enableBrowserTooltips: true,
                 rowClassRules: {
@@ -919,7 +924,9 @@ export class RefsetDetails {
                         valueGetter:
                             UiUtility.gridDateValueGetter,
                         tooltipField: "memberEffectiveTime",
-                        sort: "desc"
+                        sort: "desc",
+                        floatingFilterComponent: 'dateTextFilterComponent',
+                        floatingFilterComponentParams: {suppressFilterButton: true}
                     },
                     {
                         field: "active",

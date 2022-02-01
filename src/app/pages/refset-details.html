@@ -885,7 +885,7 @@
                                      [style.display]="membersTableDisplay">
                                     <ag-grid-angular #detailsMembersTable
                                                      *ngIf="showTable"
-                                                     class="ag-theme-alpine refset-tool-ag-grid"
+                                                     class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                                                      [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
                                                      [columnDefs]="membersColumnDefs"
                                                      [gridOptions]="membersGridOptions">

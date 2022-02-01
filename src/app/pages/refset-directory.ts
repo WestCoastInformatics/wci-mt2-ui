@@ -115,7 +115,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 140, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
                     { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
-                    floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}},
+                    floatingFilterComponentParams: {suppressFilterButton: true}},
                     { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
                 ];
                 this.refsetGridOptions = {
