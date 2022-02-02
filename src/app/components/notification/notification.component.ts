@@ -14,6 +14,7 @@ export interface IToastButton {
 export class NotificationComponent extends Toast {
 
     buttons: IToastButton[];
+    refsetId: string;
 
     constructor(protected toastrService: ToastrService, public toastPackage: ToastPackage) {
         super(toastrService, toastPackage);

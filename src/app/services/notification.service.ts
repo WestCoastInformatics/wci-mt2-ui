@@ -15,7 +15,7 @@ export class NotificationService {
         private readonly sanitizer: DomSanitizer
     ) { }
 
-    show(message: string, title: string = null, type: string = 'info', config: any = {}, buttons: IToastButton[] = []): ActiveToast<any> {
+    show(message: string, title: string = null, type: string = 'info', config: any = {}, refsetId: string = '', buttons: IToastButton[] = []): ActiveToast<any> {
 
         let additonalConfig = {
             'timeOut': 25000,
@@ -26,6 +26,7 @@ export class NotificationService {
         };
 
         const toast = this.toastr.show(message, title, {...additonalConfig, ...config}, 'toast-' + type);
+        toast.toastRef.componentInstance.refsetId = refsetId;
 
         if (buttons.length > 0) {
             toast.toastRef.componentInstance.buttons = buttons;
@@ -34,7 +35,7 @@ export class NotificationService {
         return toast;
     }
 
-    showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}, buttons: IToastButton[] = []): ActiveToast<any> {
+    showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}, refsetId: string = '', buttons: IToastButton[] = []): ActiveToast<any> {
 
         let additonalConfig = {
             'extendedTimeOut': 0,
@@ -45,7 +46,7 @@ export class NotificationService {
             'progressAnimation': 'increasing'
         };
 
-        const toast = this.show(message, title, 'info', {...additonalConfig, ...config}, buttons);
+        const toast = this.show(message, title, 'info', {...additonalConfig, ...config}, refsetId, buttons);
 
         this.setProgressLength(toast, 0);
         return toast;
@@ -113,7 +114,7 @@ export class NotificationService {
                 toastInstances.push(toast);
             }
         }
-
+        
         if (toastInstances.length <= 1) {
             return;
         }
@@ -140,6 +141,28 @@ export class NotificationService {
 
         const newToast = this.show(consolidatedMessage, null, type, {timeOut: 0, extendedTimeOut: 0});
         return newToast;
+    }
+
+    getNotificationsForRefset(refsetId: string, title: string) {
+
+        let allToasts: ActiveToast<any>[] = this.toastr.toasts;
+        let toastInstances: ActiveToast<any>[] = [];
+
+        for (let i = 0; i < allToasts.length; i++) {
+
+            const toast = allToasts[i];
+            const instance = toast.toastRef.componentInstance;
+
+            if (instance.refsetId == refsetId && toast.title == title) {
+                toastInstances.push(toast);
+            }
+        }
+
+        return toastInstances;
+    }
+
+    isNotificationOfType(toast: ActiveToast<any>, type: string) {
+        return toast.toastRef.componentInstance.toastClasses.includes(type);
     }
 
     private setProgressLength(toast: ActiveToast<any>, progress: number) {

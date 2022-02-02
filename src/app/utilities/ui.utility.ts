@@ -4,6 +4,7 @@ import { environment } from "src/environments/environment";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { Router } from "@angular/router";
 import { IToastButton } from "src/app/components/notification/notification.component";
+import { ActiveToast } from "ngx-toastr";
 
 export class UiUtility {
 
@@ -265,7 +266,6 @@ export class UiUtility {
 		let callDelay = 1000;
 		let successMessageTimeout = 0;
         this.router = router;
-        this.memberChangeData[refsetId] = {refset: refsetId, statuses: []};
 
 		let checkIfFinished = () => {
 
@@ -285,6 +285,17 @@ export class UiUtility {
 						setTimeout(checkIfFinished, callDelay);
 					} else {
 
+                        let title = 'Member Change Notification';
+                        let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
+                        let notificationType = 'success';
+						let conceptArray = Object.keys(data);
+                        let emptydata = {refset: refsetId, statuses: []};
+                        let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
+                        if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
+                            this.memberChangeData[refsetId] = emptydata;
+                        }
+
 						notificationService.close(notification);
 
 						if (router.url.includes('edit/refset/' + refsetInternalId)) {
@@ -295,23 +306,17 @@ export class UiUtility {
                             buttons.unshift(viewRefsetButton);
                         }
 
-                        let notificationType = 'success';
-						let conceptArray = Object.keys(data);
-
                         for (let conceptID of conceptArray) {
 
                             let conceptStatus: any = data[conceptID];
                             this.memberChangeData[refsetId].statuses.push({Concept: conceptID, Operation: conceptStatus.operation, Status: conceptStatus.status});
                         }
 
-                        let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
-
                         if (conceptArray.length > 0) {
                             
-                            let dataString = JSON.stringify(data);
+                            let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
                             let someFailed = dataString.includes('Failed');
                             let someSucceeded = dataString.includes('Success');
-                            
 
                             if (!someFailed && someSucceeded) {
                                 message = 'All members were successfully ' + messageEnd;
@@ -327,27 +332,49 @@ export class UiUtility {
                             }
                         } else {
 
+                            let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
+                            let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # ect.).';
+                            let continueEditingMessage = ' You may continue editing the refset.';
                             notificationType = 'warning';
-                            message = 'There were no concepts in the request. Make sure you do not have special characters included (ie: % $ # ect.). You may continue editing the refset.';
-                            buttons.pop();
 
+                            if (previousNotifications.length > 0) {
+
+                                if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
+                                    notificationType = 'error';
+                                }
+
+                                if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
+                                    message = previousNotifications[0].message;
+                                } else {
+                                    message = 'There were no concepts in the last request for refset ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
+                                }
+
+                            } else {
+
+                                message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
+                                buttons.pop();
+                            }
                         }
 
-						notification = notificationService.show(message, null, notificationType, {timeOut: 0, extendedTimeOut: 0}, buttons);
+                        if (previousNotifications.length > 0) {
+                            notificationService.close(previousNotifications[0]);
+                        }
 
+						notification = notificationService.show(message, title, notificationType, {timeOut: 0, extendedTimeOut: 0}, refsetId, buttons);
+                        
                         notification.onAction.subscribe(button => {
 
                             if (button.id == 'download') {
-                                this.createMemberChangeReport(refsetId);
+                                this.createMemberChangeReport(refsetId, notification, notificationService);
 
                             } else if (button.id == 'view') {
                                 this.viewRefset(refsetInternalId, true);
                             }
                         });
 
-                        notification.onHidden.subscribe( () => {
-                            this.memberChangeData[refsetId] = {refset: refsetId, statuses: []};
-                        });
+                        // notification.onHidden.subscribe(() => {
+                        //     this.memberChangeData[refsetId] = emptydata;
+                        // });
 					}
 				},
 				(error) => {
@@ -362,12 +389,14 @@ export class UiUtility {
 		checkIfFinished();
 	}
 
-    static createMemberChangeReport(refsetId: string): void {
+    static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
 
         let memberStatuses = this.memberChangeData[refsetId].statuses;
         let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
 
         this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
+        notificationService.close(notification);
+        delete this.memberChangeData[refsetId];
     }
 
     static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
