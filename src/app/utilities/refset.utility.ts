@@ -25,10 +25,6 @@ export class RefsetUtility {
 
         for (let version of refset.versionList) {
 
-            if (!viewingInDevelopment && version.status == this.IN_DEVELOPMENT) {
-                continue;
-            }
-
             let value = version.refsetInternalId;
 
             if (valueField == "date") {
