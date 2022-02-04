@@ -127,7 +127,7 @@ export class AuthenticationService {
         this.userSubject.next(user);
 
         // if the user is on a page that requires being logged in, then send them to the directory
-        if (this.router.url.includes('project') || this.router.url.includes('edit/refset')) {
+        if (this.router.url.includes('project')) {
             this.router.navigateByUrl('directory');
         }
 

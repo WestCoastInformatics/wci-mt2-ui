@@ -685,13 +685,17 @@ button.refset-tool-table-action-icon {
     margin-right: 0px !important;
 }
 
+#refsetDetailsPage .refset-tool-refset-details-title-name-section {
+    display: flex;
+}
+
 #refsetDetailsPage .refset-tool-refset-details-title-name {
-    padding-left: 15px;
-    //padding-top:37px;
-    // padding-bottom: 15px;
     font-size: 1.25rem;
     display: flex;
     font-weight: bold;
+    max-width: 700px;
+    padding-right: 15px;
+    padding-left: 25px;
 }
 
 #refsetDetailsPage {
@@ -701,10 +705,6 @@ button.refset-tool-table-action-icon {
     }
 }
 
-#refsetDetailsPage .refset-data-name {
-    padding-left: 3rem;
-}
-
 #refsetDetailsPage .refset-tool-refset-metadata-column {
     margin-top: 0px !important;
     display: flex;
@@ -712,18 +712,17 @@ button.refset-tool-table-action-icon {
     flex: 1;
 }
 
-#refsetDetailsPage
-    .details-version-select
-    .mat-form-field-appearance-fill
-    .mat-form-field-flex {
+#refsetDetailsPage .details-version-select .mat-form-field-appearance-fill .mat-form-field-flex {
     padding: 0 0.75em 0 0.75em;
     //margin-top: -30px;
     width: 225px;
 }
 
-.details-version-select {
-    padding-right: 3rem;
+#refsetDetailsPage .refset-title .details-version-select {
+    text-align: right;
+    padding-right: 45px;
 }
+
 #refsetDetailsPage .refset-title {
     background: white;
     top: 70px;
@@ -1258,6 +1257,10 @@ button.refset-tool-table-action-icon {
 }
 
 // Refset Download Styles
+.refset-tool-icon-button-download {
+    padding-bottom: 2px;
+}
+
 .col.refset-tool-download-column-label {
     width: 200px;
     max-width: 200px;
@@ -2121,13 +2124,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     align-items: center;
     box-shadow: 0 4px 2px -2px gray;
     padding-top: 0px;
-    height: 65px;
+    min-height: 65px;
     justify-content: space-between;
-}
-
-.mat-horizontal-stepper-header-container {
-    height: 65px;
-    margin-top: -35px;
 }
 
 #refsetDetailsPage > .page-title {
@@ -2618,12 +2616,34 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-size: 14px;
 }
 
+.mat-horizontal-stepper-header-container {
+    height: 65px;
+    margin-top: -35px;
+}
+
 .details-page-stepper {
     transform: scale(0.7);
     margin-top: -25px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+.details-page-stepper-started-step {
+    color: #00a9e0;
+}
+
+.details-page-stepper-unstarted-step {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.mat-step-label {
+    width: 100px !important;
+    white-space: normal !important;
+}
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
+    pointer-events: none !important;
 }
 
 .edit-button-group-right-below-sticky-header {
@@ -2633,11 +2653,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .allowed-file-types {
     color: red;
     font-size: smaller;
-}
-
-.mat-step-label {
-    width: 100px !important;
-    white-space: normal !important;
 }
 
 #refsetDetailsPage .refset-title-container .edit-button-group-right-below-sticky-header .refset-action-button {
@@ -2923,10 +2938,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
-    pointer-events: none !important;
 }
 
 .mat-column-modified,

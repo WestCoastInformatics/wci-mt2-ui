@@ -65,6 +65,7 @@ import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
@@ -89,8 +90,7 @@ const appRoutes: Routes = [
     { path: '', component: LandingPageComponent },
     { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
     { path: 'details/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
-    { path: 'projects', component: ProjectsRefsetComponent, canActivate: [AuthGuardGuard] },
-    { path: 'edit/refset/:refsetId', component: RefsetDetails, data: { breadcrumbLabel: 'Edit Reference Set', editMode: true }, canActivate: [AuthGuardGuard] },
+    { path: 'projects', component: ProjectsRefsetComponent, canActivate: [AuthGuardGuard] }
 ];
 
 @NgModule({
@@ -174,6 +174,7 @@ const appRoutes: Routes = [
 		RefsetDetails,
         PaginationService,
         BreadcrumbService,
+        RouterExtentionService,
         NotificationService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {

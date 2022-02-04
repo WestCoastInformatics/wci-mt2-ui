@@ -56,12 +56,10 @@ export class NavbarComponent implements OnInit {
 
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
-
-        
     }
 
     showProjectRoleAndAssignee(): boolean {
-        return this.router.url.includes('details') || this.router.url.includes('edit/refset');
+        return this.router.url.includes('details');
     }
 
     getProjectRoleString(): string {

@@ -192,7 +192,7 @@ export class CreateNewRefsetComponent implements OnInit {
                 }
 
                 this.modalService.dismissAll();
-                this.router.navigate(['/edit/refset', status.refsetInternalId,]);
+                this.router.navigate(['/details', status.refsetInternalId,]);
             },
             (error) => {
                 this.showLoadingSpinner = false;
@@ -244,7 +244,7 @@ export class CreateNewRefsetComponent implements OnInit {
                 }
 
                 this.modalService.dismissAll();
-                this.router.navigate(['/edit/refset', status.refsetInternalId,]);
+                this.router.navigate(['/details', status.refsetInternalId,]);
                 this.refsetDetails.initializeDetailsPage();
             },
             (error) => {

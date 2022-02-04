@@ -14,7 +14,6 @@ export class RefsetService extends RestService {
     taxonomyRootNode: any = null;
     contextPath = '/refsetservice/';
     assignedUser: string;
-    editMode = false;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
         

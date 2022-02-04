@@ -94,7 +94,7 @@ export class ImportFromFileModalComponent implements OnInit {
         this.changeLockedStatus.emit(false);
 
         // if the same refset is still open then refsesh the page
-        if (this.router.url.includes('edit/refset/' + this.refsetInternalId)) {
+        if (this.router.url.includes('/' + this.refsetInternalId)) {
             this.reloadPageData.emit(true);
         }
 

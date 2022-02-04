@@ -364,7 +364,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     }
 
     goToEditRefsetPage(refsetId){
-        this.router.navigate(['/edit/refset', refsetId]);
+        this.router.navigate(['/details', refsetId]);
     }
 
     getRefsetRow(refsetId: string) {

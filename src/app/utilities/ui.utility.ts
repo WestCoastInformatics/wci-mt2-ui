@@ -368,7 +368,7 @@ export class UiUtility {
                                 this.createMemberChangeReport(refsetId, notification, notificationService);
 
                             } else if (button.id == 'view') {
-                                this.viewRefset(refsetInternalId, true);
+                                this.viewRefset(refsetInternalId);
                             }
                         });
 
@@ -449,13 +449,8 @@ export class UiUtility {
          return csvString;
      }
 
-    static viewRefset (refsetInternalId, editMode: boolean = false) {
-
-		if (editMode) {
-            this.router.navigateByUrl('edit/refset/' + refsetInternalId);
-		} else {
-            this.router.navigateByUrl('details/' + refsetInternalId);
-        }
+    static viewRefset (refsetInternalId) {
+        this.router.navigateByUrl('details/' + refsetInternalId);
 	}
 
     static toggleLockedSections(lock: boolean) {

@@ -127,7 +127,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         UiUtility.toggleLockedSections(false);
 
         // if this modal is closed and the same refset is still open then refsesh the page
-        if (!this.modalService.hasOpenModals() && this.router.url.includes('edit/refset/' + this.refsetInternalId)) {
+        if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refsetInternalId)) {
             this.sendReloadPageDataTrigger(true);
         }
 
