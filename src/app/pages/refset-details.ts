@@ -13,7 +13,7 @@ import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { PaginationComponent } from "src/app/components/pagination/pagination.component";
 import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
-import { Subject, forkJoin } from "rxjs";
+import { Subject, forkJoin, Subscription } from "rxjs";
 import { TaxonomyTreeComponent } from "src/app/components/taxonomy-tree/taxonomy-tree.component";
 import { environment } from "src/environments/environment";
 import { WorkflowService } from "../services/workflow/workflow.service";
@@ -197,6 +197,7 @@ export class RefsetDetails {
     eclString: any;
     membersGridNumberOfMembers: any;
     resetRefsetTotal = false;
+    routeParamsSubscription$: Subscription;
 
     constructor(
         private route: ActivatedRoute,
@@ -216,7 +217,7 @@ export class RefsetDetails {
     //***** Framework Functions *****/
     ngOnInit() { 
 
-        this.route.params.pipe(take(1)).subscribe(routeParams => {
+        this.routeParamsSubscription$ = this.route.params.subscribe(routeParams => {
 
             this.id = routeParams.refsetId;
             this.initializeDetailsPage();
@@ -560,46 +561,9 @@ export class RefsetDetails {
         this.loadWorkflowHistoryData();
     }
 
-    setWorkflowStatusByAction(notes: string, action: string): void {
-
-        this.toggleLoadingSpinner(true);
-    
-        this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({next: (results) => {
-                
-            if (results) {
-                
-                if (action.includes('UNASSIGN')) {
-                    this.router.navigateByUrl('projects');
-                } else if (this.refsetData.id != results.id) {
-                    this.router.navigateByUrl('details/' + results.id);
-                } else {
-                    this.initializeDetailsPage();
-                }
-            } else {
-
-                this.initializeDetailsPage();
-                this.changeDetectorRef.detectChanges();
-            }
-        },
-        error: (error) => {
-            this.toggleLoadingSpinner(false);
-        }}); 
+    ngOnDestroy() {
+        this.routeParamsSubscription$.unsubscribe();
     }
-
-    loadWorkflowHistoryData(): void {
-
-        this.refsetService.getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified&sortAscending=false").subscribe((results) => {
-
-            this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
-            this.workflowHistoryDataSource.sort = this.sort;
-            this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
-
-            const source = this.workflowHistoryDataSource?.data[0];
-            if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
-                this.reviewNotesAdded = true;
-            }
-        });
-    };
 
     //***** Members Taxonomy Functions  *****/
     cacheTaxonomyAncestors() {
@@ -1098,7 +1062,47 @@ export class RefsetDetails {
     }
 
     //***** General Functions *****/
+    setWorkflowStatusByAction(notes: string, action: string): void {
 
+        this.toggleLoadingSpinner(true);
+    
+        this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({next: (results) => {
+                
+            if (results) {
+                
+                if (action.includes('UNASSIGN')) {
+                    this.router.navigateByUrl('projects');
+                } else if (this.refsetData.id != results.id) {
+                    this.router.navigateByUrl('details/' + results.id);
+                } else {
+                    this.initializeDetailsPage();
+                }
+            } else {
+
+                this.initializeDetailsPage();
+                this.changeDetectorRef.detectChanges();
+            }
+        },
+        error: (error) => {
+            this.toggleLoadingSpinner(false);
+        }}); 
+    }
+
+    loadWorkflowHistoryData(): void {
+
+        this.refsetService.getWorkflowHistory(this.id, "?limit=500&offset=0&sort=modified&sortAscending=false").subscribe((results) => {
+
+            this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
+            this.workflowHistoryDataSource.sort = this.sort;
+            this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
+
+            const source = this.workflowHistoryDataSource?.data[0];
+            if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
+                this.reviewNotesAdded = true;
+            }
+        });
+    };
+    
     addRemoveConcept(params: any): void {
 
         this.isConceptBeingAdded = new Boolean(params.addConcept);

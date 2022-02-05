@@ -31,7 +31,13 @@ export class RefsetUtility {
                 value = version.date;
             }
 
-            let option: any = { value: value, display: version.date + ' (' + version.status?.charAt(0) + version.status?.slice(1).toLowerCase() + ')' };
+            let displayStatus = 'Published';
+
+            if (version.status == RefsetUtility.IN_DEVELOPMENT) {
+                displayStatus = 'In Development'
+            }
+
+            let option: any = { value: value, display: version.date + ' (' + displayStatus + ')' };
         
             if (version.date === this.getVersionDate(refset) || (refset.versionStatus == this.IN_DEVELOPMENT && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
                 option.selected = true;
