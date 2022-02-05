@@ -298,7 +298,7 @@ export class UiUtility {
 
 						notificationService.close(notification);
 
-						if (router.url.includes('edit/refset/' + refsetInternalId)) {
+						if (router.url.includes('/' + refsetInternalId)) {
 
 							successMessageTimeout = 5000;
 							callbackFunction(data);
