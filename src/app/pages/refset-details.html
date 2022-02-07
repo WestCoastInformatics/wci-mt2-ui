@@ -377,7 +377,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <tr *ngIf="refsetData.tags[0]">
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         "
@@ -391,7 +391,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <tr *ngIf="refsetData.narrative">
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         "
