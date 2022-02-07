@@ -1502,6 +1502,7 @@ export class RefsetDetails {
                 const dialogData = {
                     headerText: `History By Reference Set Member`,
                     showCancel: false,
+                    showConfirm: false,
                     template: this.memberHistoryDialog,
                     data: historyData,
                 };

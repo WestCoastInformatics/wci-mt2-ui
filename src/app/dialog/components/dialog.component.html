@@ -24,7 +24,7 @@
         {{ config.cancelText }}
     </button>
 
-    <button mat-raised-button color="primary" [style.background-color]="isDisabled ? 'grey' : '#00a9e0'" [style.cursor]="isDisabled ? 'default' : 'pointer'" id="{{ id }}Confirm" (click)="isDisabled ? '' : confirm() ">
+    <button mat-raised-button color="primary" [hidden]="config.showConfirm === false" [style.background-color]="isDisabled ? 'grey' : '#00a9e0'" [style.cursor]="isDisabled ? 'default' : 'pointer'" id="{{ id }}Confirm" (click)="isDisabled ? '' : confirm() ">
         <mat-icon *ngIf="config.confirmIcon" role="img" class="refset-tool-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">
             {{ config.confirmIcon }}
         </mat-icon>
