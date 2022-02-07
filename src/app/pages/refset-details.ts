@@ -393,6 +393,13 @@ export class RefsetDetails {
             this.showLoadingSpinner = false;
         });
 
+        this.refreshWorkflow();
+
+        this.cacheTaxonomyAncestors();
+        this.loadWorkflowHistoryData();
+    }
+
+    refreshWorkflow(): void {
         this.refsetService.getRefset(this.id).subscribe({next: (results) => {
 
             console.log(results);
@@ -556,11 +563,7 @@ export class RefsetDetails {
         error: (error) => {
             this.toggleLoadingSpinner(false);
         }});
-        
-        this.cacheTaxonomyAncestors();
-        this.loadWorkflowHistoryData();
     }
-
     ngOnDestroy() {
         this.routeParamsSubscription$.unsubscribe();
     }
@@ -1075,17 +1078,19 @@ export class RefsetDetails {
                 } else if (this.refsetData.id != results.id) {
                     this.router.navigateByUrl('details/' + results.id);
                 } else {
-                    this.initializeDetailsPage();
+                    this.refreshWorkflow();
                 }
             } else {
-
-                this.initializeDetailsPage();
-                this.changeDetectorRef.detectChanges();
+                this.refreshWorkflow();
             }
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/details', this.id]);
+            }); 
+            this.changeDetectorRef.detectChanges();
         },
         error: (error) => {
             this.toggleLoadingSpinner(false);
-        }}); 
+        }});
     }
 
     loadWorkflowHistoryData(): void {
