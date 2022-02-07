@@ -1009,6 +1009,8 @@ button.refset-tool-table-action-icon {
     margin-left: 10px;
     padding-left: 0px;
     padding-right: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
