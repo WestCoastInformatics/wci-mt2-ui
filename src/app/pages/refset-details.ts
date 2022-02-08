@@ -898,7 +898,7 @@ export class RefsetDetails {
 
             let data = results.items;
             this.membersGridData = data;
-            this.membersGridNumberOfMembers = (this.membersGridNumberOfMembers && !this.resetRefsetTotal) && (this.membersGridNumberOfMembers < results.total) ? this.membersGridNumberOfMembers : results.total;
+            this.membersGridNumberOfMembers = this.membersGridNumberOfMembers && !this.resetRefsetTotal ? this.membersGridNumberOfMembers : results.total;
             this.membersGridNumberOfResults = results.total;
 
 
