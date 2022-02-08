@@ -13,7 +13,7 @@ import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { PaginationComponent } from "src/app/components/pagination/pagination.component";
 import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
-import { Subject, forkJoin, Subscription } from "rxjs";
+import { Subject, forkJoin, Subscription, BehaviorSubject } from "rxjs";
 import { TaxonomyTreeComponent } from "src/app/components/taxonomy-tree/taxonomy-tree.component";
 import { environment } from "src/environments/environment";
 import { WorkflowService } from "../services/workflow/workflow.service";
@@ -195,7 +195,7 @@ export class RefsetDetails {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
-    membersGridNumberOfMembers: any;
+    membersGridNumberOfMembers: string;
     resetRefsetTotal = false;
     routeParamsSubscription$: Subscription;
 
@@ -1145,7 +1145,6 @@ export class RefsetDetails {
                 this.reloadMembersGridAndTaxonomy();
     
             } else {
-                this.resetRefsetTotal = true;
                 this.reloadMembersGridAndTaxonomy();
                 this.showLoadingSpinner = false;
             } 
@@ -1154,6 +1153,7 @@ export class RefsetDetails {
     }
     
     reloadMembersGridAndTaxonomy(){
+        this.resetRefsetTotal = true;
 
         // reload the members grid
         this.onMembersGridReady(this.originalGridParams);
