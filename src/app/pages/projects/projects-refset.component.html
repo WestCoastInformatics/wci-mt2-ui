@@ -62,13 +62,13 @@
             <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
         </div>
 
-        <div style="display: inline; padding-right: 10px; cursor: pointer;"
+        <!-- <div style="display: inline; padding-right: 10px; cursor: pointer;"
         (click)="openWorkflowDiagramModal(workflowDiagramDialog)">
             <img src="assets/help-icon.svg"
             alt="Display Workflow Diagram"
             title="Display Workflow Diagram"
             aria-label="Display Workflow Diagram" />
-        </div>
+        </div> -->
         <div style="display: inline">
             <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
             </create-new-refset>
