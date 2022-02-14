@@ -967,6 +967,7 @@ button.refset-tool-table-action-icon {
 }
 .refset-tool-concept-details-concept-name {
     font-size: 15px;
+    padding-left: 0px !important;
 }
 .refset-tool-concept-details-section-title {
     font-weight: 400;
@@ -977,6 +978,7 @@ button.refset-tool-table-action-icon {
     height: fit-content;
     background-color: $concept_details_color;
     width: 40%;
+    padding-left: 0px !important;
     color: white;
     border-color: $concept_details_color;
     line-height: 1;
@@ -1007,6 +1009,8 @@ button.refset-tool-table-action-icon {
     margin-left: 10px;
     padding-left: 0px;
     padding-right: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     background-color: $concept_details_color;
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;

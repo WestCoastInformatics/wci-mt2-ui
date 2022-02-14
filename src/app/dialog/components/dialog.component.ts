@@ -40,7 +40,6 @@ export class DialogComponent<T> {
         }
         this.disableChannel.onmessage = (message) => {
             this.isDisabled = message.data;
-            console.log(this.isDisabled);
         };
     }
 

@@ -13,7 +13,7 @@ import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { PaginationComponent } from "src/app/components/pagination/pagination.component";
 import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
-import { Subject, forkJoin, Subscription } from "rxjs";
+import { Subject, forkJoin, Subscription, BehaviorSubject } from "rxjs";
 import { TaxonomyTreeComponent } from "src/app/components/taxonomy-tree/taxonomy-tree.component";
 import { environment } from "src/environments/environment";
 import { WorkflowService } from "../services/workflow/workflow.service";
@@ -195,7 +195,7 @@ export class RefsetDetails {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
-    membersGridNumberOfMembers: any;
+    membersGridNumberOfMembers: string;
     resetRefsetTotal = false;
     routeParamsSubscription$: Subscription;
 
@@ -393,6 +393,13 @@ export class RefsetDetails {
             this.showLoadingSpinner = false;
         });
 
+        this.refreshWorkflow();
+
+        this.cacheTaxonomyAncestors();
+        this.loadWorkflowHistoryData();
+    }
+
+    refreshWorkflow(): void {
         this.refsetService.getRefset(this.id).subscribe({next: (results) => {
 
             console.log(results);
@@ -556,11 +563,7 @@ export class RefsetDetails {
         error: (error) => {
             this.toggleLoadingSpinner(false);
         }});
-        
-        this.cacheTaxonomyAncestors();
-        this.loadWorkflowHistoryData();
     }
-
     ngOnDestroy() {
         this.routeParamsSubscription$.unsubscribe();
     }
@@ -1075,17 +1078,19 @@ export class RefsetDetails {
                 } else if (this.refsetData.id != results.id) {
                     this.router.navigateByUrl('details/' + results.id);
                 } else {
-                    this.initializeDetailsPage();
+                    this.refreshWorkflow();
                 }
             } else {
-
-                this.initializeDetailsPage();
-                this.changeDetectorRef.detectChanges();
+                this.refreshWorkflow();
             }
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                this.router.navigate(['/details', this.id]);
+            }); 
+            this.changeDetectorRef.detectChanges();
         },
         error: (error) => {
             this.toggleLoadingSpinner(false);
-        }}); 
+        }});
     }
 
     loadWorkflowHistoryData(): void {
@@ -1140,7 +1145,6 @@ export class RefsetDetails {
                 this.reloadMembersGridAndTaxonomy();
     
             } else {
-                this.resetRefsetTotal = true;
                 this.reloadMembersGridAndTaxonomy();
                 this.showLoadingSpinner = false;
             } 
@@ -1149,6 +1153,7 @@ export class RefsetDetails {
     }
     
     reloadMembersGridAndTaxonomy(){
+        this.resetRefsetTotal = true;
 
         // reload the members grid
         this.onMembersGridReady(this.originalGridParams);
@@ -1502,6 +1507,7 @@ export class RefsetDetails {
                 const dialogData = {
                     headerText: `History By Reference Set Member`,
                     showCancel: false,
+                    showConfirm: false,
                     template: this.memberHistoryDialog,
                     data: historyData,
                 };

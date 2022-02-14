@@ -377,7 +377,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <tr *ngIf="refsetData?.tags[0]">
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         "
@@ -391,7 +391,7 @@
                                     </td>
                                 </tr>
 
-                                <tr>
+                                <tr *ngIf="refsetData?.narrative">
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         "
@@ -1030,7 +1030,7 @@
                                                      src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div class="col refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset" 
+                                            <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset" 
                                                 [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
                                                 
                                                 <span
@@ -1115,10 +1115,7 @@
                                                             row
                                                             refset-tool-concept-details-concept-row
                                                         ">
-                                                        <div class="
-                                                                col-3
-                                                                refset-tool-concept-details-concept-id-label
-                                                            ">
+                                                        <div class="refset-tool-concept-details-concept-id-label">
                                                             SCTID
                                                         </div>
 
@@ -1156,10 +1153,7 @@
                                                             refset-tool-concept-details-concept-row
                                                         "
                                                          *ngFor="let description of conceptDescriptions">
-                                                        <div class="
-                                                                col-3
-                                                                refset-tool-concept-details-concept-description-language
-                                                            "
+                                                        <div class="refset-tool-concept-details-concept-description-language"
                                                              title="{{description.languageName}}"
                                                              aria-label="{{description.languageName}}">
                                                             {{description.languageName.substr(0,
@@ -1223,7 +1217,7 @@
                                         </div>
 
                                         <!-- Children Taxonomy Tree -->
-                                        <div class="container-fluid">
+                                        <div class="">
                                             <app-taxonomy-tree #childrenMembersTaxonomy
                                                                treeId="childrenMembersTree"
                                                                [refset]="refsetData"
