@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
         if (this.authService.isAuthenticated()) {
 
             console.log('is authenticated');
-            this.router.navigate(['/']);
+            this.router.navigate(['directory']);
             //$('.logout').css('display', 'block');
 
         } else {

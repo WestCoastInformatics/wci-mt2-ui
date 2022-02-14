@@ -109,7 +109,18 @@ export class AuthenticationService {
     isAuthenticated(): boolean {
         
         let cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
-        const token = localStorage.getItem('auth_token');
+        let token = localStorage.getItem('auth_token');
+
+        try {
+            
+            cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
+            token = localStorage.getItem('auth_token');
+        
+        } catch (ex) {
+
+            this.noCookieAccess();
+            return false;
+        } 
 
         return cookieFound && token != null;
     }
@@ -140,7 +151,6 @@ export class AuthenticationService {
 
     getUser() {
 
-        
         let user;
         
         try {
