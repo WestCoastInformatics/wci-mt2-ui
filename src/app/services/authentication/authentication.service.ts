@@ -139,6 +139,25 @@ export class AuthenticationService {
     }
 
     getUser() {
-        return JSON.parse(localStorage.getItem('refset_user'));
+
+        
+        let user;
+        
+        try {
+            user = JSON.parse(localStorage.getItem('refset_user'));
+        
+        } catch (ex) {
+
+            this.noCookieAccess();
+            return null;
+        } 
+        
+        return user;
+    }
+
+    noCookieAccess() {
+
+        this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', {timeOut: 0, extendedTimeOut: 0});
+        this.router.navigateByUrl('');
     }
 }
