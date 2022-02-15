@@ -289,8 +289,8 @@
                 <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
                     <div *ngIf="editMode" class="edit-refset-button">
-                        <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode"
-                            [refsetId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
+                        <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
+                            [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
                         </create-new-refset>
                     </div>
                     <a class="detail-top-link"

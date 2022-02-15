@@ -5,6 +5,7 @@ import { RefsetService } from "src/app/services/rest/refset.service";
 import { Router } from "@angular/router";
 import { IToastButton } from "src/app/components/notification/notification.component";
 import { ActiveToast } from "ngx-toastr";
+import { RefsetUtility } from "./refset.utility";
 
 export class UiUtility {
 
@@ -298,7 +299,7 @@ export class UiUtility {
 
 						notificationService.close(notification);
 
-						if (router.url.includes('/' + refsetInternalId)) {
+						if (router.url.includes('/' + refsetId)) {
 
 							successMessageTimeout = 5000;
 							callbackFunction(data);
@@ -368,7 +369,7 @@ export class UiUtility {
                                 this.createMemberChangeReport(refsetId, notification, notificationService);
 
                             } else if (button.id == 'view') {
-                                this.viewRefset(refsetInternalId);
+                                this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
                             }
                         });
 
@@ -449,8 +450,8 @@ export class UiUtility {
          return csvString;
      }
 
-    static viewRefset (refsetInternalId) {
-        this.router.navigateByUrl('details/' + refsetInternalId);
+    static viewRefset (refsetId, versionDate) {
+        this.router.navigate(['/details', refsetId, versionDate]);
 	}
 
     static toggleLockedSections(lock: boolean) {

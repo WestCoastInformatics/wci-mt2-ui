@@ -37,6 +37,7 @@ export class RefsetDetails {
 
     id: string;
     refsetId = "";
+    versionDate = "";
     isIntensional: boolean = false;
     refsetBranchPath: string;
     refsetLoaded = new Subject<boolean>();
@@ -159,7 +160,8 @@ export class RefsetDetails {
     allowedToEdit = false;
     allowedToReview = false;
     isLocked = false;
-    stepperInfo = {
+    stepperInfo: any = {}
+    stepperStartInfo = {
         'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
         'READY_FOR_EDIT_STARTED': false,
         'IN_EDIT_COLOR': 'details-page-stepper-unstarted-step',
@@ -217,9 +219,12 @@ export class RefsetDetails {
     //***** Framework Functions *****/
     ngOnInit() { 
 
+        Object.freeze(this.stepperStartInfo);
+
         this.routeParamsSubscription$ = this.route.params.subscribe(routeParams => {
 
-            this.id = routeParams.refsetId;
+            this.refsetId = routeParams.refsetId;
+            this.versionDate = routeParams.versionDate;
             this.initializeDetailsPage();
         });
 
@@ -260,6 +265,8 @@ export class RefsetDetails {
 
         this.refsetLoaded$.pipe(take(1)).subscribe((loaded) => {
 
+            this.loadWorkflowHistoryData();
+            
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -393,18 +400,16 @@ export class RefsetDetails {
             this.showLoadingSpinner = false;
         });
 
-        this.refreshWorkflow();
-
+        this.loadRefset();
         this.cacheTaxonomyAncestors();
-        this.loadWorkflowHistoryData();
     }
 
-    refreshWorkflow(): void {
-        this.refsetService.getRefset(this.id).subscribe({next: (results) => {
+    loadRefset(): void {
 
-            console.log(results);
+        this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({next: (results) => {
+
             this.refsetStatus = results?.workflowStatus;
-            this.refsetId = results?.refsetId;
+            this.id = results?.id;
             this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetBranchPath = RefsetUtility.getBranchPath(results)
             this.refsetData = results;
@@ -418,78 +423,7 @@ export class RefsetDetails {
 
             if (this.editMode) {
 
-                let stepperClass = 'details-page-stepper-started-step';
-
-                if (this.refsetStatus?.includes('READY_FOR_EDIT')) {
-
-                    this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-
-                } else if (this.refsetStatus?.includes('IN_EDIT')) {
-
-                    this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-                    this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_EDIT_STARTED'] = true;
-
-                } else if (this.refsetStatus?.includes('READY_FOR_REVIEW')) {
-
-                    this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-                    this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_EDIT_STARTED'] = true;
-                    this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-
-                } else if (this.refsetStatus?.includes('IN_REVIEW')) {
-
-                    this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-                    this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_EDIT_STARTED'] = true;
-                    this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-                    this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_REVIEW_STARTED'] = true;
-                    
-                } else if (this.refsetStatus?.includes('REVIEW_COMPLETED')) {
-
-                    this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-                    this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_EDIT_STARTED'] = true;
-                    this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-                    this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_REVIEW_STARTED'] = true;
-                    this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
-                    this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
-                    
-                } else if (this.refsetStatus?.includes('READY_FOR_PUBLICATION')) {
-
-                    this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
-                    this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_EDIT_STARTED'] = true;
-                    this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
-                    this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
-                    this.stepperInfo['IN_REVIEW_STARTED'] = true;
-                    this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
-                    this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
-                    this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
-                    this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
-                    
-                }
-
-                if (this.refsetData?.availableActions?.includes('FINISH_EDIT')) {
-
-                    this.allowedToEdit = true;
-                    this.inEditButtonPrefix = "Save and ";
-
-                } else if (this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')) {
-                    this.allowedToReview = true;
-                }
+                this.refreshWorkflow();
 
                 this.editMetadataProperties = {
                     project: this.refsetData.project,
@@ -515,9 +449,14 @@ export class RefsetDetails {
             let languageRefsetOptions = [];
 
             this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
-            this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData);
-            this.selectedVersion = this.id;
+            this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData, 'date');
             this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
+
+            if (this.refsetData.versionStatus != RefsetUtility.IN_DEVELOPMENT) {
+                this.selectedVersion = this.refsetData.versionDate;
+            } else {
+                this.selectedVersion = RefsetUtility.IN_DEVELOPMENT;
+            }
 
             for (let language of languages) {
 
@@ -564,6 +503,87 @@ export class RefsetDetails {
             this.toggleLoadingSpinner(false);
         }});
     }
+
+    refreshWorkflow() {
+
+        if (this.editMode) {
+
+            this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
+            let stepperClass = 'details-page-stepper-started-step';
+
+            if (this.refsetStatus?.includes('READY_FOR_EDIT')) {
+
+                this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+
+            } else if (this.refsetStatus?.includes('IN_EDIT')) {
+
+                this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+                this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['IN_EDIT_STARTED'] = true;
+
+            } else if (this.refsetStatus?.includes('READY_FOR_REVIEW')) {
+
+                this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+                this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['IN_EDIT_STARTED'] = true;
+                this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+
+            } else if (this.refsetStatus?.includes('IN_REVIEW')) {
+
+                this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+                this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['IN_EDIT_STARTED'] = true;
+                this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+                this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['IN_REVIEW_STARTED'] = true;
+                
+            } else if (this.refsetStatus?.includes('REVIEW_COMPLETED')) {
+
+                this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+                this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['IN_EDIT_STARTED'] = true;
+                this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+                this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['IN_REVIEW_STARTED'] = true;
+                this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+                this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+                
+            } else if (this.refsetStatus?.includes('READY_FOR_PUBLICATION')) {
+
+                this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_EDIT_STARTED'] = true;
+                this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
+                this.stepperInfo['IN_EDIT_STARTED'] = true;
+                this.stepperInfo['READY_FOR_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
+                this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
+                this.stepperInfo['IN_REVIEW_STARTED'] = true;
+                this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
+                this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
+                this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
+                this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
+                
+            }
+
+            if (this.refsetData?.availableActions?.includes('FINISH_EDIT')) {
+
+                this.allowedToEdit = true;
+                this.inEditButtonPrefix = "Save and ";
+
+            } else if (this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')) {
+                this.allowedToReview = true;
+            }
+        }
+    }
+
     ngOnDestroy() {
         this.routeParamsSubscription$.unsubscribe();
     }
@@ -571,7 +591,7 @@ export class RefsetDetails {
     //***** Members Taxonomy Functions  *****/
     cacheTaxonomyAncestors() {
 
-        this.refsetService.cacheMemberAncestors(this.id).subscribe({next: results => {
+        this.refsetService.cacheMemberAncestors(this.refsetId, this.versionDate).subscribe({next: results => {
 
             let success = results?.success;
 
@@ -1037,8 +1057,6 @@ export class RefsetDetails {
 
             let selectedConcept = this.getMemberRow(selectedId);
             this.loadConceptDetail(selectedConcept);
-
-            //this.router.navigate(['/details', selectedId]);
         }
     };
 
@@ -1075,18 +1093,22 @@ export class RefsetDetails {
                 
                 if (action.includes('UNASSIGN')) {
                     this.router.navigateByUrl('projects');
+
                 } else if (this.refsetData.id != results.id) {
-                    this.router.navigateByUrl('details/' + results.id);
+                    this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
+
                 } else {
-                    this.refreshWorkflow();
+                    this.loadRefset();
                 }
             } else {
-                this.refreshWorkflow();
+                this.loadRefset();
             }
-            this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                this.router.navigate(['/details', this.id]);
-            }); 
-            this.changeDetectorRef.detectChanges();
+
+            // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            //     this.router.navigate(['/details', this.id]);
+            // }); 
+
+            // this.changeDetectorRef.detectChanges();
         },
         error: (error) => {
             this.toggleLoadingSpinner(false);
@@ -1299,11 +1321,9 @@ export class RefsetDetails {
     }
 
     changeVersion() {
-        this.router
-            .navigate(["/details", this.selectedVersion])
-            .then((page) => {
-                window.location.reload();
-            });
+        this.router.navigate(['/details', this.refsetId, this.selectedVersion]).then((page) => {
+            window.location.reload();
+        });
     }
 
     openAuditTrail() {

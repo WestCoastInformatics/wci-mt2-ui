@@ -21,14 +21,18 @@ export class RefsetUtility {
     static getVersionOptions(refset, valueField: string = "id") {
 
         let versionOptions = [];
-        let viewingInDevelopment = refset.versionStatus == this.IN_DEVELOPMENT;
 
         for (let version of refset.versionList) {
 
             let value = version.refsetInternalId;
 
             if (valueField == "date") {
-                value = version.date;
+
+                if (version.status != RefsetUtility.IN_DEVELOPMENT) {
+                    value = version.date;
+                } else {
+                    value = RefsetUtility.IN_DEVELOPMENT;
+                }
             }
 
             let displayStatus = 'Published';
@@ -57,10 +61,23 @@ export class RefsetUtility {
 
         let date = '';
 
-        if (refset.versionStatus.toLowerCase() == 'in development'){
+        if (refset.versionStatus == this.IN_DEVELOPMENT){
             date = CodeUtility.getCurrentDate();
         } else {
             date= refset.versionDate;
+        }
+
+        return date;
+    }
+
+    static getVersionDateForRefsetApiCall(refset): string {
+
+        let date = '';
+
+        if (refset.versionStatus == this.IN_DEVELOPMENT){
+            date = this.IN_DEVELOPMENT;
+        } else {
+            date = CodeUtility.formatJsonDate(refset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         }
 
         return date;

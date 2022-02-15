@@ -348,13 +348,16 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
 
             let selectedRows = this.refsetGridApi.getSelectedRows();
-            let selectedId: string;
+            let refsetId: string;
+            let versionDate: string;
 
             selectedRows.forEach(function (selectedRow, index) {
-                selectedId = selectedRow.id;
+                
+                refsetId = selectedRow.refsetId;
+                versionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
             });
 
-            this.goToEditRefsetPage(selectedId);
+            this.goToDetailsPage(refsetId, versionDate);
         }
     }
 
@@ -363,8 +366,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetGridApi.purgeInfiniteCache();
     }
 
-    goToEditRefsetPage(refsetId){
-        this.router.navigate(['/details', refsetId]);
+    goToDetailsPage(refsetId, versionDate){
+        this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     getRefsetRow(refsetId: string) {

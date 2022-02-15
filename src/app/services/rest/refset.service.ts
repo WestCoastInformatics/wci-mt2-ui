@@ -60,8 +60,8 @@ export class RefsetService extends RestService {
         return this.put(this.contextPath + `refset/${refsetInternalId}`, params);
     }
 
-    getRefset(refsetId: string): Observable<any> {
-        return this.get(this.contextPath + 'refset/' + refsetId);
+    getRefset(refsetId: string, versionDate: String = ''): Observable<any> {
+        return this.get(this.contextPath + 'refset/' + refsetId + '/versionDate/' + versionDate);
     }
 
     getMemberAncestorConcepts(refsetInternalId: string, conceptId: string): Observable<any> {
@@ -80,8 +80,8 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'general/branchVersions', params, false);
     }
 
-    cacheMemberAncestors(refsetId: string, params: any = {}): Observable<any> {
-        return this.get(this.contextPath + 'ancestors/' + refsetId, params);
+    cacheMemberAncestors(refsetId: string, versionDate: String = '', params: any = {}): Observable<any> {
+        return this.get(this.contextPath + 'ancestors/' + refsetId + '/versionDate/' + versionDate, params);
     }
 
     getWorkflowHistory(refsetId: string, params: any) {

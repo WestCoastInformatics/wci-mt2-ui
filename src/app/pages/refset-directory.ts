@@ -328,19 +328,22 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     };
 
     onGridCellClick = (event) => {
-        if (
-            event.column.colId === 'information' ||
-            event.column.colId === 'actions'
-        ) {
+
+        if (event.column.colId === 'information' || event.column.colId === 'actions') {
+
         } else {
+
             let selectedRows = this.refsetGridApi.getSelectedRows();
             let selectedId: string;
+            let selectedVersionDate: string;
 
             selectedRows.forEach(function (selectedRow, index) {
-                selectedId = selectedRow.id;
+
+                selectedId = selectedRow.refsetId;
+                selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
             });
 
-            this.goToDetailsPage(selectedId);
+            this.goToDetailsPage(selectedId, selectedVersionDate);
         }
     };
 
@@ -355,8 +358,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         UiUtility.openEclBuilder(fieldId, "MAIN");
     }
 
-    goToDetailsPage(refsetId){
-        this.router.navigate(['/details', refsetId]);
+    goToDetailsPage(refsetId, versionDate){
+        this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     getRefsetRow(refsetId: string) {
@@ -378,57 +381,59 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     openInformation(refsetId: string) {
 
         let refset = this.getRefsetRow(refsetId);
-        this.refsetService.getRefset(refset.id).subscribe((results) => {
+
+        this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
+
             refset.descriptions = results.descriptions;
-        const dialogId = 'directoryInfoDialog';
-        this.directUrl = (window.location.host + this.router.url).replace("directory", "details/" + refset.id);
+            const dialogId = 'directoryInfoDialog';
+            this.directUrl = (window.location.host + this.router.url).replace("directory", "details/" + refset.id);
 
-        if (CodeUtility.hasValue(refset)){
+            if (CodeUtility.hasValue(refset)){
 
-            refset.status = RefsetUtility.getStatus(refset.active);
-            if (CodeUtility.hasValue(refset.narrative)){
-                refset.narrativeShortText = refset.narrative;
+                refset.status = RefsetUtility.getStatus(refset.active);
+                if (CodeUtility.hasValue(refset.narrative)){
+                    refset.narrativeShortText = refset.narrative;
+                }
+
+                if (CodeUtility.hasValue(refset.versionNotes)){
+                    refset.versionNotesShortText = refset.versionNotes;
+                }
+
+                refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
+                refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
             }
 
-            if (CodeUtility.hasValue(refset.versionNotes)){
-                refset.versionNotesShortText = refset.versionNotes;
+            let tags = '';
+
+            for (const tag of refset.tags){
+                tags += tag + "; ";
             }
 
-            refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
-            refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
-        }
-
-        let tags = '';
-
-        for (const tag of refset.tags){
-            tags += tag + "; ";
-        }
-
-        //refset.tags = CodeUtility.removeFinal(tags, ';');
-        const dialogData = {
-            dialogId: dialogId,
-            showCancel: false,
-            cancelText: 'Close',
-            confirmText: 'View Complete Refset',
-            showTitle: false,
-            template: this.infoDialog,
-            data: refset,
-            showCloseIcon: true
-        }
-
-        const dialogOptions = {
-            id: dialogId,
-            width: '1000px',
-            disableClose: true
-        }
-
-        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-        this.dialog.confirmed().subscribe(data => {
-
-            if (data) {
-                this.goToDetailsPage(refset.id);
+            //refset.tags = CodeUtility.removeFinal(tags, ';');
+            const dialogData = {
+                dialogId: dialogId,
+                showCancel: false,
+                cancelText: 'Close',
+                confirmText: 'View Complete Refset',
+                showTitle: false,
+                template: this.infoDialog,
+                data: refset,
+                showCloseIcon: true
             }
+
+            const dialogOptions = {
+                id: dialogId,
+                width: '1000px',
+                disableClose: true
+            }
+
+            this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+
+            this.dialog.confirmed().subscribe(data => {
+
+                if (data) {
+                    this.goToDetailsPage(refset.id, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+                }
             });
         });
     }

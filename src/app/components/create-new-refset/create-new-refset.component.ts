@@ -53,6 +53,7 @@ export class CreateNewRefsetComponent implements OnInit {
     @Input() isDetailsPage = false;
     @Input() editMode = false;
     @Input() disabled = false;
+    @Input() refsetInternalId: string;
     @Input() refsetId: string;
     @Input() inputProperties: {
         project?: any;
@@ -192,7 +193,7 @@ export class CreateNewRefsetComponent implements OnInit {
                 }
 
                 this.modalService.dismissAll();
-                this.router.navigate(['/details', status.refsetInternalId,]);
+                this.router.navigate(['/details', status.refsetId, RefsetUtility.IN_DEVELOPMENT]);
             },
             (error) => {
                 this.showLoadingSpinner = false;
@@ -233,7 +234,7 @@ export class CreateNewRefsetComponent implements OnInit {
             params.definitionClauses = this.definitionClauses;
         }
 
-        this.refsetService.updateRefsetMetadata(this.refsetId, params).subscribe( (status) => {
+        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe( (status) => {
 
                 this.showLoadingSpinner = false;
 
@@ -244,7 +245,7 @@ export class CreateNewRefsetComponent implements OnInit {
                 }
 
                 this.modalService.dismissAll();
-                this.router.navigate(['/details', status.refsetInternalId,]);
+                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
                 this.refsetDetails.initializeDetailsPage();
             },
             (error) => {
