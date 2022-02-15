@@ -66,7 +66,7 @@ export class AuthenticationService {
 
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
-                this.router.navigate(['directory']);
+                this.router.navigate(['projects']);
                 this.userSubject.next(userData);
                 this.isUserLoggedIn = true;
             },
