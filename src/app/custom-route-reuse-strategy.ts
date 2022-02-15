@@ -1,14 +1,16 @@
 import { LocationStrategy } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { RouteReuseStrategy, DetachedRouteHandle, ActivatedRouteSnapshot } from '@angular/router';
+import { BreadcrumbService } from './services/breadcrumb.service';
 
 @Injectable()
 export class CustomReuseStrategy implements RouteReuseStrategy {
 
     handlers: { [key: string]: DetachedRouteHandle } = {};
     back = false;
+    previousBreadcrumbLabel: any;
 
-    constructor(location: LocationStrategy) {
+    constructor(location: LocationStrategy, private breadcrumbService: BreadcrumbService) {
         location.onPopState(() => {
             this.back = true;
         });
@@ -32,13 +34,14 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
   store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
     let url = route.url.join("/") || route.parent.url.join("/");
-
+    this.previousBreadcrumbLabel = route.data?.breadcrumbLabel;
     this.handlers[url] = handle;
 
   }
 
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
     let url = route.url.join("/") || route.parent.url.join("/");
+    this.setBreadcrumbs(route);
       if (this.back && url !== 'projects') {
           this.back = false;
         return !!route.routeConfig && !!this.handlers[url];
@@ -56,5 +59,24 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
     return future.routeConfig === curr.routeConfig;
+  }
+
+  private setBreadcrumbs(route: ActivatedRouteSnapshot): void {
+
+    if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Directory') ) {
+
+      this.breadcrumbService.setBreadcrumbs([
+          { path: "/directory", label: "Directory" },
+          { label: "Refset Details" },
+      ]);
+    } else if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Projects')) {
+
+      this.breadcrumbService.setBreadcrumbs([
+          { path: "/projects", label: "Projects" },
+          { label: "Refset Details" },
+      ]);
+    } else {
+      this.breadcrumbService.setBreadcrumbs([{ label: route.data['breadcrumbLabel'] }]);
+    }
   }
 }

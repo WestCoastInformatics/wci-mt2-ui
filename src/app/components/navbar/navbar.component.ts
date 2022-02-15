@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { User } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -19,7 +18,8 @@ export class NavbarComponent implements OnInit {
     environment: string;
     user: User;
     userSubscription: Subscription;
-    breadcrumbs;
+    @Input()
+    breadcrumbs: any;
     guestUser: string;
     isUserLoggedIn =  false;
 
