@@ -6,7 +6,7 @@ export const environment = {
     production: false,
     restUrl: 'http://local.ihtsdotools.org:8888',
     restContextPath: '/refsetservice/',
-    snomedBrowserUrl: 'https://prod-browser.ihtsdotools.org/?perspective=full',
+    snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
     snowstormApiUrl: 'https://snowstorm.ihtsdotools.org/snowstorm/snomed-ct',
     mockRestData: false,
     refsetsExportableAsFreeset: '787778008',
