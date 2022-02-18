@@ -240,7 +240,7 @@ export class RefsetDetails {
         this.memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
         this.showLoadingSpinner = true;
         this.inEditButtonPrefix = '';
-        this.directUrl = (window.location.host + this.router.url);
+        this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url);
 
         if (this.routerExtentionService.getPreviousUrl() != null && this.routerExtentionService.getPreviousUrl().includes('projects')) {
 

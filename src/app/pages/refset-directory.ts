@@ -386,9 +386,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
             refset.descriptions = results.descriptions;
             const dialogId = 'directoryInfoDialog';
-            this.directUrl = (window.location.host + this.router.url).replace("directory", "details/" + refset.id);
+            this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("directory", "details/" + refset.refsetId + '/' 
+                + RefsetUtility.getVersionDateForRefsetApiCall(refset));
 
-            if (CodeUtility.hasValue(refset)){
+            if (CodeUtility.hasValue(refset)) {
 
                 refset.status = RefsetUtility.getStatus(refset.active);
                 if (CodeUtility.hasValue(refset.narrative)){

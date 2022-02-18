@@ -1134,6 +1134,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-refset-metadata-table {
     margin: 1.5rem 0;
+    table-layout: fixed;
 }
 
 .refset-tool-refset-metadata-table tr {
@@ -1145,11 +1146,15 @@ button.refset-tool-table-action-icon {
     padding-left: 15px !important;
 }
 
+.refset-tool-refset-metadata-table .refset-tool-refset-metadata-value {
+    word-wrap: break-word;
+}
+
 .refset-tool-refset-metadata-table td.refset-tool-refset-metadata-label {
     font-weight: bold;
     padding-left: 10px;
     padding-right: 15px;
-    width: 151px;
+    width: 175px;
 }
 
 .mat-raised-button {
