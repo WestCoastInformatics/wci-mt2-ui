@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Context } from 'ag-grid-community';
+import { Context, Logger } from 'ag-grid-community';
 import { forkJoin } from 'rxjs';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
@@ -19,8 +19,8 @@ import { User } from '../../models/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'projects-refset',
-  templateUrl: './projects-refset.component.html'
+    selector: 'projects-refset',
+    templateUrl: './projects-refset.component.html'
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
@@ -31,7 +31,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     refsetGridApi: any;
     refsetGridColumnApi: any;
     columnDefs = [];
-    refsetGridColumns = [{name: 'information', show: true}, {name: 'refsetId', show: true}];
+    refsetGridColumns = [{ name: 'information', show: true }, { name: 'refsetId', show: true }];
     refsetGridOptions: any;
     refsetGridPaging = {
         pageSize: 10,
@@ -45,7 +45,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     showTable: boolean = false;
     refsetData: any;
     dialog: DialogService;
-	versionStatuses: any;
+    versionStatuses: any;
     initialGridWidth: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
@@ -67,6 +67,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     existingBranchVersions: any;
     numOfResults: number;
     isSelectedProject: boolean;
+    projectIsUat: boolean;
 
     constructor(
         private router: Router,
@@ -85,7 +86,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Projects');
-        this.breadcrumbService.setBreadcrumbs([{label: 'Projects'}]);
+        this.breadcrumbService.setBreadcrumbs([{ label: 'Projects' }]);
         this.getUser();
         this.populateProjectList();
     }
@@ -106,9 +107,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
 
         forkJoin(
-        	this.refsetService.getVersionStatuses(),
-			//this.refsetService.getEditions(),
-		).subscribe(([results]) => {
+            this.refsetService.getVersionStatuses(),
+            //this.refsetService.getEditions(),
+        ).subscribe(([results]) => {
 
             this.versionStatuses = results;
             this.showLoadingSpinner = false;
@@ -116,10 +117,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
 
         this.columnDefs = [
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }},
-            { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150},
-            { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus }},
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155 },
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
+            { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150 },
+            { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus } },
             { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
             { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
         ];
@@ -151,11 +152,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 resizable: true
             },
             rowClassRules: {
-                'refset_tool_grid_inactive_row': function(params) {
+                'refset_tool_grid_inactive_row': function (params) {
 
                     var inactivatedRow = false;
 
-                    if (params.data){
+                    if (params.data) {
                         inactivatedRow = params.data.active == false;
                     }
 
@@ -195,6 +196,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         }
         this.isSelectedProject = JSON.stringify(this.selectedProject.id) === sessionStorage.getItem('selectedProjectId');
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+        this.projectIsUat = this.selectedProject.name.includes("UAT");
     }
 
     onGridReady = (gridReadyParams) => {
@@ -203,7 +205,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        this.createRefsetProperties = {project: this.selectedProject, definitionClauses: [{value: '', negated: false}]};
+        this.createRefsetProperties = { project: this.selectedProject, definitionClauses: [{ value: '', negated: false }] };
         this.getBranchVersions();
         this.originalGridParams = gridReadyParams;
         this.refsetGridApi = gridReadyParams.api;
@@ -233,7 +235,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 }
 
                 // if the filters have changed then reset the total row variables
-                if (newFilterString !== this.refsetGridLastFilter){
+                if (newFilterString !== this.refsetGridLastFilter) {
 
                     this.refsetGridPaging.totalRows = null;
                     this.refsetGridPaging.totalKnown = false;
@@ -243,7 +245,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 this.refsetGridLastSort = newSortString;
 
                 query = query.replace(/\//g, '%2F');
-                
+
                 let restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
@@ -254,7 +256,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     query: query
                 }
 
-                this.refsetService.getRefsets({...restParams, ...sort}).subscribe(results => {
+                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe(results => {
                     this.numOfResults = results.total;
                     if (results.items.length == 0 && pageNumber > 1) {
 
@@ -305,11 +307,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     this.refsetGridPaging.manualStateRefresh = new Boolean(true);
                     this.showLoadingSpinner = false;
                 },
-                error => {
+                    error => {
 
-                    this.refsetGridApi.showNoRowsOverlay();
-                    rowParams.successCallback([], 0);
-                });
+                        this.refsetGridApi.showNoRowsOverlay();
+                        rowParams.successCallback([], 0);
+                    });
             }
         };
 
@@ -319,7 +321,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
 
             if (obj.attributes['disabled']) { // skip columns with disabled filter
-              return;
+                return;
             }
 
             let label = obj.getAttribute('aria-label');
@@ -331,7 +333,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     editionValueGetter = function (params) {
 
-        if (!CodeUtility.hasValue(params?.data)){
+        if (!CodeUtility.hasValue(params?.data)) {
             return '';
         }
 
@@ -352,7 +354,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             let versionDate: string;
 
             selectedRows.forEach(function (selectedRow, index) {
-                
+
                 refsetId = selectedRow.refsetId;
                 versionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
             });
@@ -366,7 +368,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetGridApi.purgeInfiniteCache();
     }
 
-    goToDetailsPage(refsetId, versionDate){
+    goToDetailsPage(refsetId, versionDate) {
         this.router.navigate(['/details', refsetId, versionDate]);
     }
 
@@ -409,15 +411,15 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         if (!this.selectedProject) {
             return '';
         }
-        
+
         return UiUtility.getRoleString(this.selectedProject.roles);
     }
 
     openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {
         this.modalService.open(workflowDiagramModal, {
-          backdrop : 'static',
-          keyboard : false,
-          windowClass: 'workflow-diagram-modal'
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: 'workflow-diagram-modal'
         });
-      }
+    }
 }
