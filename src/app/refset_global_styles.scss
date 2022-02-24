@@ -320,13 +320,13 @@ button.refset-tool-table-action-icon {
     color: $delete_color;
 }
 .refset-tool-concept-details-concept-ecl {
-    padding-left: 0px;
+    padding-left: 0px !important;
 }
 .refset-tool-concept-details-concept-id-label {
     padding-left: 0px;
 }
 .refset-tool-concept-details-taxonomy-icon {
-    padding-left: 0px;
+    padding-left: 0px !important;
 }
 
 .refset-tool-details-member-taxonomy{
@@ -681,8 +681,8 @@ button.refset-tool-table-action-icon {
 
 // Details Page Styles
 #refsetDetailsPage .row {
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+    margin-left: 3px !important;
+    margin-right: 3px !important;
 }
 
 #refsetDetailsPage .refset-tool-refset-details-title-name-section {
@@ -969,6 +969,7 @@ button.refset-tool-table-action-icon {
     font-size: 15px;
     padding-left: 0px !important;
 }
+
 .refset-tool-concept-details-section-title {
     font-weight: 400;
 }
@@ -978,7 +979,8 @@ button.refset-tool-table-action-icon {
     height: fit-content;
     background-color: $concept_details_color;
     width: 40%;
-    padding-left: 0px !important;
+    padding-left: 3px !important;
+    padding-right: 6px !important;
     color: white;
     border-color: $concept_details_color;
     line-height: 1;
@@ -1015,6 +1017,15 @@ button.refset-tool-table-action-icon {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
 }
+
+.refset-tool-concept-details-action-icon {
+    width:25px !important;
+    height:25px !important;
+}
+
+#refset-block {
+    padding:2px;
+}
 .refset-tool-concept-details-concept-roles-column-no-attributes {
     margin-left: 10px;
     padding-left: 0px;
@@ -1032,9 +1043,14 @@ button.refset-tool-table-action-icon {
 .no-attributes {
     opacity: 30%;
 }
-.refset-tool-concept-details-concept-description-language {
+.refset-tool-concept-details-concept-description {
     padding-left: 0px;
     padding-right: 0px;
+}
+.refset-tool-concept-details-concept-description-language {
+    
+    font-style:italic; 
+    word-spacing: .5rem;
 }
 .refset-tool-concept-details-role-row {
     line-height: 1.3;
