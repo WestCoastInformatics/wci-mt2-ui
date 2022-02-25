@@ -167,13 +167,15 @@ strong {
 }
 
 nav a img {
-    margin-top: -0.5em;
     height: 3rem !important;
-    margin-left: 15px;
+    vertical-align: middle;
+    border-style: none;
 }
+
 nav a span {
-    margin-top: 0.5em;
+    vertical-align: middle;
     display: inline-block;
+    margin-left: 0.25rem;
 }
 
 .bg-dark {
@@ -187,15 +189,27 @@ nav a span {
 }
 
 footer.footer {
-    font-family: $header_font_family;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
 footer.footer a {
     font-size: 0.9em !important;
+    color: #C8CFD6;
+    &:hover {
+        text-decoration: none;
+    }
 }
 
-footer {
-    z-index: 1000;
+a.footer-link {
+    font-weight: 300;
+    font-size: 1.2rem;
+    color: #C8CFD6;
 }
 
 .refset-tool-breadcrumb-bar > :first-child {
@@ -791,7 +805,7 @@ button.refset-tool-table-action-icon {
 }
 // Taxonomy Styles
 .refset-tool-taxonomy {
-    
+
     margin-bottom: 15px;
     display: block;
     padding-left: 0px;
@@ -3107,7 +3121,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     overflow: unset;
     color: white;
   }
-  
+
 .landing-page-top-bar-center {
     grid-area: landing-page-top-bar-center;
     padding-top: 18px;
@@ -3129,7 +3143,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     grid-area: landing-page-info-section;
     padding-top: 30px;
 }
-  
+
 .landing-page-login-section {
     grid-area: landing-page-login-section;
     justify-self: center;
@@ -3141,15 +3155,23 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .landing-page-text-2 {
-    
+
 }
 
 .landing-page-text-3 {
-    
+
 }
 
 .landing-page-text-4 {
-    
+
+}
+
+span.title {
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #C8CFD6;
 }
 
 .landing-page-guest-access {
