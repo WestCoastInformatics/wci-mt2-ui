@@ -2702,6 +2702,76 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-bottom: 30px !important;
 }
 
+.upgrade-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+.upgrade-modal > .modal-dialog > .modal-content {
+    width: 700px;
+}
+
+.upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.upgrade-modal-body-mid {
+    text-align: left;
+}
+
+.upgrade-modal-current-version {
+
+}
+
+.upgrade-footer-warning-message {
+    color: red;
+    padding-right: 20px;
+}
+
+.upgrade-modal-current-version-label {
+    font-weight: 500;
+}
+
+.upgrade-modal-current-version-term {
+    padding-left: 25px;
+}
+
+.upgrade-modal-current-terminology {
+
+}
+
+.upgrade-modal-current-terminology-label {
+    font-weight: 500;
+}
+
+.upgrade-modal-current-terminology-term {
+    padding-left: 25px;
+}
 
 .review-modal-body {
     background-color: #f5f5f6;

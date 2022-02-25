@@ -117,6 +117,8 @@
                         Edit
                     </button>
 
+                    <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal>
+
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                             mat-raised-button
                             color="primary"

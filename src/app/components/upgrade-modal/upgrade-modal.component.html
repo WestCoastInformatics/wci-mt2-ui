@@ -1,0 +1,58 @@
+<button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
+    Upgrade
+</button>
+<ng-template #upgradeDialog
+             let-modal>
+    <div class="modal-header upgrade-modal-header">
+        <h4 class="modal-title upgrade-modal-title"
+            id="modal-basic-title">
+            Upgrade Reference Set
+        </h4>
+        <button type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid upgrade-container-fluid">
+        <div class="modal-body upgrade-modal-body">
+            <div class="upgrade-modal-body-header">
+                <div class="upgrade-modal-current-version">
+                    <span class="upgrade-modal-current-version-label" aria-label="Current Version:">Current Version:</span>
+                    <span class="upgrade-modal-current-version-term">{{refsetData?.branchPath}}</span>
+                </div>
+                <div class="upgrade-modal-current-terminology">
+                    <span class="upgrade-modal-current-terminology-label" aria-label="Current Terminology:">Current Terminology:</span>
+                    <span class="upgrade-modal-current-terminology-term">{{refsetData?.editionShortName}}</span>
+                </div>
+            </div>
+            <div class="upgrade-modal-body-mid">
+            <mat-form-field appearance="fill">
+                <mat-label>New Version:</mat-label>
+                <select matNativeControl
+                        [(ngModel)]="selectedVersion">
+                    <option *ngFor="let version of listOfDates(refsetData?.versionList)"
+                            [value]="version?.date">
+                        {{ version?.date }}
+                    </option>
+                </select>
+            </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer upgrade-footer">
+        <div class="upgrade-footer-warning-message" *ngIf="showWarning">Currently on the newest version</div>
+        <button type="button"
+                mat-raised-button
+                color="primary"
+                aria-hidden="false"
+                class="refset-tool-action-button upgrade-modal-button"
+                aria-label="Upgrade"
+                title="Upgrade"
+                ng-reflect-color="primary"
+                (click)="upgrade()">
+            Upgrade
+        </button>
+    </div>
+</ng-template>
