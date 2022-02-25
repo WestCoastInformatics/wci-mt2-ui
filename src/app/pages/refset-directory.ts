@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -63,6 +63,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
+    @Output() loadingSpinner = new EventEmitter<boolean>(true);
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
@@ -380,6 +381,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     openInformation(refsetId: string) {
 
+        if (this.showLoadingSpinner == false) {
+            this.showLoadingSpinner = true;
+            this.loadingSpinner.emit(true);
+        } else {
+            return;
+        }
+
         let refset = this.getRefsetRow(refsetId);
 
         this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
@@ -426,6 +434,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 id: dialogId,
                 width: '1000px',
                 disableClose: true
+            }
+
+            if (this.showLoadingSpinner) {
+                this.showLoadingSpinner = false;
+                this.loadingSpinner.emit(false);
             }
 
             this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
