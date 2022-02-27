@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
+import {MatMenuModule} from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -150,6 +151,7 @@ const appRoutes: Routes = [
         MatStepperModule,
         MatButtonModule,
         MatButtonToggleModule,
+        MatMenuModule,
         MatIconModule,
         MatRadioModule,
         ToastNoAnimationModule.forRoot({

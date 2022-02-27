@@ -14,23 +14,23 @@
 
             <div class="set-of-buttons">
 
-                <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download>
+                <!-- <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download> -->
 
                 <!-- <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
                     <img src="assets/quote-icon.svg" alt="quote icon" title="View Feedback" aria-label="View Feedback" />
                 </button> -->
 
-                <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
+                <!-- <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
                     <img src="assets/compare-refset-icon.svg" alt="notes icon" title="Compare Refset" aria-label="Compare Refset" />
-                </button>
+                </button> -->
 
-                <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openCloneRefset()">
+                <!-- <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openCloneRefset()">
                     <img src="assets/pages-icon.svg" alt="pages icon" title="Clone Refset" aria-label="Clone refset" />
-                </button>
+                </button> -->
 
-                <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">
+                <!-- <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">
                     <img src="assets/trash-icon.svg" alt="trash icon" title="Delete Refset" aria-label="Delete refset" />
-                </button>
+                </button> -->
             </div>
 
         </div>
@@ -100,7 +100,16 @@
         <div class="metadata-container" *ngIf="editMode">
             <div class="container-fluid">
 
-                <div *ngIf="editMode" class=""><span class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span></div>
+                <div *ngIf="editMode" class=""><span class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
+                    <br>
+                    <button mat-button [matMenuTriggerFor]="menu" class="manage-refset-menu">Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #menu="matMenu">
+                      <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download>
+                      <button mat-menu-item (click)="openCompareRefset()">Compare Refset</button>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="!allowedToEdit" (click)="openCloneRefset()">Clone Refset</button>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
+                    </mat-menu>
+                </div>
                 
                 <div class="edit-button-group-right-below-sticky-header">
 
@@ -725,7 +734,7 @@
                 &nbsp;{{'(' + membersGridNumberOfMembers + ')'}}
             </span>
 
-            <div class="set-of-buttons" *ngIf="allowedToEdit">
+            <!-- <div class="set-of-buttons" *ngIf="allowedToEdit">
 
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
@@ -738,9 +747,26 @@
 
                 <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
                     (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
-            </div>
+            </div> -->
         </div>
+        <span *ngIf="allowedToEdit">
+            <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Manage Members <span class="down-arrow-for-menu">&#x25BC;</span></button>
+            <mat-menu #menu="matMenu">
+              <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
+                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
 
+                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
+                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-list-modal>
+
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)"
+                    (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
+
+                <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
+                    (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
+
+            </mat-menu>
+        </span>
+        <br>
         <!-- Member Concepts Section -->
         <div class="container-fluid" id="detailsMemberSection">
             <div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">

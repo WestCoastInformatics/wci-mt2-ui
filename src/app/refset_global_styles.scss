@@ -2743,6 +2743,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     }
 }
 
+
 .upgrade-modal > .modal-dialog > .modal-content {
     width: 700px;
 }
@@ -2829,6 +2830,17 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .upgrade-success-inactive-label {
     font-weight: 500;
     padding-right: 60px;
+}
+
+.manage-members-menu,
+.manage-refset-menu {
+    padding: 0px !important;
+    color: #00a9e0;
+}
+
+.down-arrow-for-menu {
+    font-size: 8px;
+    padding-top: 5px;
 }
 
 .upgrade-success-members-label {
