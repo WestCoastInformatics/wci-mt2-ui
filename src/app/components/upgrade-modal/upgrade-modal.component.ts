@@ -11,7 +11,10 @@ export class UpgradeModalComponent implements OnInit {
   refsetData: any;
   selectedVersion: string;
   showWarning = false;
-
+  @Input()
+  isInitialUpgrade = true;
+  @Input()
+  isResumeUpgrade = false;
   constructor(private readonly modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -35,11 +38,21 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   upgrade(): void {
-    if (!this.listOfDates(this.refsetData?.versionList)?.length) {
-      this.showWarning = true;
-      setTimeout(() => {
-        this.showWarning = false;
-      }, 3500);
+    if (this.isInitialUpgrade) {
+      if (!this.listOfDates(this.refsetData?.versionList)?.length) {
+        this.showWarning = true;
+        setTimeout(() => {
+          this.showWarning = false;
+        }, 3500);
+      } else {
+        this.modalService.dismissAll();
+        this.isInitialUpgrade = false;
+        this.isResumeUpgrade = true;
+      }
+    } else if (this.isResumeUpgrade) {
+      this.isInitialUpgrade = true;
+      this.isResumeUpgrade = false;
     }
+
   }
 }

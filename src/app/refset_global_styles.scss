@@ -2770,6 +2770,12 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     height: 50px;
 }
 
+.successful-upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
 .upgrade-modal-body-mid {
     text-align: left;
 }
@@ -2795,12 +2801,39 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 }
 
+.circled-check {
+    height: 24px;
+    width: 24px;
+}
+
+.upgrade-modal-success-warning {
+    height: fit-content;
+}
+
+.upgrade-modal-success {
+    text-align: left;
+}
+
 .upgrade-modal-current-terminology-label {
     font-weight: 500;
 }
 
 .upgrade-modal-current-terminology-term {
     padding-left: 25px;
+}
+
+.upgrade-footer .export-inactive-concept-modal-button {
+    margin-right: 10px;
+}
+
+.upgrade-success-inactive-label {
+    font-weight: 500;
+    padding-right: 60px;
+}
+
+.upgrade-success-members-label {
+    font-weight: 500;
+    padding-right: 39px;
 }
 
 .review-modal-body {
