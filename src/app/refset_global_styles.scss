@@ -148,7 +148,7 @@ strong {
 }
 
 .refset-tool-nav-title {
-    font-family: $header_font_family;
+    font-family: $standard_font_family;
     font-size: 20px;
     color: #eee !important;
 }
@@ -184,11 +184,12 @@ nav a span {
 
 .page-title {
     color: #9b9b9b;
-    font-family: $header_font_family;
-    font-size: 1.5em;
+    font-family: $standard_font_family;
+    font-size: 1em;
 }
 
 footer.footer {
+    font-family: $standard_font_family;
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -1989,8 +1990,7 @@ button.refset-tool-table-action-icon {
 .create-new-refset-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: $standard_font_family;
 }
 
 .create-new-refset-container-fluid {
@@ -2062,7 +2062,7 @@ button.refset-tool-table-action-icon {
 .import-from-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .import-from-container-fluid {
@@ -2360,8 +2360,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: $standard_font_family;
 }
 
 .add-remove-concept-hierarchy-modal-body {
@@ -2718,7 +2717,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .ready-for-publication-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .ready-for-publication-footer {
@@ -2874,7 +2873,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .review-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .ready-for-review-footer {
@@ -3022,7 +3021,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .workflow-history-notes-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .workflow-history-notes-footer {
@@ -3067,7 +3066,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-descendants-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .add-remove-descendants-footer {
