@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -63,11 +63,14 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
+    @Output() loadingSpinner = new EventEmitter<boolean>(true);
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
     numOfMembers: any;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
+    
+    disableChannel = new BroadcastChannel('disable-button-channel');
 
     constructor(
         private router: Router,
@@ -86,6 +89,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
+
+        this.disableChannel.postMessage(false);
     }
 
     ngAfterViewInit() {
@@ -380,15 +385,23 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     openInformation(refsetId: string) {
 
+        if (this.showLoadingSpinner == false) {
+            this.showLoadingSpinner = true;
+            this.loadingSpinner.emit(true);
+        } else {
+            return;
+        }
+
         let refset = this.getRefsetRow(refsetId);
 
         this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
 
             refset.descriptions = results.descriptions;
             const dialogId = 'directoryInfoDialog';
-            this.directUrl = (window.location.host + this.router.url).replace("directory", "details/" + refset.id);
+            this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("directory", "details/" + refset.refsetId + '/' 
+                + RefsetUtility.getVersionDateForRefsetApiCall(refset));
 
-            if (CodeUtility.hasValue(refset)){
+            if (CodeUtility.hasValue(refset)) {
 
                 refset.status = RefsetUtility.getStatus(refset.active);
                 if (CodeUtility.hasValue(refset.narrative)){
@@ -427,12 +440,17 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 disableClose: true
             }
 
+            if (this.showLoadingSpinner) {
+                this.showLoadingSpinner = false;
+                this.loadingSpinner.emit(false);
+            }
+
             this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
             this.dialog.confirmed().subscribe(data => {
 
                 if (data) {
-                    this.goToDetailsPage(refset.id, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+                    this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
                 }
             });
         });

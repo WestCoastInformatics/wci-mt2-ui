@@ -18,15 +18,15 @@ export class AuthenticationService {
     LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
     IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
-    authCookie = {name: 'rt2-auth', path: '/'}
-    isUserLoggedIn =  false;
+    authCookie = { name: 'rt2-auth', path: '/' }
+    isUserLoggedIn = false;
 
     constructor(
         private http: HttpClient,
         private readonly modalService: NgbModal,
         private router: Router,
         private readonly notificationService: NotificationService
-    ) {}
+    ) { }
 
     imsLogin(successCallback: Function = this.handleImsSuccess) {
 
@@ -49,10 +49,10 @@ export class AuthenticationService {
     generateImsUrl(endpoint: string): string {
 
         let url = window.location.origin + '/login';
-        
+
         if (!window.location.origin.includes("local")) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
-        } else { 
+        } else {
             url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
         }
 
@@ -71,7 +71,7 @@ export class AuthenticationService {
                 this.isUserLoggedIn = true;
             },
             (err) => {
-                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                 console.error(err);
             }
         );
@@ -97,30 +97,30 @@ export class AuthenticationService {
         let loggedInUser = localStorage.getItem('auth_token');
         this.notAuthenticated();
 
-        this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser,{}).subscribe(
+        this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser, {}).subscribe(
             (data) => {
                 console.log("Back end logged out");
             }
         );
 
-        window.location.href = this.generateImsUrl('logout')
+        window.location.href = window.location.origin
     }
 
     isAuthenticated(): boolean {
-        
+
         let cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
         let token = localStorage.getItem('auth_token');
 
         try {
-            
+
             cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
             token = localStorage.getItem('auth_token');
-        
+
         } catch (ex) {
 
             this.noCookieAccess();
             return false;
-        } 
+        }
 
         return cookieFound && token != null;
     }
@@ -128,7 +128,7 @@ export class AuthenticationService {
     notAuthenticated(): any {
 
         localStorage.clear();
-        
+
         let userWasLoggedin = this.isUserLoggedIn;
         let user = new User();
         user.userName = this.GUEST_USER;
@@ -145,29 +145,29 @@ export class AuthenticationService {
         if (userWasLoggedin) {
 
             this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', {timeOut: 5000, extendedTimeOut: 0});
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', { timeOut: 5000, extendedTimeOut: 0 });
         }
     }
 
     getUser() {
 
         let user;
-        
+
         try {
             user = JSON.parse(localStorage.getItem('refset_user'));
-        
+
         } catch (ex) {
 
             this.noCookieAccess();
             return null;
-        } 
-        
+        }
+
         return user;
     }
 
     noCookieAccess() {
 
-        this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', {timeOut: 0, extendedTimeOut: 0});
+        this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
         this.router.navigateByUrl('');
     }
 }

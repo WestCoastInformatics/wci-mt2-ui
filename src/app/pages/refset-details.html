@@ -14,23 +14,23 @@
 
             <div class="set-of-buttons">
 
-                <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download>
+                <!-- <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download> -->
 
                 <!-- <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
                     <img src="assets/quote-icon.svg" alt="quote icon" title="View Feedback" aria-label="View Feedback" />
                 </button> -->
 
-                <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
+                <!-- <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
                     <img src="assets/compare-refset-icon.svg" alt="notes icon" title="Compare Refset" aria-label="Compare Refset" />
-                </button>
+                </button> -->
 
-                <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openCloneRefset()">
+                <!-- <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openCloneRefset()">
                     <img src="assets/pages-icon.svg" alt="pages icon" title="Clone Refset" aria-label="Clone refset" />
-                </button>
+                </button> -->
 
-                <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">
+                <!-- <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">
                     <img src="assets/trash-icon.svg" alt="trash icon" title="Delete Refset" aria-label="Delete refset" />
-                </button>
+                </button> -->
             </div>
 
         </div>
@@ -100,7 +100,16 @@
         <div class="metadata-container" *ngIf="editMode">
             <div class="container-fluid">
 
-                <div *ngIf="editMode" class=""><span class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span></div>
+                <div *ngIf="editMode" class=""><span class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
+                    <br>
+                    <button mat-button [matMenuTriggerFor]="menu" class="manage-refset-menu">Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #menu="matMenu">
+                      <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download>
+                      <button mat-menu-item (click)="openCompareRefset()">Compare Refset</button>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="!allowedToEdit" (click)="openCloneRefset()">Clone Refset</button>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
+                    </mat-menu>
+                </div>
                 
                 <div class="edit-button-group-right-below-sticky-header">
 
@@ -116,6 +125,8 @@
                             (click)="setWorkflowStatusByAction('', 'EDIT')">
                         Edit
                     </button>
+
+                    <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                             mat-raised-button
@@ -514,7 +525,7 @@
                                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        <a href="https://{{directUrl}}">{{directUrl}}</a>
+                                        <a href="{{directUrl}}">{{directUrl}}</a>
                                     </td>
                                 </tr>
 
@@ -723,7 +734,7 @@
                 &nbsp;{{'(' + membersGridNumberOfMembers + ')'}}
             </span>
 
-            <div class="set-of-buttons" *ngIf="allowedToEdit">
+            <!-- <div class="set-of-buttons" *ngIf="allowedToEdit">
 
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
@@ -736,9 +747,26 @@
 
                 <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
                     (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
-            </div>
+            </div> -->
         </div>
+        <span *ngIf="allowedToEdit">
+            <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Manage Members <span class="down-arrow-for-menu">&#x25BC;</span></button>
+            <mat-menu #menu="matMenu">
+              <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
+                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
 
+                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()" 
+                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-list-modal>
+
+                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)"
+                    (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
+
+                <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
+                    (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
+
+            </mat-menu>
+        </span>
+        <br>
         <!-- Member Concepts Section -->
         <div class="container-fluid" id="detailsMemberSection">
             <div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
@@ -988,14 +1016,9 @@
                                     </div>
 
                                     <!-- Parents Section -->
-                                    <div class="
-                                            container-fluid
-                                            refset-tool-concept-details-taxonomy-section
-                                        ">
+                                    <div class="refset-tool-concept-details-taxonomy-section">
                                         <div class="row">
-                                            <div class="
-                                                    refset-tool-concept-details-section-title
-                                                ">
+                                            <div class="refset-tool-concept-details-section-title">
                                                 Parents
                                             </div>
                                         </div>
@@ -1009,12 +1032,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="
-                                                row
-                                                refset-tool-concept-details-taxonomy-item
-                                            "
+                                        <div 
                                              *ngFor="let parent of conceptDetailParents">
-                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+                                            <span class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
 
                                                 <add-remove-concepts-icons [concept]="parent" [hidden]="!allowedToEdit" [isInDetailsPanel]="true" [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
 
@@ -1028,101 +1048,70 @@
                                                      aria-label="Primitive"
                                                      class="refset-tool-logo mr-2 p-0"
                                                      src="/assets/unlinedTaxonomyIcon.png" />
-                                            </div>
+                                            </span>
 
-                                            <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset" 
+                                            <span  [class.bold-if-member]="parent?.memberOfRefset" 
                                                 [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
                                                 
                                                 <span
                                                     *ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
                                                     title="{{parent.fsn}}"
-                                                    aria-label="{{parent.fsn}}"
-                                                    >{{parent.fsn}}</span
-                                                >
+                                                    aria-label="{{parent.fsn}}">{{parent.fsn}}</span>
                                             
                                                 <span *ngIf="(!this.taxonomyOptions.useFsn && !this.conceptDetailsOptions.useFsn) || !this.conceptDetailsOptions.useFsn" title="{{parent.name}}"
                                                       aria-label="{{parent.name}}">{{parent.name}}</span>
-                                            </div>
+                                            </span>
                                         </div>
                                     </div>
 
                                     <!-- Details Section -->
-                                    <div class="
-                                            container-fluid
-                                            refset-tool-concept-details-concept-section
-                                        ">
+                                    <div class="container-fluid refset-tool-concept-details-concept-section">
                                         <div class="row">
                                             <!-- Info Section -->
-                                            <div class="
-                                                    col
-                                                    refset-tool-concept-details-concept-info-column
-                                                "
+                                            <div class="col refset-tool-concept-details-concept-info-column"
                                                  [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active">
-                                                <div class="container-fluid">
+                                                <div>
                                                     <!-- Name -->
-                                                    <div class="
-                                                            row
-                                                            refset-tool-concept-details-concept-title-row
-                                                        ">
-                                                        <div class="
-                                                                refset-tool-concept-details-taxonomy-icon
-                                                            ">
-                                                            <img [hidden]="!conceptDetail.defined || !editMode"
+                                                    <div class="row">
+
+                                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 refset-tool-concept-details-taxonomy-icon">
+                                                            <img [hidden]="!conceptDetail.defined"
                                                                  title="Fully Defined"
                                                                  aria-label="Fully Defined"
                                                                  src="/assets/linedTaxonomyIcon.png" />
-                                                            <img *ngIf="!conceptDetail.defined || !editMode"
+                                                            <img *ngIf="!conceptDetail.defined"
                                                                  title="Primitive"
                                                                  aria-label="Primitive"
-                                                                 class="
-                                                                    refset-tool-logo
-                                                                    mr-2
-                                                                    p-0
-                                                                "
+                                                                 class="refset-tool-logo mr-2 p-0"
                                                                  src="/assets/unlinedTaxonomyIcon.png" />
                                                         </div>
-
-                                                        <div class="
-                                                                col
-                                                                refset-tool-concept-details-concept-name
-                                                            "
+                                                        
+                                                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 refset-tool-concept-details-concept-name"
                                                              title="{{conceptDescriptions[0].term}}"
                                                              aria-label="{{conceptDescriptions[0].term}}">
                                                             {{getFsn(conceptDescriptions)}}
                                                         </div>
 
-                                                        <div class="
-                                                                col-1
-                                                                refset-tool-concept-details-concept-link
-                                                                text-right
-                                                            ">
+                                                        <div class="col-xs-1 col-xs-offset-11 col-sm-1 col-sm-offset-11 col-md-1 col-md-offset-11 col-lg-1 col-lg-offset-11">
                                                             <button mat-icon-button
-                                                                    (click)="openInNewWindow(conceptDetail.code)"
-                                                                    aria-hidden="false"
-                                                                    class="
-                                                                    refset-tool-concept-details-action-icon
-                                                                "
-                                                                    aria-label="Open Concept in New SNOMED Browser Window"
-                                                                    title="Open Concept in SNOMED Browser Window">
-                                                                <mat-icon>open_in_new</mat-icon>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <br />
+                                                                     (click)="openInNewWindow(conceptDetail.code)"
+                                                                     aria-hidden="false"
+                                                                     class="refset-tool-concept-details-action-icon"
+                                                                     aria-label="Open Concept in New SNOMED Browser Window"
+                                                                     title="Open Concept in SNOMED Browser Window">
+                                                                 <mat-icon>open_in_new</mat-icon>
+                                                             </button>
+                                                         </div>
+                                                    </div>     
+                                                <br>                                              
 
                                                     <!-- ID -->
-                                                    <div class="
-                                                            row
-                                                            refset-tool-concept-details-concept-row
-                                                        ">
+                                                    <div class="row refset-tool-concept-details-concept-row">
                                                         <div class="refset-tool-concept-details-concept-id-label">
                                                             SCTID
                                                         </div>
 
-                                                        <div class="
-                                                                col
-                                                                refset-tool-concept-details-concept-id-text
-                                                            "
+                                                        <div class="col refset-tool-concept-details-concept-id-text"
                                                              title="{{conceptDetail.code}}"
                                                              aria-label="{{conceptDetail.code}}">
                                                             {{conceptDetail.code}}
@@ -1130,14 +1119,8 @@
                                                     </div>
                                                     <br />
                                                     <!-- ECL -->
-                                                    <div class="
-                                                            row
-                                                            refset-tool-concept-details-concept-row
-                                                        ">
-                                                        <div class="
-                                                                col
-                                                                refset-tool-concept-details-concept-ecl
-                                                            ">
+                                                    <div class="row refset-tool-concept-details-concept-row">
+                                                        <div class="col refset-tool-concept-details-concept-ecl">
                                                             {{conceptDetail.code}}
                                                             |
                                                             {{conceptDescriptions[0].term}}
@@ -1148,24 +1131,14 @@
 
                                                     <!-- Descriptions -->
                                                     <!-- FSN -->
-                                                    <div class="
-                                                            row
-                                                            refset-tool-concept-details-concept-row
-                                                        "
+                                                    <div class="row refset-tool-concept-details-concept-row"
                                                          *ngFor="let description of conceptDescriptions">
-                                                        <div class="refset-tool-concept-details-concept-description-language"
+                                                        <div class="refset-tool-concept-details-concept-description"
                                                              title="{{description.languageName}}"
                                                              aria-label="{{description.languageName}}">
-                                                            {{description.languageName.substr(0,
+                                                            <span class="refset-tool-concept-details-concept-description-language">{{description.languageName.substr(0,
                                                             description.languageName.indexOf('(')).toLowerCase()}}
-                                                        </div>
-
-                                                        <div class="
-                                                                col
-                                                                refset-tool-concept-details-concept-description-text
-                                                            "
-                                                             title="{{description.term}}"
-                                                             aria-label="{{description.term}}">
+                                                            </span>
                                                             {{description.term}}
                                                         </div>
                                                     </div>
@@ -1173,24 +1146,14 @@
                                             </div>
 
                                             <!-- Roles Section -->
-                                            <div class="
-                                                    col
-                                                    refset-tool-concept-details-concept-roles-column
-                                                "
-                                                 [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length">
-                                                <div class="container-fluid"
-                                                     *ngIf="true">
+                                            <div style="padding:2px;" class="col refset-tool-concept-details-concept-roles-column"
+                                                 [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length">      
+                                                <div *ngIf="true">
                                                     <span class="no-attributes"
                                                           *ngIf="!conceptDetail.numRoleGroups">No attributes</span>
-                                                    <div class="
-                                                            row
-                                                            refset-tool-concept-details-role-row
-                                                        "
+                                                    <div class="row refset-tool-concept-details-role-row"
                                                          *ngFor="let role of conceptDetail.roleGroups | keyvalue">
-                                                        <div class="
-                                                                row
-                                                                refset-tool-concept-details-role-details
-                                                            "
+                                                        <div class="row refset-tool-concept-details-role-details"
                                                              *ngFor="let detail of role.value">
                                                             {{detail}}
                                                         </div>
@@ -1202,7 +1165,6 @@
 
                                     <!-- Children Section -->
                                     <div class="
-                                            container-fluid
                                             refset-tool-concept-details-taxonomy-section
                                             children-section
                                         ">

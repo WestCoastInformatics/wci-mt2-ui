@@ -1,6 +1,8 @@
-<button (click)="openImportFromListModal(importFromListDialog)" class="refset-tool-standard-icon-button">
+<!-- <button (click)="openImportFromListModal(importFromListDialog)" class="refset-tool-standard-icon-button">
     <img src="assets/import-list-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import List of SctIds" aria-label="Import list" />
-</button>
+</button> -->
+
+<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import List of SctIds" aria-label="Import list" (click)="openImportFromListModal(importFromListDialog)">Add/Remove by List</button>
 
 <ng-template #importFromListDialog let-modal>
 

@@ -1,11 +1,13 @@
-<button #addRemoveConceptHierarchyButton
+<!-- <button #addRemoveConceptHierarchyButton
         (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)"
         class="add-remove-concept-hierarchy-modal-button">
     <img src="assets/mag-icon.svg"
          alt="magnifying glass icon"
          title="Search for Concepts to Add"
          aria-label="Search for concepts" />
-</button>
+</button> -->
+
+<button mat-menu-item (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)" alt="magnifying glass icon" title="Search for Concepts to Add" aria-label="Search for concepts">Add/Remove by Search</button>
 
 <ng-template #addRemoveConceptHierarchyModal
              let-modal>
