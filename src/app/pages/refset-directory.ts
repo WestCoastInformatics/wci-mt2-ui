@@ -68,6 +68,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     directUrl: string;
     numOfMembers: any;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
+    
+    disableChannel = new BroadcastChannel('disable-button-channel');
 
     constructor(
         private router: Router,
@@ -86,6 +88,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
+
+        this.disableChannel.postMessage(false);
     }
 
     ngAfterViewInit() {
@@ -432,7 +436,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             this.dialog.confirmed().subscribe(data => {
 
                 if (data) {
-                    this.goToDetailsPage(refset.id, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+                    this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
                 }
             });
         });
