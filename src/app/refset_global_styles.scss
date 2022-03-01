@@ -3183,15 +3183,20 @@ span.title {
     color: white;
     width: 220px;
     height: 25px;
-    font-size: 10px;
+    font-size: 14px;
 }
 
 .landing-page-guest-has-account {
     color: black;
+    font-weight: 500;
 }
 
 .landing-page-log-in-link {
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+    color: rgb(50, 50, 212);
 }
 
 .landing-page-tool-logo {
