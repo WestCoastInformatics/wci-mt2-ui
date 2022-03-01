@@ -24,7 +24,8 @@ export class UpgradeModalComponent implements OnInit {
     this.modalService.open(upgradeDialog, {
       backdrop: 'static',
       keyboard: false,
-      windowClass: 'upgrade-modal'
+      windowClass: 'upgrade-modal',
+      size: 'lg'
     });
   }
 
