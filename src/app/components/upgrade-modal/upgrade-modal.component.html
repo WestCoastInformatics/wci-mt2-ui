@@ -1,6 +1,7 @@
-<button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
+<!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
     Upgrade
-</button>
+</button> -->
+<button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button>
 <ng-template #upgradeDialog
              let-modal>
 <ng-container *ngIf="isInitialUpgrade && !isResumeUpgrade">

@@ -2832,9 +2832,20 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .manage-members-menu,
-.manage-refset-menu {
+.manage-refset-menu,
+.documentation-menu,
+.download-menu,
+.collaboration-menu,
+.compare-menu {
     padding: 0px !important;
     color: #00a9e0;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.menu-spacer {
+    padding-right: 10px;
 }
 
 .down-arrow-for-menu {

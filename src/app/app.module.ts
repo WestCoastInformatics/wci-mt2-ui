@@ -179,6 +179,7 @@ const appRoutes: Routes = [
         PaginationService,
         BreadcrumbService,
         RouterExtentionService,
+        ProjectsRefsetComponent,
         NotificationService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {

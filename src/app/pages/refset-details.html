@@ -102,12 +102,37 @@
 
                 <div *ngIf="editMode" class=""><span class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
                     <br>
-                    <button mat-button [matMenuTriggerFor]="menu" class="manage-refset-menu">Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span></button>
-                    <mat-menu #menu="matMenu">
-                      <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download>
-                      <button mat-menu-item (click)="openCompareRefset()">Compare Refset</button>
-                      <button mat-menu-item *ngIf="editMode" [disabled]="!allowedToEdit" (click)="openCloneRefset()">Clone Refset</button>
+                    <button mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #refsetMenu="matMenu">
+                      <create-new-refset [projectsRefsetComponent]="projectsRefsetComponent" *ngIf="editMode" [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
+                      [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
+                      </create-new-refset>
+                      <workflow-history-notes-modal [refsetId]="id" [user]="refsetData?.modifiedBy" [disabled]="!allowedToEdit && !allowedToReview" [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal>
+                      <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="true">Convert Refset Type</button>
                       <button mat-menu-item *ngIf="editMode" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
+                    </mat-menu>
+                    <span class="menu-spacer">&nbsp;</span>
+                    <button mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #collaborationMenu="matMenu">
+                      <button mat-menu-item *ngIf="editMode" [disabled]="true">Create New Feedback</button>
+                      <button mat-menu-item (click)="openRefsetFeedback()" title="View Feedback" aria-label="View Feedback" *ngIf="editMode">Manage Feedback</button>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="true">Share Reference Set</button>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="true">Request Project Access</button>
+                    </mat-menu>
+                    <span class="menu-spacer">&nbsp;</span>
+                    <span class="compare-menu" (click)="openCompareRefset()">Compare</span>
+                    <span class="menu-spacer">&nbsp;</span>
+                    <button mat-button [matMenuTriggerFor]="documentationMenu" class="documentation-menu">Documentation <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #documentationMenu="matMenu">
+                      <button mat-menu-item (click)="openArtifacts()" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
+                      <button mat-menu-item (click)="openAuditTrail()" title="Open Audit Trail" aria-label="Audit Trail">Audit Trail</button>
+                    </mat-menu>
+                    <span class="menu-spacer">&nbsp;</span>
+                    <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #downloadMenu="matMenu">
+                      <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download>
+                      <button mat-menu-item *ngIf="editMode" [disabled]="true">Download Workflow History</button>
                     </mat-menu>
                 </div>
                 
@@ -126,7 +151,7 @@
                         Edit
                     </button>
 
-                    <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal>
+                    <!-- <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal> -->
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                             mat-raised-button
@@ -299,19 +324,19 @@
             <div class="metadata-collapsible-container-group-header">
                 <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
-                    <div *ngIf="editMode" class="edit-refset-button">
+                    <!-- <div *ngIf="editMode" class="edit-refset-button">
                         <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
                             [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
                         </create-new-refset>
-                    </div>
-                    <a class="detail-top-link"
+                    </div> -->
+                    <!-- <a class="detail-top-link"
                        (click)="openArtifacts()"
                        title="Open Artifacts List"
                        aria-label="Artifacts">Artifacts</a>
                     <a class="detail-top-link"
                        (click)="openAuditTrail()"
                        title="Open Audit Trail"
-                       aria-label="Audit Trail">Audit Trail</a>
+                       aria-label="Audit Trail">Audit Trail</a> -->
                 </div>
                 <img src="assets/collapse-minus-icon.svg"
                     *ngIf="!hideMetadataTable"
@@ -621,19 +646,19 @@
             <div class="metadata-collapsible-container-group-header">
                 <div class="metadata-collapsible-container-title">
                     Workflow History
-                    <div class="set-of-buttons-workflow-history">
+                    <!-- <div class="set-of-buttons-workflow-history"> -->
                         <!-- TODO: Should download WF HX table contents, not the refset
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
 -->
-                        <workflow-history-notes-modal [refsetId]="id"
+                        <!-- <workflow-history-notes-modal [refsetId]="id"
                                                       [user]="refsetData?.modifiedBy"
                                                       [disabled]="!allowedToEdit && !allowedToReview"
                                                       [status]="refsetStatus"
-                                                      [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal>
-                    </div>
+                                                      [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal> -->
+                    <!-- </div> -->
                 </div>
                 <img src="assets/collapse-minus-icon.svg"
                     *ngIf="!hideWorkflowTable"

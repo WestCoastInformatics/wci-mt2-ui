@@ -24,6 +24,7 @@ import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { catchError, filter, pairwise, take } from 'rxjs/operators';
+import { ProjectsRefsetComponent } from './projects/projects-refset.component';
 
 /**
  * @title Tree with nested nodes
@@ -211,7 +212,8 @@ export class RefsetDetails {
         private breadcrumbService: BreadcrumbService,
         private readonly workflowService: WorkflowService,
         private readonly modalService: NgbModal,
-        private routerExtentionService: RouterExtentionService
+        private routerExtentionService: RouterExtentionService,
+        private readonly projectsRefsetComponent: ProjectsRefsetComponent
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -413,6 +415,7 @@ export class RefsetDetails {
             this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetBranchPath = RefsetUtility.getBranchPath(results)
             this.refsetData = results;
+            console.log(this.refsetData);
             this.refsetService.setRefsetInformation(this.refsetData);
             this.allowedToEdit = false;
             this.allowedToReview = false;

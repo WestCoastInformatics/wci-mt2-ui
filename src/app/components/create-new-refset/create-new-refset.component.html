@@ -1,17 +1,19 @@
-<button *ngIf="!isDetailsPage" [disabled]="!isUat()" mat-raised-button color="primary"
+<button *ngIf="!isDetailsPage" mat-raised-button color="primary"
     (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
     class="refset-tool-action-button" [ngClass]="{ inactive: disabled }"
     aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
     Create New Refset
 </button>
 
-<button class="refset-tool-standard-icon-button details-edit-refset-modal"
+<!-- <button class="refset-tool-standard-icon-button details-edit-refset-modal"
     *ngIf="isDetailsPage || editMode" [style.height]="editMode ? '31px' : '31px'"
     (click)="openCreateRefsetModal(createNewRefsetDialog);" [ngClass]="{ inactive: disabled }"
     [disabled]="disabled">
     <img src="assets/notes-icon.svg" alt="notes icon" title="Edit Metadata"
         aria-label="Edit metadata" />
-</button>
+</button> -->
+<button mat-menu-item *ngIf="isDetailsPage || editMode" (click)="openCreateRefsetModal(createNewRefsetDialog);" [disabled]="disabled" alt="notes icon" title="Edit Metadata" aria-label="Edit metadata">Edit Metadata</button>
+
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #createNewRefsetDialog let-modal>
