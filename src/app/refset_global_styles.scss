@@ -1063,8 +1063,8 @@ button.refset-tool-table-action-icon {
     padding-right: 0px;
 }
 .refset-tool-concept-details-concept-description-language {
-    
-    font-style:italic; 
+
+    font-style:italic;
     word-spacing: .5rem;
 }
 .refset-tool-concept-details-role-row {
@@ -1264,6 +1264,10 @@ button.refset-tool-table-action-icon {
     padding-right: 20px;
 }
 // Table-Tax Button Group
+.mat-button-toggle {
+    margin-top: -2px;
+}
+
 .mat-button-toggle-checked {
     background-color: $cerulean;
     color: white !important;
@@ -1271,7 +1275,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-toggle-buttons {
     .mat-button-toggle-button {
-        width: 100px !important;
+        width: 90px !important;
     }
 }
 
@@ -1281,7 +1285,10 @@ button.refset-tool-table-action-icon {
     border: 1px solid #666;
 }
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-    line-height: 40px;
+    line-height: 31px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 !important
 }
 
 .mat-horizontal-content-container {
@@ -1289,6 +1296,7 @@ button.refset-tool-table-action-icon {
 }
 .mat-button-toggle-group-appearance-standard {
     border-radius: 0px;
+    height: 31px;
 }
 
 #refsetDetailsPage
