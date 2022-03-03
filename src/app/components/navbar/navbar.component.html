@@ -2,13 +2,17 @@
 
     <div class="refset-tool-nav-item-row">
 
-        <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
+        <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home"
+            aria-label="Reference set tool home">
             <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
-            <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool <b>(BETA)</b></span>
+            <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool
+                <b>(BETA)</b></span>
         </a>
 
         <div class="refset-tool-breadcrumb-bar text-ghost-grey">
-            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
+            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}"
+                aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
+                (click)="navigate(breadcrumb.id)">
                 {{breadcrumb.label}}
             </div>
         </div>
@@ -24,12 +28,18 @@
     </div>
 
     <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()">
-        <span class="project-role" *ngIf="getProjectRoleString()">Project Role: {{getProjectRoleString()}}</span>
-        <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{ assignedUser() }}</span>
+        <span class="project-role" *ngIf="getProjectRoleString()">Project Role:
+            {{getProjectRoleString()}}</span>
+        <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{
+            assignedUser() }}</span>
     </div>
-    
-    <div class="directory-nav" routerLink="/directory"><img class="directory-icon" src="/assets/directory-icon.svg"><span class="directory-icon-label">Directory</span></div>
-    <div *ngIf="isUserLoggedIn" class="project-nav" routerLink="/projects"><img class="projects-icon" src="/assets/projects-icon.svg"><span class="projects-icon-label">Projects</span></div>
+
+    <div *ngIf="!breadcrumbsHasDir()" class="directory-nav" routerLink="/directory"><img
+            class="directory-icon" src="/assets/directory-icon.svg"><span
+            class="directory-icon-label">Directory</span></div>
+    <div *ngIf="isUserLoggedIn && !breadcrumbsHasProjects()" class="project-nav"
+        routerLink="/projects"><img class="projects-icon" src="/assets/projects-icon.svg"><span
+            class="projects-icon-label">Projects</span></div>
 
     <div *ngIf="isUserLoggedIn" class="float-right mx-3">
         <div class="user d-inline-block m-2">

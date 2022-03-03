@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
+import {MatMenuModule} from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -83,6 +84,7 @@ import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -104,6 +106,7 @@ const appRoutes: Routes = [
         RefsetDownloadComponent,
         ColumnChooserComponent,
         NotificationComponent,
+        UpgradeModalComponent,
         SafeUrlPipe,
         RefsetDirectory,
         RefsetDetails,
@@ -148,6 +151,7 @@ const appRoutes: Routes = [
         MatStepperModule,
         MatButtonModule,
         MatButtonToggleModule,
+        MatMenuModule,
         MatIconModule,
         MatRadioModule,
         ToastNoAnimationModule.forRoot({
@@ -175,6 +179,7 @@ const appRoutes: Routes = [
         PaginationService,
         BreadcrumbService,
         RouterExtentionService,
+        ProjectsRefsetComponent,
         NotificationService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {

@@ -148,7 +148,7 @@ strong {
 }
 
 .refset-tool-nav-title {
-    font-family: $header_font_family;
+    font-family: $standard_font_family;
     font-size: 20px;
     color: #eee !important;
 }
@@ -167,13 +167,15 @@ strong {
 }
 
 nav a img {
-    margin-top: -0.5em;
     height: 3rem !important;
-    margin-left: 15px;
+    vertical-align: middle;
+    border-style: none;
 }
+
 nav a span {
-    margin-top: 0.5em;
+    vertical-align: middle;
     display: inline-block;
+    margin-left: 0.25rem;
 }
 
 .bg-dark {
@@ -182,20 +184,33 @@ nav a span {
 
 .page-title {
     color: #9b9b9b;
-    font-family: $header_font_family;
-    font-size: 1.5em;
+    font-family: $standard_font_family;
+    font-size: 1em;
 }
 
 footer.footer {
-    font-family: $header_font_family;
+    font-family: $standard_font_family;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
 footer.footer a {
     font-size: 0.9em !important;
+    color: #C8CFD6;
+    &:hover {
+        text-decoration: none;
+    }
 }
 
-footer {
-    z-index: 1000;
+a.footer-link {
+    font-weight: 300;
+    font-size: 1.2rem;
+    color: #C8CFD6;
 }
 
 .refset-tool-breadcrumb-bar > :first-child {
@@ -320,13 +335,13 @@ button.refset-tool-table-action-icon {
     color: $delete_color;
 }
 .refset-tool-concept-details-concept-ecl {
-    padding-left: 0px;
+    padding-left: 0px !important;
 }
 .refset-tool-concept-details-concept-id-label {
     padding-left: 0px;
 }
 .refset-tool-concept-details-taxonomy-icon {
-    padding-left: 0px;
+    padding-left: 2px !important;
 }
 
 .refset-tool-details-member-taxonomy{
@@ -681,8 +696,8 @@ button.refset-tool-table-action-icon {
 
 // Details Page Styles
 #refsetDetailsPage .row {
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+    margin-left: 3px !important;
+    margin-right: 3px !important;
 }
 
 #refsetDetailsPage .refset-tool-refset-details-title-name-section {
@@ -791,7 +806,7 @@ button.refset-tool-table-action-icon {
 }
 // Taxonomy Styles
 .refset-tool-taxonomy {
-    
+
     margin-bottom: 15px;
     display: block;
     padding-left: 0px;
@@ -969,6 +984,7 @@ button.refset-tool-table-action-icon {
     font-size: 15px;
     padding-left: 0px !important;
 }
+
 .refset-tool-concept-details-section-title {
     font-weight: 400;
 }
@@ -978,7 +994,8 @@ button.refset-tool-table-action-icon {
     height: fit-content;
     background-color: $concept_details_color;
     width: 40%;
-    padding-left: 0px !important;
+    padding-left: 3px !important;
+    padding-right: 6px !important;
     color: white;
     border-color: $concept_details_color;
     line-height: 1;
@@ -1015,6 +1032,15 @@ button.refset-tool-table-action-icon {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
 }
+
+.refset-tool-concept-details-action-icon {
+    width:25px !important;
+    height:25px !important;
+}
+
+#refset-block {
+    padding:2px;
+}
 .refset-tool-concept-details-concept-roles-column-no-attributes {
     margin-left: 10px;
     padding-left: 0px;
@@ -1032,9 +1058,14 @@ button.refset-tool-table-action-icon {
 .no-attributes {
     opacity: 30%;
 }
-.refset-tool-concept-details-concept-description-language {
+.refset-tool-concept-details-concept-description {
     padding-left: 0px;
     padding-right: 0px;
+}
+.refset-tool-concept-details-concept-description-language {
+
+    font-style:italic;
+    word-spacing: .5rem;
 }
 .refset-tool-concept-details-role-row {
     line-height: 1.3;
@@ -1134,6 +1165,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-refset-metadata-table {
     margin: 1.5rem 0;
+    table-layout: fixed;
 }
 
 .refset-tool-refset-metadata-table tr {
@@ -1145,11 +1177,15 @@ button.refset-tool-table-action-icon {
     padding-left: 15px !important;
 }
 
+.refset-tool-refset-metadata-table .refset-tool-refset-metadata-value {
+    word-wrap: break-word;
+}
+
 .refset-tool-refset-metadata-table td.refset-tool-refset-metadata-label {
     font-weight: bold;
     padding-left: 10px;
     padding-right: 15px;
-    width: 151px;
+    width: 175px;
 }
 
 .mat-raised-button {
@@ -1228,6 +1264,10 @@ button.refset-tool-table-action-icon {
     padding-right: 20px;
 }
 // Table-Tax Button Group
+.mat-button-toggle {
+    margin-top: -2px;
+}
+
 .mat-button-toggle-checked {
     background-color: $cerulean;
     color: white !important;
@@ -1235,7 +1275,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-toggle-buttons {
     .mat-button-toggle-button {
-        width: 100px !important;
+        width: 90px !important;
     }
 }
 
@@ -1245,7 +1285,10 @@ button.refset-tool-table-action-icon {
     border: 1px solid #666;
 }
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-    line-height: 40px;
+    line-height: 31px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 !important
 }
 
 .mat-horizontal-content-container {
@@ -1253,6 +1296,7 @@ button.refset-tool-table-action-icon {
 }
 .mat-button-toggle-group-appearance-standard {
     border-radius: 0px;
+    height: 31px;
 }
 
 #refsetDetailsPage
@@ -1954,8 +1998,7 @@ button.refset-tool-table-action-icon {
 .create-new-refset-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: $standard_font_family;
 }
 
 .create-new-refset-container-fluid {
@@ -2027,7 +2070,7 @@ button.refset-tool-table-action-icon {
 .import-from-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .import-from-container-fluid {
@@ -2106,9 +2149,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 40px;
     height: 31px;
     box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: rgba(0, 164, 228, 1);
+    //border-width: 1px;
+    border-style: transparent;
+    //border-color: rgba(0, 164, 228, 1);
     background-color: rgba(255, 255, 255, 1);
 
     &.inactive {
@@ -2325,8 +2368,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: $standard_font_family;
 }
 
 .add-remove-concept-hierarchy-modal-body {
@@ -2683,7 +2725,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .ready-for-publication-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .ready-for-publication-footer {
@@ -2697,6 +2739,132 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-bottom: 30px !important;
 }
 
+.upgrade-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+
+.upgrade-modal > .modal-dialog > .modal-content {
+    width: 800px;
+}
+
+.upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.successful-upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.upgrade-modal-body-mid {
+    text-align: left;
+}
+
+.upgrade-modal-current-version {
+
+}
+
+.upgrade-footer-warning-message {
+    color: red;
+    padding-right: 20px;
+}
+
+.upgrade-modal-current-version-label {
+    font-weight: 500;
+}
+
+.upgrade-modal-current-version-term {
+    padding-left: 25px;
+}
+
+.upgrade-modal-current-terminology {
+
+}
+
+.circled-check {
+    height: 24px;
+    width: 24px;
+}
+
+.upgrade-modal-success-warning {
+    height: fit-content;
+}
+
+.upgrade-modal-success {
+    text-align: left;
+}
+
+.upgrade-modal-current-terminology-label {
+    font-weight: 500;
+}
+
+.upgrade-modal-current-terminology-term {
+    padding-left: 25px;
+}
+
+.upgrade-footer .export-inactive-concept-modal-button {
+    margin-right: 10px;
+}
+
+.upgrade-success-inactive-label {
+    font-weight: 500;
+    padding-right: 60px;
+}
+
+.manage-members-menu,
+.manage-refset-menu,
+.documentation-menu,
+.download-menu,
+.collaboration-menu,
+.compare-menu {
+    padding: 0px !important;
+    color: #00a9e0;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.menu-spacer {
+    padding-right: 10px;
+}
+
+.down-arrow-for-menu {
+    font-size: 8px;
+    padding-top: 5px;
+}
+
+.upgrade-success-members-label {
+    font-weight: 500;
+    padding-right: 39px;
+}
 
 .review-modal-body {
     background-color: #f5f5f6;
@@ -2724,7 +2892,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .review-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .ready-for-review-footer {
@@ -2872,7 +3040,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .workflow-history-notes-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .workflow-history-notes-footer {
@@ -2917,7 +3085,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-descendants-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .add-remove-descendants-footer {
@@ -3102,7 +3270,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     overflow: unset;
     color: white;
   }
-  
+
 .landing-page-top-bar-center {
     grid-area: landing-page-top-bar-center;
     padding-top: 18px;
@@ -3124,7 +3292,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     grid-area: landing-page-info-section;
     padding-top: 30px;
 }
-  
+
 .landing-page-login-section {
     grid-area: landing-page-login-section;
     justify-self: center;
@@ -3136,15 +3304,23 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .landing-page-text-2 {
-    
+
 }
 
 .landing-page-text-3 {
-    
+
 }
 
 .landing-page-text-4 {
-    
+
+}
+
+span.title {
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #C8CFD6;
 }
 
 .landing-page-guest-access {
@@ -3156,15 +3332,20 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     width: 220px;
     height: 25px;
-    font-size: 10px;
+    font-size: 14px;
 }
 
 .landing-page-guest-has-account {
     color: black;
+    font-weight: 500;
 }
 
 .landing-page-log-in-link {
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+    color: rgb(50, 50, 212);
 }
 
 .landing-page-tool-logo {
