@@ -21,14 +21,14 @@ export class NavbarComponent implements OnInit {
     @Input()
     breadcrumbs: any;
     guestUser: string;
-    isUserLoggedIn =  false;
+    isUserLoggedIn = false;
 
     constructor(private authenticationService: AuthenticationService,
         private breadcrumbService: BreadcrumbService,
         private readonly modalService: NgbModal,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
-        readonly refsetService: RefsetService, 
+        readonly refsetService: RefsetService,
         private readonly notificationService: NotificationService) {
 
         this.guestUser = authenticationService.GUEST_USER;
@@ -80,11 +80,11 @@ export class NavbarComponent implements OnInit {
         return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
     }
 
-    navigate(breadcrumbId){
+    navigate(breadcrumbId) {
 
         let breadcrumb = this.breadcrumbs[breadcrumbId];
 
-        if (breadcrumb.selectable){
+        if (breadcrumb.selectable) {
             this.router.navigate([breadcrumb.path]);
         }
     }
@@ -99,5 +99,17 @@ export class NavbarComponent implements OnInit {
 
     assignedUser(): string {
         return this.refsetService.assignedUser ? this.refsetService.assignedUser : 'Unassigned';
+    }
+
+    breadcrumbsHasDir(): boolean {
+        if (this.breadcrumbs.length == 0)
+            return false;
+        return this.breadcrumbs.find(bc => bc.label == "Directory") != undefined;
+    }
+
+    breadcrumbsHasProjects(): boolean {
+        if (this.breadcrumbs.length == 0)
+            return false;
+        return this.breadcrumbs.find(bc => bc.label == "Projects") != undefined;
     }
 }
