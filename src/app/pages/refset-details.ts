@@ -1657,8 +1657,8 @@ export class RefsetDetails {
 
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
-          backdrop : 'static',
-          keyboard : false,
+          //backdrop : 'static',
+          //keyboard : false,
           windowClass: 'alert-modal'
         });
     }
