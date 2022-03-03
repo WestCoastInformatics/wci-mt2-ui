@@ -437,7 +437,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             const dialogOptions = {
                 id: dialogId,
                 width: '1000px',
-                disableClose: true
+                disableClose: false
             }
 
             if (this.showLoadingSpinner) {
@@ -468,10 +468,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
 
         const dialogOptions = {
-            id: dialogId
+            id: dialogId,
+            disableClose: false
         }
 
-        this.dialog = this.dialogFactoryService.open(dialogData);
+        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
         this.dialog.confirmed().subscribe(data => {
 
