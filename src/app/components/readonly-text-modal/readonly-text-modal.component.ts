@@ -19,6 +19,6 @@ export class ReadonlyTextModalComponent implements OnInit {
   }
 
   openCreateRefsetModal(refsetVersionNotes: NgbModal) {
-      this.modalService.open(refsetVersionNotes, { size: 'lg', backdrop: 'static', keyboard: false  });
+      this.modalService.open(refsetVersionNotes, { size: 'lg'  });
   }
 }

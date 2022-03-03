@@ -415,8 +415,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {
         this.modalService.open(workflowDiagramModal, {
-          backdrop : 'static',
-          keyboard : false,
+          //backdrop : 'static',
+          //keyboard : false,
           windowClass: 'workflow-diagram-modal'
         });
       }
