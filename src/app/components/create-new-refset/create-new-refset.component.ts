@@ -100,8 +100,8 @@ export class CreateNewRefsetComponent implements OnInit {
 
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
-                backdrop: 'static',
-                keyboard: false,
+                //backdrop: 'static',
+                //keyboard: false,
             });
         }
     }
