@@ -167,7 +167,7 @@ strong {
 }
 
 nav a img {
-    height: 3rem !important;
+    height: 40px !important;
     vertical-align: middle;
     border-style: none;
 }
@@ -180,6 +180,24 @@ nav a span {
 
 .bg-dark {
     background-color: #434955 !important;
+}
+
+#bg-landing-header {
+    background-color: rgb(33, 37, 41) !important;
+    padding: 5px !important;
+    height: 50px !important;
+}
+
+#bg-landing-footer {
+    background-color: rgb(33, 37, 41) !important;
+    font-weight: 300;
+    height: 40px !important;
+}
+
+.header-title {
+    font-family: Poppins, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 300
 }
 
 .page-title {
