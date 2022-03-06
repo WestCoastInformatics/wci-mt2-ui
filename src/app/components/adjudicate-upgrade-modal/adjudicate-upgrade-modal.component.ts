@@ -325,7 +325,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         };
           
           this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), restParams).subscribe(results => {
-            this.numOfResults = results.total;
+            
+            results.items = results.items.filter((x) => {
+              return x.active === false;
+            });
+
+            this.numOfResults = results.items.length;
             console.log(results.items)
             if (results.items.length == 0 && pageNumber > 1) {
 
@@ -348,7 +353,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
                     if (results.totalKnown) {
 
-                        lastRow = results.total;
+                        lastRow = results.items.length;
 
                     } else if (this.refsetGridPaging.totalKnown) {
 
@@ -387,16 +392,16 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 
     // set placeholders on the grid floating filter fields
-    Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+    // Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
 
-        if (obj.attributes['disabled']) { // skip columns with disabled filter
-            return;
-        }
+    //     if (obj.attributes['disabled']) { // skip columns with disabled filter
+    //         return;
+    //     }
 
-        let label = obj.getAttribute('aria-label');
-        let value = label.substring(0, label.indexOf('Filter Input')) + '...';
-        obj.setAttribute('placeholder', value);
-    });
+    //     let label = obj.getAttribute('aria-label');
+    //     let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+    //     obj.setAttribute('placeholder', value);
+    // });
 
 
 }
