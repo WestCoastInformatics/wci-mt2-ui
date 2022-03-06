@@ -85,6 +85,7 @@ import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
+import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -107,6 +108,7 @@ const appRoutes: Routes = [
         ColumnChooserComponent,
         NotificationComponent,
         UpgradeModalComponent,
+        AdjudicateUpgradeModalComponent,
         SafeUrlPipe,
         RefsetDirectory,
         RefsetDetails,
@@ -132,6 +134,7 @@ const appRoutes: Routes = [
     imports: [
         RouterModule.forRoot(
             appRoutes,
+            {onSameUrlNavigation: 'reload'}
             //{ enableTracing: true } // <-- debugging purposes only
         ),
         BrowserModule,

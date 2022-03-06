@@ -121,24 +121,13 @@
                         class="manage-refset-menu">Manage Refset <span
                             class="down-arrow-for-menu">&#x25BC;</span></button>
                     <mat-menu #refsetMenu="matMenu">
-                        <create-new-refset [projectsRefsetComponent]="projectsRefsetComponent"
-                            *ngIf="editMode" [hidden]="!allowedToEdit" [status]="refsetStatus"
-                            [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
-                            [refsetInternalId]="id" [inputProperties]="editMetadataProperties"
-                            (processChangedMemberEffects)="processChangedMemberEffects()">
-                        </create-new-refset>
-                        <workflow-history-notes-modal [refsetId]="id"
-                            [user]="refsetData?.modifiedBy"
-                            [hidden]="!allowedToEdit && !allowedToReview" [status]="refsetStatus"
-                            [workflowHistoryNotes]="workflowHistoryNotes">
-                        </workflow-history-notes-modal>
-                        <upgrade-modal
-                            *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')"
-                            [refsetData]="refsetData"></upgrade-modal>
-                        <button mat-menu-item *ngIf="editMode" [hidden]="true">Convert Refset
-                            Type</button>
-                        <button mat-menu-item *ngIf="editMode" [hidden]="!allowedToEdit"
-                            (click)="openDeleteRefset()">Delete Refset</button>
+                      <create-new-refset [projectsRefsetComponent]="projectsRefsetComponent" *ngIf="editMode" [hidden]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
+                      [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
+                      </create-new-refset>
+                      <workflow-history-notes-modal [refsetId]="id" [user]="refsetData?.modifiedBy" [hidden]="!allowedToEdit && !allowedToReview" [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal>
+                      <!-- <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal> -->
+                      <button mat-menu-item *ngIf="editMode" [hidden]="true">Convert Refset Type</button>
+                      <button mat-menu-item *ngIf="editMode" [hidden]="!allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
                     </mat-menu>
                     <span class="menu-spacer">&nbsp;</span>
                     <button mat-button [matMenuTriggerFor]="collaborationMenu"
@@ -188,7 +177,7 @@
                         Edit
                     </button>
 
-                    <!-- <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal> -->
+                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton

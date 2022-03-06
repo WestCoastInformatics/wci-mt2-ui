@@ -28,6 +28,14 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/search', params);
     }
 
+    initializeUpgrade(refsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${refsetInternalId}/compileUpgradeData`, '', false);
+    }
+
+    getUpgradeData(refsetInternalId: string, params: any): Observable<any> {
+        return this.get(this.contextPath + `refset/${refsetInternalId}/upgradeData`, params, false);
+    }
+
     getProjects(params: any): Observable<any> {
         return this.get(this.contextPath + 'project/search', params, false);
     }

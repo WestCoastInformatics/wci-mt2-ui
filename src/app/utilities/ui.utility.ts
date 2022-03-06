@@ -282,9 +282,9 @@ export class UiUtility {
 
 				(data) => {
 
-					if (CodeUtility.testBoolean(data)) {
-						setTimeout(checkIfFinished, callDelay);
-					} else {
+                    if (CodeUtility.testBoolean(data)) {
+                        setTimeout(checkIfFinished, callDelay);
+                    } else {
 
                         let title = 'Member Change Notification';
                         let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
@@ -388,6 +388,85 @@ export class UiUtility {
 		};
 
 		checkIfFinished();
+    }
+    
+    static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string, selectedVersion?: any) {
+
+        let message = '';
+		let upgradeMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
+            + 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+        
+        if (processType?.includes('upgrade')) {
+            message = upgradeMessage;
+        }
+        
+        let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+
+		let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
+        let buttons = [viewRefsetButton];
+		let callNumber = 0;
+		let callDelay = 1000;
+		let successMessageTimeout = 0;
+        this.router = router;
+
+		let checkIfFinished = () => {
+
+			callNumber++;
+
+			if (callNumber == 20) {
+				callDelay = 4000;
+
+			} else if (callNumber == 30) {
+				callDelay = 15000;
+			}
+			refsetService.isRefsetLocked(refsetInternalId).subscribe(
+
+				(data) => {
+
+                    if (CodeUtility.testBoolean(data)) {
+                        setTimeout(checkIfFinished, callDelay);
+                    } else {
+
+                        let title = 'Refset Change Notification';
+                        let notificationType = 'success';
+                        let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
+
+						notificationService.close(notification);
+
+						// if (router.url.includes('/' + refsetId)) {
+						// 	successMessageTimeout = 5000;
+						// 	callbackFunction(data);
+						// } else {
+                        //     buttons.unshift(viewRefsetButton);
+                        // }
+
+                        message = 'Refset ' + refsetId + ' has successfully completed the '+ processType +' process. You may continue editing the refset.';
+
+                        if (previousNotifications.length > 0) {
+                            notificationService.close(previousNotifications[0]);
+                        }
+
+						notification = notificationService.show(message, title, notificationType, {timeOut: 0, extendedTimeOut: 0}, refsetId, buttons);
+                        
+                        notification.onAction.subscribe(button => {
+
+                        if (button.id == 'view') {
+                            this.viewRefset(refsetId, versionDate, selectedVersion);
+                            }
+                        });
+					}
+				},
+				(error) => {
+
+					console.log(error);
+                    message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. View the refset to determine changes or contact an administrator.';
+					notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+				}
+			);
+		};
+
+		checkIfFinished();
 	}
 
     static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
@@ -450,9 +529,13 @@ export class UiUtility {
          return csvString;
      }
 
-    static viewRefset (refsetId, versionDate) {
-        this.router.navigate(['/details', refsetId, versionDate]);
-	}
+    static viewRefset(refsetId, versionDate, selectedVersion?: any) {
+        if (selectedVersion) {
+            this.router.navigate(['/details', refsetId, versionDate], {queryParams: {isResumeUpgrade: true, isInitialUpgrade: false, selectedVersion}});
+        } else {
+            this.router.navigate(['/details', refsetId, versionDate]);
+        }
+    }
 
     static toggleLockedSections(lock: boolean) {
 
