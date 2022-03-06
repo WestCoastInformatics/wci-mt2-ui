@@ -2839,6 +2839,74 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-right: 60px;
 }
 
+.adjudicate-upgrade-modal-body {
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+
+.adjudicate-upgrade-modal > .modal-dialog > .modal-content {
+    width: 1140px;
+}
+
+.adjudicate-upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.adjudicate-inactive-concepts {
+    padding-right: 15px;
+}
+
+.adjudicate-format-option-drop-down {
+    margin-top: -15px;
+    padding-right: 15px;
+}
+
+.adjudicate-column-inactiveId,
+.adjudicate-column-inactiveEnPtSection,
+.adjudicate-column-inactiveEnFsnSection,
+.adjudicate-column-inactiveFrPtSection,
+.adjudicate-column-inactiveNlPtSection {
+    background-color: rgba(249, 238, 238, 1);
+}
+
+.adjudicate-upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.adjudicate-upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.adjudicate-upgrade-modal-body-header {
+    display: flex;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+}
+
+.adjudicate-upgrade-modal-body-mid {
+}
+
+.adjudicate-export-modal-button {
+    margin-right: 15px !important ;
+}
+
+.adjudicate-cancel-modal-button {
+    margin-right: 15px !important;
+    background-color: red !important;
+}
+
 .manage-members-menu,
 .manage-refset-menu,
 .documentation-menu,

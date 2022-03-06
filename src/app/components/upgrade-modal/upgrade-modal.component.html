@@ -1,10 +1,10 @@
-<!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
-    Upgrade
-</button> -->
-<button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button>
+<button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
+    {{ (getResumeParam || isResumeUpgrade && !isInitialUpgrade) ? 'Resume Upgrade' : 'Upgrade' }}
+</button>
+<!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button> -->
 <ng-template #upgradeDialog
              let-modal>
-<ng-container *ngIf="isInitialUpgrade && !isResumeUpgrade">
+<ng-container *ngIf="(isInitialUpgrade || getInitialParam) && (!isResumeUpgrade || !getResumeParam)">
     <div class="modal-header upgrade-modal-header">
         <h4 class="modal-title upgrade-modal-title"
             id="modal-basic-title">
@@ -35,7 +35,7 @@
                 <select matNativeControl
                         [(ngModel)]="selectedVersion">
                     <option *ngFor="let version of listOfDates(refsetData?.versionList)"
-                            [value]="version?.date">
+                            [value]="version?.refsetInternalId">
                         {{ version?.date }}
                     </option>
                 </select>
@@ -45,20 +45,12 @@
     </div>
     <div class="modal-footer upgrade-footer">
         <div class="upgrade-footer-warning-message" *ngIf="showWarning">Currently on the newest version</div>
-        <button type="button"
-                mat-raised-button
-                color="primary"
-                aria-hidden="false"
-                class="refset-tool-action-button upgrade-modal-button"
-                aria-label="Upgrade"
-                title="Upgrade"
-                ng-reflect-color="primary"
-                (click)="upgrade()">
+        <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary" (click)="upgrade()">
             Upgrade
         </button>
     </div>
 </ng-container>
-<ng-container *ngIf="isResumeUpgrade && !isInitialUpgrade">
+<ng-container *ngIf="(getResumeParam || isResumeUpgrade) && (!isInitialUpgrade || !getInitialParam)">
     <div class="modal-header upgrade-modal-header">
         <h4 class="modal-title upgrade-modal-title"
             id="modal-basic-title">
@@ -84,18 +76,22 @@
                 </ngb-alert>
             </div>
             <div class="upgrade-modal-body-mid">
-                <div class="upgrade-success-inactive"><span class="upgrade-success-inactive-label">Inactive Concepts:</span><span>12</span></div>
-                <div class="upgrade-success-members"><span class="upgrade-success-members-label">Members in Common:</span><span>875</span></div>
+                <div class="upgrade-success-inactive"><span class="upgrade-success-inactive-label">Inactive Concepts:</span><span>{{inactiveConcepts}}</span></div>
+                <div class="upgrade-success-members"><span class="upgrade-success-members-label">Members in Common:</span><span>{{totalMembers}}</span></div>
             </div>
         </div>
     </div>
     <div class="modal-footer upgrade-footer">
+        <button type="button" mat-raised-button color="primary" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click'); refsetDetails?.initializeDetailsPage()" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="primary">
+            Cancel Upgrade
+        </button>
         <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="primary">
             Export Inactive Concept Report
         </button>
-        <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary" (click)="modal.dismiss('Cross click'); upgrade()">
+        <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary" (click)="modal.dismiss('Cross click'); upgrade()">
             Continue Upgrade
-        </button>
+        </button> -->
+        <adjudicate-upgrade-modal [refsetData]="refsetData" [selectedVersion]="selectedVersion" [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
     </div>
 </ng-container>
 </ng-template>
