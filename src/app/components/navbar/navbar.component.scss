@@ -1,8 +1,20 @@
 @import "~src/variables.scss";
 
 nav {
+    height: 50px;
+    padding: 5px;
+    font-family: Poppins, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    background-color: rgb(33, 37, 41) !important;
+    div {
+        margin-top: -10px;
+        div {
+            margin-top: 0;
+        }
+    }
     a.logo {
-        height: 4rem;
+        height: 40px;
         font-size: 1.6rem;
 
         &:hover {
@@ -25,7 +37,7 @@ nav {
 
     div.banner {
         position: absolute;
-        top: 1rem;
+        top: 0.6rem;
         left: -3rem;
         transform: rotate(-45deg);
         line-height: 1rem;
