@@ -40,7 +40,7 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Project Name:</label>
+                        <label style="margin-bottom: 1rem;">Project Name:</label>
                     </div>
                     <div class="
                             col
@@ -57,7 +57,7 @@
                 <div class="create-new-refset-form-field">
 
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label>Owner/Organization:</label>
+                        <label style="margin-bottom: 1rem;">Owner/Organization:</label>
                     </div>
 
                     <div class="col create-new-refset-field create-new-refset-flex-weight"
@@ -75,7 +75,7 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Edition/Extension:</label>
+                        <label style="margin-bottom: 1rem;">Edition/Extension:</label>
                     </div>
                     <div class="
                             col
@@ -223,13 +223,13 @@
                 <!-- End both NARRATIVEs-->
 
                 <!-- Tags -->
-                <div class="create-new-refset-form-field">
+                <div class="create-new-refset-form-field" style="align-items: normal">
                     <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Reference Set Tags:</label>
+                        <label style="margin-top: 2rem">Reference Set Tags:</label>
                     </div>
 
                     <!-- Tags for new refset-->
@@ -296,7 +296,8 @@
                             create-new-refset-flex-weight
                         ">
                         <mat-form-field appearance="fill">
-                            <mat-label>Select Reference Set Type</mat-label>
+                            <mat-label>Select Reference Set Type
+                            </mat-label>
                             <select matNativeControl [(ngModel)]="selectedReferenceType">
                                 <option *ngFor="let referenceType of referenceTypes"
                                     [value]="referenceType">
@@ -314,7 +315,7 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Reference Set Type:</label>
+                        <label style="margin-bottom: 0.2rem;">Reference Set Type:</label>
                     </div>
                     <div class="
                             col
@@ -334,7 +335,7 @@
                     *ngIf="selectedReferenceType === INTENSIONAL">
 
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label>ECL Definition:</label>
+                        <label style="margin-bottom: 0">ECL Definition:</label>
                     </div>
 
                     <div class="col create-new-refset-field create-new-refset-flex-weight">
