@@ -12,7 +12,9 @@
     <img src="assets/notes-icon.svg" alt="notes icon" title="Edit Metadata"
         aria-label="Edit metadata" />
 </button> -->
-<button mat-menu-item *ngIf="isDetailsPage || editMode" (click)="openCreateRefsetModal(createNewRefsetDialog);" [disabled]="disabled" alt="notes icon" title="Edit Metadata" aria-label="Edit metadata">Edit Metadata</button>
+<button mat-menu-item *ngIf="isDetailsPage || editMode"
+    (click)="openCreateRefsetModal(createNewRefsetDialog);" [disabled]="disabled" alt="notes icon"
+    title="Edit Metadata" aria-label="Edit metadata">Edit Metadata</button>
 
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
@@ -87,7 +89,8 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="create-new-refset-form-field">
+                <div class="create-new-refset-form-field"
+                    id="create-new-refset-assign-refset-field">
                     <div *ngIf="editMode" class="
                             col
                             create-new-refset-label
@@ -123,6 +126,9 @@
                                 (change)="checkRadioButtonValue($event)">Choose an existing metadata
                                 concept</mat-radio-button>
 
+                            <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
+                                Create a new concept</mat-radio-button>
+
                             <mat-form-field appearance="fill"
                                 [hidden]="isSelected == 2 || isSelected == 0">
                                 <mat-label>Choose existing metadata concept</mat-label>
@@ -135,8 +141,6 @@
                                 </select>
                             </mat-form-field>
 
-                            <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
-                                Create a new concept</mat-radio-button>
 
                             <mat-form-field appearance="fill"
                                 [hidden]="isSelected == 1 || isSelected == 0">

@@ -1357,6 +1357,10 @@ button.refset-tool-table-action-icon {
     max-width: 200px;
 }
 
+#vertical {
+    vertical-align: top;
+}
+
 // Temp Style
 
 // Make Table in Button Group appear selected on load
@@ -2053,6 +2057,10 @@ button.refset-tool-table-action-icon {
     justify-content: space-between;
     width: 100%;
     align-items: center;
+}
+
+#create-new-refset-assign-refset-field {
+    align-items: normal
 }
 
 .create-new-refset-project-name {
