@@ -64,12 +64,10 @@
         <button type="button" mat-raised-button color="primary" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click'); refsetDetails?.initializeDetailsPage()" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="primary">
             Cancel Upgrade
         </button>
-        <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button adjudicate-export-modal-button" aria-label="Export Change Report" title="Export Change Report" ng-reflect-color="primary">
+        <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button adjudicate-export-modal-button" aria-label="Export Change Report" title="Export Change Report" ng-reflect-color="primary">
             Export Change Report
-        </button>
-        <button type="button" mat-raised-button color="primary" (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); modal.dismiss('Cross click')" aria-hidden="false" class="refset-tool-action-button adjudicate-finish-modal-button" aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="primary">
-            Finish Upgrade
-        </button>
+        </button> -->
+        <finish-upgrade-modal></finish-upgrade-modal>
     </div>
 </ng-container>
 </ng-template>

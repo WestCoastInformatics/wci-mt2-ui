@@ -479,6 +479,20 @@ export class UiUtility {
         delete this.memberChangeData[refsetId];
     }
 
+    static createInactiveChangeReport(refsetId: string, data): void {
+
+        let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+
+        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept', 'Members in Common ID', 'Refset ID'], fileName);
+    }
+
+    // static createFinishedChangeReport(refsetId: string, data): void {
+
+    //     let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+
+    //     this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept', 'Members in Common ID', 'Refset ID'], fileName);
+    // }
+
     static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
 
         const csvData = this.convertToCsv(data, headerlist);

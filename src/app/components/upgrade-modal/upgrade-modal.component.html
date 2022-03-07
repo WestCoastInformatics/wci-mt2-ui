@@ -85,7 +85,7 @@
         <button type="button" mat-raised-button color="primary" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click'); refsetDetails?.initializeDetailsPage()" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="primary">
             Cancel Upgrade
         </button>
-        <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="primary">
+        <button type="button" mat-raised-button color="primary" (click)="getInactiveChangeExport()" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="primary">
             Export Inactive Concept Report
         </button>
         <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary" (click)="modal.dismiss('Cross click'); upgrade()">

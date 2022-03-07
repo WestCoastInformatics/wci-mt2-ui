@@ -2857,6 +2857,96 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-right: 60px;
 }
 
+
+.finish-upgrade-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+
+.finish-upgrade-modal > .modal-dialog > .modal-content {
+    width: 800px;
+}
+
+.finish-upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.finish-upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.finish-upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.finish-upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.finish-upgrade-modal-body-mid {
+    text-align: left;
+}
+
+.finish-upgrade-modal-current-version {
+
+}
+
+.finish-upgrade-footer-warning-message {
+    color: red;
+    padding-right: 20px;
+}
+
+.finish-upgrade-modal-current-version-label {
+    font-weight: 500;
+}
+
+.finish-upgrade-modal-current-version-term {
+    padding-left: 25px;
+}
+
+.upgrade-modal-current-terminology {
+
+}
+
+.finish-upgrade-modal-success-warning {
+    height: fit-content;
+}
+
+.finish-upgrade-modal-success {
+    text-align: left;
+}
+
+.finish-upgrade-modal-current-terminology-label {
+    font-weight: 500;
+}
+
+.finish-upgrade-modal-current-terminology-term {
+    padding-left: 25px;
+}
+
+.finish-upgrade-footer .export-inactive-concept-modal-button {
+    margin-right: 10px;
+}
+
+.finish-upgrade-success-inactive-label {
+    font-weight: 500;
+    padding-right: 60px;
+}
+
 .adjudicate-upgrade-modal-body {
     text-align: center;
     text-align: -webkit-center;
