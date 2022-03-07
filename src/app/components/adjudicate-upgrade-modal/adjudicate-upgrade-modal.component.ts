@@ -166,7 +166,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           }
           return JSON.parse(x);
         });
-        // console.log(formattedObjectArray)
         return formattedObjectArray.filter((x) => {
           return x.languageName === this.selectedLanguage;
         });
@@ -323,9 +322,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
             limit: this.refsetGridApi.paginationGetPageSize(),
             offset: pageNumber - 1
         };
-          
+
           this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), restParams).subscribe(results => {
-            
+
             results.items = results.items.filter((x) => {
               return x.active === false;
             });

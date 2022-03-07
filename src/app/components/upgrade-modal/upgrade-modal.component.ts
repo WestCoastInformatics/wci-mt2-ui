@@ -110,7 +110,74 @@ export class UpgradeModalComponent implements OnInit {
         this.refsetService.initializeUpgrade(this.selectedVersion);
         this.isInitialUpgrade = false;
         this.isResumeUpgrade = true;
-        UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'upgrade', this.selectedVersion);
+        UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
+      }
+    }
+  }
+
+  getInactiveChangeExport(): void {
+    const memberItems = this.membersInCommon.items;
+    const inactiveConcepts = memberItems.filter((items: any) => {
+      return items?.active == false;
+    });
+    let data = [];
+    for (let i = 0; i < inactiveConcepts.length; i++) {
+      data.push({
+        'Inactive Concept ID': inactiveConcepts[i].code,
+        'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term,
+        'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
+        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term
+      });
+    }
+
+    UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+  }
+
+  transformDescriptions(descriptions: any) {
+    if (descriptions) {
+      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
+      if (getStringifiedJSON) {
+        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"descriptionId"').map((x) => {
+          if (x[x.length - 1] === ',') {
+            const modifiedString = x.slice(0, -1);
+            x = modifiedString;
+          }
+          if (!x.includes('"descriptionId"')) {
+            x = '{"descriptionId"' + x;
+          } else if (!x.includes('{"descriptionId"') && x.includes('"descriptionId"')) {
+            x = '{' + x;
+          }
+          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
+            x = x + '"}';
+          }
+          return JSON.parse(x);
+        });
+        return formattedObjectArray[0];
+      }
+    }
+  }
+
+  transformReplacementDescriptions(descriptions: any) {
+    if (descriptions) {
+      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
+      if (getStringifiedJSON) {
+        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
+          if (x[x.length - 1] === ',') {
+            const modifiedString = x.slice(0, -1);
+            x = modifiedString;
+          }
+          if (!x.includes('"active"')) {
+            x = '{"active"' + x;
+          } else if (!x.includes('{"active"') && x.includes('"active"')) {
+            x = '{' + x;
+          }
+          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
+            x = x + '"}';
+          }
+          return JSON.parse(x);
+        });
+        return formattedObjectArray[0];
       }
     }
   }

@@ -86,6 +86,7 @@ import { ReviewModalComponent } from 'src/app/components/review-modal/review-mod
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
+import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -108,6 +109,7 @@ const appRoutes: Routes = [
         ColumnChooserComponent,
         NotificationComponent,
         UpgradeModalComponent,
+        FinishUpgradeModalComponent,
         AdjudicateUpgradeModalComponent,
         SafeUrlPipe,
         RefsetDirectory,
