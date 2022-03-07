@@ -11,6 +11,7 @@ import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ProjectsRefsetComponent } from 'src/app/pages/projects/projects-refset.component';
 
 @Component({
     selector: 'create-new-refset',
@@ -68,9 +69,6 @@ export class CreateNewRefsetComponent implements OnInit {
         definitionClauses?: [];
     };
 
-    @Input()
-    projectsRefsetComponent: any;
-
     constructor(
         private modalService: NgbModal,
         private detectChanges: ChangeDetectorRef,
@@ -78,7 +76,8 @@ export class CreateNewRefsetComponent implements OnInit {
         private refsetService: RefsetService,
         private readonly workflowService: WorkflowService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly notificationService: NotificationService
+        private readonly notificationService: NotificationService,
+        private readonly projectsRefsetComponent: ProjectsRefsetComponent
     ) { }
 
     ngOnInit(): void { }
