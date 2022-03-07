@@ -1357,6 +1357,10 @@ button.refset-tool-table-action-icon {
     max-width: 200px;
 }
 
+#vertical {
+    vertical-align: top;
+}
+
 // Temp Style
 
 // Make Table in Button Group appear selected on load
@@ -2053,6 +2057,10 @@ button.refset-tool-table-action-icon {
     justify-content: space-between;
     width: 100%;
     align-items: center;
+}
+
+#create-new-refset-assign-refset-field {
+    align-items: normal
 }
 
 .create-new-refset-project-name {
@@ -3343,15 +3351,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .project-nav {
     width: 75px;
     border-right: 1px solid #797979;
-    height: 55px;
-    margin-bottom: -10px;
-    margin-top: -10px;
+    height: 40px;
     cursor: pointer;
 }
 
 .projects-icon {
-    padding-top: 10px;
+    padding-top: 5px;
     padding-left: 18px;
+    margin-bottom: -5px;
 }
 
 .projects-icon-label {
@@ -3364,15 +3371,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 75px;
     border-left: 1px solid #797979;
     border-right: 1px solid #797979;
-    height: 55px;
-    margin-bottom: -10px;
-    margin-top: -10px;
+    height: 50px;
     cursor: pointer;
 }
 
 .directory-icon {
-    padding-top: 7px;
+    padding-top: 5px;
     padding-left: 22px;
+    margin-bottom: -5px;
 }
 
 .directory-icon-label {
