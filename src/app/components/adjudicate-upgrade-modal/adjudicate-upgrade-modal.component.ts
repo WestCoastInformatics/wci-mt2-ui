@@ -25,7 +25,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   selectedVersion: any
   numOfResults: any;
   numOfMembers: any;
-  selectedLanguage = '';
+  selectedLanguage = 'EN (FSN)';
   languageOptions = [];
   hideReplacements = false;
   refsetGridLastFilter: string = '';
