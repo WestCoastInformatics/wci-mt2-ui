@@ -524,23 +524,17 @@ button.refset-tool-table-action-icon {
     }
 
     .mat-raised-button {
-        min-width: 36px !important;
+        min-width: 30px !important;
         border-radius: 0px !important;
         padding: 0px !important;
-        line-height: 36px !important;
+        line-height: 30px !important;
     }
 
     .mat-raised-button.mat-primary {
         background-color: $cerulean !important;
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px
     }
 
-    .mat-raised-button.mat-button-disabled,
-    .mat-raised-button.mat-button-base {
-        margin-bottom: 15px;
-    }
 }
 
 .close-button button.refset-tool-table-action-icon {
@@ -550,9 +544,7 @@ button.refset-tool-table-action-icon {
 .isDisabled {
     .mat-raised-button.mat-primary {
         background-color: lightgrey !important;
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px
     }
 }
 .wrapper-progressBar {
@@ -639,7 +631,6 @@ button.refset-tool-table-action-icon {
 }
 
 .top-search-bar {
-    top: 70px !important;
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     .page-title {
@@ -758,7 +749,7 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage .refset-title {
     background: white;
-    top: 70px;
+    top: 10px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
     z-index: 1000;
@@ -868,14 +859,6 @@ button.refset-tool-table-action-icon {
         > .toggle-children {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
-    .tree-node {
-        .refset-tool-taxonomy-no-members-in-branch {
-            margin-left: 25px;
-        }
-        .refset-tool-taxonomy-is-member {
-            margin-left: 25px;
-        }
-    }
     .tree-node img {
         width: 12.75px;
         height: 10.5px;
@@ -908,6 +891,7 @@ button.refset-tool-table-action-icon {
         height: 18px;
         width: 29.25px;
         top: 5px;
+        margin-right: 3px;
     }
     // used for when there are no children
     .toggle-children-placeholder {
@@ -1106,11 +1090,11 @@ button.refset-tool-table-action-icon {
         text-align: center;
     }
     button {
-        margin: 0 5px;
+        margin: 0 2px;
     }
     .refset-tool-pagination-buttons {
         padding: 0;
-        margin: 5px 0px;
+        margin: 2px 0px;
     }
     .refset-tool-pagination-total-label {
         flex: 1;
@@ -1139,6 +1123,7 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
+    padding-left: 0 !important;
 }
 
 .mat-form-field-underline {
@@ -1147,6 +1132,10 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-underline:hover {
     background-color: rgba(0, 0, 0, 0.42);
+}
+
+.mat-form-field-appearance-fill .mat-form-field-label {
+    margin-top: 0em !important;
 }
 
 .mat-input-element,
@@ -2368,7 +2357,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetProjectsPage > .refset-title {
     align-items: baseline;
     position: sticky;
-    top: 70px;
     z-index: 2;
     background-color: white;
     padding-top: 10px;
@@ -2548,11 +2536,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-details-size {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     overflow-x: hidden;
 }
@@ -2560,22 +2548,22 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .refset-tool-taxonomy {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
 }
 
 .refset-tool-concept-details-taxonomy-icon {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
 }
 
@@ -2690,7 +2678,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .mat-horizontal-stepper-header-container {
     height: 65px;
-    margin-top: -35px;
+    margin-top: -25px;
 }
 
 .details-page-stepper {
@@ -3357,14 +3345,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .project-nav {
     width: 75px;
     border-right: 1px solid #797979;
-    height: 40px;
+    height: 50px;
     cursor: pointer;
 }
 
 .projects-icon {
-    padding-top: 5px;
     padding-left: 18px;
-    margin-bottom: -5px;
+    margin-bottom: -7px;
 }
 
 .projects-icon-label {
