@@ -44,6 +44,23 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + 'refset/', params);
     }
 
+
+    addInactiveMembers(refsetInternalId: string, inactiveConceptId: string,): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=INACTIVE_ADDED`, '', true);
+    }
+
+    removeInactiveMembers(refsetInternalId: string, inactiveConceptId: string,): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=INACTIVE_REMOVED`, '', true);
+    }
+
+    addReplacementMembers(refsetInternalId: string, inactiveConceptId: string,): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=REPLACEMENT_ADDED`, '', true);
+    }
+
+    removeReplacementMembers(refsetInternalId: string, inactiveConceptId: string): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=REPLACEMENT_REMOVED`, '', true);
+    }
+
     addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
     }

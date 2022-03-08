@@ -2860,6 +2860,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-right: 10px;
 }
 
+.adjudicate-export-inactive-concept-modal-button {
+    margin-right: 15px !important;
+}
+
 .upgrade-success-inactive-label {
     font-weight: 500;
     padding-right: 60px;
@@ -2984,10 +2988,12 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-right: 15px;
 }
 
+.adjudicate-column-inactiveCode,
 .adjudicate-column-inactiveId,
 .adjudicate-column-inactiveEnPtSection,
 .adjudicate-column-inactiveEnFsnSection,
 .adjudicate-column-inactiveFrPtSection,
+.adjudicate-column-inactivationReason,
 .adjudicate-column-inactiveNlPtSection {
     background-color: rgba(249, 238, 238, 1);
 }
