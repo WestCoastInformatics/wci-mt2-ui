@@ -639,7 +639,6 @@ button.refset-tool-table-action-icon {
 }
 
 .top-search-bar {
-    top: 70px !important;
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     .page-title {
@@ -758,7 +757,7 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage .refset-title {
     background: white;
-    top: 70px;
+    top: 10px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
     z-index: 1000;
@@ -2366,7 +2365,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetProjectsPage > .refset-title {
     align-items: baseline;
     position: sticky;
-    top: 70px;
     z-index: 2;
     background-color: white;
     padding-top: 10px;
@@ -2688,7 +2686,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .mat-horizontal-stepper-header-container {
     height: 65px;
-    margin-top: -35px;
+    margin-top: -25px;
 }
 
 .details-page-stepper {
