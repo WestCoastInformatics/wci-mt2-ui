@@ -1139,6 +1139,7 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
+    padding-left: 0 !important;
 }
 
 .mat-form-field-underline {
@@ -1147,6 +1148,10 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-underline:hover {
     background-color: rgba(0, 0, 0, 0.42);
+}
+
+.mat-form-field-appearance-fill .mat-form-field-label {
+    margin-top: 0em !important;
 }
 
 .mat-input-element,
@@ -3351,14 +3356,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .project-nav {
     width: 75px;
     border-right: 1px solid #797979;
-    height: 40px;
+    height: 50px;
     cursor: pointer;
 }
 
 .projects-icon {
-    padding-top: 5px;
     padding-left: 18px;
-    margin-bottom: -5px;
+    margin-bottom: -7px;
 }
 
 .projects-icon-label {
