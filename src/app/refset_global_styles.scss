@@ -868,14 +868,6 @@ button.refset-tool-table-action-icon {
         > .toggle-children {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
-    .tree-node {
-        .refset-tool-taxonomy-no-members-in-branch {
-            margin-left: 25px;
-        }
-        .refset-tool-taxonomy-is-member {
-            margin-left: 25px;
-        }
-    }
     .tree-node img {
         width: 12.75px;
         height: 10.5px;
@@ -908,6 +900,7 @@ button.refset-tool-table-action-icon {
         height: 18px;
         width: 29.25px;
         top: 5px;
+        margin-right: 3px;
     }
     // used for when there are no children
     .toggle-children-placeholder {
@@ -2553,11 +2546,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-details-size {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     overflow-x: hidden;
 }
@@ -2565,22 +2558,22 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .refset-tool-taxonomy {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
 }
 
 .refset-tool-concept-details-taxonomy-icon {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
 }
 
