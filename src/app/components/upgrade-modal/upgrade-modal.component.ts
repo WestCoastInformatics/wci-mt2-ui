@@ -42,6 +42,7 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   openUpgradeModal(upgradeDialog: NgbModal) {
+    this.selectedVersion = this.refsetData.id;
 
     this.sendLoadingSpinnerTrigger(true);
 
@@ -58,8 +59,8 @@ export class UpgradeModalComponent implements OnInit {
           windowClass: 'upgrade-modal',
           size: 'lg'
         });
-        this.sendLoadingSpinnerTrigger(false);
       }
+      this.sendLoadingSpinnerTrigger(false);
     });
 
   }
@@ -67,11 +68,9 @@ export class UpgradeModalComponent implements OnInit {
   async getUpgradeData(upgradeDialog: NgbModal): Promise<void> {
 
     this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
-      this.totalMembers = members?.total;
-      this.inactiveConcepts = members?.items?.filter((items: any) => {
-        return items?.active == false;
-      })?.length;
-
+      console.log(members);
+      this.totalMembers = members?.miscCountA;
+      this.inactiveConcepts = members?.total;
 
       this.modalService.open(upgradeDialog, {
         backdrop: 'static',
@@ -79,7 +78,6 @@ export class UpgradeModalComponent implements OnInit {
         windowClass: 'upgrade-modal',
         size: 'lg'
       });
-      this.sendLoadingSpinnerTrigger(false);
 
       this.membersInCommon = members;
     });
@@ -100,18 +98,22 @@ export class UpgradeModalComponent implements OnInit {
 
   upgrade(): void {
     if (this.isInitialUpgrade) {
-      if (!this.listOfDates(this.refsetData?.versionList)?.length || !this.selectedVersion) {
-        this.showWarning = true;
-        setTimeout(() => {
-          this.showWarning = false;
-        }, 3500);
-      } else {
+      // if (!this.listOfDates(this.refsetData?.versionList)?.length || !this.selectedVersion) {
+      //   this.showWarning = true;
+      //   setTimeout(() => {
+      //     this.showWarning = false;
+      //   }, 3500);
+      // } else {
+      console.log(this.refsetData)
+        this.refsetService.initializeUpgrade(this.selectedVersion).subscribe();
         this.modalService.dismissAll();
-        this.refsetService.initializeUpgrade(this.selectedVersion);
+
+        UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
+      setTimeout(() => {
         this.isInitialUpgrade = false;
         this.isResumeUpgrade = true;
-        UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
-      }
+      }, 1000);
+        // }
     }
   }
 

@@ -30,6 +30,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
+	@Input() isInactive: boolean;
+	@Input() isReplacement: boolean;
 	@Input() processChangedMemberFunction: () => void;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() onMembersGridReady = new EventEmitter<any>();
@@ -124,14 +126,29 @@ export class AddRemoveConceptsComponent implements OnInit {
 			if (this.isAdd) {
 
 				description = 'added to';
-				operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
+				if (this.isInactive) {
+					operationFunction = this.refsetService.addInactiveMembers.bind(this.refsetService);
+				} else if (this.isReplacement) {
+					operationFunction = this.refsetService.addReplacementMembers.bind(this.refsetService);
+				} else {
+					operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
+				}
 			} else {
 
 				description = 'removed from';
-				operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
+				if (this.isInactive) {
+					operationFunction = this.refsetService.removeInactiveMembers.bind(this.refsetService);
+				} else if (this.isReplacement) {
+					operationFunction = this.refsetService.removeReplacementMembers.bind(this.refsetService);
+				} else {
+					operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
+				}
 			}
-
-			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
+			if (this.isInactive || this.isReplacement) {
+				operationFunction(this.refsetInternalId, conceptId).subscribe();
+			} else {
+				operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
+			}
 		}
 
 		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);

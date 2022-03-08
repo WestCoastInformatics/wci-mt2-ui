@@ -1,6 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
