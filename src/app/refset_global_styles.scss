@@ -524,23 +524,17 @@ button.refset-tool-table-action-icon {
     }
 
     .mat-raised-button {
-        min-width: 36px !important;
+        min-width: 30px !important;
         border-radius: 0px !important;
         padding: 0px !important;
-        line-height: 36px !important;
+        line-height: 30px !important;
     }
 
     .mat-raised-button.mat-primary {
         background-color: $cerulean !important;
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px
     }
 
-    .mat-raised-button.mat-button-disabled,
-    .mat-raised-button.mat-button-base {
-        margin-bottom: 15px;
-    }
 }
 
 .close-button button.refset-tool-table-action-icon {
@@ -550,9 +544,7 @@ button.refset-tool-table-action-icon {
 .isDisabled {
     .mat-raised-button.mat-primary {
         background-color: lightgrey !important;
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px
     }
 }
 .wrapper-progressBar {
@@ -1098,11 +1090,11 @@ button.refset-tool-table-action-icon {
         text-align: center;
     }
     button {
-        margin: 0 5px;
+        margin: 0 2px;
     }
     .refset-tool-pagination-buttons {
         padding: 0;
-        margin: 5px 0px;
+        margin: 2px 0px;
     }
     .refset-tool-pagination-total-label {
         flex: 1;
