@@ -34,7 +34,6 @@
                 <mat-label>New Version:</mat-label>
                 <select matNativeControl
                         [(ngModel)]="selectedVersion">
-                        <option>2022-03-01</option>
                     <option *ngFor="let version of listOfDates(refsetData?.versionList)"
                             [value]="version?.refsetInternalId">
                         {{ version?.date }}

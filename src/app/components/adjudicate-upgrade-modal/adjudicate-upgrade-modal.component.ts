@@ -25,7 +25,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   selectedVersion: any
   numOfResults: any;
   numOfMembers: any;
-  selectedLanguage = 'EN (FSN)';
+  selectedLanguage = '';
   languageOptions = [];
   hideReplacements = false;
   refsetGridLastFilter: string = '';
@@ -77,7 +77,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.languageOptions = this.refsetData?.edition?.fullyQualifiedLanguageRefsets.map((x) => {
       return x.qualifiedLanguageCode;
     });
-    // this.selectedLanguage = this.languageOptions[0];
+    this.selectedLanguage = this.languageOptions[0];
   }
 
   ngAfterViewInit() {
