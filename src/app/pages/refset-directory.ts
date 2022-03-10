@@ -427,10 +427,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 dialogId: dialogId,
                 showCancel: false,
                 cancelText: 'Close',
-                confirmText: 'View Complete Refset',
-                showTitle: false,
+                actionText: 'View Complete Refset',
+                //showTitle: false,
+                showConfirm: false,
                 template: this.infoDialog,
+                headerText: 'Refset Metadata',
                 data: refset,
+                showAction: true,
                 showCloseIcon: true
             }
 

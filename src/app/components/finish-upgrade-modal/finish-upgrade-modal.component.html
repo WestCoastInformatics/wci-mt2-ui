@@ -1,20 +1,20 @@
-<button type="button" mat-raised-button color="primary" (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button adjudicate-finish-modal-button" aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="primary">
+<button type="button" mat-raised-button color="green" (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button adjudicate-finish-modal-button" aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="green">
     Finish Upgrade
 </button>
 <!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button> -->
 <ng-template #finishUpgradeDialog
              let-modal>
 <ng-container>
-    <div class="modal-header finish-upgrade-modal-header">
-        <h4 class="modal-title finish-upgrade-modal-title"
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
             Upgrade Reference Set
         </h4>
         <button type="button"
-                class="close"
+                class="close dialog-close-x"
                 aria-label="Close"
                 (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
     <div class="container-fluid upgrade-container-fluid">
@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer upgrade-footer">
+    <div class="modal-footer rt2-modal-footer">
         <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button adjudicate-export-modal-button" aria-label="Export Change Report" title="Export Change Report" ng-reflect-color="primary">
             Export Change Report
         </button> -->

@@ -19,16 +19,16 @@
 <div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
 
 <ng-template #createNewRefsetDialog let-modal>
-    <div class="modal-header create-new-refset-modal-header">
-        <h4 *ngIf="!editMode" class="modal-title create-new-refset-title" id="modal-basic-title">
+    <div class="modal-header rt2-modal-header">
+        <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
             Create New Refset
         </h4>
-        <h4 *ngIf="editMode" class="modal-title create-new-refset-title" id="modal-basic-title">
+        <h4 *ngIf="editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
             Edit Reference Set Metadata
         </h4>
-        <button type="button" class="close" aria-label="Close"
+        <button type="button" class="close dialog-close-x" aria-label="Close"
             (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
     <div class="container-fluid create-new-refset-container-fluid">
@@ -408,17 +408,17 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer create-new-refset-modal-footer">
+    <div class="modal-footer rt2-modal-footer">
         <button *ngIf="!isDetailsPage" [disabled]="!isComplete()" type="button"
-            (click)="createRefsetObject()" mat-raised-button color="primary" aria-hidden="false"
+            (click)="createRefsetObject()" mat-raised-button color="green" aria-hidden="false"
             class="refset-tool-action-button" aria-label="Create New Refset"
-            title="Create New Refset" ng-reflect-color="primary">
+            title="Create New Refset" ng-reflect-color="green">
             Create New Refset
         </button>
         <button *ngIf="isDetailsPage || editMode" type="button" (click)="editRefsetObject()"
-            mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+            mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
             aria-label="Update Refset Metadata" title="Update Refset Metadata"
-            ng-reflect-color="primary">
+            ng-reflect-color="green">
             Update Metadata
         </button>
     </div>
