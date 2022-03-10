@@ -11,13 +11,13 @@
 
 <ng-template #addRemoveConceptHierarchyModal
              let-modal>
-    <div class="modal-header add-remove-concept-hierarchy-modal-header">
-        <h4 class="modal-title add-remove-concept-hierarchy-modal-title"
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
             Add/Remove By Concept or Hierarchy
         </h4>
-        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
     <div class="
@@ -461,16 +461,16 @@
         </div>
     </div>
 
-    <div class="modal-footer add-remove-concept-hierarchy-modal-footer refset-tool-lockable">
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
         <button type="button"
                 (click)="onTableSearchChange()"
                 mat-raised-button
-                color="primary"
+                color="green"
                 aria-hidden="false"
                 class="refset-tool-action-button"
                 aria-label="Search"
                 title="Search Concepts"
-                ng-reflect-color="primary">
+                ng-reflect-color="green">
             Search
         </button>
     </div>
