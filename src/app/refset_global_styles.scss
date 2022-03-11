@@ -276,7 +276,7 @@ a.footer-link {
     color: #fff;
     font-weight: 300;
     letter-spacing: .5px;
-    width: 100%; 
+    width: 100%;
     justify-content: space-between;
 }
 
@@ -321,7 +321,7 @@ a.footer-link {
 }
 
 .mat-flat-button.mat-primary,
-.mat-raised-button.mat-primary {  
+.mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
 }
 
@@ -582,6 +582,14 @@ button.refset-tool-table-action-icon {
     .mat-raised-button.mat-primary {
         background-color: $cerulean !important;
         margin-bottom: 5px
+    }
+
+    .mat-raised-button .mat-button-wrapper {
+        color: black
+    }
+
+    .mat-raised-button.mat-primary .mat-button-wrapper {
+        color: white
     }
 
 }
