@@ -3374,6 +3374,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-bottom: -6rem;
     overflow: unset;
     color: white;
+    font-family: $standard_font_family;
+    letter-spacing: .1rem;
   }
 
 .landing-page-top-bar-center {
@@ -3438,6 +3440,8 @@ span.title {
     width: 220px;
     height: 25px;
     font-size: 14px;
+    font-family: inherit;
+    letter-spacing: .1rem;
 }
 
 .landing-page-guest-has-account {
