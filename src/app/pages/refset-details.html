@@ -936,7 +936,8 @@
                                         </ng-template>
                                     </div>
 
-                                    <app-taxonomy-tree #detailsMembersTaxonomy
+                                    <div class="details-section">
+                                        <app-taxonomy-tree #detailsMembersTaxonomy
                                                        treeId="detailsMembersTree"
                                                        [refset]="refsetData"
                                                        [rootNode]="membersTaxonomyRoot"
@@ -948,7 +949,8 @@
                                                        (loadConceptDetail)="loadConceptDetail($event)"
                                                        (changeLockedStatus)="changeLockedStatus($event)"
                                                        (numOfChildren)="numOfChildren = $event">
-                                    </app-taxonomy-tree>
+                                        </app-taxonomy-tree>
+                                    </div>
                                 </div>
                             </div>
                         </as-split-area>

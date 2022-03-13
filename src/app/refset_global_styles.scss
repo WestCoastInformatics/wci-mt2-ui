@@ -333,6 +333,11 @@ button.refset-tool-table-action-icon {
     height: 800px;
 }
 
+.refset-tool-details-member-taxonomy .details-section{
+    height: 968px;
+    overflow: auto;
+}
+
 // AG Grid Styles
 .refset_tool_inactive_row {
     background-color: $inactive_row_color;
