@@ -14,10 +14,6 @@ export class UpgradeModalComponent implements OnInit {
 
   @Input()
   refsetData: any;
-  @Input()
-  isInitialUpgrade = true;
-  @Input()
-  isResumeUpgrade = false;
   @Output()
   loadingSpinner = new EventEmitter<boolean>(false);
 
@@ -49,10 +45,8 @@ export class UpgradeModalComponent implements OnInit {
     this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
 
       if (!x && (!this.isInitialUpgrade || this.getResumeParam)) {
-        this.isResumeUpgrade = true;
         await this.getUpgradeData(upgradeDialog);
       } else if (!x && (this.isInitialUpgrade || !this.getResumeParam)) {
-        this.isResumeUpgrade = false;
         this.modalService.open(upgradeDialog, {
           backdrop: 'static',
           keyboard: false,
@@ -63,6 +57,14 @@ export class UpgradeModalComponent implements OnInit {
       this.sendLoadingSpinnerTrigger(false);
     });
 
+  }
+
+  get isInitialUpgrade(): boolean {
+    if (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) {
+      return false;
+    } else if (this.refsetData?.availableActions?.includes('EDIT')) {
+      return true;
+    }
   }
 
   async getUpgradeData(upgradeDialog: NgbModal): Promise<void> {
@@ -87,33 +89,19 @@ export class UpgradeModalComponent implements OnInit {
     this.loadingSpinner.emit(value);
   }
 
-  listOfDates(versionList: any[]): any {
-    return versionList.filter((x) => {
-      if (Date.parse(x?.date) > Date.parse(this.refsetData?.versionDate) && !x?.status?.includes('IN DEVELOPMENT')) {
-        return true;
-      }
-      return false;
-    });
+  latestDate(versionList: any[]): string {
+    return versionList[0].date;
   }
 
   upgrade(): void {
     if (this.isInitialUpgrade) {
-      // if (!this.listOfDates(this.refsetData?.versionList)?.length || !this.selectedVersion) {
-      //   this.showWarning = true;
-      //   setTimeout(() => {
-      //     this.showWarning = false;
-      //   }, 3500);
-      // } else {
       console.log(this.refsetData)
         this.refsetService.initializeUpgrade(this.selectedVersion).subscribe();
         this.modalService.dismissAll();
 
         UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
       setTimeout(() => {
-        this.isInitialUpgrade = false;
-        this.isResumeUpgrade = true;
       }, 1000);
-        // }
     }
   }
 

@@ -177,7 +177,7 @@
                         Edit
                     </button>
 
-                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR')" [refsetData]="refsetData"></upgrade-modal>
+                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')" [refsetData]="refsetData"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton

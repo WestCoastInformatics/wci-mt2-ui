@@ -544,11 +544,11 @@ export class UiUtility {
      }
 
     static viewRefset(refsetId, versionDate, selectedVersion?: any) {
-        if (selectedVersion) {
-            this.router.navigate(['/details', refsetId, versionDate], {queryParams: {isResumeUpgrade: true, isInitialUpgrade: false, selectedVersion}});
-        } else {
+        // if (selectedVersion) {
+        //     this.router.navigate(['/details', refsetId, versionDate], {queryParams: {isResumeUpgrade: true, isInitialUpgrade: false, selectedVersion}});
+        // } else {
             this.router.navigate(['/details', refsetId, versionDate]);
-        }
+        // }
     }
 
     static toggleLockedSections(lock: boolean) {

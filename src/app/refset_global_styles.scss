@@ -2815,6 +2815,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     text-align: left;
 }
 
+.upgrade-modal-body-mid-label {
+    font-weight: 500;
+}
+
 .upgrade-modal-current-version {
 
 }
@@ -2857,8 +2861,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-left: 25px;
 }
 
-.upgrade-footer .export-inactive-concept-modal-button {
-    margin-right: 10px;
+.rt2-modal-footer .export-inactive-concept-modal-button {
+    margin-right: 15px !important;
 }
 
 .adjudicate-export-inactive-concept-modal-button {
