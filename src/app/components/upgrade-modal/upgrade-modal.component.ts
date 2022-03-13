@@ -19,7 +19,7 @@ export class UpgradeModalComponent implements OnInit {
 
   selectedVersion: any;
   showWarning = false;
-  membersInCommon: any;
+  members: any;
   inactiveConcepts = 0;
   totalMembers = 0;
 
@@ -81,7 +81,7 @@ export class UpgradeModalComponent implements OnInit {
         size: 'lg'
       });
 
-      this.membersInCommon = members;
+      this.members = members;
     });
   }
 
@@ -106,7 +106,7 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   getInactiveChangeExport(): void {
-    const memberItems = this.membersInCommon.items;
+    const memberItems = this.members.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
     });
@@ -114,13 +114,14 @@ export class UpgradeModalComponent implements OnInit {
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
         'Inactive Concept ID': inactiveConcepts[i].code,
-        'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term,
+        'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
         'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
         'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term
+        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
+    console.log(inactiveConcepts);
     UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
   }
 

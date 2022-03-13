@@ -483,7 +483,7 @@ export class UiUtility {
 
         let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept', 'Members in Common ID', 'Refset ID'], fileName);
+        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept'], fileName);
     }
 
     // static createFinishedChangeReport(refsetId: string, data): void {
