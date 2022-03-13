@@ -111,7 +111,8 @@
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-    <add-remove-concepts-icons [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="params?.data?.replacementConcecpts[0]?.existingMember" (processSelection)="addRemoveConcept($event, true, params?.data?.replacementConcecpts[0]?.existingMember ? 'REPLACEMENT_REMOVED' : 'REPLACEMENT_ADDED')"> </add-remove-concepts-icons>
+    <add-remove-concepts-icons *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember" [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="params?.data?.replacementConcecpts[0]?.existingMember" (processSelection)="addRemoveConcept($event, true, params?.data?.replacementConcecpts[0]?.existingMember ? 'REPLACEMENT_REMOVED' : 'REPLACEMENT_ADDED')"> </add-remove-concepts-icons>
+    <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember" class="adjudicate-information-button" aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
 </ng-template>
 
 <!-- Replacement ID Templates -->

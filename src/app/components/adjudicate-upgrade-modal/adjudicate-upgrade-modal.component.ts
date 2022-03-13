@@ -302,6 +302,7 @@ processChangedMemberEffects = () => {
             }
 
             UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+            this.refsetDetails.showLoadingSpinner = false;
 
         },
             error => {
