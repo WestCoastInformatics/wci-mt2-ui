@@ -242,7 +242,8 @@ processChangedMemberEffects = () => {
     this.refsetGridApi = gridReadyParams.api;
     this.refsetGridColumnApi = gridReadyParams.columnApi;
 
-            this.refsetGridApi.showLoadingOverlay();
+            // this.refsetGridApi.showLoadingOverlay();
+            this.refsetDetails.showLoadingSpinner = true;
 
             let pageNumber = this.refsetGridApi.paginationGetPageSize();
             let filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
@@ -294,6 +295,8 @@ processChangedMemberEffects = () => {
                   this.refsetGridPaging.totalKnown = true;
                   this.paginationComponent?.goToPage(pageNumber - 1);
               }
+
+              this.refsetDetails.showLoadingSpinner = false;
 
               return;
             }

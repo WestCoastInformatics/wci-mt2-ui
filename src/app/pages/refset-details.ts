@@ -711,7 +711,8 @@ export class RefsetDetails {
             return;
         }
 
-        this.taxonomySearchGridApi.showLoadingOverlay();
+        // this.taxonomySearchGridApi.showLoadingOverlay();
+        this.showLoadingSpinner = true;
 
         let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
         let query = "";
@@ -759,6 +760,7 @@ export class RefsetDetails {
                     this.taxonomySearchGridPaging.totalKnown = true;
                     this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
                 }
+                this.showLoadingSpinner = false;
 
                 return;
             }
@@ -870,7 +872,8 @@ export class RefsetDetails {
         let membersData = [];
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
-        this.membersGridApi.showLoadingOverlay();
+        // this.membersGridApi.showLoadingOverlay();
+        this.showLoadingSpinner = true;
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = "";
@@ -884,6 +887,7 @@ export class RefsetDetails {
 
             this.membersGridApi.showNoRowsOverlay();
             this.membersGridApi.setRowData([]);
+            this.showLoadingSpinner = false;
             return;
         }
 
@@ -936,6 +940,7 @@ export class RefsetDetails {
                     this.membersGridPaging.totalKnown = true;
                     this.membersPaginationComponent.goToPage(pageNumber - 1);
                 }
+                this.showLoadingSpinner = false;
 
                 return;
             }
@@ -1013,7 +1018,7 @@ export class RefsetDetails {
             );
 
             UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
-
+            this.showLoadingSpinner = false;
         },
         error: (error) => {
 
