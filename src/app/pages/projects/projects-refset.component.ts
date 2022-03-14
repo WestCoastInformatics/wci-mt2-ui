@@ -215,7 +215,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             rowCount: null,
             getRows: (rowParams) => {
 
-                this.refsetGridApi.showLoadingOverlay();
+                // this.refsetGridApi.showLoadingOverlay();
+                this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
@@ -263,6 +264,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                         this.refsetGridPaging.totalRows = (this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1));
                         this.refsetGridPaging.totalKnown = true;
                         this.paginationComponent.goToPage(pageNumber - 1);
+                        this.showLoadingSpinner = false;
+
                         return;
                     }
 
@@ -328,6 +331,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             let value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
+        this.showLoadingSpinner = false;
 
     }
 

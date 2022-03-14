@@ -1,4 +1,4 @@
-<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+<div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div id="refsetDetailsPage" class="container-fluid">
 
@@ -177,7 +177,7 @@
                         Edit
                     </button>
 
-                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR')" [refsetData]="refsetData"></upgrade-modal>
+                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')" [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id" [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
@@ -992,7 +992,7 @@
                             <div class="refset-tool-concept-details-column"
                                 *ngIf="isConceptDetailsLoading || conceptDetail">
                                 <div class="row" *ngIf="isConceptDetailsLoading">
-                                    <div>Loading...</div>
+                                    <!-- <div>Loading...</div> -->
                                 </div>
 
                                 <div *ngIf="conceptDetail">
@@ -1257,7 +1257,7 @@
     </div>
     <div class="modal-footer ready-for-review-footer">
         <button type="button"
-            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click')"
+            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
             mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
             aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
             Yes
