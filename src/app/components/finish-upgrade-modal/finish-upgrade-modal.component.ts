@@ -39,6 +39,26 @@ export class FinishUpgradeModalComponent implements OnInit {
 
   }
 
+  getInactiveChangeReport(): void {
+    const memberItems = this.membersInCommon.items;
+    const inactiveConcepts = memberItems.filter((items: any) => {
+      return items?.active == false;
+    });
+    let data = [];
+    for (let i = 0; i < inactiveConcepts.length; i++) {
+      data.push({
+        'Inactive Concept ID': inactiveConcepts[i].code,
+        'Inactive Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
+        'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
+        'Suggested Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+      });
+    }
+
+    UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+
+  }
+
   getFinishedChangeReport(): void {
 
     // Get old members from inactive concepts

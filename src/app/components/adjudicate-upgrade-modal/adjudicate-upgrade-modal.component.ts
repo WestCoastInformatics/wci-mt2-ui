@@ -81,6 +81,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       return x.qualifiedLanguageCode;
     });
     this.selectedLanguage = this.languageOptions[0];
+    // this.getFinishedChangeReport(false);
   }
 
   ngAfterViewInit() {
@@ -342,9 +343,10 @@ processChangedMemberEffects = () => {
     }
 
     UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+
   }
 
-  getFinishedChangeReport(): void {
+  getFinishedChangeReport(shouldDownload = true): void {
 
     // Get old members from inactive concepts
     let memberItems = this.membersInCommon?.items;
@@ -405,6 +407,15 @@ processChangedMemberEffects = () => {
       'manualReplacement': manualReplacement,
       'membersInCommon': membersInCommon
   };
+    // if (shouldDownload) {
+    //   UiUtility.createFinishedChangeReport(this.refsetData.refsetId, changeReportObject);
+    // } else {
+    //   if (localStorage.getItem('finishedChangeReportData')) {
+    //     localStorage.removeItem('finishedChangeReportData');
+    //   }
+    //   localStorage.setItem('finishedChangeReportData', JSON.stringify(changeReportObject));
+    // }
     UiUtility.createFinishedChangeReport(this.refsetData.refsetId, changeReportObject);
+
   }
 }

@@ -50,15 +50,8 @@ export class UpgradeModalComponent implements OnInit {
 
     this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
 
-      if (!x && (!this.isInitialUpgrade)) {
+      if (!x) {
         await this.getUpgradeData(upgradeDialog);
-      } else if (!x && (this.isInitialUpgrade)) {
-        this.modalService.open(upgradeDialog, {
-          backdrop: 'static',
-          keyboard: false,
-          windowClass: 'upgrade-modal',
-          size: 'lg'
-        });
       }
       this.sendLoadingSpinnerTrigger(false);
     });
@@ -103,16 +96,23 @@ export class UpgradeModalComponent implements OnInit {
       this.refsetService.initializeUpgrade(this.selectedVersion).subscribe((x) => {
         if (this.router.url.includes('/' + this.refsetId)) {
           window.location.reload();
+        } else {
+          this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
+            this.totalMembers = members?.miscCountA;
+            this.inactiveConcepts = members?.total;
+      
+            this.membersInCommon = members;
+            this.getInactiveChangeReport(false);
+          });
         }
       });
       UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
-      console.log(this.refsetInternalId, this.refsetId, this.refsetVersionDate);
       this.modalService.dismissAll();
       this.refsetDetails.initializeDetailsPage();
     }
   }
 
-  getInactiveChangeReport(): void {
+  getInactiveChangeReport(shouldDownload = true): void {
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
@@ -128,8 +128,14 @@ export class UpgradeModalComponent implements OnInit {
       });
     }
 
-    console.log(inactiveConcepts);
-    UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+    if (shouldDownload) {
+      UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+    } else {
+      if (localStorage.getItem('inactiveChangeReportData')) {
+        localStorage.removeItem('inactiveChangeReportData');
+      }
+      localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
+    }
   }
 
   transformDescriptions(descriptions: any) {

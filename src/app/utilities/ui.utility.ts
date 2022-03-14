@@ -403,7 +403,9 @@ export class UiUtility {
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
 		let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
-        let buttons = [viewRefsetButton];
+		let downloadInactiveReportButton : IToastButton = {id: 'inactive', title: 'Download Inactive Change Report', data: {}};
+		// let downloadChangeReportButton : IToastButton = {id: 'change', title: 'Download Finished Change Report', data: {}};
+        let buttons = [viewRefsetButton, downloadInactiveReportButton];
 		let callNumber = 0;
 		let callDelay = 1000;
 		let successMessageTimeout = 0;
@@ -453,7 +455,12 @@ export class UiUtility {
 
                         if (button.id == 'view') {
                             this.viewRefset(refsetId, versionDate, selectedVersion);
-                            }
+                        } else if (button.id == 'inactive') {
+                            this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
+                        }
+                        // else if (button.id == 'change') {
+                        //     this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
+                        // }
                         });
 					}
 				},
