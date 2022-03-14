@@ -34,8 +34,8 @@ export class ImportFromFileModalComponent implements OnInit {
         this.files = [];
         this.disableActionButtons = true;
         this.openedModel = this.modalService.open(importFromFileDialog, {
-            backdrop: "static",
-            keyboard: false,
+            //backdrop: "static",
+            //keyboard: false,
         });
     }
 

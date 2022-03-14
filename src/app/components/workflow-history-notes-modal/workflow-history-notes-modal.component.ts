@@ -63,8 +63,8 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
 
 	openreadyForReviewModal(workflowHistoryNotesDialog: NgbModal) {
 		this.modalService.open(workflowHistoryNotesDialog, {
-			backdrop: 'static',
-			keyboard: false,
+			//backdrop: 'static',
+			//keyboard: false,
 			windowClass: 'workflow-history-notes-modal'
 		});
 	}

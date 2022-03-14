@@ -1,16 +1,18 @@
-<button (click)="openImportFromFileModal(importFromFileDialog)" class="refset-tool-standard-icon-button">
+<!-- <button (click)="openImportFromFileModal(importFromFileDialog)" class="refset-tool-standard-icon-button">
     <img src="assets/import-file-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
-</button>
+</button> -->
+
+<button mat-menu-item (click)="openImportFromFileModal(importFromFileDialog)" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file">Import from File</button>
 
 <ng-template #importFromFileDialog let-modal>
 
-    <div class="modal-header import-from-modal-header">
-        <h4 class="modal-title import-from-modal-title" id="modal-basic-title">
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Add or Remove Members From File
         </h4>
 
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
 
@@ -51,15 +53,15 @@
         </div>
     </div>
 
-    <div class="modal-footer import-from-modal-footer refset-tool-lockable">
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
         <button *ngIf="!showBanner" [disabled]="disableActionButtons" type="button" (click)="callMemberOperation('add')" mat-raised-button
-                color="primary" aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members" title="Add Members" ng-reflect-color="primary">
+                color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members" title="Add Members" ng-reflect-color="green">
             Add Members
         </button>
         
         <button *ngIf="!showBanner && !isIntensional" [disabled]="disableActionButtons" type="button" (click)="callMemberOperation('remove')" mat-raised-button
-                color="primary" aria-hidden="false" class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="primary" style="margin-left: 15px">
+                color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="green" style="margin-left: 15px">
             Remove Members
         </button>
 

@@ -28,8 +28,8 @@ export class ReviewModalComponent implements OnInit {
 
   openReviewModal(reviewDialog: NgbModal) {
     this.modalService.open(reviewDialog, {
-      backdrop : 'static',
-      keyboard : false,
+      //backdrop : 'static',
+      //keyboard : false,
       windowClass: 'review-modal'
     });
   }

@@ -19,7 +19,7 @@ export class DialogComponent<T> {
     id: string;
     confirmIcon: string;
     cancelIcon: string;
-    isDisabled = true;
+    isDisabled = false;
     disableChannel = new BroadcastChannel('disable-button-channel');
 
     constructor(

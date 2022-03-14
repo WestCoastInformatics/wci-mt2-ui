@@ -1,6 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
@@ -31,7 +29,9 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 
             if (propertyName === "concept" && CodeUtility.hasValue(this.concept)) {
 
-                if (this.refsetType != RefsetUtility.INTENSIONAL) {
+                if (!this.refsetType) {
+                    this.actionText = "Member";
+                } else if (this.refsetType != RefsetUtility.INTENSIONAL) {
 
                     this.actionText = "Member";
                     this.showAdd = !this.concept.memberOfRefset;

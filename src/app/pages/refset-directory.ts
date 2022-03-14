@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
@@ -63,11 +63,14 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
+    @Output() loadingSpinner = new EventEmitter<boolean>(true);
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
     numOfMembers: any;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
+    
+    disableChannel = new BroadcastChannel('disable-button-channel');
 
     constructor(
         private router: Router,
@@ -86,6 +89,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
+
+        this.disableChannel.postMessage(false);
     }
 
     ngAfterViewInit() {
@@ -103,7 +108,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 let organizationsArray = this.organizations?.items;
                 
                 this.columnDefs = [
-                    { field: 'id', tooltipField: 'id', colId: 'information', headerName: '', width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, pinned: 'left'},
+                    { field: 'id', tooltipField: 'id', colId: 'information', headerName: '', width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false},
                     { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155},
                     { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
                     { field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', flex: 1, minWidth: 170, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
@@ -116,7 +121,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
                     { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
                     floatingFilterComponentParams: {suppressFilterButton: true}},
-                    { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, pinned: 'right'}
+                    { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', width: 70, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false}
                 ];
                 this.refsetGridOptions = {
                     context: { componentParent: this },
@@ -187,7 +192,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             rowCount: null,
             getRows: (rowParams) => {
 
-                this.refsetGridApi.showLoadingOverlay();
+                // this.refsetGridApi.showLoadingOverlay();
+                this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
@@ -248,6 +254,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
                         this.refsetGridPaging.totalKnown = true;
                         this.paginationComponent.goToPage(pageNumber - 1);
+                        this.showLoadingSpinner = false;
+
                         return;
                     }
 
@@ -380,6 +388,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     openInformation(refsetId: string) {
 
+        if (this.showLoadingSpinner == false) {
+            this.showLoadingSpinner = true;
+            this.loadingSpinner.emit(true);
+        } else {
+            return;
+        }
+
         let refset = this.getRefsetRow(refsetId);
 
         this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
@@ -415,17 +430,25 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 dialogId: dialogId,
                 showCancel: false,
                 cancelText: 'Close',
-                confirmText: 'View Complete Refset',
-                showTitle: false,
+                actionText: 'View Complete Refset',
+                //showTitle: false,
+                showConfirm: false,
                 template: this.infoDialog,
+                headerText: 'Refset Metadata',
                 data: refset,
+                showAction: true,
                 showCloseIcon: true
             }
 
             const dialogOptions = {
                 id: dialogId,
                 width: '1000px',
-                disableClose: true
+                disableClose: false
+            }
+
+            if (this.showLoadingSpinner) {
+                this.showLoadingSpinner = false;
+                this.loadingSpinner.emit(false);
             }
 
             this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
@@ -433,7 +456,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             this.dialog.confirmed().subscribe(data => {
 
                 if (data) {
-                    this.goToDetailsPage(refset.id, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+                    this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
                 }
             });
         });
@@ -451,10 +474,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
 
         const dialogOptions = {
-            id: dialogId
+            id: dialogId,
+            disableClose: false
         }
 
-        this.dialog = this.dialogFactoryService.open(dialogData);
+        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
         this.dialog.confirmed().subscribe(data => {
 

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { firstValueFrom } from 'rxjs';
@@ -11,6 +11,7 @@ import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ProjectsRefsetComponent } from 'src/app/pages/projects/projects-refset.component';
 
 @Component({
     selector: 'create-new-refset',
@@ -75,10 +76,11 @@ export class CreateNewRefsetComponent implements OnInit {
         private refsetService: RefsetService,
         private readonly workflowService: WorkflowService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly notificationService: NotificationService
-    ) {}
+        private readonly notificationService: NotificationService,
+        private readonly projectsRefsetComponent: ProjectsRefsetComponent
+    ) { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
 
@@ -100,8 +102,8 @@ export class CreateNewRefsetComponent implements OnInit {
 
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
-                backdrop: 'static',
-                keyboard: false,
+                //backdrop: 'static',
+                //keyboard: false,
             });
         }
     }
@@ -115,7 +117,7 @@ export class CreateNewRefsetComponent implements OnInit {
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
-        this.definitionClauses = [{value: '', negated: false}];
+        this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = '';
         this.privateRefset = false;
     }
@@ -188,7 +190,7 @@ export class CreateNewRefsetComponent implements OnInit {
 
                 if (status.error) {
 
-                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                     return;
                 }
 
@@ -204,7 +206,7 @@ export class CreateNewRefsetComponent implements OnInit {
     generateDefinitionClausesJson(definitionClauses: []) {
 
         for (let definitionClause of definitionClauses)
-        return [{ value: definitionClauses, negated: false }];
+            return [{ value: definitionClauses, negated: false }];
     }
 
     parseDefinitionClausesJson(definitionClauses: any) {
@@ -234,20 +236,20 @@ export class CreateNewRefsetComponent implements OnInit {
             params.definitionClauses = this.definitionClauses;
         }
 
-        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe( (status) => {
+        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe((status) => {
 
-                this.showLoadingSpinner = false;
+            this.showLoadingSpinner = false;
 
-                if (status.error) {
+            if (status.error) {
 
-                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-                    return;
-                }
+                this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                return;
+            }
 
-                this.modalService.dismissAll();
-                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
-                this.refsetDetails.initializeDetailsPage();
-            },
+            this.modalService.dismissAll();
+            this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+            this.refsetDetails.initializeDetailsPage();
+        },
             (error) => {
                 this.showLoadingSpinner = false;
             }
@@ -257,7 +259,7 @@ export class CreateNewRefsetComponent implements OnInit {
     isComplete(): boolean {
 
         let typeCheck = false;
-        
+
         if (this.selectedReferenceType == RefsetUtility.EXTENSIONAL) {
             typeCheck = true;
             console.log("EXTENSIONAL typeCheck: " + typeCheck);
@@ -269,6 +271,10 @@ export class CreateNewRefsetComponent implements OnInit {
 
 
         return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
+    }
+
+    isUat(): boolean {
+        return this.projectsRefsetComponent?.projectIsUat;
     }
 
     checkRadioButtonValue(event: any): void {
@@ -304,7 +310,7 @@ export class CreateNewRefsetComponent implements OnInit {
             if (input) {
                 input.value = '';
             }
-        } 
+        }
 
         // Handling new refset creation
         else {
@@ -325,17 +331,17 @@ export class CreateNewRefsetComponent implements OnInit {
 
         // Handling update refset metadata
         if (this.editMode) {
-            
+
             const index = this.tags.indexOf(data);
 
             if (index >= 0) {
                 this.tags.splice(index, 1);
             }
-        } 
-        
+        }
+
         // Handling new refset creation
         else {
-            
+
             const index = this.selectedTags.indexOf(data);
 
             if (index >= 0) {

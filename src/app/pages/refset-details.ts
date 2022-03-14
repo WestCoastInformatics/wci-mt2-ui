@@ -24,6 +24,7 @@ import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { catchError, filter, pairwise, take } from 'rxjs/operators';
+import { ProjectsRefsetComponent } from './projects/projects-refset.component';
 
 /**
  * @title Tree with nested nodes
@@ -211,7 +212,8 @@ export class RefsetDetails {
         private breadcrumbService: BreadcrumbService,
         private readonly workflowService: WorkflowService,
         private readonly modalService: NgbModal,
-        private routerExtentionService: RouterExtentionService
+        private routerExtentionService: RouterExtentionService,
+        private readonly projectsRefsetComponent: ProjectsRefsetComponent
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -413,6 +415,7 @@ export class RefsetDetails {
             this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
             this.refsetBranchPath = RefsetUtility.getBranchPath(results)
             this.refsetData = results;
+            console.log(this.refsetData);
             this.refsetService.setRefsetInformation(this.refsetData);
             this.allowedToEdit = false;
             this.allowedToReview = false;
@@ -708,7 +711,8 @@ export class RefsetDetails {
             return;
         }
 
-        this.taxonomySearchGridApi.showLoadingOverlay();
+        // this.taxonomySearchGridApi.showLoadingOverlay();
+        this.showLoadingSpinner = true;
 
         let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
         let query = "";
@@ -756,6 +760,7 @@ export class RefsetDetails {
                     this.taxonomySearchGridPaging.totalKnown = true;
                     this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
                 }
+                this.showLoadingSpinner = false;
 
                 return;
             }
@@ -867,7 +872,8 @@ export class RefsetDetails {
         let membersData = [];
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
-        this.membersGridApi.showLoadingOverlay();
+        // this.membersGridApi.showLoadingOverlay();
+        this.showLoadingSpinner = true;
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = "";
@@ -881,6 +887,7 @@ export class RefsetDetails {
 
             this.membersGridApi.showNoRowsOverlay();
             this.membersGridApi.setRowData([]);
+            this.showLoadingSpinner = false;
             return;
         }
 
@@ -933,6 +940,7 @@ export class RefsetDetails {
                     this.membersGridPaging.totalKnown = true;
                     this.membersPaginationComponent.goToPage(pageNumber - 1);
                 }
+                this.showLoadingSpinner = false;
 
                 return;
             }
@@ -959,10 +967,13 @@ export class RefsetDetails {
                 let language = this.languageOptions[i];
                 let minWidth =
                     language.value === "101FSN" ? 250 : 190;
+                    
                 this.membersColumnDefs.push({
                     field: i.toString(),
                     flex: 1,
                     minWidth: minWidth,
+                    maxWidth: 280,
+                    width: 280,
                     colId: language.value,
                     headerName: language.display,
                     cellClass:
@@ -979,6 +990,9 @@ export class RefsetDetails {
                         colId: "modified",
                         flex: 1,
                         minWidth: 150,
+                        
+                        maxWidth: 200,
+                        width: 240,
                         headerName: "Modified Date",
                         cellClass:
                             "refset-tool-details-column-modified-date",
@@ -1002,7 +1016,6 @@ export class RefsetDetails {
                             template: this.actionSection,
                         },
                         filter: false,
-                        pinned: "right",
                         tooltipField: "active",
                         sortable: false
                     },
@@ -1010,7 +1023,7 @@ export class RefsetDetails {
             );
 
             UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
-
+            this.showLoadingSpinner = false;
         },
         error: (error) => {
 
@@ -1098,11 +1111,20 @@ export class RefsetDetails {
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
 
                 } else {
-                    this.loadRefset();
+
+                    if (action.includes('CANCEL_EDIT')) {
+                        this.loadWorkflowHistoryData();
+                        this.processChangedMemberEffects();
+                        this.loadRefset();
+                    } else {
+                        this.loadRefset();
+                    }
+
                 }
             } else {
                 this.loadRefset();
             }
+
 
             // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             //     this.router.navigate(['/details', this.id]);
@@ -1235,10 +1257,11 @@ export class RefsetDetails {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-
+        this.showLoadingSpinner = true;
         this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
+            this.showLoadingSpinner = false;
             this.conceptDetail = results;
             this.conceptDetail.roleGroups = results.roleGroups;
             this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
@@ -1654,8 +1677,8 @@ export class RefsetDetails {
 
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
-          backdrop : 'static',
-          keyboard : false,
+          //backdrop : 'static',
+          //keyboard : false,
           windowClass: 'alert-modal'
         });
     }

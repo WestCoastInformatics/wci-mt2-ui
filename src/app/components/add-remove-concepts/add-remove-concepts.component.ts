@@ -23,6 +23,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		{ value: '', display: '\=       (Self Only)' }
 	];
 
+	@Input() changeMethod: string;
 	@Input() isAdd: boolean;
 	@Input() refset: any;
 	@Input() definitionExceptionType: string;
@@ -30,6 +31,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
+	@Input() isInactive: boolean;
+	@Input() isReplacement: boolean;
 	@Input() processChangedMemberFunction: () => void;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() onMembersGridReady = new EventEmitter<any>();
@@ -65,11 +68,26 @@ export class AddRemoveConceptsComponent implements OnInit {
 			
 			} else if (propertyName === "refset") {
 				this.refsetInternalId = this.refset?.id;
+			} else if (propertyName === "changeMethod") {
+
+				if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
+					this.actionText = "Add";
+				} else {
+					this.actionText = "Remove";
+				}
+
+				// if this isn't the initial setup then call addRemoveConcept
+				if (!changes[propertyName].firstChange) {
+
+					this.resetComponent();
+					this.addRemoveConcept(this.changeMethod);
+				}
+			
 			}
 		}
 	}
 
-	addRemoveConcept(): void {
+	addRemoveConcept(changeMethod?: string): void {
 
         let conceptId: string = '';
 		let ecl = '';
@@ -98,8 +116,22 @@ export class AddRemoveConceptsComponent implements OnInit {
                 
         this.changeLockedStatus.emit(true);
 
+
+		if (changeMethod) {
+
+			if (changeMethod === 'INACTIVE_ADDED' || changeMethod === 'REPLACEMENT_ADDED') {
+
+				description = 'added to';
+			} else {
+	
+				description = 'removed from';
+			}
+
+			this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
+		}
+
 		// if this is an intensional refset
-		if (this.refset.type == RefsetUtility.INTENSIONAL) {
+		else if (this.refset.type == RefsetUtility.INTENSIONAL) {
 
 			if (this.isAdd) {
 
@@ -145,8 +177,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	openAddRemoveDescendantsModal() {
 
 		this.openedModel = this.modalService.open(this.dialogSection, {
-			backdrop: 'static',
-			keyboard: false,
+			//backdrop: 'static',
+			//keyboard: false,
 			windowClass: 'add-remove-descendants-modal'
 		});
 
