@@ -1101,7 +1101,10 @@ export class RefsetDetails {
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
 
                 } else {
+                    this.loadWorkflowHistoryData();
+                    this.processChangedMemberEffects();
                     this.loadRefset();
+                    //this.hideWorkflowTable = false;
                 }
             } else {
                 this.loadRefset();
