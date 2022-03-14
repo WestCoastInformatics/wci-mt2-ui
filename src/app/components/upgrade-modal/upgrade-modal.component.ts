@@ -14,6 +14,12 @@ export class UpgradeModalComponent implements OnInit {
 
   @Input()
   refsetData: any;
+  @Input()
+  refsetId: any;
+  @Input()
+  refsetInternalId: any;
+  @Input()
+  refsetVersionDate: any;
   @Output()
   loadingSpinner = new EventEmitter<boolean>(false);
   @Input()
@@ -24,8 +30,7 @@ export class UpgradeModalComponent implements OnInit {
   inactiveConcepts = 0;
   totalMembers = 0;
 
-  getResumeParam = this.route.snapshot.queryParamMap.get('isResumeUpgrade') === 'true';
-  getInitialParam = this.route.snapshot.queryParamMap.get('isInitialUpgrade') === 'true';
+
 
 
   constructor(private readonly modalService: NgbModal,
@@ -45,9 +50,9 @@ export class UpgradeModalComponent implements OnInit {
 
     this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
 
-      if (!x && (!this.isInitialUpgrade || this.getResumeParam)) {
+      if (!x && (!this.isInitialUpgrade)) {
         await this.getUpgradeData(upgradeDialog);
-      } else if (!x && (this.isInitialUpgrade || !this.getResumeParam)) {
+      } else if (!x && (this.isInitialUpgrade)) {
         this.modalService.open(upgradeDialog, {
           backdrop: 'static',
           keyboard: false,
@@ -95,13 +100,15 @@ export class UpgradeModalComponent implements OnInit {
 
   upgrade(): void {
     if (this.isInitialUpgrade) {
-      console.log(this.refsetData)
-        this.refsetService.initializeUpgrade(this.selectedVersion).subscribe();
-        this.modalService.dismissAll();
-
-        UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
-      setTimeout(() => {
-      }, 1000);
+      this.refsetService.initializeUpgrade(this.selectedVersion).subscribe((x) => {
+        if (this.router.url.includes('/' + this.refsetId)) {
+          window.location.reload();
+        }
+      });
+      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
+      console.log(this.refsetInternalId, this.refsetId, this.refsetVersionDate);
+      this.modalService.dismissAll();
+      this.refsetDetails.initializeDetailsPage();
     }
   }
 

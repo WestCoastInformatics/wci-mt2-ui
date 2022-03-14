@@ -1,10 +1,10 @@
 <button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
-    {{ (getResumeParam || !isInitialUpgrade) ? 'Resume Upgrade' : 'Upgrade' }}
+    {{ !isInitialUpgrade ? 'Resume Upgrade' : 'Upgrade' }}
 </button>
 <!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button> -->
 <ng-template #upgradeDialog
              let-modal>
-<ng-container *ngIf="((isInitialUpgrade || getInitialParam) && !getResumeParam)">
+<ng-container *ngIf="isInitialUpgrade">
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
@@ -40,7 +40,7 @@
         </button>
     </div>
 </ng-container>
-<ng-container *ngIf="((getResumeParam || !isInitialUpgrade) && !getInitialParam)">
+<ng-container *ngIf="!isInitialUpgrade">
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
