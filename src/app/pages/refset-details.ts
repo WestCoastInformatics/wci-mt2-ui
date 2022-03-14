@@ -1106,11 +1106,16 @@ export class RefsetDetails {
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
 
                 } else {
-                    this.loadRefset();
+                    if (action.includes('CANCEL_EDIT')) {
+                        window.location.reload();
+                    } else {
+                        this.loadRefset();
+                    }
                 }
             } else {
                 this.loadRefset();
             }
+
 
             // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             //     this.router.navigate(['/details', this.id]);
