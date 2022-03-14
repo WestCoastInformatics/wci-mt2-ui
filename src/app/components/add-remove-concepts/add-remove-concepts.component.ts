@@ -156,29 +156,14 @@ export class AddRemoveConceptsComponent implements OnInit {
 			if (this.isAdd) {
 
 				description = 'added to';
-				if (this.isInactive) {
-					operationFunction = this.refsetService.addInactiveMembers.bind(this.refsetService);
-				} else if (this.isReplacement) {
-					operationFunction = this.refsetService.addReplacementMembers.bind(this.refsetService);
-				} else {
-					operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
-				}
+				operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
 			} else {
 
 				description = 'removed from';
-				if (this.isInactive) {
-					operationFunction = this.refsetService.removeInactiveMembers.bind(this.refsetService);
-				} else if (this.isReplacement) {
-					operationFunction = this.refsetService.removeReplacementMembers.bind(this.refsetService);
-				} else {
-					operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
-				}
+				operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
 			}
-			if (this.isInactive || this.isReplacement) {
-				operationFunction(this.refsetInternalId, conceptId).subscribe();
-			} else {
-				operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
-			}
+
+			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
 		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
