@@ -23,6 +23,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		{ value: '', display: '\=       (Self Only)' }
 	];
 
+	@Input() changeMethod: string;
 	@Input() isAdd: boolean;
 	@Input() refset: any;
 	@Input() definitionExceptionType: string;
@@ -30,8 +31,6 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
-	@Input() isInactive: boolean;
-	@Input() isReplacement: boolean;
 	@Input() processChangedMemberFunction: () => void;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() onMembersGridReady = new EventEmitter<any>();
@@ -67,11 +66,26 @@ export class AddRemoveConceptsComponent implements OnInit {
 			
 			} else if (propertyName === "refset") {
 				this.refsetInternalId = this.refset?.id;
+			} else if (propertyName === "changeMethod") {
+
+				if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
+					this.actionText = "Add";
+				} else {
+					this.actionText = "Remove";
+				}
+
+				// if this isn't the initial setup then call addRemoveConcept
+				if (!changes[propertyName].firstChange) {
+
+					this.resetComponent();
+					this.addRemoveConcept(this.changeMethod);
+				}
+			
 			}
 		}
 	}
 
-	addRemoveConcept(): void {
+	addRemoveConcept(changeMethod?: string): void {
 
         let conceptId: string = '';
 		let ecl = '';
@@ -100,8 +114,22 @@ export class AddRemoveConceptsComponent implements OnInit {
                 
         this.changeLockedStatus.emit(true);
 
+
+		if (changeMethod) {
+
+			if (changeMethod === 'INACTIVE_ADDED' || changeMethod === 'REPLACEMENT_ADDED') {
+
+				description = 'added to';
+			} else {
+	
+				description = 'removed from';
+			}
+
+			this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
+		}
+
 		// if this is an intensional refset
-		if (this.refset.type == RefsetUtility.INTENSIONAL) {
+		else if (this.refset.type == RefsetUtility.INTENSIONAL) {
 
 			if (this.isAdd) {
 
@@ -126,29 +154,14 @@ export class AddRemoveConceptsComponent implements OnInit {
 			if (this.isAdd) {
 
 				description = 'added to';
-				if (this.isInactive) {
-					operationFunction = this.refsetService.addInactiveMembers.bind(this.refsetService);
-				} else if (this.isReplacement) {
-					operationFunction = this.refsetService.addReplacementMembers.bind(this.refsetService);
-				} else {
-					operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
-				}
+				operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
 			} else {
 
 				description = 'removed from';
-				if (this.isInactive) {
-					operationFunction = this.refsetService.removeInactiveMembers.bind(this.refsetService);
-				} else if (this.isReplacement) {
-					operationFunction = this.refsetService.removeReplacementMembers.bind(this.refsetService);
-				} else {
-					operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
-				}
+				operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
 			}
-			if (this.isInactive || this.isReplacement) {
-				operationFunction(this.refsetInternalId, conceptId).subscribe();
-			} else {
-				operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
-			}
+
+			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
 		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);

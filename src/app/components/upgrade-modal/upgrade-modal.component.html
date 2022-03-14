@@ -1,10 +1,10 @@
 <button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
-    {{ (getResumeParam || isResumeUpgrade && !isInitialUpgrade) ? 'Resume Upgrade' : 'Upgrade' }}
+    {{ !isInitialUpgrade ? 'Resume Upgrade' : 'Upgrade' }}
 </button>
 <!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button> -->
 <ng-template #upgradeDialog
              let-modal>
-<ng-container *ngIf="(isInitialUpgrade || getInitialParam) && (!isResumeUpgrade || !getResumeParam)">
+<ng-container *ngIf="isInitialUpgrade">
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
@@ -30,27 +30,17 @@
                 </div>
             </div>
             <div class="upgrade-modal-body-mid">
-            <mat-form-field appearance="fill">
-                <mat-label>New Version:</mat-label>
-                <select matNativeControl
-                        [(ngModel)]="selectedVersion">
-                    <option *ngFor="let version of listOfDates(refsetData?.versionList)"
-                            [value]="version?.refsetInternalId">
-                        {{ version?.date }}
-                    </option>
-                </select>
-            </mat-form-field>
+            <div><span class="upgrade-modal-body-mid-label">Upgrade To: </span>{{ latestDate(refsetData?.versionList) }}</div>
             </div>
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <!-- <div class="upgrade-footer-warning-message" *ngIf="showWarning">Currently on the newest version</div> -->
         <button type="button" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="green" (click)="modal.dismiss('Cross click'); upgrade()">
             Upgrade
         </button>
     </div>
 </ng-container>
-<ng-container *ngIf="(getResumeParam || isResumeUpgrade) && (!isInitialUpgrade || !getInitialParam)">
+<ng-container *ngIf="!isInitialUpgrade">
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
@@ -82,16 +72,13 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" mat-raised-button color="red" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); isInitialUpgrade = true; isResumeUpgrade = false; modal.dismiss('Cross click');" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+        <button type="button" mat-raised-button color="red" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click');" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
             Cancel Upgrade
         </button>
-        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeExport()" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
+        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
             Export Inactive Concept Report
         </button>
-        <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary" (click)="modal.dismiss('Cross click'); upgrade()">
-            Continue Upgrade
-        </button> -->
-        <adjudicate-upgrade-modal [refsetData]="refsetData" [selectedVersion]="selectedVersion" [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
+        <adjudicate-upgrade-modal [refsetData]="refsetData" [selectedVersion]="selectedVersion" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
     </div>
 </ng-container>
 </ng-template>

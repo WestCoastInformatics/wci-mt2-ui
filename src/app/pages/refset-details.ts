@@ -711,7 +711,8 @@ export class RefsetDetails {
             return;
         }
 
-        this.taxonomySearchGridApi.showLoadingOverlay();
+        // this.taxonomySearchGridApi.showLoadingOverlay();
+        this.showLoadingSpinner = true;
 
         let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
         let query = "";
@@ -759,6 +760,7 @@ export class RefsetDetails {
                     this.taxonomySearchGridPaging.totalKnown = true;
                     this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
                 }
+                this.showLoadingSpinner = false;
 
                 return;
             }
@@ -870,7 +872,8 @@ export class RefsetDetails {
         let membersData = [];
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
-        this.membersGridApi.showLoadingOverlay();
+        // this.membersGridApi.showLoadingOverlay();
+        this.showLoadingSpinner = true;
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = "";
@@ -884,6 +887,7 @@ export class RefsetDetails {
 
             this.membersGridApi.showNoRowsOverlay();
             this.membersGridApi.setRowData([]);
+            this.showLoadingSpinner = false;
             return;
         }
 
@@ -936,6 +940,7 @@ export class RefsetDetails {
                     this.membersGridPaging.totalKnown = true;
                     this.membersPaginationComponent.goToPage(pageNumber - 1);
                 }
+                this.showLoadingSpinner = false;
 
                 return;
             }
@@ -1013,7 +1018,7 @@ export class RefsetDetails {
             );
 
             UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
-
+            this.showLoadingSpinner = false;
         },
         error: (error) => {
 
@@ -1101,14 +1106,20 @@ export class RefsetDetails {
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
 
                 } else {
-                    this.loadWorkflowHistoryData();
-                    this.processChangedMemberEffects();
-                    this.loadRefset();
-                    //this.hideWorkflowTable = false;
+
+                    if (action.includes('CANCEL_EDIT')) {
+                        this.loadWorkflowHistoryData();
+                        this.processChangedMemberEffects();
+                        this.loadRefset();
+                    } else {
+                        this.loadRefset();
+                    }
+
                 }
             } else {
                 this.loadRefset();
             }
+
 
             // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             //     this.router.navigate(['/details', this.id]);
@@ -1241,10 +1252,11 @@ export class RefsetDetails {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-
+        this.showLoadingSpinner = true;
         this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
+            this.showLoadingSpinner = false;
             this.conceptDetail = results;
             this.conceptDetail.roleGroups = results.roleGroups;
             this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;

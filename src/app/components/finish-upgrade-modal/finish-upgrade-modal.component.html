@@ -32,9 +32,12 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button adjudicate-export-modal-button" aria-label="Export Change Report" title="Export Change Report" ng-reflect-color="primary">
+        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
+            Export Inactive Concept Report
+        </button>
+        <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
             Export Change Report
-        </button> -->
+        </button>
     </div>
 </ng-container>
 </ng-template>

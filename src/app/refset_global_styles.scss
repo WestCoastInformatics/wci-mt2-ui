@@ -276,7 +276,7 @@ a.footer-link {
     color: #fff;
     font-weight: 300;
     letter-spacing: .5px;
-    width: 100%; 
+    width: 100%;
     justify-content: space-between;
 }
 
@@ -321,7 +321,7 @@ a.footer-link {
 }
 
 .mat-flat-button.mat-primary,
-.mat-raised-button.mat-primary {  
+.mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
 }
 
@@ -582,6 +582,14 @@ button.refset-tool-table-action-icon {
     .mat-raised-button.mat-primary {
         background-color: $cerulean !important;
         margin-bottom: 5px
+    }
+
+    .mat-raised-button .mat-button-wrapper {
+        color: black
+    }
+
+    .mat-raised-button.mat-primary .mat-button-wrapper {
+        color: white
     }
 
 }
@@ -1525,6 +1533,9 @@ button.refset-tool-table-action-icon {
     );
 }
 
+.ag-overlay-loading-wrapper {
+    display: none !important;
+}
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
     /* hide "loading..." text */
@@ -2807,6 +2818,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     text-align: left;
 }
 
+.upgrade-modal-body-mid-label {
+    font-weight: 500;
+}
+
 .upgrade-modal-current-version {
 
 }
@@ -2849,8 +2864,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-left: 25px;
 }
 
-.upgrade-footer .export-inactive-concept-modal-button {
-    margin-right: 10px;
+.rt2-modal-footer .export-inactive-concept-modal-button {
+    margin-right: 15px !important;
 }
 
 .adjudicate-export-inactive-concept-modal-button {
@@ -2862,6 +2877,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-right: 60px;
 }
 
+.adjudicate-information-button {
+    color: #00a9e0;
+    padding-top: 20px;
+}
 
 .finish-upgrade-modal-body {
     background-color: #f5f5f6;
