@@ -36,7 +36,7 @@
                                 <div class="
                                         add-remove-concept-hierarchy-modal-search-bar
                                     ">
-                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField"
+                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField" style="width: auto;"
                                                     class="
                                             add-remove-concept-hierarchy-modal-input-field
                                         ">
@@ -55,17 +55,17 @@
                                         "
                                           (click)="clearSearch()">&#10005;</span>
 
-                                    <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
-                                            #addRemoveByConceptHierarchySearchEclButton
-                                            class="
-                                            refset-tool-standard-icon-button
-                                            refset-tool-search-ecl-button
-                                        ">
-                                        <img src="assets/wrench-icon.svg"
-                                             alt="wrench icon"
-                                             title="Open ECL Builder"
-                                             aria-label="ECL Builder" />
-                                    </button>
+                                          <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
+                                          #addRemoveByConceptHierarchySearchEclButton
+                                          class="btn btn-primary i18n ml-3" style="
+                                          font-size: 12px;
+                                          margin-top: 23px;
+                                          position: absolute;">ECL Builder
+                                      <!-- <img src="assets/wrench-icon.svg"
+                                           alt="wrench icon"
+                                           title="Open ECL Builder"
+                                           aria-label="ECL Builder" /> -->
+                                  </button>
                                         <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults"
                                              class="

@@ -6,7 +6,7 @@
     <div class="row refset-title sticky-top">
 
         <!-- Refset Name, action icons, and roles -->
-        <div class="col-5 refset-tool-refset-details-title-name-section">
+        <div class="col-4 refset-tool-refset-details-title-name-section">
 
             <div class="refset-tool-refset-details-title-name">
                 {{refsetData?.name}}
@@ -36,49 +36,49 @@
         </div>
 
         <!-- Locked Refset bar -->
-        <div *ngIf="isLocked" id="refsetLockBanner" class="col-4">
+        <div *ngIf="isLocked" id="refsetLockBanner" class="col-5">
             This refset is locked while edits are processing.
         </div>
 
         <!-- Spacer Column if not in edit mode -->
-        <div *ngIf="!editMode" class="col-4">&nbsp;</div>
+        <div *ngIf="!editMode" class="col-5">&nbsp;</div>
 
         <!-- Status Stepper if in edit mode and refset not locked -->
-        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-4 details-page-stepper"
+        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-5 details-page-stepper"
             [linear]="true" labelPosition="bottom" #stepper>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
                 <ng-template matStepperIcon="number">
                     <mat-icon>done</mat-icon>
                 </ng-template>
-                <ng-template matStepLabel><span [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
                         for Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['IN_EDIT_COLOR']">In
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;" [class]="stepperInfo['IN_EDIT_COLOR']">In
                         Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-                <ng-template matStepLabel><span
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
                         [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
                 </ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['IN_REVIEW_COLOR']">In
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;" [class]="stepperInfo['IN_REVIEW_COLOR']">In
                         Review</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-                <ng-template matStepLabel><span
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
                         [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
                 </ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-                <ng-template matStepLabel><span
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
                         [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for
                         Publication</span></ng-template>
             </mat-step>
@@ -337,7 +337,7 @@
                     <div class="col refset-tool-refset-metadata-column">
                         <table class="
                                 refset-tool-refset-metadata-table
-                                table-striped
+                                table-striped mb-1
                             ">
                             <tbody>
                                 <tr>
@@ -452,7 +452,7 @@
                     <div class="col refset-tool-refset-metadata-column">
                         <table class="
                                 refset-tool-refset-metadata-table
-                                table-striped
+                                table-striped mb-1
                             ">
                             <tbody>
                                 <!-- Version Date with default if empty -->
@@ -713,7 +713,7 @@
                     (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </div> -->
         </div>
-        <span *ngIf="allowedToEdit">
+        <span >
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Manage Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
@@ -781,7 +781,7 @@
                                             </mat-form-field>
                                         </div>
 
-                                        <div class="col-lg ml-3"
+                                        <div class="col-lg ml-3" style="padding-right: 90px;"
                                             [style.display]="membersTableDisplay">
                                             <mat-form-field
                                                 class="refset-tool-details-search-field">
@@ -793,16 +793,20 @@
                                             </mat-form-field>
                                             <span class="clear-search"
                                                 (click)="clearSearch('table')">&#10005;</span>
-                                            <button
+                                                <button
                                                 (click)="openEclBuilder('detailsTableSearchInput')"
-                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
-                                                <img src="assets/wrench-icon.svg" alt="wrench icon"
+                                                class="btn btn-primary i18n" style="
+                                                font-size: 12px;
+                                            margin-top: 23px;
+                                            position: absolute;
+                                            ">ECL Builder
+                                                <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                                     title="Open ECL Builder"
-                                                    aria-label="ECL Builder" />
+                                                    aria-label="ECL Builder" /> -->
                                             </button>
                                         </div>
 
-                                        <div class="col-lg ml-3"
+                                        <div class="col-lg ml-3" style="padding-right: 90px;"
                                             [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field class="refset-tool-details-search-field"
                                                 *ngIf="showMembersSearchBar()">
@@ -818,10 +822,14 @@
                                                 *ngIf="showMembersSearchBar()">&#10005;</span>
                                             <button
                                                 (click)="openEclBuilder('detailsTaxonomySearchInput')"
-                                                class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
-                                                <img src="assets/wrench-icon.svg" alt="wrench icon"
+                                                class="btn btn-primary i18n" style="
+                                                font-size: 12px;
+                                            margin-top: 23px;
+                                            position: absolute;
+                                            ">ECL Builder
+                                                <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                                     title="Open ECL Builder"
-                                                    aria-label="ECL Builder" />
+                                                    aria-label="ECL Builder" /> -->
                                             </button>
                                         </div>
 
