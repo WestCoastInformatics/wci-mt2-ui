@@ -393,11 +393,11 @@ export class UiUtility {
     static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string, selectedVersion?: any) {
 
         let message = '';
-		let upgradeMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
+		let lookupMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
             + 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
         
-        if (processType?.includes('upgrade')) {
-            message = upgradeMessage;
+        if (processType?.includes('lookup')) {
+            message = lookupMessage;
         }
         
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
