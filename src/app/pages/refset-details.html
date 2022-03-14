@@ -323,12 +323,12 @@
                        title="Open Audit Trail"
                        aria-label="Audit Trail">Audit Trail</a> -->
                 </div>
-                <img src="assets/collapse-minus-icon.svg" *ngIf="!hideMetadataTable"
+                <img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable"
                     alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button"
-                    class="collapse-minus-icon" (click)="metadataCollapseTrigger()" />
-                <img src="assets/collapse-plus-icon.svg" *ngIf="hideMetadataTable"
+                    class="caret-up-solid" (click)="metadataCollapseTrigger()" />
+                <img src="assets/caret-down-solid.svg" *ngIf="hideMetadataTable"
                     alt="Uncollapse Button" title="Uncollapse Metadata"
-                    aria-label="Uncollapse Button" class="collapse-plus-icon"
+                    aria-label="Uncollapse Button" class="caret-down-solid"
                     (click)="metadataCollapseTrigger()" />
             </div>
             <div class="container-fluid" id="detailsMetadataSection" [hidden]="hideMetadataTable">
@@ -618,13 +618,13 @@
                                                       [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal> -->
                     <!-- </div> -->
                 </div>
-                <img src="assets/collapse-minus-icon.svg" *ngIf="!hideWorkflowTable"
+                <img src="assets/caret-up-solid.svg" *ngIf="!hideWorkflowTable"
                     alt="Collapse Button" title="Collapse Workflow History"
-                    aria-label="Collapse Button" class="collapse-minus-icon"
+                    aria-label="Collapse Button" class="caret-up-solid"
                     (click)="workflowCollapseTrigger()" />
-                <img src="assets/collapse-plus-icon.svg" *ngIf="hideWorkflowTable"
+                <img src="assets/caret-down-solid.svg" *ngIf="hideWorkflowTable"
                     alt="Uncollapse Button" title="Uncollapse Workflow History"
-                    aria-label="Uncollapse Button" class="collapse-plus-icon"
+                    aria-label="Uncollapse Button" class="caret-down-solid"
                     (click)="workflowCollapseTrigger()" />
             </div>
             <div [hidden]="hideWorkflowTable">

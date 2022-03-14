@@ -1104,7 +1104,6 @@ export class RefsetDetails {
                     this.loadWorkflowHistoryData();
                     this.processChangedMemberEffects();
                     this.loadRefset();
-                    //this.hideWorkflowTable = false;
                 }
             } else {
                 this.loadRefset();
