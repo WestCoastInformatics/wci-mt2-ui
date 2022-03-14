@@ -486,12 +486,43 @@ export class UiUtility {
         this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept'], fileName);
     }
 
-    // static createFinishedChangeReport(refsetId: string, data): void {
+    static createFinishedChangeReport(refsetId: string, data): void {
 
-    //     let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+        let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
 
-    //     this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept', 'Members in Common ID', 'Refset ID'], fileName);
-    // }
+        const headerObject = {
+            'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
+            'newMemberHeader': ['New Member ID', 'New Member Concept'],
+            'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
+            'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
+        };
+        this.downloadMergedFile(data, headerObject, fileName);
+    }
+
+    static downloadMergedFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
+
+        const csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+            + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+            + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
+            + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+
+        const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+        const downloadLink = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
+        
+        if (isSafariBrowser) {
+            downloadLink.setAttribute('target', '_blank');
+        }
+
+        downloadLink.setAttribute('href', url);
+        downloadLink.setAttribute('download', fileName + '.csv');
+        downloadLink.style.visibility = 'hidden';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
 
     static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
 

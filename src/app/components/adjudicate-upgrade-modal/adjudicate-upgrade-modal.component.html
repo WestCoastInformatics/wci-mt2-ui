@@ -63,20 +63,20 @@
         <button type="button" mat-raised-button color="red" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); upgradeModalComponent.isInitialUpgrade = true; upgradeModalComponent.isResumeUpgrade = false; modal.dismiss('Cross click');" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
             Cancel Upgrade
         </button>
-        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeExport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
+        <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
+            Export Change Report
+        </button>
+        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
             Export Inactive Concept Report
         </button>
-        <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button adjudicate-export-modal-button" aria-label="Export Change Report" title="Export Change Report" ng-reflect-color="primary">
-            Export Change Report
-        </button> -->
-        <finish-upgrade-modal></finish-upgrade-modal>
+        <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
     </div>
 </ng-container>
 </ng-template>
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <add-remove-concepts-icons [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="params?.data?.stillMember" (processSelection)="addRemoveConcept($event, false, params?.data?.stillMember ? 'INACTIVE_REMOVED' : 'INACTIVE_ADDED')"> </add-remove-concepts-icons>
+    <add-remove-concepts-icons [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="!params?.data?.stillMember" (processSelection)="addRemoveConcept($event, false, params?.data?.stillMember ? 'INACTIVE_REMOVED' : 'INACTIVE_ADDED')"> </add-remove-concepts-icons>
 </ng-template>
 
 <!-- Inactive ID Templates -->
@@ -111,7 +111,7 @@
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-    <add-remove-concepts-icons *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember" [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="params?.data?.replacementConcecpts[0]?.existingMember" (processSelection)="addRemoveConcept($event, true, params?.data?.replacementConcecpts[0]?.existingMember ? 'REPLACEMENT_REMOVED' : 'REPLACEMENT_ADDED')"> </add-remove-concepts-icons>
+    <add-remove-concepts-icons *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember" [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="!params?.data?.replacementConcecpts[0].added" (processSelection)="addRemoveConcept($event, true, params?.data?.replacementConcecpts[0]?.added ? 'REPLACEMENT_REMOVED' : 'REPLACEMENT_ADDED')"> </add-remove-concepts-icons>
     <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember" class="adjudicate-information-button" aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
 </ng-template>
 

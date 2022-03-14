@@ -16,10 +16,11 @@ export class UpgradeModalComponent implements OnInit {
   refsetData: any;
   @Output()
   loadingSpinner = new EventEmitter<boolean>(false);
-
+  @Input()
+  membersOfRefset: any;
   selectedVersion: any;
   showWarning = false;
-  members: any;
+  membersInCommon: any;
   inactiveConcepts = 0;
   totalMembers = 0;
 
@@ -70,7 +71,6 @@ export class UpgradeModalComponent implements OnInit {
   async getUpgradeData(upgradeDialog: NgbModal): Promise<void> {
 
     this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
-      console.log(members);
       this.totalMembers = members?.miscCountA;
       this.inactiveConcepts = members?.total;
 
@@ -81,7 +81,7 @@ export class UpgradeModalComponent implements OnInit {
         size: 'lg'
       });
 
-      this.members = members;
+      this.membersInCommon = members;
     });
   }
 
@@ -105,8 +105,8 @@ export class UpgradeModalComponent implements OnInit {
     }
   }
 
-  getInactiveChangeExport(): void {
-    const memberItems = this.members.items;
+  getInactiveChangeReport(): void {
+    const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
     });
