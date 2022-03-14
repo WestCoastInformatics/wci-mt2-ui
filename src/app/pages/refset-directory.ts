@@ -192,7 +192,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             rowCount: null,
             getRows: (rowParams) => {
 
-                this.refsetGridApi.showLoadingOverlay();
+                // this.refsetGridApi.showLoadingOverlay();
+                this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
@@ -253,6 +254,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
                         this.refsetGridPaging.totalKnown = true;
                         this.paginationComponent.goToPage(pageNumber - 1);
+                        this.showLoadingSpinner = false;
+
                         return;
                     }
 
@@ -427,10 +430,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 dialogId: dialogId,
                 showCancel: false,
                 cancelText: 'Close',
-                confirmText: 'View Complete Refset',
-                showTitle: false,
+                actionText: 'View Complete Refset',
+                //showTitle: false,
+                showConfirm: false,
                 template: this.infoDialog,
+                headerText: 'Refset Metadata',
                 data: refset,
+                showAction: true,
                 showCloseIcon: true
             }
 

@@ -15,20 +15,21 @@ export class UpgradeModalComponent implements OnInit {
   @Input()
   refsetData: any;
   @Input()
-  isInitialUpgrade = true;
+  refsetId: any;
   @Input()
-  isResumeUpgrade = false;
+  refsetInternalId: any;
+  @Input()
+  refsetVersionDate: any;
   @Output()
   loadingSpinner = new EventEmitter<boolean>(false);
-
+  @Input()
+  membersOfRefset: any;
   selectedVersion: any;
   showWarning = false;
   membersInCommon: any;
   inactiveConcepts = 0;
   totalMembers = 0;
 
-  getResumeParam = this.route.snapshot.queryParamMap.get('isResumeUpgrade') === 'true';
-  getInitialParam = this.route.snapshot.queryParamMap.get('isInitialUpgrade') === 'true';
 
 
   constructor(private readonly modalService: NgbModal,
@@ -48,27 +49,25 @@ export class UpgradeModalComponent implements OnInit {
 
     this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
 
-      if (!x && (!this.isInitialUpgrade || this.getResumeParam)) {
-        this.isResumeUpgrade = true;
+      if (!x) {
         await this.getUpgradeData(upgradeDialog);
-      } else if (!x && (this.isInitialUpgrade || !this.getResumeParam)) {
-        this.isResumeUpgrade = false;
-        this.modalService.open(upgradeDialog, {
-          backdrop: 'static',
-          keyboard: false,
-          windowClass: 'upgrade-modal',
-          size: 'lg'
-        });
       }
       this.sendLoadingSpinnerTrigger(false);
     });
 
   }
 
+  get isInitialUpgrade(): boolean {
+    if (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) {
+      return false;
+    } else if (this.refsetData?.availableActions?.includes('EDIT')) {
+      return true;
+    }
+  }
+
   async getUpgradeData(upgradeDialog: NgbModal): Promise<void> {
 
     this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
-      console.log(members);
       this.totalMembers = members?.miscCountA;
       this.inactiveConcepts = members?.total;
 
@@ -87,37 +86,32 @@ export class UpgradeModalComponent implements OnInit {
     this.loadingSpinner.emit(value);
   }
 
-  listOfDates(versionList: any[]): any {
-    return versionList.filter((x) => {
-      if (Date.parse(x?.date) > Date.parse(this.refsetData?.versionDate) && !x?.status?.includes('IN DEVELOPMENT')) {
-        return true;
-      }
-      return false;
-    });
+  latestDate(versionList: any[]): string {
+    return versionList[0].date;
   }
 
   upgrade(): void {
     if (this.isInitialUpgrade) {
-      // if (!this.listOfDates(this.refsetData?.versionList)?.length || !this.selectedVersion) {
-      //   this.showWarning = true;
-      //   setTimeout(() => {
-      //     this.showWarning = false;
-      //   }, 3500);
-      // } else {
-      console.log(this.refsetData)
-        this.refsetService.initializeUpgrade(this.selectedVersion).subscribe();
-        this.modalService.dismissAll();
-
-        UiUtility.manageProcessNotifications(this.refsetData?.Id, this.refsetData?.refsetId, this.refsetData?.versionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
-      setTimeout(() => {
-        this.isInitialUpgrade = false;
-        this.isResumeUpgrade = true;
-      }, 1000);
-        // }
+      this.refsetService.initializeUpgrade(this.selectedVersion).subscribe((x) => {
+        if (this.router.url.includes('/' + this.refsetId)) {
+          window.location.reload();
+        } else {
+          this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
+            this.totalMembers = members?.miscCountA;
+            this.inactiveConcepts = members?.total;
+      
+            this.membersInCommon = members;
+            this.getInactiveChangeReport(false);
+          });
+        }
+      });
+      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
+      this.modalService.dismissAll();
+      this.refsetDetails.initializeDetailsPage();
     }
   }
 
-  getInactiveChangeExport(): void {
+  getInactiveChangeReport(shouldDownload = true): void {
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
@@ -126,14 +120,21 @@ export class UpgradeModalComponent implements OnInit {
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
         'Inactive Concept ID': inactiveConcepts[i].code,
-        'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term,
+        'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
         'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
         'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term
+        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
-    UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+    if (shouldDownload) {
+      UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+    } else {
+      if (localStorage.getItem('inactiveChangeReportData')) {
+        localStorage.removeItem('inactiveChangeReportData');
+      }
+      localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
+    }
   }
 
   transformDescriptions(descriptions: any) {

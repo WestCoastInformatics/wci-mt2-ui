@@ -138,7 +138,7 @@ strong {
     user-select: none;
 }
 .refset-tool-rounded-borders {
-    border-radius: 5px;
+    border-radius: 3px;
     border-style: solid;
     border-width: 2px;
 }
@@ -265,27 +265,74 @@ a.footer-link {
 // Material Dialog Override Styles
 .mat-dialog-actions.refset-tool-dialog-actions {
     justify-content: flex-end;
+    margin-bottom: 0px;
+    padding: 8px 8px;
 }
 
 .mat-dialog-title.refset-tool-dialog-title {
-    font-size: 20px;
+    font-size: 1.2rem;
     display: flex;
     float: right;
-    gap: 250px;
+    color: #fff;
+    font-weight: 300;
+    letter-spacing: .5px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.mat-dialog-container {
+    display: block;
+    border-radius: 3px;
+    box-sizing: border-box;
+    overflow: hidden !important;
+    outline: 0;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 0px !important;
+}
+
+.dialog-header {
+    background-color: black;
+    padding: 0 5px;
+    height: 40px;
+    display: flex;
+    float: right;
+    color: #fff;
+    font-weight: 300;
+    letter-spacing: .5px;
+    width: 100%;
 }
 
 .mat-dialog-content.refset-tool-dialog-content {
-    //overflow: visible;
+    color: black;
+    margin: 0px;
+    padding-top: 8px;
 }
 
 .mat-flat-button,
 .mat-raised-button {
     background-color: $standard_default_button_color;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    line-height: 30px !important;
 }
 
 .mat-flat-button.mat-primary,
 .mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
+}
+
+.mat-flat-button.mat-green,
+.mat-raised-button.mat-green {
+    background-color: $standard_green_button_color;
+}
+
+.mat-flat-button.mat-red,
+.mat-raised-button.mat-red {
+    background-color: $standard_red_button_color;
 }
 
 .mat-icon-button {
@@ -333,6 +380,8 @@ button.refset-tool-table-action-icon {
 .mat-icon-button i,
 .mat-icon-button .mat-icon {
     line-height: 24px !important;
+    width: 25px !important;
+    height: 25px !important;
 }
 
 .refset-tool-close-button {
@@ -525,14 +574,22 @@ button.refset-tool-table-action-icon {
 
     .mat-raised-button {
         min-width: 30px !important;
-        border-radius: 0px !important;
-        padding: 0px !important;
+        border-radius: 3px !important;
+        //padding: 0px !important;
         line-height: 30px !important;
     }
 
     .mat-raised-button.mat-primary {
         background-color: $cerulean !important;
         margin-bottom: 5px
+    }
+
+    .mat-raised-button .mat-button-wrapper {
+        color: black
+    }
+
+    .mat-raised-button.mat-primary .mat-button-wrapper {
+        color: white
     }
 
 }
@@ -762,7 +819,7 @@ button.refset-tool-table-action-icon {
 
 #detailsMemberSection {
     background-color: #f5f5f5;
-    border-radius: 4px;
+    border-radius: 3px;
     margin-left: 0px;
     margin-right: 0px;
     width: auto;
@@ -906,7 +963,7 @@ button.refset-tool-table-action-icon {
 
     tree-viewport {
         background: white;
-        border-radius: 4px;
+        border-radius: 3px;
         padding-top: 10px;
         margin-bottom: 15px;
     }
@@ -924,7 +981,7 @@ button.refset-tool-table-action-icon {
 // Concept Detail Styles
 .refset-tool-concept-details-column {
     background-color: white;
-    border-radius: 4px;
+    border-radius: 3px;
     margin-top: 20px;
     margin-bottom: 15px;
     font-size: 14px;
@@ -1195,18 +1252,9 @@ button.refset-tool-table-action-icon {
     width: 175px;
 }
 
-.mat-raised-button {
-    line-height: 40px !important;
-}
-
-.mat-flat-button.mat-primary,
-.mat-raised-button.mat-primary {
-    border-radius: 0px;
-}
-
 .refset-tool-refset-metadata-column {
     background-color: #f5f5f5;
-    border-radius: 5px;
+    border-radius: 3px;
     margin: 1.5rem 0 0 0;
     padding-left: 15px;
     padding-right: 15px;
@@ -1370,7 +1418,7 @@ button.refset-tool-table-action-icon {
     background: #f5f5f5;
     margin-left: 15px;
     margin-right: 15px;
-    border-radius: 4px;
+    border-radius: 3px;
     padding-top: 15px;
     padding-bottom: 15px;
 }
@@ -1383,7 +1431,7 @@ button.refset-tool-table-action-icon {
 #downloadDialogCancel {
     background: #e93848;
     color: white;
-    border-radius: 0px;
+    border-radius: 3px;
 }
 
 #downloadDialogActions button {
@@ -1485,6 +1533,9 @@ button.refset-tool-table-action-icon {
     );
 }
 
+.ag-overlay-loading-wrapper {
+    display: none !important;
+}
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
     /* hide "loading..." text */
@@ -1738,7 +1789,7 @@ button.refset-tool-table-action-icon {
         z-index: 1;
         top: 0;
         left: 0;
-        border-radius: 4px;
+        border-radius: 3px;
         background-color: #4c97cb;
         transition: 0.5s all;
     }
@@ -2030,7 +2081,7 @@ button.refset-tool-table-action-icon {
     background-color: rgba(245, 245, 246, 1);
     padding: 28px !important;
     padding-top: 0px !important;
-    border-radius: 5px;
+    border-radius: 3px;
     font-size: 14px;
 }
 
@@ -2070,22 +2121,37 @@ button.refset-tool-table-action-icon {
     align-self: normal;
 }
 
-.create-new-refset-modal-footer {
-    border: none !important;
-    padding-right: 30px !important;
+
+
+.rt2-modal-header {
+    color: #fff;
+    font-weight: 300;
+    line-height: inherit;
+    letter-spacing: .5px;
+    background-color: #343a40;
+    border-top-left-radius: initial;
+    border-top-right-radius: initial;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
 }
 
-
-.import-from-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
-
-.import-from-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
+.rt2-modal-title {
+    color: white;
+    font-size: 1.2rem;
     font-family: $standard_font_family;
+    letter-spacing: 1.5px;
+}
+
+.dialog-close-x {
+    color: white;
+    font-size: 2rem;
+    font-weight: 300;
+    text-shadow: none;
+    line-height: .8rem;
 }
 
 .import-from-container-fluid {
@@ -2097,7 +2163,7 @@ button.refset-tool-table-action-icon {
 .import-from-modal-body {
     background-color: rgba(245, 245, 246, 1);
     padding: 30px !important;
-    border-radius: 5px;
+    border-radius: 3px;
     font-size: 14px;
     text-align: -webkit-center;
 }
@@ -2109,10 +2175,9 @@ button.refset-tool-table-action-icon {
     padding-bottom: 20px !important;
 }
 
-.import-from-modal-footer {
-    border: none !important;
-    padding: 30px !important;
-    align-self: center;
+.rt2-modal-footer {
+    border-top: 1px solid #dee2e6;
+    align-self: right;
 }
 
 .import-from-remove-members-button {
@@ -2219,7 +2284,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title-container > .metadata-container {
     width: 100%;
     display: flex;
-    padding: 20px;
+    padding-bottom: 20px;
     align-items: baseline;
     padding-left: 0px;
 }
@@ -2373,18 +2438,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     background-color: rgba(255, 255, 255, 1);
 }
 
-.add-remove-concept-hierarchy-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 0px !important;
-}
-
-.add-remove-concept-hierarchy-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: $standard_font_family;
-}
-
 .add-remove-concept-hierarchy-modal-body {
     padding: 0;
 }
@@ -2406,10 +2459,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     height: 680px;
 }
 
-.add-remove-concept-hierarchy-modal-footer {
-    border: none !important;
-    padding: 30px !important;
-}
+
 
 .add-remove-concept-hierarchy-modal-size > .modal-dialog {
     width: 500px;
@@ -2716,8 +2766,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 #refsetDetailsPage .refset-title-container .edit-button-group-right-below-sticky-header .refset-action-button {
-    margin-left: 10px !important;
-    min-width: 165px !important;
+    margin-left: 5px !important;
+    min-width: 150px !important;
     margin-bottom: -5px !important;
 }
 
@@ -2736,23 +2786,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 700px;
 }
 
-.ready-for-publication-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: $standard_font_family;
-}
-
-.ready-for-publication-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.ready-for-publication-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
-
 .upgrade-modal-body {
     background-color: #f5f5f6;
     padding: 28px !important;
@@ -2769,23 +2802,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 800px;
 }
 
-.upgrade-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
-}
-
-.upgrade-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.upgrade-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
-
 .upgrade-modal-body-header {
     display: flex;
     justify-content: space-between;
@@ -2800,6 +2816,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .upgrade-modal-body-mid {
     text-align: left;
+}
+
+.upgrade-modal-body-mid-label {
+    font-weight: 500;
 }
 
 .upgrade-modal-current-version {
@@ -2844,8 +2864,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-left: 25px;
 }
 
-.upgrade-footer .export-inactive-concept-modal-button {
-    margin-right: 10px;
+.rt2-modal-footer .export-inactive-concept-modal-button {
+    margin-right: 15px !important;
 }
 
 .adjudicate-export-inactive-concept-modal-button {
@@ -2857,6 +2877,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-right: 60px;
 }
 
+.adjudicate-information-button {
+    color: #00a9e0;
+    padding-top: 20px;
+}
 
 .finish-upgrade-modal-body {
     background-color: #f5f5f6;
@@ -2874,22 +2898,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 800px;
 }
 
-.finish-upgrade-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
-}
-
-.finish-upgrade-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.finish-upgrade-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
 
 .finish-upgrade-modal-body-header {
     display: flex;
@@ -2961,12 +2969,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 1140px;
 }
 
-.adjudicate-upgrade-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
-}
-
 .adjudicate-inactive-concepts {
     padding-right: 15px;
 }
@@ -2984,17 +2986,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .adjudicate-column-inactivationReason,
 .adjudicate-column-inactiveNlPtSection {
     background-color: rgba(249, 238, 238, 1);
-}
-
-.adjudicate-upgrade-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.adjudicate-upgrade-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
 }
 
 .adjudicate-upgrade-modal-body-header {
@@ -3028,6 +3019,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
+    letter-spacing: 1px;
 }
 
 .menu-spacer {
@@ -3073,16 +3065,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-family: $standard_font_family;
 }
 
-.ready-for-review-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.review-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
 
 @mixin refset-listing-workflow-button {
     width: 160px;
@@ -3215,22 +3197,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 700px;
 }
 
-.workflow-history-notes-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: $standard_font_family;
-}
-
-.workflow-history-notes-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.workflow-history-notes-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
-}
 
 .mat-elevation-z8 {
     overflow: overlay;
@@ -3258,23 +3224,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .add-remove-descendants-modal > .modal-dialog > .modal-content {
     width: 700px;
-}
-
-.add-remove-descendants-modal-title {
-    color: #9b9b9b;
-    font-size: 1.5em;
-    font-family: $standard_font_family;
-}
-
-.add-remove-descendants-footer {
-    border: none !important;
-    padding: 30px !important;
-}
-
-.add-remove-descendants-modal-header {
-    border: none !important;
-    padding-left: 30px !important;
-    padding-bottom: 30px !important;
 }
 
 .limit-text-container {
@@ -3444,6 +3393,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-bottom: -6rem;
     overflow: unset;
     color: white;
+    font-family: $standard_font_family;
+    letter-spacing: .1rem;
   }
 
 .landing-page-top-bar-center {
@@ -3508,6 +3459,8 @@ span.title {
     width: 220px;
     height: 25px;
     font-size: 14px;
+    font-family: inherit;
+    letter-spacing: .1rem;
 }
 
 .landing-page-guest-has-account {

@@ -1,4 +1,4 @@
-<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+<div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div id="refsetDetailsPage" class="container-fluid">
 
@@ -44,7 +44,7 @@
         <div *ngIf="!editMode" class="col-5">&nbsp;</div>
 
         <!-- Status Stepper if in edit mode and refset not locked -->
-        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-5 details-page-stepper"
+        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-4 details-page-stepper"
             [linear]="true" labelPosition="bottom" #stepper>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
@@ -177,7 +177,7 @@
                         Edit
                     </button>
 
-                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR')" [refsetData]="refsetData"></upgrade-modal>
+                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')" [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id" [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
@@ -858,7 +858,8 @@
                                 <div class="container-fluid" [style.display]="membersTableDisplay">
                                     <ag-grid-angular #detailsMembersTable *ngIf="showTable"
                                         class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                                        domLayout="autoHeight" [columnDefs]="membersColumnDefs"
+                                        [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
+                                        [columnDefs]="membersColumnDefs"
                                         [gridOptions]="membersGridOptions">
                                     </ag-grid-angular>
 
@@ -999,7 +1000,7 @@
                             <div class="refset-tool-concept-details-column"
                                 *ngIf="isConceptDetailsLoading || conceptDetail">
                                 <div class="row" *ngIf="isConceptDetailsLoading">
-                                    <div>Loading...</div>
+                                    <!-- <div>Loading...</div> -->
                                 </div>
 
                                 <div *ngIf="conceptDetail">
@@ -1264,14 +1265,14 @@
     </div>
     <div class="modal-footer ready-for-review-footer">
         <button type="button"
-            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click')"
+            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
             mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
             aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
             Yes
         </button>
-        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="primary"
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"
             aria-hidden="false" class="refset-tool-action-button" aria-label="No" title="No"
-            ng-reflect-color="primary">
+            ng-reflect-color="red">
             No
         </button>
     </div>

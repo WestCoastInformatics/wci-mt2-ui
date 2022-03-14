@@ -113,6 +113,7 @@ export class TaxonomyTreeComponent {
                 if (!this.rootNode.active) {
 
                     this.isLoading = false;
+                    this.showLoadingSpinner = false;
                     this.noData = true;
                     return;
                 }
@@ -126,12 +127,14 @@ export class TaxonomyTreeComponent {
                 } else {
 
                     this.isLoading = true;
+                    this.showLoadingSpinner = true;
                     this.prepareData(this.rootNode.children);
                 }
 
             } else if (propertyName === "manualStateRefresh") {
 
                 this.isLoading = true;
+                this.showLoadingSpinner = true;
                 this.nodes = [];
             }
         }
@@ -140,7 +143,7 @@ export class TaxonomyTreeComponent {
     getTreeData() {
 
         this.isLoading = true;
-
+        this.showLoadingSpinner = true;
         let restParams = {
             displayType: "taxonomy",
             depth: 1,
@@ -159,6 +162,7 @@ export class TaxonomyTreeComponent {
         error: (error) => {
             
             this.isLoading = false;
+            this.showLoadingSpinner = false;
             this.showLoadingSpinner = false;
         }});
     }
@@ -187,6 +191,7 @@ export class TaxonomyTreeComponent {
         }
 
         this.isLoading = false;
+        this.showLoadingSpinner = false;
     }
 
     onInitTree(event) {
