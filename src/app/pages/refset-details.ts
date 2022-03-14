@@ -1248,10 +1248,11 @@ export class RefsetDetails {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-
+        this.showLoadingSpinner = true;
         this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
+            this.showLoadingSpinner = false;
             this.conceptDetail = results;
             this.conceptDetail.roleGroups = results.roleGroups;
             this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
