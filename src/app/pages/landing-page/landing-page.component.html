@@ -1,42 +1,55 @@
+<nav class="navbar sticky-top navbar-dark bg-dark p-2 pr-2" id="bg-landing-header">
+    <a class="logo" routerlink="/">
+        <img class="logo p-0" src="assets/small_logo.png" alt="Logo">
+        <span class="title header-title">SNOMED CT Request Management Portal Dashboard</span>
+    </a>
+</nav>
 <div class="landing-page-container">
-    <div class="landing-page-top-bar-center"><img src="/assets/small_logo.png" class="landing-page-tool-logo"><span class="landing-page-title-text">Reference Set Tool 2.0</span></div>
-    <div class="landing-page-top-bar-left"></div>
-    <div class="landing-page-top-bar-right"></div>
+
     <div class="landing-page-info-section">
-        <p class="landing-page-text-1">Welcome to SNOMED International's New Reference Set Management Tool!</p>
+        <p class="landing-page-text-1">Welcome to SNOMED International's New Reference Set
+            Management Tool!</p>
         <br>
-        <p class="landing-page-text-2">SNOMED International's new Reference Set Management Tool builds upon the Refset and Translation Tool. It builds upon the existing tool by adding a modern interface, a better modeling user experience, richer capabilities, and integrates directly with Snowstorm.</p>
+        <p class="landing-page-text-2">SNOMED International's new Reference Set Management Tool
+            builds upon the Refset and Translation Tool. It builds upon the existing tool by adding
+            a modern interface, a better modeling user experience, richer capabilities, and
+            integrates directly with Snowstorm.</p>
         <p class="landing-page-text-3">Functionality Includes:</p>
-            <ul class="landing-page-text-4">
-                <li>Full integration with SNOMED's Snowstorm Terminology Server</li>
-                <li>A flexible review workflow</li>
-                <li>More powerful comparison capabilities (In Development)</li>
-                <li>Collaborate with others outside your organization (In Development)</li>
-                <li>Ability to browse published reference sets as a guest</li>
-            </ul>        
+        <ul class="landing-page-text-4">
+            <li>Full integration with SNOMED's Snowstorm Terminology Server</li>
+            <li>A flexible review workflow</li>
+            <li>More powerful comparison capabilities (In Development)</li>
+            <li>Collaborate with others outside your organization (In Development)</li>
+            <li>Ability to browse published reference sets as a guest</li>
+        </ul>
     </div>
     <div class="landing-page-login-section">
         <div *ngIf="isGuestMode">
             <div class="landing-page-guest-access">
                 <button class="landing-page-guest-access-button" [routerLink]="['/directory']"
-                [routerLinkActive]="['active']">
-                Access as Guest
+                    [routerLinkActive]="['active']">
+                    Access as Guest
                 </button>
             </div>
             <br>
-            <p class="landing-page-guest-has-account">Already have an account? <a class="landing-page-log-in-link" (click)="login()">Log In</a></p>
+            <p class="landing-page-guest-has-account">Already have an account? <a
+                    class="landing-page-log-in-link" (click)="login()">Log In</a></p>
         </div>
         <div *ngIf="!isGuestMode">
             <div class="landing-page-login-form">
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     <div class="form-group">
-                        <input type="text" placeholder="Username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" disabled />
+                        <input type="text" placeholder="Username" formControlName="username"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.username.errors }" disabled />
                         <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                             <div *ngIf="f.username.errors.required">Username is required</div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="password" placeholder="Password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" disabled/>
+                        <input type="password" placeholder="Password" formControlName="password"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.password.errors }" disabled />
                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                             <div *ngIf="f.password.errors.required">Password is required</div>
                         </div>
@@ -46,13 +59,22 @@
                     </div>
                     <div class="landing-page-guest-access form-group">
                         <button class="landing-page-guest-access-button" (click)="login()">
-                        Log In
+                            Log In
                         </button>
                     </div>
                 </form>
             </div>
             <br>
-            <p class="landing-page-guest-has-account">Don't have an account? <a class="landing-page-log-in-link" (click)="isGuestMode = true">Proceed as a Guest</a> or <a class="landing-page-log-in-link" href="http://snomed.org/accounts" target="_blank">Create an Accountt</a></p>
+            <p class="landing-page-guest-has-account">Don't have an account? <a
+                    class="landing-page-log-in-link" (click)="isGuestMode = true">Proceed as a
+                    Guest</a> or <a class="landing-page-log-in-link"
+                    href="http://snomed.org/accounts" target="_blank">Create an Account</a></p>
         </div>
     </div>
-  </div>
+</div>
+<footer class="footer bg-dark" id="bg-landing-footer">
+    <a class="px-3 footer-link" href="http://www.snomed.org/" target="_blank" i18n="">Copyright ©
+        {{year}} SNOMED International All
+        Rights Reserved
+    </a>
+</footer>

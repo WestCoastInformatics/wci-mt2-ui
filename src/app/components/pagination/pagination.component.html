@@ -6,35 +6,52 @@
 
         <div class="refset-tool-pagination-buttons">
 
-            <button #paginationFirstPage mat-raised-button (click)="goToPage(1)" title="Go To First Page" attr.aria-label="Go To First Page">
+            <button #paginationFirstPage mat-raised-button (click)="goToPage(1)"
+                title="Go To First Page" attr.aria-label="Go To First Page">
                 <mat-icon aria-hidden="false">first_page</mat-icon>
             </button>
 
-            <button #paginationPreviousPage mat-raised-button (click)="goToPrevious(currentPage - 1)" title="Go To Previous Page" attr.aria-label="Go To Previous Page {{currentPage - 1}}">
+            <button #paginationPreviousPage mat-raised-button
+                (click)="goToPrevious(currentPage - 1)" title="Go To Previous Page"
+                attr.aria-label="Go To Previous Page {{currentPage - 1}}">
                 <mat-icon aria-hidden="false">arrow_left</mat-icon>
             </button>
 
             <span *ngFor="let page of paginationPages.pages">
-                <button #paginationPageNumber mat-raised-button [color]="currentPage === page ? 'primary' : ''" (click)="goToPage(page)" attr.aria-label="Go To Page {{page}}" title="Go To Page {{page}}">
+                <button #paginationPageNumber mat-raised-button
+                    [color]="currentPage === page ? 'primary' : ''" (click)="goToPage(page)"
+                    attr.aria-label="Go To Page {{page}}" title="Go To Page {{page}}">
                     {{page}}
                 </button>
             </span>
 
             <button mat-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
-                (click)="goToPage(paginationPages.startPage + 5)" title="Go To Page {{paginationPages.startPage + 5}}" attr.aria-label="Go To Page {{paginationPages.startPage + 5}}" title="Go To Page {{paginationPages.startPage + 5}}">
+                (click)="goToPage(paginationPages.startPage + 5)"
+                title="Go To Page {{paginationPages.startPage + 5}}"
+                attr.aria-label="Go To Page {{paginationPages.startPage + 5}}"
+                title="Go To Page {{paginationPages.startPage + 5}}"
+                style="min-width: 32px; padding: 0">
                 ...
             </button>
 
-            <button mat-raised-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
-                (click)="goToPage(paginationPages.totalPages)" attr.aria-label="Go To Page {{paginationPages.totalPages}}" title="Go To Page {{paginationPages.totalPages}}">
+            <button mat-raised-button
+                *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
+                (click)="goToPage(paginationPages.totalPages)"
+                attr.aria-label="Go To Page {{paginationPages.totalPages}}"
+                title="Go To Page {{paginationPages.totalPages}}">
                 {{paginationPages.totalPages}}
             </button>
 
-            <button #paginationNextPage mat-raised-button (click)="manualStateRefresh=true;goToNext(currentPage + 1)" title="Go To Next Page" attr.aria-label="Go To Next Page {{currentPage + 1}}">
+            <button #paginationNextPage mat-raised-button
+                (click)="manualStateRefresh=true;goToNext(currentPage + 1)" title="Go To Next Page"
+                attr.aria-label="Go To Next Page {{currentPage + 1}}">
                 <mat-icon aria-hidden="false">arrow_right</mat-icon>
             </button>
 
-            <button #paginationLastPage mat-raised-button (click)="goToPage(paginationPages.totalPages)" title="Go To Last Page ({{paginationPages.totalPages}})" attr.aria-label="Go To Last Page {{paginationPages.totalPages}}">
+            <button #paginationLastPage mat-raised-button
+                (click)="goToPage(paginationPages.totalPages)"
+                title="Go To Last Page ({{paginationPages.totalPages}})"
+                attr.aria-label="Go To Last Page {{paginationPages.totalPages}}">
                 <mat-icon aria-hidden="false">last_page</mat-icon>
             </button>
 
@@ -42,7 +59,8 @@
 
         <div class="refset-tool-pagination-total-label ">
             <div *ngIf="showTotal && totalKnown && numOfResults > 0">
-                Showing <span class="refset-tool-pagination-count">{{startRecord}}</span> to <span class="refset-tool-pagination-count">{{endRecord}}</span>
+                Showing <span class="refset-tool-pagination-count">{{startRecord}}</span> to <span
+                    class="refset-tool-pagination-count">{{endRecord}}</span>
                 of <span class="refset-tool-pagination-count">{{this.numOfResults}}</span> results
             </div>
             <div *ngIf="numOfResults == 0">
@@ -56,21 +74,29 @@
 
         <ng-container *ngIf="!showAll">
             <span *ngFor="let sizeOption of pageSizeOptions">
-                <button [hidden]="((numOfResults < sizeOption) || (numOfResults < 25))" mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''" (click)="setPageSize(sizeOption); goToPage(1)" title="{{sizeOption}} Members per Page">
-                   {{sizeOption}}
+                <button [hidden]="((numOfResults < sizeOption) || (numOfResults < 25))"
+                    mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''"
+                    (click)="setPageSize(sizeOption); goToPage(1)"
+                    title="{{sizeOption}} Members per Page">
+                    {{sizeOption}}
                 </button>
             </span>
         </ng-container>
         <span *ngIf="numOfResults > 10 && numOfResults < 100">
             <ng-container *ngIf="showAll">
                 <span *ngFor="let sizeOption of pageSizeOptions">
-                    <button [hidden]="numOfResults < sizeOption" mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''" (click)="setPageSize(sizeOption); goToPage(1)" title="{{sizeOption}} Members per Page">
-                       {{sizeOption}}
+                    <button [hidden]="numOfResults < sizeOption" mat-raised-button
+                        [color]="pageSize === sizeOption ? 'primary' : ''"
+                        (click)="setPageSize(sizeOption); goToPage(1)"
+                        title="{{sizeOption}} Members per Page">
+                        {{sizeOption}}
                     </button>
                 </span>
             </ng-container>
-            <button mat-raised-button [color]="showAll ? 'primary' : ''" (click)="setPageSize(numOfResults, true); goToPage(1)" title="Show All Members per Page">
-               All
+            <button mat-raised-button [color]="showAll ? 'primary' : ''"
+                (click)="setPageSize(numOfResults, true); goToPage(1)"
+                title="Show All Members per Page">
+                All
             </button>
         </span>
     </div>

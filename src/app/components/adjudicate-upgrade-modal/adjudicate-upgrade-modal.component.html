@@ -1,0 +1,156 @@
+
+<button type="button" mat-raised-button color="primary" aria-hidden="false" #adjudicateUpgradeButton class="refset-tool-action-button refset-action-button" (click)="openAdjudicateUpgradeModal(adjudicateUpgradeDialog)" aria-label="Adjudicate Upgrade" title="Adjudicate Upgrade" ng-reflect-color="primary">Continue Upgrade</button>
+<ng-template #adjudicateUpgradeDialog
+             let-modal>
+<ng-container>
+    <div class="modal-header adjudicate-upgrade-modal-header">
+        <h4 class="modal-title adjudicate-upgrade-modal-title"
+            id="modal-basic-title">
+            Upgrade Reference Set
+        </h4>
+        <button type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="adjudicate-upgrade-container-fluid">
+        <div class="modal-body adjudicate-upgrade-modal-body">
+            <div class="adjudicate-upgrade-modal-body-header">
+                <div class="adjudicate-inactive-concepts">Inactive Concepts ({{inactiveConcepts}})</div>
+                <div class="adjudicate-format-option-drop-down">
+                    <mat-form-field appearance="fill">
+                    <mat-label>Select Language(s):</mat-label>
+                    <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event)">
+                        <option
+                            *ngFor="let option of languageOptions"
+                            [value]="option">
+                            {{ option }}
+                        </option>
+                    </select>
+                </mat-form-field>
+                </div>
+                <div class="adjudicate-toggle">
+                    <mat-slide-toggle
+                    color="primary"
+                    (change)="hideIncludedReplacements($event)">
+                  Hide Included Replacements
+                </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="adjudicate-upgrade-modal-body-mid">
+                <ag-grid-angular
+                class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+                [columnDefs]="columnDefs"
+                [gridOptions]="refsetGridOptions"
+                style="width: 100%; height: 433px">
+                </ag-grid-angular>
+
+                <app-pagination
+               [pageSize]="refsetGridPaging.pageSize"
+               [gridOptions]="refsetGridOptions"
+               [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
+               [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+               [totalKnown]="refsetGridPaging.totalKnown"
+               [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+               [numOfResults]="numOfResults">
+                </app-pagination>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer adjudicate-upgrade-footer">
+        <button type="button" mat-raised-button color="primary" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); upgradeModalComponent.isInitialUpgrade = true; upgradeModalComponent.isResumeUpgrade = false; modal.dismiss('Cross click');" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="primary">
+            Cancel Upgrade
+        </button>
+        <button type="button" mat-raised-button color="primary" (click)="getInactiveChangeExport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="primary">
+            Export Inactive Concept Report
+        </button>
+        <!-- <button type="button" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button adjudicate-export-modal-button" aria-label="Export Change Report" title="Export Change Report" ng-reflect-color="primary">
+            Export Change Report
+        </button> -->
+        <finish-upgrade-modal></finish-upgrade-modal>
+    </div>
+</ng-container>
+</ng-template>
+
+<!-- Inactive Concept Code Templates -->
+<ng-template #inactiveConceptCodeSection let-params>
+    <add-remove-concepts-icons [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="params?.data?.stillMember" (processSelection)="addRemoveConcept($event, true, false)"> </add-remove-concepts-icons>
+</ng-template>
+
+<!-- Inactive ID Templates -->
+<ng-template #adjudicateInactiveId let-params>
+    {{ params?.data?.code }}
+</ng-template>
+
+<!-- Inactive Section EN PT Templates -->
+<ng-template #adjudicateInactiveEnPtSection let-params>
+    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Inactive Section EN FSN Templates -->
+<ng-template #adjudicateInactiveEnFsnSection let-params>
+    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Inactive Section FR PT Templates -->
+<ng-template #adjudicateInactiveFrPtSection let-params>
+    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Inactive Section NL PT Templates -->
+<ng-template #adjudicateInactiveNlPtSection let-params>
+    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Inactivation Reason Section Templates -->
+<ng-template #adjudicateInactivationReason let-params>
+    {{ formatReason(params?.data?.inactivationReason) }}
+</ng-template>
+
+<!-- Replacement Concept Code Templates -->
+<ng-template #replacementConceptCodeSection let-params>
+    <add-remove-concepts-icons [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="params?.data?.stillMember" (processSelection)="addRemoveConcept($event, false, true)"> </add-remove-concepts-icons>
+</ng-template>
+
+<!-- Replacement ID Templates -->
+<ng-template #adjudicateReplacementId let-params>
+    {{ params?.data?.replacementConcecpts[0]?.code }}
+</ng-template>
+
+<!-- Replacement Section EN PT Templates -->
+<ng-template #adjudicateReplacementEnPtSection let-params>
+    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Replacement Section EN FSN Templates -->
+<ng-template #adjudicateReplacementEnFsnSection let-params>
+    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Replacement Section FR PT Templates -->
+<ng-template #adjudicateReplacementFrPtSection let-params>
+    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Replacement Section NL PT Templates -->
+<ng-template #adjudicateReplacementNlPtSection let-params>
+    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
+</ng-template>
+
+<!-- Reason Section Templates -->
+<ng-template #adjudicateReason let-params>
+    {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
+</ng-template>
+
+<add-remove-concepts [isAdd]="isConceptBeingAdded"
+    [conceptCode]="conceptForAddRemove?.code"
+    [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
+    [refset]="refsetData"
+    [isInactive]="isInactive"
+    [isReplacement]="isReplacement"
+    (changeLockedStatus)="changeLockedStatus($event)"
+    [processChangedMemberFunction]="processChangedMemberEffects"
+    (onMembersGridReady)="onGridReady(originalGridParams); resetRefsetTotal = true">
+</add-remove-concepts>

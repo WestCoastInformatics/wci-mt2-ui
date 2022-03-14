@@ -1,11 +1,13 @@
-<button #addRemoveConceptHierarchyButton
+<!-- <button #addRemoveConceptHierarchyButton
         (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)"
         class="add-remove-concept-hierarchy-modal-button">
     <img src="assets/mag-icon.svg"
          alt="magnifying glass icon"
          title="Search for Concepts to Add"
          aria-label="Search for concepts" />
-</button>
+</button> -->
+
+<button mat-menu-item (click)="openAddRemoveModal(addRemoveConceptHierarchyModal)" alt="magnifying glass icon" title="Search for Concepts to Add" aria-label="Search for concepts">Add/Remove by Search</button>
 
 <ng-template #addRemoveConceptHierarchyModal
              let-modal>
@@ -34,7 +36,7 @@
                                 <div class="
                                         add-remove-concept-hierarchy-modal-search-bar
                                     ">
-                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField"
+                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField" style="width: auto;"
                                                     class="
                                             add-remove-concept-hierarchy-modal-input-field
                                         ">
@@ -55,14 +57,14 @@
 
                                     <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
                                             #addRemoveByConceptHierarchySearchEclButton
-                                            class="
-                                            refset-tool-standard-icon-button
-                                            refset-tool-search-ecl-button
-                                        ">
-                                        <img src="assets/wrench-icon.svg"
+                                            class="btn btn-primary i18n ml-3" style="
+                                            font-size: 12px;
+                                            margin-top: 23px;
+                                            position: absolute;">ECL Builder
+                                        <!-- <img src="assets/wrench-icon.svg"
                                              alt="wrench icon"
                                              title="Open ECL Builder"
-                                             aria-label="ECL Builder" />
+                                             aria-label="ECL Builder" /> -->
                                     </button>
                                         <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults"

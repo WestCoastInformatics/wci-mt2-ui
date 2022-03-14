@@ -1,6 +1,8 @@
-<button (click)="openImportFromEclModal(importFromEclDialog)" class="refset-tool-standard-icon-button">
+<!-- <button (click)="openImportFromEclModal(importFromEclDialog)" class="refset-tool-standard-icon-button">
     <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
-</button>
+</button> -->
+
+<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" (click)="openImportFromEclModal(importFromEclDialog)">ECL Builder</button>
 
 <ng-template #importFromEclDialog let-modal>
 
@@ -26,8 +28,8 @@
                     <textarea id="importFromEclInput" matInput class="import-from-ecl-text-area" [(ngModel)]="ecl"></textarea>
                 </mat-form-field>
 
-                <button (click)="openEclBuilder('importFromEclInput')" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
-                    <img src="assets/wrench-icon.svg" alt="wrench icon" title="Open ECL Builder" aria-label="ECL Builder" />
+                <button (click)="openEclBuilder('importFromEclInput')" class="btn btn-primary i18n" style="
+                font-size: 11px;">ECL Builder
                 </button>
 
             </div>

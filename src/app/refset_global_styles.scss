@@ -148,7 +148,7 @@ strong {
 }
 
 .refset-tool-nav-title {
-    font-family: $header_font_family;
+    font-family: $standard_font_family;
     font-size: 20px;
     color: #eee !important;
 }
@@ -167,35 +167,68 @@ strong {
 }
 
 nav a img {
-    margin-top: -0.5em;
-    height: 3rem !important;
-    margin-left: 15px;
+    height: 40px !important;
+    vertical-align: middle;
+    border-style: none;
 }
+
 nav a span {
-    margin-top: 0.5em;
+    vertical-align: middle;
     display: inline-block;
+    margin-left: 0.25rem;
 }
 
 .bg-dark {
     background-color: #434955 !important;
 }
 
+#bg-landing-header {
+    background-color: rgb(33, 37, 41) !important;
+    padding: 5px !important;
+    height: 50px !important;
+}
+
+#bg-landing-footer {
+    background-color: rgb(33, 37, 41) !important;
+    font-weight: 300;
+    height: 40px !important;
+}
+
+.header-title {
+    font-family: Poppins, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 300
+}
+
 .page-title {
     color: #9b9b9b;
-    font-family: $header_font_family;
-    font-size: 1.5em;
+    font-family: $standard_font_family;
+    font-size: 1em;
 }
 
 footer.footer {
-    font-family: $header_font_family;
+    font-family: $standard_font_family;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
 footer.footer a {
     font-size: 0.9em !important;
+    color: #C8CFD6;
+    &:hover {
+        text-decoration: none;
+    }
 }
 
-footer {
-    z-index: 1000;
+a.footer-link {
+    font-weight: 300;
+    font-size: 1.2rem;
+    color: #C8CFD6;
 }
 
 .refset-tool-breadcrumb-bar > :first-child {
@@ -320,13 +353,13 @@ button.refset-tool-table-action-icon {
     color: $delete_color;
 }
 .refset-tool-concept-details-concept-ecl {
-    padding-left: 0px;
+    padding-left: 0px !important;
 }
 .refset-tool-concept-details-concept-id-label {
     padding-left: 0px;
 }
 .refset-tool-concept-details-taxonomy-icon {
-    padding-left: 0px;
+    padding-left: 2px !important;
 }
 
 .refset-tool-details-member-taxonomy{
@@ -431,7 +464,7 @@ button.refset-tool-table-action-icon {
     // Data Rows
     .ag-row {
         height: 51px !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
     .ag-row:hover {
         background-color: #f0fcff; //icy blue hover
@@ -491,23 +524,17 @@ button.refset-tool-table-action-icon {
     }
 
     .mat-raised-button {
-        min-width: 36px !important;
+        min-width: 30px !important;
         border-radius: 0px !important;
         padding: 0px !important;
-        line-height: 36px !important;
+        line-height: 30px !important;
     }
 
     .mat-raised-button.mat-primary {
         background-color: $cerulean !important;
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px
     }
 
-    .mat-raised-button.mat-button-disabled,
-    .mat-raised-button.mat-button-base {
-        margin-bottom: 15px;
-    }
 }
 
 .close-button button.refset-tool-table-action-icon {
@@ -517,9 +544,7 @@ button.refset-tool-table-action-icon {
 .isDisabled {
     .mat-raised-button.mat-primary {
         background-color: lightgrey !important;
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px
     }
 }
 .wrapper-progressBar {
@@ -606,7 +631,6 @@ button.refset-tool-table-action-icon {
 }
 
 .top-search-bar {
-    top: 70px !important;
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     .page-title {
@@ -681,8 +705,8 @@ button.refset-tool-table-action-icon {
 
 // Details Page Styles
 #refsetDetailsPage .row {
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+    margin-left: 3px !important;
+    margin-right: 3px !important;
 }
 
 #refsetDetailsPage .refset-tool-refset-details-title-name-section {
@@ -725,7 +749,7 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage .refset-title {
     background: white;
-    top: 70px;
+    top: 10px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
     z-index: 1000;
@@ -791,7 +815,7 @@ button.refset-tool-table-action-icon {
 }
 // Taxonomy Styles
 .refset-tool-taxonomy {
-    
+
     margin-bottom: 15px;
     display: block;
     padding-left: 0px;
@@ -835,14 +859,6 @@ button.refset-tool-table-action-icon {
         > .toggle-children {
         background-image: url("/assets/circled_chevron_right_icon.svg");
     }
-    .tree-node {
-        .refset-tool-taxonomy-no-members-in-branch {
-            margin-left: 25px;
-        }
-        .refset-tool-taxonomy-is-member {
-            margin-left: 25px;
-        }
-    }
     .tree-node img {
         width: 12.75px;
         height: 10.5px;
@@ -875,6 +891,7 @@ button.refset-tool-table-action-icon {
         height: 18px;
         width: 29.25px;
         top: 5px;
+        margin-right: 3px;
     }
     // used for when there are no children
     .toggle-children-placeholder {
@@ -969,6 +986,7 @@ button.refset-tool-table-action-icon {
     font-size: 15px;
     padding-left: 0px !important;
 }
+
 .refset-tool-concept-details-section-title {
     font-weight: 400;
 }
@@ -978,7 +996,8 @@ button.refset-tool-table-action-icon {
     height: fit-content;
     background-color: $concept_details_color;
     width: 40%;
-    padding-left: 0px !important;
+    padding-left: 3px !important;
+    padding-right: 6px !important;
     color: white;
     border-color: $concept_details_color;
     line-height: 1;
@@ -1015,6 +1034,15 @@ button.refset-tool-table-action-icon {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
 }
+
+.refset-tool-concept-details-action-icon {
+    width:25px !important;
+    height:25px !important;
+}
+
+#refset-block {
+    padding:2px;
+}
 .refset-tool-concept-details-concept-roles-column-no-attributes {
     margin-left: 10px;
     padding-left: 0px;
@@ -1032,9 +1060,14 @@ button.refset-tool-table-action-icon {
 .no-attributes {
     opacity: 30%;
 }
-.refset-tool-concept-details-concept-description-language {
+.refset-tool-concept-details-concept-description {
     padding-left: 0px;
     padding-right: 0px;
+}
+.refset-tool-concept-details-concept-description-language {
+
+    font-style:italic;
+    word-spacing: .5rem;
 }
 .refset-tool-concept-details-role-row {
     line-height: 1.3;
@@ -1057,11 +1090,11 @@ button.refset-tool-table-action-icon {
         text-align: center;
     }
     button {
-        margin: 0 5px;
+        margin: 0 2px;
     }
     .refset-tool-pagination-buttons {
         padding: 0;
-        margin: 5px 0px;
+        margin: 2px 0px;
     }
     .refset-tool-pagination-total-label {
         flex: 1;
@@ -1090,6 +1123,7 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
+    padding-left: 0 !important;
 }
 
 .mat-form-field-underline {
@@ -1098,6 +1132,10 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-underline:hover {
     background-color: rgba(0, 0, 0, 0.42);
+}
+
+.mat-form-field-appearance-fill .mat-form-field-label {
+    margin-top: 0em !important;
 }
 
 .mat-input-element,
@@ -1210,7 +1248,7 @@ button.refset-tool-table-action-icon {
 }
 
 .ag-center-cols-clipper {
-    min-height: 300px !important;
+    min-height: 50px !important;
 }
 // Search (clear-search)
 .clear-search {
@@ -1233,6 +1271,10 @@ button.refset-tool-table-action-icon {
     padding-right: 20px;
 }
 // Table-Tax Button Group
+.mat-button-toggle {
+    margin-top: -2px;
+}
+
 .mat-button-toggle-checked {
     background-color: $cerulean;
     color: white !important;
@@ -1240,7 +1282,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-toggle-buttons {
     .mat-button-toggle-button {
-        width: 100px !important;
+        width: 90px !important;
     }
 }
 
@@ -1250,7 +1292,10 @@ button.refset-tool-table-action-icon {
     border: 1px solid #666;
 }
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-    line-height: 40px;
+    line-height: 31px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 !important
 }
 
 .mat-horizontal-content-container {
@@ -1258,6 +1303,7 @@ button.refset-tool-table-action-icon {
 }
 .mat-button-toggle-group-appearance-standard {
     border-radius: 0px;
+    height: 31px;
 }
 
 #refsetDetailsPage
@@ -1298,6 +1344,10 @@ button.refset-tool-table-action-icon {
 .col.create-new-refset-label {
     width: 200px;
     max-width: 200px;
+}
+
+#vertical {
+    vertical-align: top;
 }
 
 // Temp Style
@@ -1959,8 +2009,7 @@ button.refset-tool-table-action-icon {
 .create-new-refset-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: $standard_font_family;
 }
 
 .create-new-refset-container-fluid {
@@ -1999,6 +2048,10 @@ button.refset-tool-table-action-icon {
     align-items: center;
 }
 
+#create-new-refset-assign-refset-field {
+    align-items: normal
+}
+
 .create-new-refset-project-name {
     display: flex;
     align-items: normal;
@@ -2032,7 +2085,7 @@ button.refset-tool-table-action-icon {
 .import-from-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .import-from-container-fluid {
@@ -2111,9 +2164,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 40px;
     height: 31px;
     box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: rgba(0, 164, 228, 1);
+    //border-width: 1px;
+    border-style: transparent;
+    //border-color: rgba(0, 164, 228, 1);
     background-color: rgba(255, 255, 255, 1);
 
     &.inactive {
@@ -2304,7 +2357,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetProjectsPage > .refset-title {
     align-items: baseline;
     position: sticky;
-    top: 70px;
     z-index: 2;
     background-color: white;
     padding-top: 10px;
@@ -2330,8 +2382,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial,
-        sans serif;
+    font-family: $standard_font_family;
 }
 
 .add-remove-concept-hierarchy-modal-body {
@@ -2485,11 +2536,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-details-size {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     overflow-x: hidden;
 }
@@ -2497,22 +2548,22 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .refset-tool-taxonomy {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
 }
 
 .refset-tool-concept-details-taxonomy-icon {
     .add-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
     .subtract-symbol-icon {
         margin-left: 10px;
-        margin-right: 10px;
+        margin-right: -5px;
     }
 }
 
@@ -2627,7 +2678,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .mat-horizontal-stepper-header-container {
     height: 65px;
-    margin-top: -35px;
+    margin-top: -25px;
 }
 
 .details-page-stepper {
@@ -2688,7 +2739,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .ready-for-publication-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .ready-for-publication-footer {
@@ -2702,6 +2753,296 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-bottom: 30px !important;
 }
 
+.upgrade-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+
+.upgrade-modal > .modal-dialog > .modal-content {
+    width: 800px;
+}
+
+.upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.successful-upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.upgrade-modal-body-mid {
+    text-align: left;
+}
+
+.upgrade-modal-current-version {
+
+}
+
+.upgrade-footer-warning-message {
+    color: red;
+    padding-right: 20px;
+}
+
+.upgrade-modal-current-version-label {
+    font-weight: 500;
+}
+
+.upgrade-modal-current-version-term {
+    padding-left: 25px;
+}
+
+.upgrade-modal-current-terminology {
+
+}
+
+.circled-check {
+    height: 24px;
+    width: 24px;
+}
+
+.upgrade-modal-success-warning {
+    height: fit-content;
+}
+
+.upgrade-modal-success {
+    text-align: left;
+}
+
+.upgrade-modal-current-terminology-label {
+    font-weight: 500;
+}
+
+.upgrade-modal-current-terminology-term {
+    padding-left: 25px;
+}
+
+.upgrade-footer .export-inactive-concept-modal-button {
+    margin-right: 10px;
+}
+
+.adjudicate-export-inactive-concept-modal-button {
+    margin-right: 15px !important;
+}
+
+.upgrade-success-inactive-label {
+    font-weight: 500;
+    padding-right: 60px;
+}
+
+
+.finish-upgrade-modal-body {
+    background-color: #f5f5f6;
+    padding: 28px !important;
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+
+.finish-upgrade-modal > .modal-dialog > .modal-content {
+    width: 800px;
+}
+
+.finish-upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.finish-upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.finish-upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.finish-upgrade-modal-body-header {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.finish-upgrade-modal-body-mid {
+    text-align: left;
+}
+
+.finish-upgrade-modal-current-version {
+
+}
+
+.finish-upgrade-footer-warning-message {
+    color: red;
+    padding-right: 20px;
+}
+
+.finish-upgrade-modal-current-version-label {
+    font-weight: 500;
+}
+
+.finish-upgrade-modal-current-version-term {
+    padding-left: 25px;
+}
+
+.upgrade-modal-current-terminology {
+
+}
+
+.finish-upgrade-modal-success-warning {
+    height: fit-content;
+}
+
+.finish-upgrade-modal-success {
+    text-align: left;
+}
+
+.finish-upgrade-modal-current-terminology-label {
+    font-weight: 500;
+}
+
+.finish-upgrade-modal-current-terminology-term {
+    padding-left: 25px;
+}
+
+.finish-upgrade-footer .export-inactive-concept-modal-button {
+    margin-right: 10px;
+}
+
+.finish-upgrade-success-inactive-label {
+    font-weight: 500;
+    padding-right: 60px;
+}
+
+.adjudicate-upgrade-modal-body {
+    text-align: center;
+    text-align: -webkit-center;
+    .notes-title {
+        text-align: left;
+        padding-bottom: 20px;
+    }
+}
+
+
+.adjudicate-upgrade-modal > .modal-dialog > .modal-content {
+    width: 1140px;
+}
+
+.adjudicate-upgrade-modal-title {
+    color: #9b9b9b;
+    font-size: 1.5em;
+    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+}
+
+.adjudicate-inactive-concepts {
+    padding-right: 15px;
+}
+
+.adjudicate-format-option-drop-down {
+    margin-top: -15px;
+    padding-right: 15px;
+}
+
+.adjudicate-column-inactiveCode,
+.adjudicate-column-inactiveId,
+.adjudicate-column-inactiveEnPtSection,
+.adjudicate-column-inactiveEnFsnSection,
+.adjudicate-column-inactiveFrPtSection,
+.adjudicate-column-inactivationReason,
+.adjudicate-column-inactiveNlPtSection {
+    background-color: rgba(249, 238, 238, 1);
+}
+
+.adjudicate-upgrade-footer {
+    border: none !important;
+    padding: 30px !important;
+}
+
+.adjudicate-upgrade-modal-header {
+    border: none !important;
+    padding-left: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.adjudicate-upgrade-modal-body-header {
+    display: flex;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+}
+
+.adjudicate-upgrade-modal-body-mid {
+}
+
+.adjudicate-export-modal-button {
+    margin-right: 15px !important ;
+}
+
+.adjudicate-cancel-modal-button {
+    margin-right: 15px !important;
+    background-color: red !important;
+}
+
+.manage-members-menu,
+.manage-refset-menu,
+.documentation-menu,
+.download-menu,
+.collaboration-menu,
+.compare-menu {
+    padding: 0px !important;
+    color: #00a9e0;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.menu-spacer {
+    padding-right: 10px;
+}
+
+.down-arrow-for-menu {
+    font-size: 8px;
+    padding-top: 5px;
+}
+
+.upgrade-success-members-label {
+    font-weight: 500;
+    padding-right: 39px;
+}
 
 .review-modal-body {
     background-color: #f5f5f6;
@@ -2729,7 +3070,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .review-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .ready-for-review-footer {
@@ -2877,7 +3218,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .workflow-history-notes-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .workflow-history-notes-footer {
@@ -2922,7 +3263,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-descendants-modal-title {
     color: #9b9b9b;
     font-size: 1.5em;
-    font-family: "museo", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-family: $standard_font_family;
 }
 
 .add-remove-descendants-footer {
@@ -3004,15 +3345,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .project-nav {
     width: 75px;
     border-right: 1px solid #797979;
-    height: 55px;
-    margin-bottom: -10px;
-    margin-top: -10px;
+    height: 50px;
     cursor: pointer;
 }
 
 .projects-icon {
-    padding-top: 10px;
     padding-left: 18px;
+    margin-bottom: -7px;
 }
 
 .projects-icon-label {
@@ -3025,15 +3364,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 75px;
     border-left: 1px solid #797979;
     border-right: 1px solid #797979;
-    height: 55px;
-    margin-bottom: -10px;
-    margin-top: -10px;
+    height: 50px;
     cursor: pointer;
 }
 
 .directory-icon {
-    padding-top: 7px;
+    padding-top: 5px;
     padding-left: 22px;
+    margin-bottom: -5px;
 }
 
 .directory-icon-label {
@@ -3107,7 +3445,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     overflow: unset;
     color: white;
   }
-  
+
 .landing-page-top-bar-center {
     grid-area: landing-page-top-bar-center;
     padding-top: 18px;
@@ -3129,7 +3467,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     grid-area: landing-page-info-section;
     padding-top: 30px;
 }
-  
+
 .landing-page-login-section {
     grid-area: landing-page-login-section;
     justify-self: center;
@@ -3141,15 +3479,23 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .landing-page-text-2 {
-    
+
 }
 
 .landing-page-text-3 {
-    
+
 }
 
 .landing-page-text-4 {
-    
+
+}
+
+span.title {
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #C8CFD6;
 }
 
 .landing-page-guest-access {
@@ -3161,15 +3507,20 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     width: 220px;
     height: 25px;
-    font-size: 10px;
+    font-size: 14px;
 }
 
 .landing-page-guest-has-account {
     color: black;
+    font-weight: 500;
 }
 
 .landing-page-log-in-link {
     cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: underline;
+    color: rgb(50, 50, 212);
 }
 
 .landing-page-tool-logo {
