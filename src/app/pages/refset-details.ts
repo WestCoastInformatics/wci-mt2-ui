@@ -1110,11 +1110,20 @@ export class RefsetDetails {
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
 
                 } else {
-                    this.loadRefset();
+
+                    if (action.includes('CANCEL_EDIT')) {
+                        this.loadWorkflowHistoryData();
+                        this.processChangedMemberEffects();
+                        this.loadRefset();
+                    } else {
+                        this.loadRefset();
+                    }
+
                 }
             } else {
                 this.loadRefset();
             }
+
 
             // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             //     this.router.navigate(['/details', this.id]);
@@ -1247,10 +1256,11 @@ export class RefsetDetails {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-
+        this.showLoadingSpinner = true;
         this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
+            this.showLoadingSpinner = false;
             this.conceptDetail = results;
             this.conceptDetail.roleGroups = results.roleGroups;
             this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;

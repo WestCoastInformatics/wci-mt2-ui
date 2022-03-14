@@ -185,6 +185,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
+        this.showLoadingSpinner = true;
         this.loadConceptDetailParents(concept);
 
         this.refsetService
@@ -194,6 +195,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             .subscribe((results) => {
 
                 this.isConceptDetailsLoading = false;
+                this.showLoadingSpinner = false;
                 this.conceptDetail = results;
                 this.conceptDescriptions =
                     this.conceptDetail.descriptions.filter(function(description) {
