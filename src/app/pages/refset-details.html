@@ -713,7 +713,7 @@
                     (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </div> -->
         </div>
-        <span >
+        <span *ngIf="allowedToEdit">
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Manage Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
