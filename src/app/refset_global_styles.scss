@@ -513,7 +513,7 @@ button.refset-tool-table-action-icon {
     // Data Rows
     .ag-row {
         height: 51px !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
     .ag-row:hover {
         background-color: #f0fcff; //icy blue hover
@@ -1296,7 +1296,7 @@ button.refset-tool-table-action-icon {
 }
 
 .ag-center-cols-clipper {
-    min-height: 300px !important;
+    min-height: 50px !important;
 }
 // Search (clear-search)
 .clear-search {
@@ -1536,6 +1536,11 @@ button.refset-tool-table-action-icon {
 .ag-overlay-loading-wrapper {
     display: none !important;
 }
+
+tree-loading-component {
+    display: none !important
+}
+
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
     /* hide "loading..." text */

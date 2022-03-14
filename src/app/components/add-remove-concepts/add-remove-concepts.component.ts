@@ -31,6 +31,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
+	@Input() isInactive: boolean;
+	@Input() isReplacement: boolean;
 	@Input() processChangedMemberFunction: () => void;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() onMembersGridReady = new EventEmitter<any>();

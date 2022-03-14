@@ -967,10 +967,13 @@ export class RefsetDetails {
                 let language = this.languageOptions[i];
                 let minWidth =
                     language.value === "101FSN" ? 250 : 190;
+                    
                 this.membersColumnDefs.push({
                     field: i.toString(),
                     flex: 1,
                     minWidth: minWidth,
+                    maxWidth: 280,
+                    width: 280,
                     colId: language.value,
                     headerName: language.display,
                     cellClass:
@@ -987,6 +990,9 @@ export class RefsetDetails {
                         colId: "modified",
                         flex: 1,
                         minWidth: 150,
+                        
+                        maxWidth: 200,
+                        width: 240,
                         headerName: "Modified Date",
                         cellClass:
                             "refset-tool-details-column-modified-date",
@@ -1010,7 +1016,6 @@ export class RefsetDetails {
                             template: this.actionSection,
                         },
                         filter: false,
-                        pinned: "right",
                         tooltipField: "active",
                         sortable: false
                     },
