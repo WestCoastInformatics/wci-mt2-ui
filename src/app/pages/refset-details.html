@@ -44,7 +44,7 @@
         <div *ngIf="!editMode" class="col-5">&nbsp;</div>
 
         <!-- Status Stepper if in edit mode and refset not locked -->
-        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-4 details-page-stepper"
+        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-5 details-page-stepper"
             [linear]="true" labelPosition="bottom" #stepper>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
@@ -338,7 +338,7 @@
                         <table class="
                                 refset-tool-refset-metadata-table
                                 table-striped mb-1
-                            " >
+                            ">
                             <tbody>
                                 <tr>
                                     <td class="
@@ -713,7 +713,7 @@
                     (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </div> -->
         </div>
-        <span *ngIf="allowedToEdit">
+        <span >
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Manage Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
@@ -793,7 +793,7 @@
                                             </mat-form-field>
                                             <span class="clear-search"
                                                 (click)="clearSearch('table')">&#10005;</span>
-                                            <button
+                                                <button
                                                 (click)="openEclBuilder('detailsTableSearchInput')"
                                                 class="btn btn-primary i18n" style="
                                                 font-size: 12px;

@@ -990,6 +990,7 @@ export class RefsetDetails {
                         colId: "modified",
                         flex: 1,
                         minWidth: 150,
+                        
                         maxWidth: 200,
                         width: 240,
                         headerName: "Modified Date",
