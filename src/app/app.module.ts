@@ -85,8 +85,8 @@ import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
-import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
+import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },

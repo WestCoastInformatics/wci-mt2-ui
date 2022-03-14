@@ -393,17 +393,19 @@ export class UiUtility {
     static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string, selectedVersion?: any) {
 
         let message = '';
-		let upgradeMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
+		let lookupMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
             + 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
         
-        if (processType?.includes('upgrade')) {
-            message = upgradeMessage;
+        if (processType?.includes('lookup')) {
+            message = lookupMessage;
         }
         
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
 		let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
-        let buttons = [viewRefsetButton];
+		let downloadInactiveReportButton : IToastButton = {id: 'inactive', title: 'Download Inactive Change Report', data: {}};
+		// let downloadChangeReportButton : IToastButton = {id: 'change', title: 'Download Finished Change Report', data: {}};
+        let buttons = [viewRefsetButton, downloadInactiveReportButton];
 		let callNumber = 0;
 		let callDelay = 1000;
 		let successMessageTimeout = 0;
@@ -453,7 +455,12 @@ export class UiUtility {
 
                         if (button.id == 'view') {
                             this.viewRefset(refsetId, versionDate, selectedVersion);
-                            }
+                        } else if (button.id == 'inactive') {
+                            this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
+                        }
+                        // else if (button.id == 'change') {
+                        //     this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
+                        // }
                         });
 					}
 				},
@@ -483,15 +490,46 @@ export class UiUtility {
 
         let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept', 'Members in Common ID', 'Refset ID'], fileName);
+        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept'], fileName);
     }
 
-    // static createFinishedChangeReport(refsetId: string, data): void {
+    static createFinishedChangeReport(refsetId: string, data): void {
 
-    //     let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+        let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
 
-    //     this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept', 'Members in Common ID', 'Refset ID'], fileName);
-    // }
+        const headerObject = {
+            'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
+            'newMemberHeader': ['New Member ID', 'New Member Concept'],
+            'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
+            'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
+        };
+        this.downloadMergedFile(data, headerObject, fileName);
+    }
+
+    static downloadMergedFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
+
+        const csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+            + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+            + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
+            + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+
+        const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+        const downloadLink = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
+        
+        if (isSafariBrowser) {
+            downloadLink.setAttribute('target', '_blank');
+        }
+
+        downloadLink.setAttribute('href', url);
+        downloadLink.setAttribute('download', fileName + '.csv');
+        downloadLink.style.visibility = 'hidden';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
 
     static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
 
@@ -544,11 +582,10 @@ export class UiUtility {
      }
 
     static viewRefset(refsetId, versionDate, selectedVersion?: any) {
-        if (selectedVersion) {
-            this.router.navigate(['/details', refsetId, versionDate], {queryParams: {isResumeUpgrade: true, isInitialUpgrade: false, selectedVersion}});
-        } else {
-            this.router.navigate(['/details', refsetId, versionDate]);
+        if (!versionDate) {
+            versionDate = RefsetUtility.IN_DEVELOPMENT;
         }
+            this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     static toggleLockedSections(lock: boolean) {

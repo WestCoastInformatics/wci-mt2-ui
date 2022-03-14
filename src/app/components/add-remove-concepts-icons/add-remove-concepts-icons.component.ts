@@ -29,7 +29,9 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 
             if (propertyName === "concept" && CodeUtility.hasValue(this.concept)) {
 
-                if (this.refsetType != RefsetUtility.INTENSIONAL) {
+                if (!this.refsetType) {
+                    this.actionText = "Member";
+                } else if (this.refsetType != RefsetUtility.INTENSIONAL) {
 
                     this.actionText = "Member";
                     this.showAdd = !this.concept.memberOfRefset;

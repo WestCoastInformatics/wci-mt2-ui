@@ -1,4 +1,4 @@
-<div *ngIf="showLoadingSpinner" class="loading">Loading&#8230;</div>
+<div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div id="refsetDetailsPage" class="container-fluid">
 
@@ -177,7 +177,7 @@
                         Edit
                     </button>
 
-                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR')" [refsetData]="refsetData"></upgrade-modal>
+                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')" [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id" [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
@@ -323,12 +323,12 @@
                        title="Open Audit Trail"
                        aria-label="Audit Trail">Audit Trail</a> -->
                 </div>
-                <img src="assets/collapse-minus-icon.svg" *ngIf="!hideMetadataTable"
+                <img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable"
                     alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button"
-                    class="collapse-minus-icon" (click)="metadataCollapseTrigger()" />
-                <img src="assets/collapse-plus-icon.svg" *ngIf="hideMetadataTable"
+                    class="caret-up-solid" (click)="metadataCollapseTrigger()" />
+                <img src="assets/caret-down-solid.svg" *ngIf="hideMetadataTable"
                     alt="Uncollapse Button" title="Uncollapse Metadata"
-                    aria-label="Uncollapse Button" class="collapse-plus-icon"
+                    aria-label="Uncollapse Button" class="caret-down-solid"
                     (click)="metadataCollapseTrigger()" />
             </div>
             <div class="container-fluid" id="detailsMetadataSection" [hidden]="hideMetadataTable">
@@ -618,13 +618,13 @@
                                                       [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal> -->
                     <!-- </div> -->
                 </div>
-                <img src="assets/collapse-minus-icon.svg" *ngIf="!hideWorkflowTable"
+                <img src="assets/caret-up-solid.svg" *ngIf="!hideWorkflowTable"
                     alt="Collapse Button" title="Collapse Workflow History"
-                    aria-label="Collapse Button" class="collapse-minus-icon"
+                    aria-label="Collapse Button" class="caret-up-solid"
                     (click)="workflowCollapseTrigger()" />
-                <img src="assets/collapse-plus-icon.svg" *ngIf="hideWorkflowTable"
+                <img src="assets/caret-down-solid.svg" *ngIf="hideWorkflowTable"
                     alt="Uncollapse Button" title="Uncollapse Workflow History"
-                    aria-label="Uncollapse Button" class="collapse-plus-icon"
+                    aria-label="Uncollapse Button" class="caret-down-solid"
                     (click)="workflowCollapseTrigger()" />
             </div>
             <div [hidden]="hideWorkflowTable">
@@ -992,7 +992,7 @@
                             <div class="refset-tool-concept-details-column"
                                 *ngIf="isConceptDetailsLoading || conceptDetail">
                                 <div class="row" *ngIf="isConceptDetailsLoading">
-                                    <div>Loading...</div>
+                                    <!-- <div>Loading...</div> -->
                                 </div>
 
                                 <div *ngIf="conceptDetail">
@@ -1257,14 +1257,14 @@
     </div>
     <div class="modal-footer ready-for-review-footer">
         <button type="button"
-            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click')"
+            (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
             mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
             aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
             Yes
         </button>
-        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="primary"
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"
             aria-hidden="false" class="refset-tool-action-button" aria-label="No" title="No"
-            ng-reflect-color="primary">
+            ng-reflect-color="red">
             No
         </button>
     </div>

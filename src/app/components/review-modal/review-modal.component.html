@@ -11,20 +11,20 @@
 </button>
 
 <ng-template #reviewDialog let-modal>
-    <div class="modal-header review-modal-header">
+    <div class="modal-header rt2-modal-header">
         <h4
-            class="modal-title review-modal-title"
+            class="modal-title rt2-modal-title"
             id="modal-basic-title"
         >
             Finish Review
         </h4>
         <button
             type="button"
-            class="close"
+            class="close dialog-close-x"
             aria-label="Close"
             (click)="modal.dismiss('Cross click')"
         >
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
     <div class="container-fluid ready-for-review-container-fluid">
@@ -46,17 +46,17 @@
     </div>
         </div>
     </div>
-    <div class="modal-footer ready-for-review-footer">
+    <div class="modal-footer rt2-modal-footer">
         <button #rejectRefsetNotesButton
                 mat-raised-button
-                color="primary"
+                color="green"
                 aria-hidden="false"
                 class="refset-tool-action-button refset-action-button"
                 aria-label="Reject Refset"
                 title="Reject Refset"
                 [disabled]="!checkIfNoteAdded()"
                 (click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus();"
-                ng-reflect-color="primary">
+                ng-reflect-color="green">
             Save & Finish
         </button>
     </div>
