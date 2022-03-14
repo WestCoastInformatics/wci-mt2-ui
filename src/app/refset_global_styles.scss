@@ -1533,6 +1533,9 @@ button.refset-tool-table-action-icon {
     );
 }
 
+.ag-overlay-loading-wrapper {
+    display: none !important;
+}
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
     /* hide "loading..." text */
