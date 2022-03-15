@@ -420,10 +420,15 @@ export class RefsetDetails {
             this.allowedToEdit = false;
             this.allowedToReview = false;
 
-            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')) || this.refsetData?.roles?.includes('AUTHOR')) {
+
+            //console.log("PARAMS  " + this.refsetData.versionStatus + "::" + this.refsetData?.roles + ":*:" + 
+            //this.refsetData?.hasVersionInDevelopment + ":&:" + this.refsetData?.latestPublishedVersion);
+
+            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')) || 
+                (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
                 this.editMode = true;
             }
-
+            
             if (this.editMode) {
 
                 this.refreshWorkflow();
