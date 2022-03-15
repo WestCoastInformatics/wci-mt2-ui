@@ -981,17 +981,19 @@
                                         </ng-template>
                                     </div>
 
-                                    <app-taxonomy-tree #detailsMembersTaxonomy
-                                        treeId="detailsMembersTree" [refset]="refsetData"
-                                        [rootNode]="membersTaxonomyRoot" [editMode]="allowedToEdit"
-                                        [selectedConcept]="selectedConcept"
-                                        [options]="taxonomyOptions"
-                                        [manualStateRefresh]="taxonomyManualStateRefresh"
-                                        [processChangedMemberFunction]="processChangedMemberEffects"
-                                        (loadConceptDetail)="loadConceptDetail($event)"
-                                        (changeLockedStatus)="changeLockedStatus($event)"
-                                        (numOfChildren)="numOfChildren = $event">
-                                    </app-taxonomy-tree>
+                                    <div class="details-section">
+                                        <app-taxonomy-tree #detailsMembersTaxonomy
+                                            treeId="detailsMembersTree" [refset]="refsetData"
+                                            [rootNode]="membersTaxonomyRoot" [editMode]="allowedToEdit"
+                                            [selectedConcept]="selectedConcept"
+                                            [options]="taxonomyOptions"
+                                            [manualStateRefresh]="taxonomyManualStateRefresh"
+                                            [processChangedMemberFunction]="processChangedMemberEffects"
+                                            (loadConceptDetail)="loadConceptDetail($event)"
+                                            (changeLockedStatus)="changeLockedStatus($event)"
+                                            (numOfChildren)="numOfChildren = $event">
+                                        </app-taxonomy-tree>
+                                    </div>
                                 </div>
                             </div>
                         </as-split-area>
