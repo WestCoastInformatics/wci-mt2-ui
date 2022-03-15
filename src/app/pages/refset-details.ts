@@ -956,6 +956,7 @@ export class RefsetDetails {
                     colId: "code",
                     headerName: "Concept ID",
                     minWidth: 120,
+                    maxWidth:140,
                     width: 140,
                     cellClass:
                         "refset-tool-details-column-concept-id",
@@ -977,8 +978,8 @@ export class RefsetDetails {
                     field: i.toString(),
                     flex: 1,
                     minWidth: minWidth,
-                    maxWidth: 280,
-                    width: 280,
+                    maxWidth: 365,
+                    width: 365,
                     colId: language.value,
                     headerName: language.display,
                     cellClass:
@@ -994,10 +995,10 @@ export class RefsetDetails {
                         field: "memberEffectiveTime",
                         colId: "modified",
                         flex: 1,
-                        minWidth: 150,
+                        minWidth: 180,
                         
-                        maxWidth: 200,
-                        width: 240,
+                        maxWidth: 180,
+                        width: 180,
                         headerName: "Modified Date",
                         cellClass:
                             "refset-tool-details-column-modified-date",
@@ -1013,6 +1014,7 @@ export class RefsetDetails {
                         colId: "actions",
                         headerName: "",
                         width: 120,
+                        maxWidth:120,
                         minWidth: 120,
                         cellClass:
                             "refset-tool-details-column-actions",

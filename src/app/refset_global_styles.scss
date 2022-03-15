@@ -574,7 +574,7 @@ button.refset-tool-table-action-icon {
     }
 
     .refset-tool-directory-column-information .refset-tool-table-action-icon {
-        left: 8px;
+        left: 0px;
     }
 
     .mat-raised-button {
@@ -814,10 +814,8 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage .refset-title {
     background: white;
-    top: 10px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
-    z-index: 1000;
     padding-top: 30px;
 }
 
@@ -3371,17 +3369,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 #refsetDirectoryPage {
     .ag-theme-alpine .ag-header {
-        top: 130px;
-        position: fixed;
         width: auto;
         z-index: 99;
     }
     .ag-theme-alpine .ag-root-wrapper {
          border: none!important;
-         top: 100px;
     }
     .refset-tool-pagination-container {
-        padding-top: 130px;
+        padding-top: 10px;
     }
 }
 
