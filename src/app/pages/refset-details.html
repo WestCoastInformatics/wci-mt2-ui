@@ -694,8 +694,8 @@
         <div class="refset-tool-refset-details-title-name refset-member-title">
 
             Reference Set Members
-            <span [hidden]="!membersGridNumberOfMembers">
-                &nbsp;{{'(' + membersGridNumberOfMembers + ')'}}
+            <span [hidden]="!refsetData?.memberCount">
+                &nbsp;{{'(' + refsetData?.memberCount + ')'}}
             </span>
 
             <!-- <div class="set-of-buttons" *ngIf="allowedToEdit">
@@ -714,7 +714,7 @@
             </div> -->
         </div>
         <span *ngIf="allowedToEdit">
-            <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Manage Members
+            <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id"
