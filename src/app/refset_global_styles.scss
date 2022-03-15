@@ -1182,12 +1182,18 @@ button.refset-tool-table-action-icon {
 
 .mat-form-field-appearance-fill .mat-form-field-infix {
     padding-right: 0;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+.mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 1.4em
 }
 
 .mat-form-field-underline {
@@ -1328,7 +1334,7 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-button-toggle-checked {
-    
+
     background-color: $cerulean !important;
     color: white !important;
 }
@@ -2324,6 +2330,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: flex;
     justify-content: space-between;
     align-items: self-end;
+    padding-left: 0px;
     padding-right: 0px;
 }
 
@@ -2465,6 +2472,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .add-remove-concept-hierarchy-modal-body {
     padding: 0;
+}
+.add-remove-concept-hierarchy-modal-body .refset-tool-concept-details-column .row{
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 .add-remove-concept-hierarchy-modal-input-field {

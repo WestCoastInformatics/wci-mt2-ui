@@ -51,12 +51,14 @@
                 <ng-template matStepperIcon="number">
                     <mat-icon>done</mat-icon>
                 </ng-template>
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
                         for Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;" [class]="stepperInfo['IN_EDIT_COLOR']">In
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['IN_EDIT_COLOR']">In
                         Edit</span></ng-template>
             </mat-step>
 
@@ -67,7 +69,8 @@
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;" [class]="stepperInfo['IN_REVIEW_COLOR']">In
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['IN_REVIEW_COLOR']">In
                         Review</span></ng-template>
             </mat-step>
 
@@ -121,15 +124,23 @@
                         class="manage-refset-menu">Manage Refset <span
                             class="down-arrow-for-menu">&#x25BC;</span></button>
                     <mat-menu #refsetMenu="matMenu">
-                      <create-new-refset [projectsRefsetComponent]="projectsRefsetComponent" *ngIf="editMode" [hidden]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
-                      [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects()">
-                      </create-new-refset>
-                      <workflow-history-notes-modal [refsetId]="id" [user]="refsetData?.modifiedBy" [hidden]="!allowedToEdit && !allowedToReview" [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal>
-                      <!-- <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal> -->
-                      <button mat-menu-item *ngIf="editMode" [hidden]="true">Convert Refset Type</button>
-                      <button mat-menu-item *ngIf="editMode" [hidden]="!allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
+                        <create-new-refset [projectsRefsetComponent]="projectsRefsetComponent"
+                            *ngIf="editMode" [hidden]="!allowedToEdit" [status]="refsetStatus"
+                            [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
+                            [refsetInternalId]="id" [inputProperties]="editMetadataProperties"
+                            (processChangedMemberEffects)="processChangedMemberEffects()">
+                        </create-new-refset>
+                        <workflow-history-notes-modal [refsetId]="id"
+                            [user]="refsetData?.modifiedBy"
+                            [hidden]="!allowedToEdit && !allowedToReview" [status]="refsetStatus"
+                            [workflowHistoryNotes]="workflowHistoryNotes">
+                        </workflow-history-notes-modal>
+                        <!-- <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal> -->
+                        <button mat-menu-item *ngIf="editMode" [hidden]="true">Convert Refset
+                            Type</button>
+                        <button mat-menu-item *ngIf="editMode" [hidden]="!allowedToEdit"
+                            (click)="openDeleteRefset()">Delete Refset</button>
                     </mat-menu>
-                    <span class="menu-spacer">&nbsp;</span>
                     <button mat-button [matMenuTriggerFor]="collaborationMenu"
                         class="collaboration-menu">Collaboration <span
                             class="down-arrow-for-menu">&#x25BC;</span></button>
@@ -169,15 +180,18 @@
 
                 <div class="edit-button-group-right-below-sticky-header">
 
-                    <button *ngIf="editMode"
-                        mat-raised-button color="primary" aria-hidden="false" #editButton
-                        class="refset-tool-action-button refset-action-button" aria-label="Edit"
-                        title="Edit" ng-reflect-color="primary"
+                    <button *ngIf="editMode" mat-raised-button color="primary" aria-hidden="false"
+                        #editButton class="refset-tool-action-button refset-action-button"
+                        aria-label="Edit" title="Edit" ng-reflect-color="primary"
                         (click)="setWorkflowStatusByAction('', 'EDIT')">
                         Edit
                     </button>
 
-                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)" *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')" [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id" [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
+                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
+                        *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
+                        [refsetData]="refsetData" [membersOfRefset]="membersGridData"
+                        [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
+                        [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
@@ -712,7 +726,7 @@
                 <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
                     (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </div> -->
-        </div>
+        </div><br />
         <span *ngIf="allowedToEdit">
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
@@ -793,7 +807,8 @@
                                             </mat-form-field>
                                             <span class="clear-search"
                                                 (click)="clearSearch('table')">&#10005;</span>
-                                                <button  mat-raised-button color="primary" aria-hidden="false" 
+                                            <button mat-raised-button color="primary"
+                                                aria-hidden="false"
                                                 class="refset-tool-action-button ecl-builder-action-button"
                                                 ng-reflect-color="primary"
                                                 (click)="openEclBuilder('detailsTableSearchInput')"
@@ -819,7 +834,8 @@
                                             <span class="clear-search"
                                                 (click)="clearSearch('taxonomy')"
                                                 *ngIf="showMembersSearchBar()">&#10005;</span>
-                                            <button  mat-raised-button color="primary" aria-hidden="false" 
+                                            <button mat-raised-button color="primary"
+                                                aria-hidden="false"
                                                 class="refset-tool-action-button ecl-builder-action-button"
                                                 ng-reflect-color="primary"
                                                 (click)="openEclBuilder('detailsTaxonomySearchInput')"
@@ -828,7 +844,7 @@
                                             margin-top: 23px;
                                             position: absolute;
                                             ">ECL Builder
-                                                
+
                                             </button>
                                         </div>
 
@@ -855,7 +871,8 @@
 
                                 <!-- Members Table -->
                                 <div class="container-fluid" [style.display]="membersTableDisplay">
-                                    <ag-grid-angular #detailsMembersTable *ngIf="showTable" style="height:418px"
+                                    <ag-grid-angular #detailsMembersTable *ngIf="showTable"
+                                        style="height:418px"
                                         class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                                         [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
                                         [columnDefs]="membersColumnDefs"
@@ -983,7 +1000,8 @@
                                     <div class="details-section">
                                         <app-taxonomy-tree #detailsMembersTaxonomy
                                             treeId="detailsMembersTree" [refset]="refsetData"
-                                            [rootNode]="membersTaxonomyRoot" [editMode]="allowedToEdit"
+                                            [rootNode]="membersTaxonomyRoot"
+                                            [editMode]="allowedToEdit"
                                             [selectedConcept]="selectedConcept"
                                             [options]="taxonomyOptions"
                                             [manualStateRefresh]="taxonomyManualStateRefresh"
