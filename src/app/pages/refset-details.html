@@ -801,7 +801,6 @@
                                                 font-size: 12px;
                                             margin-top: 23px;
                                             position: absolute;
-                                            line-height: 30px !important;
                                             ">ECL Builder
                                             </button>
                                         </div>
@@ -820,16 +819,16 @@
                                             <span class="clear-search"
                                                 (click)="clearSearch('taxonomy')"
                                                 *ngIf="showMembersSearchBar()">&#10005;</span>
-                                            <button
+                                            <button  mat-raised-button color="primary" aria-hidden="false" 
+                                                class="refset-tool-action-button ecl-builder-action-button"
+                                                ng-reflect-color="primary"
                                                 (click)="openEclBuilder('detailsTaxonomySearchInput')"
-                                                class="btn btn-primary i18n" style="
+                                                style="
                                                 font-size: 12px;
                                             margin-top: 23px;
                                             position: absolute;
                                             ">ECL Builder
-                                                <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
-                                                    title="Open ECL Builder"
-                                                    aria-label="ECL Builder" /> -->
+                                                
                                             </button>
                                         </div>
 
