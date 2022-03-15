@@ -2466,6 +2466,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-body {
     padding: 0;
 }
+.add-remove-concept-hierarchy-modal-body .refset-tool-concept-details-column .row{
+    margin-left: 3px;
+    margin-right: 3px;
+}
 
 .add-remove-concept-hierarchy-modal-input-field {
     width: 308px;
