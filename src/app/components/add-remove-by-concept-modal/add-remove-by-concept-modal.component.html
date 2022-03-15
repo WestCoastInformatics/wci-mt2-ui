@@ -57,14 +57,13 @@
 
                                     <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
                                             #addRemoveByConceptHierarchySearchEclButton
-                                            class="btn btn-primary i18n ml-3" style="
+                                             mat-raised-button color="primary" aria-hidden="false" 
+                                                class="refset-tool-action-button ecl-builder-action-button"
+                                                ng-reflect-color="primary" style="
                                             font-size: 12px;
-                                            margin-top: 23px;
+                                            margin-top: 23px; margin-left: 5px;
                                             position: absolute;">ECL Builder
-                                        <!-- <img src="assets/wrench-icon.svg"
-                                             alt="wrench icon"
-                                             title="Open ECL Builder"
-                                             aria-label="ECL Builder" /> -->
+                                       
                                     </button>
                                         <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults"
