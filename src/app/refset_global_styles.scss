@@ -1326,10 +1326,12 @@ button.refset-tool-table-action-icon {
 // Table-Tax Button Group
 .mat-button-toggle {
     margin-top: -2px;
+    font-family: $standard_font_family;
 }
 
 .mat-button-toggle-checked {
-    background-color: $cerulean;
+    
+    background-color: $cerulean !important;
     color: white !important;
 }
 
@@ -1339,16 +1341,23 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.mat-button-toggle-group,
 .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
     margin-top: 15px;
     border: 1px solid #666;
+    //font-family: $standard_font_family;
 }
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-    line-height: 31px;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 0 !important
+    //line-height: 31px;
+    //font-size: 14px;
+    //font-weight: 400;
+    padding: 0 !important;
+    font-family: $standard_font_family;
+    font-size: 1.0rem;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    line-height: 30px !important;
 }
 
 .mat-horizontal-content-container {
@@ -1362,6 +1371,14 @@ button.refset-tool-table-action-icon {
 #refsetDetailsPage
     .mat-raised-button.mat-button-base.refset-tool-action-button {
     line-height: 40px !important;
+}
+
+#refsetDetailsPage
+    .mat-raised-button.mat-button-base.ecl-builder-action-button {
+    line-height: 30px !important;
+    font-size: 12px;
+    margin-top: 23px;
+    position: absolute;
 }
 
 // Refset Download Styles
@@ -1389,7 +1406,7 @@ button.refset-tool-table-action-icon {
         background: white;
     }
     .refset_tool_ecl_definition_field {
-        width: calc(100% - 60px);
+        width: calc(100% - 120px);
         margin-right: 5px;
     }
 }

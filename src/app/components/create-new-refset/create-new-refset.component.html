@@ -350,14 +350,15 @@
                                 <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
                                 <button
-                                (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
-                                class="btn btn-primary i18n" style="
+                                    (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
+                                     mat-raised-button color="primary" aria-hidden="false" 
+                                    class="refset-tool-action-button ecl-builder-action-button"
+                                    ng-reflect-color="primary" style="
                                         font-size: 12px;
                                         margin-top: 23px;
                                         position: absolute;">ECL Builder
-                                <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
-                                    aria-label="ECL Builder" title="Open ECL Builder" /> -->
-                            </button>
+                                
+                                </button>
                             </span>
 
                             <span *ngIf="i > 0" class="refset-tool-flex-row">
