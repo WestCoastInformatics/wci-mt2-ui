@@ -733,6 +733,9 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.ag-floating-filter-full-body app-category-floating-filter select {
+    padding: 0px;
+}
 // .scroll-override {
 //     width: auto !important;
 //     overflow-x: scroll !important;
@@ -757,7 +760,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-column-chooser-select {
     .mat-select-trigger {
-        width: 160px;
+        width: 190px;
     }
 }
 
@@ -1180,12 +1183,13 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-infix {
-    padding: 0.5em;
+    padding-right: 0;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
     padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .mat-form-field-underline {
@@ -1314,10 +1318,6 @@ button.refset-tool-table-action-icon {
     &:hover {
         color: $delete_color;
     }
-}
-
-.search-label {
-    padding-left: 10px;
 }
 
 .refset-tool-directory-chooser-column {
