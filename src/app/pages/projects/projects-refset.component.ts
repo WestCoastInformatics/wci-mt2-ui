@@ -117,12 +117,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
 
         this.columnDefs = [
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155 },
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
-            { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150 },
-            { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus } },
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter },
-            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
+            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155,maxWidth:160 },
+            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550,maxWidth:590 , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
+            { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150,maxWidth:150 },
+            { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', flex: 1, minWidth: 150,maxWidth:150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus } },
+            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180,maxWidth:180, valueGetter: UiUtility.gridDateValueGetter },
+            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180,maxWidth:180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
         ];
 
         this.refsetGridOptions = {
