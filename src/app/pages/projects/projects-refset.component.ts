@@ -97,9 +97,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         forkJoin(this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true'), this.refsetService.getVersions()).subscribe(([projectResults, versionResults]) => {
 
-            this.projects = projectResults.items;
-            this.getStorageItems();
-
             this.versions = versionResults;
             let versionsArray = this.versions?.items;
             this.showLoadingSpinner = false;
@@ -167,6 +164,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     }
                 }
             };
+
+            this.projects = projectResults.items;
+            this.getStorageItems();
         });
     }
 
