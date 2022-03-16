@@ -390,7 +390,7 @@ export class UiUtility {
 		checkIfFinished();
     }
     
-    static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string, selectedVersion?: any) {
+    static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string) {
 
         let message = '';
 		let lookupMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
@@ -454,7 +454,8 @@ export class UiUtility {
                         notification.onAction.subscribe(button => {
 
                         if (button.id == 'view') {
-                            this.viewRefset(refsetId, versionDate, selectedVersion);
+                            this.viewRefset(refsetId, versionDate);
+                            notificationService.close(notification);
                         } else if (button.id == 'inactive') {
                             this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
                         }
@@ -565,7 +566,7 @@ export class UiUtility {
          row = row.slice(0, -1);
          csvString += row + '\r\n';
 
-         for (let i = 0; i < array.length; i++) {
+         for (let i = 0; i < array?.length; i++) {
 
              let line = (i + 1) + '';
 
@@ -581,7 +582,7 @@ export class UiUtility {
          return csvString;
      }
 
-    static viewRefset(refsetId, versionDate, selectedVersion?: any) {
+    static viewRefset(refsetId, versionDate) {
         if (!versionDate) {
             versionDate = RefsetUtility.IN_DEVELOPMENT;
         }

@@ -68,27 +68,24 @@ export class AddRemoveConceptsComponent implements OnInit {
 			
 			} else if (propertyName === "refset") {
 				this.refsetInternalId = this.refset?.id;
-			} else if (propertyName === "changeMethod") {
-
-				if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
-					this.actionText = "Add";
-				} else {
-					this.actionText = "Remove";
-				}
-
-				// if this isn't the initial setup then call addRemoveConcept
-				if (!changes[propertyName].firstChange) {
-
-					this.resetComponent();
-					this.addRemoveConcept(this.changeMethod);
-				}
-			
 			}
 		}
 	}
 
-	addRemoveConcept(changeMethod?: string): void {
+	addRemoveConceptsForAdjudication(conceptForAddRemove: any): void {
+		this.conceptCode = conceptForAddRemove?.code;
+		if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
+			this.actionText = "Add";
+		} else {
+			this.actionText = "Remove";
+		}
 
+			this.resetComponent();
+			this.addRemoveConcept(this.changeMethod);
+	
+	}
+
+	addRemoveConcept(changeMethod?: string): void {
         let conceptId: string = '';
 		let ecl = '';
 		let description: string;
@@ -127,6 +124,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 				description = 'removed from';
 			}
 
+			console.log(changeMethod)
 			this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
 		}
 
@@ -166,7 +164,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
-		UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
+			UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
         //this.onMembersGridReady.emit();
     }
 

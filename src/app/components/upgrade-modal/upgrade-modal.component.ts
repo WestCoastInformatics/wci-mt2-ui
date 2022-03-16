@@ -24,7 +24,6 @@ export class UpgradeModalComponent implements OnInit {
   loadingSpinner = new EventEmitter<boolean>(false);
   @Input()
   membersOfRefset: any;
-  selectedVersion: any;
   showWarning = false;
   membersInCommon: any;
   inactiveConcepts = 0;
@@ -43,8 +42,6 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   openUpgradeModal(upgradeDialog: NgbModal) {
-    this.selectedVersion = this.refsetData.id;
-
     this.sendLoadingSpinnerTrigger(true);
 
     this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
@@ -67,7 +64,7 @@ export class UpgradeModalComponent implements OnInit {
 
   async getUpgradeData(upgradeDialog: NgbModal): Promise<void> {
 
-    this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
+    this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
       this.totalMembers = members?.miscCountA;
       this.inactiveConcepts = members?.total;
 
@@ -92,11 +89,11 @@ export class UpgradeModalComponent implements OnInit {
 
   upgrade(): void {
     if (this.isInitialUpgrade) {
-      this.refsetService.initializeUpgrade(this.selectedVersion).subscribe((x) => {
+      this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
         if (this.router.url.includes('/' + this.refsetId)) {
           window.location.reload();
         } else {
-          this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), '').subscribe((members) => {
+          this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
             this.totalMembers = members?.miscCountA;
             this.inactiveConcepts = members?.total;
       
@@ -105,7 +102,7 @@ export class UpgradeModalComponent implements OnInit {
           });
         }
       });
-      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup', this.selectedVersion);
+      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup');
       this.modalService.dismissAll();
       this.refsetDetails.initializeDetailsPage();
     }

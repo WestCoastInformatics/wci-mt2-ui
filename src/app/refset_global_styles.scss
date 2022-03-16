@@ -320,6 +320,10 @@ a.footer-link {
     line-height: 30px !important;
 }
 
+.pagination-page-buttons > .mat-button-wrapper {
+    color: black;
+}
+
 .mat-flat-button.mat-primary,
 .mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
@@ -3001,8 +3005,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 
-.adjudicate-upgrade-modal > .modal-dialog > .modal-content {
-    width: 1140px;
+.adjudicate-upgrade-modal > .modal-dialog {
+    width: 1400px;
+    max-width: 1400px
 }
 
 .adjudicate-inactive-concepts {
