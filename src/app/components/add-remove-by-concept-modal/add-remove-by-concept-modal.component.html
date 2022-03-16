@@ -264,7 +264,7 @@
                                              *ngFor="
                                                 let parent of conceptDetailParents
                                             ">
-                                            <div class="refset-tool-concept-details-taxonomy-icon">
+                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
 
                                                 <add-remove-concepts-icons [concept]="parent" [isInDetailsPanel]="true" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
                                                 
@@ -394,8 +394,9 @@
                                                             let description of conceptDescriptions
                                                         ">
                                                         <div class="refset-tool-concept-details-concept-description-language">
+                                                            
                                                             {{
-                                                            description?.languageName
+                                                            description?.language
                                                             }}
                                                         </div>
 
