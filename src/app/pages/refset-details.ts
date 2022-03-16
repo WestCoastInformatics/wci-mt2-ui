@@ -419,7 +419,7 @@ export class RefsetDetails {
             this.refsetService.setRefsetInformation(this.refsetData);
             this.allowedToEdit = false;
             this.allowedToReview = false;
-
+            this.changeDetectorRef.detectChanges();
 
             //console.log("PARAMS  " + this.refsetData.versionStatus + "::" + this.refsetData?.roles + ":*:" + 
             //this.refsetData?.hasVersionInDevelopment + ":&:" + this.refsetData?.latestPublishedVersion);
