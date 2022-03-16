@@ -1266,7 +1266,7 @@
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
     (changeLockedStatus)="changeLockedStatus($event)"
     [processChangedMemberFunction]="processChangedMemberEffects"
-    (onMembersGridReady)="onMembersGridReady(originalGridParams); resetRefsetTotal = true; loadRefset()">
+    (onMembersGridReady)="onMembersGridReady(originalGridParams); onTaxonomySearchGridReady(taxonomyGridParams); resetRefsetTotal = true; loadRefset()">
 </add-remove-concepts>
 <scroll-top></scroll-top>
 

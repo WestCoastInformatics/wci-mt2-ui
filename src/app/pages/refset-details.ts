@@ -1194,9 +1194,11 @@ export class RefsetDetails {
             if (this.isAddRemoveInDetailsPanel) {
                 this.loadConceptDetail(this.selectedConcept);
                 this.reloadMembersGridAndTaxonomy();
+                this.loadRefset();
     
             } else {
                 this.reloadMembersGridAndTaxonomy();
+                this.loadRefset();
                 this.showLoadingSpinner = false;
             } 
         }
