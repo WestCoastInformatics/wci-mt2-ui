@@ -408,10 +408,13 @@
                                         " aria-label="Tags:">
                                         Tags:
                                     </td>
-                                    <td class="
-                                            refset-tool-refset-metadata-value
-                                        ">
-                                        {{refsetData?.tags?.join('; ')}}
+                                    <td class="refset-tool-refset-metadata-value tag-container">
+                                        <mat-chip-list> 
+                                            <mat-chip *ngFor="let tag of refsetData?.tags"
+                                                class="mat-elevation-z5 bg-white">
+                                                {{ tag }}
+                                            </mat-chip>
+                                        </mat-chip-list>
                                     </td>
                                 </tr>
 
