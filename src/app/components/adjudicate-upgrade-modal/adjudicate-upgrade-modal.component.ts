@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -23,8 +24,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   inactiveConcepts: any;
   @Input()
   membersInCommon: any;
-  @Input()
-  selectedVersion: any
   numOfResults: any;
   numOfMembers: any;
   selectedLanguage = '';
@@ -74,33 +73,27 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     readonly refsetDetails: RefsetDetails,
     private readonly changeDetection: ChangeDetectorRef,
     private readonly route: ActivatedRoute,
-    readonly upgradeModalComponent: UpgradeModalComponent) { }
+    readonly upgradeModalComponent: UpgradeModalComponent,
+    private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
 
   ngOnInit(): void {
     this.languageOptions = this.refsetData?.edition?.fullyQualifiedLanguageRefsets.map((x) => {
       return x.qualifiedLanguageCode;
     });
     this.selectedLanguage = this.languageOptions[0];
-    // this.getFinishedChangeReport(false);
   }
 
   ngAfterViewInit() {
 
     this.columnDefs = [
-      { field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason', cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
-      { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60},
-      { field: 'inactiveId', tooltipField: 'inactiveId', headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110},
-      { field: 'inactiveEnPtSection', hide: this.selectedLanguage !== this.languageOptions[0], tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
-      { field: 'inactiveEnFsnSection', hide: this.selectedLanguage !== this.languageOptions[1], tooltipField: 'inactiveEnFsnSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnFsnSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnFsnSection } },
-      { field: 'inactiveFrPtSection', hide: this.selectedLanguage !== this.languageOptions[2], tooltipField: 'inactiveFrPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveFrPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveFrPtSection } },
-      { field: 'inactiveNlPtSection', hide: this.selectedLanguage !== this.languageOptions[3], tooltipField: 'inactiveNlPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveNlPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveNlPtSection } },
-      { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection } },
-      { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
-      { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
-      { field: 'replacementEnPtSection', hide: this.selectedLanguage !== this.languageOptions[0], tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
-      { field: 'replacementEnFsnSection', hide: this.selectedLanguage !== this.languageOptions[1], tooltipField: 'replacementEnFsnSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnFsnSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnFsnSection }},
-      { field: 'replacementFrPtSection', hide: this.selectedLanguage !== this.languageOptions[2], tooltipField: 'replacementFrPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementFrPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementFrPtSection }},
-      { field: 'replacementNlPtSection', hide: this.selectedLanguage !== this.languageOptions[3], tooltipField: 'replacementNlPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementNlPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementNlPtSection }},      
+      { field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason', cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190,maxWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
+      { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60,maxWidth:60},
+      { field: 'inactiveId', tooltipField: 'inactiveId', headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110,maxWidth:120},
+      { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
+      { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220,maxWidth:220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection } },
+      { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
+      { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150,maxWidth:160,  cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
+      { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
     ];
 
     this.refsetGridOptions = {
@@ -130,12 +123,15 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   }
 
   addRemoveConcept(params: any, isReplacement: boolean, changeMethod: string): void {
-  this.changeMethod = changeMethod;
-  if (isReplacement) {
-    this.conceptForAddRemove = params.concept;
-  } else {
-    this.conceptForAddRemove = params.concept?.replacementConcecpts[0];
-  }
+    this.addRemoveConceptsComponent.changeMethod = changeMethod;
+    this.addRemoveConceptsComponent.refset = this.refsetData;
+    this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+    this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+    if (isReplacement) {
+      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params.replacementConcecpts[0]);
+    } else {
+      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params);
+    }
 }
 
 changeLockedStatus(lock: boolean) {
@@ -231,7 +227,7 @@ processChangedMemberEffects = () => {
       backdrop: 'static',
       keyboard: false,
       windowClass: 'adjudicate-upgrade-modal',
-      size: 'xl'
+      centered: true
     });
   }
 
@@ -262,7 +258,7 @@ processChangedMemberEffects = () => {
             offset: pageNumber - 1
         };
 
-          this.refsetService.getUpgradeData(this.selectedVersion ? this.selectedVersion : this.route.snapshot.queryParamMap.get('selectedVersion'), restParams).subscribe(results => {
+          this.refsetService.getUpgradeData(this.refsetData?.id, restParams).subscribe(results => {
 
             results.items = results.items.filter((x) => {
               if (this.hideReplacements) {
@@ -348,13 +344,16 @@ processChangedMemberEffects = () => {
 
   getFinishedChangeReport(shouldDownload = true): void {
 
+    this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
+      this.membersInCommon = members;
+
     // Get old members from inactive concepts
     let memberItems = this.membersInCommon?.items;
-    let inactiveConcepts = memberItems.filter((items: any) => {
+    let inactiveConcepts = memberItems?.filter((items: any) => {
       return items?.replaced === true;
     });
     let oldMembers = [];
-    for (let i = 0; i < inactiveConcepts.length; i++) {
+    for (let i = 0; i < inactiveConcepts?.length; i++) {
       oldMembers.push({
         'Old Member ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
         'Old Member Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
@@ -363,11 +362,11 @@ processChangedMemberEffects = () => {
 
     // Get new members from inactive concepts
     memberItems = this.membersInCommon?.items;
-    inactiveConcepts = memberItems.filter((items: any) => {
+    inactiveConcepts = memberItems?.filter((items: any) => {
       return items?.replaced === true;
     });
     let newMembers = [];
-    for (let i = 0; i < inactiveConcepts.length; i++) {
+    for (let i = 0; i < inactiveConcepts?.length; i++) {
       newMembers.push({
         'New Member ID': inactiveConcepts[i].code,
         'New Member Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/')
@@ -376,11 +375,11 @@ processChangedMemberEffects = () => {
 
     // Get manual replacements from inactive concepts
     memberItems = this.membersInCommon?.items;
-    inactiveConcepts = memberItems.filter((items: any) => {
+    inactiveConcepts = memberItems?.filter((items: any) => {
       return items?.replacementConcecpts[0].added === true;
     });
     let manualReplacement = [];
-    for (let i = 0; i < inactiveConcepts.length; i++) {
+    for (let i = 0; i < inactiveConcepts?.length; i++) {
       manualReplacement.push({
         'Manual Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
         'Manual Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
@@ -389,12 +388,12 @@ processChangedMemberEffects = () => {
 
     // Get members in common
     const membersInCommonItems = this.membersOfRefset;
-    const commonConcepts = membersInCommonItems.filter((x) => {
+    const commonConcepts = membersInCommonItems?.filter((x) => {
       return !memberItems.includes(x.id);
     });
     console.log(commonConcepts)
     let membersInCommon = [];
-    for (let i = 0; i < commonConcepts.length; i++) {
+    for (let i = 0; i < commonConcepts?.length; i++) {
       membersInCommon.push({
         'Members In Common ID': commonConcepts[i].code,
         'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
@@ -407,15 +406,7 @@ processChangedMemberEffects = () => {
       'manualReplacement': manualReplacement,
       'membersInCommon': membersInCommon
   };
-    // if (shouldDownload) {
-    //   UiUtility.createFinishedChangeReport(this.refsetData.refsetId, changeReportObject);
-    // } else {
-    //   if (localStorage.getItem('finishedChangeReportData')) {
-    //     localStorage.removeItem('finishedChangeReportData');
-    //   }
-    //   localStorage.setItem('finishedChangeReportData', JSON.stringify(changeReportObject));
-    // }
     UiUtility.createFinishedChangeReport(this.refsetData.refsetId, changeReportObject);
-
+  });
   }
 }

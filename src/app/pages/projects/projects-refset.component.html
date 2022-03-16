@@ -91,14 +91,14 @@
     <!-- Refset Table -->
     <div class="container-fluid"
          [class.container-toggled]="toggleService.isToggled">
-        <ag-grid-angular *ngIf="showTable" #directoryTable
+        <ag-grid-angular *ngIf="showTable" #projectTable
                          class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                          [columnDefs]="columnDefs"
                          [gridOptions]="refsetGridOptions"
                          style="width: 100%">
         </ag-grid-angular>
 
-        <app-pagination *ngIf="showTable" #directoryPaging
+        <app-pagination *ngIf="showTable" #projectPaging
                         [pageSize]="refsetGridPaging.pageSize"
                         [gridOptions]="refsetGridOptions"
                         [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
@@ -111,9 +111,7 @@
         </app-pagination>
 
         <!-- Name Templates -->
-        <!-- Jesse: What is the private refset icon? -->
-        <ng-template #directoryNameSection
-                     let-params>
+        <ng-template #projectNameSection let-params>
             {{ params?.value }}
 
             <mat-icon *ngIf="params?.data?.privateRefset"
@@ -126,7 +124,7 @@
             </mat-icon>
         </ng-template>
         <!-- Workflow Status Templates -->
-        <ng-template #directoryversionStatusSection let-params>
+        <ng-template #projectWorkflowStatusSection let-params>
             
             <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED'">
                 <div>Published</div>

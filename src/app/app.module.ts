@@ -185,6 +185,7 @@ const appRoutes: Routes = [
         BreadcrumbService,
         RouterExtentionService,
         ProjectsRefsetComponent,
+        AddRemoveConceptsComponent,
         NotificationService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {

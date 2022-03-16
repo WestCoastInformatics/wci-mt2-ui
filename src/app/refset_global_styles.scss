@@ -320,6 +320,10 @@ a.footer-link {
     line-height: 30px !important;
 }
 
+.pagination-page-buttons > .mat-button-wrapper {
+    color: black;
+}
+
 .mat-flat-button.mat-primary,
 .mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
@@ -574,7 +578,7 @@ button.refset-tool-table-action-icon {
     }
 
     .refset-tool-directory-column-information .refset-tool-table-action-icon {
-        left: 8px;
+        left: 0px;
     }
 
     .mat-raised-button {
@@ -733,6 +737,9 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.ag-floating-filter-full-body app-category-floating-filter select {
+    padding: 0px;
+}
 // .scroll-override {
 //     width: auto !important;
 //     overflow-x: scroll !important;
@@ -757,7 +764,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-column-chooser-select {
     .mat-select-trigger {
-        width: 160px;
+        width: 190px;
     }
 }
 
@@ -811,10 +818,8 @@ button.refset-tool-table-action-icon {
 
 #refsetDetailsPage .refset-title {
     background: white;
-    top: 10px;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
-    z-index: 1000;
     padding-top: 30px;
 }
 
@@ -1180,12 +1185,19 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-infix {
-    padding: 0.5em;
+    padding-right: 0;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
     padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 1.4em
 }
 
 .mat-form-field-underline {
@@ -1316,10 +1328,6 @@ button.refset-tool-table-action-icon {
     }
 }
 
-.search-label {
-    padding-left: 10px;
-}
-
 .refset-tool-directory-chooser-column {
     padding-right: 20px;
 }
@@ -1330,7 +1338,7 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-button-toggle-checked {
-    
+
     background-color: $cerulean !important;
     color: white !important;
 }
@@ -2326,6 +2334,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: flex;
     justify-content: space-between;
     align-items: self-end;
+    padding-left: 0px;
     padding-right: 0px;
 }
 
@@ -2467,6 +2476,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .add-remove-concept-hierarchy-modal-body {
     padding: 0;
+}
+.add-remove-concept-hierarchy-modal-body .refset-tool-concept-details-column .row{
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 .add-remove-concept-hierarchy-modal-input-field {
@@ -2992,8 +3005,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 
-.adjudicate-upgrade-modal > .modal-dialog > .modal-content {
-    width: 1140px;
+.adjudicate-upgrade-modal > .modal-dialog {
+    width: 1400px;
+    max-width: 1400px
 }
 
 .adjudicate-inactive-concepts {
@@ -3388,17 +3402,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 #refsetDirectoryPage {
     .ag-theme-alpine .ag-header {
-        top: 130px;
-        position: fixed;
         width: auto;
         z-index: 99;
     }
     .ag-theme-alpine .ag-root-wrapper {
          border: none!important;
-         top: 100px;
     }
     .refset-tool-pagination-container {
-        padding-top: 130px;
+        padding-top: 10px;
     }
 }
 
