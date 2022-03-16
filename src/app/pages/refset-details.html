@@ -180,7 +180,7 @@
 
                 <div class="edit-button-group-right-below-sticky-header">
 
-                    <button *ngIf="editMode" mat-raised-button color="primary" aria-hidden="false"
+                    <button *ngIf="this.refsetData?.availableActions?.includes('EDIT')" mat-raised-button color="primary" aria-hidden="false"
                         #editButton class="refset-tool-action-button refset-action-button"
                         aria-label="Edit" title="Edit" ng-reflect-color="primary"
                         (click)="setWorkflowStatusByAction('', 'EDIT')">
