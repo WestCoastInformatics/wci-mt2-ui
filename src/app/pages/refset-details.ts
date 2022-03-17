@@ -419,11 +419,13 @@ export class RefsetDetails {
             this.refsetService.setRefsetInformation(this.refsetData);
             this.allowedToEdit = false;
             this.allowedToReview = false;
+            this.changeDetectorRef.detectChanges();
 
-            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')) || this.refsetData?.roles?.includes('AUTHOR')) {
+            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')  ) || 
+                (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
                 this.editMode = true;
             }
-
+            
             if (this.editMode) {
 
                 this.refreshWorkflow();
@@ -1189,9 +1191,11 @@ export class RefsetDetails {
             if (this.isAddRemoveInDetailsPanel) {
                 this.loadConceptDetail(this.selectedConcept);
                 this.reloadMembersGridAndTaxonomy();
+                this.loadRefset();
     
             } else {
                 this.reloadMembersGridAndTaxonomy();
+                this.loadRefset();
                 this.showLoadingSpinner = false;
             } 
         }

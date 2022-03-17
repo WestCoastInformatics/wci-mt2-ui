@@ -320,6 +320,10 @@ a.footer-link {
     line-height: 30px !important;
 }
 
+.pagination-page-buttons > .mat-button-wrapper {
+    color: black;
+}
+
 .mat-flat-button.mat-primary,
 .mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
@@ -413,6 +417,11 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-details-member-taxonomy{
     height: 800px;
+}
+
+.refset-tool-details-member-taxonomy .details-section{
+    height: 968px;
+    overflow: auto;
 }
 
 // AG Grid Styles
@@ -730,6 +739,9 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.ag-floating-filter-full-body app-category-floating-filter select {
+    padding: 0px;
+}
 // .scroll-override {
 //     width: auto !important;
 //     overflow-x: scroll !important;
@@ -754,7 +766,7 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-column-chooser-select {
     .mat-select-trigger {
-        width: 160px;
+        width: 190px;
     }
 }
 
@@ -1176,12 +1188,19 @@ button.refset-tool-table-action-icon {
 }
 
 .mat-form-field-appearance-fill .mat-form-field-infix {
-    padding: 0.5em;
+    padding-right: 0;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
     background-color: transparent;
     padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 1.4em
 }
 
 .mat-form-field-underline {
@@ -1312,20 +1331,18 @@ button.refset-tool-table-action-icon {
     }
 }
 
-.search-label {
-    padding-left: 10px;
-}
-
 .refset-tool-directory-chooser-column {
     padding-right: 20px;
 }
 // Table-Tax Button Group
 .mat-button-toggle {
     margin-top: -2px;
+    font-family: $standard_font_family;
 }
 
 .mat-button-toggle-checked {
-    background-color: $cerulean;
+
+    background-color: $cerulean !important;
     color: white !important;
 }
 
@@ -1335,16 +1352,23 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.mat-button-toggle-group,
 .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
     margin-top: 15px;
     border: 1px solid #666;
+    //font-family: $standard_font_family;
 }
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-    line-height: 31px;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 0 !important
+    //line-height: 31px;
+    //font-size: 14px;
+    //font-weight: 400;
+    padding: 0 !important;
+    font-family: $standard_font_family;
+    font-size: 1.0rem;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    line-height: 30px !important;
 }
 
 .mat-horizontal-content-container {
@@ -1358,6 +1382,14 @@ button.refset-tool-table-action-icon {
 #refsetDetailsPage
     .mat-raised-button.mat-button-base.refset-tool-action-button {
     line-height: 40px !important;
+}
+
+#refsetDetailsPage
+    .mat-raised-button.mat-button-base.ecl-builder-action-button {
+    line-height: 30px !important;
+    font-size: 12px;
+    margin-top: 23px;
+    position: absolute;
 }
 
 // Refset Download Styles
@@ -1385,7 +1417,7 @@ button.refset-tool-table-action-icon {
         background: white;
     }
     .refset_tool_ecl_definition_field {
-        width: calc(100% - 60px);
+        width: calc(100% - 120px);
         margin-right: 5px;
     }
 }
@@ -2305,6 +2337,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: flex;
     justify-content: space-between;
     align-items: self-end;
+    padding-left: 0px;
     padding-right: 0px;
 }
 
@@ -2445,6 +2478,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .add-remove-concept-hierarchy-modal-body {
     padding: 0;
+}
+.add-remove-concept-hierarchy-modal-body .refset-tool-concept-details-column .row{
+    margin-left: 3px;
+    margin-right: 3px;
 }
 
 .add-remove-concept-hierarchy-modal-input-field {
@@ -2970,8 +3007,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 
-.adjudicate-upgrade-modal > .modal-dialog > .modal-content {
-    width: 1140px;
+.adjudicate-upgrade-modal > .modal-dialog {
+    width: 1400px;
+    max-width: 1400px
 }
 
 .adjudicate-inactive-concepts {
@@ -3138,13 +3176,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     align-items: center;
 }
 
-.collapse-plus-icon {
-    width: 15px;
-    height: 15px;
+.caret-up-solid {
+    width: 17px;
+    height: 17px;
     align-self: center;
 }
 
-.collapse-minus-icon {
+.caret-down-solid {
     width: 17px;
     height: 17px;
     align-self: center;
@@ -3523,5 +3561,6 @@ span.title {
 .ecl-button {
     font-size: 12px !important;
     margin-top: 23px !important;
+    margin-left: 5px !important;
     position: absolute !important;
 }

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Context, Logger } from 'ag-grid-community';
 import { forkJoin } from 'rxjs';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
@@ -45,18 +46,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     showTable: boolean = false;
     refsetData: any;
     dialog: DialogService;
-    versionStatuses: any;
+    versions: any;
     initialGridWidth: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
     showLoadingSpinner = false;
     createRefsetProperties: any = {};
-
-    @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
-    @ViewChild('directoryversionStatusSection') versionStatus: TemplateRef<any>;
-    @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
-    @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-
     metadataAndConcepts = true;
     dummydata = ['Your Usual Project', 'Project 2', 'Project 3'];
     selectedValue = this.dummydata[0];
@@ -68,6 +63,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     numOfResults: number;
     isSelectedProject: boolean;
     projectIsUat: boolean;
+
+    @ViewChild('projectNameSection') nameSection: TemplateRef<any>;
+    @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
+    @ViewChild('projectPaging') paginationComponent: PaginationComponent;
 
     constructor(
         private router: Router,
@@ -88,82 +87,87 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.titleService.setTitle('Refset Tool - Projects');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Projects' }]);
         this.getUser();
-        this.populateProjectList();
     }
 
     getUser(): void {
         this.user = this.authService.getUser();
     }
 
-    populateProjectList(): void {
-
-        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(project => {
-
-            this.projects = project.items;
-            this.getStorageItems();
-        });
-    }
-
     ngAfterViewInit() {
 
-        forkJoin(
-            this.refsetService.getVersionStatuses(),
-            //this.refsetService.getEditions(),
-        ).subscribe(([results]) => {
+        forkJoin(this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true'), this.refsetService.getVersions()).subscribe(([projectResults, versionResults]) => {
 
-            this.versionStatuses = results;
+            this.versions = versionResults;
+            let versionsArray = this.versions?.items;
             this.showLoadingSpinner = false;
             this.changeDetectorRef.detectChanges();
-        });
+            let workflowStatuses = [
+                {type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT'},
+                {type: 'status', name: 'In Edit', value: 'IN_EDIT'},
+                {type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE'},
+                {type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW'},
+                {type: 'status', name: 'In Review', value: 'IN_REVIEW'},
+                {type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED'},
+                {type: 'status', name: 'Ready for PUBLICATION', value: 'READY_FOR_PUBLICATION'},
+                {type: 'status', name: 'Published', value: 'PUBLISHED'}
+            ];
 
-        this.columnDefs = [
-            { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155,maxWidth:160 },
-            { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550,maxWidth:590 , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
-            { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150,maxWidth:150 },
-            { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', flex: 1, minWidth: 150,maxWidth:150, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus } },
-            { field: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180,maxWidth:180, valueGetter: UiUtility.gridDateValueGetter },
-            { field: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180,maxWidth:180, valueGetter: UiUtility.gridDateValueGetter, sort: 'desc' }
-        ];
+            this.columnDefs = [
+                { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', flex: 1, minWidth: 155,maxWidth:160 },
+                { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550,maxWidth:590 , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
+                { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', flex: 1, minWidth: 150,maxWidth:150 },
+                { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', flex: 1, minWidth: 180,maxWidth:180, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus }, 
+                    floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: workflowStatuses}},
+                { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', flex: 1, minWidth: 150,maxWidth:150, valueGetter: UiUtility.gridDateValueGetter, 
+                    floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
+                { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', flex: 1, minWidth: 180,maxWidth:180, valueGetter: UiUtility.gridDateValueGetter, 
+                    floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true}, sort: 'desc'}
+            ];
 
-        this.refsetGridOptions = {
-            context: { componentParent: this },
-            pagination: true,
-            suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-            suppressPaginationPanel: true,
-            paginationPageSize: this.refsetGridPaging.pageSize,
-            cacheBlockSize: this.refsetGridPaging.pageSize,
-            maxBlocksInCache: 1,
-            rowModelType: 'infinite',
-            enableCellTextSelection: true,
-            rowSelection: 'single',
-            onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady,
-            frameworkComponents: {
-                'templateRenderer': TemplateRenderer,
-                'categoryFilterComponent': CategoryFilterComponent
-            },
-            defaultColDef: {
-                sortable: true,
-                filter: true,
-                floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-                suppressMenu: true,
-                menuTabs: ['columnsMenuTab'],
-                resizable: true
-            },
-            rowClassRules: {
-                'refset_tool_grid_inactive_row': function (params) {
+            this.refsetGridOptions = {
+                context: { componentParent: this },
+                pagination: true,
+                suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                suppressPaginationPanel: true,
+                paginationPageSize: this.refsetGridPaging.pageSize,
+                cacheBlockSize: this.refsetGridPaging.pageSize,
+                maxBlocksInCache: 1,
+                rowModelType: 'infinite',
+                enableCellTextSelection: true,
+                rowSelection: 'single',
+                onCellClicked: this.onGridCellClick,
+                onGridReady: this.onGridReady,
+                frameworkComponents: {
+                    'templateRenderer': TemplateRenderer,
+                    'categoryFilterComponent': CategoryFilterComponent,
+                    'dateTextFilterComponent': DateTextFilterComponent
+                },
+                defaultColDef: {
+                    sortable: true,
+                    filter: true,
+                    floatingFilter: true,
+                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                    suppressMenu: true,
+                    menuTabs: ['columnsMenuTab'],
+                    resizable: true
+                },
+                rowClassRules: {
+                    'refset_tool_grid_inactive_row': function (params) {
 
-                    var inactivatedRow = false;
+                        var inactivatedRow = false;
 
-                    if (params.data) {
-                        inactivatedRow = params.data.active == false;
+                        if (params.data) {
+                            inactivatedRow = params.data.active == false;
+                        }
+
+                        return inactivatedRow;
                     }
-
-                    return inactivatedRow;
                 }
-            }
-        };
+            };
+
+            this.projects = projectResults.items;
+            this.getStorageItems();
+        });
     }
 
     getStorageItems(): void {

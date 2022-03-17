@@ -1,7 +1,6 @@
 
 <button type="button" mat-raised-button color="primary" aria-hidden="false" #adjudicateUpgradeButton class="refset-tool-action-button refset-action-button" (click)="openAdjudicateUpgradeModal(adjudicateUpgradeDialog)" aria-label="Adjudicate Upgrade" title="Adjudicate Upgrade" ng-reflect-color="primary">Continue Upgrade</button>
-<ng-template #adjudicateUpgradeDialog
-             let-modal>
+<ng-template #adjudicateUpgradeDialog class="modal-dialog-centered" let-modal>
 <ng-container>
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title"
@@ -76,7 +75,27 @@
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <add-remove-concepts-icons [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="!params?.data?.stillMember" (processSelection)="addRemoveConcept($event, false, params?.data?.stillMember ? 'INACTIVE_REMOVED' : 'INACTIVE_ADDED')"> </add-remove-concepts-icons>
+    <img *ngIf="!params?.data?.stillMember"
+    src="assets/add-symbol-icon.svg"
+    (click)="addRemoveConcept(params?.data, false, 'INACTIVE_ADDED')"
+    width="18px"
+    height="18px"
+    title="Add {{actionText}}"
+    aria-label="Add"
+    class="add-symbol-icon"
+    alt="Add symbol shown when you're able to add a concept" 
+/>
+
+<img *ngIf="params?.data?.stillMember"
+    src="assets/subtract-symbol-icon.svg"
+    (click)="addRemoveConcept(params?.data, false, 'INACTIVE_REMOVED')"
+    width="18px"
+    height="18px"
+    title="Remove {{actionText}}"
+    aria-label="Subtract"
+    class="subtract-symbol-icon"
+    alt="Subtract symbol shown when you're able to remove a concept" 
+/>
 </ng-template>
 
 <!-- Inactive ID Templates -->
@@ -89,21 +108,6 @@
     {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
 </ng-template>
 
-<!-- Inactive Section EN FSN Templates -->
-<ng-template #adjudicateInactiveEnFsnSection let-params>
-    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
-</ng-template>
-
-<!-- Inactive Section FR PT Templates -->
-<ng-template #adjudicateInactiveFrPtSection let-params>
-    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
-</ng-template>
-
-<!-- Inactive Section NL PT Templates -->
-<ng-template #adjudicateInactiveNlPtSection let-params>
-    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
-</ng-template>
-
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
     {{ formatReason(params?.data?.inactivationReason) }}
@@ -111,7 +115,29 @@
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-    <add-remove-concepts-icons *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember" [concept]="params?.data" [isInDetailsPanel]="false" [showAdd]="!params?.data?.replacementConcecpts[0].added" (processSelection)="addRemoveConcept($event, true, params?.data?.replacementConcecpts[0]?.added ? 'REPLACEMENT_REMOVED' : 'REPLACEMENT_ADDED')"> </add-remove-concepts-icons>
+<span *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
+    <img *ngIf="!params?.data?.replacementConcecpts[0]?.added"
+    src="assets/add-symbol-icon.svg"
+    (click)="addRemoveConcept(params?.data, true, 'REPLACEMENT_ADDED')"
+    width="18px"
+    height="18px"
+    title="Add {{actionText}}"
+    aria-label="Add"
+    class="add-symbol-icon"
+    alt="Add symbol shown when you're able to add a concept" 
+/>
+
+<img *ngIf="params?.data?.replacementConcecpts[0]?.added"
+    src="assets/subtract-symbol-icon.svg"
+    (click)="addRemoveConcept(params?.data, true, 'REPLACEMENT_REMOVED')"
+    width="18px"
+    height="18px"
+    title="Remove {{actionText}}"
+    aria-label="Subtract"
+    class="subtract-symbol-icon"
+    alt="Subtract symbol shown when you're able to remove a concept" 
+/>
+</span>
     <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember" class="adjudicate-information-button" aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
 </ng-template>
 
@@ -125,31 +151,7 @@
     {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
 </ng-template>
 
-<!-- Replacement Section EN FSN Templates -->
-<ng-template #adjudicateReplacementEnFsnSection let-params>
-    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
-</ng-template>
-
-<!-- Replacement Section FR PT Templates -->
-<ng-template #adjudicateReplacementFrPtSection let-params>
-    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
-</ng-template>
-
-<!-- Replacement Section NL PT Templates -->
-<ng-template #adjudicateReplacementNlPtSection let-params>
-    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
-</ng-template>
-
 <!-- Reason Section Templates -->
 <ng-template #adjudicateReason let-params>
     {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
 </ng-template>
-
-<add-remove-concepts
-    [conceptCode]="conceptForAddRemove?.code"
-    [changeMethod]="changeMethod"
-    [refset]="refsetData"
-    (changeLockedStatus)="changeLockedStatus($event)"
-    [processChangedMemberFunction]="processChangedMemberEffects"
-    (onMembersGridReady)="onGridReady(originalGridParams)">
-</add-remove-concepts>

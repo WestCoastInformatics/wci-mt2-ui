@@ -28,8 +28,10 @@
                     <textarea id="importFromEclInput" matInput class="import-from-ecl-text-area" [(ngModel)]="ecl"></textarea>
                 </mat-form-field>
 
-                <button (click)="openEclBuilder('importFromEclInput')" class="btn btn-primary i18n" style="
-                font-size: 11px;">ECL Builder
+                <button (click)="openEclBuilder('importFromEclInput')" mat-raised-button color="primary" aria-hidden="false" 
+                class="refset-tool-action-button ecl-builder-action-button"
+                ng-reflect-color="primary" style="
+                font-size: 12px;">ECL Builder
                 </button>
 
             </div>
@@ -44,8 +46,8 @@
             Add Members
         </button>
 
-        <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="green" aria-hidden="false"
-                class="refset-tool-action-button import-from-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="green">
+        <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="red" aria-hidden="false"
+                class="refset-tool-action-button import-from-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
             Remove Members
         </button>
 
