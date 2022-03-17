@@ -29,7 +29,7 @@
                 <div class="add-remove-concept-hierarchy-modal-Section-container">
                     <as-split direction="horizontal"
                               gutterSize="4">
-                        <as-split-area [size]="showResults && conceptSelected ? 50 : 100"
+                        <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100"
                                        [minSize]="37">
                             <div class="refset-tool-details-members-column">
                                 <!-- Search Bar -->
@@ -57,13 +57,11 @@
 
                                     <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
                                             #addRemoveByConceptHierarchySearchEclButton
-                                             mat-raised-button color="primary" aria-hidden="false" 
-                                                class="refset-tool-action-button ecl-builder-action-button"
-                                                ng-reflect-color="primary" style="
-                                            font-size: 12px;
-                                            margin-top: 23px; margin-left: 5px;
-                                            position: absolute;">ECL Builder
-                                       
+                                            class="btn btn-primary i18n ml-3 ecl-button">ECL Builder
+                                        <!-- <img src="assets/wrench-icon.svg"
+                                             alt="wrench icon"
+                                             title="Open ECL Builder"
+                                             aria-label="ECL Builder" /> -->
                                     </button>
                                         <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults"

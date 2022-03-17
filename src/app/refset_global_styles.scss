@@ -699,6 +699,8 @@ button.refset-tool-table-action-icon {
 .top-search-bar {
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
+    z-index: 1000 !important;
+    padding-top: 52px;
     .page-title {
         padding-left: 3rem;
     }
@@ -820,6 +822,7 @@ button.refset-tool-table-action-icon {
     background: white;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
     padding-right: 0px;
+    z-index: 1000;
     padding-top: 30px;
 }
 
@@ -2298,7 +2301,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title {
     align-items: center;
     box-shadow: 0 4px 2px -2px gray;
-    padding-top: 0px;
+    padding-top: 52px;
     min-height: 65px;
     justify-content: space-between;
 }
@@ -2464,7 +2467,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     > .row
     > .detailsMemberSection-container {
     width: 100%;
-    min-height: 1100px;
     background: #f5f5f5;
 }
 
@@ -3568,4 +3570,10 @@ span.title {
 
 .concept-details-header {
     top: -20px;
+}
+.ecl-button {
+    font-size: 12px !important;
+    margin-top: 23px !important;
+    margin-left: 5px !important;
+    position: absolute !important;
 }
