@@ -34,7 +34,7 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 			if (entry.type === "status") {
 
-				let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.name, entry.value);
+				let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
 				this.options.push(obj);
 			} else {
 
