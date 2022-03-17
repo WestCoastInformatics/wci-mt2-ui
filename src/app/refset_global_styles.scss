@@ -577,6 +577,10 @@ button.refset-tool-table-action-icon {
 }
 
 // Directory Page Styles
+#refsetProjectsPage {
+    margin-top: 4rem;
+}
+
 #refsetProjectsPage,
 #refsetDirectoryPage,
 #refsetDetailsPage {
@@ -3585,4 +3589,11 @@ span.title {
     margin-top: 23px !important;
     margin-left: 5px !important;
     position: absolute !important;
+}
+
+.navbar.sticky-top.navbar-dark {
+    width: 100%;
+    width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    width: fill-available;
 }
