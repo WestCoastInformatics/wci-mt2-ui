@@ -516,6 +516,15 @@ button.refset-tool-table-action-icon {
 .no-row-overlay {
     height: 300px;
 }
+.ag-overlay {
+    .ag-overlay-panel {
+        .ag-overlay-wrapper {
+            .ag-overlay-no-rows-center {
+                padding-top: 8.5em
+            }
+        }
+    }
+}
 .ag-theme-alpine {
     font-family: $standard_font_family;
 
