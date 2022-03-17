@@ -1,6 +1,6 @@
 
     <select type="number" [(ngModel)]="selectedOption" (ngModelChange)="valueChanged()" class="form-control">
-      <option *ngFor="let option of options" [ngValue]="option">{{option.name}}</option>
+      <option *ngFor="let option of options" [ngValue]="option">{{option.label}}</option>
     </select>
 
     
