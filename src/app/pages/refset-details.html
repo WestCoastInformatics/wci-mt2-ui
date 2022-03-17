@@ -123,6 +123,7 @@
                     <button mat-button [matMenuTriggerFor]="refsetMenu" [hidden]="!allowedToEdit"
                         class="manage-refset-menu">Manage Refset <span
                             class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <span class="menu-spacer">&nbsp;</span>
                     <mat-menu #refsetMenu="matMenu">
                         <create-new-refset [projectsRefsetComponent]="projectsRefsetComponent"
                             *ngIf="editMode" [hidden]="!allowedToEdit" [status]="refsetStatus"
@@ -409,7 +410,7 @@
                                         Tags:
                                     </td>
                                     <td class="refset-tool-refset-metadata-value tag-container">
-                                        <mat-chip-list> 
+                                        <mat-chip-list>
                                             <mat-chip *ngFor="let tag of refsetData?.tags"
                                                 class="mat-elevation-z5 bg-white">
                                                 {{ tag }}
