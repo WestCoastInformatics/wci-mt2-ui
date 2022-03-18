@@ -48,8 +48,12 @@ export class AuthenticationService {
 
     generateImsUrl(endpoint: string): string {
 
-        let url = window.location.origin + '/login';
+        let url = window.location.origin;
 
+        if (endpoint == 'login') {
+            url += '/login';
+        }
+         
         if (!window.location.origin.includes("local")) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
         } else {
@@ -103,7 +107,7 @@ export class AuthenticationService {
             }
         );
 
-        window.location.href = window.location.origin
+        window.location.href = this.generateImsUrl('logout')
     }
 
     isAuthenticated(): boolean {
