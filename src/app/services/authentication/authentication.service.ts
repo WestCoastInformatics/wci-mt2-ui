@@ -109,13 +109,12 @@ export class AuthenticationService {
             }
         );
 
-        this.restService.get(this.generateImsUrl('logout'), false, true).subscribe(results => { let temp = ""; });
-        
         let redirect = function () {
             window.location.href = window.location.origin;
         }
         
-        setTimeout(redirect, 500) ;
+        setTimeout(redirect, 500);
+        window.location.href = this.generateImsUrl('logout');
     }
 
     isAuthenticated(): boolean {
