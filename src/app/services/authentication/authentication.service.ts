@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RestService } from '../rest/rest.service';
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +26,8 @@ export class AuthenticationService {
         private http: HttpClient,
         private readonly modalService: NgbModal,
         private router: Router,
-        private readonly notificationService: NotificationService
+        private readonly notificationService: NotificationService,
+        private restService: RestService,
     ) { }
 
     imsLogin(successCallback: Function = this.handleImsSuccess) {
@@ -107,8 +109,9 @@ export class AuthenticationService {
             }
         );
 
-        window.location.href = this.generateImsUrl('logout');
-        window.location.href = this.generateImsUrl(window.location.origin);
+        this.restService.get(this.generateImsUrl('logout'), false, true).subscribe(results => { });
+        //window.location.href = this.generateImsUrl('logout');
+        window.location.href = window.location.origin;
     }
 
     isAuthenticated(): boolean {
