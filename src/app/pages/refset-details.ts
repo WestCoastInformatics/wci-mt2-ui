@@ -1483,6 +1483,7 @@ export class RefsetDetails {
         } else {
             this.membersTableDisplay = "none";
             this.membersTaxonomyDisplay = "inline-block";
+            this.changeTaxonomyLanguage();
         }
     }
 
