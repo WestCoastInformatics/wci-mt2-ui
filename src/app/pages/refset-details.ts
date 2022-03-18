@@ -953,8 +953,6 @@ export class RefsetDetails {
                     colId: "code",
                     headerName: "Concept ID",
                     minWidth: 120,
-                    maxWidth:190,
-                    width: 140,
                     cellClass:
                         "refset-tool-details-column-concept-id",
                     cellRenderer: "templateRenderer",
@@ -975,8 +973,6 @@ export class RefsetDetails {
                     field: i.toString(),
                     flex: 1,
                     minWidth: minWidth,
-                    maxWidth: 700,
-                    width: 180,
                     colId: language.value,
                     headerName: language.display,
                     cellClass:
@@ -993,9 +989,6 @@ export class RefsetDetails {
                         colId: "modified",
                         flex: 1,
                         minWidth: 180,
-                        
-                        maxWidth: 700,
-                        width: 180,
                         headerName: "Modified Date",
                         cellClass:
                             "refset-tool-details-column-modified-date",
@@ -1010,8 +1003,6 @@ export class RefsetDetails {
                         field: "active",
                         colId: "actions",
                         headerName: "",
-                        width: 120,
-                        maxWidth:120,
                         minWidth: 120,
                         cellClass:
                             "refset-tool-details-column-actions",
@@ -1021,7 +1012,9 @@ export class RefsetDetails {
                         },
                         filter: false,
                         tooltipField: "active",
-                        sortable: false
+                        sortable: false,
+                        pinned: 'right',
+                        resizable: false
                     },
                 ]
             );
