@@ -24,7 +24,8 @@ export class ImportFromFileModalComponent implements OnInit {
     @Input() isIntensional: boolean = false;
     @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+    @Output() onMembersGridReady = new EventEmitter<any>();
+
     constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) {}
 
     ngOnInit(): void {}

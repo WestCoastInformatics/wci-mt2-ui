@@ -1184,11 +1184,9 @@ export class RefsetDetails {
             if (this.isAddRemoveInDetailsPanel) {
                 this.loadConceptDetail(this.selectedConcept);
                 this.reloadMembersGridAndTaxonomy();
-                this.loadRefset();
     
             } else {
                 this.reloadMembersGridAndTaxonomy();
-                this.loadRefset();
                 this.showLoadingSpinner = false;
             } 
         }
@@ -1199,7 +1197,9 @@ export class RefsetDetails {
         this.resetRefsetTotal = true;
 
         // reload the members grid
+        this.loadRefset();
         this.onMembersGridReady(this.originalGridParams);
+        this.onTaxonomySearchGridReady(this.taxonomyGridParams);
         this.memberCacheLoaded = new Subject<boolean>();
 
         var allObservables = {
@@ -1217,6 +1217,7 @@ export class RefsetDetails {
         if (this.conceptDetail != null) {
             this.loadConceptDetail(this.conceptDetail);
         }
+        this.changeDetectorRef.detectChanges();
     }
 
     openEclBuilder(fieldId) {

@@ -985,6 +985,7 @@ button.refset-tool-table-action-icon {
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
+        margin-right: 3px;
     }
 
     tree-viewport {
@@ -1053,6 +1054,7 @@ button.refset-tool-table-action-icon {
         width: 12.75px;
         height: 10.5px;
         align-self: center;
+        margin-left: 10px;
     }
 
     .add-symbol-icon,
@@ -2686,8 +2688,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .taxonomy-icon-edit-mode {
-    display: flex;
-    align-self: center;
+    // display: flex;
+    // align-self: center;
 }
 
 .refset-tool-column-chooser-select-field {

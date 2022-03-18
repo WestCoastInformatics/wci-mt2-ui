@@ -717,42 +717,27 @@
             <span [hidden]="!refsetData?.memberCount">
                 &nbsp;{{'(' + refsetData?.memberCount + ')'}}
             </span>
-
-            <!-- <div class="set-of-buttons" *ngIf="allowedToEdit">
-
-                <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
-
-                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()"
-                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-list-modal>
-
-                <add-remove-by-concept-modal [refset]="refsetData" (reloadPageData)="processChangedMemberEffects()" (loadingSpinner)="toggleLoadingSpinner($event)"
-                    (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
-
-                <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
-                    (reloadPageData)="reloadMembersGridAndTaxonomy()" (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
-            </div> -->
         </div><br />
         <span *ngIf="allowedToEdit">
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id"
-                    [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                    [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy();"
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
 
                 <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id"
-                    [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                    [refsetId]="refsetId" (reloadPageData)="reloadMembersGridAndTaxonomy();"
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-list-modal>
 
                 <add-remove-by-concept-modal [refset]="refsetData"
-                    (reloadPageData)="processChangedMemberEffects()"
+                    (reloadPageData)="processChangedMemberEffects(); onMembersGridReady(originalGridParams); onTaxonomySearchGridReady(taxonomyGridParams); loadRefset()"
                     (loadingSpinner)="toggleLoadingSpinner($event)"
                     (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
 
                 <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id"
                     [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
-                    (reloadPageData)="reloadMembersGridAndTaxonomy()"
+                    (reloadPageData)="reloadMembersGridAndTaxonomy();"
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
 
             </mat-menu>
