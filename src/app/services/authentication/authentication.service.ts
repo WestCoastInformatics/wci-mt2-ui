@@ -50,11 +50,7 @@ export class AuthenticationService {
 
     generateImsUrl(endpoint: string): string {
 
-        let url = window.location.origin;
-
-        if (endpoint == 'login') {
-            url += '/login';
-        }
+        let url = window.location.origin + '/login';
          
         if (!window.location.origin.includes("local")) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
@@ -108,7 +104,7 @@ export class AuthenticationService {
                 console.log("Back end logged out");
             }
         );
-        
+
         window.location.href = this.generateImsUrl('logout');
     }
 
