@@ -1051,8 +1051,8 @@ button.refset-tool-table-action-icon {
     max-width: 30px;
 
     img {
-        width: 12.75px;
-        height: 10.5px;
+        width: 13px;
+        height: 12.75px;
         align-self: center;
         margin-left: 10px;
     }
@@ -1066,7 +1066,11 @@ button.refset-tool-table-action-icon {
 .refset-tool-concept-details-taxonomy-icon.taxonomy-icon-edit-mode{
     max-width: 50px;
 }
-
+.add-remove-concept-hierarchy-modal-parent-size .refset-tool-concept-details-taxonomy-icon{
+    img{
+        margin-left: 0;
+    }
+}
 .refset-tool-concept-details-taxonomy-description {
     margin-left: 10px;
 }
