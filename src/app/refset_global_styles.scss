@@ -587,7 +587,7 @@ button.refset-tool-table-action-icon {
     padding: 0px;
     .refset-tool-directory-column-information {
         justify-content: center;
-        padding-left: 3px;
+        padding-left: 12px;
     }
 
     .refset-tool-directory-column-information .refset-tool-table-action-icon {
@@ -676,8 +676,8 @@ button.refset-tool-table-action-icon {
 }
 
 #refsetDirectoryPage {
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .centerDownload {
