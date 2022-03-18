@@ -1106,10 +1106,9 @@
                                                 [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active">
                                                 <div>
                                                     <!-- Name -->
-                                                    <div class="row">
+                                                    <div class="row details-row">
 
-                                                        <div
-                                                            class="col-xs-1 col-sm-1 col-md-1 col-lg-1 refset-tool-concept-details-taxonomy-icon">
+                                                        <div class="refset-tool-concept-details-taxonomy-icon status-icon-container">
                                                             <img [hidden]="!conceptDetail.defined"
                                                                 title="Fully Defined"
                                                                 aria-label="Fully Defined"
@@ -1121,14 +1120,13 @@
                                                                 src="/assets/unlinedTaxonomyIcon.png" />
                                                         </div>
 
-                                                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 refset-tool-concept-details-concept-name"
+                                                        <div class="refset-tool-concept-details-concept-name"
                                                             title="{{conceptDescriptions[0].term}}"
                                                             aria-label="{{conceptDescriptions[0].term}}">
                                                             {{getFsn(conceptDescriptions)}}
                                                         </div>
 
-                                                        <div
-                                                            class="col-xs-1 col-xs-offset-11 col-sm-1 col-sm-offset-11 col-md-1 col-md-offset-11 col-lg-1 col-lg-offset-11">
+                                                        <div class="open-container">
                                                             <button mat-icon-button
                                                                 (click)="openInNewWindow(conceptDetail.code)"
                                                                 aria-hidden="false"
