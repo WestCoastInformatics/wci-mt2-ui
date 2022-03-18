@@ -108,12 +108,7 @@ export class AuthenticationService {
                 console.log("Back end logged out");
             }
         );
-
-        let redirect = function () {
-            window.location.href = window.location.origin;
-        }
         
-        setTimeout(redirect, 500);
         window.location.href = this.generateImsUrl('logout');
     }
 
