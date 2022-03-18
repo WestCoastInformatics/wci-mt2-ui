@@ -1078,7 +1078,18 @@ button.refset-tool-table-action-icon {
     font-size: 15px;
     padding-left: 0px !important;
 }
-
+.details-row{
+    
+    .status-icon-container{
+        width: 60px;
+    }
+    .refset-tool-concept-details-concept-name{
+        flex-grow: 2;
+    }
+    .open-container{
+        width: 60px;
+    }
+}
 .refset-tool-concept-details-section-title {
     font-weight: 400;
 }
