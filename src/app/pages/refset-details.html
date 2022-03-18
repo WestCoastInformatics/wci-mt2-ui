@@ -714,8 +714,12 @@
         <div class="refset-tool-refset-details-title-name refset-member-title">
 
             Reference Set Members
-            <span [hidden]="!refsetData?.memberCount">
+            <span *ngIf="refsetData?.memberCount">
                 &nbsp;{{'(' + refsetData?.memberCount + ')'}}
+            </span>
+            
+            <span *ngIf="!refsetData?.memberCount && membersGridNumberOfMembers">
+                &nbsp;{{'(' + membersGridNumberOfMembers + ')'}}
             </span>
         </div><br />
         <span *ngIf="allowedToEdit">
