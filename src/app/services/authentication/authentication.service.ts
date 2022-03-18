@@ -107,7 +107,8 @@ export class AuthenticationService {
             }
         );
 
-        window.location.href = this.generateImsUrl('logout')
+        window.location.href = this.generateImsUrl('logout');
+        window.location.href = this.generateImsUrl(window.location.origin);
     }
 
     isAuthenticated(): boolean {
