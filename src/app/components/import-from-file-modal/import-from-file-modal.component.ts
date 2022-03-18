@@ -136,7 +136,9 @@ export class ImportFromFileModalComponent implements OnInit {
     deleteFile(index: number) {
 
         this.files.splice(index, 1);
-        this.disableActionButtons = true;
+        if (!this.files.length) {
+            this.disableActionButtons = true;
+        }
     }
 
     /**
