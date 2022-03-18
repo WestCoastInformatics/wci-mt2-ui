@@ -1013,7 +1013,6 @@ export class RefsetDetails {
                         filter: false,
                         tooltipField: "active",
                         sortable: false,
-                        pinned: 'right',
                         resizable: false
                     },
                 ]
