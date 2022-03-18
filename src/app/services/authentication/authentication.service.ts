@@ -109,7 +109,7 @@ export class AuthenticationService {
             }
         );
 
-        this.restService.get(this.generateImsUrl('logout'), false, true).subscribe(results => { });
+        this.restService.get(this.generateImsUrl('logout'), false, true).subscribe(results => { alert("Hello");});
         //window.location.href = this.generateImsUrl('logout');
         window.location.href = window.location.origin;
     }
