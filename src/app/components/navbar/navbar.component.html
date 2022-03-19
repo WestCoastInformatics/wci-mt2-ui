@@ -34,12 +34,15 @@
             assignedUser() }}</span>
     </div>
 
-    <div *ngIf="!breadcrumbsHasDir()" class="directory-nav" routerLink="/directory"><img
-            class="directory-icon" src="/assets/directory-icon.svg"><span
-            class="directory-icon-label">Directory</span></div>
-    <div *ngIf="isUserLoggedIn && !breadcrumbsHasProjects()" class="project-nav"
-        routerLink="/projects"><img class="projects-icon" src="/assets/projects-icon.svg"><span
-            class="projects-icon-label">Projects</span></div>
+    <div class="directory-nav" routerLink="/directory">
+        <img class="directory-icon" src="/assets/directory-icon.svg">
+        <span class="directory-icon-label">Directory</span>
+    </div>
+
+    <div *ngIf="isUserLoggedIn" class="project-nav" routerLink="/projects">
+        <img class="projects-icon" src="/assets/projects-icon.svg">
+        <span class="projects-icon-label">Projects</span>
+    </div>
 
     <div *ngIf="isUserLoggedIn" class="float-right mx-3">
         <div class="user d-inline-block m-2">
