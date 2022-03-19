@@ -237,6 +237,7 @@ export class RefsetDetails {
 
         this.editMode = false;
         this.isLocked = false;
+        this.showFlag = true;
         this.refsetLoaded = new Subject<boolean>();
         this.refsetLoaded$ = this.refsetLoaded.asObservable();
         this.memberCacheLoaded = new Subject<boolean>();
@@ -1684,7 +1685,7 @@ export class RefsetDetails {
         });
     }
 
-    showFlagIcon(shouldShow: boolean) {
-        this.showFlag = shouldShow;
+    showFlagIcon(event: any) {
+        this.showFlag = false;
     }
 }

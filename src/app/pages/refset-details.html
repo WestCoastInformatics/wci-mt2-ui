@@ -380,7 +380,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.editionName}}
-                                        <img *ngIf="showFlag" (error)="showFlagIcon(false)" class="refset-tool-edition-flag" src="{{refsetData?.flagIcon}}" 
+                                        <img *ngIf="showFlag" (error)="showFlagIcon($event)" class="refset-tool-edition-flag" src="{{refsetData?.flagIcon}}" 
                                             title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
