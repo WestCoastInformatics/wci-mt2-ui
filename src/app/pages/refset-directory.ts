@@ -532,12 +532,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         return refsetData?.descriptions;
     }
 
-    showFlagIcon(element, show) {
+    showFlagIcon(event, show) {
         
         if (show) {
-            element.style.display = 'inline';
+            event.target.style.display = 'inline';
         } else {
-            element.style.display = 'none';
+            event.target.style.display = 'none';
         }
     }
 }
