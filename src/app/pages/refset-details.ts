@@ -149,6 +149,7 @@ export class RefsetDetails {
     workflowHistoryColumnDefs: any;
     refsetStatus: string;
     updateToggled = false;
+    showFlag = true;
     adminToggled = false;
     workflowHistoryDataSource: any;
     workflowHistoryNotes: string;
@@ -1681,5 +1682,9 @@ export class RefsetDetails {
           //keyboard : false,
           windowClass: 'alert-modal'
         });
+    }
+
+    showFlagIcon(shouldShow: boolean) {
+        this.showFlag = shouldShow;
     }
 }
