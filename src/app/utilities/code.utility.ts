@@ -32,9 +32,9 @@ export class CodeUtility {
      */
     static addIfNotEmpty(originalString: string, stringToAdd: string, addToEnd: boolean = true, addOr = false): string {
 
-        if (this.hasValue(originalString)){
+        if (this.hasValue(originalString)) {
 
-            if (addToEnd){
+            if (addToEnd) {
 
                 if (addOr) {
                     return `${originalString} AND ${stringToAdd}`;
@@ -45,13 +45,13 @@ export class CodeUtility {
             } else {
                 return stringToAdd + originalString;
             }
-            
+
         } else {
 
             if (addOr) {
                 return `${stringToAdd}`;
             }
-            
+
             return originalString;
         }
     }
@@ -61,7 +61,7 @@ export class CodeUtility {
      */
     static removeFinal(str: string, charsToRemove: string): string {
 
-        let  regex = new RegExp(`${charsToRemove}\s*$`);
+        let regex = new RegExp(`${charsToRemove}\s*$`);
         return str.replace(regex, "");
     }
 
@@ -160,31 +160,31 @@ export class CodeUtility {
     /*
      * stripHtml - return a string with all HTML tags removed from it.
      */
-    static stripHtml(html){
+    static stripHtml(html) {
 
         let doc = new DOMParser().parseFromString(html, 'text/html');
         return doc.body.textContent || "";
-     }
+    }
 
     /*
      * clone - return cloned copy of the object with new object references. Cannot process circular references
      */
-    static clone(object){
+    static clone(object) {
 
         return JSON.parse(JSON.stringify(object));
-     }
+    }
 
-     /*
-     * textOverflow - return a string up to a certain number of characters with '...' at the end if it excedes the limit.
-     */
-    static textOverflow(text: string, characterLimit: number){
+    /*
+    * textOverflow - return a string up to a certain number of characters with '...' at the end if it excedes the limit.
+    */
+    static textOverflow(text: string, characterLimit: number) {
 
-        if (text.length <= characterLimit){
+        if (text.length <= characterLimit) {
             return text;
         } else {
             return text.substr(0, characterLimit);
         }
-     }
+    }
 
     /*
      * toTitleCase - return the supplied string in title case.
@@ -200,11 +200,15 @@ export class CodeUtility {
             .join(splitter);
     }
 
+    static async delay(delayMilliseconds = 200) {
+        return await new Promise(resolve => setTimeout(resolve, delayMilliseconds));
+    }
+
     static parseJsonDate(jsonDate) {
 
-        if (this.hasValue(jsonDate)){
-            
-            let date = moment.unix(jsonDate/1000)
+        if (this.hasValue(jsonDate)) {
+
+            let date = moment.unix(jsonDate / 1000)
 
             if (date.isValid()) {
                 return date.utc();
@@ -214,14 +218,14 @@ export class CodeUtility {
         } else {
             return jsonDate;
         }
-        
+
     }
 
     static formatJsonDate(jsonDate: string, format: string = this.DATE_FORMAT_REVERSE) {
 
         let date = this.parseJsonDate(jsonDate);
 
-        if (date !== jsonDate){
+        if (date !== jsonDate) {
             return date.format(format);
         } else {
             return jsonDate;
@@ -232,7 +236,7 @@ export class CodeUtility {
 
         let date = moment(dateString, format, true);
 
-        if (date.isValid()){
+        if (date.isValid()) {
             return true;
         } else {
             return false;

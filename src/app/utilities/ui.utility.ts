@@ -256,6 +256,9 @@ export class UiUtility {
     // Function for background processesing of lengthy refset tasks, and notification to user of the status of those tasks
     static manageNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
+        // set a small delay so the original call has some time to process
+        CodeUtility.delay();
+
 		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
 				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
 		let notification = notificationService.show(message, null, 'info', {timeOut: 0, extendedTimeOut: 0});
