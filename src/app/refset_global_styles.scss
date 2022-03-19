@@ -3382,6 +3382,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     border-right: 1px solid #797979;
     height: 50px;
     cursor: pointer;
+    padding-top: 4px;
+
+    img {
+        padding-bottom: 3px;
+    }
 }
 
 .projects-icon {
