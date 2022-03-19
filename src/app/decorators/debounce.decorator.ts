@@ -3,7 +3,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 /**
  * Debounce a method
  */
-export function Debounce(milliseconds = 500) {
+export function Debounce(milliseconds = 800) {
 
   return function(target: any, key: any, descriptor: any) {
 

@@ -712,13 +712,10 @@
 
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name refset-member-title">
+            Reference Set Members &nbsp; ({{refsetData?.memberCount}})  
+        </div>
 
-            Reference Set Members
-            <span [hidden]="!refsetData?.memberCount">
-                &nbsp;{{'(' + refsetData?.memberCount + ')'}}
-            </span>
-            
-        </div><br />
+        <br />
         <span *ngIf="allowedToEdit">
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
