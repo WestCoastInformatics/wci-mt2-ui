@@ -339,17 +339,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     }
 
-    editionValueGetter = function (params) {
-
-        if (!CodeUtility.hasValue(params?.data)) {
-            return '';
-        }
-
-        let flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
-        params.data.flagIcon = flagIcon;
-        return params?.data?.edition?.name;
-    };
-
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'information' || event.column.colId === 'actions') {

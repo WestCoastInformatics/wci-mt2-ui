@@ -114,11 +114,9 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{data?.edition?.name}}
-                                        <img class="refset-tool-edition-flag"
-                                            src="{{data?.flagIcon}}" *ngIf="data?.flagIcon != ''"
-                                            [hidden]="!data?.flagIcon"
-                                            title="{{data?.editionName}} Flag"
-                                            aria-label="{{data?.editionName}} Flag" />
+                                        <img *ngIf="data?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{data?.flagIcon}}" 
+                                            class="refset-tool-edition-flag" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag" />
+
                                     </td>
                                 </tr>
 
@@ -206,11 +204,8 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{data?.project?.organization?.name}}
-                                        <img class="refset-tool-edition-flag"
-                                            src="{{data?.flagIcon}}" *ngIf="data?.flagIcon != ''"
-                                            [hidden]="!data?.flagIcon"
-                                            title="{{data?.editionName}} Flag"
-                                            aria-label="{{data?.editionName}} Flag" />
+                                        <img *ngIf="data?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{data?.flagIcon}}" 
+                                            class="refset-tool-edition-flag" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag" />
                                     </td>
                                 </tr>
 

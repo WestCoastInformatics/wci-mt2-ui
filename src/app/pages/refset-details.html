@@ -380,7 +380,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.editionName}}
-                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon($event)" src="{{refsetData?.flagIcon}}" 
+                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}" 
                                             class="refset-tool-edition-flag" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
@@ -500,12 +500,8 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.organizationName}}
-                                        <img class="refset-tool-edition-flag"
-                                            src="{{refsetData?.flagIcon}}"
-                                            *ngIf="refsetData?.flagIcon != ''"
-                                            [hidden]="!refsetData?.flagIcon"
-                                            title="{{refsetData?.editionName}} Flag"
-                                            aria-label="{{refsetData?.editionName}} Flag" />
+                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}" 
+                                            class="refset-tool-edition-flag" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
 

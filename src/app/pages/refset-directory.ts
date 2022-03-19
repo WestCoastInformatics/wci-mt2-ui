@@ -54,6 +54,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     showFullNarrativeText = false;
     showFullNotesText = false;
     showLoadingSpinner = false;
+    showFlag = true;
+    toggleDropdown = false;
+    numOfResults: any;
+    directUrl: string;
+    numOfMembers: any;
+    disableChannel = new BroadcastChannel('disable-button-channel');
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -63,14 +69,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
-    @Output() loadingSpinner = new EventEmitter<boolean>(true);
-    toggleDropdown = false;
-    numOfResults: any;
-    directUrl: string;
-    numOfMembers: any;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
-    
-    disableChannel = new BroadcastChannel('disable-button-channel');
+
+    @Output() loadingSpinner = new EventEmitter<boolean>(true);
 
     constructor(
         private router: Router,
@@ -530,5 +531,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     setDescriptions(refsetData: any): Array<string> {
         return refsetData?.descriptions;
+    }
+
+    showFlagIcon(showFlag: boolean) {
+        this.showFlag = showFlag;
     }
 }

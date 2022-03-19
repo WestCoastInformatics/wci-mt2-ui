@@ -1685,7 +1685,7 @@ export class RefsetDetails {
         });
     }
 
-    showFlagIcon(event: any) {
-        this.showFlag = false;
+    showFlagIcon(showFlag: boolean) {
+        this.showFlag = showFlag;
     }
 }
