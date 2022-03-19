@@ -625,6 +625,13 @@ export class UiUtility {
         return rolesToShow.join(', ');
     }
 
+    static doesImageExist(url, callback) {
+
+        let image = new Image();
+        image.onload = function() { callback(true); };
+        image.onerror = function() { callback(false); };
+    }
+
     //***** AG Grid Function to apply data and paging to table *****/
     static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 

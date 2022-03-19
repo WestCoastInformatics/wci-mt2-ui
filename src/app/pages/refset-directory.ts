@@ -54,7 +54,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     showFullNarrativeText = false;
     showFullNotesText = false;
     showLoadingSpinner = false;
-    showFlag = true;
     toggleDropdown = false;
     numOfResults: any;
     directUrl: string;
@@ -533,7 +532,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         return refsetData?.descriptions;
     }
 
-    showFlagIcon(showFlag: boolean) {
-        this.showFlag = showFlag;
+    showFlagIcon(element, show) {
+        
+        if (show) {
+            element.style.display = 'inline';
+        } else {
+            element.style.display = 'none';
+        }
     }
 }

@@ -114,7 +114,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{data?.edition?.name}}
-                                        <img *ngIf="data?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{data?.flagIcon}}" 
+                                        <img (load)="showFlagIcon(this, true)" (error)="showFlagIcon(this, false)" src="{{data?.flagIcon}}" 
                                             class="refset-tool-edition-flag" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag" />
 
                                     </td>
@@ -204,7 +204,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{data?.project?.organization?.name}}
-                                        <img *ngIf="data?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{data?.flagIcon}}" 
+                                        <img (load)="showFlagIcon(this, true)" (error)="showFlagIcon(this, false)" src="{{data?.flagIcon}}" 
                                             class="refset-tool-edition-flag" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag" />
                                     </td>
                                 </tr>
@@ -288,10 +288,8 @@
 
         <!-- Edition Templates -->
         <ng-template #directoryEditionSection let-params>
-            <img class="refset-tool-edition-flag" src="{{params?.data?.flagIcon}}"
-                *ngIf="params?.data?.flagIcon != ''" [hidden]="!params?.data?.flagIcon"
-                title="{{params?.data?.editionName}} Flag"
-                aria-label="{{params?.data?.editionName}} Flag" />
+            <img (load)="showFlagIcon(this, true)" (error)="showFlagIcon(this, false)" src="{{params?.data?.flagIcon}}" 
+                class="refset-tool-edition-flag" title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag" />
             {{params?.data?.edition?.name}}
         </ng-template>
 
