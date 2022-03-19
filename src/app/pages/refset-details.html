@@ -1112,7 +1112,7 @@
                                                         <div class="refset-tool-concept-details-concept-name"
                                                             title="{{conceptDescriptions[0].term}}"
                                                             aria-label="{{conceptDescriptions[0].term}}">
-                                                            {{getFsn(conceptDescriptions)}}
+                                                            {{getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptions[0].term}}
                                                         </div>
 
                                                         <div class="open-container">
