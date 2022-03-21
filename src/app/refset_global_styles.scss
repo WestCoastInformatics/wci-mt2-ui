@@ -1079,7 +1079,7 @@ button.refset-tool-table-action-icon {
     padding-left: 0px !important;
 }
 .details-row{
-    
+
     .status-icon-container{
         width: 60px;
     }
@@ -2584,9 +2584,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .add-remove-concept-hierarchy-modal-table {
-    height: 542px;
+    height: 37rem;
     overflow-x: scroll;
-    overflow: overlay;
+    overflow:auto;
     border-width: 2px;
     border-style: solid;
     border-color: rgba(215, 215, 215, 1);
