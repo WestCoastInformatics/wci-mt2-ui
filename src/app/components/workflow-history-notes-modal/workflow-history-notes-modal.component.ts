@@ -17,7 +17,7 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
 	title: string;
 
 	@Input() workflowHistoryNotes: string;
-	@Input() refsetId: string;
+	@Input() refsetInternalId: string;
 	@Input() user: string;
 	@Input() disabled = false;
 	@Input() status: string;
@@ -73,7 +73,7 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
 	
 		modal.close('Save');
 		this.refsetDetails.ngOnInit();
-		this.workflowService.saveNotes(this.refsetId, this.workflowHistoryNotes);
+		this.workflowService.saveNotes(this.refsetInternalId, this.workflowHistoryNotes);
 		this.workflowHistoryNotes = '';
 		this.refsetDetails.ngOnInit();
 	}

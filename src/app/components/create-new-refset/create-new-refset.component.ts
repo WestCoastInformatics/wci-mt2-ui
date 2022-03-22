@@ -5,7 +5,6 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { firstValueFrom } from 'rxjs';
 import { Route, Router } from '@angular/router';
-import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
@@ -74,7 +73,6 @@ export class CreateNewRefsetComponent implements OnInit {
         private detectChanges: ChangeDetectorRef,
         private router: Router,
         private refsetService: RefsetService,
-        private readonly workflowService: WorkflowService,
         private readonly refsetDetails: RefsetDetails,
         private readonly notificationService: NotificationService,
         private readonly projectsRefsetComponent: ProjectsRefsetComponent

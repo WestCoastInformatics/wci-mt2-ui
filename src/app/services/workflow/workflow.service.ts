@@ -8,22 +8,22 @@ import { RefsetService } from '../rest/refset.service';
 export class WorkflowService {
     constructor(private readonly refsetService: RefsetService) {}
 
-    saveNotes(refsetId: string, workflowHistoryNotes: string): void {
+    saveNotes(refsetInternalId: string, workflowHistoryNotes: string): void {
         this.refsetService
-            .updateWorkflowStatus(refsetId, workflowHistoryNotes)
+            .updateWorkflowStatus(refsetInternalId, workflowHistoryNotes)
             .subscribe((results) => {
                 console.log(results);
             });
     }
 
     setWorkflowStatusByAction(
-        refsetId: string,
+        refsetInternalId: string,
         user: string,
         action: string,
         workflowHistoryNotes: string
     ): Observable<any> {
         return this.refsetService.setWorkflowStatusByAction(
-            refsetId,
+            refsetInternalId,
             action,
             user,
             workflowHistoryNotes
