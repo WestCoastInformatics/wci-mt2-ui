@@ -121,7 +121,10 @@ export class RefsetUtility {
         let countryCode = branch.toLowerCase().substring(branch.toLowerCase().lastIndexOf('/snomedct-') + 10);
         let image = '';
 
-        if (countryCode != '' && countryCode != branch.toLowerCase()){
+        if (countryCode != '' && countryCode != branch.toLowerCase()) {
+            if (countryCode.includes('upd')) {
+                countryCode = countryCode.split('upd')[0];
+            }
             image = '/assets/flags/' + countryCode + '.png';
         }
 
