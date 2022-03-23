@@ -220,7 +220,7 @@ export class RefsetDetails {
     }
 
     //***** Framework Functions *****/
-    ngOnInit() { 
+    ngOnInit() {
 
         Object.freeze(this.stepperStartInfo);
 
@@ -259,7 +259,7 @@ export class RefsetDetails {
                 { path: "/directory", label: "Directory" },
                 { label: "Refset Details" },
             ]);
-            
+
         }
 
         var allObservables = {
@@ -270,7 +270,7 @@ export class RefsetDetails {
         this.refsetLoaded$.pipe(take(1)).subscribe((loaded) => {
 
             this.loadWorkflowHistoryData();
-            
+
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -400,7 +400,7 @@ export class RefsetDetails {
                     },
                 },
             };
-            
+
             this.showLoadingSpinner = false;
         });
 
@@ -423,11 +423,11 @@ export class RefsetDetails {
             this.allowedToReview = false;
             this.changeDetectorRef.detectChanges();
 
-            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')  ) || 
+            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')  ) ||
                 (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
                 this.editMode = true;
             }
-            
+
             if (this.editMode) {
 
                 this.refreshWorkflow();
@@ -504,7 +504,7 @@ export class RefsetDetails {
             }
 
             this.showLoadingSpinner = false;
-            
+
         },
         error: (error) => {
             this.toggleLoadingSpinner(false);
@@ -549,7 +549,7 @@ export class RefsetDetails {
                 this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
                 this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
                 this.stepperInfo['IN_REVIEW_STARTED'] = true;
-                
+
             } else if (this.refsetStatus?.includes('REVIEW_COMPLETED')) {
 
                 this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
@@ -562,7 +562,7 @@ export class RefsetDetails {
                 this.stepperInfo['IN_REVIEW_STARTED'] = true;
                 this.stepperInfo['REVIEW_COMPLETED_COLOR'] = stepperClass;
                 this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
-                
+
             } else if (this.refsetStatus?.includes('READY_FOR_PUBLICATION')) {
 
                 this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
@@ -577,7 +577,7 @@ export class RefsetDetails {
                 this.stepperInfo['REVIEW_COMPLETED_STARTED'] = true;
                 this.stepperInfo['READY_FOR_PUBLICATION_COLOR'] = stepperClass;
                 this.stepperInfo['READY_FOR_PUBLICATION_STARTED'] = true;
-                
+
             }
 
             if (this.refsetData?.availableActions?.includes('FINISH_EDIT')) {
@@ -617,7 +617,7 @@ export class RefsetDetails {
     }
 
     loadTaxonomyRoot() {
-        
+
         let restParams = {
             displayType: "taxonomy",
             returnStartingConcept: true,
@@ -661,7 +661,7 @@ export class RefsetDetails {
 
         // if concept details is present reload the concept details child tree
         if (CodeUtility.hasValue(this.conceptDetail)) {
-            
+
             delete this.conceptDetail.children;
             this.conceptDetail = CodeUtility.clone(this.conceptDetail);
             this.loadConceptDetailParents(this.conceptDetail);
@@ -679,7 +679,7 @@ export class RefsetDetails {
 
         // if concept details is present reload the concept details child tree
         if (CodeUtility.hasValue(this.conceptDetail)) {
-            
+
             delete this.conceptDetail.children;
             this.conceptDetail = CodeUtility.clone(this.conceptDetail);
             this.loadConceptDetailParents(this.conceptDetail, this.getConceptDetailLanguageWithoutType());
@@ -869,7 +869,7 @@ export class RefsetDetails {
 
     //***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
-        
+
         this.originalGridParams = gridReadyParams;
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
@@ -939,7 +939,7 @@ export class RefsetDetails {
                 this.membersGridApi.setRowData([]);
 
                 if (pageNumber > 1) {
-                        
+
                     this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
                     this.membersGridPaging.totalKnown = true;
                     this.membersPaginationComponent.goToPage(pageNumber - 1);
@@ -970,7 +970,7 @@ export class RefsetDetails {
                 let language = this.languageOptions[i];
                 let minWidth =
                     language.value === "101FSN" ? 250 : 190;
-                    
+
                 this.membersColumnDefs.push({
                     field: i.toString(),
                     flex: 1,
@@ -991,6 +991,7 @@ export class RefsetDetails {
                         colId: "modified",
                         flex: 1,
                         minWidth: 180,
+                        maxWidth: 180,
                         headerName: "Modified Date",
                         cellClass:
                             "refset-tool-details-column-modified-date",
@@ -999,11 +1000,12 @@ export class RefsetDetails {
                         tooltipField: "memberEffectiveTime",
                         sort: "desc",
                         floatingFilterComponent: 'dateTextFilterComponent',
-                        floatingFilterComponentParams: {suppressFilterButton: true}
+                        floatingFilterComponentParams: {suppressFilterButton: true},
                     },
                     {
                         field: "active",
                         colId: "actions",
+                        flex: 1,
                         headerName: "",
                         minWidth: 120,
                         cellClass:
@@ -1097,11 +1099,11 @@ export class RefsetDetails {
     setWorkflowStatusByAction(notes: string, action: string): void {
 
         this.toggleLoadingSpinner(true);
-    
+
         this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({next: (results) => {
-                
+
             if (results) {
-                
+
                 if (action.includes('UNASSIGN')) {
                     this.router.navigateByUrl('projects');
 
@@ -1126,7 +1128,7 @@ export class RefsetDetails {
 
             // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             //     this.router.navigate(['/details', this.id]);
-            // }); 
+            // });
 
             // this.changeDetectorRef.detectChanges();
         },
@@ -1149,7 +1151,7 @@ export class RefsetDetails {
             }
         });
     };
-    
+
     addRemoveConcept(params: any): void {
 
         this.isConceptBeingAdded = new Boolean(params.addConcept);
@@ -1185,15 +1187,15 @@ export class RefsetDetails {
             if (this.isAddRemoveInDetailsPanel) {
                 this.loadConceptDetail(this.selectedConcept);
                 this.reloadMembersGridAndTaxonomy();
-    
+
             } else {
                 this.reloadMembersGridAndTaxonomy();
                 this.showLoadingSpinner = false;
-            } 
+            }
         }
-        
+
     }
-    
+
     reloadMembersGridAndTaxonomy(){
         this.resetRefsetTotal = true;
 
@@ -1287,7 +1289,7 @@ export class RefsetDetails {
     loadConceptDetailParents(concept, language = this.getTaxonomyLanguageWithoutType()) {
 
         this.conceptDetailParents = [];
-        
+
         if (!concept?.active) {
             return;
         }
@@ -1595,7 +1597,7 @@ export class RefsetDetails {
         if (!this.refsetData) {
             return '';
         }
-        
+
         return UiUtility.getRoleString(this.refsetData.roles);
     }
 
@@ -1625,7 +1627,7 @@ export class RefsetDetails {
         return new Date(dateTime).toLocaleDateString() + ' ' + new Date(dateTime).toLocaleTimeString();
     }
 
-	
+
     getFsn(descriptions: any)  : string{
         for (let description of descriptions) {
         	if (description.languageName.toLowerCase().indexOf("fsn") > 0) {
@@ -1633,7 +1635,7 @@ export class RefsetDetails {
 			}
 		}
     }
-	
+
     showMembersSearchBar(): boolean {
         return (
             (this.showTable &&
