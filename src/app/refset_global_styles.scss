@@ -1044,6 +1044,21 @@ button.refset-tool-table-action-icon {
 // #detailsMembersTree tree-viewport {
 //     overflow: unset !important;
 // }
+#detailsMembersTree .tree-children{
+    overflow: unset;
+    padding-left: 0;
+}
+#detailsMembersTree tree-node{
+    position: relative;
+}
+#detailsMembersTree tree-node:nth-child(even){
+    background-color: #f5f5f5;
+    display: block;
+}
+#detailsMembersTree tree-node:nth-child(odd){
+    background-color: #fff;
+    display: block;
+}
 .children-section {
     height: 623px;
 }

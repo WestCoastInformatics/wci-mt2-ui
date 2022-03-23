@@ -17,16 +17,18 @@
             <ng-container *ngIf="editMode">
                 <add-remove-concepts-icons [concept]="node?.data" [isInDetailsPanel]="isInDetailsPanel" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
             </ng-container>
-            <tree-node-expander class="glyphicon glyphicon-chevron-down custom-inner-chevron" style="display:inline-block" [node]="node" (click)="showSpinner()"></tree-node-expander>
 
-            <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-            <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
+            <div [style]="getNodeAddIconMargin(node)" >
+                <tree-node-expander class="glyphicon glyphicon-chevron-down custom-inner-chevron" style="display:inline-block" [node]="node" (click)="showSpinner()"></tree-node-expander>
+                <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+                <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
 
-            <span id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}" class="taxonomy-code-text" 
-                [class.bold-if-member]="node?.data?.memberOfRefset && editMode" [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
-                (click)="sendConceptDetailTrigger(node.data);" title="{{ getNodeText(node) }}" aria-label="{{ getNodeText(node) }}">
-                {{ getNodeText(node) }}
-            </span>
+                <span id="{{ node?.parent?.data?.code + '-' + node?.data?.code }}" class="taxonomy-code-text" 
+                    [class.bold-if-member]="node?.data?.memberOfRefset && editMode" [class.greyed-if-not-member]="!node?.data?.memberOfRefset && editMode"
+                    (click)="sendConceptDetailTrigger(node.data);" title="{{ getNodeText(node) }}" aria-label="{{ getNodeText(node) }}">
+                    {{ getNodeText(node) }}
+                </span>
+            </div>
 
         </ng-template>
     </tree-root>
