@@ -75,7 +75,7 @@
         </ng-template>
 
         <ng-template #directoryInfoDialog let-data>
-            <div class="container-fluid" id="directoryInformationSection">
+            <div class="container-fluid" id="directoryInformationSection" style="overflow: auto;min-width: 350px;">
                 <div class="row refset-tool-refset-details-title-name" style="display: block;"
                     title="{{data.name}}" aria-label="{{data.name}}">
                     <p style="font-size:18px; margin-bottom: 0px;">{{data.name}}</p>
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="row refset-tool-refset-metadata-section">
-                    <div class="col refset-tool-refset-metadata-column">
+                    <div class="col refset-tool-refset-metadata-column col-md-6 col-12">
                         <table class="
                                 refset-tool-refset-metadata-table
                                 table-striped
@@ -175,7 +175,7 @@
                         </table>
                     </div>
 
-                    <div class="col refset-tool-refset-metadata-column">
+                    <div class="col refset-tool-refset-metadata-column col-md-6 col-12">
                         <table class="
                                 refset-tool-refset-metadata-table
                                 table-striped
