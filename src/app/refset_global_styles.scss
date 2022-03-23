@@ -1078,16 +1078,31 @@ button.refset-tool-table-action-icon {
     font-size: 15px;
     padding-left: 0px !important;
 }
+
+.refset-tool-concept-details-concept-info-column-title table {
+    padding: 0px;
+    margin: none;
+}
+
+.refset-tool-concept-details-concept-info-column-title td {
+    padding: 2px
+}
+
 .details-row{
 
     .status-icon-container{
-        width: 60px;
+        width: 30px;
     }
     .refset-tool-concept-details-concept-name{
+        text-align: center;
         flex-grow: 2;
     }
     .open-container{
-        width: 60px;
+        padding: none;
+        .mat-button .mat-button-wrapper>*, .mat-flat-button .mat-button-wrapper>*, .mat-stroked-button .mat-button-wrapper>*, .mat-raised-button .mat-button-wrapper>*, .mat-icon-button .mat-button-wrapper>*, .mat-fab .mat-button-wrapper>*, .mat-mini-fab .mat-button-wrapper>*
+        {
+            vertical-align: top !important;
+        }
     }
 }
 .refset-tool-concept-details-section-title {
@@ -1141,7 +1156,15 @@ button.refset-tool-table-action-icon {
 .refset-tool-concept-details-action-icon {
     width:25px !important;
     height:25px !important;
+    vertical-align: top !important;
 }
+
+
+// //override position
+// .mat-button .mat-button-wrapper>*, .mat-flat-button .mat-button-wrapper>*, .mat-stroked-button .mat-button-wrapper>*, .mat-raised-button .mat-button-wrapper>*, .mat-icon-button .mat-button-wrapper>*, .mat-fab .mat-button-wrapper>*, .mat-mini-fab .mat-button-wrapper>*
+// {
+//     vertical-align: top !important;
+// }
 
 #refset-block {
     padding:2px;
