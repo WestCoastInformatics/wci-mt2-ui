@@ -962,6 +962,7 @@ export class RefsetDetails {
                         template: this.conceptCodeSection,
                     },
                     tooltipField: "code",
+                    resizable: false
                 },
             ];
 
