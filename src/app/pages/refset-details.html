@@ -131,7 +131,7 @@
                             [refsetInternalId]="id" [inputProperties]="editMetadataProperties"
                             (processChangedMemberEffects)="processChangedMemberEffects()">
                         </create-new-refset>
-                        <workflow-history-notes-modal [refsetInternalId]="id"
+                        <workflow-history-notes-modal [refsetId]="id"
                             [user]="refsetData?.modifiedBy"
                             [hidden]="!allowedToEdit && !allowedToReview" [status]="refsetStatus"
                             [workflowHistoryNotes]="workflowHistoryNotes">
@@ -257,8 +257,8 @@
                         Reject Refset
                     </button>
 
-                    <review-modal *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
-                        [refsetInternalId]="refsetData.id"
+                    <review-modal
+                        *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
                         (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
                     </review-modal>
 
@@ -380,7 +380,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.editionName}}
-                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}"
+                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}" 
                                             class="refset-tool-edition-flag" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
@@ -500,7 +500,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.organizationName}}
-                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}"
+                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}" 
                                             class="refset-tool-edition-flag" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
@@ -704,7 +704,7 @@
 
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name refset-member-title">
-            Reference Set Members ({{refsetData?.memberCount}})
+            Reference Set Members ({{refsetData?.memberCount}})  
         </div>
 
         <br />
@@ -850,7 +850,7 @@
                                 <!-- Members Table -->
                                 <div class="container-fluid" [style.display]="membersTableDisplay">
                                     <ag-grid-angular #detailsMembersTable *ngIf="showTable"
-                                        style="height:622px"
+                                        style="max-height:622px"
                                         class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                                         [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
                                         [columnDefs]="membersColumnDefs"
