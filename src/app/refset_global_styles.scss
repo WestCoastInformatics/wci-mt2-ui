@@ -1354,6 +1354,12 @@ button.refset-tool-table-action-icon {
 .refset-tool-refset-metadata-column:first-child {
     margin: 1.5rem 1.5rem 0 0;
 }
+@media (min-width: 768px)
+{
+    .refset-tool-refset-metadata-column:first-child.col-md-6 {
+        max-width: calc(50% - 1.5rem);
+    }
+}
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: white !important;
