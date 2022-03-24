@@ -157,20 +157,19 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             windowClass: "add-remove-concept-hierarchy-modal-size",
             animation: true,
             beforeDismiss: () => {
+                if (!this.isLocked) {
+                    this.sendReloadPageDataTrigger(true);
+                }
                 this.refreshModal();
                 return true;
-            },
+            }
             //backdrop: "static",
             //keyboard: false,
         });
+
     }
 
     closeModal() {
-
-        if (!this.isLocked) {
-            this.sendReloadPageDataTrigger(true);
-        }
-
         this.openedModel.dismiss();
     }
 
