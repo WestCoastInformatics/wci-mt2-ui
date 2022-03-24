@@ -46,6 +46,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   @ViewChild('adjudicateReplacementFrPtSection') replacementFrPtSection: TemplateRef<any>;
   @ViewChild('adjudicateReplacementNlPtSection') replacementNlPtSection: TemplateRef<any>;
   @ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
+  // @ViewChild('actionSection') actionSection: TemplateRef<any>;
+
   gridOptions: any;
   columnDefs: any;
   refsetGridOptions: any;
@@ -67,6 +69,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   isReplacement: boolean;
   resetRefsetTotal = false;
   changeMethod = '';
+  // selectedRow: any;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -94,6 +97,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150,maxWidth:160,  cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
       { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
+      // { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
 
     this.refsetGridOptions = {
@@ -122,16 +126,21 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
   }
 
+  // onCellMouseOver(params) {
+  //   this.selectedRow = params;
+  // }
+
+  // getSelectedRowData() {
+  //   console.log(this.selectedRow?.rowIndex);
+  //   console.log(this.selectedRow?.data);
+  // }
+
   addRemoveConcept(params: any, isReplacement: boolean, changeMethod: string): void {
     this.addRemoveConceptsComponent.changeMethod = changeMethod;
     this.addRemoveConceptsComponent.refset = this.refsetData;
     this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
     this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-    if (isReplacement) {
-      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params.replacementConcecpts[0]);
-    } else {
-      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params);
-    }
+      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
 }
 
 changeLockedStatus(lock: boolean) {

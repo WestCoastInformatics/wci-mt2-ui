@@ -45,8 +45,13 @@ export class RefsetService extends RestService {
     }
 
 
-    modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}`, '', true);
+    modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string): Observable<any> {
+        console.log(replacementConceptId)
+        let replacementCode = '';
+        if (replacementConceptId) {
+            replacementCode = '&replacementConceptId=' + replacementConceptId
+        }
+        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}${replacementCode}`, '', true);
     }
 
     addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {

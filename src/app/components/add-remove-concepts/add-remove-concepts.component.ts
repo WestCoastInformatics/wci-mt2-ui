@@ -39,6 +39,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Output() selectedEvent = new EventEmitter<string>();
 
 	@ViewChild("addRemoveDescendantsDialog") dialogSection: TemplateRef<any>;
+	replacementCode: any;
 
 	constructor(private readonly modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) { }
 
@@ -72,8 +73,10 @@ export class AddRemoveConceptsComponent implements OnInit {
 		}
 	}
 
-	addRemoveConceptsForAdjudication(conceptForAddRemove: any): void {
-		this.conceptCode = conceptForAddRemove?.code;
+	addRemoveConceptsForAdjudication(inactiveData: any, replacementData: any): void {
+		this.conceptCode = inactiveData?.code;
+		this.replacementCode = replacementData?.code;
+		console.log(this.replacementCode)
 		if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
 			this.actionText = "Add";
 		} else {
@@ -116,16 +119,25 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 		if (changeMethod) {
 
-			if (changeMethod === 'INACTIVE_ADDED' || changeMethod === 'REPLACEMENT_ADDED') {
+			if (changeMethod === 'INACTIVE_ADDED') {
 
 				description = 'added to';
-			} else {
+				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
+			} else if (changeMethod === 'INACTIVE_REMOVED') {
 	
 				description = 'removed from';
+				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
+			} else if (changeMethod === 'REPLACEMENT_ADDED') {
+
+				description = 'added to';
+				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
+			} else if (changeMethod === 'REPLACEMENT_REMOVED'){
+	
+				description = 'removed from';
+				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
 			}
 
-			console.log(changeMethod)
-			this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
+			console.log(changeMethod);
 		}
 
 		// if this is an intensional refset
