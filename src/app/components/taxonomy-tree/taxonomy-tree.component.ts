@@ -255,7 +255,7 @@ export class TaxonomyTreeComponent {
 
     getNodeAddIconMargin(node: TreeNode){
         const marginSize = (node.level - 1) * 20;
-        return `margin-left: ${marginSize}px;display: inline-block;`;
+        return `margin-left: ${marginSize}px;display: inline-flex;width: calc(100% - 23px - ${marginSize}px);`;
     }
 
     getNodeText(node) {
