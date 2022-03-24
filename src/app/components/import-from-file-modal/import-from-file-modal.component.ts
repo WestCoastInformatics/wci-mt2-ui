@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Router } from '@angular/router';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { RefsetDetails } from 'src/app/pages/refset-details';
 
 @Component({
     selector: "import-from-file-modal",
@@ -22,11 +23,10 @@ export class ImportFromFileModalComponent implements OnInit {
     @Input() refsetInternalId: string;
     @Input() refsetId: string;
     @Input() isIntensional: boolean = false;
-    @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     @Output() onMembersGridReady = new EventEmitter<any>();
 
-    constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) {}
+    constructor(private modalService: NgbModal, private readonly refsetDetails: RefsetDetails, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) {}
 
     ngOnInit(): void {}
 
@@ -94,10 +94,7 @@ export class ImportFromFileModalComponent implements OnInit {
 
         this.changeLockedStatus.emit(false);
 
-        // if the same refset is still open then refsesh the page
-        if (this.router.url.includes('/' + this.refsetId)) {
-            this.reloadPageData.emit(true);
-        }
+            this.refsetDetails.ngOnInit();
 
         this.files = [];
         this.disableActionButtons = true;

@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { NotificationService } from "src/app/services/notification.service";
 import { Router } from "@angular/router";
+import { RefsetDetails } from 'src/app/pages/refset-details';
 
 @Component({
     selector: "import-from-list-modal",
@@ -18,14 +19,14 @@ export class ImportFromListModalComponent {
     @Input() refsetInternalId: string;
     @Input() refsetId: string;
     @Input() isIntensional: boolean = false;
-    @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
         private notificationService: NotificationService, 
-        private router: Router
+        private router: Router,
+        private refsetDetails: RefsetDetails
     ) {}
 
     callMemberOperation(operation: string): void {
@@ -58,13 +59,9 @@ export class ImportFromListModalComponent {
     }
 
     processOperationReturn = (data) => { 
-
         this.changeLockedStatus.emit(false);
 
-        // if the same refset is still open then refsesh the page
-        if (this.router.url.includes('/' + this.refsetId)) {
-            this.reloadPageData.emit(true);
-        }
+        this.refsetDetails.ngOnInit();
 
         this.listOfIds = "";
     }
