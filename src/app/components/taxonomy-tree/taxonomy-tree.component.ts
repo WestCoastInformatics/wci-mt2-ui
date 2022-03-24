@@ -253,6 +253,11 @@ export class TaxonomyTreeComponent {
         return classes;
     }
 
+    getNodeAddIconMargin(node: TreeNode){
+        const marginSize = (node.level - 1) * 20;
+        return `margin-left: ${marginSize}px;display: inline-block;`;
+    }
+
     getNodeText(node) {
         let text = "";
         let data = node?.data;
