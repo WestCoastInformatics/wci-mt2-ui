@@ -226,12 +226,12 @@ export class TaxonomyTreeComponent {
         return data;
     }
 
-    showSpinner(): void {
-        this.showLoadingSpinner = true;
-        setTimeout(() => {
-            this.showLoadingSpinner = false;
-        }, 2000);
-    }
+    // showSpinner(): void {
+    //     this.showLoadingSpinner = true;
+    //     setTimeout(() => {
+    //         this.showLoadingSpinner = false;
+    //     }, 2000);
+    // }
 
     styleNodeClass(node: TreeNode) {
         let classes = "";

@@ -219,8 +219,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             rowCount: null,
             getRows: (rowParams) => {
 
-                // this.refsetGridApi.showLoadingOverlay();
-                this.showLoadingSpinner = true;
+                this.refsetGridApi.showLoadingOverlay();
+                // this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);

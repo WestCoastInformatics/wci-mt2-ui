@@ -123,7 +123,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
-			} else if (changeMethod === 'INACTIVE_REMOVED') {
+			} else if (changeMethod === 'INACTIVE_REMOVED'){
 	
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
@@ -137,7 +137,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
 			}
 
-			console.log(changeMethod);
+			console.log(changeMethod)
 		}
 
 		// if this is an intensional refset

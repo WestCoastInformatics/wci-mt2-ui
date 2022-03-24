@@ -715,8 +715,8 @@ export class RefsetDetails {
             return;
         }
 
-        // this.taxonomySearchGridApi.showLoadingOverlay();
-        this.showLoadingSpinner = true;
+        this.taxonomySearchGridApi.showLoadingOverlay();
+        // this.showLoadingSpinner = true;
 
         let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
         let query = "";
@@ -876,7 +876,7 @@ export class RefsetDetails {
         let membersData = [];
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
-        // this.membersGridApi.showLoadingOverlay();
+        this.membersGridApi.showLoadingOverlay();
         this.showLoadingSpinner = true;
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;

@@ -1645,13 +1645,13 @@ button.refset-tool-table-action-icon {
     );
 }
 
-.ag-overlay-loading-wrapper {
-    display: none !important;
-}
+// .ag-overlay-loading-wrapper {
+//     display: none !important;
+// }
 
-tree-loading-component {
-    display: none !important
-}
+// tree-loading-component {
+//     display: none !important
+// }
 
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
