@@ -14,23 +14,6 @@
 
             <div class="set-of-buttons">
 
-                <!-- <app-refset-download [isDetailPage]="true" [refset]="refsetData" [disabled]="!refsetData?.downloadable"></app-refset-download> -->
-
-                <!-- <button class="refset-tool-standard-icon-button" (click)="openRefsetFeedback()">
-                    <img src="assets/quote-icon.svg" alt="quote icon" title="View Feedback" aria-label="View Feedback" />
-                </button> -->
-
-                <!-- <button class="refset-tool-standard-icon-button" (click)="openCompareRefset()">
-                    <img src="assets/compare-refset-icon.svg" alt="notes icon" title="Compare Refset" aria-label="Compare Refset" />
-                </button> -->
-
-                <!-- <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openCloneRefset()">
-                    <img src="assets/pages-icon.svg" alt="pages icon" title="Clone Refset" aria-label="Clone refset" />
-                </button> -->
-
-                <!-- <button *ngIf="editMode" class="refset-tool-standard-icon-button" [ngClass]="{'inactive' : !allowedToEdit}" [disabled]="!allowedToEdit" (click)="openDeleteRefset()">
-                    <img src="assets/trash-icon.svg" alt="trash icon" title="Delete Refset" aria-label="Delete refset" />
-                </button> -->
             </div>
 
         </div>
@@ -292,32 +275,23 @@
                         Complete Publication
                     </button>
 
-                    <!-- <button
-                        *ngIf="updateToggled"
-                        #updateRefsetButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        class="refset-tool-action-button update-refset-button"
-                        aria-label="Update Refset"
-                        title="Update Refset"
-                        ng-reflect-color="primary"
-                    >
-                        Update Refset
-                    </button>
-                    <button
-                        *ngIf="updateToggled"
-                        #cancelUpdateButton
-                        mat-raised-button
-                        color="primary"
-                        aria-hidden="false"
-                        class="refset-tool-action-button cancel-update-button"
-                        aria-label="Cancel Update"
-                        title="Cancel Update"
-                        ng-reflect-color="primary"
-                    >
-                        Cancel Update
-                    </button> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="metadata-container" *ngIf="!editMode">
+            <div class="container-fluid">
+
+                <div *ngIf="!editMode" class="">
+                    <button mat-button [matMenuTriggerFor]="downloadMenu"
+                        class="download-menu">Download <span
+                            class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <mat-menu #downloadMenu="matMenu">
+                        <app-refset-download [isDetailPage]="true" [refset]="refsetData"
+                            [hidden]="!refsetData?.downloadable"></app-refset-download>
+                        <button mat-menu-item *ngIf="editMode" [hidden]="true">Download Workflow
+                            History</button>
+                    </mat-menu>
                 </div>
             </div>
         </div>
