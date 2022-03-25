@@ -3205,33 +3205,76 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
 }
 .ready-for-review-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #c05d72;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #c05d72;
 }
 
 .in-review-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #a4303f;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #a4303f;
 }
 
 .review-completed-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #7b2232;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #7b2232;
 }
 
 .ready-for-edit-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(202, 176, 39, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: rgba(202, 176, 39, 1);
 }
 
 .in-edit-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(147, 124, 1, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    background-color: #937c01;
 }
 
 .ready-for-publication-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(150, 72, 176, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: rgba(150, 72, 176, 1);
 }
 
 .refset-listing-workflow-button-text {
