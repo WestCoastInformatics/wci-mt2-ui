@@ -87,6 +87,11 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProjectsComponent } from './pages/organizations/projects/projects.component';
+import { TeamsComponent } from './pages/organizations/teams/teams.component';
+import { PeopleComponent } from './pages/organizations/people/people.component';
+import { ConfigurationComponent } from './pages/organizations/configuration/configuration.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -94,7 +99,13 @@ const appRoutes: Routes = [
     { path: '', component: LandingPageComponent },
     { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
     { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
-    { path: 'projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] }
+    { path: 'projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/projects', component: ProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/teams', component: TeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/people', component: PeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/configuration', component: ConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] }
+
 ];
 
 @NgModule({
@@ -131,7 +142,12 @@ const appRoutes: Routes = [
         AddRemoveConceptsComponent,
         AddRemoveConceptsIconsComponent,
         LoginComponent,
-        LandingPageComponent
+        LandingPageComponent,
+        DashboardComponent,
+        ProjectsComponent,
+        TeamsComponent,
+        PeopleComponent,
+        ConfigurationComponent
     ],
     imports: [
         RouterModule.forRoot(
