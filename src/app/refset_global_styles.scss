@@ -2378,6 +2378,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-top: 52px;
     min-height: 65px;
     justify-content: space-between;
+    top: 40px;
 }
 
 #refsetDetailsPage > .page-title {
@@ -3705,6 +3706,9 @@ span.title {
     width: -moz-available;          /* WebKit-based browsers will ignore this. */
     width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
     width: fill-available;
+    min-height: 50px;
+    height: fit-content;
+    justify-content: center;
 }
 
 img.refset-tool-edition-flag{
@@ -3713,4 +3717,24 @@ img.refset-tool-edition-flag{
 
 .workflow-stepper-bar {
     padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 1120px) {
+    #refsetDetailsPage > .refset-title {
+        top: 80px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+
+}
+
+.left-title-buttons {
+    display: contents;
+}
+
+.mat-stepper-horizontal {
+    margin-left: -80px;
+    margin-right: -80px;
+    max-width: 525px !important;
 }
