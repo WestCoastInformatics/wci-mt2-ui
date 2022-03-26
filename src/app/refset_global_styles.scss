@@ -2397,6 +2397,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title-container {
     padding-left: 3rem;
     padding-right: 3rem;
+    margin-top: 50px;
 }
 
 #refsetDetailsPage > .refset-title-container > .refset-title {
@@ -3722,6 +3723,9 @@ img.refset-tool-edition-flag{
 @media only screen and (max-width: 1120px) {
     #refsetDetailsPage > .refset-title {
         top: 100px;
+    }
+    #refsetDetailsPage > .refset-title-container {
+        margin-top: 100px;
     }
 }
 
