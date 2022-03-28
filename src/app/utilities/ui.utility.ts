@@ -295,15 +295,12 @@ export class UiUtility {
 						let conceptArray = Object.keys(data);
                         let emptydata = {refset: refsetId, statuses: []};
                         let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
-
                         if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
                             this.memberChangeData[refsetId] = emptydata;
                         }
 
 						notificationService.close(notification);
-
-						if (router.url.includes('/' + refsetId)) {
-
+                        if (router.url.includes('/details/' + refsetId)) {
 							successMessageTimeout = 5000;
 							callbackFunction(data);
 						} else {
@@ -390,7 +387,7 @@ export class UiUtility {
 			);
 		};
 
-		checkIfFinished();
+        checkIfFinished();
     }
     
     static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string) {

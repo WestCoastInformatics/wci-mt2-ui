@@ -578,7 +578,7 @@ button.refset-tool-table-action-icon {
 
 // Directory Page Styles
 #refsetProjectsPage {
-    margin-top: 4rem;
+    // margin-top: 4rem;
 }
 
 #refsetProjectsPage,
@@ -713,7 +713,7 @@ button.refset-tool-table-action-icon {
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     z-index: 1000 !important;
-    padding-top: 52px;
+    // padding-top: 52px;
     .page-title {
         padding-left: 3rem;
     }
@@ -2375,9 +2375,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title {
     align-items: center;
     box-shadow: 0 4px 2px -2px gray;
-    padding-top: 52px;
+    // padding-top: 52px;
     min-height: 65px;
     justify-content: space-between;
+    // top: 40px;
 }
 
 #refsetDetailsPage > .page-title {
@@ -2396,6 +2397,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title-container {
     padding-left: 3rem;
     padding-right: 3rem;
+    margin-top: 50px;
 }
 
 #refsetDetailsPage > .refset-title-container > .refset-title {
@@ -3205,33 +3207,76 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
 }
 .ready-for-review-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #c05d72;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #c05d72;
 }
 
 .in-review-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #a4303f;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #a4303f;
 }
 
 .review-completed-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #7b2232;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #7b2232;
 }
 
 .ready-for-edit-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(202, 176, 39, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: rgba(202, 176, 39, 1);
 }
 
 .in-edit-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(147, 124, 1, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    background-color: #937c01;
 }
 
 .ready-for-publication-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(150, 72, 176, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: rgba(150, 72, 176, 1);
 }
 
 .refset-listing-workflow-button-text {
@@ -3662,8 +3707,40 @@ span.title {
     width: -moz-available;          /* WebKit-based browsers will ignore this. */
     width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
     width: fill-available;
+    min-height: 50px;
+    height: fit-content;
+    justify-content: center;
+    position: inherit;
 }
 
 img.refset-tool-edition-flag{
     margin-bottom: 4px;
+}
+
+.workflow-stepper-bar {
+    padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 1120px) {
+    #refsetDetailsPage > .refset-title {
+        // top: 100px;
+    }
+    #refsetDetailsPage > .refset-title-container {
+        // margin-top: 100px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+
+}
+
+.left-title-buttons {
+    display: contents;
+}
+
+.mat-stepper-horizontal {
+    margin-left: -80px;
+    margin-right: -80px;
+    min-width: 600px !important;
+    margin-bottom: 15px;
 }

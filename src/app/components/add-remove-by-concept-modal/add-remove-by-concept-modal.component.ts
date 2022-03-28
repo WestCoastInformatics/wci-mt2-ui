@@ -19,6 +19,7 @@ import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { environment } from 'src/environments/environment';
+import { RefsetDetails } from 'src/app/pages/refset-details';
 
 @Component({
     selector: "add-remove-by-concept-modal",
@@ -61,14 +62,14 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     eclString: any;
 
     @Input() refset: any;
-    @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
     @Output() changeLockedStatus = new EventEmitter<boolean>(true);
 
     constructor(
         private readonly modalService: NgbModal,
         private refsetService: RefsetService,
-        private router: Router
+        private router: Router,
+        private readonly refsetDetails: RefsetDetails
     ) {}
 
     ngOnInit(): void {
@@ -103,9 +104,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         }
     }
 
-    private sendReloadPageDataTrigger(value: boolean): void {
-        this.reloadPageData.emit();
-    }
 
     addRemoveConcept(params: any): void {
 
@@ -128,7 +126,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refset.refsetId)) {
-            this.sendReloadPageDataTrigger(true);
+            this.refsetDetails.ngOnInit();
         }
 
         // reload the search results
@@ -158,7 +156,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             animation: true,
             beforeDismiss: () => {
                 if (!this.isLocked) {
-                    this.sendReloadPageDataTrigger(true);
+                    this.refsetDetails.ngOnInit();
                 }
                 this.refreshModal();
                 return true;
@@ -170,6 +168,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     closeModal() {
+
+        if (!this.isLocked) {
+            this.refsetDetails.ngOnInit();
+        }
+
         this.openedModel.dismiss();
     }
 

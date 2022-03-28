@@ -6,6 +6,7 @@ import { NotificationService } from "src/app/services/notification.service";
 import { Router } from "@angular/router";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { RefsetDetails } from 'src/app/pages/refset-details';
 
 @Component({
     selector: "import-from-ecl-modal",
@@ -20,14 +21,14 @@ export class ImportFromEclModalComponent {
     @Input() refsetId: string;
     @Input() refsetBranchPath: string;
     @Input() isIntensional: boolean = false;
-    @Output() reloadPageData = new EventEmitter<boolean>();
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
         private notificationService: NotificationService, 
-        private router: Router
+        private router: Router,
+        private readonly refsetDetails: RefsetDetails
     ) {}
 
     callMemberOperation(operation: string): void {
@@ -60,10 +61,7 @@ export class ImportFromEclModalComponent {
 
         this.changeLockedStatus.emit(false);
 
-        // if the same refset is still open then refsesh the page
-        if (this.router.url.includes('details/' + this.refsetId)) {
-            this.reloadPageData.emit(true);
-        }
+        this.refsetDetails.ngOnInit();
 
         this.ecl = '';
     }
