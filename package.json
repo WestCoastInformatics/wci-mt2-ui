@@ -38,6 +38,7 @@
         "angular7-csv": "^0.2.12",
         "bootstrap": "^4.4.1",
         "core-js": "^3.6.5",
+        "font-awesome": "^4.7.0",
         "guid-typescript": "^1.0.9",
         "jquery": "^3.5.1",
         "moment": "^2.29.1",

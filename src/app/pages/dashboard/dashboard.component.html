@@ -1,0 +1,74 @@
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">My Dashboard</span>
+    </div>
+</div>
+
+<div class='container-fluid mt-3'>
+    <div class='row'>
+        <div class='col-md-4 col-12'>
+            <section>
+                <div class='section-header'>My Organization</div>
+                <div class='dashboard-section'>
+                    <div class='section-list'>
+                        <img src='assets/sampels/u102.svg' />
+                        <a>IHTSDO</a>
+                    </div>
+                    <div class='section-list'>
+                        <img src='assets/sampels/u105.svg' />
+                        <a>West Coast Informatics</a>
+                    </div>
+                    <div class='section-list text-right'><a class='btn btn-primary btn-lg'>Create an Organization</a></div>
+                </div>
+            </section>
+            
+            <section>
+                <div class='section-header'>My Projects</div>
+                <div class='dashboard-section'>
+                    <div class='section-list'><a>IHTSDO/SNOMED International Project</a></div>
+                    <div class='section-list'><a>WestCoastInformatics/WCI Test MANAGED-SERVICE Project</a> <i class='fa fa-lock ml-2 text-muted'></i></div>
+                    <div class='section-list'><a>IHTSDO/Some Other Project</a> <i class='fa fa-lock ml-2 text-muted'></i></div>
+                    <div class='section-list'><a>IHTSDO/A project you simply can’t miss</a></div>
+                    <div class='section-list text-right'><a class='btn btn-primary btn-lg'>Create a Project</a></div>
+                </div>
+            </section>
+
+            <section>
+                <div class='section-header'>My Teams</div>
+                <div class='dashboard-section'>
+                    <div class='section-list'><a>IHTSDO/WCI</a></div>
+                    <div class='section-list'><a>WestCoastInformatics/depoyment-team</a></div>
+                    <div class='section-list'><a>WestCoastInformatics/dev-team</a></div>
+                    <div class='section-list text-right'><a class='btn btn-primary btn-lg'>Create a Team</a></div>
+                </div>
+            </section>
+        </div>
+        <div class='col-md-8 col-12'>
+            <section>
+                <div class='section-header'>My Refsets</div>
+                <div class='dashboard-section'>
+                    <mat-form-field class="example-form-field" appearance="fill">
+                                <input matInput type="text"
+                                    placeholder="Search"
+                                    [(ngModel)]="searchText" />
+                                <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+                                    (click)="searchText = ''">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                    <div class="ag-theme-alpine p-2">
+                        <ag-grid-angular
+                            [columnDefs]="columnDefs"
+                            [rowData]="data"
+                            style="width: 100%">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+            </section>
+            <div class='text-right'>
+                <a class='text-muted light mr-3'>show admin</a>
+                <a class='text-muted light'>hide admin</a>
+            </div>
+        </div>
+    </div>
+</div>

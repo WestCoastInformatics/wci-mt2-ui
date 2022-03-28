@@ -44,6 +44,11 @@
         <span class="projects-icon-label">Projects</span>
     </div>
 
+    <div class="nav-item" routerLink="/dashboard">
+        <img class="nav-icon dashboard-icon" src="/assets/dashboard-icon.svg">
+        <span class="nav-label dashboard-icon-label">Dashboard</span>
+    </div>
+
     <div *ngIf="isUserLoggedIn" class="float-right mx-3">
         <div class="user d-inline-block m-2">
             <span class="px-2 text-ghost-grey">{{user.userName}}</span>

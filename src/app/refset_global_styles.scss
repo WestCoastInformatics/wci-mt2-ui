@@ -1,4 +1,6 @@
 // Main Layout Styles
+$main-color: #00A4E4;
+
 html,
 body {
     font-family: $standard_font_family;
@@ -3463,7 +3465,25 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     padding-left: 16px;
 }
+.nav-item{
+    width: 75px;
+    border-right: 1px solid #797979;
+    height: 50px;
+    cursor: pointer;
+    padding-top: 6px;
+    text-align: center;
 
+    img{
+        max-height: 26px;
+    }
+    .nav-label{
+        display: block;
+        text-align: center;
+        font-size: 9px;
+        color: white;
+        margin-top: 4px;
+    }
+}
 .project-role-label {
     height: 45px;
 }
@@ -3666,4 +3686,70 @@ span.title {
 
 img.refset-tool-edition-flag{
     margin-bottom: 4px;
+}
+.content-header{
+    margin-top: 4rem;
+    .header-title{
+        align-items: baseline;
+        position: sticky;
+        z-index: 2;
+        background-color: white;
+        padding-top: 10px;
+        box-shadow: 0 5px 7px -2px grey;
+        .title-label{
+            margin-right: 20px; 
+            color: #555555; 
+            padding-left: 60px;
+            font-size: 20px;
+            font-weight: 400;
+            padding-bottom: 15px;
+        }
+    }
+}
+.dashboard-section{
+    box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 20%);
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 0.25rem;
+    margin-bottom: 30px;
+}
+.section-header{
+    font-size: 20px;
+    color: $main-color;
+    margin-bottom: 10px;
+}
+.section-list{
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    font-weight: 700;
+    color: $main-color;
+
+    a{
+        cursor: pointer;
+    }
+    
+    img{
+        width: 34px;
+        height: 34px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+    a:not(.btn):hover{
+        text-decoration: underline !important;
+    }
+
+    .btn.btn-primary{
+        background-color: $main-color;
+        border-radius: 0 !important;
+        border-color: $main-color;
+        font-size: 14px;
+    }
+}
+.section-list:last-child{
+    border-bottom: 0;
+    padding: 15px;
+}
+.radius-0{
+    border-radius: 0 !important;
 }
