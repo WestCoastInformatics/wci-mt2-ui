@@ -13,7 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +34,7 @@ import { CustomReuseStrategy } from './custom-route-reuse-strategy';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { AngularSplitModule } from 'angular-split';
 
 // COMPONENT IMPORTS
@@ -52,6 +52,7 @@ import { CreateNewRefsetComponent } from './components/create-new-refset/create-
 import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
 import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
+// import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
@@ -92,6 +93,7 @@ import { ProjectsComponent } from './pages/organizations/projects/projects.compo
 import { TeamsComponent } from './pages/organizations/teams/teams.component';
 import { PeopleComponent } from './pages/organizations/people/people.component';
 import { ConfigurationComponent } from './pages/organizations/configuration/configuration.component';
+import { FeedbackCollectorComponent } from './components/feedback-collector/feedback-collector.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -147,7 +149,8 @@ const appRoutes: Routes = [
         ProjectsComponent,
         TeamsComponent,
         PeopleComponent,
-        ConfigurationComponent
+        ConfigurationComponent,
+        FeedbackCollectorComponent
     ],
     imports: [
         RouterModule.forRoot(
