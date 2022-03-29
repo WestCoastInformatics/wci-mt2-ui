@@ -222,7 +222,10 @@ processChangedMemberEffects = () => {
 
   getLanguageAndType(): string[] {
     const language = this.selectedLanguage.split(' ')[0].toLowerCase();
-    const type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+    let type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+    if (type === 'PT') {
+      type = 'SYNONYM';
+    }
 
     return [language, type];
   }
