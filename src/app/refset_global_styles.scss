@@ -3804,6 +3804,14 @@ img.refset-tool-edition-flag{
     .text-primary{
         color: $main-color !important;
     }
+
+    .profile-pic{
+        width: 43px;
+        height: 43px;
+        border-radius: 100%;
+        margin-right: 40px;
+        vertical-align: middle;
+    }
 }
 .section-header{
     font-size: 20px;
