@@ -5,37 +5,8 @@
     </div>
 </div>
 <div class="content-wrapper">
-    <div class='sidebar'>
-        <div class="wrapper">
-            <ul>
-                <li class="active">
-                    <a>
-                        <i class="fa fa-folder-open"></i>
-                        <span class="nav-label">Projects</span>
-                    </a>
-                </li>
-                <li>
-                    <a>
-                        <i class="fa fa-users"></i>
-                        <span class="nav-label">Teams</span>
-                    </a>
-                </li>
-                <li>
-                    <a>
-                        <i class="fa fa-user"></i>
-                        <span class="nav-label">People</span>
-                    </a>
-                </li>
-                <li>
-                    <a>
-                        <i class="fa fa-cogs"></i>
-                        <span class="nav-label">Configuration</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class='container-fluid mt-3 with-sidebar'>
+    <app-organizations-sidebar activeRoute="null"></app-organizations-sidebar>
+    <div class='container-fluid mt-3'>
         <div class='row'>
             <div class='col-md-4 col-12'>
                 <section>
@@ -77,7 +48,7 @@
             <div class='col-md-8 col-12'>
                 <section>
                     <div class='section-header'>My Refsets</div>
-                    <div class='dashboard-section'>
+                    <div class='dashboard-section pr-2 pl-2'>
                         <mat-form-field class="example-form-field" appearance="fill">
                                     <input matInput type="text"
                                         placeholder="Search"
@@ -87,7 +58,7 @@
                                         <mat-icon>close</mat-icon>
                                     </button>
                                 </mat-form-field>
-                        <div class="ag-theme-alpine p-2">
+                        <div class="ag-theme-alpine">
                             <ag-grid-angular
                                 [columnDefs]="columnDefs"
                                 [rowData]="data"

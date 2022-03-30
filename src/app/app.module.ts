@@ -94,6 +94,7 @@ import { TeamsComponent } from './pages/organizations/teams/teams.component';
 import { PeopleComponent } from './pages/organizations/people/people.component';
 import { ConfigurationComponent } from './pages/organizations/configuration/configuration.component';
 import { FeedbackCollectorComponent } from './components/feedback-collector/feedback-collector.component';
+import { OrganizationsSidebarComponent } from './pages/organizations/sidebar/sidebar.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -150,7 +151,8 @@ const appRoutes: Routes = [
         TeamsComponent,
         PeopleComponent,
         ConfigurationComponent,
-        FeedbackCollectorComponent
+        FeedbackCollectorComponent,
+        OrganizationsSidebarComponent
     ],
     imports: [
         RouterModule.forRoot(
