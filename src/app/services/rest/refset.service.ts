@@ -44,7 +44,6 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + 'refset/', params);
     }
 
-
     modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string): Observable<any> {
         console.log(replacementConceptId)
         let replacementCode = '';
@@ -168,6 +167,7 @@ export class RefsetService extends RestService {
 	getOrganizations(): Observable<any> {
         return this.get(this.contextPath + 'refset/organizations');
     }
+
 
     getVersions(): Observable<any> {
         return this.get(this.contextPath + 'refset/versions');

@@ -52,6 +52,9 @@ import { CreateNewRefsetComponent } from './components/create-new-refset/create-
 import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
 import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
+import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
+import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
+import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
@@ -132,6 +135,9 @@ const appRoutes: Routes = [
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
         ImportFromEclModalComponent,
+        CreateNewOrganizationModalComponent,
+        CreateNewTeamModalComponent,
+        CreateNewProjectModalComponent,
         dragAndDropDirective,
         AddRemoveByConceptModalComponent,
         ScrollTopComponent,
