@@ -3,10 +3,10 @@ import { Title } from '@angular/platform-browser';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 @Component({
-  selector: 'app-teams',
+  selector: 'organization-teams',
   templateUrl: './teams.component.html'
 })
-export class TeamsComponent implements OnInit {
+export class OrganizationTeamsComponent implements OnInit {
   data = [];
   defaultColDef = {};
   columnDefs = [

@@ -1,6 +1,5 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<!-- <app-side-bar></app-side-bar> -->
 <div id="refsetProjectsPage"
      class="container-fluid">
     <div class="row refset-title">
@@ -43,7 +42,9 @@
             <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
         </div>
     </div>
-
+    <div class="content-wrapper">
+        <app-projects-sidebar activeRoute="people"></app-projects-sidebar>
+        <div class='container-fluid mt-3'>
     <!-- Page Title -->
     <div *ngIf="selectedProject" style="
             width: 100%;
@@ -151,6 +152,7 @@
         </ng-template>
     </div>
 </div>
+</div></div>
 <scroll-top></scroll-top>
 
 <ng-template #workflowDiagramDialog let-modal>

@@ -3,10 +3,10 @@ import { Title } from '@angular/platform-browser';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 @Component({
-  selector: 'app-projects',
+  selector: 'organization-projects',
   templateUrl: './projects.component.html'
 })
-export class ProjectsComponent implements OnInit {
+export class OrganizationProjectsComponent implements OnInit {
   data = [];
   defaultColDef = {};
   columnDefs = [
