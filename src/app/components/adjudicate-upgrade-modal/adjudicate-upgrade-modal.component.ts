@@ -241,6 +241,9 @@ processChangedMemberEffects = () => {
           } else if (!x.includes('{"descriptionId"') && x.includes('"descriptionId"')) {
             x = '{' + x;
           }
+          if (x.includes(',null')) {
+            x = x.replaceAll(',null', '');
+          }
           if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
             x = x + '"}';
           }
