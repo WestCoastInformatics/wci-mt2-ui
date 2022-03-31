@@ -702,6 +702,19 @@
                     [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
 
+
+                <create-new-organization-modal [refsetInternalId]="id"
+                    [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
+                    (changeLockedStatus)="changeLockedStatus($event)"></create-new-organization-modal>
+
+                <create-new-team-modal [refsetInternalId]="id"
+                    [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
+                    (changeLockedStatus)="changeLockedStatus($event)"></create-new-team-modal>
+
+                <create-new-project-modal [refsetInternalId]="id"
+                    [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
+                    (changeLockedStatus)="changeLockedStatus($event)"></create-new-project-modal>
+
             </mat-menu>
         </span>
         <br>
@@ -769,7 +782,7 @@
                                                 <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                                     title="Open ECL Builder"
                                                     aria-label="ECL Builder" /> -->
-                                            </button>
+                                            </button>                                             
                                         </div>
 
                                         <div class="col-lg ml-3" style="padding-right: 90px;"

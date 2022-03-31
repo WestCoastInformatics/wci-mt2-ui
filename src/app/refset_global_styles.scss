@@ -868,6 +868,24 @@ button.refset-tool-table-action-icon {
     }
 }
 
+.mat-form-field.refset-tool-modal-select-field {
+    width: 300px;
+
+    .mat-form-field-flex {
+        width: 275px;
+    }
+}
+
+.refset-tool-modal-select {
+    .mat-select-trigger {
+        width: 300px;
+    }
+}
+
+.refset-tool-modal-select-field {
+    font-size: 14px;
+}
+
 #detailsMemberSection,
 #detailsMemberSection .refset-tool-details-members-column {
     //padding-left: 0px;
@@ -2732,6 +2750,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         margin-right: -5px;
     }
     overflow-x: hidden;
+}
+
+.modal-input-field {
+    width: 308px;
+}
+
+.modal-label {
+    font-weight: bold;
 }
 
 .refset-tool-taxonomy {
