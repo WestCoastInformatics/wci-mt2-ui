@@ -3735,7 +3735,6 @@ span.title {
     width: fill-available;
     min-height: 50px;
     height: fit-content;
-    // justify-content: center;
     position: inherit;
 }
 
@@ -3769,7 +3768,6 @@ img.refset-tool-edition-flag{
     margin-right: -80px;
     min-width: 600px !important;
     margin-bottom: 15px;
-
 }
 
 .content-header{
@@ -3929,4 +3927,19 @@ img.refset-tool-edition-flag{
             opacity: 1;
         }
     }
+}
+.linethrough-inactive {
+    text-decoration: line-through;
+}
+
+.hide-data {
+    opacity: 0;
+}
+
+.grey-close-icon,
+.add-symbol-icon,
+.subtract-symbol-icon,
+.grey-add-symbol-icon,
+.grey-trash-bin-icon {
+    cursor: pointer;
 }
