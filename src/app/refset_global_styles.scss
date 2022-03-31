@@ -3757,3 +3757,11 @@ img.refset-tool-edition-flag{
 .hide-data {
     opacity: 0;
 }
+
+.grey-close-icon,
+.add-symbol-icon,
+.subtract-symbol-icon,
+.grey-add-symbol-icon,
+.grey-trash-bin-icon {
+    cursor: pointer;
+}

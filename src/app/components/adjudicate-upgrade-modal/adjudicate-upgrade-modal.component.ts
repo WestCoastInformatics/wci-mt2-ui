@@ -55,8 +55,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   columnDefs: any;
   refsetGridOptions: any;
   refsetGridPaging = {
-    pageSize: 6,
-    pageSizeOptions: [6, 12, 24, 48],
+    pageSize: 100,
+    pageSizeOptions: [5, 10, 25, 50],
     totalKnown: false,
     totalRows: null,
 };
@@ -105,7 +105,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150,maxWidth:160,  cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
       { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
-      { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
+      { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 90, width: 90,maxWidth: 100, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
 
     this.refsetGridOptions = {
@@ -147,22 +147,19 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     newItem.replacementConcecpts = '';
     if (option.includes('add')) {
       this.chosenConceptCode = this.selectedRow['data'].code;
-      // this.refsetGridOptions.paginationPageSize = this.refsetGridPaging.pageSize + 1;
-      // this.onGridReady(this.originalGridParams);
       this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow?.rowIndex + 1 });
     } else if (option.includes('remove')) {
-      // this.refsetGridOptions.paginationPageSize = this.refsetGridPaging.pageSize - 1;
-      // this.onGridReady(this.originalGridParams);
       this.refsetGridApi.applyTransaction({ remove: [this.selectedRow?.data] });
     }
+    this.selectedConcepts = undefined;
   }
 
-addRemoveConcept(params: any, isReplacement: boolean, changeMethod: string): void {
+addRemoveConcept(params: any, changeMethod: string): void {
     this.addRemoveConceptsComponent.changeMethod = changeMethod;
     this.addRemoveConceptsComponent.refset = this.refsetData;
     this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
     this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
+    this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
 }
 
 async onKey(value): Promise<void> {
@@ -186,16 +183,24 @@ removeManualReplacement(changeMethod: string): void {
     this.onGridReady(this.originalGridParams);
     this.refsetDetails.toggleLoadingSpinner(false);
   });
+  this.selectedConcepts = undefined;
 }
 
 addManualReplacement(changeMethod: string): void {
-  this.refsetDetails.toggleLoadingSpinner(true);
-  const body = { ...this.concept };
-  this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
-    this.onGridReady(this.originalGridParams);
-    this.refsetDetails.toggleLoadingSpinner(false);
-  });
+  if (this.concept) {
+    this.refsetDetails.toggleLoadingSpinner(true);
+    const body = { ...this.concept };
+    this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
+      this.onGridReady(this.originalGridParams);
+      this.refsetDetails.toggleLoadingSpinner(false);
+    });
+  }
+  this.selectedConcepts = undefined;
 }
+
+  focus(): void {
+    document.getElementById('inputFocus').focus();
+  }
 
 changeLockedStatus(lock: boolean) {
 
