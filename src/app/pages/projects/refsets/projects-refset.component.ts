@@ -16,8 +16,8 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { User } from '../../models/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/models/user';
 
 @Component({
     selector: 'projects-refset',

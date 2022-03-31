@@ -1,4 +1,6 @@
 // Main Layout Styles
+$main-color: #00A4E4;
+
 html,
 body {
     font-family: $standard_font_family;
@@ -63,7 +65,7 @@ table {
 main {
     &.container {
         min-width: 100%;
-        margin-bottom: 6rem;
+        margin-bottom: 40px;
     }
 }
 
@@ -578,7 +580,7 @@ button.refset-tool-table-action-icon {
 
 // Directory Page Styles
 #refsetProjectsPage {
-    margin-top: 4rem;
+    // margin-top: 4rem;
 }
 
 #refsetProjectsPage,
@@ -713,7 +715,7 @@ button.refset-tool-table-action-icon {
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     z-index: 1000 !important;
-    padding-top: 52px;
+    // padding-top: 52px;
     .page-title {
         padding-left: 3rem;
     }
@@ -831,6 +833,11 @@ button.refset-tool-table-action-icon {
     padding-right: 45px;
 }
 
+#refsetProjectsPage .refset-title .details-version-select {
+    margin-bottom: -9px;
+    margin-left: 20px
+}
+
 #refsetDetailsPage .refset-title {
     background: white;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
@@ -910,6 +917,7 @@ button.refset-tool-table-action-icon {
 .node-content-wrapper {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
+    width: 100%;
 }
 .node-wrapper {
     line-height: 0px !important;
@@ -965,7 +973,7 @@ button.refset-tool-table-action-icon {
         height: 12.75px;
         position: relative;
         right: 6px;
-        top: 0px;
+        top: 2px;
     }
 
     .tree-node {
@@ -2393,9 +2401,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title {
     align-items: center;
     box-shadow: 0 4px 2px -2px gray;
-    padding-top: 52px;
+    // padding-top: 52px;
     min-height: 65px;
     justify-content: space-between;
+    // top: 40px;
 }
 
 #refsetDetailsPage > .page-title {
@@ -2414,6 +2423,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage > .refset-title-container {
     padding-left: 3rem;
     padding-right: 3rem;
+    margin-top: 50px;
 }
 
 #refsetDetailsPage > .refset-title-container > .refset-title {
@@ -3231,33 +3241,76 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
 }
 .ready-for-review-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #c05d72;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #c05d72;
 }
 
 .in-review-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #a4303f;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #a4303f;
 }
 
 .review-completed-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: #7b2232;
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: #7b2232;
 }
 
 .ready-for-edit-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(202, 176, 39, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: rgba(202, 176, 39, 1);
 }
 
 .in-edit-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(147, 124, 1, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    background-color: #937c01;
 }
 
 .ready-for-publication-projects-button {
-    @include refset-listing-workflow-button;
-    background-color: rgba(150, 72, 176, 1);
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;    background-color: rgba(150, 72, 176, 1);
 }
 
 .refset-listing-workflow-button-text {
@@ -3489,7 +3542,25 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     padding-left: 16px;
 }
+.nav-item{
+    width: 75px;
+    border-right: 1px solid #797979;
+    height: 50px;
+    cursor: pointer;
+    padding-top: 6px;
+    text-align: center;
 
+    img{
+        max-height: 26px;
+    }
+    .nav-label{
+        display: block;
+        text-align: center;
+        font-size: 9px;
+        color: white;
+        margin-top: 4px;
+    }
+}
 .project-role-label {
     height: 45px;
 }
@@ -3688,8 +3759,213 @@ span.title {
     width: -moz-available;          /* WebKit-based browsers will ignore this. */
     width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
     width: fill-available;
+    min-height: 50px;
+    height: fit-content;
+    position: inherit;
 }
 
 img.refset-tool-edition-flag{
     margin-bottom: 4px;
+}
+
+.workflow-stepper-bar {
+    padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 1120px) {
+    #refsetDetailsPage > .refset-title {
+        // top: 100px;
+    }
+    #refsetDetailsPage > .refset-title-container {
+        // margin-top: 100px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+
+}
+
+.left-title-buttons {
+    display: contents;
+}
+
+.mat-stepper-horizontal {
+    margin-left: -80px;
+    margin-right: -80px;
+    min-width: 600px !important;
+    margin-bottom: 15px;
+}
+
+.content-header{
+    .header-title{
+        align-items: baseline;
+        position: sticky;
+        z-index: 2;
+        background-color: white;
+        padding-top: 10px;
+        box-shadow: 0 5px 7px -2px grey;
+        .title-label{
+            margin-right: 20px; 
+            color: #555555; 
+            padding-left: 60px;
+            font-size: 20px;
+            font-weight: 400;
+            padding-bottom: 15px;
+        }
+    }
+}
+.dashboard-section{
+    box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 20%);
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 0.25rem;
+    margin-bottom: 30px;
+
+    .ag-row, .ag-header-cell-text{
+        font-size: 16px;
+    }
+
+    .text-primary{
+        color: $main-color !important;
+    }
+
+    .profile-pic{
+        width: 43px;
+        height: 43px;
+        border-radius: 100%;
+        margin-right: 40px;
+        vertical-align: middle;
+    }
+}
+.section-header{
+    font-size: 20px;
+    color: $main-color;
+    margin-bottom: 10px;
+
+    
+    .btn.btn-primary{
+        background-color: $main-color;
+        border-radius: 0 !important;
+        border-color: $main-color;
+        font-size: 14px;
+    }
+}
+.section-list{
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    font-weight: 700;
+    color: $main-color;
+
+    a{
+        cursor: pointer;
+    }
+    
+    img{
+        width: 34px;
+        height: 34px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+    a:not(.btn):hover{
+        text-decoration: underline !important;
+    }
+
+    .btn.btn-primary{
+        background-color: $main-color;
+        border-radius: 0 !important;
+        border-color: $main-color;
+        font-size: 14px;
+    }
+}
+.section-list:last-child{
+    border-bottom: 0;
+    padding: 15px;
+}
+.radius-0{
+    border-radius: 0 !important;
+}
+
+.content-wrapper{
+    display: flex;
+    align-items: stretch;
+    min-height: calc(100vh - 158px);
+}
+.sidebar{
+    width: 72px;
+    overflow-x: visible;
+    z-index: 999;
+    height: 100%;
+    position: relative;
+
+    .wrapper{
+        min-height: 100%;
+        background-color: #212529;
+        width: 72px;
+        transition: all 0.25s;
+
+        ul{
+            margin-bottom: 0;
+            padding: 40px 0 0;
+
+            li{
+                color: #fff;
+                a{
+                    display: flex;
+                    align-items: center;
+                    padding: 7px 10px;
+                    margin: 10px 0;
+                    font-size: 16px;
+                    cursor: pointer;
+                    color: inherit;
+                    text-decoration: none !important;
+
+                    i{
+                        font-size: 30px;
+                        margin-left: 10px;
+                        margin-right: 15px;
+                        min-width: 37.5px;
+                        text-align: center;
+                    }
+                }
+            }
+            li:hover{
+                color: $main-color;
+            }
+            li.active{
+                border-left: 5px solid $main-color;
+                color: $main-color;
+            }
+
+            .nav-label{
+                opacity: 0;
+                transition: opacity 0.25s;
+            }
+        }
+    }
+}
+
+.sidebar:hover .wrapper{
+    width: 294px;
+
+    ul{
+        .nav-label{
+            opacity: 1;
+        }
+    }
+}
+.linethrough-inactive {
+    text-decoration: line-through;
+}
+
+.hide-data {
+    opacity: 0;
+}
+
+.grey-close-icon,
+.add-symbol-icon,
+.subtract-symbol-icon,
+.grey-add-symbol-icon,
+.grey-trash-bin-icon {
+    cursor: pointer;
 }

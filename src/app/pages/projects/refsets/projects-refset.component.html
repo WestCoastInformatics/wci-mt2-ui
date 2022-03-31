@@ -1,6 +1,5 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<!-- <app-side-bar></app-side-bar> -->
 <div id="refsetProjectsPage"
      class="container-fluid">
     <div class="row refset-title">
@@ -8,8 +7,7 @@
              style="margin-right: 20px; color: #555555; padding-left: 60px">
             Projects
         </div>
-        <div class="row justify-content-end details-version-select"
-             style="margin-left: 20px">
+        <div class="row justify-content-end details-version-select">
             <mat-form-field appearance="outline"
                             class="project-drop-down">
                 <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
@@ -44,7 +42,9 @@
             <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
         </div>
     </div>
-
+    <div class="content-wrapper">
+        <app-projects-sidebar activeRoute="people"></app-projects-sidebar>
+        <div class='container-fluid mt-3'>
     <!-- Page Title -->
     <div *ngIf="selectedProject" style="
             width: 100%;
@@ -54,6 +54,7 @@
             padding-top: 20px;
             align-items: baseline;
             padding-left: 15px;
+            padding-bottom: 10px;
         "
          [class.container-toggled]="toggleService.isToggled">
         <div class="container-fluid page-title"
@@ -130,33 +131,28 @@
                 <div>Published</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_EDIT'">
-                <div class="ready-for-edit-projects-button"></div>
-                <div class="refset-listing-workflow-button-text">Ready for Edit</div>
+                <div class="ready-for-edit-projects-button">Ready for Edit</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_EDIT'">
-                <div class="in-edit-projects-button"></div>
-                <div class="refset-listing-workflow-button-text">In Edit</div>
+                <div class="in-edit-projects-button">In Edit</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
-                <div class="ready-for-review-projects-button"></div>
-                <div class="refset-listing-workflow-button-text">Ready for Review</div>
+                <div class="ready-for-review-projects-button">Ready for Review</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_REVIEW'">
-                <div class="in-review-projects-button"></div>
-                <div class="refset-listing-workflow-button-text">In Review</div>
+                <div class="in-review-projects-button">In Review</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'REVIEW_COMPLETED'">
-                <div class="review-completed-projects-button"></div>
-                <div class="refset-listing-workflow-button-text">Review Completed</div>
+                <div class="review-completed-projects-button">Review Completed</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_PUBLICATION'">
-                <div class="ready-for-publication-projects-button"></div>
-                <div class="refset-listing-workflow-button-text">Ready for Publication</div>
+                <div class="ready-for-publication-projects-button">Ready for Publication</div>
             </ng-container>
             
         </ng-template>
     </div>
 </div>
+</div></div>
 <scroll-top></scroll-top>
 
 <ng-template #workflowDiagramDialog let-modal>

@@ -13,7 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatStepperModule } from '@angular/material/stepper';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +34,7 @@ import { CustomReuseStrategy } from './custom-route-reuse-strategy';
 
 // MODULE IMPORTS
 import { DialogModule } from 'src/app/dialog/dialog.module';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { AngularSplitModule } from 'angular-split';
 
 // COMPONENT IMPORTS
@@ -55,11 +55,25 @@ import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
+// import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
-import { ProjectsRefsetComponent } from 'src/app/pages/projects/projects-refset.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { FeedbackCollectorComponent } from './components/feedback-collector/feedback-collector.component';
+import { OrganizationsSidebarComponent } from './pages/organizations/sidebar/sidebar.component';
+import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
+import { OrganizationProjectsComponent } from './pages/organizations/projects/projects.component';
+import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.component';
+import { OrganizationPeopleComponent } from './pages/organizations/people/people.component';
+import { OrganizationConfigurationComponent } from './pages/organizations/configuration/configuration.component';
+import { ProjectsPeopleComponent } from './pages/projects/people/people.component';
+import { ProjectsConfigurationComponent } from './pages/projects/configuration/configuration.component';
+import { TeamsPeopleComponent } from './pages/teams/people/people.component';
+import { TeamsConfigurationComponent } from './pages/teams/configuration/configuration.component';
+import { PersonalLandingComponent } from './pages/personal/landing/landing.component';
+import { PersonalConfigurationComponent } from './pages/personal/configuration/configuration.component';
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -90,11 +104,10 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ProjectsComponent } from './pages/organizations/projects/projects.component';
-import { TeamsComponent } from './pages/organizations/teams/teams.component';
-import { PeopleComponent } from './pages/organizations/people/people.component';
-import { ConfigurationComponent } from './pages/organizations/configuration/configuration.component';
+import { TeamsSidebarComponent } from './pages/teams/sidebar/sidebar.component';
+import { PersonalSidebarComponent } from './pages/personal/sidebar/sidebar.component';
+import { ProjectsSidebarComponent } from './pages/projects/sidebar/sidebar.component';
+
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -102,13 +115,18 @@ const appRoutes: Routes = [
     { path: '', component: LandingPageComponent },
     { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
     { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
-    { path: 'projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
     { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/projects', component: ProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/teams', component: TeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/people', component: PeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/configuration', component: ConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] }
-
+    { path: 'organizations/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/teams', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/people', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/configuration', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
+    { path: 'projects/people', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'projects/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'teams/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'teams/configuration', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'personal/landing', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
+    { path: 'personal/configuration', component: PersonalConfigurationComponent, data: { breadcrumbLabel: 'Account Configuration' }, canActivate: [AuthGuardGuard] },
 ];
 
 @NgModule({
@@ -130,7 +148,7 @@ const appRoutes: Routes = [
         RefsetDetails,
 		CategoryFilterComponent,
         DateTextFilterComponent,
-		CreateNewRefsetComponent,
+        CreateNewRefsetComponent,
         ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
@@ -150,10 +168,19 @@ const appRoutes: Routes = [
         LoginComponent,
         LandingPageComponent,
         DashboardComponent,
-        ProjectsComponent,
-        TeamsComponent,
-        PeopleComponent,
-        ConfigurationComponent
+        FeedbackCollectorComponent,
+        OrganizationsSidebarComponent,
+        OrganizationProjectsComponent,
+        OrganizationTeamsComponent,
+        OrganizationPeopleComponent,
+        OrganizationConfigurationComponent,
+        ProjectsPeopleComponent,
+        ProjectsConfigurationComponent,
+        TeamsSidebarComponent,
+        TeamsConfigurationComponent,
+        TeamsPeopleComponent,
+        PersonalSidebarComponent,
+        ProjectsSidebarComponent
     ],
     imports: [
         RouterModule.forRoot(

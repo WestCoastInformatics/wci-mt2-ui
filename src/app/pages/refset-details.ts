@@ -24,7 +24,7 @@ import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { catchError, filter, pairwise, take } from 'rxjs/operators';
-import { ProjectsRefsetComponent } from './projects/projects-refset.component';
+import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 
 /**
  * @title Tree with nested nodes

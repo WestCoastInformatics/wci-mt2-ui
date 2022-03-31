@@ -3,10 +3,10 @@ import { Title } from '@angular/platform-browser';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 @Component({
-  selector: 'app-configuration',
+  selector: 'organization-configuration',
   templateUrl: './configuration.component.html'
 })
-export class ConfigurationComponent implements OnInit {
+export class OrganizationConfigurationComponent implements OnInit {
 
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
 

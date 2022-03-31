@@ -1,0 +1,26 @@
+<!-- <div *ngIf="showLoadingSpinner" class="loading"></div> -->
+
+<!-- <app-side-bar></app-side-bar> -->
+<div id="refsetProjectsPage"
+     class="container-fluid">
+    <div class="row refset-title">
+        <div class="col-md-auto page-title"
+             style="margin-right: 20px; color: #555555; padding-left: 60px">
+            Organizations
+        </div>
+        <div class="row justify-content-end details-version-select"
+             style="margin-left: 20px">
+            <mat-form-field appearance="outline"
+                            class="project-drop-down">
+                <mat-label>{{'Choose Test'}}</mat-label>
+                <mat-select #detailsVersionSelect>
+                    <mat-option *ngFor="let test of ['test', 'test']"
+                                [value]="test"
+                                style="z-index: 3">
+                        {{ test }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    </div>
