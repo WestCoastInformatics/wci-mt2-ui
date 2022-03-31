@@ -76,14 +76,12 @@ export class AddRemoveConceptsComponent implements OnInit {
 	addRemoveConceptsForAdjudication(inactiveData: any, replacementData: any): void {
 		this.conceptCode = inactiveData?.code;
 		this.replacementCode = replacementData?.code;
-		console.log(this.replacementCode)
 		if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
 			this.actionText = "Add";
 		} else {
 			this.actionText = "Remove";
 		}
 
-			this.resetComponent();
 			this.addRemoveConcept(this.changeMethod);
 	
 	}

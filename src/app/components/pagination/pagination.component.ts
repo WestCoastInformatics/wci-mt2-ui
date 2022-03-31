@@ -35,6 +35,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @ViewChild('paginationLastPage') lastPageButton: MatButton;
     @ViewChildren('paginationPageNumber') pageNumberButtons: QueryList<MatButton>;
     activeGridOptions: any;
+    @Input()
     showAll: boolean;
     
 

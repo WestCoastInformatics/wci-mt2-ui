@@ -831,6 +831,11 @@ button.refset-tool-table-action-icon {
     padding-right: 45px;
 }
 
+#refsetProjectsPage .refset-title .details-version-select {
+    margin-bottom: -9px;
+    margin-left: 20px
+}
+
 #refsetDetailsPage .refset-title {
     background: white;
     //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
@@ -892,6 +897,7 @@ button.refset-tool-table-action-icon {
 .node-content-wrapper {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
+    width: 100%;
 }
 .node-wrapper {
     line-height: 0px !important;
@@ -947,7 +953,7 @@ button.refset-tool-table-action-icon {
         height: 12.75px;
         position: relative;
         right: 6px;
-        top: 0px;
+        top: 2px;
     }
 
     .tree-node {
@@ -3709,7 +3715,6 @@ span.title {
     width: fill-available;
     min-height: 50px;
     height: fit-content;
-    justify-content: center;
     position: inherit;
 }
 
@@ -3743,4 +3748,20 @@ img.refset-tool-edition-flag{
     margin-right: -80px;
     min-width: 600px !important;
     margin-bottom: 15px;
+}
+
+.linethrough-inactive {
+    text-decoration: line-through;
+}
+
+.hide-data {
+    opacity: 0;
+}
+
+.grey-close-icon,
+.add-symbol-icon,
+.subtract-symbol-icon,
+.grey-add-symbol-icon,
+.grey-trash-bin-icon {
+    cursor: pointer;
 }
