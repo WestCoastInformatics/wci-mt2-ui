@@ -24,9 +24,6 @@ export class CreateNewProjectModalComponent {
     organization:any;
     privateProject: any;
 
-    @Input() refsetInternalId: string;
-    @Input() refsetId: string;
-    @Input() refsetBranchPath: string;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     
     constructor(

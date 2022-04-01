@@ -28,9 +28,6 @@ export class CreateNewTeamModalComponent {
 
     roleOptions: any;
 
-    @Input() refsetInternalId: string;
-    @Input() refsetId: string;
-    @Input() refsetBranchPath: string;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     
     constructor(
