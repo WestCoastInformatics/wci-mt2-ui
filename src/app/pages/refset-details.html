@@ -27,8 +27,8 @@
         <div *ngIf="!editMode" class="col-5">&nbsp;</div>
 
         <!-- Status Stepper if in edit mode and refset not locked -->
-        <mat-horizontal-stepper *ngIf="!isLocked && editMode" class="col-5 details-page-stepper"
-            [linear]="true" labelPosition="bottom" #stepper>
+        <mat-horizontal-stepper *ngIf="!isLocked && editMode && refsetStatus != 'IN_UPGRADE'"
+            class="col-5 details-page-stepper" [linear]="true" labelPosition="bottom" #stepper>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
                 <ng-template matStepperIcon="number">
@@ -74,6 +74,10 @@
             </ng-template>
 
         </mat-horizontal-stepper>
+
+        <!-- In Upgrade -->
+        <div *ngIf="refsetStatus == 'IN_UPGRADE'" class="refset-tool-refset-details-title-name">IN
+            UPGRADE</div>
 
         <!-- Version Select -->
         <div class="col-3 details-version-select">
@@ -354,8 +358,12 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.editionName}}
-                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}"
-                                            class="refset-tool-edition-flag" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
+                                        <img *ngIf="refsetData?.flagIcon != null && showFlag"
+                                            (error)="showFlagIcon(false)"
+                                            src="{{refsetData?.flagIcon}}"
+                                            class="refset-tool-edition-flag"
+                                            title="{{refsetData?.editionName}} Flag"
+                                            aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
 
@@ -474,8 +482,12 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.organizationName}}
-                                        <img *ngIf="refsetData?.flagIcon != null && showFlag" (error)="showFlagIcon(false)" src="{{refsetData?.flagIcon}}"
-                                            class="refset-tool-edition-flag" title="{{refsetData?.editionName}} Flag" aria-label="{{refsetData?.editionName}} Flag" />
+                                        <img *ngIf="refsetData?.flagIcon != null && showFlag"
+                                            (error)="showFlagIcon(false)"
+                                            src="{{refsetData?.flagIcon}}"
+                                            class="refset-tool-edition-flag"
+                                            title="{{refsetData?.editionName}} Flag"
+                                            aria-label="{{refsetData?.editionName}} Flag" />
                                     </td>
                                 </tr>
 
@@ -687,12 +699,12 @@
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id"
-                    [refsetId]="refsetId"
-                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-file-modal>
+                    [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)">
+                </import-from-file-modal>
 
                 <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id"
-                    [refsetId]="refsetId"
-                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-list-modal>
+                    [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)">
+                </import-from-list-modal>
 
                 <add-remove-by-concept-modal [refset]="refsetData"
                     (loadingSpinner)="toggleLoadingSpinner($event)"
@@ -1068,10 +1080,12 @@
                                                 <div>
                                                     <!-- Name -->
                                                     <div class="row details-row">
-                                                        <table class="refset-tool-concept-details-concept-info-column-title">
+                                                        <table
+                                                            class="refset-tool-concept-details-concept-info-column-title">
                                                             <tr>
                                                                 <td style="text-align: left;">
-                                                                    <div class="refset-tool-concept-details-taxonomy-icon status-icon-container">
+                                                                    <div
+                                                                        class="refset-tool-concept-details-taxonomy-icon status-icon-container">
                                                                         <img [hidden]="!conceptDetail.defined"
                                                                             title="Fully Defined"
                                                                             aria-label="Fully Defined"
@@ -1087,7 +1101,11 @@
                                                                     <div class="refset-tool-concept-details-concept-name"
                                                                         title="{{conceptDescriptions[0].term}}"
                                                                         aria-label="{{conceptDescriptions[0].term}}">
-                                                                        {{getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptions[0].term}}
+                                                                        {{getFsn(conceptDescriptions)
+                                                                        ?
+                                                                        getFsn(conceptDescriptions)
+                                                                        :
+                                                                        conceptDescriptions[0].term}}
                                                                     </div>
                                                                 </td>
                                                                 <td style="text-align: right;">
@@ -1098,7 +1116,8 @@
                                                                             class="refset-tool-concept-details-action-icon"
                                                                             aria-label="Open Concept in New SNOMED Browser Window"
                                                                             title="Open Concept in SNOMED Browser Window">
-                                                                            <mat-icon>open_in_new</mat-icon>
+                                                                            <mat-icon>open_in_new
+                                                                            </mat-icon>
                                                                         </button>
                                                                     </div>
                                                                 </td>
