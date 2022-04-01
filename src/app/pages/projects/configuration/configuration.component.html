@@ -1,10 +1,9 @@
-<!-- <div *ngIf="showLoadingSpinner" class="loading"></div> -->
-
-<!-- <app-side-bar></app-side-bar> -->
-<div id="refsetProjectsPage" class="container-fluid">
+<div id="refsetProjectsPage"
+     class="container-fluid">
     <div class="row refset-title">
-        <div class="col-md-auto page-title" style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Organizations
+        <div class="col-md-auto page-title"
+             style="margin-right: 20px; color: #555555; padding-left: 60px">
+            Projects
         </div>
         <div class="row justify-content-end details-version-select" style="margin-left: 20px">
             <mat-form-field appearance="outline" class="project-drop-down">
@@ -17,4 +16,68 @@
             </mat-form-field>
         </div>
     </div>
-</div>
+    </div>
+
+    <div class="content-wrapper">
+        <app-sidebar [menuItems]="menu"></app-sidebar>
+        <div class='container-fluid mt-3'>
+        <span class="projects-configuration">
+        
+            <div class="section-header mb-3"> Project Configuration </div>
+            <div class="projects-configuration-details">
+                <div class="projects-configuration-blocks-1">
+                    <div class="projects-configuration-block main-block profile-block">
+                        <div class="projects-profile-head section-header">Profile</div>
+                    <div class="projects-profile-mid">
+                        <mat-form-field class="profile-name-field" appearance="none">
+                            <mat-label>Name</mat-label>
+                            <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                        </mat-form-field>
+    
+                        <mat-form-field class="profile-email-field" appearance="none">
+                            <mat-label>Primary Contact Email</mat-label>
+                            <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+                        </mat-form-field>
+    
+                        <mat-form-field class="profile-description-field" appearance="none">
+                            <mat-label>Description</mat-label>
+                            <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project" [(ngModel)]="profileEmailValue"></textarea>
+                        </mat-form-field>
+                        
+                        <div class="project-privacy">
+                            <span>Project Privacy</span>
+                            <mat-checkbox class="project-private-checkbox" [(ngModel)]="isPrivate">Private</mat-checkbox>
+                        </div>    
+                    </div>
+                            
+                            <div class="update-profile-button">
+                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a class="btn btn-primary btn-lg">Update Profile</a></div>
+                            </div>
+                    </div>
+        
+                    <div class="secondary-block">
+                        <div class="projects-configuration-block teams-block">
+                            <div class="projects-profile-head section-header">Teams</div>
+                            <div class="projects-profile-mid teams-textarea">
+                                <mat-form-field class="profile-description-field" appearance="none">
+                                    <mat-label>Teams</mat-label>
+                                    <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="save-team-button">
+                                <div class="section-list text-right" aria-label="Save Teams" title="Save Teams"><a class="btn btn-primary btn-lg">Save Teams</a></div>
+                            </div>
+                        </div>
+                        <div class="projects-configuration-block remove-project-block">
+                            <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Project</div>
+                            <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
+                            <div class="remove-projects-button">
+                                <div class="section-list text-right" aria-label="Remove project" title="Remove project"><a class="btn btn-primary btn-lg">Remove Project</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </span>
+    </div></div>

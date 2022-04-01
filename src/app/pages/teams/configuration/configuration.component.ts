@@ -13,12 +13,16 @@ export class TeamsConfigurationComponent implements OnInit {
     {name: 'Configuration', link: '/teams/configuration', icon: 'fa fa-cogs'}
   ];
 
+  profileNameValue = '';
+  profileEmailValue = '';
+  profileDescriptionValue = '';
+
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Organizations');
+    this.titleService.setTitle('Refset Tool - Teams');
     this.breadcrumbService.setBreadcrumbs([
-      { path: '/organizations/configuration', label: 'Organizations' },
+      { path: '/teams/configuration', label: 'Teams' },
       { label: 'Configurations' },
   ]);
   }

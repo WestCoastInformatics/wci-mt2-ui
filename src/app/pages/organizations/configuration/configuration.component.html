@@ -32,16 +32,14 @@
                                 <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
-                            <mat-form-field class="profile-email-field" appearance="none">
-                                <mat-label>Primary Contact Email</mat-label>
-                                <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
-                            </mat-form-field>
-
-                            <mat-form-field class="profile-description-field" appearance="none">
-                                <mat-label>Description</mat-label>
-                                <textarea matInput type="text" name="description"
-                                    [(ngModel)]="profileEmailValue"></textarea>
-                            </mat-form-field>
+                    <mat-form-field class="profile-description-field" appearance="none">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+                    </mat-form-field>
+                </div>
+                        
+                        <div class="update-profile-button">
+                            <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a class="btn btn-primary btn-lg">Update Profile</a></div>
                         </div>
 
                         <div class="update-profile-button">

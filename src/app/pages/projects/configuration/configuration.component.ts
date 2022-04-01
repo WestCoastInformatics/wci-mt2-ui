@@ -14,12 +14,17 @@ export class ProjectsConfigurationComponent implements OnInit {
     {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs', isActive: true}
   ];
 
+  profileNameValue = '';
+  profileEmailValue = '';
+  profileDescriptionValue = '';
+  isPrivate = false;
+
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Organizations');
+    this.titleService.setTitle('Refset Tool - Projects');
     this.breadcrumbService.setBreadcrumbs([
-      { path: '/organizations/configuration', label: 'Organizations' },
+      { path: '/projects/configuration', label: 'Projects' },
       { label: 'Configurations' },
   ]);
   }
