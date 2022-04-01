@@ -3828,6 +3828,9 @@ img.refset-tool-edition-flag{
     .text-primary{
         color: $main-color !important;
     }
+    .action-btn{
+        cursor: pointer;
+    }
 
     .profile-pic{
         width: 43px;
@@ -3891,6 +3894,7 @@ img.refset-tool-edition-flag{
     align-items: stretch;
     min-height: calc(100vh - 158px);
 }
+$sidebar-width: 294px;
 .sidebar{
     width: 72px;
     overflow-x: visible;
@@ -3910,6 +3914,7 @@ img.refset-tool-edition-flag{
 
             li{
                 color: #fff;
+                width: $sidebar-width;
                 a{
                     display: flex;
                     align-items: center;
@@ -3935,6 +3940,9 @@ img.refset-tool-edition-flag{
             li.active{
                 border-left: 5px solid $main-color;
                 color: $main-color;
+                a{
+                    padding-left: 5px;
+                }
             }
 
             .nav-label{
@@ -3946,7 +3954,7 @@ img.refset-tool-edition-flag{
 }
 
 .sidebar:hover .wrapper{
-    width: 294px;
+    width: $sidebar-width;
 
     ul{
         .nav-label{

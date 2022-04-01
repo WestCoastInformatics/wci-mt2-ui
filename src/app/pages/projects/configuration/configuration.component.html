@@ -5,15 +5,11 @@
              style="margin-right: 20px; color: #555555; padding-left: 60px">
             Projects
         </div>
-        <div class="row justify-content-end details-version-select"
-             style="margin-left: 20px">
-            <mat-form-field appearance="outline"
-                            class="project-drop-down">
+        <div class="row justify-content-end details-version-select" style="margin-left: 20px">
+            <mat-form-field appearance="outline" class="project-drop-down">
                 <mat-label>{{'Choose Test'}}</mat-label>
                 <mat-select #detailsVersionSelect>
-                    <mat-option *ngFor="let test of ['test', 'test']"
-                                [value]="test"
-                                style="z-index: 3">
+                    <mat-option *ngFor="let test of ['test', 'test']" [value]="test" style="z-index: 3">
                         {{ test }}
                     </mat-option>
                 </mat-select>
@@ -23,7 +19,7 @@
     </div>
 
     <div class="content-wrapper">
-        <app-projects-sidebar activeRoute="configuration"></app-projects-sidebar>
+        <app-sidebar [menuItems]="menu"></app-sidebar>
         <div class='container-fluid mt-3'>
         <span class="projects-configuration">
         

@@ -38,6 +38,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { AngularSplitModule } from 'angular-split';
 
 // COMPONENT IMPORTS
+import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
@@ -62,7 +63,6 @@ import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FeedbackCollectorComponent } from './components/feedback-collector/feedback-collector.component';
-import { OrganizationsSidebarComponent } from './pages/organizations/sidebar/sidebar.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationProjectsComponent } from './pages/organizations/projects/projects.component';
 import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.component';
@@ -88,7 +88,6 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { SideBarModule } from 'src/app/components/side-bar/side-bar.module';
 import { dragAndDropDirective } from 'src/app/directives/drag-and-drop.directive';
 import { AddRemoveByConceptModalComponent } from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
 import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
@@ -104,9 +103,6 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
-import { TeamsSidebarComponent } from './pages/teams/sidebar/sidebar.component';
-import { PersonalSidebarComponent } from './pages/personal/sidebar/sidebar.component';
-import { ProjectsSidebarComponent } from './pages/projects/sidebar/sidebar.component';
 
 
 const appRoutes: Routes = [
@@ -169,18 +165,16 @@ const appRoutes: Routes = [
         LandingPageComponent,
         DashboardComponent,
         FeedbackCollectorComponent,
-        OrganizationsSidebarComponent,
+        SidebarComponent,
         OrganizationProjectsComponent,
         OrganizationTeamsComponent,
         OrganizationPeopleComponent,
         OrganizationConfigurationComponent,
         ProjectsPeopleComponent,
         ProjectsConfigurationComponent,
-        TeamsSidebarComponent,
+        //TeamsSidebarComponent,
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
-        PersonalSidebarComponent,
-        ProjectsSidebarComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent
     ],
@@ -219,7 +213,6 @@ const appRoutes: Routes = [
         EditorModule,
         AngularSplitModule,
         NgbModule,
-        SideBarModule,
         ReactiveFormsModule,
         MatSlideToggleModule
     ],

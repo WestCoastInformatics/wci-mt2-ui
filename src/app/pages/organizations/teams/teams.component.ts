@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 @Component({
@@ -7,6 +8,13 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
   templateUrl: './teams.component.html'
 })
 export class OrganizationTeamsComponent implements OnInit {
+  menu:SidebarMenuItem[] = [
+    {name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open'},
+    {name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true},
+    {name: 'People', link: '/organizations/people', icon: 'fa fa-user'},
+    {name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs'}
+  ];
+
   data = [];
   defaultColDef = {};
   columnDefs = [
