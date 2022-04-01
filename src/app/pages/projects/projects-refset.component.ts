@@ -102,26 +102,32 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.showLoadingSpinner = false;
             this.changeDetectorRef.detectChanges();
             let workflowStatuses = [
-                {type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT'},
-                {type: 'status', name: 'In Edit', value: 'IN_EDIT'},
-                {type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE'},
-                {type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW'},
-                {type: 'status', name: 'In Review', value: 'IN_REVIEW'},
-                {type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED'},
-                {type: 'status', name: 'Ready for PUBLICATION', value: 'READY_FOR_PUBLICATION'},
-                {type: 'status', name: 'Published', value: 'PUBLISHED'}
+                { type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT' },
+                { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
+                { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+                { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
+                { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
+                { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+                { type: 'status', name: 'Ready for PUBLICATION', value: 'READY_FOR_PUBLICATION' },
+                { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
 
             this.columnDefs = [
                 { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false },
                 { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
                 { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 150, resizable: false },
-                { field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus }, 
-                    floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: workflowStatuses}},
-                { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 150, resizable: false, valueGetter: UiUtility.gridDateValueGetter, 
-                    floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
-                { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 180, resizable: false, valueGetter: UiUtility.gridDateValueGetter, 
-                    floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true}, sort: 'desc'}
+                {
+                    field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
+                    floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: workflowStatuses }
+                },
+                {
+                    field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 150, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
+                    floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }
+                },
+                {
+                    field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 180, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
+                    floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, sort: 'desc'
+                }
             ];
 
             this.refsetGridOptions = {
@@ -188,6 +194,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             // if the stored project ID doesn't match anything remove it
             sessionStorage.removeItem('selectedProjectId');
+        }
+        // set to first in project list if none stored
+        else if (this.projects && this.projects.length > 0) {
+            this.selectedProject = this.projects[0];
         }
     }
 
@@ -414,9 +424,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {
         this.modalService.open(workflowDiagramModal, {
-          //backdrop : 'static',
-          //keyboard : false,         
-          windowClass: 'workflow-diagram-modal'
+            //backdrop : 'static',
+            //keyboard : false,
+            windowClass: 'workflow-diagram-modal'
         });
     }
 }

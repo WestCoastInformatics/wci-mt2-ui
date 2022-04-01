@@ -18,6 +18,7 @@ body {
 }
 
 @-moz-document url-prefix() {
+
     html,
     body {
         font-weight: 400 !important;
@@ -60,6 +61,7 @@ textarea {
 table {
     width: 100%;
 }
+
 main {
     &.container {
         min-width: 100%;
@@ -77,58 +79,73 @@ strong {
 .refset-tool-inline {
     display: inline;
 }
+
 .refset-tool-flex-column {
     display: flex;
     flex-direction: column;
     flex: 0 0 auto;
 }
+
 .refset-tool-flex-row {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     flex: 1 1 auto;
 }
+
 .refset-tool-padding {
     padding: 5px;
 }
+
 .refset-tool-margin-left {
     margin-left: 5px;
 }
+
 .refset-tool-margin-right {
     margin-right: 5px;
 }
+
 .refset-tool-margin-sides {
     margin: 0px 5px;
 }
+
 .refset-tool-margin-top {
     margin-top: 5px;
 }
+
 .refset-tool-margin-bottom {
     margin-bottom: 5px;
 }
+
 .refset-tool-margin-top-bottom {
     margin: 5px 0px;
 }
+
 .refset-tool-no-margins {
     margin: 0px;
 }
+
 .refset-tool-no-padding {
     margin: 0px;
     padding: 0px;
 }
+
 .refset-tool-no-margins-padding {
     margin: 0px;
     padding: 0px;
 }
+
 .refset-tool-flex-no-wrap {
     flex-wrap: nowrap;
 }
+
 .refset-tool-flex-right {
     flex: 1 1 auto;
     text-align: right;
     justify-content: flex-end;
     display: flex;
 }
+
 // <--- Manual Flex Styles END
 
 // General Page Styles
@@ -137,6 +154,7 @@ strong {
     opacity: 0.4;
     user-select: none;
 }
+
 .refset-tool-rounded-borders {
     border-radius: 3px;
     border-style: solid;
@@ -153,9 +171,10 @@ strong {
     color: #eee !important;
 }
 
-.refset-tool-nav-item-row > * {
+.refset-tool-nav-item-row>* {
     margin-left: 10px;
 }
+
 .refset-tool-nav-item-row {
     display: flex;
     flex: 1 1 auto;
@@ -220,6 +239,7 @@ footer.footer {
 footer.footer a {
     font-size: 0.9em !important;
     color: #C8CFD6;
+
     &:hover {
         text-decoration: none;
     }
@@ -231,14 +251,16 @@ a.footer-link {
     color: #C8CFD6;
 }
 
-.refset-tool-breadcrumb-bar > :first-child {
+.refset-tool-breadcrumb-bar> :first-child {
     margin-left: 10px;
 }
-.refset-tool-breadcrumb-bar > :not(:last-child)::after {
+
+.refset-tool-breadcrumb-bar> :not(:last-child)::after {
     content: "/";
     color: $ghost-grey;
     margin: 0px 10px;
 }
+
 .refset-tool-breadcrumb-bar {
     display: flex;
     align-items: center;
@@ -258,6 +280,7 @@ a.footer-link {
 .refset-tool-nav-item-row a:hover {
     text-decoration: none;
 }
+
 .refset-tool-nav-item-row a span {
     //color: greenyellow !important;
 }
@@ -320,7 +343,7 @@ a.footer-link {
     line-height: 30px !important;
 }
 
-.pagination-page-buttons > .mat-button-wrapper {
+.pagination-page-buttons>.mat-button-wrapper {
     color: black;
 }
 
@@ -349,7 +372,7 @@ a.footer-link {
     text-transform: capitalize;
 }
 
-.mat-icon-button .mat-button-wrapper > * {
+.mat-icon-button .mat-button-wrapper>* {
     //vertical-align: top !important;
 }
 
@@ -365,6 +388,7 @@ button.refset-tool-table-action-icon {
     margin-top: auto;
     margin-bottom: auto;
     z-index: 1;
+
     mat-icon {
         overflow: hidden;
         height: 24px;
@@ -405,21 +429,24 @@ button.refset-tool-table-action-icon {
 .refset-tool-delete {
     color: $delete_color;
 }
+
 .refset-tool-concept-details-concept-ecl {
     padding-left: 0px !important;
 }
+
 .refset-tool-concept-details-concept-id-label {
     padding-left: 0px;
 }
+
 .refset-tool-concept-details-taxonomy-icon {
     padding-left: 2px !important;
 }
 
-.refset-tool-details-member-taxonomy{
+.refset-tool-details-member-taxonomy {
     height: 800px;
 }
 
-.refset-tool-details-member-taxonomy .details-section{
+.refset-tool-details-member-taxonomy .details-section {
     height: 968px;
     overflow: auto;
 }
@@ -428,6 +455,7 @@ button.refset-tool-table-action-icon {
 .refset_tool_inactive_row {
     background-color: $inactive_row_color;
 }
+
 .refset-tool-ag-grid {
 
     &.ten-rows {
@@ -509,13 +537,16 @@ button.refset-tool-table-action-icon {
 .ag-theme-alpine .ag-ltr input[class^="ag-"][type="text"] {
     padding-top: 24px;
 }
+
 .ag-root-wrapper-body {
     height: max-content !important;
     // max-height: 623px;
 }
+
 .no-row-overlay {
     height: 300px;
 }
+
 .ag-overlay {
     .ag-overlay-panel {
         .ag-overlay-wrapper {
@@ -525,6 +556,7 @@ button.refset-tool-table-action-icon {
         }
     }
 }
+
 .ag-theme-alpine {
     font-family: $standard_font_family;
 
@@ -533,13 +565,16 @@ button.refset-tool-table-action-icon {
         height: 51px !important;
         font-size: 14px !important;
     }
+
     .ag-row:hover {
         background-color: #f0fcff; //icy blue hover
     }
+
     .ag-row-selected {
         background-color: #a4dbfd; //slightly darker selected
         color: #000000;
     }
+
     .ag-ltr .ag-has-focus .ag-cell-focus:not(.ag-cell-range-selected) {
         border-color: $cerulean;
     }
@@ -548,16 +583,20 @@ button.refset-tool-table-action-icon {
     .ag-header-viewport {
         border-bottom: 1px solid #eeeeee;
     }
+
     .ag-header-cell-resize::after {
         background-color: #888888;
     }
+
     .ag-header-row:not(:first-child) .ag-header-cell {
         border-top-color: #eeeeee;
     }
+
     &.refset-tool-ag-grid-filter .ag-header {
         height: 110px !important;
         min-height: 110px !important;
     }
+
     .ag-header-row-floating-filter {
         height: 63px !important;
     }
@@ -570,6 +609,7 @@ button.refset-tool-table-action-icon {
         background-color: transparent;
         border-radius: 0px;
     }
+
     .ag-ltr input[class^="ag-"][type="text"]:focus {
         border-bottom: 1px solid $cerulean;
         box-shadow: none;
@@ -585,6 +625,7 @@ button.refset-tool-table-action-icon {
 #refsetDirectoryPage,
 #refsetDetailsPage {
     padding: 0px;
+
     .refset-tool-directory-column-information {
         justify-content: center;
         padding-left: 12px;
@@ -626,6 +667,7 @@ button.refset-tool-table-action-icon {
         margin-bottom: 5px
     }
 }
+
 .wrapper-progressBar {
     width: 100%;
 }
@@ -713,13 +755,16 @@ button.refset-tool-table-action-icon {
     background-color: white;
     box-shadow: 0 4px 2px -2px grey;
     z-index: 1000 !important;
+
     // padding-top: 52px;
     .page-title {
         padding-left: 3rem;
     }
+
     .justify-content-end {
         justify-content: space-between !important;
     }
+
     .dropdown-group {
         display: inline-flex !important;
         padding-right: 3rem;
@@ -738,15 +783,19 @@ button.refset-tool-table-action-icon {
         width: 320px;
     }
 }
+
 #refsetDirectoryPage .outer-table-button {
     margin-top: 23px;
 }
+
 #directoryViewFilterField.mat-form-field {
     width: 125px;
     padding-left: 5px;
+
     .mat-form-field-flex {
         width: 125px;
     }
+
     .mat-form-field-underline {
         width: 125px;
     }
@@ -755,6 +804,7 @@ button.refset-tool-table-action-icon {
 .ag-floating-filter-full-body app-category-floating-filter select {
     padding: 0px;
 }
+
 // .scroll-override {
 //     width: auto !important;
 //     overflow-x: scroll !important;
@@ -768,6 +818,7 @@ button.refset-tool-table-action-icon {
 .ag-floating-filter-input {
     padding-bottom: 12px;
 }
+
 // Column Chooser Styles
 .mat-form-field.refset-tool-column-chooser-select-field {
     width: 190px;
@@ -860,6 +911,7 @@ button.refset-tool-table-action-icon {
     width: 90%;
     padding-left: 30px;
     font-size: 14px;
+
     // set this to 20px less than the field to leave room for the cancel 'X'
     .mat-form-field-flex {
         width: calc(100% - 20px);
@@ -894,14 +946,17 @@ button.refset-tool-table-action-icon {
 #refsetDetailsPage button .mat-raised-button.mat-button-base {
     width: 150px;
 }
+
 .node-content-wrapper {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     width: 100%;
 }
+
 .node-wrapper {
     line-height: 0px !important;
 }
+
 // Taxonomy Styles
 .refset-tool-taxonomy {
 
@@ -909,29 +964,25 @@ button.refset-tool-table-action-icon {
     display: block;
     padding-left: 0px;
     padding-right: 0px;
-    .tree-node.refset-tool-taxonomy-is-not-member
-        > tree-node-wrapper
-        > .node-wrapper
-        > .node-content-wrapper {
+
+    .tree-node.refset-tool-taxonomy-is-not-member>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
         font-weight: normal;
         color: $standard_font_color;
     }
-    .tree-node.refset-tool-taxonomy-is-member
-    > tree-node-wrapper
-    > .node-wrapper
-    > .node-content-wrapper {
-    font-weight: bold !important;
-    color: $standard_font_color !important;
-}
-    .tree-node.refset-tool-taxonomy-no-members-in-branch
-        > tree-node-wrapper
-        > .node-wrapper
-        > .node-content-wrapper {
+
+    .tree-node.refset-tool-taxonomy-is-member>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
+        font-weight: bold !important;
+        color: $standard_font_color !important;
+    }
+
+    .tree-node.refset-tool-taxonomy-no-members-in-branch>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
         //font-weight: normal;
         //color: $inactive_text_color;
     }
+
     .node-wrapper tree-node-expander {
         display: none;
+
         .custom-inner-chevron {
             display: block;
             padding-right: 10px;
@@ -949,6 +1000,7 @@ button.refset-tool-table-action-icon {
             background-image: url("/assets/circled_chevron_right_icon.svg");
         }
     }
+
     .tree-node img {
         width: 13px;
         height: 12.75px;
@@ -958,6 +1010,7 @@ button.refset-tool-table-action-icon {
     }
 
     .tree-node {
+
         .add-symbol-icon,
         .subtract-symbol-icon {
             width: 18px !important;
@@ -966,16 +1019,19 @@ button.refset-tool-table-action-icon {
     }
 
     add-remove-concepts-icons {
+
         .add-symbol-icon,
         .subtract-symbol-icon {
             width: 18px !important;
             height: 18px !important;
         }
     }
+
     // Tree Component Overrides
     .toggle-children-wrapper {
         padding: 0px;
     }
+
     .toggle-children {
         background-image: url("/assets/chevron_right_icon.svg");
         height: 18px;
@@ -983,6 +1039,7 @@ button.refset-tool-table-action-icon {
         top: 5px;
         margin-right: 3px;
     }
+
     // used for when there are no children
     .toggle-children-placeholder {
         background-image: url("/assets/remove_icon.svg");
@@ -1022,24 +1079,30 @@ button.refset-tool-table-action-icon {
     margin-left: 20px;
     margin-right: 5px;
 }
+
 .refset-tool-details-chooser-column {
     font-size: 16px;
 }
+
 .refset-tool-concept-details-title-name {
     font-size: 1.25rem;
     padding: 0px;
 }
+
 .refset-tool-toggle-buttons {
     font-size: 16px;
     margin-right: 15px;
     margin-bottom: 10px;
 }
+
 #detailsTaxonomySearchInputField {
     top: 2px;
 }
-.createNewRefsetDialog > .modal-dialog {
+
+.createNewRefsetDialog>.modal-dialog {
     max-width: 1200px;
 }
+
 .refset-tool-concept-details-taxonomy-section {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
@@ -1048,27 +1111,33 @@ button.refset-tool-table-action-icon {
     resize: vertical;
     overflow: auto;
 }
+
 // #detailsMembersTree tree-viewport {
 //     overflow: unset !important;
 // }
-#detailsMembersTree .tree-children{
+#detailsMembersTree .tree-children {
     overflow: unset;
     padding-left: 0;
 }
-#detailsMembersTree tree-node{
+
+#detailsMembersTree tree-node {
     position: relative;
 }
-#detailsMembersTree tree-node:nth-child(even){
+
+#detailsMembersTree tree-node:nth-child(even) {
     background-color: #f5f5f5;
     display: block;
 }
-#detailsMembersTree tree-node:nth-child(odd){
+
+#detailsMembersTree tree-node:nth-child(odd) {
     background-color: #fff;
     display: block;
 }
+
 .children-section {
     height: 623px;
 }
+
 .refset-tool-concept-details-taxonomy-icon {
     max-width: 30px;
 
@@ -1085,17 +1154,21 @@ button.refset-tool-table-action-icon {
         height: 18px !important;
     }
 }
-.refset-tool-concept-details-taxonomy-icon.taxonomy-icon-edit-mode{
+
+.refset-tool-concept-details-taxonomy-icon.taxonomy-icon-edit-mode {
     max-width: 50px;
 }
-.add-remove-concept-hierarchy-modal-parent-size .refset-tool-concept-details-taxonomy-icon{
-    img{
+
+.add-remove-concept-hierarchy-modal-parent-size .refset-tool-concept-details-taxonomy-icon {
+    img {
         margin-left: 0;
     }
 }
+
 .refset-tool-concept-details-taxonomy-description {
     margin-left: 10px;
 }
+
 .refset-tool-concept-details-concept-name {
     font-size: 15px;
     padding-left: 0px !important;
@@ -1110,26 +1183,36 @@ button.refset-tool-table-action-icon {
     padding: 2px
 }
 
-.details-row{
+.details-row {
 
-    .status-icon-container{
+    .status-icon-container {
         width: 30px;
     }
-    .refset-tool-concept-details-concept-name{
+
+    .refset-tool-concept-details-concept-name {
         text-align: center;
         flex-grow: 2;
     }
-    .open-container{
+
+    .open-container {
         padding: none;
-        .mat-button .mat-button-wrapper>*, .mat-flat-button .mat-button-wrapper>*, .mat-stroked-button .mat-button-wrapper>*, .mat-raised-button .mat-button-wrapper>*, .mat-icon-button .mat-button-wrapper>*, .mat-fab .mat-button-wrapper>*, .mat-mini-fab .mat-button-wrapper>*
-        {
+
+        .mat-button .mat-button-wrapper>*,
+        .mat-flat-button .mat-button-wrapper>*,
+        .mat-stroked-button .mat-button-wrapper>*,
+        .mat-raised-button .mat-button-wrapper>*,
+        .mat-icon-button .mat-button-wrapper>*,
+        .mat-fab .mat-button-wrapper>*,
+        .mat-mini-fab .mat-button-wrapper>* {
             vertical-align: top !important;
         }
     }
 }
+
 .refset-tool-concept-details-section-title {
     font-weight: 400;
 }
+
 .refset-tool-concept-details-concept-info-column {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -1146,9 +1229,7 @@ button.refset-tool-table-action-icon {
     @extend .refset-tool-rounded-borders;
 }
 
-.add-remove-concept-hierarchy-modal-details-size
-    > .row
-    > .refset-tool-concept-details-concept-info-column {
+.add-remove-concept-hierarchy-modal-details-size>.row>.refset-tool-concept-details-concept-info-column {
     width: 100%;
     padding-left: 15px;
     padding-right: 15px;
@@ -1158,12 +1239,15 @@ button.refset-tool-table-action-icon {
     padding-right: 15px;
     padding-left: 15px;
 }
+
 .refset-tool-concept-details-concept-info-column-status {
     background-color: lightpink;
 }
+
 .refset-tool-concept-details-concept-row {
     margin-bottom: 5px;
 }
+
 .refset-tool-concept-details-concept-roles-column {
     margin-left: 10px;
     padding-left: 0px;
@@ -1176,8 +1260,8 @@ button.refset-tool-table-action-icon {
 }
 
 .refset-tool-concept-details-action-icon {
-    width:25px !important;
-    height:25px !important;
+    width: 25px !important;
+    height: 25px !important;
     vertical-align: top !important;
 }
 
@@ -1189,8 +1273,9 @@ button.refset-tool-table-action-icon {
 // }
 
 #refset-block {
-    padding:2px;
+    padding: 2px;
 }
+
 .refset-tool-concept-details-concept-roles-column-no-attributes {
     margin-left: 10px;
     padding-left: 0px;
@@ -1199,24 +1284,29 @@ button.refset-tool-table-action-icon {
     border-color: $concept_details_color;
     @extend .refset-tool-rounded-borders;
 }
+
 .refset-tool-concept-details-concept-section {
     margin-bottom: 5px;
     padding: 0px;
     padding-right: 0px !important;
     padding-left: 0px !important;
 }
+
 .no-attributes {
     opacity: 30%;
 }
+
 .refset-tool-concept-details-concept-description {
     padding-left: 0px;
     padding-right: 0px;
 }
+
 .refset-tool-concept-details-concept-description-language {
 
-    font-style:italic;
+    font-style: italic;
     word-spacing: .5rem;
 }
+
 .refset-tool-concept-details-role-row {
     line-height: 1.3;
     font-size: 12px;
@@ -1234,26 +1324,32 @@ button.refset-tool-table-action-icon {
     .refset-tool-pagination-top-row {
         display: flex;
     }
+
     .refset-tool-pagination-bottom-row {
         text-align: center;
     }
+
     button {
         margin: 0 2px;
     }
+
     .refset-tool-pagination-buttons {
         padding: 0;
         margin: 2px 0px;
     }
+
     .refset-tool-pagination-total-label {
         flex: 1;
         display: flex;
         justify-content: flex-end;
     }
+
     .refset-tool-pagination-spacer {
         visibility: hidden;
         flex: 1;
         display: flex;
     }
+
     .refset-tool-pagination-count {
         font-weight: bold;
     }
@@ -1323,6 +1419,7 @@ button.refset-tool-table-action-icon {
     padding-right: 10px;
     padding-top: 10px;
 }
+
 // Refset Details Modal / Info Popup
 
 .refset-tool-refset-metadata-table {
@@ -1361,8 +1458,8 @@ button.refset-tool-table-action-icon {
 .refset-tool-refset-metadata-column:first-child {
     margin: 1.5rem 1.5rem 0 0;
 }
-@media (min-width: 768px)
-{
+
+@media (min-width: 768px) {
     .refset-tool-refset-metadata-column:first-child.col-md-6 {
         max-width: calc(50% - 1.5rem);
     }
@@ -1402,6 +1499,7 @@ button.refset-tool-table-action-icon {
 .ag-center-cols-clipper {
     min-height: 50px !important;
 }
+
 // Search (clear-search)
 .clear-search {
     color: #666666;
@@ -1410,6 +1508,7 @@ button.refset-tool-table-action-icon {
     left: -13px;
     top: 0px;
     cursor: pointer;
+
     &:hover {
         color: $delete_color;
     }
@@ -1418,6 +1517,7 @@ button.refset-tool-table-action-icon {
 .refset-tool-directory-chooser-column {
     padding-right: 20px;
 }
+
 // Table-Tax Button Group
 .mat-button-toggle {
     margin-top: -2px;
@@ -1443,6 +1543,7 @@ button.refset-tool-table-action-icon {
     border: 1px solid #666;
     //font-family: $standard_font_family;
 }
+
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
     //line-height: 31px;
     //font-size: 14px;
@@ -1458,18 +1559,17 @@ button.refset-tool-table-action-icon {
 .mat-horizontal-content-container {
     padding: 0px !important;
 }
+
 .mat-button-toggle-group-appearance-standard {
     border-radius: 0px;
     height: 31px;
 }
 
-#refsetDetailsPage
-    .mat-raised-button.mat-button-base.refset-tool-action-button {
+#refsetDetailsPage .mat-raised-button.mat-button-base.refset-tool-action-button {
     line-height: 40px !important;
 }
 
-#refsetDetailsPage
-    .mat-raised-button.mat-button-base.ecl-builder-action-button {
+#refsetDetailsPage .mat-raised-button.mat-button-base.ecl-builder-action-button {
     line-height: 30px !important;
     font-size: 12px;
     margin-top: 23px;
@@ -1493,6 +1593,7 @@ button.refset-tool-table-action-icon {
     mat-form-field {
         width: 100%;
     }
+
     mat-chip {
         transform: scale(0.8);
         margin-right: 5px;
@@ -1500,12 +1601,14 @@ button.refset-tool-table-action-icon {
         border-radius: 8px;
         background: white;
     }
+
     .refset_tool_ecl_definition_field {
         width: calc(100% - 120px);
         margin-right: 5px;
     }
 }
-.tag-container{
+
+.tag-container {
     mat-chip {
         transform: scale(0.8);
         margin-right: 5px;
@@ -1514,6 +1617,7 @@ button.refset-tool-table-action-icon {
         background: white;
     }
 }
+
 .col.create-new-refset-label {
     width: 200px;
     max-width: 200px;
@@ -1609,7 +1713,7 @@ button.refset-tool-table-action-icon {
 }
 
 // Notification Styles
-#toast-container.toast-container > div.refset-tool-notification {
+#toast-container.toast-container>div.refset-tool-notification {
     width: 400px;
 
     .refset-tool-notification-button {
@@ -1652,10 +1756,8 @@ button.refset-tool-table-action-icon {
     height: 100%;
     background: radial-gradient(rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.8));
 
-    background: -webkit-radial-gradient(
-        rgba(20, 20, 20, 0.8),
-        rgba(0, 0, 0, 0.8)
-    );
+    background: -webkit-radial-gradient(rgba(20, 20, 20, 0.8),
+            rgba(0, 0, 0, 0.8));
 }
 
 // .ag-overlay-loading-wrapper {
@@ -1717,6 +1819,7 @@ button.refset-tool-table-action-icon {
         -o-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
         -moz-transform: rotate(360deg);
@@ -1725,6 +1828,7 @@ button.refset-tool-table-action-icon {
         transform: rotate(360deg);
     }
 }
+
 @-moz-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -1733,6 +1837,7 @@ button.refset-tool-table-action-icon {
         -o-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
         -moz-transform: rotate(360deg);
@@ -1741,6 +1846,7 @@ button.refset-tool-table-action-icon {
         transform: rotate(360deg);
     }
 }
+
 @-o-keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -1749,6 +1855,7 @@ button.refset-tool-table-action-icon {
         -o-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
         -moz-transform: rotate(360deg);
@@ -1757,6 +1864,7 @@ button.refset-tool-table-action-icon {
         transform: rotate(360deg);
     }
 }
+
 @keyframes spinner {
     0% {
         -webkit-transform: rotate(0deg);
@@ -1765,6 +1873,7 @@ button.refset-tool-table-action-icon {
         -o-transform: rotate(0deg);
         transform: rotate(0deg);
     }
+
     100% {
         -webkit-transform: rotate(360deg);
         -moz-transform: rotate(360deg);
@@ -1785,6 +1894,7 @@ button.refset-tool-table-action-icon {
     margin: 0 auto;
     width: 300px;
     background-color: white;
+
     input {
         opacity: 0;
         position: absolute;
@@ -2132,8 +2242,7 @@ button.refset-tool-table-action-icon {
 }
 
 .slide-in-left {
-    -webkit-animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-        both;
+    -webkit-animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
@@ -2143,18 +2252,21 @@ button.refset-tool-table-action-icon {
         transform: translateX(-1000px);
         opacity: 0;
     }
+
     100% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
         opacity: 1;
     }
 }
+
 @keyframes slide-in-left {
     0% {
         -webkit-transform: translateX(-1000px);
         transform: translateX(-1000px);
         opacity: 0;
     }
+
     100% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
@@ -2170,10 +2282,7 @@ button.refset-tool-table-action-icon {
     padding-top: 0 !important;
 }
 
-::ng-deep
-    #refsetProjectsPage
-    .refset-tool-pagination-container
-    .row:nth-child(2) {
+::ng-deep #refsetProjectsPage .refset-tool-pagination-container .row:nth-child(2) {
     display: none;
 }
 
@@ -2379,7 +2488,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     line-height: normal;
 }
 
-#refsetDetailsPage > .refset-title {
+#refsetDetailsPage>.refset-title {
     align-items: center;
     box-shadow: 0 4px 2px -2px gray;
     // padding-top: 52px;
@@ -2388,34 +2497,34 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     // top: 40px;
 }
 
-#refsetDetailsPage > .page-title {
+#refsetDetailsPage>.page-title {
     font-size: 1.25rem;
     color: #555555;
     text-align: left;
 }
 
-#refsetDetailsPage > .page-title > .row {
+#refsetDetailsPage>.page-title>.row {
     margin: 0;
     height: 40px;
     padding-right: 15px;
     margin-bottom: 20px;
 }
 
-#refsetDetailsPage > .refset-title-container {
+#refsetDetailsPage>.refset-title-container {
     padding-left: 3rem;
     padding-right: 3rem;
     margin-top: 50px;
 }
 
-#refsetDetailsPage > .refset-title-container > .refset-title {
+#refsetDetailsPage>.refset-title-container>.refset-title {
     align-items: baseline;
 }
 
-#refsetDetailsPage > .refset-title-container > .refset-title {
+#refsetDetailsPage>.refset-title-container>.refset-title {
     align-items: baseline;
 }
 
-#refsetDetailsPage > .refset-title-container > .metadata-container {
+#refsetDetailsPage>.refset-title-container>.metadata-container {
     width: 100%;
     display: flex;
     padding-bottom: 20px;
@@ -2423,10 +2532,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-left: 0px;
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > .metadata-container
-    > .container-fluid {
+#refsetDetailsPage>.refset-title-container>.metadata-container>.container-fluid {
     font-size: 1.25rem;
     color: #555555;
     text-align: left;
@@ -2437,22 +2543,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-right: 0px;
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > .metadata-container
-    > .container-fluid
-    > .metadata-name {
+#refsetDetailsPage>.refset-title-container>.metadata-container>.container-fluid>.metadata-name {
     display: flex;
     font-weight: bold;
     margin-left: -15px;
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > .metadata-container
-    > .container-fluid
-    > .metadata-name
-    > .set-of-buttons {
+#refsetDetailsPage>.refset-title-container>.metadata-container>.container-fluid>.metadata-name>.set-of-buttons {
     // width: 234px;
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
@@ -2466,12 +2563,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     justify-content: space-around;
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > .metadata-container
-    > .container-fluid
-    > .metadata-name
-    > .set-of-buttons {
+#refsetDetailsPage>.refset-title-container>.metadata-container>.container-fluid>.metadata-name>.set-of-buttons {
     .button-inactive {
         width: 39px;
         box-sizing: border-box;
@@ -2483,7 +2575,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     }
 }
 
-.refset-tool-refset-details-title-name > .set-of-buttons-non-edit-mode {
+.refset-tool-refset-details-title-name>.set-of-buttons-non-edit-mode {
     // width: 156px;
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
@@ -2495,12 +2587,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-left: 20px;
     display: flex;
     justify-content: space-around;
+
     .details-edit-refset-modal {
         height: 31px;
     }
 }
 
-.refset-tool-refset-details-title-name > .set-of-buttons-non-edit-mode {
+.refset-tool-refset-details-title-name>.set-of-buttons-non-edit-mode {
     .button-inactive {
         width: 39px;
         box-sizing: border-box;
@@ -2512,10 +2605,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     }
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > .refset-tool-refset-details-title-name
-    > .set-of-buttons {
+#refsetDetailsPage>.refset-title-container>.refset-tool-refset-details-title-name>.set-of-buttons {
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
     box-sizing: border-box;
@@ -2528,32 +2618,25 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     justify-content: space-around;
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > .refset-tool-refset-details-title-name
-    > .set-of-buttons
-    > .button-inactive {
+#refsetDetailsPage>.refset-title-container>.refset-tool-refset-details-title-name>.set-of-buttons>.button-inactive {
     width: 39px;
     box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
     border-color: rgba(0, 164, 228, 1);
     background-color: rgba(255, 255, 255, 1);
+
     .details-edit-refset-modal {
         height: 31px;
     }
 }
 
-#refsetDetailsPage
-    > .refset-title-container
-    > #detailsMemberSection
-    > .row
-    > .detailsMemberSection-container {
+#refsetDetailsPage>.refset-title-container>#detailsMemberSection>.row>.detailsMemberSection-container {
     width: 100%;
     background: #f5f5f5;
 }
 
-#refsetProjectsPage > .refset-title {
+#refsetProjectsPage>.refset-title {
     align-items: baseline;
     position: sticky;
     z-index: 2;
@@ -2575,7 +2658,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-body {
     padding: 0;
 }
-.add-remove-concept-hierarchy-modal-body .refset-tool-concept-details-column .row{
+
+.add-remove-concept-hierarchy-modal-body .refset-tool-concept-details-column .row {
     margin-left: 3px;
     margin-right: 3px;
 }
@@ -2599,9 +2683,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 
 
-.add-remove-concept-hierarchy-modal-size > .modal-dialog {
+.add-remove-concept-hierarchy-modal-size>.modal-dialog {
     width: 500px;
     max-width: 500px;
+
     .modal-content {
         height: 300px;
     }
@@ -2639,7 +2724,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .add-remove-concept-hierarchy-modal-table {
     height: 37rem;
     overflow-x: scroll;
-    overflow:auto;
+    overflow: auto;
     border-width: 2px;
     border-style: solid;
     border-color: rgba(215, 215, 215, 1);
@@ -2679,7 +2764,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     align-items: center;
 }
 
-.add-remove-concept-hierarchy-modal-table-second-column-data > .concept-name {
+.add-remove-concept-hierarchy-modal-table-second-column-data>.concept-name {
     padding-left: 5px;
 }
 
@@ -2706,15 +2791,15 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     height: 98% !important;
 }
 
-.add-remove-concept-hierarchy-modal-parent-size
-    > .row
-    > .refset-tool-concept-details-taxonomy-icon {
+.add-remove-concept-hierarchy-modal-parent-size>.row>.refset-tool-concept-details-taxonomy-icon {
     display: flex;
     align-self: center;
+
     .add-symbol-icon {
         margin-left: 10px;
         margin-right: 10px;
     }
+
     .subtract-symbol-icon {
         margin-left: 10px;
         margin-right: 10px;
@@ -2726,10 +2811,12 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         margin-left: 10px;
         margin-right: -5px;
     }
+
     .subtract-symbol-icon {
         margin-left: 10px;
         margin-right: -5px;
     }
+
     overflow-x: hidden;
 }
 
@@ -2738,6 +2825,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         margin-left: 10px;
         margin-right: -5px;
     }
+
     .subtract-symbol-icon {
         margin-left: 10px;
         margin-right: -5px;
@@ -2749,6 +2837,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         margin-left: 10px;
         margin-right: -5px;
     }
+
     .subtract-symbol-icon {
         margin-left: 10px;
         margin-right: -5px;
@@ -2826,26 +2915,32 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .details-page-right-button-group {
     margin-top: 0;
     margin-right: 30px;
+
     .button-group-edit {
         background-color: white;
         width: 75px;
     }
+
     .button-group-update {
         background-color: white;
         width: 75px;
     }
+
     .button-group-review {
         background-color: white;
         width: 75px;
     }
+
     .button-group-admin {
         background-color: white;
         width: 75px;
     }
+
     .mat-button-toggle-disabled {
         background-color: #f5f5f5;
         width: 75px;
     }
+
     .mat-button-toggle-checked {
         background-color: #00a9e0;
         width: 75px;
@@ -2914,13 +3009,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding: 28px !important;
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
     }
 }
 
-.ready-for-publication-modal > .modal-dialog > .modal-content {
+.ready-for-publication-modal>.modal-dialog>.modal-content {
     width: 700px;
 }
 
@@ -2929,6 +3025,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding: 28px !important;
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
@@ -2936,7 +3033,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 
-.upgrade-modal > .modal-dialog > .modal-content {
+.upgrade-modal>.modal-dialog>.modal-content {
     width: 800px;
 }
 
@@ -2960,9 +3057,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-weight: 500;
 }
 
-.upgrade-modal-current-version {
-
-}
+.upgrade-modal-current-version {}
 
 .upgrade-footer-warning-message {
     color: red;
@@ -2977,9 +3072,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-left: 25px;
 }
 
-.upgrade-modal-current-terminology {
-
-}
+.upgrade-modal-current-terminology {}
 
 .circled-check {
     height: 24px;
@@ -3025,6 +3118,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding: 28px !important;
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
@@ -3032,7 +3126,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 
-.finish-upgrade-modal > .modal-dialog > .modal-content {
+.finish-upgrade-modal>.modal-dialog>.modal-content {
     width: 800px;
 }
 
@@ -3047,9 +3141,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     text-align: left;
 }
 
-.finish-upgrade-modal-current-version {
-
-}
+.finish-upgrade-modal-current-version {}
 
 .finish-upgrade-footer-warning-message {
     color: red;
@@ -3064,9 +3156,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-left: 25px;
 }
 
-.upgrade-modal-current-terminology {
-
-}
+.upgrade-modal-current-terminology {}
 
 .finish-upgrade-modal-success-warning {
     height: fit-content;
@@ -3096,6 +3186,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .adjudicate-upgrade-modal-body {
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
@@ -3103,7 +3194,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 
-.adjudicate-upgrade-modal > .modal-dialog {
+.adjudicate-upgrade-modal>.modal-dialog {
     width: 1400px;
     max-width: 1400px
 }
@@ -3135,11 +3226,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-bottom: 15px;
 }
 
-.adjudicate-upgrade-modal-body-mid {
-}
+.adjudicate-upgrade-modal-body-mid {}
 
 .adjudicate-export-modal-button {
-    margin-right: 15px !important ;
+    margin-right: 15px !important;
 }
 
 .adjudicate-cancel-modal-button {
@@ -3180,21 +3270,22 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding: 28px !important;
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
     }
 }
 
-.review-modal > .modal-dialog > .modal-content {
+.review-modal>.modal-dialog>.modal-content {
     width: 700px;
 }
 
-.workflow-diagram-modal > .modal-dialog > .modal-content {
+.workflow-diagram-modal>.modal-dialog>.modal-content {
     width: 1000px;
 }
 
-.workflow-diagram-modal > .modal-dialog {
+.workflow-diagram-modal>.modal-dialog {
     display: table;
 }
 
@@ -3213,6 +3304,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     border-radius: 12px;
     top: 10px;
 }
+
 .ready-for-review-projects-button {
     height: 31px;
     position: absolute;
@@ -3222,7 +3314,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    color: white;    background-color: #c05d72;
+    color: white;
+    background-color: #c05d72;
 }
 
 .in-review-projects-button {
@@ -3234,7 +3327,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    color: white;    background-color: #a4303f;
+    color: white;
+    background-color: #a4303f;
 }
 
 .review-completed-projects-button {
@@ -3246,7 +3340,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    color: white;    background-color: #7b2232;
+    color: white;
+    background-color: #7b2232;
 }
 
 .ready-for-edit-projects-button {
@@ -3258,7 +3353,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    color: white;    background-color: rgba(202, 176, 39, 1);
+    color: white;
+    background-color: rgba(202, 176, 39, 1);
 }
 
 .in-edit-projects-button {
@@ -3274,6 +3370,19 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     background-color: #937c01;
 }
 
+.in-upgrade-projects-button {
+    height: 31px;
+    position: absolute;
+    background: inherit;
+    border-radius: 12px;
+    line-height: 2.3;
+    top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    background-color: #029301;
+}
+
 .ready-for-publication-projects-button {
     height: 31px;
     position: absolute;
@@ -3283,7 +3392,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    color: white;    background-color: rgba(150, 72, 176, 1);
+    color: white;
+    background-color: rgba(150, 72, 176, 1);
 }
 
 .refset-listing-workflow-button-text {
@@ -3335,7 +3445,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     height: 56px;
 }
 
-  .metadata-collapsible-container-title > .set-of-buttons-workflow-history {
+.metadata-collapsible-container-title>.set-of-buttons-workflow-history {
     width: 42px;
     height: 33px;
     background-color: rgba(255, 255, 255, 1);
@@ -3347,12 +3457,13 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-left: 20px;
     display: flex;
     justify-content: space-around;
+
     .details-edit-refset-modal {
         height: 31px;
     }
 }
 
-.metadata-collapsible-container-title > .set-of-buttons-workflow-history {
+.metadata-collapsible-container-title>.set-of-buttons-workflow-history {
     .button-inactive {
         width: 38px;
         box-sizing: border-box;
@@ -3369,13 +3480,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     // padding: 28px !important;
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
     }
 }
 
-.workflow-history-notes-modal > .modal-dialog > .modal-content {
+.workflow-history-notes-modal>.modal-dialog>.modal-content {
     width: 700px;
 }
 
@@ -3389,28 +3501,27 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     border-bottom: 15px solid #f5f5f5;
 }
 
-.workflow-history-table-container {
-
-}
+.workflow-history-table-container {}
 
 .add-remove-descendants-modal-body {
     background-color: #f5f5f6;
     padding: 28px !important;
     text-align: center;
     text-align: -webkit-center;
+
     .notes-title {
         text-align: left;
         padding-bottom: 20px;
     }
 }
 
-.add-remove-descendants-modal > .modal-dialog > .modal-content {
+.add-remove-descendants-modal>.modal-dialog>.modal-content {
     width: 700px;
 }
 
 .limit-text-container {
-    float:left;
-    display:flex
+    float: left;
+    display: flex
 }
 
 .limit-text-30 {
@@ -3434,7 +3545,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .warning-logo,
 .success-logo {
-   margin-left: -10px;
+    margin-left: -10px;
 }
 
 .warning-body,
@@ -3537,7 +3648,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 // Material Overlay
-.cdk-global-overlay-wrapper, .cdk-overlay-container {
+.cdk-global-overlay-wrapper,
+.cdk-overlay-container {
     z-index: 2000 !important;
 }
 
@@ -3551,9 +3663,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         width: auto;
         z-index: 99;
     }
+
     .ag-theme-alpine .ag-root-wrapper {
-         border: none!important;
+        border: none !important;
     }
+
     .refset-tool-pagination-container {
         padding-top: 10px;
     }
@@ -3567,9 +3681,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     gap: 0px 0px;
     grid-auto-flow: row;
     grid-template-areas:
-      "landing-page-top-bar-left landing-page-top-bar-center landing-page-top-bar-right"
-      ". landing-page-info-section ."
-      ". landing-page-login-section .";
+        "landing-page-top-bar-left landing-page-top-bar-center landing-page-top-bar-right"
+        ". landing-page-info-section ."
+        ". landing-page-login-section .";
     background-image: url("/assets/rt2-landing-bg.png");
     background-repeat: no-repeat;
     background-size: cover;
@@ -3579,7 +3693,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     font-family: $standard_font_family;
     letter-spacing: .1rem;
-  }
+}
 
 .landing-page-top-bar-center {
     grid-area: landing-page-top-bar-center;
@@ -3613,17 +3727,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-size: 19px;
 }
 
-.landing-page-text-2 {
+.landing-page-text-2 {}
 
-}
+.landing-page-text-3 {}
 
-.landing-page-text-3 {
-
-}
-
-.landing-page-text-4 {
-
-}
+.landing-page-text-4 {}
 
 span.title {
     font-weight: 300;
@@ -3667,13 +3775,9 @@ span.title {
     margin-top: -6px;
 }
 
-.landing-page-title-text {
+.landing-page-title-text {}
 
-}
-
-.landing-page-login-form {
-
-}
+.landing-page-login-form {}
 
 .landing-page-checkbox {
     color: black;
@@ -3702,6 +3806,7 @@ span.title {
 .concept-details-header {
     top: -20px;
 }
+
 .ecl-button {
     font-size: 12px !important;
     margin-top: 23px !important;
@@ -3711,15 +3816,17 @@ span.title {
 
 .navbar.sticky-top.navbar-dark {
     width: 100%;
-    width: -moz-available;          /* WebKit-based browsers will ignore this. */
-    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    width: -moz-available;
+    /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;
+    /* Mozilla-based browsers will ignore this. */
     width: fill-available;
     min-height: 50px;
     height: fit-content;
     position: inherit;
 }
 
-img.refset-tool-edition-flag{
+img.refset-tool-edition-flag {
     margin-bottom: 4px;
 }
 
@@ -3728,17 +3835,16 @@ img.refset-tool-edition-flag{
 }
 
 @media only screen and (max-width: 1120px) {
-    #refsetDetailsPage > .refset-title {
+    #refsetDetailsPage>.refset-title {
         // top: 100px;
     }
-    #refsetDetailsPage > .refset-title-container {
+
+    #refsetDetailsPage>.refset-title-container {
         // margin-top: 100px;
     }
 }
 
-@media only screen and (max-width: 1000px) {
-
-}
+@media only screen and (max-width: 1000px) {}
 
 .left-title-buttons {
     display: contents;
