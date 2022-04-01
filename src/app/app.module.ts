@@ -180,7 +180,9 @@ const appRoutes: Routes = [
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
         PersonalSidebarComponent,
-        ProjectsSidebarComponent
+        ProjectsSidebarComponent,
+        PersonalLandingComponent,
+        PersonalConfigurationComponent
     ],
     imports: [
         RouterModule.forRoot(

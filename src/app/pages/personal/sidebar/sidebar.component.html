@@ -1,26 +1,14 @@
 <div class='sidebar'>
   <div class="wrapper">
       <ul>
-          <li class="{{activeClass('projects')}}">
-              <a routerLink="/organizations/projects">
-                  <i class="fa fa-folder-open"></i>
-                  <span class="nav-label">Projects</span>
-              </a>
-          </li>
-          <li class="{{activeClass('teams')}}">
-              <a routerLink="/organizations/teams">
-                  <i class="fa fa-users"></i>
-                  <span class="nav-label">Teams</span>
-              </a>
-          </li>
-          <li class="{{activeClass('people')}}">
-              <a routerLink="/organizations/people">
+          <li class="{{activeClass('landing')}}">
+              <a routerLink="/personal/landing">
                   <i class="fa fa-user"></i>
                   <span class="nav-label">People</span>
               </a>
           </li>
           <li class="{{activeClass('configuration')}}">
-              <a>
+              <a routerLink="/personal/configuration">
                   <i class="fa fa-cogs"></i>
                   <span class="nav-label">Configuration</span>
               </a>

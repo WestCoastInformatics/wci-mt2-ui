@@ -8,12 +8,16 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 })
 export class ProjectsConfigurationComponent implements OnInit {
 
+  profileNameValue = '';
+  profileEmailValue = '';
+  profileDescriptionValue = '';
+
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Organizations');
+    this.titleService.setTitle('Refset Tool - Projects');
     this.breadcrumbService.setBreadcrumbs([
-      { path: '/organizations/configuration', label: 'Organizations' },
+      { path: '/projects/configuration', label: 'Projects' },
       { label: 'Configurations' },
   ]);
   }
