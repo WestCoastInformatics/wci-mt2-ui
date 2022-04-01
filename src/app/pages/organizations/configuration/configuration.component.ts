@@ -8,6 +8,9 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 })
 export class OrganizationConfigurationComponent implements OnInit {
 
+  profileNameValue = '';
+  profileEmailValue = '';
+  profileDescriptionValue = '';
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
 
   ngOnInit(): void {
