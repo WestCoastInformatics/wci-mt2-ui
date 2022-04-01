@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 
 @Component({
@@ -7,6 +8,11 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
   templateUrl: './people.component.html'
 })
 export class TeamsPeopleComponent implements OnInit {
+  menu:SidebarMenuItem[] = [
+    {name: 'People', link: '/teams/people', icon: 'fa fa-user', isActive: true},
+    {name: 'Configuration', link: '/teams/configuration', icon: 'fa fa-cogs'}
+  ];
+  
   data = [];
   defaultColDef = {};
   columnDefs = [
@@ -16,7 +22,9 @@ export class TeamsPeopleComponent implements OnInit {
       }},
     { field: 'company', headerName: 'Company Name' },
     { field: 'email', headerName: 'Email' },
-    { field: 'teams', headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+    { field: null, headerName: 'Edit Member', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold', cellRenderer: params => {
+      return `<a class='action-btn'>Remove Member</a>`;
+    } }
   ];
 
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
@@ -33,12 +41,13 @@ export class TeamsPeopleComponent implements OnInit {
   };
 
   this.data = [
-    { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', company: 'UX Designer', email: 'swhalen@westcoastinformatics.com', teams: '2 Teams' },
-    { name: 'Linda Bird', pic: 'assets/sampels/profile/2.svg', company: 'Head of Implementation Support', email: 'lbi@snomed.org', teams: '3 Teams' },
-    { name: 'Toni Morrison', pic: 'assets/sampels/profile/3.svg', company: 'Senior Terminologist', email: 'tmo@snomed.org', teams: '1 Team' },
-    { name: 'Monica Harry', pic: 'assets/sampels/profile/4.svg', company: 'Director of Content and Mapping', email: 'mha@snomed.org', teams: '1 Team' },
-    { name: 'Farzaneh Ashrafi', pic: 'assets/sampels/profile/5.svg', company: 'Senior Terminologist', email: 'fas@snomed.org', teams: '1 Team' },
-    { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Release Manager', email: 'aat@snomed.org', teams: '3 Teams' }
+    { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', company: 'West Coast Informatics', email: 'swhalen@westcoastinformatics.com' },
+    { name: 'Linda Bird', pic: 'assets/sampels/profile/2.svg', company: 'Snomed International', email: 'lbi@snomed.org' },
+    { name: 'Toni Morrison', pic: 'assets/sampels/profile/3.svg', company: 'Snomed International', email: 'tmo@snomed.org'},
+    { name: 'Monica Harry', pic: 'assets/sampels/profile/4.svg', company: 'Snomed International', email: 'mha@snomed.org' },
+    { name: 'Farzaneh Ashrafi', pic: 'assets/sampels/profile/5.svg', company: 'Snomed International', email: 'fas@snomed.org' },
+    { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Snomed International', email: 'aat@snomed.org' },
+    { name: 'Anna Nilsson', pic: 'assets/sampels/profile/7.svg', company: 'Swedish NRC', email: 'anilsson@swedishnrc.org' }
   ];
   }
   get dataCount() {

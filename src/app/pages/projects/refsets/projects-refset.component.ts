@@ -18,12 +18,18 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/models/user';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 
 @Component({
     selector: 'projects-refset',
     templateUrl: './projects-refset.component.html'
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
+    menu:SidebarMenuItem[] = [
+      {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy', isActive: true},
+      {name: 'People', link: '/projects/people', icon: 'fa fa-user'},
+      {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs'}
+    ];
 
     searchInput: string;
     user: User;
