@@ -1389,6 +1389,24 @@ export class RefsetDetails {
         this.dialog.confirmed().subscribe((data) => {});
     }
 
+    openCreateNewOrganizationDialog() {
+        const dialogId = "createNewOrganizationDialog";
+
+        const dialogData = {
+            headerText: `Create New Organization`,
+            template: this.refsetArtifactsDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
     openRefsetFeedback() {
         const dialogId = "refsetFeedbackDialog";
 

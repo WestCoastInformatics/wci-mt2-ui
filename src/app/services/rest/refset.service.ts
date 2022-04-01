@@ -50,6 +50,7 @@ export class RefsetService extends RestService {
 
 
     modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string, body?: string): Observable<any> {
+
         let replacementCode = '';
         if (replacementConceptId) {
             replacementCode = '&replacementConceptId=' + replacementConceptId
@@ -171,6 +172,7 @@ export class RefsetService extends RestService {
 	getOrganizations(): Observable<any> {
         return this.get(this.contextPath + 'refset/organizations');
     }
+
 
     getVersions(): Observable<any> {
         return this.get(this.contextPath + 'refset/versions');
