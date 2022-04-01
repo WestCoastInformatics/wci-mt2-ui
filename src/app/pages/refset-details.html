@@ -139,7 +139,7 @@
                             Access</button>
                     </mat-menu>
                     <span class="menu-spacer">&nbsp;</span>
-                    <span class="compare-menu" (click)="openCompareRefset()">Compare</span>
+                    <app-launch-comparison-modal [isDetailPage]="true" [activeRefset]="refsetData"></app-launch-comparison-modal>
                     <span class="menu-spacer">&nbsp;</span>
                     <button mat-button [matMenuTriggerFor]="documentationMenu"
                         class="documentation-menu">Documentation <span

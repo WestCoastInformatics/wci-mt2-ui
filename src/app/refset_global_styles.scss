@@ -91,6 +91,9 @@ strong {
 .refset-tool-padding {
     padding: 5px;
 }
+.refset-tool-padding-top {
+    padding-top: 5px;
+}
 .refset-tool-margin-left {
     margin-left: 5px;
 }
@@ -2179,6 +2182,95 @@ button.refset-tool-table-action-icon {
 .app-container-padding {
     padding-left: 0px !important;
     padding-right: 0px !important;
+}
+
+.launch-comparison-dialog > .modal-dialog {
+    max-width: 1000px;
+}
+
+.refset-tool-dialog-container {
+    padding: 30px !important;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    max-height: calc(100vh - 55px - 52px - (1.75rem * 2) - 2px); // 100% height - header - footer - margin
+    overflow: auto;
+
+    .refset-tool-dialog-body {
+        background-color: rgba(245, 245, 246, 1);
+        padding: 28px !important;
+        padding-top: 0px !important;
+        border-radius: 3px;
+        font-size: 14px;
+    
+        div.dialog-form {
+            align-items: baseline;
+            display: flex;
+            align-items: normal;
+        }
+        
+        div.dialog-form-field-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+
+            &.top-aligned {
+                align-items: normal;
+            }
+        
+            &.first-row {
+                margin-top: 20px;
+            }
+        
+            &.boxed-row {
+                border: 1px solid; 
+                margin-bottom: 10px; 
+                padding-top: 10px; 
+            }
+        }
+        
+        .col.dialog-form-field {
+            width: 900px;
+            max-width: 900px;
+            flex: 1;
+        
+            mat-form-field {
+                width: 100%;
+            }
+        
+            mat-chip {
+                transform: scale(0.8);
+                margin-right: 5px;
+                margin-bottom: 5px;
+                border-radius: 8px;
+                background: white;
+            }
+        
+            .refset_tool_ecl_definition_field {
+                width: calc(100% - 120px);
+                margin-right: 5px;
+            }
+        }
+        
+        .col.dialog-form-label {
+            width: 200px;
+            max-width: 200px;
+            flex: 1;
+        
+            label.raised {
+                margin-bottom: 0.7rem;
+            }
+        }
+        
+        .dialog-form-radio-option-padding {
+            padding-right: 30px;
+        }
+    }
+}
+
+.concept-dropdown-input {
+    height: 50px; 
+    width: 300px;
 }
 
 .create-new-refset-modal-header {

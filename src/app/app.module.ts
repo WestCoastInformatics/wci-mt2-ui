@@ -45,6 +45,7 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
+import { LaunchComparisonModalComponent } from 'src/app/components/comparison/launch-comparison-modal.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
@@ -134,7 +135,8 @@ const appRoutes: Routes = [
         AddRemoveConceptsIconsComponent,
         LoginComponent,
         LandingPageComponent,
-        FeedbackCollectorComponent
+        FeedbackCollectorComponent,
+        LaunchComparisonModalComponent
     ],
     imports: [
         RouterModule.forRoot(

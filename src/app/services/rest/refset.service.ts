@@ -179,4 +179,12 @@ export class RefsetService extends RestService {
     setRefsetInformation(refsetData: any): void {
         this.assignedUser = refsetData?.assignedUser;
     }
+
+    searchRefsetsForDropdowns(query: string): Observable<any> {
+        return this.get(this.contextPath + `refset/dropdownSearch?limit=10&query=${query}`, '', false);
+    }
+
+    launchComparison(activeRefsetInternalId: string, comparisonRefsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileUpgradeData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+    }
 }

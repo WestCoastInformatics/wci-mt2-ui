@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -102,7 +103,7 @@ export class UpgradeModalComponent implements OnInit {
           });
         }
       });
-      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup');
+      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
       this.modalService.dismissAll();
       this.refsetDetails.initializeDetailsPage();
     }
