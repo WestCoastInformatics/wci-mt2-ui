@@ -11,6 +11,7 @@ export class ProjectsConfigurationComponent implements OnInit {
   profileNameValue = '';
   profileEmailValue = '';
   profileDescriptionValue = '';
+  isPrivate = false;
 
   constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
 

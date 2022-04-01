@@ -6,7 +6,7 @@
     <div class="row refset-title">
         <div class="col-md-auto page-title"
              style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Organizations
+            Projects
         </div>
         <div class="row justify-content-end details-version-select"
              style="margin-left: 20px">
@@ -28,14 +28,14 @@
     <div class="content-wrapper">
         <app-projects-sidebar activeRoute="configuration"></app-projects-sidebar>
         <div class='container-fluid mt-3'>
-        <span class="organizations-configuration">
+        <span class="projects-configuration">
         
             <div class="section-header mb-3"> Project Configuration </div>
-            <div class="organizations-configuration-details">
-                <div class="organizations-configuration-blocks-1">
-                    <div class="organizations-configuration-block main-block profile-block">
-                        <div class="organization-profile-head section-header">Profile</div>
-                    <div class="organization-profile-mid">
+            <div class="projects-configuration-details">
+                <div class="projects-configuration-blocks-1">
+                    <div class="projects-configuration-block main-block profile-block">
+                        <div class="projects-profile-head section-header">Profile</div>
+                    <div class="projects-profile-mid">
                         <mat-form-field class="profile-name-field" appearance="none">
                             <mat-label>Name</mat-label>
                             <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
@@ -50,6 +50,11 @@
                             <mat-label>Description</mat-label>
                             <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project" [(ngModel)]="profileEmailValue"></textarea>
                         </mat-form-field>
+                        
+                        <div class="project-privacy">
+                            <span>Project Privacy</span>
+                            <mat-checkbox class="project-private-checkbox" [(ngModel)]="isPrivate">Private</mat-checkbox>
+                        </div>    
                     </div>
                             
                             <div class="update-profile-button">
@@ -57,34 +62,25 @@
                             </div>
                     </div>
         
-                    <div class="organizations-configuration-block main-block profile-pic-block">
-                        <div class="organization-profile-head section-header">Profile Picture</div>
-                        <div class="organization-profile-mid organization-picture"><img src="assets/ihtsdo.svg"></div>
-                        <div class="edit-picture-button">
-                            <div class="section-list text-right" aria-label="Edit Picture" title="Edit Picture"><a class="btn btn-primary btn-lg">Edit Picture</a></div>
+                    <div class="secondary-block">
+                        <div class="projects-configuration-block teams-block">
+                            <div class="projects-profile-head section-header">Teams</div>
+                            <div class="projects-profile-mid teams-textarea">
+                                <mat-form-field class="profile-description-field" appearance="none">
+                                    <mat-label>Teams</mat-label>
+                                    <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="save-team-button">
+                                <div class="section-list text-right" aria-label="Save Teams" title="Save Teams"><a class="btn btn-primary btn-lg">Save Teams</a></div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="organizations-configuration-blocks-2">
-                    <div class="organizations-configuration-block secondary-block teams-block">
-                        <div class="organization-profile-head section-header">Teams</div>
-                        <div class="organization-profile-mid">Create teams for your organization. Refset modeling permissions are assigned through the use of teams.</div>
-                        <div class="create-team-button">
-                            <div class="section-list text-right" aria-label="Create Team" title="Create Team"><a class="btn btn-primary btn-lg">Create Team</a></div>
-                        </div>
-                    </div>
-                    <div class="organizations-configuration-block secondary-block teams-block">
-                        <div class="organization-profile-head section-header">Projects</div>
-                        <div class="organization-profile-mid">Add projects to your organization. Projects help to organize your reference sets.</div>
-                        <div class="create-project-button">
-                            <div class="section-list text-right" aria-label="Create Project" title="Create Project"><a class="btn btn-primary btn-lg">Create Project</a></div>
-                        </div>
-                    </div>
-                    <div class="organizations-configuration-block secondary-block teams-block">
-                        <div class="organization-profile-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Organization</div>
-                        <div class="organization-profile-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
-                        <div class="remove-organization-button">
-                            <div class="section-list text-right" aria-label="Remove Organization" title="Remove Organization"><a class="btn btn-primary btn-lg">Remove Organization</a></div>
+                        <div class="projects-configuration-block remove-project-block">
+                            <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Project</div>
+                            <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
+                            <div class="remove-projects-button">
+                                <div class="section-list text-right" aria-label="Remove project" title="Remove project"><a class="btn btn-primary btn-lg">Remove project</a></div>
+                            </div>
                         </div>
                     </div>
                 </div>
