@@ -938,15 +938,16 @@ button.refset-tool-table-action-icon {
             margin-left: -15px;
         }
     }
-    .tree-node.refset-tool-taxonomy-relation-members
-        > tree-node-wrapper
-        > .node-wrapper
-        > .node-content-wrapper
-        > tree-node-content
-        > tree-node-expander
-        > .toggle-children-wrapper
-        > .toggle-children {
-        background-image: url("/assets/circled_chevron_right_icon.svg");
+    .tree-node.refset-tool-taxonomy-relation-members >
+        tree-node-wrapper >
+        .node-wrapper >
+        .node-content-wrapper >
+        tree-node-content {
+            tree-node-expander > 
+            .toggle-children-wrapper >
+            .toggle-children {
+            background-image: url("/assets/circled_chevron_right_icon.svg");
+        }
     }
     .tree-node img {
         width: 13px;
