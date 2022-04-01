@@ -1,2 +1,67 @@
-<p>configuration works!</p>
-<app-personal-sidebar activeRoute="configuration"></app-personal-sidebar>
+<div id="refsetProjectsPage"
+     class="container-fluid">
+    <div class="row refset-title">
+        <div class="col-md-auto page-title"
+             style="margin-right: 20px; color: #555555; padding-left: 60px">
+            Fake Name
+        </div>
+        <div class="row justify-content-end details-version-select"
+             style="margin-left: 20px">
+            <mat-form-field appearance="outline"
+                            class="project-drop-down" style="visibility: hidden;">
+                <mat-label>{{'Choose Test'}}</mat-label>
+                <mat-select #detailsVersionSelect>
+                    <mat-option *ngFor="let test of ['test', 'test']"
+                                [value]="test"
+                                style="z-index: 3">
+                        {{ test }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    </div>
+
+    <div class="content-wrapper">
+    <app-personal-sidebar activeRoute="configuration"></app-personal-sidebar>
+    <div class='container-fluid mt-3'>
+    <span class="account-configuration">
+    
+        <div class="section-header mb-3"> Account Configuration </div>
+        <div class="account-configuration-details">
+            <div class="account-configuration-blocks-1">
+                <div class="account-configuration-block main-block profile-block">
+                    <div class="account-profile-head section-header">Profile</div>
+                <div class="account-profile-mid">
+                    <mat-form-field class="profile-name-field" appearance="none">
+                        <mat-label>Name</mat-label>
+                        <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                    </mat-form-field>
+
+                    <mat-form-field class="profile-company-field" appearance="none">
+                        <mat-label>Company</mat-label>
+                        <input matInput type="text" name="email" [(ngModel)]="profileCompanyValue">
+                    </mat-form-field>
+
+                    <mat-form-field class="profile-email-field" appearance="none">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+                    </mat-form-field>
+                </div> 
+                    <div class="update-profile-button">
+                        <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a class="btn btn-primary btn-lg">Update Profile</a></div>
+                    </div>
+                </div>
+    
+                <div class="account-configuration-block main-block profile-pic-block">
+                    <div class="account-profile-head section-header">Profile Picture</div>
+                    <div class="account-profile-mid account-picture"><img src="assets/ihtsdo.svg"></div>
+                    <div class="edit-picture-button">
+                        <div class="section-list text-right" aria-label="Edit Picture" title="Edit Picture"><a class="btn btn-primary btn-lg">Edit Picture</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </span>
+</div></div>

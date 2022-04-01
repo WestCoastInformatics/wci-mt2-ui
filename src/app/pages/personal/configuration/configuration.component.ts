@@ -6,6 +6,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PersonalConfigurationComponent implements OnInit {
 
+  profileNameValue = '';
+  profileCompanyValue = '';
+  profileEmailValue = '';
+
   constructor() { }
 
   ngOnInit(): void {
