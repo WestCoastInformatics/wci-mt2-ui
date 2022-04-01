@@ -118,12 +118,11 @@
                             [refsetInternalId]="id" [inputProperties]="editMetadataProperties"
                             (processChangedMemberEffects)="processChangedMemberEffects()">
                         </create-new-refset>
-                        <workflow-history-notes-modal [refsetId]="id"
+                        <workflow-history-notes-modal [refsetInternalId]="id"
                             [user]="refsetData?.modifiedBy"
                             [hidden]="!allowedToEdit && !allowedToReview" [status]="refsetStatus"
                             [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
-                        <!-- <upgrade-modal *ngIf="this.refsetData?.availableActions?.includes('EDIT') && getRoleString().includes('AUTHOR') && !refsetData?.versionStatus?.includes('IN DEVELOPMENT')" [refsetData]="refsetData"></upgrade-modal> -->
                         <button mat-menu-item *ngIf="editMode" [hidden]="true">Convert Refset
                             Type</button>
                         <button mat-menu-item *ngIf="editMode" [hidden]="!allowedToEdit"
