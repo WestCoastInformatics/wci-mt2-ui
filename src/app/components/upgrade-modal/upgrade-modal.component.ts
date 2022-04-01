@@ -92,7 +92,8 @@ export class UpgradeModalComponent implements OnInit {
     if (this.isInitialUpgrade) {
       this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
         if (this.router.url.includes('/' + this.refsetId)) {
-          window.location.reload();
+          this.refsetDetails.ngOnInit();
+          this.refsetDetails.changeLockedStatus(false);
         } else {
           this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
             this.totalMembers = members?.miscCountA;
