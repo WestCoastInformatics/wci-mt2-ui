@@ -23,7 +23,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		{ value: '', display: '\=       (Self Only)' }
 	];
 
-	@Input() changeMethod: string;
+	changeMethod = '';
 	@Input() isAdd: boolean;
 	@Input() refset: any;
 	@Input() definitionExceptionType: string;
@@ -82,11 +82,11 @@ export class AddRemoveConceptsComponent implements OnInit {
 			this.actionText = "Remove";
 		}
 
-			this.addRemoveConcept(this.changeMethod);
+			this.addRemoveConcept();
 	
 	}
 
-	addRemoveConcept(changeMethod?: string): void {
+	addRemoveConcept(): void {
         let conceptId: string = '';
 		let ecl = '';
 		let description: string;
@@ -115,27 +115,26 @@ export class AddRemoveConceptsComponent implements OnInit {
         this.changeLockedStatus.emit(true);
 
 
-		if (changeMethod) {
+		if (this.changeMethod) {
 
-			if (changeMethod === 'INACTIVE_ADDED') {
+			if (this.changeMethod === 'INACTIVE_ADDED') {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
-			} else if (changeMethod === 'INACTIVE_REMOVED'){
+			} else if (this.changeMethod === 'INACTIVE_REMOVED'){
 	
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
-			} else if (changeMethod === 'REPLACEMENT_ADDED') {
+			} else if (this.changeMethod === 'REPLACEMENT_ADDED') {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
-			} else if (changeMethod === 'REPLACEMENT_REMOVED'){
+			} else if (this.changeMethod === 'REPLACEMENT_REMOVED'){
 	
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
 			}
 
-			console.log(changeMethod)
 		}
 
 		// if this is an intensional refset

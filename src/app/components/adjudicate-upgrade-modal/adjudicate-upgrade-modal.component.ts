@@ -154,7 +154,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.selectedConcepts = undefined;
   }
 
-addRemoveConcept(params: any, changeMethod: string): void {
+  addRemoveConcept(params: any, changeMethod: string): void {
     this.addRemoveConceptsComponent.changeMethod = changeMethod;
     this.addRemoveConceptsComponent.refset = this.refsetData;
     this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
@@ -218,8 +218,8 @@ processChangedMemberEffects = () => {
   this.refsetDetails.showLoadingSpinner = false;
 }
   
-  hideIncludedReplacements(checked: boolean): void {
-    this.hideReplacements = checked;
+  hideIncludedReplacements(toggle: any): void {
+    this.hideReplacements = toggle.checked;
     this.onGridReady(this.originalGridParams);
   }
 
@@ -346,7 +346,7 @@ processChangedMemberEffects = () => {
 
             results.items = results.items.filter((x) => {
               if (this.hideReplacements) {
-                return !x.replacementConcecpts[0].existingMember && x.active === false;
+                return !x.replaced;
               }
               return x.active === false;
             });
@@ -433,10 +433,11 @@ processChangedMemberEffects = () => {
     let data = [];
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
-        'Inactive Concept ID': inactiveConcepts[i].code,
+        'Inactivation Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Inactive ID': inactiveConcepts[i].code,
         'Inactive Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
-        'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
-        'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
+        'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
         'Suggested Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }

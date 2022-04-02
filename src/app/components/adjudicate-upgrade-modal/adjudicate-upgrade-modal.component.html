@@ -78,7 +78,7 @@
 <ng-template #inactiveConceptCodeSection let-params>
     <img *ngIf="!params?.data?.isHidden && params?.data?.stillMember !== undefined && !params?.data?.stillMember"
     src="assets/add-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, false, 'INACTIVE_ADDED')"
+    (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')"
     width="18px"
     height="18px"
     title="Add {{actionText}}"
@@ -89,7 +89,7 @@
 
 <img *ngIf="!params?.data?.isHidden && params?.data?.stillMember"
     src="assets/subtract-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, false, 'INACTIVE_REMOVED')"
+    (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')"
     width="18px"
     height="18px"
     title="Remove {{actionText}}"
@@ -125,7 +125,7 @@
 <span *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
     <img *ngIf="!params?.data?.replacementConcecpts[0]?.added"
     src="assets/add-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, true, 'REPLACEMENT_ADDED')"
+    (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')"
     width="18px"
     height="18px"
     title="Add {{actionText}}"
@@ -136,7 +136,7 @@
 
 <img *ngIf="params?.data?.replacementConcecpts[0]?.added"
     src="assets/subtract-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, true, 'REPLACEMENT_REMOVED')"
+    (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
     width="18px"
     height="18px"
     title="Remove {{actionText}}"
