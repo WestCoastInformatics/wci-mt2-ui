@@ -46,6 +46,7 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
+import { LaunchComparisonModalComponent } from 'src/app/components/comparison/launch-comparison-modal.component';
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
@@ -56,7 +57,6 @@ import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
-// import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
@@ -176,7 +176,8 @@ const appRoutes: Routes = [
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
         PersonalLandingComponent,
-        PersonalConfigurationComponent
+        PersonalConfigurationComponent,
+        LaunchComparisonModalComponent
     ],
     imports: [
         RouterModule.forRoot(

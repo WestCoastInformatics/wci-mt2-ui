@@ -1,0 +1,98 @@
+<span class="compare-menu" (click)="openModal(launchComparisonDialog)">Compare</span>
+
+<ng-template #launchComparisonDialog let-modal>
+
+    <div class="modal-header rt2-modal-header">
+
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Compare Reference Set</h4>
+
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+
+    </div>
+
+    <div class="container-fluid refset-tool-dialog-container">
+        <div class="modal-body refset-tool-dialog-body">
+
+            <div class="row dialog-form">
+
+                <div class="dialog-form-field-row first-row">
+
+                    <div class="col dialog-form-label">
+                        <label>Active Reference Set:</label>
+                    </div>
+
+                    <div class="col dialog-form-field">
+                        <label>{{activeRefset.name}} {{activeRefset.versionDate}} ({{activeRefset.versionStatus}})</label>
+                    </div>
+
+                </div>
+
+                <div class="dialog-form-field-row boxed-row top-aligned">
+
+                    <div class="col dialog-form-label">
+                        <label>Comparison Reference Set:<span class="mandatory-field">*</span></label>
+                    </div>
+
+                    <div class="col dialog-form-field">
+                        
+                        <mat-radio-group>
+
+                            <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset" checked (change)="comparisonSelectionChange($event)">
+                                To another version of this reference set
+                            </mat-radio-button>
+                            <mat-radio-button value="different_refset" (change)="comparisonSelectionChange($event)">By searching for a reference set</mat-radio-button>
+
+                            <mat-form-field [hidden]="comparisonTypeSelected == 'different_refset'" appearance="fill">
+
+                                <mat-label>Choose comparison version</mat-label>
+                                <mat-select [(ngModel)]="comparisonRefsetId" (selectionChange)="checkComplete()">
+                                    <mat-option *ngFor="let option of activeRefsetVersionOptions" [value]="option.value"> {{ option.display }}</mat-option>
+                                </mat-select>
+
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill" [hidden]="comparisonTypeSelected == 'same_refset'">
+
+                                <mat-label>Select a refset by ID or FSN</mat-label>
+                                <mat-select (selectionChange)="comparisonRefsetSelected($event)">
+                                    <input class="concept-dropdown-input" placeholder="Type here..." (keyup)="onKeyUp($event.target.value)" (mouseover)="this.focus()" id="inputFocus">
+                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None</mat-option>
+                                    <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
+                                    <mat-option *ngFor="let refset of refsetOptions" [value]="refset">{{ refset.name }}</mat-option>
+                                </mat-select>
+
+                            </mat-form-field>
+
+                            <mat-form-field [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefset == null" appearance="fill">
+
+                                <mat-label>Select version for comparison</mat-label>
+                                <mat-select [(ngModel)]="comparisonRefsetId" (selectionChange)="checkComplete()">
+                                    <mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value"> {{ option.display }}</mat-option>
+                                </mat-select>
+
+                            </mat-form-field>
+
+                        </mat-radio-group>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="modal-footer rt2-modal-footer">
+
+        <button [disabled]="!checkComplete()" type="button" (click)="launchComparison()" mat-raised-button color="green" aria-hidden="false" 
+            class="refset-tool-action-button" aria-label="Launch Comparison" ng-reflect-color="green"
+        >
+            Launch Comparison
+        </button>
+
+    </div>
+
+</ng-template>
