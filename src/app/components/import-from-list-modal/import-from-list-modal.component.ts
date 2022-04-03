@@ -6,6 +6,7 @@ import { UiUtility } from "src/app/utilities/ui.utility";
 import { NotificationService } from "src/app/services/notification.service";
 import { Router } from "@angular/router";
 import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetUtility } from "src/app/utilities/refset.utility";
 
 @Component({
     selector: "import-from-list-modal",
@@ -36,33 +37,13 @@ export class ImportFromListModalComponent {
         }
 
         this.changeLockedStatus.emit(true);
-
-        let operationFunction: Function;
-        let messageModifier = "";
-
-        if (operation == 'add') {
-
-            messageModifier = "added to";
-            operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
-        } else {
-
-            messageModifier = "removed from";
-            operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
-        }
-
-        const commaRegex = /,+/ig;
-        let allIdsString = this.listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").replaceAll(/[^,\-\_a-zA-Z0-9]/g, '').trim();
-
-        operationFunction(this.refsetInternalId, "list", allIdsString).subscribe();
-
-        UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
+        RefsetUtility.addRemoveMembersByList(this.refsetInternalId, this.refsetId, this.listOfIds, operation, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
     processOperationReturn = (data) => { 
+
         this.changeLockedStatus.emit(false);
-
         this.refsetDetails.ngOnInit();
-
         this.listOfIds = "";
     }
 

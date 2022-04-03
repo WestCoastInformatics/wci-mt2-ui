@@ -185,4 +185,31 @@ export class RefsetUtility {
             return descriptionCompareValue;
         });
     }
+
+    static addRemoveMembersByList(refsetInternalId: string, refsetId: string, listOfIds: any, operation: string, callback: Function, notificationService: any, refsetService: any, router: any): void {
+
+        if (!listOfIds?.length) {
+            return;
+        }
+
+        let operationFunction: Function;
+        let messageModifier = "";
+
+        if (operation == 'add') {
+
+            messageModifier = "added to";
+            operationFunction = refsetService.addRefsetMembers.bind(refsetService);
+        } else {
+
+            messageModifier = "removed from";
+            operationFunction = refsetService.removeRefsetMembers.bind(refsetService);
+        }
+
+        const commaRegex = /,+/ig;
+        let allIdsString = listOfIds?.replaceAll(" ", ",").replaceAll("\n", ",").replaceAll(commaRegex, ",").replaceAll(/[^,\-\_a-zA-Z0-9]/g, '').trim();
+
+        operationFunction(refsetInternalId, "list", allIdsString).subscribe();
+
+        UiUtility.manageNotifications(refsetInternalId, refsetId, messageModifier, callback, notificationService, refsetService, router);
+    }
 }

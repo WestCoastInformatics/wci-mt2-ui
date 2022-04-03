@@ -238,7 +238,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     closeShowComparisonModal() {
 
-        if (!this.isLocked) {
+        if (this.allowedToEdit && !this.isLocked) {
             this.refsetDetails.ngOnInit();
         }
 
@@ -409,6 +409,19 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+    }
+
+    addRemoveConceptGroup(params: any): void {
+
+        let operation = 'add';
+
+        if (!params.addConcept) {
+            operation = 'remove';
+        }
+
+        let concepts = params.concepts.join(",");
+
+        RefsetUtility.addRemoveMembersByList(this.activeRefset.id, this.activeRefset.refsetId, concepts, operation, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
     }
 
     public processChangedMemberEffects = () => {

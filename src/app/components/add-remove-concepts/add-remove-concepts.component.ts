@@ -31,7 +31,6 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
-	@Input() isInactive: boolean;
 	@Input() isReplacement: boolean;
 	@Input() processChangedMemberFunction: () => void;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
@@ -103,7 +102,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 
         if (ecl == '' && CodeUtility.hasValue(this.conceptCode)) {
 
-            if (this.conceptHasChildren && this.refset.type != RefsetUtility.INTENSIONAL) {
+            if (CodeUtility.testBoolean(this.conceptHasChildren) && this.refset.type != RefsetUtility.INTENSIONAL) {
 
                 this.openAddRemoveDescendantsModal();
                 return;

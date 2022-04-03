@@ -17,7 +17,6 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
 	@Input() concepts: string[];
 	@Input() addConcept: boolean;
 	@Input() hidden: boolean = false;
-	@Input() isParentConcept: boolean;
     @Output() processSelection = new EventEmitter<any>(true);
 
 	constructor() {}
@@ -63,6 +62,6 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
 	}
 
     onSelection(addConcept: boolean) {
-        this.processSelection.emit({addConcept: addConcept, concept: this.concepts, isParentConcept: this.isParentConcept, definitionExceptionType: this.definitionExceptionType});
+        this.processSelection.emit({addConcept: addConcept, concepts: this.concepts, definitionExceptionType: this.definitionExceptionType});
     }
 }
