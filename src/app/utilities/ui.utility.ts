@@ -257,7 +257,7 @@ export class UiUtility {
     static manageNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
         // set a small delay so the original call has some time to process
-        CodeUtility.delay();
+        CodeUtility.delay(2000);
 
 		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
 				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
@@ -281,9 +281,7 @@ export class UiUtility {
 			} else if (callNumber == 30) {
 				callDelay = 15000;
 			}
-			refsetService.isRefsetLocked(refsetInternalId).subscribe(
-
-				(data) => {
+			refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
 
                     if (CodeUtility.testBoolean(data)) {
                         setTimeout(checkIfFinished, callDelay);
@@ -507,7 +505,7 @@ export class UiUtility {
 
         let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept'], fileName);
+        this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
     }
 
     static createFinishedChangeReport(refsetId: string, data): void {
