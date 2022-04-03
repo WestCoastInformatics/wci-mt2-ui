@@ -632,6 +632,23 @@ export class UiUtility {
         image.onerror = function() { callback(false); };
     }
 
+    //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
+    static applyGridPlaceholders(classSelector) {
+
+        Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
+
+            // skip columns with disabled filter
+            if (field.attributes["disabled"]) {
+                return;
+            }
+
+            let label = field.getAttribute("aria-label");
+            let value = label.substring(0, label.indexOf("Filter Input")) + "...";
+            field.setAttribute("placeholder", value);
+        });
+    }
+    
+    
     //***** AG Grid Function to apply data and paging to table *****/
     static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 

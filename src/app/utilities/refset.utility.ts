@@ -41,7 +41,7 @@ export class RefsetUtility {
                 displayStatus = 'In Development'
             }
 
-            let option: any = { value: value, display: version.date + ' (' + displayStatus + ')' };
+            let option: any = { value: value, display: version.date + ' (' + displayStatus + ')', date: version.date, status: displayStatus };
         
             if (version.date === this.getVersionDate(refset) || (refset.versionStatus == this.IN_DEVELOPMENT && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
                 option.selected = true;

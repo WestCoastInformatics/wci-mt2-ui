@@ -1,6 +1,7 @@
 // Main Layout Styles
 html,
-body {
+body, 
+body.refset-tool.modal-open {
     font-family: $standard_font_family;
     font-size: $standard_font_size;
     font-weight: 400;
@@ -1162,12 +1163,6 @@ button.refset-tool-table-action-icon {
     max-width: 50px;
 }
 
-.add-remove-concept-hierarchy-modal-parent-size .refset-tool-concept-details-taxonomy-icon {
-    img {
-        margin-left: 0;
-    }
-}
-
 .refset-tool-concept-details-taxonomy-description {
     margin-left: 10px;
 }
@@ -1230,17 +1225,6 @@ button.refset-tool-table-action-icon {
     font-size: 12px;
     font-weight: 400;
     @extend .refset-tool-rounded-borders;
-}
-
-.add-remove-concept-hierarchy-modal-details-size>.row>.refset-tool-concept-details-concept-info-column {
-    width: 100%;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-.add-remove-concept-hierarchy-modal-details-size {
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .refset-tool-concept-details-concept-info-column-status {
@@ -2298,17 +2282,44 @@ button.refset-tool-table-action-icon {
     max-width: 1000px;
 }
 
-.refset-tool-dialog-container {
-    padding: 30px !important;
+.show-comparison-dialog > .modal-dialog {
+    max-width: 1700px;
+
+    .children-section {
+        height: 525px;
+    }
+}
+
+.refset-tool-refset-metadata-table {
+
+    td.refset-tool-comparison-refset-member-total {
+        word-wrap: break-word;
+        vertical-align: top;
+        width: 275px;
+    }
+    
+    td.refset-tool-comparison-refset-name {
+        word-wrap: break-word;
+        vertical-align: top;
+    }
+    
+    td.refset-tool-comparison-refset-distinct {
+        word-wrap: break-word;
+        vertical-align: top;
+        width: 250px;
+    }
+} 
+
+div.container-fluid.refset-tool-dialog-container {
+    padding: 15px 15px 0px 15px;
     padding-bottom: 0px;
     padding-top: 0px;
     max-height: calc(100vh - 55px - 52px - (1.75rem * 2) - 2px); // 100% height - header - footer - margin
     overflow: auto;
 
-    .refset-tool-dialog-body {
+    div.modal-body.refset-tool-dialog-body {
         background-color: rgba(245, 245, 246, 1);
-        padding: 28px !important;
-        padding-top: 0px !important;
+        padding: 15px 15px 15px 15px;
         border-radius: 3px;
         font-size: 14px;
     
@@ -2378,9 +2389,21 @@ button.refset-tool-table-action-icon {
     }
 }
 
+// TODO - this should be what controls button spacing for all dialogs - use generic sibling calcs
+div.modal-footer.rt2-modal-footer {
+    
+    .not-last-button {
+        margin-right: 15px;
+    }
+}
+
 .concept-dropdown-input {
     height: 50px; 
     width: 300px;
+
+    &.full-width {
+        width: 100%;
+    }
 }
 
 .create-new-refset-modal-header {
@@ -2773,8 +2796,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     height: 680px;
 }
 
-
-
 .add-remove-concept-hierarchy-modal-size>.modal-dialog {
     width: 500px;
     max-width: 500px;
@@ -2797,16 +2818,56 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     height: 250px;
     max-height: 250px;
     overflow: auto;
-}
+    overflow-x: hidden;
+    padding-right: 15px;
+    padding-left: 15px;
 
-.add-remove-concept-hierarchy-modal-children-size {
-    height: fit-content;
-    max-height: 274px;
+    .add-symbol-icon {
+        margin-left: 10px;
+        margin-right: -5px;
+    }
+
+    .subtract-symbol-icon {
+        margin-left: 10px;
+        margin-right: -5px;
+    }
+
+    &>.row>.refset-tool-concept-details-concept-info-column {
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 .add-remove-concept-hierarchy-modal-parent-size {
     height: 90px;
     max-height: 90px;
+
+    &>.row>.refset-tool-concept-details-taxonomy-icon {
+        display: flex;
+        align-self: center;
+    
+        .add-symbol-icon {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    
+        .subtract-symbol-icon {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+
+    & .refset-tool-concept-details-taxonomy-icon {
+        img {
+            margin-left: 0;
+        }
+    }
+}
+
+.add-remove-concept-hierarchy-modal-children-size {
+    height: fit-content;
+    max-height: 274px;
 }
 
 #addRemoveByConceptHierarchySearchInputField {
@@ -2881,35 +2942,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .as-split-gutter {
     height: 98% !important;
-}
-
-.add-remove-concept-hierarchy-modal-parent-size>.row>.refset-tool-concept-details-taxonomy-icon {
-    display: flex;
-    align-self: center;
-
-    .add-symbol-icon {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    .subtract-symbol-icon {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-}
-
-.add-remove-concept-hierarchy-modal-details-size {
-    .add-symbol-icon {
-        margin-left: 10px;
-        margin-right: -5px;
-    }
-
-    .subtract-symbol-icon {
-        margin-left: 10px;
-        margin-right: -5px;
-    }
-
-    overflow-x: hidden;
 }
 
 .refset-tool-taxonomy {
@@ -3500,6 +3532,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .metadata-collapsible-container {
     background-color: #f5f5f5;
     margin-bottom: 1rem;
+
+    &.white {
+        background-color: white;
+    }
 }
 
 .metadata-collapsible-container-group-header {
@@ -3515,6 +3551,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-size: 1.25rem;
     display: flex;
     align-items: center;
+    font-weight: bold;
 }
 
 .caret-up-solid {

@@ -66,7 +66,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   isConceptBeingAdded: Boolean;
   conceptForAddRemove: any;
   addRemoveDefinitionExceptionType: any;
-  isAddRemoveInDetailsPanel: any;
   isLocked = false;
   isInactive: boolean;
   isReplacement: boolean;

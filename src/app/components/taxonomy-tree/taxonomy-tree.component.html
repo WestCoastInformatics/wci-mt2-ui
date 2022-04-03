@@ -15,7 +15,7 @@
         <ng-template #treeNodeTemplate let-node let-index="index">
 
             <ng-container *ngIf="editMode">
-                <add-remove-concepts-icons [concept]="node?.data" [isInDetailsPanel]="isInDetailsPanel" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
+                <add-remove-concepts-icons [concept]="node?.data" [isParentConcept]="isParentConcept" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)"></add-remove-concepts-icons>
             </ng-container>
 
             <div [style]="getNodeAddIconMargin(node)" >

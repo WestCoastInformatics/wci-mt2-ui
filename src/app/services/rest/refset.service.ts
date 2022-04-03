@@ -185,6 +185,10 @@ export class RefsetService extends RestService {
     }
 
     launchComparison(activeRefsetInternalId: string, comparisonRefsetInternalId: string): Observable<any> {
-        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileUpgradeData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileComparisonData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+    }
+
+    getComparisonData(activeRefsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
 }

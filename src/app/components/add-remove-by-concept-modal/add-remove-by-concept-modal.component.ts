@@ -52,7 +52,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     selectedConcept: any;
     numOfChildren = undefined;
     isConceptBeingAdded: Boolean;
-    isAddRemoveInDetailsPanel: Boolean;
     addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     refsetInternalId: string;
@@ -110,13 +109,12 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
-        if (params.isInDetailsPanel) {
+        if (params.isParentConcept) {
             params.concept.hasChildren = true;
         }
 
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
-        this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
     public processChangedMemberEffects = () => {
@@ -269,10 +267,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     getTaxonomyLanguageWithoutType() {
         return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
-    }
-
-    setLoadSpinnerStatus($event): void {
-        this.showLoadingSpinner = $event;
     }
 
     openEclBuilder(fieldId) {
