@@ -14,7 +14,10 @@
 
 <ng-template #topicModal let-modal>
   <div class="modal-header review-modal-header">
-    <h4 class="modal-title">Refset Feedback Discussion: {{topic}}</h4>
+    <h4 class="modal-title">
+      Refset Feedback Discussion: {{topic}}
+      <span class="pull-right text-muted">Status: Open</span>
+    </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -41,54 +44,65 @@
             </mat-menu>
           </div>
         </div>
-        <div class="topic-content">
+        <div class="topic-content mb-3">
           <div class="topic-title">Consider adding long covid symptoms to this refset</div>
           <div>
             Original entry goes here. To provide context to the user, it will be slightly larger text and remain sticky. I would suggest showing the first 2-3 lines of each message by default and giving the user the option to expand or collapse the message with a text link that says 
-            <a class="btn btn-link text-main show-more">show more/less</a>
+            
           </div>
         </div>
-        <div class="discussion-list">
-          <div class='section-list'>
+        <div class="discussion-list mb-3">
+          <div class='section-list' *ngFor="let discussion of discussions; index as i">
             <div class="topic-header">
-              <img src="assets/sampels/profile/2.svg" class="author-pic" />
+              <img src="{{discussion.pic}}" class="author-pic" />
               <div class="topic-author">
-                <div>Jesse Efron</div>
-                <div class="topic-time">2022-03-12  02:38:19</div>
+                <div>{{discussion.author}}</div>
+                <div class="topic-time">{{discussion.date}} <i *ngIf="discussion.locked" class="fa fa-lock ml-2"></i></div>
               </div>
               <div class="topic-action">
-                <button mat-button [matMenuTriggerFor]="disctionMenu"class="manage-refset-menu">
+                <button mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu">
                   <i class="fa fa-ellipsis-v text-main fa-lg"></i>
                 </button>
                 <span class="menu-spacer">&nbsp;</span>
-                <mat-menu #disctionMenu="matMenu">
+                <mat-menu #discussionMenu="matMenu">
                   <button mat-menu-item >Hide Reply</button>
                   <button mat-menu-item >Mark Private</button>
                 </mat-menu>
               </div>
             </div>
             <div>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio. 
+              {{discussion.content.substr(0, 1000)}}
+              <a *ngIf="discussion.content.length > 1000" class="btn btn-link text-main show-more">show more/less</a>
             </div>
           </div>
-          <div class='section-list'><a>WestCoastInformatics/WCI Test MANAGED-SERVICE Project</a> <i class='fa fa-lock ml-2 text-muted'></i></div>
-          <div class='section-list'><a>IHTSDO/Some Other Project</a> <i class='fa fa-lock ml-2 text-muted'></i></div>
-          <div class='section-list'><a>IHTSDO/A project you simply can’t miss</a></div>
+        </div>
+        <div>
+          <div class="topic-header">
+            <img src="assets/sampels/profile/1.svg" class="author-pic" />
+            <div class="topic-author">
+              <div>Steph Whalen</div>
+              <div class="topic-time"></div>
+            </div>
+          </div>
+          <div class="mb-2 mt-2">
+            <mat-checkbox >Mark Feedback Private</mat-checkbox>
+          </div>
+          <div>
+            <editor [init]="{
+              base_url: '/tinymce',
+              suffix: '.min',
+              height: 200,
+              menubar: false,
+              plugins: ['lists advlist'],
+              toolbar:
+                  'undo redo | bold italic | bullist numlist outdent indent'
+            }"></editor>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
-<ng-template #newTopicModal let-modal>
-  <div class="modal-header review-modal-header">
-    <h4 class="modal-title">New Refset Feedback Discussion: {{refset.name}}</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="container-fluid ready-for-review-container-fluid">
-    <div class="modal-body pr-0 pl-0 pb-0">
-      
+    <div class="modal-footer mt-0 mb-3">
+      <a class="btn btn-main">Reply</a>
     </div>
   </div>
 </ng-template>

@@ -4871,6 +4871,9 @@ $sidebar-width: 294px;
     border: 1px solid rgba(197, 196, 197, 1);
     font-size: 16px;
     font-weight: 400;
+    max-height: 300px;
+    overflow: auto;
+
     .topic-header{
         font-size: 20px;
         .author-pic{
@@ -4886,4 +4889,7 @@ $sidebar-width: 294px;
         font-size: inherit;
         font-weight: inherit;
     }
+}
+.full-form-field{
+    width: 100%;
 }

@@ -15,6 +15,25 @@ export class RefsetFeedbackListComponent implements OnInit {
   @ViewChild('topicModal') topicModal: TemplateRef<NgbModal>;
   
   data = [];
+  discussions = [
+    {
+      authour: 'Jesse Efron', pic: 'assets/sampels/profile/2.svg', date: '2022-03-12  02:38:19', locked: false,
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
+    },
+    {
+      authour: 'Tim Williams', pic: 'assets/sampels/profile/3.svg', date: '2022-03-13  10:03:20', locked: true,
+      content: 'Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus sit pulvinar tempor sit et'
+    },
+    {
+      authour: 'Wendy Boeger', pic: 'assets/sampels/profile/4.svg', date: '2022-03-14 11:43:29', locked: false,
+      content: 'Most recent entry goes here. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus sit.'
+    },
+    {
+      authour: 'Jesse Efron', pic: 'assets/sampels/profile/5.svg', date: '2022-03-12  02:38:19', locked: false,
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
+    },
+  ];
+
   refsetGridOptions = {};
   topic: string;
 
@@ -81,9 +100,9 @@ export class RefsetFeedbackListComponent implements OnInit {
       this.modalService.open(this.topicModal, {
         modalDialogClass: 'full-modal',
         centered: true
-      //backdrop : 'static',
-      //keyboard : false,
-    });
+        //backdrop : 'static',
+        //keyboard : false,
+      });
     }
   }
 
