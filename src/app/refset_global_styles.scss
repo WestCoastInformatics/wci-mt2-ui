@@ -1,4 +1,6 @@
 // Main Layout Styles
+$main-color: #00A4E4;
+
 html,
 body, 
 body.refset-tool.modal-open {
@@ -66,7 +68,7 @@ table {
 main {
     &.container {
         min-width: 100%;
-        margin-bottom: 6rem;
+        margin-bottom: 40px;
     }
 }
 
@@ -920,6 +922,24 @@ button.refset-tool-table-action-icon {
     .mat-form-field-flex {
         width: calc(100% - 20px);
     }
+}
+
+.mat-form-field.refset-tool-modal-select-field {
+    width: 300px;
+
+    .mat-form-field-flex {
+        width: 275px;
+    }
+}
+
+.refset-tool-modal-select {
+    .mat-select-trigger {
+        width: 300px;
+    }
+}
+
+.refset-tool-modal-select-field {
+    font-size: 14px;
 }
 
 #detailsMemberSection,
@@ -3781,7 +3801,25 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     padding-left: 16px;
 }
+.nav-item{
+    width: 75px;
+    border-right: 1px solid #797979;
+    height: 50px;
+    cursor: pointer;
+    padding-top: 6px;
+    text-align: center;
 
+    img{
+        max-height: 26px;
+    }
+    .nav-label{
+        display: block;
+        text-align: center;
+        font-size: 9px;
+        color: white;
+        margin-top: 4px;
+    }
+}
 .project-role-label {
     height: 45px;
 }
@@ -4012,6 +4050,176 @@ img.refset-tool-edition-flag {
     margin-bottom: 15px;
 }
 
+.content-header{
+    .header-title{
+        align-items: baseline;
+        position: sticky;
+        z-index: 2;
+        background-color: white;
+        padding-top: 10px;
+        box-shadow: 0 5px 7px -2px grey;
+        .title-label{
+            margin-right: 20px; 
+            color: #555555; 
+            padding-left: 60px;
+            font-size: 20px;
+            font-weight: 400;
+            padding-bottom: 15px;
+        }
+    }
+}
+.dashboard-section{
+    box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 20%);
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 0.25rem;
+    margin-bottom: 30px;
+
+    .ag-row, .ag-header-cell-text{
+        font-size: 16px;
+    }
+
+    .text-primary{
+        color: $main-color !important;
+    }
+    .action-btn{
+        cursor: pointer;
+    }
+
+    .profile-pic{
+        width: 43px;
+        height: 43px;
+        border-radius: 100%;
+        margin-right: 40px;
+        vertical-align: middle;
+    }
+}
+.dashboard-section-mid {
+    height: 180px;
+    overflow-y: scroll;
+}
+.section-header{
+    font-size: 20px;
+    color: $main-color;
+    margin-bottom: 10px;
+
+    
+    .btn.btn-primary{
+        background-color: $main-color;
+        border-radius: 0 !important;
+        border-color: $main-color;
+        font-size: 14px;
+    }
+}
+.section-list{
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    font-weight: 700;
+    color: $main-color;
+
+    a{
+        cursor: pointer;
+    }
+    
+    img{
+        width: 34px;
+        height: 34px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+    a:not(.btn):hover{
+        text-decoration: underline !important;
+    }
+
+    .btn.btn-primary{
+        background-color: $main-color;
+        border-radius: 0 !important;
+        border-color: $main-color;
+        font-size: 14px;
+    }
+}
+.section-list:last-child{
+    border-bottom: 0;
+    padding: 15px;
+}
+.radius-0{
+    border-radius: 0 !important;
+}
+
+.content-wrapper{
+    display: flex;
+    align-items: stretch;
+    min-height: calc(100vh - 158px);
+}
+$sidebar-width: 294px;
+.sidebar{
+    width: 72px;
+    overflow-x: visible;
+    z-index: 999;
+    height: 100%;
+    position: relative;
+
+    .wrapper{
+        min-height: 100%;
+        background-color: #212529;
+        width: 72px;
+        transition: all 0.25s;
+
+        ul{
+            margin-bottom: 0;
+            padding: 40px 0 0;
+
+            li{
+                color: #fff;
+                width: $sidebar-width;
+                a{
+                    display: flex;
+                    align-items: center;
+                    padding: 7px 10px;
+                    margin: 10px 0;
+                    font-size: 16px;
+                    cursor: pointer;
+                    color: inherit;
+                    text-decoration: none !important;
+
+                    i{
+                        font-size: 30px;
+                        margin-left: 10px;
+                        margin-right: 15px;
+                        min-width: 37.5px;
+                        text-align: center;
+                    }
+                }
+            }
+            li:hover{
+                color: $main-color;
+            }
+            li.active{
+                border-left: 5px solid $main-color;
+                color: $main-color;
+                a{
+                    padding-left: 5px;
+                }
+            }
+
+            .nav-label{
+                opacity: 0;
+                transition: opacity 0.25s;
+            }
+        }
+    }
+}
+
+.sidebar:hover .wrapper{
+    width: $sidebar-width;
+
+    ul{
+        .nav-label{
+            opacity: 1;
+        }
+    }
+}
 .linethrough-inactive {
     text-decoration: line-through;
 }
@@ -4026,4 +4234,606 @@ img.refset-tool-edition-flag {
 .grey-add-symbol-icon,
 .grey-trash-bin-icon {
     cursor: pointer;
+}
+
+.organizations-configuration {
+    .organizations-configuration-title{
+        font-size: 19px;
+    }
+    .title-bar {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100vw;
+        background-color: #FFF;
+        padding: 20px 30px;
+        filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+        span {
+            padding: 0px 15px;
+        }
+    }
+    .organizations-configuration-dropdown {
+        font-size: 17px;
+        font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
+    }
+
+    .organizations-configuration-details {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        h3 {
+            font-size: 20px;
+            color: #00A4E4;
+        }
+
+        .organizations-configuration-blocks-1 {
+            display: flex;
+            width: 100%;
+            // justify-content: space-around;
+            // align-items: flex-start;
+            flex-wrap: nowrap;
+
+            .main-block {
+                min-height: 356px;
+                width: 100%;
+                // width: 845px;
+            }
+
+            .profile-pic-block {
+                margin-left: 10px;
+                margin-bottom: 10px;
+            }
+            .profile-block {
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .organizations-configuration-blocks-2 {
+            display: flex;
+            width: 100%;
+            // justify-content: space-around;
+            // align-items: flex-start;
+            // flex-wrap: wrap;
+
+            .secondary-block {
+                min-height: 190px;
+                // width: 33%;
+                width: 100%;
+            }
+
+            .teams-block {
+                margin-right: 10px;
+                margin-top: 10px;
+            }
+            .projects-block {
+                margin-left: 10px;
+                margin-right: 10px;
+                margin-top: 10px;
+            }
+            .remove-org-block {
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+        }
+
+        .organizations-configuration-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 0px;
+            background-color: #f5f5f6;
+            padding: 30px 55px;
+        }
+
+        input {
+            font-size: 16px;
+            background-color: #f5f5f6;
+            border-bottom: 1px solid black;
+            width: 100%;
+        }
+
+        textarea {
+            font-size: 13px;
+            background-color: #f5f5f6;
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+        }
+    }
+
+    .profile-name-field,
+    .profile-email-field,
+    .profile-description-field {
+        width: 100%;
+    }
+
+    .organization-profile-head {
+        height: 10%;
+        width: 100%;
+    }
+    .organization-profile-mid {
+        height: 80%;
+        width: 100%;
+        padding-top: 25px;
+    }
+    .organization-picture {
+        text-align: center;
+    }
+    .update-profile-button,
+    .edit-picture-button,
+    .create-team-button,
+    .create-project-button,
+    .remove-organization-button {
+        width: 100%;
+        height: 10%;
+    }
+
+    .red-x {
+        transform: rotate(45deg);
+    }
+
+
+}
+
+.projects-configuration {
+    .projects-configuration-title{
+        font-size: 19px;
+    }
+    .title-bar {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100vw;
+        background-color: #FFF;
+        padding: 20px 30px;
+        filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+        span {
+            padding: 0px 15px;
+        }
+    }
+    .projects-configuration-dropdown {
+        font-size: 17px;
+        font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
+    }
+
+    .projects-configuration-details {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        h3 {
+            font-size: 20px;
+            color: #00A4E4;
+        }
+
+        .projects-configuration-blocks-1 {
+            display: flex;
+            width: 100%;
+            // justify-content: space-around;
+            // align-items: flex-start;
+            flex-wrap: nowrap;
+
+            .main-block {
+                min-height: 356px;
+                width: 100%;
+            }
+
+            .profile-block {
+                max-height: 654px;
+            }
+
+            .secondary-block {
+                margin-left: 10px;
+                width: 100%;
+            }
+            .teams-block {
+                min-height: 400px;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .remove-project-block {
+                min-height: 175px;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .teams-textarea {
+                textarea {
+                    font-size: 13px;
+                    background-color: #f5f5f6;
+                    border: 1px solid black;
+                    width: 100%;
+                    height: 160px;
+                }
+            }
+        }
+
+        .projects-configuration-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 0px;
+            background-color: #f5f5f6;
+            padding: 30px 55px;
+        }
+
+        input {
+            font-size: 16px;
+            background-color: #f5f5f6;
+            border-bottom: 1px solid black;
+            width: 100%;
+        }
+
+        textarea {
+            font-size: 13px;
+            background-color: #f5f5f6;
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+        }
+    }
+
+    .profile-name-field,
+    .profile-email-field,
+    .profile-description-field {
+        width: 100%;
+    }
+
+    .projects-profile-head {
+        height: 10%;
+        width: 100%;
+    }
+    .projects-profile-mid {
+        height: 80%;
+        width: 100%;
+
+        .team-list-box {
+            margin-top: 10px;
+            height: 160px;
+            border: groove;
+            overflow-y: scroll;
+
+            .team-item {
+                padding: 10px;
+                display: inline-flex;
+                align-items: center;
+
+                .team-item-name {
+                    padding-left: 40px;
+                }
+            }
+        }
+    }
+    .projects-picture {
+        text-align: center;
+    }
+    .update-profile-button,
+    .save-team-button,
+    .remove-projects-button {
+        width: 100%;
+        height: 10%;
+    }
+
+    .red-x {
+        transform: rotate(45deg);
+    }
+
+    .project-privacy {
+        display: inline-grid;
+    }
+}
+
+.teams-configuration {
+    .teams-configuration-title{
+        font-size: 19px;
+    }
+    .title-bar {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100vw;
+        background-color: #FFF;
+        padding: 20px 30px;
+        filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+        span {
+            padding: 0px 15px;
+        }
+    }
+    .teams-configuration-dropdown {
+        font-size: 17px;
+        font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
+    }
+
+    .teams-configuration-details {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        h3 {
+            font-size: 20px;
+            color: #00A4E4;
+        }
+
+        .teams-configuration-blocks-1 {
+            display: flex;
+            width: 100%;
+            flex-wrap: nowrap;
+            height: 700px;
+
+            .main-block {
+                min-height: 356px;
+                width: 100%;
+            }
+
+            .profile-block {
+            }
+
+            .secondary-block {
+                margin-left: 10px;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .team-permissions-block {
+                height: 40%;
+                width: 100%;
+                margin-bottom: 10px;
+                display: block;
+            }
+            .team-members-block {
+                height: 30%;
+                width: 100%;
+                margin-bottom: 10px;
+                margin-top: 10px;
+                display: block;
+            }
+            .remove-teams-block {
+                height: 30%;
+                width: 100%;
+                margin-top: 10px;
+                display: block;
+            }
+            .teams-textarea {
+                textarea {
+                    font-size: 13px;
+                    background-color: #f5f5f6;
+                    border: 1px solid black;
+                    width: 100%;
+                    height: 160px;
+                }
+            }
+        }
+
+        .teams-configuration-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 0px;
+            background-color: #f5f5f6;
+            padding: 30px 55px;
+        }
+
+        .teams-configuration-block-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-right: 0px;
+            background-color: #f5f5f6;
+            padding: 30px 55px;
+        }
+
+        input {
+            font-size: 16px;
+            background-color: #f5f5f6;
+            border-bottom: 1px solid black;
+            width: 100%;
+        }
+
+        textarea {
+            font-size: 13px;
+            background-color: #f5f5f6;
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+        }
+    }
+
+    .profile-name-field,
+    .profile-email-field,
+    .profile-description-field {
+        width: 100%;
+    }
+    .save-permissions {
+        height: 10%;
+        width: 100%;
+    }
+    .add-members-head {
+        height: 10%;
+        width: 100%;
+    }
+    .remove-team-head {
+        height: 10%;
+        width: 100%;
+    }
+    .teams-profile-head {
+        height: 10%;
+        width: 100%;
+    }
+    .teams-profile-mid {
+        height: 80%;
+        width: 100%;
+        padding-top: 15px;
+    }
+    .save-permissions-mid {
+        height: 55%;
+        width: 100%;
+        padding-top: 15px;
+    }
+    .add-members-mid {
+        height: 40%;
+        width: 100%;
+        padding-top: 15px;
+    }
+    .remove-team-mid {
+        height: 40%;
+        width: 100%;
+        padding-top: 15px;
+    }
+    .save-permissions-button {
+        width: 100%;
+        height: 10%;
+    }
+    .add-members-button {
+        width: 100%;
+        height: 10%;
+    }
+    .remove-teams-button {
+        width: 100%;
+        height: 10%;
+    }
+    .update-profile-button,
+    .save-team-button {
+        width: 100%;
+        height: 10%;
+    }
+
+    .red-x {
+        transform: rotate(45deg);
+    }
+}
+
+.account-configuration {
+    .account-configuration-title{
+        font-size: 19px;
+    }
+    .title-bar {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100vw;
+        background-color: #FFF;
+        padding: 20px 30px;
+        filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+        span {
+            padding: 0px 15px;
+        }
+    }
+    .account-configuration-dropdown {
+        font-size: 17px;
+        font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
+    }
+
+    .account-configuration-details {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        h3 {
+            font-size: 20px;
+            color: #00A4E4;
+        }
+
+        .account-configuration-blocks-1 {
+            display: flex;
+            width: 100%;
+            // justify-content: space-around;
+            // align-items: flex-start;
+            flex-wrap: nowrap;
+
+            .main-block {
+                min-height: 356px;
+                width: 100%;
+                // width: 845px;
+            }
+
+            .profile-pic-block {
+                margin-left: 10px;
+                margin-bottom: 10px;
+            }
+            .profile-block {
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .account-configuration-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: 0px;
+            background-color: #f5f5f6;
+            padding: 30px 55px;
+        }
+
+        input {
+            font-size: 16px;
+            background-color: #f5f5f6;
+            border-bottom: 1px solid black;
+            width: 100%;
+        }
+
+        textarea {
+            font-size: 13px;
+            background-color: #f5f5f6;
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+        }
+    }
+
+    .profile-name-field,
+    .profile-email-field,
+    .profile-company-field {
+        width: 100%;
+    }
+
+    .account-profile-head {
+        height: 10%;
+        width: 100%;
+    }
+    .account-profile-mid {
+        height: 80%;
+        width: 100%;
+        padding-top: 25px;
+        text-align: center;
+    }
+    .account-picture {
+        border-radius: 50%;
+    }
+    .update-profile-button,
+    .edit-picture-button,
+    .create-team-button,
+    .create-project-button,
+    .remove-account-button {
+        width: 100%;
+        height: 10%;
+    }
+
+    .red-x {
+        transform: rotate(45deg);
+    }
+
+
+}
+
+.landing-profile-pic {
+    border-radius: 50%;
+}
+
+.about-section {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.about-data-section {
+    margin-left: 165px;
+    text-align: left;
+}
+
+.about-name-section {
+    font-weight: 400;
+    font-size: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.about-data-text {
+    padding-bottom: 5px;
 }

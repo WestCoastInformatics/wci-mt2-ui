@@ -44,12 +44,17 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'project/search', params, false);
     }
 
+    getTeams(params: any): Observable<any> {
+        return this.get(this.contextPath + 'team/search', params, false);
+    }
+
     createRefset(params: any): Observable<any> {
         return this.post(this.contextPath + 'refset/', params);
     }
 
 
     modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string, body?: string): Observable<any> {
+
         let replacementCode = '';
         if (replacementConceptId) {
             replacementCode = '&replacementConceptId=' + replacementConceptId
