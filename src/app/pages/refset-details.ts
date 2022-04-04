@@ -19,7 +19,6 @@ import { environment } from "src/environments/environment";
 import { WorkflowService } from "../services/workflow/workflow.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
 import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
@@ -155,7 +154,6 @@ export class RefsetDetails {
     workflowHistoryNotes: string;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
     isConceptBeingAdded: Boolean;
-    isAddRemoveInDetailsPanel: Boolean;
     addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     reviewNotesAdded = false;
@@ -196,7 +194,6 @@ export class RefsetDetails {
     @ViewChild("taxonomyPathSection") taxonomyPathSection: TemplateRef<any>;
     @ViewChild("conceptCodeSection") conceptCodeSection: TemplateRef<any>;
     @ViewChild("importFromListDialog") importFromListDialog: TemplateRef<any>;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
     membersGridNumberOfMembers: string;
@@ -214,7 +211,7 @@ export class RefsetDetails {
         private readonly workflowService: WorkflowService,
         private readonly modalService: NgbModal,
         private routerExtentionService: RouterExtentionService,
-        private readonly projectsRefsetComponent: ProjectsRefsetComponent
+        readonly projectsRefsetComponent: ProjectsRefsetComponent
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -949,21 +946,8 @@ export class RefsetDetails {
                 return;
             }
 
-            this.membersColumnDefs = [
-                {
-                    field: "code",
-                    colId: "code",
-                    headerName: "Concept ID",
-                    minWidth: 120,
-                    cellClass:
-                        "refset-tool-details-column-concept-id",
-                    cellRenderer: "templateRenderer",
-                    cellRendererParams: {
-                        template: this.conceptCodeSection,
-                    },
-                    tooltipField: "code",
-                    resizable: false
-                },
+            this.membersColumnDefs = [{ field: "code", colId: "code", headerName: "Concept ID", minWidth: 120, tooltipField: "code", resizable: false,
+                    cellClass: "refset-tool-details-column-concept-id", cellRenderer: "templateRenderer", cellRendererParams: { template: this.conceptCodeSection}}
             ];
 
             for (let i = 0; i < this.languageOptions.length; i++) {
@@ -1034,21 +1018,7 @@ export class RefsetDetails {
         }});
 
         // set placeholders on the grid floating filter fields
-        Array.from(
-            document.querySelectorAll(
-                ".ag-floating-filter-full-body .ag-input-field-input"
-            )
-        ).forEach((obj: any) => {
-            if (obj.attributes["disabled"]) {
-                // skip columns with disabled filter
-                return;
-            }
-
-            let label = obj.getAttribute("aria-label");
-            let value =
-                label.substring(0, label.indexOf("Filter Input")) + "...";
-            obj.setAttribute("placeholder", value);
-        });
+        UiUtility.applyGridPlaceholders(".ag-floating-filter-full-body .ag-input-field-input");
     };
 
     onMembersColumnsLoaded() {
@@ -1115,7 +1085,7 @@ export class RefsetDetails {
 
                     if (action.includes('CANCEL_EDIT')) {
                         this.loadWorkflowHistoryData();
-                        this.processChangedMemberEffects();
+                        this.processChangedMemberEffects(null);
                         this.loadRefset();
                     } else {
                         this.loadRefset();
@@ -1158,13 +1128,12 @@ export class RefsetDetails {
         this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
-        if (params.isInDetailsPanel) {
+        if (params.isParentConcept) {
             params.concept.hasChildren = true;
         }
 
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
-        this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
     changeLockedStatus(lock: boolean) {
@@ -1174,7 +1143,7 @@ export class RefsetDetails {
         UiUtility.toggleLockedSections(lock);
     }
 
-    processChangedMemberEffects = () => {
+    processChangedMemberEffects = (conceptStatusArray) => {
 
         this.changeLockedStatus(false);
         this.showLoadingSpinner = true;
@@ -1185,14 +1154,8 @@ export class RefsetDetails {
 
         } else {
 
-            if (this.isAddRemoveInDetailsPanel) {
-                this.loadConceptDetail(this.selectedConcept);
-                this.reloadMembersGridAndTaxonomy();
-
-            } else {
-                this.reloadMembersGridAndTaxonomy();
-                this.showLoadingSpinner = false;
-            }
+            this.reloadMembersGridAndTaxonomy();
+            this.showLoadingSpinner = false;
         }
 
     }

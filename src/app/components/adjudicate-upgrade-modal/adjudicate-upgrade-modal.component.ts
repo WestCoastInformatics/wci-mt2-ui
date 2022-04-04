@@ -66,7 +66,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   isConceptBeingAdded: Boolean;
   conceptForAddRemove: any;
   addRemoveDefinitionExceptionType: any;
-  isAddRemoveInDetailsPanel: any;
   isLocked = false;
   isInactive: boolean;
   isReplacement: boolean;
@@ -209,7 +208,7 @@ changeLockedStatus(lock: boolean) {
   UiUtility.toggleLockedSections(lock);
 }
 
-processChangedMemberEffects = () => {
+processChangedMemberEffects = (conceptStatusArray) => {
 
   this.changeLockedStatus(false);
   this.refsetDetails.showLoadingSpinner = true;

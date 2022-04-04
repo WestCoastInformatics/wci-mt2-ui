@@ -57,6 +57,9 @@ import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
+import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
+import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
+// import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
@@ -95,7 +98,6 @@ import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-mod
 import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
 import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
 import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
-import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
@@ -177,6 +179,7 @@ const appRoutes: Routes = [
         WorkflowHistoryNotesModalComponent,
         AddRemoveConceptsComponent,
         AddRemoveConceptsIconsComponent,
+        AddRemoveConceptGroupIconsComponent,
         LoginComponent,
         LandingPageComponent,
         DashboardComponent,
