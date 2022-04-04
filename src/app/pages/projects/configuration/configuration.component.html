@@ -3,7 +3,7 @@
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-            <mat-select #detailsVersionSelect (selectionChange)="selectProject($event)">
+            <mat-select #detailsVersionSelect  [disableOptionCentering]="true" [(value)]="selectedProject"  (selectionChange)="selectProject($event)">
                 <mat-option *ngFor="let project of projectList"
                             [value]="project"
                             style="z-index: 3">
