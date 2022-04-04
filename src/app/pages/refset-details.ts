@@ -1706,6 +1706,15 @@ export class RefsetDetails {
         });
     }
 
+    openFeedbackModal(dialog: NgbModal) {
+        this.modalService.open(dialog, {
+            modalDialogClass: 'full-modal',
+            centered: true
+          //backdrop : 'static',
+          //keyboard : false,
+        });
+    }
+
     showFlagIcon(showFlag: boolean) {
         this.showFlag = showFlag;
     }

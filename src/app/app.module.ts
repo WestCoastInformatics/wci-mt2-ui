@@ -103,6 +103,7 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
+import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 
 
 const appRoutes: Routes = [
@@ -172,7 +173,7 @@ const appRoutes: Routes = [
         OrganizationConfigurationComponent,
         ProjectsPeopleComponent,
         ProjectsConfigurationComponent,
-        //TeamsSidebarComponent,
+        RefsetFeedbackListComponent,
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
         PersonalLandingComponent,

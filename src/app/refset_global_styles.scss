@@ -714,12 +714,12 @@ button.refset-tool-table-action-icon {
 }
 
 .progressBar li.active {
-    color: #00a4e4;
+    color: $main-color;
 }
 
 .progressBar li.active:before {
-    border-color: #00a4e4;
-    background-color: #00a4e4;
+    border-color: $main-color;
+    background-color: $main-color;
 }
 
 #refsetDirectoryPage {
@@ -3884,7 +3884,7 @@ span.title {
 }
 
 .landing-page-guest-access-button {
-    background-color: #00A4E4;
+    background-color: $main-color;
     color: white;
     width: 220px;
     height: 25px;
@@ -3936,7 +3936,7 @@ span.title {
 .edit-refset-button {
     border-width: 1px;
     border-style: solid;
-    border-color: #00a4e4;
+    border-color: $main-color;
     border-radius: 3px;
     margin-left: 15px;
 }
@@ -4113,7 +4113,7 @@ $sidebar-width: 294px;
 
             li{
                 color: #fff;
-                width: $sidebar-width;
+                overflow: visible;
                 a{
                     display: flex;
                     align-items: center;
@@ -4156,6 +4156,9 @@ $sidebar-width: 294px;
     width: $sidebar-width;
 
     ul{
+        li{
+            width: $sidebar-width;
+        }
         .nav-label{
             opacity: 1;
         }
@@ -4167,6 +4170,24 @@ $sidebar-width: 294px;
 
 .hide-data {
     opacity: 0;
+}
+.text-main{
+    color: $main-color;
+}
+.btn.btn-main{
+    background-color: $main-color;
+    border-radius: 0 !important;
+    color: #ffffff;
+    border-color: $main-color;
+}
+.btn.btn-main:hover{
+    color: #fff;
+}
+.pointer{
+    cursor: pointer;
+}
+.modal-dialog.full-modal{
+    max-width: 90%;
 }
 
 .grey-close-icon,
@@ -4204,7 +4225,7 @@ $sidebar-width: 294px;
         position: relative;
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .organizations-configuration-blocks-1 {
@@ -4344,7 +4365,7 @@ $sidebar-width: 294px;
         position: relative;
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .projects-configuration-blocks-1 {
@@ -4474,7 +4495,7 @@ $sidebar-width: 294px;
         position: relative;
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .teams-configuration-blocks-1 {
@@ -4651,7 +4672,7 @@ $sidebar-width: 294px;
         position: relative;
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .account-configuration-blocks-1 {
@@ -4760,4 +4781,59 @@ $sidebar-width: 294px;
 
 .about-data-text {
     padding-bottom: 5px;
+}
+.topic-header{
+    display: flex;
+    align-items: center;
+    .author-pic{
+        width: 60px;
+        height: 60px;
+    }
+
+    .topic-author{
+        flex-grow: 1;
+        font-size: 26px;
+        margin: 0 20px;
+        color:#555555;
+        .topic-time{
+            font-size: 16px;
+        }
+    }
+    .topic-action{
+        display: inline-block;
+    }
+}
+.topic-title{
+    font-size: inherit;
+    font-weight: 700;
+    color:#555555;
+}
+.topic-content{
+    font-size: 22px;
+    color:#555555;
+    .show-more{
+        font-size: inherit;
+    }
+}
+
+.discussion-list{
+    background-color: #fff;
+    border: 1px solid rgba(197, 196, 197, 1);
+    font-size: 16px;
+    font-weight: 400;
+    .topic-header{
+        font-size: 20px;
+        .author-pic{
+            width: 50px;
+            height: 50px;
+        }
+        .topic-author{
+            margin: 0 10px;
+        }
+    }
+    .section-list{
+        color: #555555;
+        font-size: inherit;
+        font-weight: inherit;
+    }
 }
