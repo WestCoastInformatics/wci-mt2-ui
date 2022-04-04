@@ -522,11 +522,11 @@ export class LaunchComparisonModalComponent implements OnInit {
         let comparisonRefsetDate = this.comparisonRefsetVersionDate;
 
         if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
-            activeRefsetDate = "(In Development)";
+            activeRefsetDate = '(In Development)';
         }
 
         if (this.comparisonRefsetStatus == RefsetUtility.IN_DEVELOPMENT) {
-            comparisonRefsetDate = "(In Development)";
+            comparisonRefsetDate = '(In Development)';
         }
 
         let members: any[] = [];
