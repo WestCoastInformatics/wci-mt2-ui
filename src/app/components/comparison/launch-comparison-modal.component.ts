@@ -43,6 +43,7 @@ export class LaunchComparisonModalComponent implements OnInit {
     conceptForAddRemove: any;
     isConceptBeingAdded: Boolean;
     addRemoveDefinitionExceptionType: string;
+    changeReportData: any[];
 
     selectedConcept: any;
     conceptDetail: any;
@@ -92,6 +93,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.showTable = false;
         this.isConceptDetailsLoading = false;
         this.taxonomyManualStateRefresh = new Boolean(false);
+        this.changeReportData = [];
         
         this.activeRefsetVersionDate = CodeUtility.formatJsonDate(this.activeRefset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         this.activeRefsetVersionOptions = RefsetUtility.getVersionOptions(this.activeRefset);
@@ -450,6 +452,8 @@ export class LaunchComparisonModalComponent implements OnInit {
                 continue;
             }
 
+            this.changeReportData.push({'Concept ID': conceptStatus.code, 'Concept Name': conceptStatus.name, Operation: conceptStatus.operation});
+
             let comparisonRowIndex = this.comparisonData.items.findIndex((element) => { return element.code == conceptStatus.code; });
 
             if (conceptStatus.added) {
@@ -566,13 +570,48 @@ export class LaunchComparisonModalComponent implements OnInit {
             }
         });
 
-        activeRefsetDate.replace(' ', '_');
-        comparisonRefsetDate.replace(' ', '_');
+        activeRefsetDate = activeRefsetDate.replace(' ', '_');
+        comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
 
         let fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' + 
             this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
 
         UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership', 'Refset Name'], fileName);
+    }
+
+    downloadChangeReport() {
+
+        this.changeReportData;
+
+        let activeRefsetDate = this.activeRefsetVersionDate;
+
+        if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+            activeRefsetDate = '(In_Development)';
+        }
+
+        let activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
+
+        this.changeReportData.sort(function(a, b) {
+
+            let sortTermA = a['Operation'].toUpperCase() + a['Concept Name'].toUpperCase();
+            let sortTermB = b['Operation'].toUpperCase() + b['Concept Name'].toUpperCase();
+
+            if (sortTermA < sortTermB) {
+                return -1;
+            
+            } else if (sortTermA > sortTermB) {
+                return 1;
+
+            } else {
+                return 0;
+            }
+        });
+
+        activeRefsetDate = activeRefsetDate.replace(' ', '_');
+
+        let fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + new Date().toLocaleDateString();
+
+        UiUtility.downloadFile(this.changeReportData, ['Concept ID', 'Concept Name', 'Operation'], fileName);
     }
 
     showFlagIcon(event, show) {

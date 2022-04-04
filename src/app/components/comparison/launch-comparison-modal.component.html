@@ -364,6 +364,12 @@
     
     <div class="modal-footer rt2-modal-footer">
         
+        <button *ngIf="changeReportData.length > 0" type="button" (click)="downloadChangeReport()" mat-raised-button color="green" aria-hidden="false" 
+            class="refset-tool-action-button not-last-button" aria-label="Download Comparison Report" ng-reflect-color="green"
+        >
+            Download Change Report
+        </button>
+        
         <button type="button" (click)="downloadComparisonReport()" mat-raised-button color="green" aria-hidden="false" 
             class="refset-tool-action-button not-last-button" aria-label="Download Comparison Report" ng-reflect-color="green"
         >
