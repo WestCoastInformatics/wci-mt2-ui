@@ -36,4 +36,7 @@ export class OrganizationsService extends RestService {
         return this.get(this.contextPath + 'organization/' + organizationId);
     }
 
+    deleteOrganization(organizationId: string): Observable<any> {
+        return this.delete(this.contextPath + 'organization/' + organizationId, '');
+    }
 }
