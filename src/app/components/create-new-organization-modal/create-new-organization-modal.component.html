@@ -1,4 +1,7 @@
-<div class='section-list text-right' title="Create New Organization" aria-label="Create New Organization" (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"><a class='btn btn-primary btn-lg'>Create an Organization</a></div>
+<div class='section-list text-right' title="Create New Organization"
+    aria-label="Create New Organization"
+    (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"><a
+        class='btn btn-primary btn-lg'>Create an Organization</a></div>
 
 <ng-template #createNewOrganizationDialog let-modal>
 
@@ -8,24 +11,28 @@
             Create an Organization
         </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
 
     <div class="modal-body refset-tool-lockable">
-        
+
         <table>
             <tr>
                 <td>
                     <label class="modal-label">Edition:</label>
                 </td>
                 <td>
-                    <div class="row" id="downloadContentRow" >
-                        <div >
-                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedEdition" (selectionChange)="getEdition()">
-                                    <mat-option *ngFor="let option of editionsArray" [value]="option.id">
+                    <div class="row" id="downloadContentRow">
+                        <div>
+                            <mat-form-field appearance="fill"
+                                class="col refset-tool-modal-select-field">
+                                <mat-select #downloadContentField class="refset-tool-modal-select"
+                                    [(value)]="selectedEdition" (selectionChange)="getEdition()">
+                                    <mat-option *ngFor="let option of editionsArray"
+                                        [value]="option.id">
                                         {{ option.value }}
                                     </mat-option>
                                 </mat-select>
@@ -39,7 +46,8 @@
                     <label class="modal-label">Name:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Organization Name"  [(ngModel)]="name"/>
+                    <input class="modal-input-field" placeholder="Organization Name"
+                        [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr>
@@ -47,7 +55,8 @@
                     <label class="modal-label">Email:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="primarycontactemail@orgname.org"  [(ngModel)]="email"/>
+                    <input class="modal-input-field" placeholder="primarycontactemail@orgname.org"
+                        [(ngModel)]="email" style="width: 250px; padding-bottom: 9px" />
                 </td>
             </tr>
             <tr>
@@ -56,9 +65,10 @@
                 </td>
                 <td>
                     <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
+                        <textarea matInput class="import-from-list-text-area"
+                            [(ngModel)]="description">test</textarea>
                     </mat-form-field>
-                    
+
                 </td>
             </tr>
         </table>
@@ -66,12 +76,14 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || description === '' || email === ''" (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" 
-                aria-label="Create Organization" title="Create Organization" ng-reflect-color="green">
+        <button type="button" [disabled]="name === '' || description === '' || email === ''"
+            (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false"
+            class="refset-tool-action-button" aria-label="Create Organization"
+            title="Create Organization" ng-reflect-color="green">
             Create Organization
         </button>
 
-        
+
     </div>
-    
+
 </ng-template>

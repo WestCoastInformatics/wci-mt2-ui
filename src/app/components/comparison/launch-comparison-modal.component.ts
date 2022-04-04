@@ -34,7 +34,7 @@ export class LaunchComparisonModalComponent implements OnInit {
     showTable: boolean = false;
     activeRefsetName: string;
     comparisonData: any;
-    comparisonRefsetDate: string;
+    comparisonRefsetVersionDate: string;
     comparisonRefsetName: string;
     comparisonRefsetStatus: string;
     allowedToEdit: boolean = false;
@@ -226,12 +226,12 @@ export class LaunchComparisonModalComponent implements OnInit {
 
             let comparisonVersionInfo = this.activeRefset.versionList.find((element) => { return element.refsetInternalId == this.comparisonRefsetInternalId; });
             this.comparisonRefsetName = this.activeRefsetName;
-            this.comparisonRefsetDate = comparisonVersionInfo.date;
+            this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
             this.comparisonRefsetStatus = comparisonVersionInfo.status;
         } else {
 
             let comparisonVersionInfo = this.comparisonRefsetVersionOptions.find((element) => { return element.value == this.comparisonRefsetInternalId; });
-            this.comparisonRefsetDate = comparisonVersionInfo.date;
+            this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
             this.comparisonRefsetStatus = comparisonVersionInfo.status;
         }
 
@@ -367,7 +367,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.conceptDetailParents = [];
 
-        if (!concept?.active) {
+        if (!CodeUtility.testBoolean(concept?.active)) {
             return;
         }
 
@@ -518,10 +518,36 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     downloadComparisonReport() {
 
+        let activeRefsetDate = this.activeRefsetVersionDate;
+        let comparisonRefsetDate = this.comparisonRefsetVersionDate;
+
+        if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+            activeRefsetDate = '(In Development)';
+        }
+
+        if (this.comparisonRefsetStatus == RefsetUtility.IN_DEVELOPMENT) {
+            comparisonRefsetDate = '(In Development)';
+        }
+
         let members: any[] = [];
+        let activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
+        let comparisonRefset = this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
+        let bothRefsets = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ') ; ' +  
+            this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
 
         for (let row of this.comparisonData.items) {
-            members.push({'Concept ID': row.code, 'Concept Name': row.name, 'Refset Membership': row.membership});
+
+            let refset = '';
+
+            if (row.membership == 'Active Refset') {
+                refset = activeRefset;
+            } else if (row.membership == 'Both') {
+                refset = bothRefsets;
+            } else {
+                refset = comparisonRefset;
+            }
+
+            members.push({'Concept ID': row.code, 'Concept Name': row.name, 'Refset Membership': row.membership, 'Refset Name': refset});
         }
 
         members.sort(function(a, b) {
@@ -540,9 +566,13 @@ export class LaunchComparisonModalComponent implements OnInit {
             }
         });
 
-        let fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_To_Refset_' + this.comparisonData.comparisonRefsetId + '_' + new Date().toLocaleDateString();
+        activeRefsetDate.replace(' ', '_');
+        comparisonRefsetDate.replace(' ', '_');
 
-        UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership'], fileName);
+        let fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' + 
+            this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
+
+        UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership', 'Refset Name'], fileName);
     }
 
     showFlagIcon(event, show) {

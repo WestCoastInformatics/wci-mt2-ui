@@ -42,11 +42,11 @@
                             <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset" (change)="comparisonSelectionChange($event)"
                                 [checked]="activeRefsetVersionOptions.length > 0" [disabled]="activeRefsetVersionOptions.length == 0"
                             >
-                                To another version of this reference set
+                                Another version
                             </mat-radio-button>
 
                             <mat-radio-button value="different_refset" (change)="comparisonSelectionChange($event)" [checked]="activeRefsetVersionOptions.length == 0">
-                                By searching for a reference Set
+                                Different reference set
                             </mat-radio-button>
 
                             <mat-form-field [hidden]="comparisonTypeSelected == 'different_refset'" appearance="fill">
@@ -176,7 +176,7 @@
                                                     </td>
 
                                                     <td class="refset-tool-comparison-refset-name">
-                                                        {{ comparisonRefsetName }} {{ comparisonRefsetDate }} ({{ comparisonRefsetStatus }})
+                                                        {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }} ({{ comparisonRefsetStatus }})
                                                     </td>
 
                                                     <td class="refset-tool-comparison-refset-distinct">
@@ -328,7 +328,7 @@
                                     <div class="container-fluid refset-tool-concept-details-taxonomy-section children-section">
 
                                         <div class="row">
-                                            <div class="refset-tool-concept-details-section-title">Children <span [hidden]="!numOfChildren"> ({{ taxonomyNumberOfChildren }})</span></div>
+                                            <div class="refset-tool-concept-details-section-title">Children <span [hidden]="!taxonomyNumberOfChildren"> ({{ taxonomyNumberOfChildren }})</span></div>
                                         </div>
 
                                         <!-- Children Taxonomy Tree -->

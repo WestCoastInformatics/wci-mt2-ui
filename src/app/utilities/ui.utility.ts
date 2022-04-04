@@ -584,7 +584,7 @@ export class UiUtility {
              for (const index in headerList) {
 
                 const head = headerList[index];
-                 line += ',' + array[i][head];
+                 line += ',' + array[i][head].replaceAll(',', ';');;
              }
 
              csvString += line + '\r\n';
