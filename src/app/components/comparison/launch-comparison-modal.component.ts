@@ -140,6 +140,11 @@ export class LaunchComparisonModalComponent implements OnInit {
         const results = this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
 
             this.refsetOptions = results.items;
+
+            for (let option of this.refsetOptions) {
+                option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+            }
+            
             this.refsetOptionsLoading = false;
         });
     }
@@ -393,8 +398,6 @@ export class LaunchComparisonModalComponent implements OnInit {
     }
 
     sendChangeLockedStatus = (value: boolean) => {
-
-        this.isLocked = value;
         this.changeLockedStatus.emit(value);
     }
 
@@ -409,6 +412,9 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+        this.sendChangeLockedStatus(true);
+        this.showLoadingSpinner = true;
     }
 
     addRemoveConceptGroup(params: any): void {
@@ -426,8 +432,9 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     public processChangedMemberEffects = (conceptStatusArray) => {
 
-        this.isLocked = false;
+        this.sendChangeLockedStatus(false);
         UiUtility.toggleLockedSections(false);
+        this.showLoadingSpinner = false;
 
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.activeRefset.refsetId)) {
@@ -463,11 +470,11 @@ export class LaunchComparisonModalComponent implements OnInit {
                     let concept = {
                         code: conceptStatus.code,
                         definitionExceptionType: null,
-                        hasChildren: "false",
-                        memberOfRefset: "true",
+                        hasChildren: 'false',
+                        memberOfRefset: 'true',
                         name: conceptStatus.name,
                         active: conceptStatus.active,
-                        membership: "Active Refset"
+                        membership: 'Active Refset'
                     };
 
                     this.comparisonData.items.push(concept);
@@ -497,9 +504,53 @@ export class LaunchComparisonModalComponent implements OnInit {
             }
         }
 
+        this.gridApi.setRowData(this.comparisonData.items);
+        this.gridApi.redrawRows();
+        this.gridPaging.totalRows = this.comparisonData.items.length;
+        //this.gridPaging.manualStateRefresh = new Boolean(true);
+        //this.gridApi.refreshCells({force: true, suppressFlash: false});
+
         // reload the concept details if it is open
         if (this.conceptDetail != null) {
             this.loadConceptDetail(this.conceptDetail);
+        }
+    }
+
+    downloadComparisonReport() {
+
+        let members: any[] = [];
+
+        for (let row of this.comparisonData.items) {
+            members.push({'Concept ID': row.code, 'Concept Name': row.name, 'Refset Membership': row.membership});
+        }
+
+        members.sort(function(a, b) {
+
+            let sortTermA = a['Refset Membership'].toUpperCase() + a['Concept Name'].toUpperCase();
+            let sortTermB = b['Refset Membership'].toUpperCase() + b['Concept Name'].toUpperCase();
+
+            if (sortTermA < sortTermB) {
+                return -1;
+            
+            } else if (sortTermA > sortTermB) {
+                return 1;
+
+            } else {
+                return 0;
+            }
+        });
+
+        let fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_To_Refset_' + this.comparisonData.comparisonRefsetId + '_' + new Date().toLocaleDateString();
+
+        UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership'], fileName);
+    }
+
+    showFlagIcon(event, show) {
+        
+        if (show) {
+            event.target.style.display = 'inline';
+        } else {
+            event.target.style.display = 'none';
         }
     }
 }

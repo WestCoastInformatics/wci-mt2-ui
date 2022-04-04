@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="col dialog-form-field">
-                        <label>{{activeRefset.name}} {{activeRefset.versionDate}} ({{activeRefset.versionStatus}})</label>
+                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{ activeRefset.versionStatus }})</label>
                     </div>
 
                 </div>
@@ -65,7 +65,11 @@
                                     <input class="concept-dropdown-input full-width" placeholder="Type here..." (keyup)="onKeyUp($event.target.value)" (mouseover)="$event.target.focus()">
                                     <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None</mat-option>
                                     <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
-                                    <mat-option *ngFor="let refset of refsetOptions" [value]="refset">{{ refset.name }}</mat-option>
+                                    <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
+                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}" 
+                                            class="refset-tool-edition-flag" title="{{ refset?.editionName }} Flag" aria-label="{{ refset?.editionName }} Flag" />
+                                        {{ refset.name }} ({{ refset?.editionName }})
+                                    </mat-option>
                                 </mat-select>
 
                             </mat-form-field>
@@ -116,9 +120,12 @@
 
     <div class="container-fluid refset-tool-dialog-container">
         <div class="modal-body refset-tool-dialog-body">
+            
+            <div *ngIf="showLoadingSpinner" class="relative-loading-container"><div class="relative-loading">Loading...</div></div>
+            
 
             <!-- SPLITTER -->
-            <as-split direction="horizontal" gutterSize="2">
+            <as-split direction="horizontal" gutterSize="2" >
 
                 <!-- MEMBERS SECTION -->
                 <as-split-area [lockSize]="true" [size]="isConceptDetailsLoading || conceptDetail ? 70 : 100" [minSize]="37">
@@ -351,6 +358,7 @@
                 </as-split-area>
 
             </as-split>
+        
         </div>
     </div>
     
