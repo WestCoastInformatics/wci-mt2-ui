@@ -1,0 +1,43 @@
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">Teams</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedTeam?.name ? selectedTeam?.name : 'Choose Team'}}</mat-label>
+            <mat-select #detailsVersionSelect (selectionChange)="selectTeam($event)">
+                <mat-option *ngFor="let team of teamList"
+                            [value]="team"
+                            style="z-index: 3">
+                    {{ team.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+    <div class="content-wrapper">
+        <app-sidebar [menuItems]="menu"></app-sidebar>
+        <div class='container-fluid mt-3'>
+            <div class='row'>
+                <div class='col-12'>
+                    <section class="mb-3">
+                        <div class='section-header mb-3'>
+                            People ({{dataCount}})
+                            <button class="btn btn-primary radius-0 float-right">Add Members</button>
+                        </div>
+                        <div class='dashboard-section'>
+                            <div class="ag-theme-alpine">
+                                <ag-grid-angular
+                                    [columnDefs]="columnDefs"
+                                    [defaultColDef]="defaultColDef"
+                                    [rowData]="data"
+                                    style="width: 100%">
+                                </ag-grid-angular>
+                            </div>
+                        </div>
+                        <div class='text-right'>
+                            <a class='text-muted light'>show/hide admin</a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>

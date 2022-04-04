@@ -23,7 +23,7 @@ import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { catchError, filter, pairwise, take } from 'rxjs/operators';
-import { ProjectsRefsetComponent } from './projects/projects-refset.component';
+import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 
 /**
  * @title Tree with nested nodes
@@ -1339,6 +1339,24 @@ export class RefsetDetails {
 
         const dialogData = {
             headerText: `Refset Artifacts`,
+            template: this.refsetArtifactsDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {});
+    }
+
+    openCreateNewOrganizationDialog() {
+        const dialogId = "createNewOrganizationDialog";
+
+        const dialogData = {
+            headerText: `Create New Organization`,
             template: this.refsetArtifactsDialog,
             data: this.refsetData,
         };

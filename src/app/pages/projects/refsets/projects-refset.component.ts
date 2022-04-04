@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Context, Logger } from 'ag-grid-community';
 import { forkJoin } from 'rxjs';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
@@ -16,14 +16,22 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { User } from '../../models/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { User } from 'src/app/models/user';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
+import { ProjectsService } from 'src/app/services/rest/projects.service';
 
 @Component({
     selector: 'projects-refset',
     templateUrl: './projects-refset.component.html'
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
+    menu:SidebarMenuItem[] = [
+      {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy', isActive: true},
+      {name: 'People', link: '/projects/people', icon: 'fa fa-user'},
+      {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs'}
+    ];
 
     searchInput: string;
     user: User;
@@ -76,7 +84,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         private breadcrumbService: BreadcrumbService,
         readonly toggleService: ToggleService,
         private authService: AuthenticationService,
-        private readonly modalService: NgbModal
+        private readonly modalService: NgbModal,
+        private readonly route: ActivatedRoute,
+        private readonly projectsService: ProjectsService
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -85,7 +95,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Projects');
-        this.breadcrumbService.setBreadcrumbs([{ label: 'Projects' }]);
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/projects', label: 'Projects' },
+            { label: 'Reference Sets' },
+        ]);
         this.getUser();
     }
 
@@ -172,7 +185,21 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             };
 
             this.projects = projectResults.items;
+            
+            this.route.params.subscribe(params => {
+                if (params['id']) {
+                    this.getProject(params['id']);
+                    sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
+                }
+            });
             this.getStorageItems();
+        });
+    }
+
+    getProject(id: string): void {
+        this.projectsService.getProject(id).subscribe((result) => {
+            this.isSelectedProject = result;
+            console.log(this.isSelectedProject)
         });
     }
 

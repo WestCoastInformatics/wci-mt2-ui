@@ -1,0 +1,49 @@
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">{{ this.user?.name }}</span>
+    </div>
+</div>
+
+    <div class="content-wrapper">
+    <app-sidebar [menuItems]="menu"></app-sidebar>
+    <div class='container-fluid mt-3'>
+    <span class="account-configuration">
+    
+        <div class="section-header mb-3"> Account Configuration </div>
+        <div class="account-configuration-details">
+            <div class="account-configuration-blocks-1">
+                <div class="account-configuration-block main-block profile-block">
+                    <div class="account-profile-head section-header">Profile</div>
+                <div class="account-profile-mid">
+                    <mat-form-field class="profile-name-field" appearance="none">
+                        <mat-label>Name</mat-label>
+                        <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                    </mat-form-field>
+
+                    <mat-form-field class="profile-company-field" appearance="none">
+                        <mat-label>Company</mat-label>
+                        <input matInput type="text" name="email" [(ngModel)]="profileCompanyValue">
+                    </mat-form-field>
+
+                    <mat-form-field class="profile-email-field" appearance="none">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+                    </mat-form-field>
+                </div> 
+                    <div class="update-profile-button">
+                        <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileCompanyValue" (click)="updateProfile()">Update Profile</button></div>
+                    </div>
+                </div>
+    
+                <div class="account-configuration-block main-block profile-pic-block">
+                    <div class="account-profile-head section-header">Profile Picture</div>
+                    <div class="account-profile-mid"><img class="account-picture" src="assets/ihtsdo.svg"></div>
+                    <div class="edit-picture-button">
+                        <div class="section-list text-right" aria-label="Edit Picture" title="Edit Picture"><a class="btn btn-primary btn-lg">Edit Picture</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </span>
+</div></div>
