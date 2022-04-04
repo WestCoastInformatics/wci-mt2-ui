@@ -1,30 +1,11 @@
-<<<<<<< HEAD
-<div id="refsetProjectsPage"
-     class="container-fluid">
-    <div class="row refset-title">
-        <div class="col-md-auto page-title"
-             style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Fake Name
-        </div>
-        <div class="row justify-content-end details-version-select"
-             style="margin-left: 20px">
-            <mat-form-field appearance="outline"
-                            class="project-drop-down" style="visibility: hidden;">
-                <mat-label>{{'Choose Test'}}</mat-label>
-                <mat-select #detailsVersionSelect>
-                    <mat-option *ngFor="let test of ['test', 'test']"
-                                [value]="test"
-                                style="z-index: 3">
-                        {{ test }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">{{ this.user?.name }}</span>
     </div>
-    </div>
+</div>
 
     <div class="content-wrapper">
-        <app-personal-sidebar activeRoute="landing"></app-personal-sidebar>
+        <app-sidebar [menuItems]="menu"></app-sidebar>
         <div class='container-fluid mt-3'>
             <div class='row'>
                 <div class='col-md-4 col-12'>
@@ -33,12 +14,11 @@
                         <div class='dashboard-section pr-2 pl-2'>
                             <div class="about-section">
                                 <div><img class="landing-profile-pic" src="assets/ihtsdo.svg"></div>
-                                <div class="about-name-section">Fake Name</div>
+                                <div class="about-name-section">{{ this.user?.name }}</div>
                                 <div class="about-data-section">
                                     <div class="about-data-text">West Coast Informatics</div>
-                                    <div class="about-data-text">swhalen@westcoastinformatics.com</div>
-                                    <div class="about-data-text">United States</div>
-                                    <div class="about-data-text">09:55:31 PM (GMT-5)</div>
+                                    <div class="about-data-text">{{ this.user?.email }}</div>
+                                    <div class="about-data-text">{{todayDate | date:'longTime'}}</div>
                                 </div>
                             </div>
                         </div>
@@ -46,15 +26,15 @@
                 </div>
                 <div class='col-md-8 col-12'>
                     <section>
-                        <div class='section-header'>Organization</div>
+                        <div class='section-header'>Organizations</div>
                         <div class='dashboard-section'>
-                            <div class='section-list'>
-                                <img src='assets/sampels/u102.svg' />
-                                <a>IHTSDO</a>
-                            </div>
-                            <div class='section-list'>
-                                <img src='assets/sampels/u105.svg' />
-                                <a>West Coast Informatics</a>
+                            <div class="dashboard-section-mid">
+                                <ng-container *ngFor="let organization of organizationList">
+                                    <div class='section-list' *ngIf="organization.value">
+                                        <!-- <img src='assets/sampels/u102.svg' /> -->
+                                        <span [routerLink]="['/organizations/projects', organization.id]"><a>{{ organization.value }}</a></span>
+                                    </div>
+                                    </ng-container>
                             </div>
                         </div>
                     </section>
@@ -62,15 +42,15 @@
                     <section>
                         <div class='section-header'>Teams</div>
                         <div class='dashboard-section'>
-                            <div class='section-list'><a>IHTSDO/WCI</a></div>
-                            <div class='section-list'><a>WestCoastInformatics/depoyment-team</a></div>
-                            <div class='section-list'><a>WestCoastInformatics/dev-team</a></div>
+                            <div class="dashboard-section-mid">
+                                <ng-container *ngFor="let team of teamList">
+                                    <div class='section-list' *ngIf="team.name">
+                                        <span [routerLink]="['/teams/people', team.id]"><a>{{ team.name }}</a></span>
+                                    </div>
+                                    </ng-container>
+                            </div>
                         </div>
                     </section>
                 </div>
             </div>
     </div></div>
-=======
-<p>landing works!</p>
-<app-sidebar [menuItems]="menu"></app-sidebar>
->>>>>>> 4092fad06e96033bed580234869d33a71e24fe4d

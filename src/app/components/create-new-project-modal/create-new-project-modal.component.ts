@@ -7,6 +7,7 @@ import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { ProjectsService } from "src/app/services/rest/projects.service";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: "create-new-project-modal",
@@ -21,19 +22,27 @@ export class CreateNewProjectModalComponent {
 	organizations: any;
     organizationsArray: any;
     selectedOrganization: any;
-    organization:any;
+    organization: any;
     privateProject: any;
 
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
         private projectsService: ProjectsService,
         private organizationsService: OrganizationsService,
-        private notificationService: NotificationService, 
-        private readonly refsetDetails: RefsetDetails
-    ) {}
+        private notificationService: NotificationService,
+        private readonly refsetDetails: RefsetDetails,
+        private readonly route: ActivatedRoute
+    ) {
+        this.route.params.subscribe(params => {
+            this.selectedOrganization = params['id'];
+            if (this.selectedOrganization) {
+                this.getOrganization();
+            }
+          });
+    }
 
     callMemberOperation(): void {
 
@@ -65,7 +74,7 @@ export class CreateNewProjectModalComponent {
         });
     }
 
-    ngOnInit() {    
+    ngOnInit() {
         // get list of organizations
         this.refsetService.getOrganizations().subscribe((organizationResults) => {
             this.organizations = organizationResults;

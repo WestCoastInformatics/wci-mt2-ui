@@ -1,43 +1,39 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
-<div id="refsetProjectsPage" class="container-fluid">
-    <div class="row refset-title">
-        <div class="col-md-auto page-title"
-            style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Projects
-        </div>
-        <div class="row justify-content-end details-version-select">
+    <div class="content-header">
+        <div class="row header-title">
+            <span class="title-label">Projects</span>
             <mat-form-field appearance="outline" class="project-drop-down">
-                <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
-                </mat-label>
-                <mat-select #detailsVersionSelect [disableOptionCentering]="true"
-                    [(value)]="selectedProject" (selectionChange)="showRefsets()">
-                    <mat-option *ngFor="let project of projects" [value]="project"
-                        style="z-index: 3">
+                <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
+                    <mat-select #detailsVersionSelect (selectionChange)="showRefsets()">
+                    <mat-option *ngFor="let project of projects"
+                                [value]="project"
+                                style="z-index: 3">
                         {{ project.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
         <div class="col-md-auto page-title" *ngIf="selectedProject" style="
-                margin-right: 20px;
-                color: #555555;
-                padding-left: 60px;
-                font-size: 14px;
-            ">
-            <b>Project Name: </b><span>{{selectedProject?.name +
-                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            margin-right: 20px;
+            color: #555555;
+            padding-left: 60px;
+            font-size: 14px;
+        ">
+        <b>Project Name: </b><span>{{selectedProject?.name +
+            &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+    
+        <b>Organization Name: </b><span>{{selectedProject?.organization?.name +
+            &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+    
+        <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
+            &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+        <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
+    </div>
+    </div>
 
-            <b>Organization Name: </b><span>{{selectedProject?.organization?.name +
-                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-
-            <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
-                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-            <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
-        </div>
     </div>
     <div class="content-wrapper">
-        <app-sidebar [menuItems]="menu"></app-sidebar>
+        <app-sidebar [menuItems]="menu" [id]="selectedProject?.id ? selectedProject?.id : ''"></app-sidebar>
         <div class='container-fluid mt-3'>
     <!-- Page Title -->
     <div *ngIf="selectedProject" style="
@@ -136,7 +132,7 @@
         </ng-template>
     </div>
 </div>
-</div></div>
+</div>
 <scroll-top></scroll-top>
 
 <ng-template #workflowDiagramDialog let-modal>

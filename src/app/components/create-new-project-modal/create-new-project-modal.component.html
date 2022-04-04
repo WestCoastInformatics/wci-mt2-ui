@@ -1,8 +1,5 @@
-<!-- <button (click)="openImportFromEclModal(importFromEclDialog)" class="refset-tool-standard-icon-button">
-    <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
-</button> -->
-
-<button mat-menu-item alt="Document symbol denoting an upload icon" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</button>
+<div *ngIf="!selectedOrganization" class='section-list text-right' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary btn-lg'>Create a Project</a></div>
+<a *ngIf="selectedOrganization" class="btn btn-primary radius-0 float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
@@ -20,7 +17,7 @@
     <div class="modal-body refset-tool-lockable">
         
         <table>
-            <tr>
+            <tr *ngIf="!selectedOrganization">
                 <td>
                     <label class="modal-label">Parent Organization:</label>
                 </td>

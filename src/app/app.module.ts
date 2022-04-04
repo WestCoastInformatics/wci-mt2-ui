@@ -103,6 +103,7 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
+import { UsersService } from './services/rest/users.service';
 
 
 const appRoutes: Routes = [
@@ -112,17 +113,32 @@ const appRoutes: Routes = [
     { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
     { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
     { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
+
     { path: 'organizations/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/projects/:id', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/teams', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/teams/:id', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/people', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/people/:id', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/configuration', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/configuration/:id', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+
     { path: 'projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
+    { path: 'projects/:id', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
     { path: 'projects/people', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'projects/people/:id', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
     { path: 'projects/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'projects/configuration/:id', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+
     { path: 'teams/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'teams/people/:id', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
     { path: 'teams/configuration', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'teams/configuration/:id', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+
     { path: 'personal/landing', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
+    { path: 'personal/landing/:id', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
     { path: 'personal/configuration', component: PersonalConfigurationComponent, data: { breadcrumbLabel: 'Account Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'personal/configuration/:id', component: PersonalConfigurationComponent, data: { breadcrumbLabel: 'Account Configuration' }, canActivate: [AuthGuardGuard] },
 ];
 
 @NgModule({
@@ -231,6 +247,7 @@ const appRoutes: Routes = [
         RouterExtentionService,
         ProjectsRefsetComponent,
         AddRemoveConceptsComponent,
+        UsersService,
         NotificationService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {

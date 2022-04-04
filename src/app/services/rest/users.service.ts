@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Concept } from 'src/app/models/concept';
 import { Observable } from 'rxjs';
-import { RestService } from './rest.service';
+import { RestService, RestWrapper } from './rest.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
 import { NotificationService } from '../notification.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectsService extends RestService {
+export class UsersService extends RestService {
 
     taxonomyRootNode: any = null;
     contextPath = '/refsetservice/';
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-        
+
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
@@ -24,15 +25,12 @@ export class ProjectsService extends RestService {
         }
     }
 
-    createProject(params: any): Observable<any> {
-        return this.post(this.contextPath + 'project/', params);
+
+    getUser(userId: string): Observable<any> {
+        return this.get(this.contextPath + 'user/' + userId);
     }
 
-    updateProject(projectId: any, params: any): Observable<any> {
-        return this.put(this.contextPath + 'project/' + projectId, params);
-    }
-
-    getProject(projectId: string): Observable<any> {
-        return this.get(this.contextPath + 'project/' + projectId);
+    updateUser(userId: string, user: any): Observable<any> {
+        return this.put(this.contextPath + 'user/' + userId, user);
     }
 }

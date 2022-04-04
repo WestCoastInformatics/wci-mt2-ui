@@ -1,14 +1,13 @@
-    
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{'Choose Test'}}</mat-label>
-            <mat-select #detailsVersionSelect>
-                <mat-option *ngFor="let test of ['test', 'test']"
-                            [value]="test"
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+            <mat-select #detailsVersionSelect (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList"
+                            [value]="organization"
                             style="z-index: 3">
-                    {{ test }}
+                    {{ organization.value }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -22,14 +21,15 @@
                 <section class="mb-3">
                     <div class='section-header mb-3'>
                         Projects ({{dataCount}})
-                        <a class="btn btn-primary radius-0 float-right">Create New Project</a>
+                        <create-new-project-modal></create-new-project-modal>
                     </div>
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
                             <ag-grid-angular
                                 [columnDefs]="columnDefs"
-                                [defaultColDef]="defaultColDef"
                                 [rowData]="data"
+                                [defaultColDef]="defaultColDef"
+                                (gridReady)="onGridReady($event)"
                                 style="width: 100%">
                             </ag-grid-angular>
                         </div>

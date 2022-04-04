@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { TeamsService } from 'src/app/services/rest/teams.service';
 
 @Component({
   selector: 'teams-people',
@@ -26,13 +30,23 @@ export class TeamsPeopleComponent implements OnInit {
       return `<a class='action-btn'>Remove Member</a>`;
     } }
   ];
+  selectedTeam: any;
+  id: any;
+  teamList = [];
+  currentUser: any;
 
-  constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
+  constructor(private readonly breadcrumbService: BreadcrumbService,
+    private readonly titleService: Title,
+    private readonly refsetService: RefsetService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly authService: AuthenticationService,
+    private readonly teamsService: TeamsService) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Organizations');
+    this.titleService.setTitle('Refset Tool - Teams');
     this.breadcrumbService.setBreadcrumbs([
-      { path: '/organizations/people', label: 'Organizations' },
+      { path: '/teams/people', label: 'Teams' },
       { label: 'People' },
   ]);
   
@@ -49,9 +63,35 @@ export class TeamsPeopleComponent implements OnInit {
     { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Snomed International', email: 'aat@snomed.org' },
     { name: 'Anna Nilsson', pic: 'assets/sampels/profile/7.svg', company: 'Swedish NRC', email: 'anilsson@swedishnrc.org' }
   ];
+    
+  this.route.params.subscribe(params => {
+    this.id = params['id'];
+  });
+  this.currentUser = this.authService.getUser();
+  this.getTeam();
+  this.getTeams();
   }
   get dataCount() {
     return this.data.length;
   }
 
+  selectTeam($event): void {
+    this.router.navigate(['/teams/people', $event['value'].id]);
+  }
+
+  getTeam(): void {
+    this.teamsService.getTeam(this.id).subscribe((result) => {
+      this.selectedTeam = result;
+    });
+  }
+
+  getTeams(): void {
+    this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+      this.teamList = results.items.filter((x) => {
+        return x.members.some((member) => {
+          return member.includes(this.currentUser.id);
+        });
+      });
+    });
+  }
 }

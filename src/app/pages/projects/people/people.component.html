@@ -1,20 +1,18 @@
-
-    
-    <div class="content-header">
-        <div class="row header-title">
-            <span class="title-label">Organizations</span>
-            <mat-form-field appearance="outline" class="project-drop-down">
-                <mat-label>{{'Choose Test'}}</mat-label>
-                <mat-select #detailsVersionSelect>
-                    <mat-option *ngFor="let test of ['test', 'test']"
-                                [value]="test"
-                                style="z-index: 3">
-                        {{ test }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">Projects</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
+            <mat-select #detailsVersionSelect (selectionChange)="selectProject($event)">
+                <mat-option *ngFor="let project of projectList"
+                            [value]="project"
+                            style="z-index: 3">
+                    {{ project.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
+</div>
     <div class="content-wrapper">
         <app-sidebar [menuItems]="menu"></app-sidebar>
         <div class='container-fluid mt-3'>

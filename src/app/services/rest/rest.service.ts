@@ -99,6 +99,24 @@ export class RestService {
           );
     }
 
+    delete(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+
+        return this.http.delete<any>(this.restUrl + url, params).pipe(
+            catchError((err) => {
+
+                if (!ignoreErrors) {
+
+                    const definedError = err.error.error ? err.error.error : err.statusText;
+                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+
+                    return err;
+                } else {
+                    return EMPTY;
+                }
+            })
+          );
+    }
+
     getHttpClient(): HttpClient {
         return this.http;
     }

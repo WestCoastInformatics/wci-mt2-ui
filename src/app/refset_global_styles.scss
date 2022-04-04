@@ -4039,6 +4039,10 @@ img.refset-tool-edition-flag {
         vertical-align: middle;
     }
 }
+.dashboard-section-mid {
+    height: 180px;
+    overflow-y: scroll;
+}
 .section-header{
     font-size: 20px;
     color: $main-color;
@@ -4426,7 +4430,23 @@ $sidebar-width: 294px;
     .projects-profile-mid {
         height: 80%;
         width: 100%;
-        padding-top: 25px;
+
+        .team-list-box {
+            margin-top: 10px;
+            height: 160px;
+            border: groove;
+            overflow-y: scroll;
+
+            .team-item {
+                padding: 10px;
+                display: inline-flex;
+                align-items: center;
+
+                .team-item-name {
+                    padding-left: 40px;
+                }
+            }
+        }
     }
     .projects-picture {
         text-align: center;
@@ -4716,9 +4736,10 @@ $sidebar-width: 294px;
         height: 80%;
         width: 100%;
         padding-top: 25px;
+        text-align: center;
     }
     .account-picture {
-        text-align: center;
+        border-radius: 50%;
     }
     .update-profile-button,
     .edit-picture-button,
@@ -4747,7 +4768,7 @@ $sidebar-width: 294px;
 }
 
 .about-data-section {
-    margin-left: 110px;
+    margin-left: 165px;
     text-align: left;
 }
 

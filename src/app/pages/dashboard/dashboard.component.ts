@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,33 +11,78 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 })
 export class DashboardComponent implements OnInit {
   searchText = '';
-  
+  organizationList = [];
+  projectList = [];
+  teamList = [];
+  currentUser: any;
+
   columnDefs = [
     { field: 'refsetId', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true},
-    { field: 'workflowStatus', headerName: 'Current Workflow Status', unSortIcon: true, sortable: true},
-    { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', unSortIcon: true, sortable: true}
+    { field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true},
+    { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', unSortIcon: true, sortable: true, valueGetter:
+    UiUtility.gridDateValueGetter,}
   ];
 
-  data = [
-    {refsetId: 'IHTSDO/SNOMED International Project/Atherosclerotic cardiovascular disease (ASCVD) …', workflowStatus: 'In Review (MHarry)', modified: '2022-01-01'},
-    {refsetId: 'WestCoastInformatics/WCI Test MANAGED-SERVICE Project/Microorganism subset', workflowStatus: 'Ready for Review', modified: '2021-12-31'},
-    {refsetId: 'WestCoastInformatics/WCI Test MANAGED-SERVICE Project/Nursing Procedures', workflowStatus: 'Ready for Edit', modified: '2021-12-09'},
-    {refsetId: 'WestCoastInformatics/WCI Test MANAGED-SERVICE Project/Urval Covid-19', workflowStatus: 'In Edit (SWhalen)', modified: '2021-12-01'},
-    {refsetId: 'IHTSDO/SNOMED International Project/General Practice / Family Practice reference set', workflowStatus: 'Review Completed', modified: '2021-11-28'},
-    {refsetId: 'Organizaztion/Project/Place Holder reference set', workflowStatus: 'Review Completed', modified: '2021-10-28'},
-    {refsetId: 'Organizaztion/Project/Place Holder reference set', workflowStatus: 'Review Completed', modified: '2021-10-28'},
-    {refsetId: 'Organizaztion/Project/Place Holder reference set', workflowStatus: 'Review Completed', modified: '2021-10-28'},
-    {refsetId: 'Organizaztion/Project/Place Holder reference set', workflowStatus: 'Review Completed', modified: '2021-10-28'},
-    {refsetId: 'Organizaztion/Project/Place Holder reference set', workflowStatus: 'Review Completed', modified: '2021-10-28'}
-  ];
+  data = [];
+  api: any;
+  columnApi: any;
 
-  constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
+  constructor(private readonly breadcrumbService: BreadcrumbService,
+    private readonly titleService: Title,
+    private readonly refsetService: RefsetService,
+    private readonly authService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Dashboard');
     this.breadcrumbService.setBreadcrumbs([
       { path: '/dashboard', label: 'Dashboard' }
-  ]);
+    ]);
+    this.currentUser = this.authService.getUser();
+    this.getOrganizations();
+    this.getProjects();
+    this.getTeams();
   }
 
+
+  getOrganizations(): void {
+    this.refsetService.getOrganizations().subscribe((results) => {
+      this.organizationList = results.items;
+    });
+  }
+
+  onGridReady = (params) => {
+    this.api = params.api;
+    this.columnApi = params.columnApi;
+    this.getRefSets();
+  }
+
+  getRefSets(): void {
+    this.refsetService.getRefsets('limit=10&offset=0&sort=name&sortAscending=true').subscribe((x) => {
+      console.log(x.items);
+      for (let refset of x.items) {
+        if (refset.assignedUser === this.currentUser.userName) {
+          this.data.push({ refsetId: `${refset?.organizationName}/${refset?.project[0]?.name}/${refset.name}`, workflowStatus: `${refset?.workflowStatus}`, modified: `${refset?.modified}` })
+        }
+      }
+      console.log(this.data)
+      this.api.setRowData(this.data.slice(0, 10));
+      this.api.redrawRows();
+    });
+  }
+
+  getProjects(): void {
+    this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+      this.projectList = results.items;
+    });
+  }
+
+  getTeams(): void {
+    this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+      this.teamList = results.items.filter((x) => {
+        return x.members.some((member) => {
+          return member.includes(this.currentUser.id);
+        });
+      });
+    });
+  }
 }

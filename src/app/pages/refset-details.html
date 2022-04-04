@@ -712,17 +712,6 @@
                 <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id"
                     [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
                     (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
-
-
-                <create-new-organization-modal 
-                    (changeLockedStatus)="changeLockedStatus($event)"></create-new-organization-modal>
-
-                <create-new-team-modal 
-                    (changeLockedStatus)="changeLockedStatus($event)"></create-new-team-modal>
-
-                <create-new-project-modal 
-                    (changeLockedStatus)="changeLockedStatus($event)"></create-new-project-modal>
-
             </mat-menu>
         </span>
         <br>

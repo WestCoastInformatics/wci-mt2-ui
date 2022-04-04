@@ -16,7 +16,7 @@ export class OrganizationsService extends RestService {
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-        
+
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
@@ -26,6 +26,10 @@ export class OrganizationsService extends RestService {
 
     createOrganization(params: any): Observable<any> {
         return this.post(this.contextPath + 'organization/', params);
+    }
+
+    updateOrganization(organizationId: any, params: any): Observable<any> {
+        return this.put(this.contextPath + 'organization/' + organizationId, params);
     }
 
     getOrganization(organizationId: string): Observable<any> {

@@ -7,6 +7,7 @@ import { NotificationService } from "src/app/services/notification.service";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: "create-new-team-modal",
@@ -35,9 +36,17 @@ export class CreateNewTeamModalComponent {
         private refsetService: RefsetService,
         private teamsService: TeamsService,
         private organizationsService: OrganizationsService,
-        private notificationService: NotificationService, 
-        private readonly refsetDetails: RefsetDetails
-    ) {}
+        private notificationService: NotificationService,
+        private readonly refsetDetails: RefsetDetails,
+        private readonly route: ActivatedRoute
+    ) {
+        this.route.params.subscribe(params => {
+            this.selectedOrganization = params['id'];
+            if (this.selectedOrganization) {
+                this.getOrganization();
+            }
+          });
+    }
 
     callMemberOperation(): void {
 

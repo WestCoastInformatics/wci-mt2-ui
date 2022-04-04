@@ -1,30 +1,11 @@
-<<<<<<< HEAD
-<div id="refsetProjectsPage"
-     class="container-fluid">
-    <div class="row refset-title">
-        <div class="col-md-auto page-title"
-             style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Fake Name
-        </div>
-        <div class="row justify-content-end details-version-select"
-             style="margin-left: 20px">
-            <mat-form-field appearance="outline"
-                            class="project-drop-down" style="visibility: hidden;">
-                <mat-label>{{'Choose Test'}}</mat-label>
-                <mat-select #detailsVersionSelect>
-                    <mat-option *ngFor="let test of ['test', 'test']"
-                                [value]="test"
-                                style="z-index: 3">
-                        {{ test }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">{{ this.user?.name }}</span>
     </div>
-    </div>
+</div>
 
     <div class="content-wrapper">
-    <app-personal-sidebar activeRoute="configuration"></app-personal-sidebar>
+    <app-sidebar [menuItems]="menu"></app-sidebar>
     <div class='container-fluid mt-3'>
     <span class="account-configuration">
     
@@ -50,13 +31,13 @@
                     </mat-form-field>
                 </div> 
                     <div class="update-profile-button">
-                        <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a class="btn btn-primary btn-lg">Update Profile</a></div>
+                        <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileCompanyValue" (click)="updateProfile()">Update Profile</button></div>
                     </div>
                 </div>
     
                 <div class="account-configuration-block main-block profile-pic-block">
                     <div class="account-profile-head section-header">Profile Picture</div>
-                    <div class="account-profile-mid account-picture"><img src="assets/ihtsdo.svg"></div>
+                    <div class="account-profile-mid"><img class="account-picture" src="assets/ihtsdo.svg"></div>
                     <div class="edit-picture-button">
                         <div class="section-list text-right" aria-label="Edit Picture" title="Edit Picture"><a class="btn btn-primary btn-lg">Edit Picture</a></div>
                     </div>
@@ -66,7 +47,3 @@
     
     </span>
 </div></div>
-=======
-<p>configuration works!</p>
-<app-sidebar [menuItems]="menu"></app-sidebar>
->>>>>>> 4092fad06e96033bed580234869d33a71e24fe4d
