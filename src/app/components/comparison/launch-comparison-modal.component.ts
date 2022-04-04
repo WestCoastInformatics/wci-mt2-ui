@@ -367,7 +367,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.conceptDetailParents = [];
 
-        if (!concept?.active) {
+        if (!CodeUtility.testBoolean(concept?.active)) {
             return;
         }
 
