@@ -19,7 +19,6 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/models/user';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 
 @Component({

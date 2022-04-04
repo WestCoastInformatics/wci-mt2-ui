@@ -5,10 +5,9 @@
             <span class="title-label">Projects</span>
             <mat-form-field appearance="outline" class="project-drop-down">
                 <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-                    <mat-select #detailsVersionSelect (selectionChange)="showRefsets()">
+                    <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
                     <mat-option *ngFor="let project of projects"
-                                [value]="project"
-                                style="z-index: 3">
+                    [value]="project" style="z-index: 3">
                         {{ project.name }}
                     </mat-option>
                 </mat-select>
