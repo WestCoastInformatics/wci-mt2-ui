@@ -2,7 +2,7 @@
 $main-color: #00A4E4;
 
 html,
-body, 
+body,
 body.refset-tool.modal-open {
     font-family: $standard_font_family;
     font-size: $standard_font_size;
@@ -99,6 +99,7 @@ strong {
 .refset-tool-padding {
     padding: 5px;
 }
+
 .refset-tool-padding-top {
     padding-top: 5px;
 }
@@ -1013,14 +1014,9 @@ button.refset-tool-table-action-icon {
             margin-left: -15px;
         }
     }
-    .tree-node.refset-tool-taxonomy-relation-members >
-        tree-node-wrapper >
-        .node-wrapper >
-        .node-content-wrapper >
-        tree-node-content {
-            tree-node-expander > 
-            .toggle-children-wrapper >
-            .toggle-children {
+
+    .tree-node.refset-tool-taxonomy-relation-members>tree-node-wrapper>.node-wrapper>.node-content-wrapper>tree-node-content {
+        tree-node-expander>.toggle-children-wrapper>.toggle-children {
             background-image: url("/assets/circled_chevron_right_icon.svg");
         }
     }
@@ -1781,12 +1777,12 @@ button.refset-tool-table-action-icon {
 
 /* Transparent Overlay */
 .relative-loading-container {
-    position:absolute; 
-    height:100%; 
-    width:100%; 
-    -ms-opacity:0.5;
-    opacity:0.5; 
-    z-index:1000000;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    -ms-opacity: 0.5;
+    opacity: 0.5;
+    z-index: 1000000;
     background: radial-gradient(rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.8));
 
     background: -webkit-radial-gradient(rgba(20, 20, 20, 0.8),
@@ -2324,11 +2320,11 @@ button.refset-tool-table-action-icon {
     padding-right: 0px !important;
 }
 
-.launch-comparison-dialog > .modal-dialog {
+.launch-comparison-dialog>.modal-dialog {
     max-width: 1000px;
 }
 
-.show-comparison-dialog > .modal-dialog {
+.show-comparison-dialog>.modal-dialog {
     max-width: 1700px;
 
     .children-section {
@@ -2343,18 +2339,18 @@ button.refset-tool-table-action-icon {
         vertical-align: top;
         width: 275px;
     }
-    
+
     td.refset-tool-comparison-refset-name {
         word-wrap: break-word;
         vertical-align: top;
     }
-    
+
     td.refset-tool-comparison-refset-distinct {
         word-wrap: break-word;
         vertical-align: top;
         width: 250px;
     }
-} 
+}
 
 div.container-fluid.refset-tool-dialog-container {
     padding: 15px 15px 0px 15px;
@@ -2368,13 +2364,13 @@ div.container-fluid.refset-tool-dialog-container {
         padding: 15px 15px 15px 15px;
         border-radius: 3px;
         font-size: 14px;
-    
+
         div.dialog-form {
             align-items: baseline;
             display: flex;
             align-items: normal;
         }
-        
+
         div.dialog-form-field-row {
             display: flex;
             justify-content: space-between;
@@ -2384,27 +2380,27 @@ div.container-fluid.refset-tool-dialog-container {
             &.top-aligned {
                 align-items: normal;
             }
-        
+
             &.first-row {
                 margin-top: 20px;
             }
-        
+
             &.boxed-row {
-                border: 1px solid; 
-                margin-bottom: 10px; 
-                padding-top: 10px; 
+                border: 1px solid;
+                margin-bottom: 10px;
+                padding-top: 10px;
             }
         }
-        
+
         .col.dialog-form-field {
             width: 900px;
             max-width: 900px;
             flex: 1;
-        
+
             mat-form-field {
                 width: 100%;
             }
-        
+
             mat-chip {
                 transform: scale(0.8);
                 margin-right: 5px;
@@ -2412,23 +2408,23 @@ div.container-fluid.refset-tool-dialog-container {
                 border-radius: 8px;
                 background: white;
             }
-        
+
             .refset_tool_ecl_definition_field {
                 width: calc(100% - 120px);
                 margin-right: 5px;
             }
         }
-        
+
         .col.dialog-form-label {
             width: 200px;
             max-width: 200px;
             flex: 1;
-        
+
             label.raised {
                 margin-bottom: 0.7rem;
             }
         }
-        
+
         .dialog-form-radio-option-padding {
             padding-right: 30px;
         }
@@ -2437,14 +2433,14 @@ div.container-fluid.refset-tool-dialog-container {
 
 // TODO - this should be what controls button spacing for all dialogs - use generic sibling calcs
 div.modal-footer.rt2-modal-footer {
-    
+
     .not-last-button {
         margin-right: 15px;
     }
 }
 
 .concept-dropdown-input {
-    height: 50px; 
+    height: 50px;
     width: 300px;
 
     &.full-width {
@@ -2892,12 +2888,12 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     &>.row>.refset-tool-concept-details-taxonomy-icon {
         display: flex;
         align-self: center;
-    
+
         .add-symbol-icon {
             margin-left: 10px;
             margin-right: 10px;
         }
-    
+
         .subtract-symbol-icon {
             margin-left: 10px;
             margin-right: 10px;
@@ -3801,7 +3797,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     color: white;
     padding-left: 16px;
 }
-.nav-item{
+
+.nav-item {
     width: 75px;
     border-right: 1px solid #797979;
     height: 50px;
@@ -3809,10 +3806,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     padding-top: 6px;
     text-align: center;
 
-    img{
+    img {
         max-height: 26px;
     }
-    .nav-label{
+
+    .nav-label {
         display: block;
         text-align: center;
         font-size: 9px;
@@ -3820,6 +3818,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
         margin-top: 4px;
     }
 }
+
 .project-role-label {
     height: 45px;
 }
@@ -4050,17 +4049,18 @@ img.refset-tool-edition-flag {
     margin-bottom: 15px;
 }
 
-.content-header{
-    .header-title{
+.content-header {
+    .header-title {
         align-items: baseline;
         position: sticky;
         z-index: 2;
         background-color: white;
         padding-top: 10px;
         box-shadow: 0 5px 7px -2px grey;
-        .title-label{
-            margin-right: 20px; 
-            color: #555555; 
+
+        .title-label {
+            margin-right: 20px;
+            color: #555555;
             padding-left: 60px;
             font-size: 20px;
             font-weight: 400;
@@ -4068,25 +4068,28 @@ img.refset-tool-edition-flag {
         }
     }
 }
-.dashboard-section{
+
+.dashboard-section {
     box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 20%);
     background-color: #f8f9fa;
     border: none;
     border-radius: 0.25rem;
     margin-bottom: 30px;
 
-    .ag-row, .ag-header-cell-text{
+    .ag-row,
+    .ag-header-cell-text {
         font-size: 16px;
     }
 
-    .text-primary{
+    .text-primary {
         color: $main-color !important;
     }
-    .action-btn{
+
+    .action-btn {
         cursor: pointer;
     }
 
-    .profile-pic{
+    .profile-pic {
         width: 43px;
         height: 43px;
         border-radius: 100%;
@@ -4094,86 +4097,95 @@ img.refset-tool-edition-flag {
         vertical-align: middle;
     }
 }
+
 .dashboard-section-mid {
     height: 180px;
     overflow-y: scroll;
 }
-.section-header{
+
+.section-header {
     font-size: 20px;
     color: $main-color;
     margin-bottom: 10px;
 
-    
-    .btn.btn-primary{
+
+    .btn.btn-primary {
         background-color: $main-color;
         border-radius: 0 !important;
         border-color: $main-color;
         font-size: 14px;
     }
 }
-.section-list{
+
+.section-list {
     padding: 10px;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
     font-weight: 700;
     color: $main-color;
 
-    a{
+    a {
         cursor: pointer;
     }
-    
-    img{
+
+    img {
         width: 34px;
         height: 34px;
         display: inline-block;
         vertical-align: middle;
         margin-right: 10px;
     }
-    a:not(.btn):hover{
+
+    a:not(.btn):hover {
         text-decoration: underline !important;
     }
 
-    .btn.btn-primary{
+    .btn.btn-primary {
         background-color: $main-color;
         border-radius: 0 !important;
         border-color: $main-color;
         font-size: 14px;
     }
 }
-.section-list:last-child{
+
+.section-list:last-child {
     border-bottom: 0;
     padding: 15px;
 }
-.radius-0{
+
+.radius-0 {
     border-radius: 0 !important;
 }
 
-.content-wrapper{
+.content-wrapper {
     display: flex;
     align-items: stretch;
     min-height: calc(100vh - 158px);
 }
+
 $sidebar-width: 294px;
-.sidebar{
+
+.sidebar {
     width: 72px;
     overflow-x: visible;
     z-index: 999;
     height: 100%;
     position: relative;
 
-    .wrapper{
+    .wrapper {
         min-height: 100%;
         background-color: #212529;
         width: 72px;
         transition: all 0.25s;
 
-        ul{
+        ul {
             margin-bottom: 0;
             padding: 40px 0 0;
 
-            li{
+            li {
                 color: #fff;
                 width: $sidebar-width;
-                a{
+
+                a {
                     display: flex;
                     align-items: center;
                     padding: 7px 10px;
@@ -4183,7 +4195,7 @@ $sidebar-width: 294px;
                     color: inherit;
                     text-decoration: none !important;
 
-                    i{
+                    i {
                         font-size: 30px;
                         margin-left: 10px;
                         margin-right: 15px;
@@ -4192,18 +4204,21 @@ $sidebar-width: 294px;
                     }
                 }
             }
-            li:hover{
+
+            li:hover {
                 color: $main-color;
             }
-            li.active{
+
+            li.active {
                 border-left: 5px solid $main-color;
                 color: $main-color;
-                a{
+
+                a {
                     padding-left: 5px;
                 }
             }
 
-            .nav-label{
+            .nav-label {
                 opacity: 0;
                 transition: opacity 0.25s;
             }
@@ -4211,15 +4226,16 @@ $sidebar-width: 294px;
     }
 }
 
-.sidebar:hover .wrapper{
+.sidebar:hover .wrapper {
     width: $sidebar-width;
 
-    ul{
-        .nav-label{
+    ul {
+        .nav-label {
             opacity: 1;
         }
     }
 }
+
 .linethrough-inactive {
     text-decoration: line-through;
 }
@@ -4237,9 +4253,10 @@ $sidebar-width: 294px;
 }
 
 .organizations-configuration {
-    .organizations-configuration-title{
+    .organizations-configuration-title {
         font-size: 19px;
     }
+
     .title-bar {
         display: flex;
         align-items: center;
@@ -4248,10 +4265,12 @@ $sidebar-width: 294px;
         background-color: #FFF;
         padding: 20px 30px;
         filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+
         span {
             padding: 0px 15px;
         }
     }
+
     .organizations-configuration-dropdown {
         font-size: 17px;
         font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
@@ -4261,6 +4280,7 @@ $sidebar-width: 294px;
         display: flex;
         flex-direction: column;
         position: relative;
+
         h3 {
             font-size: 20px;
             color: #00A4E4;
@@ -4283,6 +4303,7 @@ $sidebar-width: 294px;
                 margin-left: 10px;
                 margin-bottom: 10px;
             }
+
             .profile-block {
                 margin-right: 10px;
                 margin-bottom: 10px;
@@ -4306,11 +4327,13 @@ $sidebar-width: 294px;
                 margin-right: 10px;
                 margin-top: 10px;
             }
+
             .projects-block {
                 margin-left: 10px;
                 margin-right: 10px;
                 margin-top: 10px;
             }
+
             .remove-org-block {
                 margin-left: 10px;
                 margin-top: 10px;
@@ -4352,14 +4375,17 @@ $sidebar-width: 294px;
         height: 10%;
         width: 100%;
     }
+
     .organization-profile-mid {
         height: 80%;
         width: 100%;
         padding-top: 25px;
     }
+
     .organization-picture {
         text-align: center;
     }
+
     .update-profile-button,
     .edit-picture-button,
     .create-team-button,
@@ -4377,9 +4403,10 @@ $sidebar-width: 294px;
 }
 
 .projects-configuration {
-    .projects-configuration-title{
+    .projects-configuration-title {
         font-size: 19px;
     }
+
     .title-bar {
         display: flex;
         align-items: center;
@@ -4388,10 +4415,12 @@ $sidebar-width: 294px;
         background-color: #FFF;
         padding: 20px 30px;
         filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+
         span {
             padding: 0px 15px;
         }
     }
+
     .projects-configuration-dropdown {
         font-size: 17px;
         font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
@@ -4401,6 +4430,7 @@ $sidebar-width: 294px;
         display: flex;
         flex-direction: column;
         position: relative;
+
         h3 {
             font-size: 20px;
             color: #00A4E4;
@@ -4426,16 +4456,19 @@ $sidebar-width: 294px;
                 margin-left: 10px;
                 width: 100%;
             }
+
             .teams-block {
                 min-height: 400px;
                 width: 100%;
                 margin-bottom: 10px;
             }
+
             .remove-project-block {
                 min-height: 175px;
                 width: 100%;
                 margin-top: 10px;
             }
+
             .teams-textarea {
                 textarea {
                     font-size: 13px;
@@ -4482,6 +4515,7 @@ $sidebar-width: 294px;
         height: 10%;
         width: 100%;
     }
+
     .projects-profile-mid {
         height: 80%;
         width: 100%;
@@ -4503,9 +4537,11 @@ $sidebar-width: 294px;
             }
         }
     }
+
     .projects-picture {
         text-align: center;
     }
+
     .update-profile-button,
     .save-team-button,
     .remove-projects-button {
@@ -4523,9 +4559,10 @@ $sidebar-width: 294px;
 }
 
 .teams-configuration {
-    .teams-configuration-title{
+    .teams-configuration-title {
         font-size: 19px;
     }
+
     .title-bar {
         display: flex;
         align-items: center;
@@ -4534,10 +4571,12 @@ $sidebar-width: 294px;
         background-color: #FFF;
         padding: 20px 30px;
         filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+
         span {
             padding: 0px 15px;
         }
     }
+
     .teams-configuration-dropdown {
         font-size: 17px;
         font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
@@ -4547,6 +4586,7 @@ $sidebar-width: 294px;
         display: flex;
         flex-direction: column;
         position: relative;
+
         h3 {
             font-size: 20px;
             color: #00A4E4;
@@ -4563,20 +4603,21 @@ $sidebar-width: 294px;
                 width: 100%;
             }
 
-            .profile-block {
-            }
+            .profile-block {}
 
             .secondary-block {
                 margin-left: 10px;
                 width: 100%;
                 margin-bottom: 20px;
             }
+
             .team-permissions-block {
                 height: 40%;
                 width: 100%;
                 margin-bottom: 10px;
                 display: block;
             }
+
             .team-members-block {
                 height: 30%;
                 width: 100%;
@@ -4584,12 +4625,14 @@ $sidebar-width: 294px;
                 margin-top: 10px;
                 display: block;
             }
+
             .remove-teams-block {
                 height: 30%;
                 width: 100%;
                 margin-top: 10px;
                 display: block;
             }
+
             .teams-textarea {
                 textarea {
                     font-size: 13px;
@@ -4640,54 +4683,66 @@ $sidebar-width: 294px;
     .profile-description-field {
         width: 100%;
     }
+
     .save-permissions {
         height: 10%;
         width: 100%;
     }
+
     .add-members-head {
         height: 10%;
         width: 100%;
     }
+
     .remove-team-head {
         height: 10%;
         width: 100%;
     }
+
     .teams-profile-head {
         height: 10%;
         width: 100%;
     }
+
     .teams-profile-mid {
         height: 80%;
         width: 100%;
         padding-top: 15px;
     }
+
     .save-permissions-mid {
         height: 55%;
         width: 100%;
         padding-top: 15px;
     }
+
     .add-members-mid {
         height: 40%;
         width: 100%;
         padding-top: 15px;
     }
+
     .remove-team-mid {
         height: 40%;
         width: 100%;
         padding-top: 15px;
     }
+
     .save-permissions-button {
         width: 100%;
         height: 10%;
     }
+
     .add-members-button {
         width: 100%;
         height: 10%;
     }
+
     .remove-teams-button {
         width: 100%;
         height: 10%;
     }
+
     .update-profile-button,
     .save-team-button {
         width: 100%;
@@ -4700,9 +4755,10 @@ $sidebar-width: 294px;
 }
 
 .account-configuration {
-    .account-configuration-title{
+    .account-configuration-title {
         font-size: 19px;
     }
+
     .title-bar {
         display: flex;
         align-items: center;
@@ -4711,10 +4767,12 @@ $sidebar-width: 294px;
         background-color: #FFF;
         padding: 20px 30px;
         filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+
         span {
             padding: 0px 15px;
         }
     }
+
     .account-configuration-dropdown {
         font-size: 17px;
         font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
@@ -4724,6 +4782,7 @@ $sidebar-width: 294px;
         display: flex;
         flex-direction: column;
         position: relative;
+
         h3 {
             font-size: 20px;
             color: #00A4E4;
@@ -4746,6 +4805,7 @@ $sidebar-width: 294px;
                 margin-left: 10px;
                 margin-bottom: 10px;
             }
+
             .profile-block {
                 margin-right: 10px;
                 margin-bottom: 10px;
@@ -4787,15 +4847,18 @@ $sidebar-width: 294px;
         height: 10%;
         width: 100%;
     }
+
     .account-profile-mid {
         height: 80%;
         width: 100%;
         padding-top: 25px;
         text-align: center;
     }
+
     .account-picture {
         border-radius: 50%;
     }
+
     .update-profile-button,
     .edit-picture-button,
     .create-team-button,
@@ -4836,4 +4899,8 @@ $sidebar-width: 294px;
 
 .about-data-text {
     padding-bottom: 5px;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0;
 }
