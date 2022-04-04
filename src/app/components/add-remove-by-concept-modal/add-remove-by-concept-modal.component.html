@@ -348,8 +348,8 @@
                          [refset]="refset"
                          [definitionExceptionType]="addRemoveDefinitionExceptionType"
                          [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
+                         [processChangedMemberFunction]="processChangedMemberEffects"
                          (changeLockedStatus)="sendChangeLockedStatus($event)"
-                         (processChangedMemberEffects)="processChangedMemberEffects()"
-                         [processChangedMemberFunction]="processChangedMemberEffects">
+                         (processChangedMemberEffects)="processChangedMemberEffects($event)">
     </add-remove-concepts>
 </ng-template>

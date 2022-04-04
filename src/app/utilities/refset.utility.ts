@@ -210,6 +210,6 @@ export class RefsetUtility {
 
         operationFunction(refsetInternalId, "list", allIdsString).subscribe();
 
-        UiUtility.manageNotifications(refsetInternalId, refsetId, messageModifier, callback, notificationService, refsetService, router);
+        UiUtility.manageMemberNotifications(refsetInternalId, refsetId, messageModifier, callback, notificationService, refsetService, router);
     }
 }

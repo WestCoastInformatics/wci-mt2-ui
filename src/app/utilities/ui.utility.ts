@@ -253,8 +253,8 @@ export class UiUtility {
         });
     }
 
-    // Function for background processesing of lengthy refset tasks, and notification to user of the status of those tasks
-    static manageNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+    // Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
+    static manageMemberNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
         // set a small delay so the original call has some time to process
         CodeUtility.delay(2000);
@@ -290,30 +290,39 @@ export class UiUtility {
                         let title = 'Member Change Notification';
                         let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
                         let notificationType = 'success';
-						let conceptArray = Object.keys(data);
+						let conceptIdArray = Object.keys(data);
+                        let conceptStatusArray: any[] = [];
                         let emptydata = {refset: refsetId, statuses: []};
                         let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
                         if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
                             this.memberChangeData[refsetId] = emptydata;
                         }
 
 						notificationService.close(notification);
 
+                        for (let conceptId of conceptIdArray) {
+
+                            let conceptStatus: any = data[conceptId];
+                            this.memberChangeData[refsetId].statuses.push({Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status});
+                            conceptStatusArray.push({
+                                code: conceptId, 
+                                added: conceptStatus.operation == 'Added', 
+                                failed: conceptStatus.status == 'Failed', 
+                                name: conceptStatus.name, 
+                                active: conceptStatus.active
+                            });
+                        }
+
                         if (router.url.includes('/details/' + refsetId)) {
 
 							successMessageTimeout = 5000;
-							callbackFunction(data);
+							callbackFunction(conceptStatusArray);
 						} else {
                             buttons.unshift(viewRefsetButton);
                         }
 
-                        for (let conceptID of conceptArray) {
-
-                            let conceptStatus: any = data[conceptID];
-                            this.memberChangeData[refsetId].statuses.push({Concept: conceptID, Operation: conceptStatus.operation, Status: conceptStatus.status});
-                        }
-
-                        if (conceptArray.length > 0) {
+                        if (conceptIdArray.length > 0) {
                             
                             let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
                             let someFailed = dataString.includes('Failed');
@@ -390,6 +399,7 @@ export class UiUtility {
         checkIfFinished();
     }
     
+    // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
     static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
         // set a small delay so the original call has some time to process

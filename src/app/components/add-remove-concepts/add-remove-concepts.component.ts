@@ -32,7 +32,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
 	@Input() isReplacement: boolean;
-	@Input() processChangedMemberFunction: () => void;
+	@Input() processChangedMemberFunction: Function;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() onMembersGridReady = new EventEmitter<any>();
 	@Output() selectedEvent = new EventEmitter<string>();
@@ -172,12 +172,12 @@ export class AddRemoveConceptsComponent implements OnInit {
 			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
-			UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
+			UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
 		this.onMembersGridReady.emit();
     }
 
-	callMemberChangeFunction = () => {
-		this.processChangedMemberFunction();
+	callMemberChangeFunction = (data) => {
+		this.processChangedMemberFunction(data);
 	}
 
 	openAddRemoveDescendantsModal() {

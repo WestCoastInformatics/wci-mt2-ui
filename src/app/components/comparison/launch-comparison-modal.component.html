@@ -388,5 +388,5 @@
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
     [processChangedMemberFunction]="processChangedMemberEffects"
     (changeLockedStatus)="sendChangeLockedStatus($event)"
-    (processChangedMemberEffects)="processChangedMemberEffects()">
+    (processChangedMemberEffects)="processChangedMemberEffects($event)">
 </add-remove-concepts>

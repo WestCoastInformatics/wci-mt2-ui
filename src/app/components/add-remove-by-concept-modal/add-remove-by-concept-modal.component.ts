@@ -117,7 +117,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
     }
 
-    public processChangedMemberEffects = () => {
+    public processChangedMemberEffects = (conceptStatusArray) => {
 
         this.isLocked = false;
         UiUtility.toggleLockedSections(false);

@@ -1085,7 +1085,7 @@ export class RefsetDetails {
 
                     if (action.includes('CANCEL_EDIT')) {
                         this.loadWorkflowHistoryData();
-                        this.processChangedMemberEffects();
+                        this.processChangedMemberEffects(null);
                         this.loadRefset();
                     } else {
                         this.loadRefset();
@@ -1143,7 +1143,7 @@ export class RefsetDetails {
         UiUtility.toggleLockedSections(lock);
     }
 
-    processChangedMemberEffects = () => {
+    processChangedMemberEffects = (conceptStatusArray) => {
 
         this.changeLockedStatus(false);
         this.showLoadingSpinner = true;

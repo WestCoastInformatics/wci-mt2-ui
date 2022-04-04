@@ -208,7 +208,7 @@ changeLockedStatus(lock: boolean) {
   UiUtility.toggleLockedSections(lock);
 }
 
-processChangedMemberEffects = () => {
+processChangedMemberEffects = (conceptStatusArray) => {
 
   this.changeLockedStatus(false);
   this.refsetDetails.showLoadingSpinner = true;

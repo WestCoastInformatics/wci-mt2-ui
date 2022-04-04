@@ -7,9 +7,9 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { TemplateRenderer } from "src/app/components/cellRenderers/template.renderer";
-import { PaginationComponent } from "src/app/components/pagination/pagination.component";
-import { Debounce } from "src/app/decorators/debounce.decorator";
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 
 @Component({
@@ -61,9 +61,9 @@ export class LaunchComparisonModalComponent implements OnInit {
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
     @Output() changeLockedStatus = new EventEmitter<boolean>(true);
 
-    @ViewChild("comparisonCodeSection") codeSection: TemplateRef<any>;
-    @ViewChild("comparisonGridPaging") paginationComponent: PaginationComponent;
-    @ViewChild("showComparisonDialog") showComparisonDialog: NgbModal;
+    @ViewChild('comparisonCodeSection') codeSection: TemplateRef<any>;
+    @ViewChild('comparisonGridPaging') paginationComponent: PaginationComponent;
+    @ViewChild('showComparisonDialog') showComparisonDialog: NgbModal;
 
     constructor(private readonly modalService: NgbModal,
         readonly refsetService: RefsetService,
@@ -104,11 +104,11 @@ export class LaunchComparisonModalComponent implements OnInit {
         if (this.activeRefsetVersionOptions.length > 1) {
 
             this.activeRefsetVersionOptions.splice(selectedVersionDateIndex, 1);
-            this.comparisonTypeSelected = "same_refset";
+            this.comparisonTypeSelected = 'same_refset';
         } else {
             
             this.activeRefsetVersionOptions = [];
-            this.comparisonTypeSelected = "different_refset";
+            this.comparisonTypeSelected = 'different_refset';
         }
 
         this.openedModel = this.modalService.open(comparisonLaunchDialog, { backdrop: 'static', keyboard: false, windowClass: 'launch-comparison-dialog', size: 'lg' });
@@ -174,7 +174,7 @@ export class LaunchComparisonModalComponent implements OnInit {
             suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
             paginationPageSize: this.gridPaging.pageSize,
-            rowSelection: "single",
+            rowSelection: 'single',
             enableCellTextSelection: true,
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
@@ -205,15 +205,15 @@ export class LaunchComparisonModalComponent implements OnInit {
         };
 
         this.gridColumnDefs = [
-            { field: "code", colId: "code", headerName: "Concept ID", minWidth: 120, tooltipField: "code", resizable: false, cellRenderer: "templateRenderer", cellRendererParams: { template: this.codeSection } },
+            { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection } },
             { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc' },
-            { field: "membership", colId: "membership", headerName: "Refset Membership", minWidth: 120, tooltipField: "code", resizable: false },
+            { field: 'membership', colId: 'membership', headerName: 'Refset Membership', minWidth: 120, tooltipField: 'code', resizable: false },
         ];
 
         this.showTable = true;
 
         // set placeholders on the grid floating filter fields
-        UiUtility.applyGridPlaceholders("#comparisonGridSection .ag-floating-filter-full-body .ag-input-field-input");
+        UiUtility.applyGridPlaceholders('#comparisonGridSection .ag-floating-filter-full-body .ag-input-field-input');
 
         this.activeRefsetName = this.activeRefset.name;
 
@@ -284,7 +284,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     onGridCellClick = (event) => {
 
-        if (event.column.colId === "code") {
+        if (event.column.colId === 'code') {
 
         } else {
 
@@ -367,7 +367,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         }
 
         let restParams = {
-            displayType: "taxonomy",
+            displayType: 'taxonomy',
             returnChildren: false,
             language: language,
             depth: 1,
@@ -419,23 +419,83 @@ export class LaunchComparisonModalComponent implements OnInit {
             operation = 'remove';
         }
 
-        let concepts = params.concepts.join(",");
+        let concepts = params.concepts.join(',');
 
         RefsetUtility.addRemoveMembersByList(this.activeRefset.id, this.activeRefset.refsetId, concepts, operation, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
     }
 
-    public processChangedMemberEffects = () => {
+    public processChangedMemberEffects = (conceptStatusArray) => {
 
         this.isLocked = false;
         UiUtility.toggleLockedSections(false);
 
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.activeRefset.refsetId)) {
+
             this.refsetDetails.ngOnInit();
+            return;
         }
 
         // process the comparison data with the changed members 
-        //this.onTableSearchChange();
+        for (let conceptStatus of conceptStatusArray) {
+
+            if (conceptStatus.failed) {
+                continue;
+            }
+
+            let comparisonRowIndex = this.comparisonData.items.findIndex((element) => { return element.code == conceptStatus.code; });
+
+            if (conceptStatus.added) {
+
+                this.comparisonData.activeRefsetMemberTotal += 1;
+
+                if (comparisonRowIndex >=0) {
+
+                    this.comparisonData.items[comparisonRowIndex].memberOfRefset = 'true';
+                    this.comparisonData.items[comparisonRowIndex].membership = 'Both';
+                    this.comparisonData.comparisonRefsetDistinctMembersCount -= 1;
+
+                    let distinctIndex = this.comparisonData.comparisonRefsetDistinctMembers.indexOf(conceptStatus.code); 
+                    this.comparisonData.comparisonRefsetDistinctMembers.splice(distinctIndex, 1);
+                    
+                } else {
+
+                    let concept = {
+                        code: conceptStatus.code,
+                        definitionExceptionType: null,
+                        hasChildren: "false",
+                        memberOfRefset: "true",
+                        name: conceptStatus.name,
+                        active: conceptStatus.active,
+                        membership: "Active Refset"
+                    };
+
+                    this.comparisonData.items.push(concept);
+                    this.comparisonData.activeRefsetDistinctMembersCount += 1;
+                    this.comparisonData.activeRefsetDistinctMembers.push(conceptStatus.code);
+                }
+                
+            } else {
+
+                this.comparisonData.activeRefsetMemberTotal -= 1;
+                this.comparisonData.items[comparisonRowIndex].memberOfRefset = 'false';
+
+                if (this.comparisonData.items[comparisonRowIndex].membership == 'Both') {
+
+                    this.comparisonData.items[comparisonRowIndex].membership = 'Comparison Refset'
+                    this.comparisonData.comparisonRefsetDistinctMembersCount += 1;
+                    this.comparisonData.comparisonRefsetDistinctMembers.push(conceptStatus.code);
+
+                } else {
+
+                    this.comparisonData.items.splice(comparisonRowIndex, 1);
+                    this.comparisonData.activeRefsetDistinctMembersCount -= 1;
+
+                    let distinctIndex = this.comparisonData.activeRefsetDistinctMembers.indexOf(conceptStatus.code); 
+                    this.comparisonData.activeRefsetDistinctMembers.splice(distinctIndex, 1);
+                }
+            }
+        }
 
         // reload the concept details if it is open
         if (this.conceptDetail != null) {

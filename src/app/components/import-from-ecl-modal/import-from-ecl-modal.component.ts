@@ -54,7 +54,7 @@ export class ImportFromEclModalComponent {
 
         operationFunction(this.refsetInternalId, "list", '', escape(this.ecl)).subscribe();
 
-        UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
+        UiUtility.manageMemberNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
     processOperationReturn = (data) => { 
