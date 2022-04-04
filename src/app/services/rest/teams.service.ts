@@ -51,4 +51,8 @@ export class TeamsService extends RestService {
     removeUser(teamId: any, userId: any): Observable<any> {
         return this.delete(this.contextPath + 'team/' + teamId + '/member/' + userId, '');
     }
+
+    deleteTeam(teamId: string): Observable<any> {
+        return this.delete(this.contextPath + 'team/' + teamId, '');
+    }
 }

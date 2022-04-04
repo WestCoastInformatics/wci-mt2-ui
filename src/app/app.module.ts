@@ -106,6 +106,7 @@ import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
 import { UsersService } from './services/rest/users.service';
+import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 
 
 const appRoutes: Routes = [
@@ -196,7 +197,8 @@ const appRoutes: Routes = [
         TeamsPeopleComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent,
-        LaunchComparisonModalComponent
+        LaunchComparisonModalComponent,
+        RemoveDashboardComponentModalComponent
     ],
     imports: [
         RouterModule.forRoot(
