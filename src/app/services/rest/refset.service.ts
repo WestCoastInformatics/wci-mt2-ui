@@ -44,6 +44,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'project/search', params, false);
     }
 
+    getTeams(params: any): Observable<any> {
+        return this.get(this.contextPath + 'team/search', params, false);
+    }
+
     createRefset(params: any): Observable<any> {
         return this.post(this.contextPath + 'refset/', params);
     }
@@ -173,7 +177,6 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/organizations');
     }
 
-
     getVersions(): Observable<any> {
         return this.get(this.contextPath + 'refset/versions');
     }
@@ -187,6 +190,10 @@ export class RefsetService extends RestService {
     }
 
     launchComparison(activeRefsetInternalId: string, comparisonRefsetInternalId: string): Observable<any> {
-        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileUpgradeData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileComparisonData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+    }
+
+    getComparisonData(activeRefsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
 }

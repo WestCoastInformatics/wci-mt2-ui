@@ -3,7 +3,7 @@
       <ul>
           <ng-cotainer *ngFor="let item of menuItems">
             <li [class.active]="item.isActive">
-                <a [routerLink]="item.link">
+                <a [routerLink]="[item.link, id]">
                     <i class="{{item.icon}}"></i>
                     <span class="nav-label">{{item.name}}</span>
                 </a>

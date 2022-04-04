@@ -1,8 +1,4 @@
-<!-- <button (click)="openImportFromEclModal(importFromEclDialog)" class="refset-tool-standard-icon-button">
-    <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
-</button> -->
-
-<button mat-menu-item alt="Document symbol denoting an upload icon" title="Create New Organization" aria-label="Create New Organization" (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)">Create New Organization</button>
+<div class='section-list text-right' title="Create New Organization" aria-label="Create New Organization" (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"><a class='btn btn-primary btn-lg'>Create an Organization</a></div>
 
 <ng-template #createNewOrganizationDialog let-modal>
 

@@ -1,0 +1,62 @@
+<!-- <button (click)="openImportFromEclModal(importFromEclDialog)" class="refset-tool-standard-icon-button">
+    <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
+</button> -->
+
+<button mat-menu-item class="btn btn-primary btn-lg"  title="Remove {{componentType}}" (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">Remove {{componentType}}</button>
+
+<ng-template #removeDashboardComponentDialog let-modal>
+
+    <div class="modal-header rt2-modal-header">
+
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            Remove {{componentName}}?
+        </h4>
+
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body refset-tool-lockable">
+        
+        <table>       
+            <tr [hidden]="componentType != 'organization'">       
+                <p>Are you sure you want to remove organization {{componentName}}? <br>Once removed, it cannot be recovered.</p>
+                <p> You will lose access to all objects associated with this organization:</p>
+                <li>{{componentName}} Teams</li>
+                <li>{{componentName}} Names</li>
+                <li>{{componentName}} Reference Sets</li>
+                <ul></ul>
+            </tr>
+            <tr [hidden]="componentType != 'project'">       
+                <p>Are you sure you want to remove project {{componentName}}? <br>Once removed, it cannot be recovered.</p>
+                <p> You will lose access to all objects associated with this project:</p>
+                <li>{{componentName}} Reference Sets</li>
+                <ul></ul>
+            </tr>
+            <tr [hidden]="componentType != 'team'">       
+                <p>Are you sure you want to remove team {{componentName}}? <br>Once removed, it cannot be recovered.</p>
+                <ul></ul>
+            </tr>
+            <tr>
+                <p>Type "remove {{componentType}}" to confirm:</p>            
+            </tr>
+            <tr>
+                <input class="modal-input-field-border-bottom" placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />       
+            </tr>   
+        </table>
+
+    </div>
+
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+        <button type="button"  (click)="callMemberOperation()" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
+                aria-label="No, Cancel" title="No, Cancel" ng-reflect-color="primary">
+            No, Cancel
+        </button>
+        <button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" 
+            aria-label="Remove" title="Remove" ng-reflect-color="red">
+            Remove
+        </button>        
+    </div>
+    
+</ng-template>

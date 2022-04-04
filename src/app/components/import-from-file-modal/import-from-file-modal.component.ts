@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { Router } from '@angular/router';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 @Component({
     selector: "import-from-file-modal",
@@ -44,8 +45,6 @@ export class ImportFromFileModalComponent implements OnInit {
         
         const listOfIds = [];
         const fileReader = new FileReader();
-        let messageModifier = "";
-        let operationFunction: Function;
 
         fileReader.onload = (e) => {
 
@@ -62,7 +61,7 @@ export class ImportFromFileModalComponent implements OnInit {
                 }
             }
 
-            let allIdsString = listOfIds.join(",").replace(/[^,\-\_a-zA-Z0-9]/g, '');
+            let allIdsString = listOfIds.join(",");
 
             if (listOfIds.length == 0) {
                 return;
@@ -70,19 +69,7 @@ export class ImportFromFileModalComponent implements OnInit {
 
             this.changeLockedStatus.emit(true);
 
-            if (operation == 'add') {
-
-                messageModifier = "added to";
-                operationFunction = this.refsetService.addRefsetMembers.bind(this.refsetService);
-            } else {
-
-                messageModifier = "removed from";
-                operationFunction = this.refsetService.removeRefsetMembers.bind(this.refsetService);
-            }
-
-            operationFunction(this.refsetInternalId, "list", allIdsString).subscribe();
-
-            UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
+            RefsetUtility.addRemoveMembersByList(this.refsetInternalId, this.refsetId, allIdsString, operation, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
         };
 
         if (this.uploadedFile) {

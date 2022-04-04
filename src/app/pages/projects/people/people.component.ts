@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { ProjectsService } from 'src/app/services/rest/projects.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
 
 @Component({
   selector: 'projects-people',
@@ -25,13 +28,22 @@ export class ProjectsPeopleComponent implements OnInit {
     { field: 'email', headerName: 'Email' },
     { field: 'teams', headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
   ];
+  peopleList = [];
+  selectedProject: any;
+  id: any;
+  projectList = [];
 
-  constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
+  constructor(private readonly breadcrumbService: BreadcrumbService,
+    private readonly titleService: Title,
+    private readonly refsetService: RefsetService,
+    private readonly projectsService: ProjectsService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router) { }
 
   ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Organizations');
+    this.titleService.setTitle('Refset Tool - Projects');
     this.breadcrumbService.setBreadcrumbs([
-      { path: '/organizations/people', label: 'Organizations' },
+      { path: '/projects/people', label: 'Projects' },
       { label: 'People' },
   ]);
   
@@ -48,9 +60,37 @@ export class ProjectsPeopleComponent implements OnInit {
     { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Snomed International', email: 'aat@snomed.org', teams: '3 Teams' },
     { name: 'Anna Nilsson', pic: 'assets/sampels/profile/7.svg', company: 'Swedish NRC', email: 'anilsson@swedishnrc.org', teams: '1 Team' }
   ];
+  this.route.params.subscribe(params => {
+    this.id = params['id'];
+  });
+  // this.getPeople();
+  this.getProject();
+  this.getProjects();
   }
   get dataCount() {
     return this.data.length;
+  }
+
+    // getPeople(): void {
+  //   this.refsetService.getPeople('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+  //     this.peopleList = results.items;
+  //   });
+  // }
+
+  getProjects(): void {
+    this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+      this.projectList = results.items;
+    });
+  }
+
+  getProject(): void {
+    this.projectsService.getProject(this.id).subscribe((result) => {
+      this.selectedProject = result;
+    });
+  }
+
+  selectProject($event): void {
+    this.router.navigate(['/projects/people', $event['value'].id]);
   }
 
 }

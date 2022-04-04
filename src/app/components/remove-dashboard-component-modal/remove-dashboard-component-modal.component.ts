@@ -1,0 +1,70 @@
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { RefsetService } from "src/app/services/rest/refset.service";
+import { NotificationService } from "src/app/services/notification.service";
+import { OrganizationsService } from "src/app/services/rest/organizations.service";
+import { TeamsService } from "src/app/services/rest/teams.service";
+import { ProjectsService } from "src/app/services/rest/projects.service";
+import { Router } from '@angular/router';
+
+@Component({
+    selector: "remove-dashboard-component-modal",
+    templateUrl: "./remove-dashboard-component-modal.component.html",
+})
+export class RemoveDashboardComponentModalComponent {
+  
+    openedModel: NgbModalRef;
+    confirmString: string = '';
+
+    @Input() componentType: string;  // should be organization, project or team
+    @Input() componentId: string;
+    @Input() componentName: string;
+    @Output() changeLockedStatus = new EventEmitter<any>(true);
+    
+    constructor(
+        private modalService: NgbModal,
+        private refsetService: RefsetService,
+        private organizationsService: OrganizationsService,
+        private projectsService: ProjectsService,
+        private teamsService: TeamsService,
+        private notificationService: NotificationService,
+        private readonly router: Router
+    ) {}
+
+    callMemberOperation(): void {
+        this.changeLockedStatus.emit(true);   
+        this.removeComponent();
+    }
+
+    removeComponent(): void {
+        if (this.componentType.toLowerCase() === 'organization') {
+            this.organizationsService.deleteOrganization(this.componentId).subscribe((x) => {
+                this.router.navigate(['/dashboard']);
+            });
+        } else if (this.componentType.toLowerCase() === 'project') {
+            this.projectsService.deleteProject(this.componentId).subscribe((x) => {
+                this.router.navigate(['/dashboard']);
+            });
+        } else if (this.componentType.toLowerCase() === 'team') {
+            this.teamsService.deleteTeam(this.componentId).subscribe((x) => {
+                this.router.navigate(['/dashboard']);
+            });
+        } 
+    }
+
+    processOperationReturn = (data) => { 
+
+        this.changeLockedStatus.emit(false);
+    }
+
+    openRemoveDashboardComponentModal(removeDashboardComponentDialog: NgbModal) {
+        this.componentType = 'project';
+        this.openedModel = this.modalService.open(removeDashboardComponentDialog, {
+        });
+    }
+
+    isDisabled() {
+        return this.confirmString.trim() != 'remove ' + this.componentType;
+    }
+
+}

@@ -1,22 +1,18 @@
-<div id="refsetProjectsPage"
-     class="container-fluid">
-    <div class="row refset-title">
-        <div class="col-md-auto page-title"
-             style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Projects
-        </div>
-        <div class="row justify-content-end details-version-select" style="margin-left: 20px">
-            <mat-form-field appearance="outline" class="project-drop-down">
-                <mat-label>{{'Choose Test'}}</mat-label>
-                <mat-select #detailsVersionSelect>
-                    <mat-option *ngFor="let test of ['test', 'test']" [value]="test" style="z-index: 3">
-                        {{ test }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">Projects</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
+            <mat-select #detailsVersionSelect (selectionChange)="selectProject($event)">
+                <mat-option *ngFor="let project of projectList"
+                            [value]="project"
+                            style="z-index: 3">
+                    {{ project.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
-    </div>
+</div>
 
     <div class="content-wrapper">
         <app-sidebar [menuItems]="menu"></app-sidebar>
@@ -41,7 +37,7 @@
     
                         <mat-form-field class="profile-description-field" appearance="none">
                             <mat-label>Description</mat-label>
-                            <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project" [(ngModel)]="profileEmailValue"></textarea>
+                            <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project" [(ngModel)]="profileDescriptionValue"></textarea>
                         </mat-form-field>
                         
                         <div class="project-privacy">
@@ -51,28 +47,36 @@
                     </div>
                             
                             <div class="update-profile-button">
-                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a class="btn btn-primary btn-lg">Update Profile</a></div>
+                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue" (click)="updateProject()">Update Profile</button></div>
                             </div>
                     </div>
         
                     <div class="secondary-block">
                         <div class="projects-configuration-block teams-block">
                             <div class="projects-profile-head section-header">Teams</div>
-                            <div class="projects-profile-mid teams-textarea">
-                                <mat-form-field class="profile-description-field" appearance="none">
-                                    <mat-label>Teams</mat-label>
-                                    <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
-                                </mat-form-field>
+                            <div class="projects-profile-mid">
+                                Add Teams to your project to define project member roles.
+                                <br>
+                                <strong>Note:</strong> In order to model Reference Sets, you need to include teams with Author, Reviewer, and Admin permissions.
+                                <div class="team-list-box">
+                                    <ng-container *ngFor="let team of teamList">
+                                        <div class="team-item">
+                                            <img *ngIf="!hideAddButton(team)" src="assets/add-symbol-icon.svg" (click)="addToTeamList(team)" width="18px" height="18px" title="Add Team Selection" aria-label="Add" class="add-symbol-icon" alt="Add symbol" />
+                                            <img *ngIf="hideAddButton(team)" src="assets/subtract-symbol-icon.svg" (click)="removeFromTeamList(team)" width="18px" height="18px" title="Remove Team Selection" aria-label="Subtract" class="subtract-symbol-icon" alt="Subtract symbol"/>
+                                               <div [style.font-weight]="addBold(team) ? '700' : '400'" class="team-item-name">{{ setTeamName(team) }}</div>
+                                        </div>
+                                    </ng-container>
+                                </div>
                             </div>
                             <div class="save-team-button">
-                                <div class="section-list text-right" aria-label="Save Teams" title="Save Teams"><a class="btn btn-primary btn-lg">Save Teams</a></div>
+                                <div class="section-list text-right" aria-label="Save Teams" title="Save Teams"><button class="btn btn-primary btn-lg" [disabled]="!containsRole" (click)="updateProjectTeams()">Save Teams</button></div>
                             </div>
                         </div>
                         <div class="projects-configuration-block remove-project-block">
                             <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Project</div>
                             <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
                             <div class="remove-projects-button">
-                                <div class="section-list text-right" aria-label="Remove project" title="Remove project"><a class="btn btn-primary btn-lg">Remove Project</a></div>
+                                <div class="section-list text-right" aria-label="Remove project" title="Remove project"><remove-dashboard-component-modal [componentType]="'project'" [componentId]="id" [componentName]="'Project'"></remove-dashboard-component-modal></div>
                             </div>
                         </div>
                     </div>

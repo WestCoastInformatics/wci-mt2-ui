@@ -1,18 +1,16 @@
-<div id="refsetProjectsPage" class="container-fluid">
-    <div class="row refset-title">
-        <div class="col-md-auto page-title" style="margin-right: 20px; color: #555555; padding-left: 60px">
-            Organizations
-        </div>
-        <div class="row justify-content-end details-version-select" style="margin-left: 20px">
-            <mat-form-field appearance="outline" class="project-drop-down">
-                <mat-label>{{'Choose Test'}}</mat-label>
-                <mat-select #detailsVersionSelect>
-                    <mat-option *ngFor="let test of ['test', 'test']" [value]="test" style="z-index: 3">
-                        {{ test }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
+<div class="content-header">
+    <div class="row header-title">
+        <span class="title-label">Organizations</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+            <mat-select #detailsVersionSelect (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList"
+                            [value]="organization"
+                            style="z-index: 3">
+                    {{ organization.value }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>
 
@@ -32,20 +30,23 @@
                                 <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
-                    <mat-form-field class="profile-description-field" appearance="none">
-                        <mat-label>Description</mat-label>
-                        <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
-                    </mat-form-field>
-                </div>
+                            <mat-form-field class="profile-email-field" appearance="none">
+                                <mat-label>Primary Contact Email</mat-label>
+                                <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+                            </mat-form-field>
+
+                            <mat-form-field class="profile-description-field" appearance="none">
+                                <mat-label>Description</mat-label>
+                                <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+                            </mat-form-field>
+                        </div>
                         
                         <div class="update-profile-button">
-                            <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a class="btn btn-primary btn-lg">Update Profile</a></div>
+                            <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
+                                <button [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue" class="btn btn-primary btn-lg" (click)="updateOrganization()">Update Profile</button>
+                            </div>
                         </div>
 
-                        <div class="update-profile-button">
-                            <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><a
-                                    class="btn btn-primary btn-lg">Update Profile</a></div>
-                        </div>
                     </div>
 
                     <div class="organizations-configuration-block main-block profile-pic-block">
@@ -63,8 +64,9 @@
                         <div class="organization-profile-mid">Create teams for your organization. Refset modeling
                             permissions are assigned through the use of teams.</div>
                         <div class="create-team-button">
-                            <div class="section-list text-right" aria-label="Create Team" title="Create Team"><a
-                                    class="btn btn-primary btn-lg">Create Team</a></div>
+                            <div class="section-list text-right" aria-label="Create Team" title="Create Team">
+                                <create-new-team-modal></create-new-team-modal>
+                            </div>
                         </div>
                     </div>
                     <div class="organizations-configuration-block secondary-block teams-block">
@@ -72,8 +74,9 @@
                         <div class="organization-profile-mid">Add projects to your organization. Projects help to
                             organize your reference sets.</div>
                         <div class="create-project-button">
-                            <div class="section-list text-right" aria-label="Create Project" title="Create Project"><a
-                                    class="btn btn-primary btn-lg">Create Project</a></div>
+                            <div class="section-list text-right" aria-label="Create Project" title="Create Project">
+                                <create-new-project-modal></create-new-project-modal>
+                            </div>
                         </div>
                     </div>
                     <div class="organizations-configuration-block secondary-block teams-block">
@@ -83,7 +86,7 @@
                             undone. Please be certain before taking action.</div>
                         <div class="remove-organization-button">
                             <div class="section-list text-right" aria-label="Remove Organization"
-                                title="Remove Organization"><a class="btn btn-primary btn-lg">Remove Organization</a>
+                                title="Remove Organization"><remove-dashboard-component-modal [componentType]="'organization'" [componentId]="id" [componentName]="'Organization'"></remove-dashboard-component-modal>
                             </div>
                         </div>
                     </div>

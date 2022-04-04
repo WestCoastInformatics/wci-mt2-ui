@@ -16,7 +16,7 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 	@Input() additionalClasses: string;
 	@Input() concept: any;
 	@Input() hidden: boolean = false;
-	@Input() isInDetailsPanel: boolean;
+	@Input() isParentConcept: boolean;
     @Output() processSelection = new EventEmitter<any>(true);
 
 	constructor() {}
@@ -34,13 +34,13 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
                 } else if (this.refsetType != RefsetUtility.INTENSIONAL) {
 
                     this.actionText = "Member";
-                    this.showAdd = !this.concept.memberOfRefset;
+                    this.showAdd = !CodeUtility.testBoolean(this.concept.memberOfRefset);
 
                 } else {
 
                     if (this.concept.definitionExceptionType != RefsetUtility.EXCLUSION && this.concept.definitionExceptionType != RefsetUtility.INCLUSION) {
 
-                        if (this.concept.memberOfRefset) {
+                        if (CodeUtility.testBoolean(this.concept.memberOfRefset)) {
 
                             this.actionText = "Exclusion";
                             this.definitionExceptionType = RefsetUtility.EXCLUSION;
@@ -74,6 +74,6 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 	}
 
     onSelection(addConcept: boolean) {
-        this.processSelection.emit({addConcept: addConcept, concept: this.concept, isInDetailsPanel: this.isInDetailsPanel, definitionExceptionType: this.definitionExceptionType});
+        this.processSelection.emit({addConcept: addConcept, concept: this.concept, isParentConcept: this.isParentConcept, definitionExceptionType: this.definitionExceptionType});
     }
 }

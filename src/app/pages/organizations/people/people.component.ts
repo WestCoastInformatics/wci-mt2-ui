@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
 
 @Component({
   selector: 'organization-people',
@@ -19,15 +22,24 @@ export class OrganizationPeopleComponent implements OnInit {
   defaultColDef = {};
   columnDefs = [
     {
-      field: 'name', headerName: 'Participant', minWidth: 300, cellRenderer: params => {
+      field: 'name', headerName: 'Members', minWidth: 300, cellRenderer: params => {
         return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
       }},
     { field: 'company', headerName: 'Company Name' },
     { field: 'email', headerName: 'Email' },
     { field: 'teams', headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
   ];
+  peopleList = [];
+  selectedOrganization: any;
+  id: any;
+  organizationList = [];
 
-  constructor(private readonly breadcrumbService: BreadcrumbService, private readonly titleService: Title) { }
+  constructor(private readonly breadcrumbService: BreadcrumbService,
+    private readonly titleService: Title,
+    private readonly refsetService: RefsetService,
+    private readonly organizationsService: OrganizationsService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Organizations');
@@ -48,9 +60,37 @@ export class OrganizationPeopleComponent implements OnInit {
     { name: 'Farzaneh Ashrafi', pic: 'assets/sampels/profile/5.svg', company: 'Senior Terminologist', email: 'fas@snomed.org', teams: '1 Team' },
     { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Release Manager', email: 'aat@snomed.org', teams: '3 Teams' }
   ];
+    
+  this.route.params.subscribe(params => {
+    this.id = params['id'];
+  });
+  // this.getPeople();
+  this.getOrganization();
+    this.getOrganizations();
   }
   get dataCount() {
     return this.data.length;
   }
 
+  // getPeople(): void {
+  //   this.refsetService.getPeople('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+  //     this.peopleList = results.items;
+  //   });
+  // }
+
+  getOrganizations(): void {
+    this.refsetService.getOrganizations().subscribe((results) => {
+      this.organizationList = results.items;
+    });
+  }
+
+  getOrganization(): void {
+    this.organizationsService.getOrganization(this.id).subscribe((result) => {
+      this.selectedOrganization = result;
+    });
+  }
+
+  selectOrg($event): void {
+    this.router.navigate(['/organizations/people', $event['value'].id]);
+  }
 }

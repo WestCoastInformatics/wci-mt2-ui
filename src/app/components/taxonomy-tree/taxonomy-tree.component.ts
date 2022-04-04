@@ -52,7 +52,7 @@ export class TaxonomyTreeComponent {
 
     @Input() editMode = false;
     @Input() isOnDetailsPage = true;
-    @Input() isInDetailsPanel = false;
+    @Input() isParentConcept = false;
     @Input() treeId: string = "taxonomyTree";
     @Input() refset: any;
     @Input() rootNode: any;
