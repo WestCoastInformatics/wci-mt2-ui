@@ -178,6 +178,7 @@ export class CreateNewRefsetComponent implements OnInit {
         };
 
         if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
@@ -231,6 +232,7 @@ export class CreateNewRefsetComponent implements OnInit {
         };
 
         if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
