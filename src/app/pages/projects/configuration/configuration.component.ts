@@ -66,6 +66,11 @@ export class ProjectsConfigurationComponent implements OnInit {
   getProject(): void {
     this.projectsService.getProject(this.id).subscribe((result) => {
       this.selectedProject = result;
+      this.profileNameValue = this.selectedProject?.name;
+      this.profileEmailValue = this.selectedProject?.primaryContactEmail;
+      this.profileDescriptionValue = this.selectedProject?.description;
+      this.isPrivate = this.selectedProject?.privateProject;
+
       console.log(this.selectedProject)
       if (!this.selectedProject?.teams) {
         this.selectedProject = {...this.selectedProject, teams: []}
@@ -89,6 +94,10 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   selectProject($event): void {
     this.router.navigate(['/projects/configuration', $event['value'].id]);
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getProject();
+    });
   }
 
   getTeams(): void {

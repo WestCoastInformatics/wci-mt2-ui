@@ -58,12 +58,19 @@ export class TeamsConfigurationComponent implements OnInit {
 
   selectTeam($event): void {
     this.router.navigate(['/teams/configuration', $event['value'].id]);
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getTeam();
+    });
   }
 
   getTeam(): void {
     this.teamsService.getTeam(this.id).subscribe((result) => {
       this.selectedTeam = result;
-      this.selectedRoles = this.selectedTeam.roles;
+      this.selectedRoles = this.selectedTeam?.roles;
+      this.profileNameValue = this.selectedTeam?.name;
+      this.profileEmailValue = this.selectedTeam?.primaryContactEmail;
+      this.profileDescriptionValue = this.selectedTeam?.description;
     });
   }
 

@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
   getOrganizations(): void {
     this.refsetService.getOrganizations().subscribe((results) => {
       this.organizationList = results.items;
+      console.log(this.organizationList);
     });
   }
 

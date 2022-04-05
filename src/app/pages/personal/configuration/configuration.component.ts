@@ -31,12 +31,16 @@ export class PersonalConfigurationComponent implements OnInit {
   getUser(): void {
     this.userService.getUser(this.currentUserId).subscribe((x) => {
       this.user = x;
+      this.profileNameValue = this.user?.name;
+      this.profileCompanyValue = this.user?.company;
+      this.profileEmailValue = this.user?.email;
     });
   }
 
   updateProfile(): void {
     this.user.name = this.profileNameValue;
     this.user.email = this.profileEmailValue;
+    this.user.company = this.profileCompanyValue;
     this.userService.updateUser(this.currentUserId, this.user).subscribe((x) => {
       console.log(x);
     });
