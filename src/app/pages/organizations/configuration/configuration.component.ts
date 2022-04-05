@@ -70,4 +70,12 @@ export class OrganizationConfigurationComponent implements OnInit {
   selectOrg($event): void {
     this.router.navigate(['/organizations/configuration', $event['value'].id]);
   }
+
+  getSelectedOrganizationName(): string{
+    return this.selectedOrganization.name;
+  }
+
+  getSelectedOrganizationId(): string{
+    return this.selectedOrganization.id;
+  }
 }
