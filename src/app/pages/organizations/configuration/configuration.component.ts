@@ -50,12 +50,16 @@ export class OrganizationConfigurationComponent implements OnInit {
   getOrganizations(): void {
     this.refsetService.getOrganizations().subscribe((results) => {
       this.organizationList = results.items;
+
     });
   }
 
   getOrganization(): void {
     this.organizationsService.getOrganization(this.id).subscribe((result) => {
       this.selectedOrganization = result;
+      this.profileNameValue = this.selectedOrganization?.name;
+      this.profileEmailValue = this.selectedOrganization?.primaryContactEmail;
+      this.profileDescriptionValue = this.selectedOrganization?.description;
     });
   }
 
@@ -69,6 +73,10 @@ export class OrganizationConfigurationComponent implements OnInit {
 
   selectOrg($event): void {
     this.router.navigate(['/organizations/configuration', $event['value'].id]);
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getOrganization();
+    });
   }
 
   getSelectedOrganizationName(): string{

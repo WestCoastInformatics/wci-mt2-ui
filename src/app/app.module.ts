@@ -199,7 +199,8 @@ const appRoutes: Routes = [
         PersonalLandingComponent,
         PersonalConfigurationComponent,
         LaunchComparisonModalComponent,
-        RemoveDashboardComponentModalComponent
+        RemoveDashboardComponentModalComponent,
+        RefsetFeedbackListComponent
     ],
     imports: [
         RouterModule.forRoot(

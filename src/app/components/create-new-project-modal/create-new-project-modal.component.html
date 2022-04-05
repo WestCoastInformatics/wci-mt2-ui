@@ -1,5 +1,5 @@
-<div *ngIf="!selectedOrganization" class='section-list text-right' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary btn-lg'>Create a Project</a></div>
-<a *ngIf="selectedOrganization" class="btn btn-primary radius-0 float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<div *ngIf="!param" class='section-list text-right' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary btn-lg'>Create a Project</a></div>
+<a *ngIf="param" class="btn btn-primary radius-0 float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
@@ -17,7 +17,7 @@
     <div class="modal-body refset-tool-lockable">
         
         <table>
-            <tr *ngIf="!selectedOrganization">
+            <tr *ngIf="!param">
                 <td>
                     <label class="modal-label">Parent Organization:</label>
                 </td>

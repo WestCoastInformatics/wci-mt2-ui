@@ -76,7 +76,7 @@
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img *ngIf="!params?.data?.isHidden && params?.data?.stillMember !== undefined && !params?.data?.stillMember"
+    <img *ngIf="!params?.data?.isHidden && ((params?.data?.stillMember !== undefined && !params?.data?.stillMember) || params?.data?.replaced)"
     src="assets/add-symbol-icon.svg"
     (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')"
     width="18px"
@@ -87,7 +87,7 @@
     alt="Add symbol shown when you're able to add a concept" 
 />
 
-<img *ngIf="!params?.data?.isHidden && params?.data?.stillMember"
+<img *ngIf="!params?.data?.isHidden && params?.data?.stillMember && !params?.data?.replaced"
     src="assets/subtract-symbol-icon.svg"
     (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')"
     width="18px"
@@ -101,28 +101,28 @@
 
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
-    <span [class.linethrough-inactive]="params?.data?.replaced" [class.hide-data]="params?.data?.isHidden">
+    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced" [class.hide-data]="params?.data?.isHidden">
         {{ params?.data?.code }}
     </span>
 </ng-template>
 
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
-    <span [class.linethrough-inactive]="params?.data?.replaced" [class.hide-data]="params?.data?.isHidden">
+    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced" [class.hide-data]="params?.data?.isHidden">
         {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : '' }}
     </span>
 </ng-template>
 
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
-    <span [class.linethrough-inactive]="params?.data?.replaced" [class.hide-data]="params?.data?.isHidden">
+    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced" [class.hide-data]="params?.data?.isHidden">
         {{ formatReason(params?.data?.inactivationReason) }}
     </span>
 </ng-template>
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-<span *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
+<ng-container *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
     <img *ngIf="!params?.data?.replacementConcecpts[0]?.added"
     src="assets/add-symbol-icon.svg"
     (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')"
@@ -144,28 +144,30 @@
     class="subtract-symbol-icon"
     alt="Subtract symbol shown when you're able to remove a concept" 
 />
-</span>
+</ng-container>
     <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember" class="adjudicate-information-button" aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
 </ng-template>
 
 <!-- Replacement ID Templates -->
 <ng-template #adjudicateReplacementId let-params>
-    {{ params?.data?.replacementConcecpts[0]?.code }}
+    <span [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+        {{ params?.data?.replacementConcecpts[0]?.code }}
+    </span>
 </ng-template>
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')">
+    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
         {{ transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
     </span>
-    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')">
-        {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
+    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+        {{ transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
     </span>
 </ng-template>
 
 <!-- Reason Section Templates -->
 <ng-template #adjudicateReason let-params>
-    <span *ngIf="!params.data.isSearch">
+    <span *ngIf="!params.data.isSearch" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
         {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
@@ -174,7 +176,7 @@
             <mat-select (selectionChange)="selectedConceptChanged($event)" >
                 <input style="height: 50px; width: 300px;" placeholder="Type here..." (keyup)="onKey($event.target.value)" (mouseover)="focus()" id="inputFocus">
                 <mat-option *ngIf="!selectedConcepts">None</mat-option>
-                <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{ transformDescriptions(concept.descriptions)?.length ? transformDescriptions(concept.descriptions)[0].term : ''}}</mat-option>
+                <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{ transformDescriptions(concept.descriptions, true)?.length ? transformDescriptions(concept.descriptions, true)[0].term + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId : ''}}</mat-option>
             </mat-select>
           </mat-form-field>
             <img

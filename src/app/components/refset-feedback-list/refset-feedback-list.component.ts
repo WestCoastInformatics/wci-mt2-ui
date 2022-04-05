@@ -6,8 +6,7 @@ import { TemplateRenderer } from '../cellRenderers/template.renderer';
 
 @Component({
   selector: 'app-refset-feedback-list',
-  templateUrl: './refset-feedback-list.component.html',
-  styleUrls: ['./refset-feedback-list.component.scss']
+  templateUrl: './refset-feedback-list.component.html'
 })
 export class RefsetFeedbackListComponent implements OnInit {
 
