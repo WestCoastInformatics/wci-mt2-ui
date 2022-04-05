@@ -148,4 +148,12 @@ export class ProjectsConfigurationComponent implements OnInit {
     });
 
   }
+
+  getSelectedProjectName(): string{
+    return this.selectedProject.name;
+  }
+
+  getSelectedProjectId(): string{
+    return this.selectedProject.id;
+  }
 }
