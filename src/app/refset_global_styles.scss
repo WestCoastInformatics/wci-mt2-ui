@@ -716,12 +716,12 @@ button.refset-tool-table-action-icon {
 }
 
 .progressBar li.active {
-    color: #00a4e4;
+    color: $main-color;
 }
 
 .progressBar li.active:before {
-    border-color: #00a4e4;
-    background-color: #00a4e4;
+    border-color: $main-color;
+    background-color: $main-color;
 }
 
 #refsetDirectoryPage {
@@ -3938,7 +3938,7 @@ span.title {
 }
 
 .landing-page-guest-access-button {
-    background-color: #00A4E4;
+    background-color: $main-color;
     color: white;
     width: 220px;
     height: 25px;
@@ -3990,7 +3990,7 @@ span.title {
 .edit-refset-button {
     border-width: 1px;
     border-style: solid;
-    border-color: #00a4e4;
+    border-color: $main-color;
     border-radius: 3px;
     margin-left: 15px;
 }
@@ -4253,6 +4253,24 @@ $sidebar-width: 294px;
 .hide-data {
     opacity: 0;
 }
+.text-main{
+    color: $main-color;
+}
+.btn.btn-main{
+    background-color: $main-color;
+    border-radius: 0 !important;
+    color: #ffffff;
+    border-color: $main-color;
+}
+.btn.btn-main:hover{
+    color: #fff;
+}
+.pointer{
+    cursor: pointer;
+}
+.modal-dialog.full-modal{
+    max-width: 90%;
+}
 
 .grey-close-icon,
 .add-symbol-icon,
@@ -4293,7 +4311,7 @@ $sidebar-width: 294px;
 
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .organizations-configuration-blocks-1 {
@@ -4443,7 +4461,7 @@ $sidebar-width: 294px;
 
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .projects-configuration-blocks-1 {
@@ -4599,7 +4617,7 @@ $sidebar-width: 294px;
 
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .teams-configuration-blocks-1 {
@@ -4795,7 +4813,7 @@ $sidebar-width: 294px;
 
         h3 {
             font-size: 20px;
-            color: #00A4E4;
+            color: $main-color;
         }
 
         .account-configuration-blocks-1 {
@@ -4914,3 +4932,4 @@ $sidebar-width: 294px;
 // .mat-form-field-appearance-outline .mat-form-field-infix {
 //     padding: 0;
 // }
+
