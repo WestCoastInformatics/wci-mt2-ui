@@ -4150,6 +4150,7 @@ img.refset-tool-edition-flag {
 .section-list:last-child {
     border-bottom: 0;
     padding: 15px;
+    padding-left: 10px;
 }
 
 .radius-0 {
@@ -4233,12 +4234,13 @@ $sidebar-width: 294px;
 .sidebar-hover .wrapper {
     width: $sidebar-width;
     z-index: 100 !important;
-        ul {
-            .nav-label {
-                pointer-events: none;
-                opacity: 1;
-            }
+
+    ul {
+        .nav-label {
+            pointer-events: none;
+            opacity: 1;
         }
+    }
 
 }
 
@@ -4253,22 +4255,27 @@ $sidebar-width: 294px;
 .hide-data {
     opacity: 0;
 }
-.text-main{
+
+.text-main {
     color: $main-color;
 }
-.btn.btn-main{
+
+.btn.btn-main {
     background-color: $main-color;
     border-radius: 0 !important;
     color: #ffffff;
     border-color: $main-color;
 }
-.btn.btn-main:hover{
+
+.btn.btn-main:hover {
     color: #fff;
 }
-.pointer{
+
+.pointer {
     cursor: pointer;
 }
-.modal-dialog.full-modal{
+
+.modal-dialog.full-modal {
     max-width: 90%;
 }
 
@@ -4932,4 +4939,3 @@ $sidebar-width: 294px;
 // .mat-form-field-appearance-outline .mat-form-field-infix {
 //     padding: 0;
 // }
-
