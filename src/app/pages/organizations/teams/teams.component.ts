@@ -61,7 +61,7 @@ export class OrganizationTeamsComponent implements OnInit {
   this.route.params.subscribe(params => {
     this.id = params['id'];
   });
-  this.getTeams();
+  //this.getTeams();
   this.getOrganization();
   this.getOrganizations();
   }
