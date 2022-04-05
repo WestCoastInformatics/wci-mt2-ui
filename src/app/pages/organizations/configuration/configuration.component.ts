@@ -80,10 +80,10 @@ export class OrganizationConfigurationComponent implements OnInit {
   }
 
   getSelectedOrganizationName(): string{
-    return this.selectedOrganization.name;
+    return this.selectedOrganization?.name;
   }
 
   getSelectedOrganizationId(): string{
-    return this.selectedOrganization.id;
+    return this.selectedOrganization?.id;
   }
 }
