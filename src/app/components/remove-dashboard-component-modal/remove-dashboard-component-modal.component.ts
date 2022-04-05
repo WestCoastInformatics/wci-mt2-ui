@@ -59,7 +59,6 @@ export class RemoveDashboardComponentModalComponent {
     }
 
     openRemoveDashboardComponentModal(removeDashboardComponentDialog: NgbModal) {
-        this.componentType = 'project';
         this.openedModel = this.modalService.open(removeDashboardComponentDialog, {
         });
     }

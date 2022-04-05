@@ -86,7 +86,7 @@
                             undone. Please be certain before taking action.</div>
                         <div class="remove-organization-button">
                             <div class="section-list text-right" aria-label="Remove Organization"
-                                title="Remove Organization"><remove-dashboard-component-modal [componentType]="'organization'" [componentId]="id" [componentName]="'Organization'"></remove-dashboard-component-modal>
+                                title="Remove Organization"><remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId() [componentName]=getSelectedOrganizationName()></remove-dashboard-component-modal>
                             </div>
                         </div>
                     </div>
