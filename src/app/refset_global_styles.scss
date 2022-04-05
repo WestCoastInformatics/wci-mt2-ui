@@ -4183,14 +4183,9 @@ $sidebar-width: 294px;
 
             li {
                 color: #fff;
-<<<<<<< HEAD
-                overflow: visible;
-                a{
-=======
                 width: $sidebar-width;
 
                 a {
->>>>>>> develop
                     display: flex;
                     align-items: center;
                     padding: 7px 10px;
@@ -4234,16 +4229,8 @@ $sidebar-width: 294px;
 .sidebar:hover .wrapper {
     width: $sidebar-width;
 
-<<<<<<< HEAD
-    ul{
-        li{
-            width: $sidebar-width;
-        }
-        .nav-label{
-=======
     ul {
         .nav-label {
->>>>>>> develop
             opacity: 1;
         }
     }
@@ -4931,70 +4918,7 @@ $sidebar-width: 294px;
 .about-data-text {
     padding-bottom: 5px;
 }
-<<<<<<< HEAD
-.topic-header{
-    display: flex;
-    align-items: center;
-    .author-pic{
-        width: 60px;
-        height: 60px;
-    }
-
-    .topic-author{
-        flex-grow: 1;
-        font-size: 26px;
-        margin: 0 20px;
-        color:#555555;
-        .topic-time{
-            font-size: 16px;
-        }
-    }
-    .topic-action{
-        display: inline-block;
-    }
-}
-.topic-title{
-    font-size: inherit;
-    font-weight: 700;
-    color:#555555;
-}
-.topic-content{
-    font-size: 22px;
-    color:#555555;
-    .show-more{
-        font-size: inherit;
-    }
-}
-
-.discussion-list{
-    background-color: #fff;
-    border: 1px solid rgba(197, 196, 197, 1);
-    font-size: 16px;
-    font-weight: 400;
-    max-height: 300px;
-    overflow: auto;
-
-    .topic-header{
-        font-size: 20px;
-        .author-pic{
-            width: 50px;
-            height: 50px;
-        }
-        .topic-author{
-            margin: 0 10px;
-        }
-    }
-    .section-list{
-        color: #555555;
-        font-size: inherit;
-        font-weight: inherit;
-    }
-}
-.full-form-field{
-    width: 100%;
-=======
 
 .mat-form-field-appearance-outline .mat-form-field-infix {
     padding: 0;
->>>>>>> develop
 }
