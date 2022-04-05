@@ -135,7 +135,7 @@
                         <div class="metadata-collapsible-container white">
 
                             <div class="col">
-                                <div class="metadata-collapsible-container-title font-weight-bold">Reference Set Members</div>
+                                <div class="metadata-collapsible-container-title font-weight-bold mb-1">Reference Set Members</div>
                             </div>
 
                             <div class="container-fluid">
@@ -342,7 +342,7 @@
                                                                hasMultipleRootNodes="false"
                                                                [processChangedMemberFunction]="processChangedMemberEffects"
                                                                (loadConceptDetail)="loadConceptDetail($event)"
-                                                               (changeLockedStatus)="sendChangeLockedStatus($event)"
+                                                               (changeLockedStatus)="indicateChanges($event)"
                                                                (numOfChildren)="taxonomyNumberOfChildren = $event">
                                             </app-taxonomy-tree>
                                         </div>
@@ -401,6 +401,6 @@
     [definitionExceptionType]="addRemoveDefinitionExceptionType"
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
     [processChangedMemberFunction]="processChangedMemberEffects"
-    (changeLockedStatus)="sendChangeLockedStatus($event)"
+    (changeLockedStatus)="indicateChanges($event)"
     (processChangedMemberEffects)="processChangedMemberEffects($event)">
 </add-remove-concepts>

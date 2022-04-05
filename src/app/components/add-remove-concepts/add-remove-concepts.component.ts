@@ -86,6 +86,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 	}
 
 	addRemoveConcept(): void {
+
         let conceptId: string = '';
 		let ecl = '';
 		let description: string;
@@ -110,9 +111,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 			conceptId = this.conceptCode;
         }
-                
-        this.changeLockedStatus.emit(true);
 
+		this.changeLockedStatus.emit(true);
 
 		if (this.changeMethod) {
 

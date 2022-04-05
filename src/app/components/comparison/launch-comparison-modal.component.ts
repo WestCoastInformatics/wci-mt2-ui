@@ -11,6 +11,8 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
+import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-launch-comparison-modal',
@@ -339,7 +341,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-        //this.showLoadingSpinner = true;
+        
         this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.activeRefset.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
@@ -359,7 +361,6 @@ export class LaunchComparisonModalComponent implements OnInit {
         error: (error) => {
 
             this.isConceptDetailsLoading = false;
-            //this.toggleLoadingSpinner(false);
         }});
 
         this.loadConceptDetailParents(concept);
@@ -403,6 +404,12 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.changeLockedStatus.emit(value);
     }
 
+    indicateChanges(data) {
+
+        this.sendChangeLockedStatus(true);
+        this.showLoadingSpinner = true;
+    }
+
     addRemoveConcept(params: any): void {
 
         this.isConceptBeingAdded = new Boolean(params.addConcept);
@@ -415,8 +422,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
 
-        this.sendChangeLockedStatus(true);
-        this.showLoadingSpinner = true;
+        this.indicateChanges(null);
     }
 
     addRemoveConceptGroup(params: any): void {
@@ -434,10 +440,33 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     public processChangedMemberEffects = (conceptStatusArray) => {
 
+        let thatConceptDetail = this.conceptDetail;
+
+        // re-cache the members for the taxonomy
+        this.refsetService.cacheMemberAncestors(this.activeRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.activeRefset)).subscribe({next: results => {
+
+            let success = results?.success;
+
+            if (!CodeUtility.testBoolean(success)) {
+                console.log('Error caching refset member details.');
+            }
+
+            // reload the concept details if it is open
+            if (thatConceptDetail != null) {
+                this.loadConceptDetail(thatConceptDetail);
+            }
+        }});
+
         this.sendChangeLockedStatus(false);
         UiUtility.toggleLockedSections(false);
         this.showLoadingSpinner = false;
 
+        if (this.conceptDetail != null) {
+
+            this.conceptDetail = null;
+            this.isConceptDetailsLoading = true;
+        }
+        
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.activeRefset.refsetId)) {
 
@@ -511,13 +540,6 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.gridApi.setRowData(this.comparisonData.items);
         this.gridApi.redrawRows();
         this.gridPaging.totalRows = this.comparisonData.items.length;
-        //this.gridPaging.manualStateRefresh = new Boolean(true);
-        //this.gridApi.refreshCells({force: true, suppressFlash: false});
-
-        // reload the concept details if it is open
-        if (this.conceptDetail != null) {
-            this.loadConceptDetail(this.conceptDetail);
-        }
     }
 
     downloadComparisonReport() {
