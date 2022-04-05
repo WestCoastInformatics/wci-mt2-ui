@@ -22,12 +22,12 @@ export class OrganizationProjectsComponent implements OnInit {
   defaultColDef = {};
   columnDefs = [
     {
-      field: 'name', headerName: 'Project Name', flex: 1, width: 500, cellRenderer: params => {
+      field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => {
 
         return `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
       }
     },
-    { field: 'description', headerName: 'Description', width: 1000, resizable: true },
+    { field: 'description', headerName: 'Description', minWidth: 550 },
     { field: 'teams', headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
   ];
   projectList = []

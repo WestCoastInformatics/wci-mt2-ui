@@ -23,10 +23,10 @@ export class OrganizationTeamsComponent implements OnInit {
   defaultColDef = {};
   columnDefs = [
     {
-      field: 'name', headerName: 'Team Name', flex: 1, minWidth: 350},
+      field: 'name', headerName: 'Team Name', flex: 1, minWidth: 250},
     { field: 'description', headerName: 'Description' },
     { field: 'role', headerName: 'Role', minWidth: 350 },
-    { field: 'email', headerName: 'Contact Email' },
+    { field: 'email', headerName: 'Contact Email', minWidth: 350},
     { field: 'members', headerName: 'Members', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
   ];
   teamList = [];
