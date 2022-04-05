@@ -103,5 +103,6 @@ export class OrganizationProjectsComponent implements OnInit {
 
   selectOrg($event): void {
     this.router.navigate(['/organizations/projects', $event['value'].id]);
+    this.onGridReady(this.gridParams);
   }
 }

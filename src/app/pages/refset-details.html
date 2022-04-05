@@ -142,7 +142,7 @@
 
                     <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
 
-                    <app-launch-comparison-modal [isDetailPage]="true" [activeRefset]="refsetData"></app-launch-comparison-modal>
+                    <app-launch-comparison-modal [isDetailPage]="true" [activeRefset]="refsetData" (changeLockedStatus)="changeLockedStatus($event)"></app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
 

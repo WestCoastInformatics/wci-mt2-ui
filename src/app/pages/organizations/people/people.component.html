@@ -3,7 +3,7 @@
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect (selectionChange)="selectOrg($event)">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"  (selectionChange)="selectOrg($event)">
                 <mat-option *ngFor="let organization of organizationList"
                             [value]="organization"
                             style="z-index: 3">
@@ -32,9 +32,9 @@
                                 </ag-grid-angular>
                             </div>
                         </div>
-                        <div class='text-right'>
+                        <!-- <div class='text-right'>
                             <a class='text-muted light'>show/hide admin</a>
-                        </div>
+                        </div> -->
                     </section>
                 </div>
             </div>

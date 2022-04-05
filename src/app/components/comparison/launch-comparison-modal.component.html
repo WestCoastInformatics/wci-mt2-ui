@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="col dialog-form-field">
-                        <label>{{activeRefset.name}} {{activeRefset.versionDate}} ({{activeRefset.versionStatus}})</label>
+                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{ activeRefset.versionStatus }})</label>
                     </div>
 
                 </div>
@@ -42,11 +42,11 @@
                             <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset" (change)="comparisonSelectionChange($event)"
                                 [checked]="activeRefsetVersionOptions.length > 0" [disabled]="activeRefsetVersionOptions.length == 0"
                             >
-                                To another version of this reference set
+                                Another version
                             </mat-radio-button>
 
                             <mat-radio-button value="different_refset" (change)="comparisonSelectionChange($event)" [checked]="activeRefsetVersionOptions.length == 0">
-                                By searching for a reference Set
+                                Different reference set
                             </mat-radio-button>
 
                             <mat-form-field [hidden]="comparisonTypeSelected == 'different_refset'" appearance="fill">
@@ -65,7 +65,11 @@
                                     <input class="concept-dropdown-input full-width" placeholder="Type here..." (keyup)="onKeyUp($event.target.value)" (mouseover)="$event.target.focus()">
                                     <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None</mat-option>
                                     <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
-                                    <mat-option *ngFor="let refset of refsetOptions" [value]="refset">{{ refset.name }}</mat-option>
+                                    <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
+                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}" 
+                                            class="refset-tool-edition-flag" title="{{ refset?.editionName }} Flag" aria-label="{{ refset?.editionName }} Flag" />
+                                        {{ refset.name }} ({{ refset?.editionName }})
+                                    </mat-option>
                                 </mat-select>
 
                             </mat-form-field>
@@ -116,9 +120,12 @@
 
     <div class="container-fluid refset-tool-dialog-container">
         <div class="modal-body refset-tool-dialog-body">
+            
+            <div *ngIf="showLoadingSpinner" class="relative-loading-container"><div class="relative-loading">Loading...</div></div>
+            
 
             <!-- SPLITTER -->
-            <as-split direction="horizontal" gutterSize="2">
+            <as-split direction="horizontal" gutterSize="2" >
 
                 <!-- MEMBERS SECTION -->
                 <as-split-area [lockSize]="true" [size]="isConceptDetailsLoading || conceptDetail ? 70 : 100" [minSize]="37">
@@ -128,7 +135,7 @@
                         <div class="metadata-collapsible-container white">
 
                             <div class="col">
-                                <div class="metadata-collapsible-container-title font-weight-bold">Reference Set Members</div>
+                                <div class="metadata-collapsible-container-title font-weight-bold mb-1">Reference Set Members</div>
                             </div>
 
                             <div class="container-fluid">
@@ -169,7 +176,7 @@
                                                     </td>
 
                                                     <td class="refset-tool-comparison-refset-name">
-                                                        {{ comparisonRefsetName }} {{ comparisonRefsetDate }} ({{ comparisonRefsetStatus }})
+                                                        {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }} ({{ comparisonRefsetStatus }})
                                                     </td>
 
                                                     <td class="refset-tool-comparison-refset-distinct">
@@ -321,7 +328,7 @@
                                     <div class="container-fluid refset-tool-concept-details-taxonomy-section children-section">
 
                                         <div class="row">
-                                            <div class="refset-tool-concept-details-section-title">Children <span [hidden]="!numOfChildren"> ({{ taxonomyNumberOfChildren }})</span></div>
+                                            <div class="refset-tool-concept-details-section-title">Children <span [hidden]="!taxonomyNumberOfChildren"> ({{ taxonomyNumberOfChildren }})</span></div>
                                         </div>
 
                                         <!-- Children Taxonomy Tree -->
@@ -335,7 +342,7 @@
                                                                hasMultipleRootNodes="false"
                                                                [processChangedMemberFunction]="processChangedMemberEffects"
                                                                (loadConceptDetail)="loadConceptDetail($event)"
-                                                               (changeLockedStatus)="sendChangeLockedStatus($event)"
+                                                               (changeLockedStatus)="indicateChanges($event)"
                                                                (numOfChildren)="taxonomyNumberOfChildren = $event">
                                             </app-taxonomy-tree>
                                         </div>
@@ -351,10 +358,17 @@
                 </as-split-area>
 
             </as-split>
+        
         </div>
     </div>
     
     <div class="modal-footer rt2-modal-footer">
+        
+        <button *ngIf="changeReportData.length > 0" type="button" (click)="downloadChangeReport()" mat-raised-button color="green" aria-hidden="false" 
+            class="refset-tool-action-button not-last-button" aria-label="Download Comparison Report" ng-reflect-color="green"
+        >
+            Download Change Report
+        </button>
         
         <button type="button" (click)="downloadComparisonReport()" mat-raised-button color="green" aria-hidden="false" 
             class="refset-tool-action-button not-last-button" aria-label="Download Comparison Report" ng-reflect-color="green"
@@ -387,6 +401,6 @@
     [definitionExceptionType]="addRemoveDefinitionExceptionType"
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
     [processChangedMemberFunction]="processChangedMemberEffects"
-    (changeLockedStatus)="sendChangeLockedStatus($event)"
+    (changeLockedStatus)="indicateChanges($event)"
     (processChangedMemberEffects)="processChangedMemberEffects($event)">
 </add-remove-concepts>

@@ -308,7 +308,9 @@ export class UiUtility {
                             conceptStatusArray.push({
                                 code: conceptId, 
                                 added: conceptStatus.operation == 'Added', 
-                                failed: conceptStatus.status == 'Failed', 
+                                failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member', 
+                                operation: conceptStatus.operation,
+                                status: conceptStatus.status,
                                 name: conceptStatus.name, 
                                 active: conceptStatus.active
                             });
@@ -584,7 +586,7 @@ export class UiUtility {
              for (const index in headerList) {
 
                 const head = headerList[index];
-                 line += ',' + array[i][head];
+                 line += ',' + array[i][head].replaceAll(',', ';');;
              }
 
              csvString += line + '\r\n';

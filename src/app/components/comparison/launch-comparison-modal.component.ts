@@ -11,6 +11,8 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
+import { Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-launch-comparison-modal',
@@ -34,7 +36,7 @@ export class LaunchComparisonModalComponent implements OnInit {
     showTable: boolean = false;
     activeRefsetName: string;
     comparisonData: any;
-    comparisonRefsetDate: string;
+    comparisonRefsetVersionDate: string;
     comparisonRefsetName: string;
     comparisonRefsetStatus: string;
     allowedToEdit: boolean = false;
@@ -43,6 +45,7 @@ export class LaunchComparisonModalComponent implements OnInit {
     conceptForAddRemove: any;
     isConceptBeingAdded: Boolean;
     addRemoveDefinitionExceptionType: string;
+    changeReportData: any[];
 
     selectedConcept: any;
     conceptDetail: any;
@@ -92,6 +95,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.showTable = false;
         this.isConceptDetailsLoading = false;
         this.taxonomyManualStateRefresh = new Boolean(false);
+        this.changeReportData = [];
         
         this.activeRefsetVersionDate = CodeUtility.formatJsonDate(this.activeRefset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         this.activeRefsetVersionOptions = RefsetUtility.getVersionOptions(this.activeRefset);
@@ -140,6 +144,11 @@ export class LaunchComparisonModalComponent implements OnInit {
         const results = this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
 
             this.refsetOptions = results.items;
+
+            for (let option of this.refsetOptions) {
+                option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+            }
+            
             this.refsetOptionsLoading = false;
         });
     }
@@ -221,12 +230,12 @@ export class LaunchComparisonModalComponent implements OnInit {
 
             let comparisonVersionInfo = this.activeRefset.versionList.find((element) => { return element.refsetInternalId == this.comparisonRefsetInternalId; });
             this.comparisonRefsetName = this.activeRefsetName;
-            this.comparisonRefsetDate = comparisonVersionInfo.date;
+            this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
             this.comparisonRefsetStatus = comparisonVersionInfo.status;
         } else {
 
             let comparisonVersionInfo = this.comparisonRefsetVersionOptions.find((element) => { return element.value == this.comparisonRefsetInternalId; });
-            this.comparisonRefsetDate = comparisonVersionInfo.date;
+            this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
             this.comparisonRefsetStatus = comparisonVersionInfo.status;
         }
 
@@ -332,7 +341,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-        //this.showLoadingSpinner = true;
+        
         this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.activeRefset.id,}).subscribe({next: (results) => {
 
             this.isConceptDetailsLoading = false;
@@ -352,7 +361,6 @@ export class LaunchComparisonModalComponent implements OnInit {
         error: (error) => {
 
             this.isConceptDetailsLoading = false;
-            //this.toggleLoadingSpinner(false);
         }});
 
         this.loadConceptDetailParents(concept);
@@ -362,7 +370,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.conceptDetailParents = [];
 
-        if (!concept?.active) {
+        if (!CodeUtility.testBoolean(concept?.active)) {
             return;
         }
 
@@ -393,9 +401,13 @@ export class LaunchComparisonModalComponent implements OnInit {
     }
 
     sendChangeLockedStatus = (value: boolean) => {
-
-        this.isLocked = value;
         this.changeLockedStatus.emit(value);
+    }
+
+    indicateChanges(data) {
+
+        this.sendChangeLockedStatus(true);
+        this.showLoadingSpinner = true;
     }
 
     addRemoveConcept(params: any): void {
@@ -409,6 +421,8 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+        this.indicateChanges(null);
     }
 
     addRemoveConceptGroup(params: any): void {
@@ -426,9 +440,33 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     public processChangedMemberEffects = (conceptStatusArray) => {
 
-        this.isLocked = false;
-        UiUtility.toggleLockedSections(false);
+        let thatConceptDetail = this.conceptDetail;
 
+        // re-cache the members for the taxonomy
+        this.refsetService.cacheMemberAncestors(this.activeRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.activeRefset)).subscribe({next: results => {
+
+            let success = results?.success;
+
+            if (!CodeUtility.testBoolean(success)) {
+                console.log('Error caching refset member details.');
+            }
+
+            // reload the concept details if it is open
+            if (thatConceptDetail != null) {
+                this.loadConceptDetail(thatConceptDetail);
+            }
+        }});
+
+        this.sendChangeLockedStatus(false);
+        UiUtility.toggleLockedSections(false);
+        this.showLoadingSpinner = false;
+
+        if (this.conceptDetail != null) {
+
+            this.conceptDetail = null;
+            this.isConceptDetailsLoading = true;
+        }
+        
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.activeRefset.refsetId)) {
 
@@ -442,6 +480,8 @@ export class LaunchComparisonModalComponent implements OnInit {
             if (conceptStatus.failed) {
                 continue;
             }
+
+            this.changeReportData.push({'Concept ID': conceptStatus.code, 'Concept Name': conceptStatus.name, Operation: conceptStatus.operation});
 
             let comparisonRowIndex = this.comparisonData.items.findIndex((element) => { return element.code == conceptStatus.code; });
 
@@ -463,11 +503,11 @@ export class LaunchComparisonModalComponent implements OnInit {
                     let concept = {
                         code: conceptStatus.code,
                         definitionExceptionType: null,
-                        hasChildren: "false",
-                        memberOfRefset: "true",
+                        hasChildren: 'false',
+                        memberOfRefset: 'true',
                         name: conceptStatus.name,
                         active: conceptStatus.active,
-                        membership: "Active Refset"
+                        membership: 'Active Refset'
                     };
 
                     this.comparisonData.items.push(concept);
@@ -497,9 +537,111 @@ export class LaunchComparisonModalComponent implements OnInit {
             }
         }
 
-        // reload the concept details if it is open
-        if (this.conceptDetail != null) {
-            this.loadConceptDetail(this.conceptDetail);
+        this.gridApi.setRowData(this.comparisonData.items);
+        this.gridApi.redrawRows();
+        this.gridPaging.totalRows = this.comparisonData.items.length;
+    }
+
+    downloadComparisonReport() {
+
+        let activeRefsetDate = this.activeRefsetVersionDate;
+        let comparisonRefsetDate = this.comparisonRefsetVersionDate;
+
+        if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+            activeRefsetDate = '(In Development)';
+        }
+
+        if (this.comparisonRefsetStatus == RefsetUtility.IN_DEVELOPMENT) {
+            comparisonRefsetDate = '(In Development)';
+        }
+
+        let members: any[] = [];
+        let activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
+        let comparisonRefset = this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
+        let bothRefsets = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ') ; ' +  
+            this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
+
+        for (let row of this.comparisonData.items) {
+
+            let refset = '';
+
+            if (row.membership == 'Active Refset') {
+                refset = activeRefset;
+            } else if (row.membership == 'Both') {
+                refset = bothRefsets;
+            } else {
+                refset = comparisonRefset;
+            }
+
+            members.push({'Concept ID': row.code, 'Concept Name': row.name, 'Refset Membership': row.membership, 'Refset Name': refset});
+        }
+
+        members.sort(function(a, b) {
+
+            let sortTermA = a['Refset Membership'].toUpperCase() + a['Concept Name'].toUpperCase();
+            let sortTermB = b['Refset Membership'].toUpperCase() + b['Concept Name'].toUpperCase();
+
+            if (sortTermA < sortTermB) {
+                return -1;
+            
+            } else if (sortTermA > sortTermB) {
+                return 1;
+
+            } else {
+                return 0;
+            }
+        });
+
+        activeRefsetDate = activeRefsetDate.replace(' ', '_');
+        comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
+
+        let fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' + 
+            this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
+
+        UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership', 'Refset Name'], fileName);
+    }
+
+    downloadChangeReport() {
+
+        this.changeReportData;
+
+        let activeRefsetDate = this.activeRefsetVersionDate;
+
+        if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+            activeRefsetDate = '(In_Development)';
+        }
+
+        let activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
+
+        this.changeReportData.sort(function(a, b) {
+
+            let sortTermA = a['Operation'].toUpperCase() + a['Concept Name'].toUpperCase();
+            let sortTermB = b['Operation'].toUpperCase() + b['Concept Name'].toUpperCase();
+
+            if (sortTermA < sortTermB) {
+                return -1;
+            
+            } else if (sortTermA > sortTermB) {
+                return 1;
+
+            } else {
+                return 0;
+            }
+        });
+
+        activeRefsetDate = activeRefsetDate.replace(' ', '_');
+
+        let fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + new Date().toLocaleDateString();
+
+        UiUtility.downloadFile(this.changeReportData, ['Concept ID', 'Concept Name', 'Operation'], fileName);
+    }
+
+    showFlagIcon(event, show) {
+        
+        if (show) {
+            event.target.style.display = 'inline';
+        } else {
+            event.target.style.display = 'none';
         }
     }
 }

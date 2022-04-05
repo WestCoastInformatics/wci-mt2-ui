@@ -32,22 +32,23 @@ export class RemoveDashboardComponentModalComponent {
     ) {}
 
     callMemberOperation(): void {
-        this.changeLockedStatus.emit(true);   
+        this.changeLockedStatus.emit(true);
         this.removeComponent();
     }
 
     removeComponent(): void {
         if (this.componentType.toLowerCase() === 'organization') {
             this.organizationsService.deleteOrganization(this.componentId).subscribe((x) => {
-                this.router.navigate(['/dashboard']);
+                // this.router.navigate(['/dashboard']);
             });
         } else if (this.componentType.toLowerCase() === 'project') {
             this.projectsService.deleteProject(this.componentId).subscribe((x) => {
-                this.router.navigate(['/dashboard']);
+                console.log(x)
+                // this.router.navigate(['/dashboard']);
             });
         } else if (this.componentType.toLowerCase() === 'team') {
             this.teamsService.deleteTeam(this.componentId).subscribe((x) => {
-                this.router.navigate(['/dashboard']);
+                // this.router.navigate(['/dashboard']);
             });
         } 
     }
@@ -58,7 +59,6 @@ export class RemoveDashboardComponentModalComponent {
     }
 
     openRemoveDashboardComponentModal(removeDashboardComponentDialog: NgbModal) {
-        this.componentType = 'project';
         this.openedModel = this.modalService.open(removeDashboardComponentDialog, {
         });
     }
