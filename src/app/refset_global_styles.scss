@@ -4939,3 +4939,23 @@ $sidebar-width: 294px;
 // .mat-form-field-appearance-outline .mat-form-field-infix {
 //     padding: 0;
 // }
+
+.full-form-field {
+    width: 100%;
+}
+
+.discussion-list {
+    border: solid;
+    border-color: lightgray;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.topic-action {
+    float: right;
+}
+
+.author-pic {
+    float: left;
+    margin-right: 10px;
+}
