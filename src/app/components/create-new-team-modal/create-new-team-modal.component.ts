@@ -14,9 +14,9 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: "./create-new-team-modal.component.html",
 })
 export class CreateNewTeamModalComponent {
-    name: string;
-    email: string;
-    description: string;
+    name = '';
+    email = '';
+    description = '';
     openedModel: NgbModalRef;
 	organizations: any;
     organizationsArray: any;
@@ -30,6 +30,7 @@ export class CreateNewTeamModalComponent {
     roleOptions: any;
 
     @Output() changeLockedStatus = new EventEmitter<any>(true);
+    param: any;
     
     constructor(
         private modalService: NgbModal,
@@ -41,7 +42,7 @@ export class CreateNewTeamModalComponent {
         private readonly route: ActivatedRoute
     ) {
         this.route.params.subscribe(params => {
-            this.selectedOrganization = params['id'];
+            this.selectedOrganization = this.param = params['id'];
             if (this.selectedOrganization) {
                 this.getOrganization();
             }
@@ -124,6 +125,7 @@ export class CreateNewTeamModalComponent {
                 this.notificationService.show("The team is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
+                window.location.reload();
             },
             (err) => {
                 this.changeLockedStatus.emit(false);

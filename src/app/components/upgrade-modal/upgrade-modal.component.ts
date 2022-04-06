@@ -118,12 +118,12 @@ export class UpgradeModalComponent implements OnInit {
     let data = [];
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
-        'Inactivation Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Inactivation Reason': inactiveConcepts[i].inactivationReason,
         'Inactive ID': inactiveConcepts[i].code,
         'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
         'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
@@ -161,27 +161,27 @@ export class UpgradeModalComponent implements OnInit {
     }
   }
 
-  transformReplacementDescriptions(descriptions: any) {
-    if (descriptions) {
-      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
-      if (getStringifiedJSON) {
-        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
-          if (x[x.length - 1] === ',') {
-            const modifiedString = x.slice(0, -1);
-            x = modifiedString;
-          }
-          if (!x.includes('"active"')) {
-            x = '{"active"' + x;
-          } else if (!x.includes('{"active"') && x.includes('"active"')) {
-            x = '{' + x;
-          }
-          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-            x = x + '"}';
-          }
-          return JSON.parse(x);
-        });
-        return formattedObjectArray[0];
-      }
-    }
-  }
+  // transformReplacementDescriptions(descriptions: any) {
+  //   if (descriptions) {
+  //     const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
+  //     if (getStringifiedJSON) {
+  //       const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
+  //         if (x[x.length - 1] === ',') {
+  //           const modifiedString = x.slice(0, -1);
+  //           x = modifiedString;
+  //         }
+  //         if (!x.includes('"active"')) {
+  //           x = '{"active"' + x;
+  //         } else if (!x.includes('{"active"') && x.includes('"active"')) {
+  //           x = '{' + x;
+  //         }
+  //         if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
+  //           x = x + '"}';
+  //         }
+  //         return JSON.parse(x);
+  //       });
+  //       return formattedObjectArray[0];
+  //     }
+  //   }
+  // }
 }

@@ -168,6 +168,7 @@ async onKey(value): Promise<void> {
 search(value: string): void {
   const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
     this.selectedConcepts = results.items;
+    console.log(this.selectedConcepts);
   });
 }
 
@@ -226,7 +227,7 @@ processChangedMemberEffects = (conceptStatusArray) => {
     return reason?.split('_').join(' ');
   }
 
-  transformDescriptions(descriptions: any) {
+  transformDescriptions(descriptions: any, isOption = false) {
     if (descriptions) {
       const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
       if (getStringifiedJSON) {
@@ -249,50 +250,63 @@ processChangedMemberEffects = (conceptStatusArray) => {
           return JSON.parse(x);
         });
         return formattedObjectArray.filter((x) => {
-          return x.languageName === this.selectedLanguage;
+          if (isOption) {
+            return x.language === this.getLanguageAndType(isOption)[0] && x.type === this.getLanguageAndType(isOption)[1];
+          } else {
+            return x.languageName === this.selectedLanguage;
+          }
         });
       }
     }
   }
 
-  transformReplacementDescriptions(descriptions: any) {
-    if (descriptions) {
-      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
-      if (getStringifiedJSON) {
-        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
-          if (x[x.length - 1] === ',') {
-            const modifiedString = x.slice(0, -1);
-            x = modifiedString;
-          }
-          if (!x.includes('"active"')) {
-            x = '{"active"' + x;
-          } else if (!x.includes('{"active"') && x.includes('"active"')) {
-            x = '{' + x;
-          }
-          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-            x = x + '"}';
-          }
-          return JSON.parse(x);
-        });
-        return formattedObjectArray.filter((x) => {
-          return x.lang === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
-        });
-      }
-    }
-  }
+  // transformReplacementDescriptions(descriptions: any) {
+  //   console.log(descriptions)
+  //   if (descriptions) {
+  //     const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
+  //     if (getStringifiedJSON) {
+  //       const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
+  //         if (x[x.length - 1] === ',') {
+  //           const modifiedString = x.slice(0, -1);
+  //           x = modifiedString;
+  //         }
+  //         if (!x.includes('"active"')) {
+  //           x = '{"active"' + x;
+  //         } else if (!x.includes('{"active"') && x.includes('"active"')) {
+  //           x = '{' + x;
+  //         }
+  //         if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
+  //           x = x + '"}';
+  //         }
+  //         return JSON.parse(x);
+  //       });
+  //       return formattedObjectArray.filter((x) => {
+  //         return x.lang === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
+  //       });
+  //     }
+  //   }
+  // }
 
 
   transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
-        return JSON.parse(descriptions).filter((x) => {
+      console.log(JSON.parse(descriptions));
+      return JSON.parse(descriptions).filter((x) => {
           return x.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
         });
       }
   }
 
-  getLanguageAndType(): string[] {
-    const language = this.selectedLanguage.split(' ')[0].toLowerCase();
-    const type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+  getLanguageAndType(isOption = false): string[] {
+    let language = '';
+    let type = '';
+    if (isOption) {
+      language = 'en';
+      type = 'FSN';
+    } else {
+      language = this.selectedLanguage.split(' ')[0].toLowerCase();
+      type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+    }
     let type2 = '';
     if (type === 'PT') {
       type2 = 'SYNONYM';
@@ -432,12 +446,12 @@ processChangedMemberEffects = (conceptStatusArray) => {
     let data = [];
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
-        'Inactivation Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Inactivation Reason': inactiveConcepts[i].inactivationReason,
         'Inactive ID': inactiveConcepts[i].code,
         'Inactive Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
         'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
@@ -459,7 +473,7 @@ processChangedMemberEffects = (conceptStatusArray) => {
     for (let i = 0; i < inactiveConcepts?.length; i++) {
       oldMembers.push({
         'Old Member ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Old Member Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Old Member Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
@@ -485,7 +499,7 @@ processChangedMemberEffects = (conceptStatusArray) => {
     for (let i = 0; i < inactiveConcepts?.length; i++) {
       manualReplacement.push({
         'Manual Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Manual Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 

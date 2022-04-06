@@ -15,9 +15,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CreateNewProjectModalComponent {
 
-    name: string;
-    email: string;
-    description: string;
+    name = '';
+    email = '';
+    description = '';
     openedModel: NgbModalRef;
 	organizations: any;
     organizationsArray: any;
@@ -26,6 +26,7 @@ export class CreateNewProjectModalComponent {
     privateProject: any;
 
     @Output() changeLockedStatus = new EventEmitter<any>(true);
+    param: any;
 
     constructor(
         private modalService: NgbModal,
@@ -37,7 +38,7 @@ export class CreateNewProjectModalComponent {
         private readonly route: ActivatedRoute
     ) {
         this.route.params.subscribe(params => {
-            this.selectedOrganization = params['id'];
+            this.selectedOrganization = this.param = params['id'];
             if (this.selectedOrganization) {
                 this.getOrganization();
             }
@@ -107,6 +108,7 @@ export class CreateNewProjectModalComponent {
                 this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
+                window.location.reload();
             },
             (err) => {
                 this.changeLockedStatus.emit(false);

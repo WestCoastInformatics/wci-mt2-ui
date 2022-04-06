@@ -257,7 +257,7 @@ export class UiUtility {
     static manageMemberNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
         // set a small delay so the original call has some time to process
-        CodeUtility.delay(2000);
+        CodeUtility.delay(1500);
 
 		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
 				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';

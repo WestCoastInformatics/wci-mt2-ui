@@ -16,9 +16,9 @@ import { EditionsService } from "src/app/services/rest/editions.service";
 })
 export class CreateNewOrganizationModalComponent {
 
-    name: string;
-    email: string;
-    description: string;
+    name = '';
+    email = '';
+    description = '';
     openedModel: NgbModalRef;
 	editions: any;
     editionsArray: any;
@@ -34,7 +34,8 @@ export class CreateNewOrganizationModalComponent {
         private organizationsService: OrganizationsService,
         private editionsService: EditionsService,
         private notificationService: NotificationService, 
-        private readonly refsetDetails: RefsetDetails
+        private readonly refsetDetails: RefsetDetails,
+        private readonly router: Router
     ) {}
 
     callMemberOperation(): void {
@@ -98,6 +99,7 @@ export class CreateNewOrganizationModalComponent {
                 this.notificationService.show("The organization is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
+                window.location.reload();
             },
             (err) => {
                 this.changeLockedStatus.emit(false);

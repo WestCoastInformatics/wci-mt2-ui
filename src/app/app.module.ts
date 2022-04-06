@@ -107,6 +107,7 @@ import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/f
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
 import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
+import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 
 
 const appRoutes: Routes = [
@@ -192,13 +193,14 @@ const appRoutes: Routes = [
         OrganizationConfigurationComponent,
         ProjectsPeopleComponent,
         ProjectsConfigurationComponent,
-        //TeamsSidebarComponent,
+        RefsetFeedbackListComponent,
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent,
         LaunchComparisonModalComponent,
-        RemoveDashboardComponentModalComponent
+        RemoveDashboardComponentModalComponent,
+        RefsetFeedbackListComponent
     ],
     imports: [
         RouterModule.forRoot(

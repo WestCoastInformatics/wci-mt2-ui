@@ -9,7 +9,7 @@ export class SidebarComponent implements OnInit {
 
   @Input() menuItems;
   @Input() id;
-
+  showSideBar = false;
   constructor(private readonly route: ActivatedRoute) { }
 
   ngOnInit() {

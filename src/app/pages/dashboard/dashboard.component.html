@@ -1,4 +1,3 @@
-
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">My Dashboard</span>
@@ -15,41 +14,48 @@
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.value">
                                     <!-- <img src='assets/sampels/u102.svg' /> -->
-                                    <span [routerLink]="['/organizations/projects', organization.id]"><a>{{ organization.value }}</a></span>
+                                    <span
+                                        [routerLink]="['/organizations/projects', organization.id]"><a>{{
+                                            organization.value }}</a></span>
                                 </div>
-                                </ng-container>
+                            </ng-container>
                         </div>
                         <div>
                             <create-new-organization-modal></create-new-organization-modal>
                         </div>
                     </div>
                 </section>
-                
+
                 <section>
                     <div class='section-header'>My Projects</div>
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let project of projectList">
                                 <div class='section-list' *ngIf="project.name">
-                                    <span [routerLink]="['/projects', project.id]"><a>{{ project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
+                                    <span [routerLink]="['/projects', project.id]"><a>{{
+                                            project.organization.edition.name }}/{{
+                                            project.name }}</a><i *ngIf="project.privateProject"
+                                            class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
-                                </ng-container>
+                            </ng-container>
                         </div>
                         <div>
                             <create-new-project-modal></create-new-project-modal>
                         </div>
                     </div>
                 </section>
-    
+
                 <section>
                     <div class='section-header'>My Teams</div>
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let team of teamList">
                                 <div class='section-list' *ngIf="team.name">
-                                    <span [routerLink]="['/teams/people', team.id]"><a>{{ team.name }}</a></span>
+                                    <span [routerLink]="['/teams/people', team.id]"><a>{{
+                                            team.organization.edition.name }}/{{ team.name
+                                            }}</a></span>
                                 </div>
-                                </ng-container>
+                            </ng-container>
                         </div>
                         <div>
                             <create-new-team-modal></create-new-team-modal>
@@ -71,19 +77,12 @@
                                     </button>
                                 </mat-form-field> -->
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular
-                                [columnDefs]="columnDefs"
-                                [rowData]="data"
-                                (gridReady)="onGridReady($event)"
-                                style="width: 100%">
+                            <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data"
+                                (gridReady)="onGridReady($event)" style="width: 100%">
                             </ag-grid-angular>
                         </div>
                     </div>
                 </section>
-                <div class='text-right'>
-                    <a class='text-muted light mr-3'>show admin</a>
-                    <a class='text-muted light'>hide admin</a>
-                </div>
             </div>
         </div>
     </div>
