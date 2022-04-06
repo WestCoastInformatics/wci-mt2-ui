@@ -112,8 +112,9 @@ export class AddRemoveConceptsComponent implements OnInit {
 			conceptId = this.conceptCode;
         }
 
+		console.timeEnd('add-remove addRemoveConcept before lock emit');
 		this.changeLockedStatus.emit(true);
-
+		console.timeEnd('add-remove addRemoveConcept after lock emit');
 		if (this.changeMethod) {
 
 			if (this.changeMethod === 'INACTIVE_ADDED') {
@@ -172,8 +173,10 @@ export class AddRemoveConceptsComponent implements OnInit {
 			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
-			UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
+		console.timeEnd('add-remove addRemoveConcept before manageMemberNotifications');
+		UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
 		this.onMembersGridReady.emit();
+		console.timeEnd('add-remove addRemoveConcept after manageMemberNotifications');
     }
 
 	callMemberChangeFunction = (data) => {

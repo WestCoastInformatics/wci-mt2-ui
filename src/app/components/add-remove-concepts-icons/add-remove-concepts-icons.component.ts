@@ -74,6 +74,16 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 	}
 
     onSelection(addConcept: boolean) {
+        
+        console.time('testing');
+        console.time('refset detail changeLockedStatus');
+        console.time('comparison processChangedMemberEffects');
+        console.time('comparison addRemoveConcept');
+        console.time('comparison indicateChanges');
+        console.time('add-remove addRemoveConcept before lock emit');
+        console.time('add-remove addRemoveConcept before manageMemberNotifications');
+        console.time('add-remove addRemoveConcept after lock emit');
+        console.time('add-remove addRemoveConcept after manageMemberNotifications');
         this.processSelection.emit({addConcept: addConcept, concept: this.concept, isParentConcept: this.isParentConcept, definitionExceptionType: this.definitionExceptionType});
     }
 }

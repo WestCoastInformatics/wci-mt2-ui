@@ -404,10 +404,22 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.changeLockedStatus.emit(value);
     }
 
+    test() {
+
+        this.indicateChanges(null);
+
+        let func = () => {
+            this.showLoadingSpinner = false;
+        }
+        setTimeout(func, 3000);
+    }
+
     indicateChanges(data) {
 
-        this.sendChangeLockedStatus(true);
         this.showLoadingSpinner = true;
+        this.sendChangeLockedStatus(true);
+        
+        console.timeEnd('comparison indicateChanges');
     }
 
     addRemoveConcept(params: any): void {
@@ -422,6 +434,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
 
+        console.timeEnd('comparison addRemoveConcept');
         this.indicateChanges(null);
     }
 
@@ -440,6 +453,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     public processChangedMemberEffects = (conceptStatusArray) => {
 
+        console.timeEnd('comparison processChangedMemberEffects');
         let thatConceptDetail = this.conceptDetail;
 
         // re-cache the members for the taxonomy
