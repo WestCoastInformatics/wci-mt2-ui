@@ -14,9 +14,9 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: "./create-new-team-modal.component.html",
 })
 export class CreateNewTeamModalComponent {
-    name: string;
-    email: string;
-    description: string;
+    name = '';
+    email = '';
+    description = '';
     openedModel: NgbModalRef;
 	organizations: any;
     organizationsArray: any;

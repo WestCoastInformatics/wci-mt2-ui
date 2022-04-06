@@ -16,9 +16,9 @@ import { EditionsService } from "src/app/services/rest/editions.service";
 })
 export class CreateNewOrganizationModalComponent {
 
-    name: string;
-    email: string;
-    description: string;
+    name = '';
+    email = '';
+    description = '';
     openedModel: NgbModalRef;
 	editions: any;
     editionsArray: any;

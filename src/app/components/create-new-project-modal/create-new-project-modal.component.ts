@@ -15,9 +15,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CreateNewProjectModalComponent {
 
-    name: string;
-    email: string;
-    description: string;
+    name = '';
+    email = '';
+    description = '';
     openedModel: NgbModalRef;
 	organizations: any;
     organizationsArray: any;
