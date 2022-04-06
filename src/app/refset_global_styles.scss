@@ -4959,3 +4959,22 @@ $sidebar-width: 294px;
     float: left;
     margin-right: 10px;
 }
+.feedback-modal-header{
+    align-items: center !important;
+    border-bottom: none !important;
+    color: #9B9B9B;
+    font-size: 24px;
+    font-weight: 300;
+    .modal-title{
+        flex-grow: 1;
+        color: inherit;
+        font-family: inherit;
+    }
+    .feedback-status{
+        color: inherit;
+        margin-right: 20px;
+    }
+    .close{
+        font-size: 30px;
+    }
+}

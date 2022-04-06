@@ -13,11 +13,11 @@
 
 
 <ng-template #topicModal let-modal>
-  <div class="modal-header review-modal-header">
+  <div class="feedback-modal-header modal-header review-modal-header">
     <h4 class="modal-title">
       Refset Feedback Discussion: {{topic}}
-      <span class="pull-right text-muted">Status: Open</span>
     </h4>
+    <span class="feedback-status">Status: Open</span>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
