@@ -23,9 +23,14 @@
     </button>
   </div>
   <div class="container-fluid ready-for-review-container-fluid">
-    <div class="modal-body">
-      <div class="dashboard-section p-3">
+    <div class="modal-body pt-0">
+      <div class="dashboard-section p-3 mb-0">
         <div class="topic-header">
+          <img src="assets/sampels/profile/1.svg" class="author-pic" />
+          <div class="topic-author">
+            <div>Steph Whalen</div>
+            <div class="topic-time">2022-03-11 05:31:29</div>
+          </div>
           <div class="topic-action">
             <button mat-button [matMenuTriggerFor]="topicMenu"class="manage-refset-menu">
               <i class="fa fa-ellipsis-v text-main fa-2x"></i>
@@ -38,15 +43,9 @@
               <button mat-menu-item >Resolve Discussion</button>
             </mat-menu>
           </div>
-          <img src="assets/sampels/profile/1.svg" class="author-pic" />
-          <div class="topic-author">
-            <div>Steph Whalen</div>
-            <div class="topic-time">2022-03-11 05:31:29</div>
-          </div>
-
         </div>
         <div class="topic-content mb-3">
-          <div class="topic-title"><strong>Consider adding long covid symptoms to this refset</strong></div>
+          <div class="topic-title">Consider adding long covid symptoms to this refset</div>
           <div>
             Original entry goes here. To provide context to the user, it will be slightly larger text and remain sticky. I would suggest showing the first 2-3 lines of each message by default and giving the user the option to expand or collapse the message with a text link that says 
             
@@ -55,6 +54,11 @@
         <div class="discussion-list mb-3">
           <div class='section-list' *ngFor="let discussion of discussions; index as i">
             <div class="topic-header">
+              <img src="{{discussion.pic}}" class="author-pic" />
+              <div class="topic-author">
+                <div>{{discussion.author}}</div>
+                <div class="topic-time">{{discussion.date}} <i *ngIf="discussion.locked" class="fa fa-lock ml-2"></i></div>
+              </div>
               <div class="topic-action">
                 <button mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu">
                   <i class="fa fa-ellipsis-v text-main fa-lg"></i>
@@ -64,11 +68,6 @@
                   <button mat-menu-item >Hide Reply</button>
                   <button mat-menu-item >Mark Private</button>
                 </mat-menu>
-              </div>
-              <img src="{{discussion.pic}}" class="author-pic" />
-              <div class="topic-author">
-                <div>{{discussion.author}}</div>
-                <div class="topic-time">{{discussion.date}} <i *ngIf="discussion.locked" class="fa fa-lock ml-2"></i></div>
               </div>
             </div>
             <div>
@@ -102,7 +101,7 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer mt-0 mb-3">
+    <div class="feedback-modal-footer modal-footer mt-0 mb-3">
       <a class="btn btn-main">Reply</a>
     </div>
   </div>
