@@ -108,6 +108,7 @@ import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade
 import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
+import { CommonModule } from '@angular/common';
 
 
 const appRoutes: Routes = [
@@ -238,7 +239,8 @@ const appRoutes: Routes = [
         AngularSplitModule,
         NgbModule,
         ReactiveFormsModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        CommonModule
     ],
     entryComponents: [NotificationComponent],
     providers: [
