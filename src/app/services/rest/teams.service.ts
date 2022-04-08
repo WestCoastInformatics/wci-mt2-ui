@@ -41,7 +41,7 @@ export class TeamsService extends RestService {
     }
 
     removeRole(teamId: any, role: any): Observable<any> {
-        return this.delete(this.contextPath + 'team/' + teamId + '/role/' + role, '');
+        return this.delete(this.contextPath + 'team/' + teamId + '/role/' + role);
     }
 
     addUser(teamId: any, userId: any): Observable<any> {
@@ -49,10 +49,10 @@ export class TeamsService extends RestService {
     }
 
     removeUser(teamId: any, userId: any): Observable<any> {
-        return this.delete(this.contextPath + 'team/' + teamId + '/member/' + userId, '');
+        return this.delete(this.contextPath + 'team/' + teamId + '/member/' + userId);
     }
 
     deleteTeam(teamId: string): Observable<any> {
-        return this.delete(this.contextPath + 'team/' + teamId, '');
+        return this.delete(this.contextPath + 'team/' + teamId);
     }
 }

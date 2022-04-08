@@ -37,6 +37,6 @@ export class ProjectsService extends RestService {
     }
 
     deleteProject(projectId: string): Observable<any> {
-        return this.delete(this.contextPath + 'project/' + projectId, '');
+        return this.delete(this.contextPath + 'project/' + projectId);
     }
 }

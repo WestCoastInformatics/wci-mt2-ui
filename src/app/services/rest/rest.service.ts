@@ -99,9 +99,9 @@ export class RestService {
           );
     }
 
-    delete(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+    delete(url: string, ignoreErrors: boolean = false): Observable<any> {
 
-        return this.http.delete<any>(this.restUrl + url, params).pipe(
+        return this.http.delete<any>(this.restUrl + url).pipe(
             catchError((err) => {
 
                 if (!ignoreErrors) {
