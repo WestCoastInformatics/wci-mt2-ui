@@ -6,10 +6,12 @@ import { OrganizationsService } from "src/app/services/rest/organizations.servic
 import { TeamsService } from "src/app/services/rest/teams.service";
 import { ProjectsService } from "src/app/services/rest/projects.service";
 import { Router } from '@angular/router';
+import { TitleCasePipe } from "@angular/common";
 
 @Component({
     selector: "remove-dashboard-component-modal",
     templateUrl: "./remove-dashboard-component-modal.component.html",
+    providers: [TitleCasePipe]
 })
 export class RemoveDashboardComponentModalComponent {
   
@@ -28,7 +30,8 @@ export class RemoveDashboardComponentModalComponent {
         private projectsService: ProjectsService,
         private teamsService: TeamsService,
         private notificationService: NotificationService,
-        private readonly router: Router
+        private readonly router: Router,
+        private titleCasePipe: TitleCasePipe
     ) {}
 
     callMemberOperation(): void {
