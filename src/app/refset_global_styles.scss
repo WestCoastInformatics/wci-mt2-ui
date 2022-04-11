@@ -4016,7 +4016,7 @@ span.title {
     width: fill-available;
     min-height: 50px;
     height: fit-content;
-    position: inherit;
+    position: sticky;
 }
 
 img.refset-tool-edition-flag {
@@ -4051,10 +4051,10 @@ img.refset-tool-edition-flag {
 }
 
 .content-header {
+    position: sticky;
+    z-index: 2;
     .header-title {
         align-items: baseline;
-        position: sticky;
-        z-index: 2;
         background-color: white;
         padding-top: 10px;
         box-shadow: 0 5px 7px -2px grey;
