@@ -78,7 +78,7 @@
                                 </mat-form-field> -->
                         <div class="ag-theme-alpine">
                             <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data"
-                                (gridReady)="onGridReady($event)" style="width: 100%">
+                                (gridReady)="onGridReady($event)" (cellClicked)="onGridCellClick($event)" style="width: 100%">
                             </ag-grid-angular>
                         </div>
                     </div>

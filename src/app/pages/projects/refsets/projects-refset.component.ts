@@ -387,7 +387,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             let versionDate: string;
 
             selectedRows.forEach(function (selectedRow, index) {
-
                 refsetId = selectedRow.refsetId;
                 versionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
             });
