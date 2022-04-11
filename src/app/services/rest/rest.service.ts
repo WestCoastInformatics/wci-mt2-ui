@@ -30,7 +30,6 @@ export class RestService {
     get(url: string, params: any = {}, parseParams: boolean = true, ignoreErrors: boolean = false): Observable<any> {
 
         let queryString: string;
-        
         // if parseParams is true then build the query string, else use the params argument as is
         if (parseParams) {
             queryString = CodeUtility.serialize(params);

@@ -24,8 +24,8 @@ export class RefsetService extends RestService {
         }
     }
 
-    getRefsets(params: any): Observable<any> {
-        return this.get(this.contextPath + 'refset/search', params);
+    getRefsets(params: any, parseParams = true): Observable<any> {
+        return this.get(this.contextPath + 'refset/search', params, parseParams);
     }
 
     getReplacementConcepts(refsetInternalId: string, query: string): Observable<any> {
