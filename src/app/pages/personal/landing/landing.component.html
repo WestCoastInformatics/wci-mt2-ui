@@ -16,7 +16,7 @@
                                 <div><img class="landing-profile-pic" src="assets/ihtsdo.svg"></div>
                                 <div class="about-name-section">{{ this.user?.name }}</div>
                                 <div class="about-data-section">
-                                    <div class="about-data-text">West Coast Informatics</div>
+                                    <div class="about-data-text">{{ this.user?.company }}</div>
                                     <div class="about-data-text">{{ this.user?.email }}</div>
                                     <div class="about-data-text">{{todayDate | date:'longTime'}}</div>
                                 </div>
@@ -38,7 +38,7 @@
                             </div>
                         </div>
                     </section>
-        
+
                     <section>
                         <div class='section-header'>Teams</div>
                         <div class='dashboard-section'>
