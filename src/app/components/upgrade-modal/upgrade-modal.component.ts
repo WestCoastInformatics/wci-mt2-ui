@@ -92,8 +92,9 @@ export class UpgradeModalComponent implements OnInit {
     if (this.isInitialUpgrade) {
       this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
         if (this.router.url.includes('/' + this.refsetId)) {
-          this.refsetDetails.ngOnInit();
           this.refsetDetails.changeLockedStatus(false);
+          this.modalService.dismissAll();
+          this.refsetDetails.initializeDetailsPage();
         } else {
           this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
             this.totalMembers = members?.miscCountA;
@@ -101,12 +102,12 @@ export class UpgradeModalComponent implements OnInit {
       
             this.membersInCommon = members;
             this.getInactiveChangeReport(false);
+            this.modalService.dismissAll();
+            this.refsetDetails.initializeDetailsPage();
           });
         }
+        UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
       });
-      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
-      this.modalService.dismissAll();
-      this.refsetDetails.initializeDetailsPage();
     }
   }
 
