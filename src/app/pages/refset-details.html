@@ -105,7 +105,7 @@
             <div class="container-fluid">
 
                 <div>
-                    
+
                     <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
                     <a class="ml-3 pointer"  (click)="openFeedbackModal(feedbackDialog)"><i class="fa fa-comment-dots text-main"></i></a>
                     <br *ngIf="editMode">
@@ -120,7 +120,7 @@
                             [projectsRefsetComponent]="projectsRefsetComponent" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
 
-                        <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" 
+                        <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy"
                             [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
 
@@ -140,7 +140,7 @@
                         <button mat-menu-item [hidden]="true">Request Project Access</button>
                     </mat-menu>
 
-                    <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
+                    <span class="menu-spacer">&nbsp;</span>
 
                     <app-launch-comparison-modal [isDetailPage]="true" [activeRefset]="refsetData" (changeLockedStatus)="changeLockedStatus($event)"></app-launch-comparison-modal>
 
@@ -724,7 +724,7 @@
                                                 [manualStateRefresh]="membersGridChooserManualStateRefresh">
                                             </app-column-chooser>
                                         </div>
- 
+
                                         <div class="refset-tool-details-chooser-column"
                                             [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field appearance="fill"
@@ -762,7 +762,7 @@
                                                 <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                                     title="Open ECL Builder"
                                                     aria-label="ECL Builder" /> -->
-                                            </button>                                             
+                                            </button>
                                         </div>
 
                                         <div class="col-lg ml-3" style="padding-right: 90px;"
@@ -1214,10 +1214,10 @@
     </div>
 </div>
 
-<add-remove-concepts [isAdd]="isConceptBeingAdded" 
+<add-remove-concepts [isAdd]="isConceptBeingAdded"
     [conceptCode]="conceptForAddRemove?.code"
     [conceptName]="conceptForAddRemove?.name"
-    [conceptHasChildren]="conceptForAddRemove?.hasChildren" 
+    [conceptHasChildren]="conceptForAddRemove?.hasChildren"
     [refset]="refsetData"
     [definitionExceptionType]="addRemoveDefinitionExceptionType"
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
@@ -1295,7 +1295,7 @@
                     <mat-label style="margin-top: 0">Feedback Topic</mat-label>
                     <input matInput type="text"
                         placeholder="Add a descriptive title for your new feedback topic" />
-                    
+
                 </mat-form-field>
             </div>
             <div class="mb-2">
