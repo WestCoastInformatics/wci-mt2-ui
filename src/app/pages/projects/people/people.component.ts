@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
@@ -11,23 +12,17 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
   templateUrl: './people.component.html'
 })
 export class ProjectsPeopleComponent implements OnInit {
-  menu:SidebarMenuItem[] = [
+  menu: SidebarMenuItem[] = [
     {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy'},
     {name: 'People', link: '/projects/people', icon: 'fa fa-user', isActive: true},
     {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs'}
   ];
   
   data = [];
-  defaultColDef = {};
-  columnDefs = [
-    {
-      field: 'name', headerName: 'Participant', minWidth: 300, cellRenderer: params => {
-        return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
-      }},
-    { field: 'company', headerName: 'Company Name' },
-    { field: 'email', headerName: 'Email' },
-    { field: 'teams', headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
-  ];
+  defaultColDef = {
+    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1,
+  };
+  columnDefs: {};
   peopleList = [];
   selectedProject: any;
   id: any;
@@ -38,7 +33,7 @@ export class ProjectsPeopleComponent implements OnInit {
     private readonly refsetService: RefsetService,
     private readonly projectsService: ProjectsService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router) { }
+    private readonly router: Router) {}
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Projects');
@@ -46,10 +41,7 @@ export class ProjectsPeopleComponent implements OnInit {
       { path: '/projects/people', label: 'Projects' },
       { label: 'People' },
   ]);
-  
-  this.defaultColDef = {
-    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1
-  };
+
 
   this.data = [
     { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', company: 'West Coast Informatics', email: 'swhalen@westcoastinformatics.com', teams: '2 Teams' },
@@ -60,6 +52,15 @@ export class ProjectsPeopleComponent implements OnInit {
     { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Snomed International', email: 'aat@snomed.org', teams: '3 Teams' },
     { name: 'Anna Nilsson', pic: 'assets/sampels/profile/7.svg', company: 'Swedish NRC', email: 'anilsson@swedishnrc.org', teams: '1 Team' }
   ];
+    this.columnDefs = [
+      {
+        field: 'name', headerName: 'Participant', minWidth: 300, flex: 1, cellRenderer: params => {
+          return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
+        }},
+      { field: 'company', flex: 1, headerName: 'Company Name' },
+      { field: 'email', flex: 1, headerName: 'Email' },
+      { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+    ];
   this.route.params.subscribe(params => {
     this.id = params['id'];
   });
