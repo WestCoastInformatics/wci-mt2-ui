@@ -4148,6 +4148,12 @@ img.refset-tool-edition-flag {
     }
 }
 
+.btn.btn-main,.btn.btn-primary {
+    background-color: $main-color;
+    border-radius: 0 !important;
+    border-color: $main-color;
+    font-size: 14px;
+}
 .section-list:last-child {
     border-bottom: 0;
     padding: 15px;
