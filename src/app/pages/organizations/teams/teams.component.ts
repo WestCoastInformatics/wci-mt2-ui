@@ -7,6 +7,7 @@ import { OrganizationsService } from 'src/app/services/rest/organizations.servic
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 
 @Component({
 	selector: 'organization-teams',
@@ -50,7 +51,32 @@ export class OrganizationTeamsComponent implements OnInit {
 			{ field: 'id', hide: true },
 			{ field: 'name', headerName: 'Team Name', flex: 1, minWidth: 250 },
 			{ field: 'description', headerName: 'Description' },
-			{ field: 'role', headerName: 'Role', minWidth: 350 },
+			{ field: 'role', headerName: 'Role', minWidth: 350, cellClass: 'text-camel',
+			floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
+				suppressMenu: true, suppressFilterButton: true, names: [
+					{
+						"type": "role",
+						"name": "Admin",
+						"value": "Admin"
+					},
+					{
+						"type": "role",
+						"name": "Author",
+						"value": "Author"
+					},
+					{
+						"type": "role",
+						"name": "Reviewer",
+						"value": "Reviewer"
+					},
+					{
+						"type": "role",
+						"name": "Viewer",
+						"value": "Viewer"
+					}
+				]
+			}
+			 },
 			{ field: 'email', headerName: 'Contact Email', minWidth: 350 },
 			{ field: 'members', headerName: 'Members', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
 		];
@@ -66,7 +92,8 @@ export class OrganizationTeamsComponent implements OnInit {
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             frameworkComponents: {
-                templateRenderer: TemplateRenderer
+                templateRenderer: TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
                 sortable: true,
@@ -114,15 +141,17 @@ export class OrganizationTeamsComponent implements OnInit {
 
 	getTeams(): void {
 		this.data = [];
+		let roles = [];
 		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 			this.teamList = results.items;
-			console.log(this.teamList)
 			for (let team of this.teamList) {
 				if (team?.organization?.id === this.selectedOrganization?.id) {
-					this.data.push({ id: team.id, name: team.name, description: team.description, role:team.roles.join(', '), email: team.primaryContactEmail, members: team.members ? team.members.length : '0' + 'Members' });
+					roles = roles.concat(team.roles);
+					this.data.push({ id: team.id, name: team.name, description: team.description, role:team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0' + 'Members' });
 				}
 			}
-			console.log(this.data);
+			roles = [...new Set(roles)].sort();
+			console.log(roles);
 			this.gridApi.setRowData(this.data.slice(0, 10));
 		});
 	}

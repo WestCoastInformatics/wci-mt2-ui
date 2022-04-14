@@ -49,7 +49,7 @@ export class OrganizationPeopleComponent implements OnInit {
   ]);
   
   this.defaultColDef = {
-    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1
+    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1, resizable: true
   };
 
   this.data = [
