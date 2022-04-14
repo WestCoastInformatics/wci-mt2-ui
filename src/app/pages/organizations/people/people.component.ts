@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { TeamsService } from 'src/app/services/rest/teams.service';
 
 @Component({
   selector: 'organization-people',
@@ -39,7 +41,8 @@ export class OrganizationPeopleComponent implements OnInit {
     private readonly refsetService: RefsetService,
     private readonly organizationsService: OrganizationsService,
     private readonly route: ActivatedRoute,
-    private readonly router: Router) { }
+    private readonly router: Router,
+    private readonly teamService: TeamsService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Organizations');
@@ -92,5 +95,23 @@ export class OrganizationPeopleComponent implements OnInit {
 
   selectOrg($event): void {
     this.router.navigate(['/organizations/people', $event['value'].id]);
+  }
+
+  async getTeams(teams: any): Promise<any> {
+    console.log(teams)
+    const teamObject = { teams: []};
+    if (teams === 'undefined' || teams === undefined) {
+      return JSON.stringify(teamObject);
+    } else {
+      for (let team of teams) {
+        teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
+      }
+      return JSON.stringify(teamObject);
+    }
+  }
+  
+  getTeamCount(data: any): number {
+
+    return data.teams.length;
   }
 }

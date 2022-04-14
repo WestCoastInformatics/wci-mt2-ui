@@ -4177,9 +4177,9 @@ img.refset-tool-edition-flag {
     align-items: stretch;
     min-height: calc(100vh - 158px);
 
-    .container-fluid {
-        z-index: 5;
-    }
+    // .container-fluid {
+    //     z-index: 5;
+    // }
 }
 
 $sidebar-width: 294px;
@@ -4442,7 +4442,7 @@ $sidebar-width: 294px;
     .create-project-button,
     .remove-organization-button {
         width: 100%;
-        height: 10%;
+        height: 20%;
     }
 
     .red-x {

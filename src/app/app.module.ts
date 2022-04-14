@@ -109,6 +109,7 @@ import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { CommonModule } from '@angular/common';
+import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 
 
 const appRoutes: Routes = [
@@ -201,7 +202,8 @@ const appRoutes: Routes = [
         PersonalConfigurationComponent,
         LaunchComparisonModalComponent,
         RemoveDashboardComponentModalComponent,
-        RefsetFeedbackListComponent
+        RefsetFeedbackListComponent,
+        CustomTooltipComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -234,7 +236,7 @@ const appRoutes: Routes = [
           }),
         DialogModule,
         TreeModule,
-        AgGridModule.withComponents([TemplateRenderer]),
+        AgGridModule.withComponents([TemplateRenderer, CustomTooltipComponent]),
         EditorModule,
         AngularSplitModule,
         NgbModule,
