@@ -2,7 +2,7 @@
     <div class="row header-title">
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+            <mat-label>{{selectedOrganization?.id ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"  (selectionChange)="selectOrg($event)">
                 <mat-option *ngFor="let organization of organizationList"
                             [value]="organization"
