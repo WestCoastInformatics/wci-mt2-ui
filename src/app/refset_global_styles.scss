@@ -4203,7 +4203,9 @@ $sidebar-width: 294px;
         min-height: 100%;
         background-color: #212529;
         width: 72px;
-
+        overflow: hidden;
+        transition: width 0.2s;
+        
         ul {
             margin-bottom: 0;
             padding: 40px 0 0;
@@ -4248,19 +4250,16 @@ $sidebar-width: 294px;
             .nav-label {
                 opacity: 0;
                 transition: opacity 0.25s;
-                pointer-events: none;
             }
         }
     }
 }
 
-.sidebar-hover .wrapper {
+.sidebar:hover .wrapper {
     width: $sidebar-width;
-    z-index: 100 !important;
 
     ul {
         .nav-label {
-            pointer-events: none;
             opacity: 1;
         }
     }
