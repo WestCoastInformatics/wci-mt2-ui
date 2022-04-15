@@ -367,6 +367,7 @@ a.footer-link {
 .mat-flat-button.mat-red,
 .mat-raised-button.mat-red {
     background-color: $standard_red_button_color;
+    margin-left: 3px;
 }
 
 .mat-icon-button {
@@ -2824,6 +2825,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .add-remove-concept-hierarchy-modal-input-field {
     width: 308px;
+}
+
+.modal-input-field-border-bottom {
+    border-bottom: 1px solid #000;
 }
 
 .add-remove-concept-hierarchy-modal-cancel-search {

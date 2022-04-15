@@ -120,4 +120,8 @@ export class TeamsConfigurationComponent implements OnInit {
   setRoles(): void {
     console.log(this.selectedRoles);
   }
+
+  getSelectedTeamName(): string{
+    return this.selectedTeam?.name;
+  }
 }
