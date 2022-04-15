@@ -20,7 +20,7 @@ export class ProjectsPeopleComponent implements OnInit {
   
   data = [];
   defaultColDef = {
-    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1,
+    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1, resizable: true
   };
   columnDefs: {};
   peopleList = [];
@@ -41,8 +41,6 @@ export class ProjectsPeopleComponent implements OnInit {
       { path: '/projects/people', label: 'Projects' },
       { label: 'People' },
   ]);
-
-
   this.data = [
     { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', company: 'West Coast Informatics', email: 'swhalen@westcoastinformatics.com', teams: '2 Teams' },
     { name: 'Linda Bird', pic: 'assets/sampels/profile/2.svg', company: 'Snomed International', email: 'lbi@snomed.org', teams: '3 Teams' },
