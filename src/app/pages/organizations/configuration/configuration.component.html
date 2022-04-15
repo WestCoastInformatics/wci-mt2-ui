@@ -3,10 +3,9 @@
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"  (selectionChange)="selectOrg($event)">
-                <mat-option *ngFor="let organization of organizationList"
-                            [value]="organization"
-                            style="z-index: 3">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
+                (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
                     {{ organization.value }}
                 </mat-option>
             </mat-select>
@@ -37,24 +36,23 @@
 
                             <mat-form-field class="profile-description-field" appearance="none">
                                 <mat-label>Description</mat-label>
-                                <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+                                <textarea matInput type="text" name="description"
+                                    [(ngModel)]="profileDescriptionValue"></textarea>
                             </mat-form-field>
                         </div>
-                        
-                        <div class="update-profile-button">
-                            <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                                <button [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue" class="btn btn-primary btn-lg" (click)="updateOrganization()">Update Profile</button>
-                            </div>
+                        <div class="section-btn">
+                            <button [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue"
+                                aria-label="Update Profile" title="Update Profile" class="btn btn-primary btn-lg"
+                                (click)="updateOrganization()">Update Profile</button>
                         </div>
-
                     </div>
 
                     <div class="organizations-configuration-block main-block profile-pic-block">
                         <div class="organization-profile-head section-header">Profile Picture</div>
                         <div class="organization-profile-mid organization-picture"><img src="assets/ihtsdo.svg"></div>
-                        <div class="edit-picture-button">
-                            <div class="section-list text-right" aria-label="Edit Picture" title="Edit Picture"><a
-                                    class="btn btn-primary btn-lg">Edit Picture</a></div>
+                        <div class="section-btn">
+                            <a aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">Edit
+                                Picture</a>
                         </div>
                     </div>
                 </div>
@@ -63,20 +61,16 @@
                         <div class="organization-profile-head section-header">Teams</div>
                         <div class="organization-profile-mid">Create teams for your organization. Refset modeling
                             permissions are assigned through the use of teams.</div>
-                        <div class="create-team-button">
-                            <div class="section-list text-right" aria-label="Create Team" title="Create Team">
-                                <create-new-team-modal></create-new-team-modal>
-                            </div>
+                        <div class="section-btn">
+                            <create-new-team-modal></create-new-team-modal>
                         </div>
                     </div>
                     <div class="organizations-configuration-block secondary-block teams-block">
                         <div class="organization-profile-head section-header">Projects</div>
                         <div class="organization-profile-mid">Add projects to your organization. Projects help to
                             organize your reference sets.</div>
-                        <div class="create-project-button">
-                            <div class="section-list text-right" aria-label="Create Project" title="Create Project">
-                                <create-new-project-modal></create-new-project-modal>
-                            </div>
+                        <div class="section-btn">
+                            <create-new-project-modal></create-new-project-modal>
                         </div>
                     </div>
                     <div class="organizations-configuration-block secondary-block teams-block">
@@ -84,10 +78,10 @@
                             Remove this Organization</div>
                         <div class="organization-profile-mid">Warning! This is a permanent operation and cannot be
                             undone. Please be certain before taking action.</div>
-                        <div class="remove-organization-button">
-                            <div class="section-list text-right" aria-label="Remove Organization"
-                                title="Remove Organization"><remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId() [componentName]=getSelectedOrganizationName()></remove-dashboard-component-modal>
-                            </div>
+                        <div class="section-btn">
+                            <remove-dashboard-component-modal [componentType]="'organization'"
+                                [componentId]=getSelectedOrganizationId() [componentName]=getSelectedOrganizationName()>
+                            </remove-dashboard-component-modal>
                         </div>
                     </div>
                 </div>

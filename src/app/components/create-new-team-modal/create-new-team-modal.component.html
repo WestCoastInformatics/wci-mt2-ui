@@ -1,9 +1,7 @@
-<div *ngIf="!param" class='section-list text-right' title="Create New Team"
-    aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)"><a
-        class='btn btn-primary btn-lg'>Create a Team</a></div>
+<a *ngIf="!param" title="Create New Team" class='btn btn-primary btn-lg'
+    aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)">Create a Team</a>
 <a *ngIf="param" class="btn btn-primary radius-0 float-right" title="Create New Team"
-    aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)">Create New
-    Team</a>
+    aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)">Create New Team</a>
 
 <ng-template #createNewTeamDialog let-modal>
 
