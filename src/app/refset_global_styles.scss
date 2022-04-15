@@ -5028,3 +5028,6 @@ $sidebar-width: 294px;
 .feedback-modal-footer{
     border-top: none !important;
 }
+.unset-gutter-height .as-split-gutter{
+    height: unset !important;
+}
