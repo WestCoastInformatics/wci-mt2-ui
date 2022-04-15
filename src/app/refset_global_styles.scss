@@ -4159,12 +4159,6 @@ img.refset-tool-edition-flag {
     }
 }
 
-.btn.btn-main,.btn.btn-primary {
-    background-color: $main-color;
-    border-radius: 0 !important;
-    border-color: $main-color;
-    font-size: 14px;
-}
 .section-list:last-child {
     border-bottom: 0;
     padding: 15px;
@@ -4175,6 +4169,9 @@ img.refset-tool-edition-flag {
     border-radius: 0 !important;
     border-color: $main-color;
     font-size: 14px;
+}
+.btn.btn-main.rounded,.btn.btn-primary.rounded{
+    border-radius: 4px !important;
 }
 .radius-0 {
     border-radius: 0 !important;
