@@ -22,7 +22,7 @@
             <div class="upgrade-modal-body-header">
                 <div class="upgrade-modal-current-version">
                     <span class="upgrade-modal-current-version-label" aria-label="Current Version:">Current Version:</span>
-                    <span class="upgrade-modal-current-version-term">{{refsetData?.branchPath}}</span>
+                    <span class="upgrade-modal-current-version-term">{{refsetData.versionDate ? refsetData.versionDate : latestDate(refsetData?.versionList)}}</span>
                 </div>
                 <div class="upgrade-modal-current-terminology">
                     <span class="upgrade-modal-current-terminology-label" aria-label="Current Terminology:">Current Terminology:</span>
