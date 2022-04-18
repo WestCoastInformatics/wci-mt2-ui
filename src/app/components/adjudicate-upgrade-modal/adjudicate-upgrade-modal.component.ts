@@ -161,9 +161,13 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
 }
 
-async onKey(value): Promise<void> {
+  async onKey(value): Promise<void> {
     await this.search(value);
   }
+
+  handleInput(event: KeyboardEvent): void {
+    event.stopPropagation();
+  } 
 
 search(value: string): void {
   const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {

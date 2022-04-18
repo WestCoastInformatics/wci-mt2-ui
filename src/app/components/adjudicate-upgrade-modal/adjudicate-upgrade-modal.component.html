@@ -174,7 +174,7 @@
         <mat-form-field appearance="fill" style="width: 400px">
             <mat-label>Add Concept by ID or FSN</mat-label>
             <mat-select (selectionChange)="selectedConceptChanged($event)" >
-                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keyup)="onKey($event.target.value)" (mouseover)="focus()" id="inputFocus">
+                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (keyup)="onKey($event.target.value)" (mouseover)="focus()" id="inputFocus">
                 <mat-option *ngIf="!selectedConcepts">None</mat-option>
                 <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{ transformDescriptions(concept.descriptions, true)?.length ? transformDescriptions(concept.descriptions, true)[0].term + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId : ''}}</mat-option>
             </mat-select>
