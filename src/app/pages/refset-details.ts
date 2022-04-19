@@ -1684,6 +1684,11 @@ export class RefsetDetails {
         return refsetData?.descriptions;
     }
 
+    get displayOutdateWarning(): boolean{
+        const data = this.refsetData;
+        return data && data.upgradeWarning && data.availableActions?.includes('CANCEL_EDIT') && !data.availableActions?.includes('EDIT');
+    }
+
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
             //backdrop : 'static',
