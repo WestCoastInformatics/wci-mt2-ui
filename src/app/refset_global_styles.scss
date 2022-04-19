@@ -353,7 +353,11 @@ a.footer-link {
 .pagination-page-buttons>.mat-button-wrapper {
     color: black;
 }
-
+.refset-tool-pagination-container .pagination-page-buttons{
+    min-width: 30px !important;
+    border-radius: 3px !important;
+    line-height: 30px !important;
+}
 .mat-flat-button.mat-primary,
 .mat-raised-button.mat-primary {
     background-color: $standard_primary_button_color;
@@ -5057,9 +5061,4 @@ app-category-floating-filter{
 }
 #compare-sumary-table td{
     vertical-align: middle;
-}
-.refset-tool-pagination-container .pagination-page-buttons{
-    min-width: 30px !important;
-    border-radius: 3px !important;
-    line-height: 30px !important;
 }
