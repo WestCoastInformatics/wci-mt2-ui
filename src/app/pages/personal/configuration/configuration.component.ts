@@ -43,10 +43,9 @@ export class PersonalConfigurationComponent implements OnInit {
     this.user.email = this.profileEmailValue;
     this.user.company = this.profileCompanyValue;
     this.userService.updateUser(this.currentUserId, this.user).subscribe((x) => {
-      if(x.success){
-        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 0, extendedTimeOut: 0 });
+      if(x){
+        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
       }
-      console.log(x);
     });
   }
 }
