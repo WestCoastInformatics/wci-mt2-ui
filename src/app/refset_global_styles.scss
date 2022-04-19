@@ -5055,3 +5055,11 @@ $sidebar-width: 294px;
 app-category-floating-filter{
     width: 100%;
 }
+#compare-sumary-table td{
+    vertical-align: middle;
+}
+.refset-tool-pagination-container .pagination-page-buttons{
+    min-width: 30px !important;
+    border-radius: 3px !important;
+    line-height: 30px !important;
+}

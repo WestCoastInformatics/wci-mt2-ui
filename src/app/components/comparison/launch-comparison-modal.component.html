@@ -160,7 +160,7 @@
                                     <div class="row refset-tool-refset-metadata-section">
 
                                         <div class="col">
-                                            <table class="refset-tool-refset-metadata-table m-0">
+                                            <table class="refset-tool-refset-metadata-table m-0" id="compare-sumary-table">
                                                 <tbody>
 
                                                     <tr>
@@ -234,7 +234,7 @@
                                 [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
                             </ag-grid-angular>
 
-                            <app-pagination *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize"
+                            <app-pagination class="compare-pagination" *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize"
                                 [gridOptions]="gridOptions" [numberOfPages]="gridApi?.paginationGetTotalPages()"
                                 [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown"
                                 [manualStateRefresh]="gridPaging.manualStateRefresh"
