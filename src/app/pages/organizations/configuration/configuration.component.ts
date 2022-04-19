@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 
@@ -26,6 +27,7 @@ export class OrganizationConfigurationComponent implements OnInit {
   organizationList = [];
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
+    private readonly notificationService: NotificationService,
     private readonly titleService: Title,
     private readonly refsetService: RefsetService,
     private readonly organizationsService: OrganizationsService,
@@ -68,7 +70,11 @@ export class OrganizationConfigurationComponent implements OnInit {
     this.selectedOrganization.primaryContactEmail = this.profileEmailValue;
     this.selectedOrganization.description = this.profileDescriptionValue;
 
-    this.organizationsService.updateOrganization(this.id, this.selectedOrganization).subscribe();
+    this.organizationsService.updateOrganization(this.id, this.selectedOrganization).subscribe((result) => {
+      if(result){
+        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+      }
+    });
   }
 
   selectOrg($event): void {
