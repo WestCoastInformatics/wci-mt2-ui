@@ -107,8 +107,8 @@ export class UpgradeModalComponent implements OnInit {
             this.refsetDetails.initializeDetailsPage();
           });
         }
-        UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
       });
+      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
     }
   }
 

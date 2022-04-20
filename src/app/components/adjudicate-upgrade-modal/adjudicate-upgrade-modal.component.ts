@@ -171,14 +171,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 search(value: string): void {
   const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
-    this.selectedConcepts = results.items;
-    console.log(this.selectedConcepts);
+    this.selectedConcepts = results.items.filter((x) => {
+      return x.active === true;
+    });
   });
 }
 
 selectedConceptChanged(concept: any): void {
   this.concept = concept['value'];
-  console.log(this.concept);
 }
 
 removeManualReplacement(changeMethod: string): void {
@@ -294,7 +294,6 @@ processChangedMemberEffects = (conceptStatusArray) => {
 
   transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
-      console.log(JSON.parse(descriptions));
       return JSON.parse(descriptions).filter((x) => {
           return x.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
         });
@@ -512,7 +511,6 @@ processChangedMemberEffects = (conceptStatusArray) => {
     const commonConcepts = membersInCommonItems?.filter((x) => {
       return !memberItems.includes(x.id);
     });
-    console.log(commonConcepts)
     let membersInCommon = [];
     for (let i = 0; i < commonConcepts?.length; i++) {
       membersInCommon.push({
