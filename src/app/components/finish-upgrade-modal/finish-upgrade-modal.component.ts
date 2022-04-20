@@ -48,9 +48,9 @@ export class FinishUpgradeModalComponent implements OnInit {
     let data = [];
     for (let i = 0; i < inactiveConcepts?.length; i++) {
       data.push({
-        'Inactivation Reason': inactiveConcepts[i].inactivationReason,
-        'Inactive ID': inactiveConcepts[i].code,
-        'Inactive Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
+        'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
+        'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
+        'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
         'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
         'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')

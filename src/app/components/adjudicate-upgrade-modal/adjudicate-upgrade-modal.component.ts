@@ -269,33 +269,6 @@ processChangedMemberEffects = (conceptStatusArray) => {
     }
   }
 
-  // transformReplacementDescriptions(descriptions: any) {
-  //   console.log(descriptions)
-  //   if (descriptions) {
-  //     const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
-  //     if (getStringifiedJSON) {
-  //       const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
-  //         if (x[x.length - 1] === ',') {
-  //           const modifiedString = x.slice(0, -1);
-  //           x = modifiedString;
-  //         }
-  //         if (!x.includes('"active"')) {
-  //           x = '{"active"' + x;
-  //         } else if (!x.includes('{"active"') && x.includes('"active"')) {
-  //           x = '{' + x;
-  //         }
-  //         if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-  //           x = x + '"}';
-  //         }
-  //         return JSON.parse(x);
-  //       });
-  //       return formattedObjectArray.filter((x) => {
-  //         return x.lang === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
-  //       });
-  //     }
-  //   }
-  // }
-
 
   transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
@@ -405,7 +378,7 @@ processChangedMemberEffects = (conceptStatusArray) => {
             this.numOfResults = results.items.length;
 
             results.items = finalResults;
-            console.log(results.items)
+            // console.log(results.items)
 
             if (results.items.length == 0) {
 
@@ -454,9 +427,9 @@ processChangedMemberEffects = (conceptStatusArray) => {
     let data = [];
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
-        'Inactivation Reason': inactiveConcepts[i].inactivationReason,
-        'Inactive ID': inactiveConcepts[i].code,
-        'Inactive Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
+        'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
+        'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
+        'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
         'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
         'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
