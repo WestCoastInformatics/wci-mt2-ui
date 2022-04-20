@@ -77,6 +77,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   replacementCode: string;
   concept: any;
   showActionButton = true;
+  disableAddRemove = false;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -154,11 +155,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   }
 
   addRemoveConcept(params: any, changeMethod: string): void {
-    this.addRemoveConceptsComponent.changeMethod = changeMethod;
-    this.addRemoveConceptsComponent.refset = this.refsetData;
-    this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
-    this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-    this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
+    if (!this.disableAddRemove) {
+      this.addRemoveConceptsComponent.changeMethod = changeMethod;
+      this.addRemoveConceptsComponent.refset = this.refsetData;
+      this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+      this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
+      this.disableAddRemove = true;
+    }
 }
 
   async onKey(value): Promise<void> {
@@ -220,6 +224,7 @@ processChangedMemberEffects = (conceptStatusArray) => {
 
   this.onGridReady(this.originalGridParams);
   this.refsetDetails.showLoadingSpinner = false;
+  this.disableAddRemove = false;
 }
   
   hideIncludedReplacements(toggle: any): void {
