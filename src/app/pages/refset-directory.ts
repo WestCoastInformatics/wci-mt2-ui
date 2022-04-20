@@ -500,6 +500,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     @Debounce()
     onSearchChange() {
+        this.searchInput = this.searchInput.trim();
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
             this.refsetGridApi.purgeInfiniteCache();
         }
