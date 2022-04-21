@@ -1,5 +1,5 @@
-<div *ngIf="!param" class='section-list text-right' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary btn-lg'>Create a Project</a></div>
-<a *ngIf="param" class="btn btn-primary radius-0 float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<div *ngIf="!param" class='section-list text-right rounded' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary rounded btn-lg'>Create a Project</a></div>
+<a *ngIf="param" class="btn btn-primary rounded float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
@@ -15,7 +15,7 @@
     </div>
 
     <div class="modal-body refset-tool-lockable">
-        
+
         <table>
             <tr *ngIf="!param">
                 <td>
@@ -59,7 +59,7 @@
                     <mat-form-field class="import-from-list-field" appearance="outline">
                         <textarea matInput class="import-from-list-text-area" [(ngModel)]="description"></textarea>
                     </mat-form-field>
-                    
+
                 </td>
             </tr>
             <tr>
@@ -75,12 +75,12 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || description === '' || email === ''" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" 
+        <button type="button" [disabled]="name === '' || description === '' || email === ''" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
                 aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>
 
-        
+
     </div>
-    
+
 </ng-template>
