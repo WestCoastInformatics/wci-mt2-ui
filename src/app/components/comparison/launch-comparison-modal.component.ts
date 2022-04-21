@@ -126,7 +126,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.comparisonRefsetVersionOptions = [];
     }
 
-    async onKeyUp(value): Promise<void> {
+    async onSearchChange(value): Promise<void> {
         await this.search(value);
     }
 
