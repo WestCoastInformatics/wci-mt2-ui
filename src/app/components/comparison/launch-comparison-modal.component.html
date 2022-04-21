@@ -68,9 +68,8 @@
                                 <mat-label>Select a refset by ID or FSN</mat-label>
                                 <mat-select (selectionChange)="comparisonRefsetSelected($event)">
                                     <input class="concept-dropdown-input full-width" placeholder="Type here..."
-                                        (keyup)="onKeyUp($event.target.value)" (mouseover)="$event.target.focus()">
-                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None
-                                    </mat-option>
+                                        (keyup)="onKeyUp($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)" >
+                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None</mat-option>
                                     <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
                                     <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
                                         <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)"

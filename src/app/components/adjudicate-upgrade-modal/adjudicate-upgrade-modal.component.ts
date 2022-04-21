@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridApi } from 'ag-grid-community';
 import { OptionsFactory } from 'ag-grid-community/dist/lib/filter/provided/optionsFactory';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -79,6 +80,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   showActionButton = true;
   disableAddRemove = false;
   membersInCommonForChangeReport = { items: [] };
+  manualReplacementOptionsLoading = false;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -166,7 +168,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     }
 }
 
-  async onKey(value): Promise<void> {
+  async onSearchChange(value): Promise<void> {
     await this.search(value);
   }
 
@@ -174,13 +176,21 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     event.stopPropagation();
   } 
 
-search(value: string): void {
-  const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
-    this.selectedConcepts = results.items.filter((x) => {
-      return x.active === true;
-    });
-  });
-}
+  @Debounce()
+  search(value: string): void {
+
+      this.manualReplacementOptionsLoading = true;
+      this.selectedConcepts = undefined;
+
+      const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
+
+          this.selectedConcepts = results.items.filter((x) => {
+              return x.active === true;
+          });
+
+          this.manualReplacementOptionsLoading = false;
+      });
+  }
 
 selectedConceptChanged(concept: any): void {
   this.concept = concept['value'];
@@ -206,10 +216,6 @@ addManualReplacement(changeMethod: string): void {
   }
   this.selectedConcepts = undefined;
 }
-
-  focus(): void {
-    document.getElementById('inputFocus').focus();
-  }
 
 changeLockedStatus(lock: boolean) {
 
