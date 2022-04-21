@@ -416,8 +416,8 @@ export class UiUtility {
             message += 'you will be notified when the refset is ready if you do not refresh the page.';
             
             let downloadInactiveReportButton : IToastButton = {id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {}};
-            // let downloadChangeReportButton : IToastButton = {id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {}};
-            buttons.push(downloadInactiveReportButton);
+            let downloadChangeReportButton : IToastButton = {id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {}};
+            // buttons.push(downloadInactiveReportButton);
 
 
         } else if (processType == ('comparison')) {
@@ -483,11 +483,9 @@ export class UiUtility {
 
                                 callbackFunction();
                                 notificationService.close(notification);
+                            } else if (button.id == 'finishedChangeReport') {
+                                this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
                             }
-
-                            // } else if (button.id == 'finishedChangeReport') {
-                            //     this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
-                            // }
                         });
 					}
 				},
@@ -514,7 +512,7 @@ export class UiUtility {
     }
 
     static createInactiveChangeReport(refsetId: string, data): void {
-
+        console.log(data);
         let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
         this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);

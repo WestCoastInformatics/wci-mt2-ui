@@ -50,7 +50,6 @@ export class UpgradeModalComponent implements OnInit {
       if (!x) {
         await this.getUpgradeData(upgradeDialog);
       }
-      this.sendLoadingSpinnerTrigger(false);
     });
 
   }
@@ -96,6 +95,8 @@ export class UpgradeModalComponent implements OnInit {
       members.items = finalResults;
       this.membersInCommon = members;
 
+      this.sendLoadingSpinnerTrigger(false);
+
     });
   }
 
@@ -121,7 +122,6 @@ export class UpgradeModalComponent implements OnInit {
             this.inactiveConcepts = members?.total;
       
             this.membersInCommon = members;
-            this.getInactiveChangeReport(false);
             this.modalService.dismissAll();
             this.refsetDetails.initializeDetailsPage();
           });
@@ -154,6 +154,7 @@ export class UpgradeModalComponent implements OnInit {
       if (localStorage.getItem('inactiveChangeReportData')) {
         localStorage.removeItem('inactiveChangeReportData');
       }
+      console.log(data);
       localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
     }
   }
