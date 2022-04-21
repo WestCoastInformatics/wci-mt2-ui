@@ -278,53 +278,55 @@
 
                                         <!-- Parents Section -->
                                         <div
-                                            class="container-fluid refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+                                            class="refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
 
-                                            <div class="row">
+                                            <div class="row ml-1 mr-1">
                                                 <div class="refset-tool-concept-details-section-title">Parents</div>
                                             </div>
 
-                                            <div class="row">
-                                                <div *ngIf="conceptDetailParents?.length == 0"
-                                                    class=" refset-tool-concept-details-no-relationships">
-                                                    No parents
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div *ngIf="conceptDetailParents?.length == 0"
+                                                        class=" refset-tool-concept-details-no-relationships">
+                                                        No parents
+                                                    </div>
                                                 </div>
-                                            </div>
-
-                                            <div *ngFor="let parent of conceptDetailParents"
-                                                class="row refset-tool-concept-details-taxonomy-item">
-
-                                                <div class="refset-tool-concept-details-taxonomy-icon"
-                                                    [class.taxonomy-icon-edit-mode]="allowedToEdit">
-
-                                                    <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="parent"
-                                                        [isParentConcept]="true" [refsetType]="activeRefset.type"
-                                                        (processSelection)="addRemoveConcept($event)">
-                                                    </add-remove-concepts-icons>
-
-                                                    <img *ngIf="parent?.defined" title="Fully Defined"
-                                                        aria-label="Fully Defined"
-                                                        src="/assets/linedTaxonomyIcon.png" />
-                                                    <img *ngIf="!parent?.defined" title="Primitive"
-                                                        aria-label="Primitive" class="refset-tool-logo p-0"
-                                                        src="/assets/unlinedTaxonomyIcon.png" />
+    
+                                                <div *ngFor="let parent of conceptDetailParents"
+                                                    class="row refset-tool-concept-details-taxonomy-item">
+    
+                                                    <div class="refset-tool-concept-details-taxonomy-icon"
+                                                        [class.taxonomy-icon-edit-mode]="allowedToEdit">
+    
+                                                        <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="parent"
+                                                            [isParentConcept]="true" [refsetType]="activeRefset.type"
+                                                            (processSelection)="addRemoveConcept($event)">
+                                                        </add-remove-concepts-icons>
+    
+                                                        <img *ngIf="parent?.defined" title="Fully Defined"
+                                                            aria-label="Fully Defined"
+                                                            src="/assets/linedTaxonomyIcon.png" />
+                                                        <img *ngIf="!parent?.defined" title="Primitive"
+                                                            aria-label="Primitive" class="refset-tool-logo p-0"
+                                                            src="/assets/unlinedTaxonomyIcon.png" />
+                                                    </div>
+    
+                                                    <div class="refset-tool-concept-details-taxonomy-description"
+                                                        [class.bold-if-member]="parent?.memberOfRefset"
+                                                        [class.greyed-if-not-member]="!parent?.memberOfRefset">
+                                                        <span *ngIf="this.taxonomyOptions?.useFsn">{{ parent?.fsn.trim()
+                                                            }}</span>
+                                                        <span *ngIf="!this.taxonomyOptions?.useFsn">{{ parent?.name.trim()
+                                                            }}</span>
+                                                    </div>
+    
                                                 </div>
-
-                                                <div class="refset-tool-concept-details-taxonomy-description"
-                                                    [class.bold-if-member]="parent?.memberOfRefset"
-                                                    [class.greyed-if-not-member]="!parent?.memberOfRefset">
-                                                    <span *ngIf="this.taxonomyOptions?.useFsn">{{ parent?.fsn.trim()
-                                                        }}</span>
-                                                    <span *ngIf="!this.taxonomyOptions?.useFsn">{{ parent?.name.trim()
-                                                        }}</span>
-                                                </div>
-
                                             </div>
 
                                         </div>
 
                                         <!-- Details Section -->
-                                        <div class="container-fluid refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
+                                        <div class="refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
                                             style="height: fit-content">
                                             <div class="row m-0">
 
@@ -379,9 +381,9 @@
 
                                         <!-- Children Section -->
                                         <div
-                                            class="container-fluid refset-tool-concept-details-taxonomy-section children-section">
+                                            class="refset-tool-concept-details-taxonomy-section children-section">
 
-                                            <div class="row">
+                                            <div class="row mr-1 ml-1">
                                                 <div class="refset-tool-concept-details-section-title">Children <span
                                                         [hidden]="!taxonomyNumberOfChildren"> ({{
                                                         taxonomyNumberOfChildren }})</span></div>
