@@ -3,6 +3,7 @@ import { TemplateRef } from '@angular/core';
 export interface DialogData {
     headerText?: string;
     template: TemplateRef<any>;
+    actionTemplate?: TemplateRef<any>;
     data: any;
     confirmText?: string;
     confirmIcon?: string;
@@ -16,6 +17,7 @@ export interface DialogData {
 export const DialogDataDefaults: DialogData = {
     headerText: 'Dialog',
     template: undefined,
+    actionTemplate: undefined,
     data: {},
     confirmText: 'OK',
     confirmIcon: undefined,
