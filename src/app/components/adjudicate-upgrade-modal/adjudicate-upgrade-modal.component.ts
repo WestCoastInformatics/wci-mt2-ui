@@ -1,11 +1,14 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { templateJitUrl } from '@angular/compiler';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GridApi } from 'ag-grid-community';
+import { OptionsFactory } from 'ag-grid-community/dist/lib/filter/provided/optionsFactory';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
-import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
@@ -46,14 +49,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   @ViewChild('adjudicateReplacementFrPtSection') replacementFrPtSection: TemplateRef<any>;
   @ViewChild('adjudicateReplacementNlPtSection') replacementNlPtSection: TemplateRef<any>;
   @ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
-  // @ViewChild('actionSection') actionSection: TemplateRef<any>;
+  @ViewChild('actionSection') actionSection: TemplateRef<any>;
 
   gridOptions: any;
   columnDefs: any;
   refsetGridOptions: any;
   refsetGridPaging = {
-    pageSize: 6,
-    pageSizeOptions: [6, 12, 24, 48],
+    pageSize: 100,
+    pageSizeOptions: [5, 10, 25, 50],
     totalKnown: false,
     totalRows: null,
 };
@@ -63,13 +66,19 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   isConceptBeingAdded: Boolean;
   conceptForAddRemove: any;
   addRemoveDefinitionExceptionType: any;
-  isAddRemoveInDetailsPanel: any;
   isLocked = false;
   isInactive: boolean;
   isReplacement: boolean;
   resetRefsetTotal = false;
   changeMethod = '';
-  // selectedRow: any;
+  selectedRow: any;
+  selectedConcepts: any;
+  chosenConceptCode: any;
+  replacementCode: string;
+  concept: any;
+  showActionButton = true;
+  disableAddRemove = false;
+  membersInCommonForChangeReport = { items: [] };
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -93,11 +102,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60,maxWidth:60},
       { field: 'inactiveId', tooltipField: 'inactiveId', headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110,maxWidth:120},
       { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
-      { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220,maxWidth:220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection } },
+      { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220,maxWidth:220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1 },
       { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150,maxWidth:160,  cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
       { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
-      // { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
+      { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 90, width: 90,maxWidth: 100, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
 
     this.refsetGridOptions = {
@@ -126,22 +135,81 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
   }
 
-  // onCellMouseOver(params) {
-  //   this.selectedRow = params;
-  // }
+  onCellMouseOver(params) {
+    this.selectedRow = params;
+  }
 
-  // getSelectedRowData() {
-  //   console.log(this.selectedRow?.rowIndex);
-  //   console.log(this.selectedRow?.data);
-  // }
+  getSelectedRowData(option: string) {
+    console.log(this.selectedRow?.rowIndex);
+    console.log(this.selectedRow?.data);
+    let newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
+    newItem.inactivationReason = '';
+    newItem.descriptions = '';
+    newItem.replacementConcecpts = '';
+    if (option.includes('add')) {
+      this.chosenConceptCode = this.selectedRow['data'].code;
+      this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow?.rowIndex + 1 });
+    } else if (option.includes('remove')) {
+      this.refsetGridApi.applyTransaction({ remove: [this.selectedRow?.data] });
+    }
+    this.selectedConcepts = undefined;
+  }
 
-  addRemoveConcept(params: any, isReplacement: boolean, changeMethod: string): void {
-    this.addRemoveConceptsComponent.changeMethod = changeMethod;
-    this.addRemoveConceptsComponent.refset = this.refsetData;
-    this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
-    this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+  addRemoveConcept(params: any, changeMethod: string): void {
+    if (!this.disableAddRemove) {
+      this.addRemoveConceptsComponent.changeMethod = changeMethod;
+      this.addRemoveConceptsComponent.refset = this.refsetData;
+      this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+      this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
       this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
+      this.disableAddRemove = true;
+    }
 }
+
+  async onKey(value): Promise<void> {
+    await this.search(value);
+  }
+
+  handleInput(event: KeyboardEvent): void {
+    event.stopPropagation();
+  } 
+
+search(value: string): void {
+  const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
+    this.selectedConcepts = results.items.filter((x) => {
+      return x.active === true;
+    });
+  });
+}
+
+selectedConceptChanged(concept: any): void {
+  this.concept = concept['value'];
+}
+
+removeManualReplacement(changeMethod: string): void {
+  this.refsetDetails.toggleLoadingSpinner(true);
+  this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode ? this.chosenConceptCode : this.selectedRow['data'].code, changeMethod, this.concept ? this.concept.code : this.selectedRow['data'].replacementConcecpts[0].code).subscribe((x) => {
+    this.onGridReady(this.originalGridParams);
+    this.refsetDetails.toggleLoadingSpinner(false);
+  });
+  this.selectedConcepts = undefined;
+}
+
+addManualReplacement(changeMethod: string): void {
+  if (this.concept) {
+    this.refsetDetails.toggleLoadingSpinner(true);
+    const body = { ...this.concept };
+    this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
+      this.onGridReady(this.originalGridParams);
+      this.refsetDetails.toggleLoadingSpinner(false);
+    });
+  }
+  this.selectedConcepts = undefined;
+}
+
+  focus(): void {
+    document.getElementById('inputFocus').focus();
+  }
 
 changeLockedStatus(lock: boolean) {
 
@@ -150,17 +218,18 @@ changeLockedStatus(lock: boolean) {
   UiUtility.toggleLockedSections(lock);
 }
 
-processChangedMemberEffects = () => {
+processChangedMemberEffects = (conceptStatusArray) => {
 
   this.changeLockedStatus(false);
   this.refsetDetails.showLoadingSpinner = true;
 
   this.onGridReady(this.originalGridParams);
   this.refsetDetails.showLoadingSpinner = false;
+  this.disableAddRemove = false;
 }
   
-  hideIncludedReplacements(checked: boolean): void {
-    this.hideReplacements = checked;
+  hideIncludedReplacements(toggle: any): void {
+    this.hideReplacements = toggle.checked;
     this.onGridReady(this.originalGridParams);
   }
 
@@ -168,7 +237,7 @@ processChangedMemberEffects = () => {
     return reason?.split('_').join(' ');
   }
 
-  transformDescriptions(descriptions: any) {
+  transformDescriptions(descriptions: any, isOption = false) {
     if (descriptions) {
       const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
       if (getStringifiedJSON) {
@@ -182,49 +251,50 @@ processChangedMemberEffects = () => {
           } else if (!x.includes('{"descriptionId"') && x.includes('"descriptionId"')) {
             x = '{' + x;
           }
+          if (x.includes(',null')) {
+            x = x.replaceAll(',null', '');
+          }
           if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
             x = x + '"}';
           }
           return JSON.parse(x);
         });
         return formattedObjectArray.filter((x) => {
-          return x.languageName === this.selectedLanguage;
+          if (isOption) {
+            return x.language === this.getLanguageAndType(isOption)[0] && x.type === this.getLanguageAndType(isOption)[1];
+          } else {
+            return x.languageName === this.selectedLanguage;
+          }
         });
       }
     }
   }
 
-  transformReplacementDescriptions(descriptions: any) {
+
+  transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
-      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
-      if (getStringifiedJSON) {
-        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
-          if (x[x.length - 1] === ',') {
-            const modifiedString = x.slice(0, -1);
-            x = modifiedString;
-          }
-          if (!x.includes('"active"')) {
-            x = '{"active"' + x;
-          } else if (!x.includes('{"active"') && x.includes('"active"')) {
-            x = '{' + x;
-          }
-          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-            x = x + '"}';
-          }
-          return JSON.parse(x);
-        });
-        return formattedObjectArray.filter((x) => {
-          return x.lang === this.getLanguageAndType()[0] && x.type === this.getLanguageAndType()[1];
+      return JSON.parse(descriptions).filter((x) => {
+          return x.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
         });
       }
-    }
   }
 
-  getLanguageAndType(): string[] {
-    const language = this.selectedLanguage.split(' ')[0].toLowerCase();
-    const type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+  getLanguageAndType(isOption = false): string[] {
+    let language = '';
+    let type = '';
+    if (isOption) {
+      language = 'en';
+      type = 'FSN';
+    } else {
+      language = this.selectedLanguage.split(' ')[0].toLowerCase();
+      type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+    }
+    let type2 = '';
+    if (type === 'PT') {
+      type2 = 'SYNONYM';
+    }
 
-    return [language, type];
+    return [language, type, type2];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -241,11 +311,11 @@ processChangedMemberEffects = () => {
   }
 
   changeLanguage($event: any) {
-        this.onGridReady(this.originalGridParams);
+    this.onGridReady(this.originalGridParams);
   }
 
   onGridReady = (gridReadyParams) => {
-
+    this.showActionButton = true;
     this.originalGridParams = gridReadyParams;
     this.refsetGridApi = gridReadyParams.api;
     this.refsetGridColumnApi = gridReadyParams.columnApi;
@@ -271,7 +341,7 @@ processChangedMemberEffects = () => {
 
             results.items = results.items.filter((x) => {
               if (this.hideReplacements) {
-                return !x.replacementConcecpts[0].existingMember && x.active === false;
+                return !x.replaced;
               }
               return x.active === false;
             });
@@ -289,8 +359,37 @@ processChangedMemberEffects = () => {
             return 0;
             });
 
+            let finalResults = [];
+            let changeReportResults = [];
+
+            results.items.forEach((item) => {
+              for (let i = 0; i < item.replacementConcecpts.length; i++) {
+                changeReportResults.push(item);
+                }
+            });
+
             this.numOfResults = results.items.length;
-            console.log(results.items)
+            this.membersInCommonForChangeReport.items = changeReportResults;
+            console.log(this.membersInCommonForChangeReport);
+
+            results.items.forEach((item) => {
+              for (let i = 0; i < item.replacementConcecpts.length; i++) {
+                if (i === 0) {
+                  finalResults.push(item);
+                } else {
+                  const newItem = {...item, isHidden: true};
+
+                  newItem.inactivationReason = '';
+                  newItem.descriptions = '';
+                  newItem.replacementConcecpts = [item.replacementConcecpts[i]];
+                  finalResults.push(newItem);
+                }
+                }
+            });
+
+            results.items = finalResults;
+            this.membersInCommon = results;
+            // console.log(results.items)
 
             if (results.items.length == 0) {
 
@@ -339,11 +438,12 @@ processChangedMemberEffects = () => {
     let data = [];
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
-        'Inactive Concept ID': inactiveConcepts[i].code,
-        'Inactive Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
-        'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
-        'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
+        'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
+        'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
+        'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
+        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
@@ -351,71 +451,100 @@ processChangedMemberEffects = () => {
 
   }
 
-  getFinishedChangeReport(shouldDownload = true): void {
+  getFinishedChangeReport(): void {
 
-    this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
-      this.membersInCommon = members;
-
-    // Get old members from inactive concepts
-    let memberItems = this.membersInCommon?.items;
-    let inactiveConcepts = memberItems?.filter((items: any) => {
-      return items?.replaced === true;
+    // this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
+      // this.membersInCommon = members;
+      // console.log(this.membersInCommon);
+      // Get old members from inactive concepts
+    let memberItems = this.membersInCommonForChangeReport?.items;
+    let inactiveConcepts = [];
+    memberItems.forEach((items: any) => {
+      if (items.replacementConcecpts) {
+        for (let item of items.replacementConcecpts) {
+          if (item.added === true) {
+            inactiveConcepts.push(item);
+          }
+          }
+      }
     });
-    let oldMembers = [];
-    for (let i = 0; i < inactiveConcepts?.length; i++) {
-      oldMembers.push({
-        'Old Member ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Old Member Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
-      });
-    }
 
-    // Get new members from inactive concepts
-    memberItems = this.membersInCommon?.items;
-    inactiveConcepts = memberItems?.filter((items: any) => {
-      return items?.replaced === true;
-    });
     let newMembers = [];
-    for (let i = 0; i < inactiveConcepts?.length; i++) {
-      newMembers.push({
-        'New Member ID': inactiveConcepts[i].code,
-        'New Member Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/')
-      });
+    for (let concept of inactiveConcepts) {
+    if (!Boolean(newMembers.some((x) => {
+      return x['New Member ID'] === concept.code;
+      }))) {
+        newMembers.push({
+          'New Member ID': concept.code,
+          'New Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+        });
+      }
     }
 
-    // Get manual replacements from inactive concepts
-    memberItems = this.membersInCommon?.items;
-    inactiveConcepts = memberItems?.filter((items: any) => {
-      return items?.replacementConcecpts[0].added === true;
-    });
-    let manualReplacement = [];
-    for (let i = 0; i < inactiveConcepts?.length; i++) {
-      manualReplacement.push({
-        'Manual Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Manual Replacement Concept': this.upgradeModalComponent.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+      // Get new members from inactive concepts
+      inactiveConcepts = [];
+      memberItems.forEach((item: any) => {
+        if (item.replaced === true) {
+          inactiveConcepts.push(item);
+        }
       });
-    }
+      let oldMembers = [];
+      for (let concept of inactiveConcepts) {
+        if (!Boolean(oldMembers.some((x) => {
+          return x['Old Member ID'] === concept.code;
+        }))) {
+          oldMembers.push({
+            'Old Member ID': concept.code,
+            'Old Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+          });
+        }
+        }
 
-    // Get members in common
-    const membersInCommonItems = this.membersOfRefset;
-    const commonConcepts = membersInCommonItems?.filter((x) => {
-      return !memberItems.includes(x.id);
-    });
-    console.log(commonConcepts)
-    let membersInCommon = [];
-    for (let i = 0; i < commonConcepts?.length; i++) {
-      membersInCommon.push({
-        'Members In Common ID': commonConcepts[i].code,
-        'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
+      // Get manual replacements from inactive concepts
+      inactiveConcepts = [];
+      memberItems.forEach((items: any) => {
+        if (items.replacementConcecpts) {
+          for (let item of items.replacementConcecpts) {
+            if (item.reason === 'MANUAL_REPLACEMENT') {
+              inactiveConcepts.push(item);
+            }
+            }
+        }
       });
-    }
 
-    const changeReportObject = {
-      'oldMember': oldMembers,
-      'newMember': newMembers,
-      'manualReplacement': manualReplacement,
-      'membersInCommon': membersInCommon
-  };
-    UiUtility.createFinishedChangeReport(this.refsetData.refsetId, changeReportObject);
-  });
+      let manualReplacement = [];
+    for (let concept of inactiveConcepts) {
+      if (!Boolean(manualReplacement.some((x) => {
+        return x['Manual Replacement ID'] === concept.code;
+      }))) {
+        manualReplacement.push({
+          'Manual Replacement ID': concept.code,
+          'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+        });
+      }
+      }
+
+      // Get members in common
+      const membersInCommonItems = this.membersOfRefset;
+      const commonConcepts = membersInCommonItems?.filter((x) => {
+        return !memberItems?.includes(x.id);
+      });
+      console.log(commonConcepts)
+      let membersInCommon = [];
+      for (let i = 0; i < commonConcepts?.length; i++) {
+        membersInCommon.push({
+          'Members In Common ID': commonConcepts[i].code,
+          'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
+        });
+      }
+
+      const changeReportObject = {
+        'oldMember': oldMembers,
+        'newMember': newMembers,
+        'manualReplacement': manualReplacement,
+        'membersInCommon': membersInCommon
+      };
+      UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
+    // });
   }
 }

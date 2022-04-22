@@ -32,8 +32,7 @@ export class FeedbackCollectorComponent implements OnInit {
     showFeedbackButton() {
         // Requires jQuery!
         jQuery.ajax({
-            //url: this.project.url,
-            url: "https://jira.ihtsdotools.org/s/ce29ab2ab8a9b98d620a1011508f9997-T/en_USgb930d/64027/64/1.4.27/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=856ac7f3",
+            url: "https://jira.ihtsdotools.org/s/373e93f7c4bfcd2355dbf6c3bc2becfc-T/xqix14/813006/fe47b4489ac981edbb824b5107716c37/4.0.4/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en&collectorId=b88ec472",
             type: 'get',
             cache: true,
             dataType: 'script'

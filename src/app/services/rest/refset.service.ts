@@ -24,8 +24,12 @@ export class RefsetService extends RestService {
         }
     }
 
-    getRefsets(params: any): Observable<any> {
-        return this.get(this.contextPath + 'refset/search', params);
+    getRefsets(params: any, parseParams = true): Observable<any> {
+        return this.get(this.contextPath + 'refset/search', params, parseParams);
+    }
+
+    getReplacementConcepts(refsetInternalId: string, query: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${refsetInternalId}/replacementConceptSearch?limit=10&query=${query}`, '', false);
     }
 
     initializeUpgrade(refsetInternalId: string): Observable<any> {
@@ -40,18 +44,22 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'project/search', params, false);
     }
 
+    getTeams(params: any): Observable<any> {
+        return this.get(this.contextPath + 'team/search', params, false);
+    }
+
     createRefset(params: any): Observable<any> {
         return this.post(this.contextPath + 'refset/', params);
     }
 
 
-    modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string): Observable<any> {
-        console.log(replacementConceptId)
+    modifyMembersForUpgrade(refsetInternalId: string, inactiveConceptId: string, changeMethod: string, replacementConceptId?: string, body?: string): Observable<any> {
+
         let replacementCode = '';
         if (replacementConceptId) {
             replacementCode = '&replacementConceptId=' + replacementConceptId
         }
-        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}${replacementCode}`, '', true);
+        return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}${replacementCode}`, body, true);
     }
 
     addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
@@ -175,5 +183,17 @@ export class RefsetService extends RestService {
 
     setRefsetInformation(refsetData: any): void {
         this.assignedUser = refsetData?.assignedUser;
+    }
+
+    searchRefsetsForDropdowns(query: string): Observable<any> {
+        return this.get(this.contextPath + `refset/dropdownSearch?limit=10&query=${query}`, '', false);
+    }
+
+    launchComparison(activeRefsetInternalId: string, comparisonRefsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/compileComparisonData?comparisonRefsetInternalId=${comparisonRefsetInternalId}`, '', false, true);
+    }
+
+    getComparisonData(activeRefsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
 }

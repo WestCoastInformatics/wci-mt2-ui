@@ -1,0 +1,109 @@
+<a *ngIf="!param" title="Create New Team" class='btn btn-primary rounded btn-lg'
+    aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)">Create a Team</a>
+<a *ngIf="param" class="btn btn-primary rounded radius-0 float-right" title="Create New Team"
+    aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)">Create New Team</a>
+
+<ng-template #createNewTeamDialog let-modal>
+
+    <div class="modal-header rt2-modal-header">
+
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            Create a Team
+        </h4>
+
+        <button type="button" class="close dialog-close-x" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body refset-tool-lockable">
+
+        <table>
+            <tr *ngIf="!param">
+                <td>
+                    <label class="modal-label" style="padding-top: 6px">Parent Organization:</label>
+                </td>
+                <td>
+                    <div class="row" id="downloadContentRow">
+                        <div>
+                            <mat-form-field appearance="fill"
+                                class="col refset-tool-modal-select-field">
+                                <mat-select #downloadContentField class="refset-tool-modal-select"
+                                    [(value)]="selectedOrganization"
+                                    (selectionChange)="getOrganization()">
+                                    <mat-option *ngFor="let option of organizationsArray"
+                                        [value]="option.id">
+                                        {{ option.value }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label">Name:</label>
+                </td>
+                <td>
+                    <input class="modal-input-field" placeholder="Team Name" [(ngModel)]="name"
+                        style="width: 250px; padding-bottom: 7px" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label">Email:</label>
+                </td>
+                <td>
+                    <input class="modal-input-field" placeholder="primarycontactemail@orgname.org"
+                        [(ngModel)]="email" style="width: 250px; padding-bottom: 7px" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label">Description:</label>
+                </td>
+                <td>
+                    <mat-form-field class="import-from-list-field" appearance="outline">
+                        <textarea matInput class="import-from-list-text-area"
+                            [(ngModel)]="description">test</textarea>
+                    </mat-form-field>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label" style="padding-top: 9px">Role:</label>
+                </td>
+                <td>
+                    <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
+                        <mat-select #detailsLanguageSelect
+                            placeholder="Choose role(s) to apply to this team"
+                            [ngModel]="roleOptions" [(value)]="selectedRoles" multiple
+                            class="refset-tool-modal-select" panelClass="refset-tool-modal-panel"
+                            (selectionChange)="setRoles()">
+
+                            <mat-option *ngFor="let role of roleOptions" [value]="role.value">
+                                {{role.display}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+        <button type="button" [disabled]="name === '' || description === '' || email === ''"
+            (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false"
+            class="refset-tool-action-button" aria-label="Create Team" title="Create Team"
+            ng-reflect-color="green">
+            Create Team
+        </button>
+
+
+    </div>
+
+</ng-template>

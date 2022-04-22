@@ -19,12 +19,11 @@ import { environment } from "src/environments/environment";
 import { WorkflowService } from "../services/workflow/workflow.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
-import { MatPaginator } from "@angular/material/paginator";
 import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { catchError, filter, pairwise, take } from 'rxjs/operators';
-import { ProjectsRefsetComponent } from './projects/projects-refset.component';
+import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 
 /**
  * @title Tree with nested nodes
@@ -68,9 +67,9 @@ export class RefsetDetails {
         RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     selectedTaxonomyLanguageIndex = 0;
     selectedConceptDetailLanguage: string =
-    RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
-    ":" +
-    RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+        RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
+        ":" +
+        RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     selectedConceptDetailLanguageIndex = 0;
     membersGridChooserManualStateRefresh = new Boolean(true);
     useDialog = false;
@@ -155,7 +154,6 @@ export class RefsetDetails {
     workflowHistoryNotes: string;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
     isConceptBeingAdded: Boolean;
-    isAddRemoveInDetailsPanel: Boolean;
     addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     reviewNotesAdded = false;
@@ -196,7 +194,6 @@ export class RefsetDetails {
     @ViewChild("taxonomyPathSection") taxonomyPathSection: TemplateRef<any>;
     @ViewChild("conceptCodeSection") conceptCodeSection: TemplateRef<any>;
     @ViewChild("importFromListDialog") importFromListDialog: TemplateRef<any>;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
     membersGridNumberOfMembers: string;
@@ -214,7 +211,7 @@ export class RefsetDetails {
         private readonly workflowService: WorkflowService,
         private readonly modalService: NgbModal,
         private routerExtentionService: RouterExtentionService,
-        private readonly projectsRefsetComponent: ProjectsRefsetComponent
+        readonly projectsRefsetComponent: ProjectsRefsetComponent
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -245,21 +242,27 @@ export class RefsetDetails {
         this.showLoadingSpinner = true;
         this.inEditButtonPrefix = '';
         this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url);
+        const prevUrl = this.routerExtentionService.getPreviousUrl();
+        let isProjects = false;
+        const parentRouteKey = 'currentRefsetParentRoute';
+        if (prevUrl && prevUrl != this.router.url) {
+            localStorage.setItem(parentRouteKey, prevUrl);
+        }
+        let parent = localStorage.getItem(parentRouteKey);
+        if(parent && parent.includes('projects')){
+            isProjects = true;
+        }
 
-        if (this.routerExtentionService.getPreviousUrl() != null && this.routerExtentionService.getPreviousUrl().includes('projects')) {
-
+        if (isProjects) {
             this.breadcrumbService.setBreadcrumbs([
                 { path: "/projects", label: "Projects" },
                 { label: "Refset Details" },
             ]);
-
         } else {
-
             this.breadcrumbService.setBreadcrumbs([
                 { path: "/directory", label: "Directory" },
                 { label: "Refset Details" },
             ]);
-
         }
 
         var allObservables = {
@@ -410,105 +413,107 @@ export class RefsetDetails {
 
     loadRefset(): void {
 
-        this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({next: (results) => {
+        this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
+            next: (results) => {
 
-            this.refsetStatus = results?.workflowStatus;
-            this.id = results?.id;
-            this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
-            this.refsetBranchPath = RefsetUtility.getBranchPath(results)
-            this.refsetData = results;
-            console.log(this.refsetData);
-            this.refsetService.setRefsetInformation(this.refsetData);
-            this.allowedToEdit = false;
-            this.allowedToReview = false;
-            this.changeDetectorRef.detectChanges();
+                this.refsetStatus = results?.workflowStatus;
+                this.id = results?.id;
+                this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
+                this.refsetBranchPath = RefsetUtility.getBranchPath(results)
+                this.refsetData = results;
+                console.log(this.refsetData);
+                this.refsetService.setRefsetInformation(this.refsetData);
+                this.allowedToEdit = false;
+                this.allowedToReview = false;
+                this.changeDetectorRef.detectChanges();
 
-            if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT  && this.refsetData?.roles?.includes('VIEWER')  ) ||
-                (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
-                this.editMode = true;
-            }
-
-            if (this.editMode) {
-
-                this.refreshWorkflow();
-
-                this.editMetadataProperties = {
-                    project: this.refsetData.project,
-                    metadataConcept: this.refsetData.name,
-                    parentConcept: this.refsetData.parentConceptId,
-                    narrative: this.refsetData.narrative,
-                    tags: this.refsetData.tags,
-                    referenceType: this.refsetData.type,
-                    privateRefset: this.refsetData.privateRefset,
-                    versionDate: this.refsetData.versionDate,
-                    versionNotes: this.refsetData.versionNotes
-                };
-
-                if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
-                    this.editMetadataProperties.definitionClauses = this.refsetData.definitionClauses;
-                }
-            }
-
-            this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
-            this.titleService.setTitle("Refset Tool - Refset Details: " + this.refsetId);
-
-            let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
-            let languageRefsetOptions = [];
-
-            this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
-            this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData, 'date');
-            this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
-
-            if (this.refsetData.versionStatus != RefsetUtility.IN_DEVELOPMENT) {
-                this.selectedVersion = this.refsetData.versionDate;
-            } else {
-                this.selectedVersion = RefsetUtility.IN_DEVELOPMENT;
-            }
-
-            for (let language of languages) {
-
-                let type = "PT";
-
-                if (language.qualifiedLanguageCode.indexOf("FSN") >= 0) {
-                    type = "FSN";
+                if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT && this.refsetData?.roles?.includes('VIEWER')) ||
+                    (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
+                    this.editMode = true;
                 }
 
-                let languageValue = language.languageCode + "-X-" + language.languageRefset + ":" + type;
+                if (this.editMode) {
 
-                if (CodeUtility.testBoolean(language.default)) {
-                    this.selectedTaxonomyLanguage = languageValue;
+                    this.refreshWorkflow();
+
+                    this.editMetadataProperties = {
+                        project: this.refsetData.project,
+                        metadataConcept: this.refsetData.name,
+                        parentConcept: this.refsetData.parentConceptId,
+                        narrative: this.refsetData.narrative,
+                        tags: this.refsetData.tags,
+                        referenceType: this.refsetData.type,
+                        privateRefset: this.refsetData.privateRefset,
+                        versionDate: this.refsetData.versionDate,
+                        versionNotes: this.refsetData.versionNotes
+                    };
+
+                    if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
+                        this.editMetadataProperties.definitionClauses = this.refsetData.definitionClauses;
+                    }
                 }
 
-                languageRefsetOptions.push({value: languageValue, display: language.qualifiedLanguageCode});
+                this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
+                this.titleService.setTitle("Refset Tool - Refset Details: " + this.refsetId);
+
+                let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
+                let languageRefsetOptions = [];
+
+                this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
+                this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData, 'date');
+                this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
+
+                if (this.refsetData.versionStatus != RefsetUtility.IN_DEVELOPMENT) {
+                    this.selectedVersion = this.refsetData.versionDate;
+                } else {
+                    this.selectedVersion = RefsetUtility.IN_DEVELOPMENT;
+                }
+
+                for (let language of languages) {
+
+                    let type = "PT";
+
+                    if (language.qualifiedLanguageCode.indexOf("FSN") >= 0) {
+                        type = "FSN";
+                    }
+
+                    let languageValue = language.languageCode + "-X-" + language.languageRefset + ":" + type;
+
+                    if (CodeUtility.testBoolean(language.default)) {
+                        this.selectedTaxonomyLanguage = languageValue;
+                    }
+
+                    languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageCode });
+                }
+
+                if (languageRefsetOptions.length > 0) {
+                    this.languageOptions = languageRefsetOptions;
+                }
+
+                this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
+                this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
+
+                if (CodeUtility.hasValue(this.refsetData)) {
+                    this.shortenNoteFields();
+                } else {
+                    console.log("Error loading refset details data.");
+                }
+
+                if (this.refsetData.locked) {
+                    this.changeLockedStatus(true);
+                } else {
+
+                    this.refsetLoaded.next(true);
+                    this.refsetLoaded.complete();
+                }
+
+                this.showLoadingSpinner = false;
+
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
             }
-
-            if (languageRefsetOptions.length > 0) {
-                this.languageOptions = languageRefsetOptions;
-            }
-
-            this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
-            this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
-
-            if (CodeUtility.hasValue(this.refsetData)) {
-                this.shortenNoteFields();
-            } else {
-                console.log("Error loading refset details data.");
-            }
-
-            if (this.refsetData.locked){
-                this.changeLockedStatus(true);
-            } else {
-
-                this.refsetLoaded.next(true);
-                this.refsetLoaded.complete();
-            }
-
-            this.showLoadingSpinner = false;
-
-        },
-        error: (error) => {
-            this.toggleLoadingSpinner(false);
-        }});
+        });
     }
 
     refreshWorkflow() {
@@ -598,22 +603,24 @@ export class RefsetDetails {
     //***** Members Taxonomy Functions  *****/
     cacheTaxonomyAncestors() {
 
-        this.refsetService.cacheMemberAncestors(this.refsetId, this.versionDate).subscribe({next: results => {
+        this.refsetService.cacheMemberAncestors(this.refsetId, this.versionDate).subscribe({
+            next: results => {
 
-            let success = results?.success;
+                let success = results?.success;
 
-            if (CodeUtility.testBoolean(success)) {
+                if (CodeUtility.testBoolean(success)) {
 
-            } else {
-                console.log('Error caching refset member details.');
+                } else {
+                    console.log('Error caching refset member details.');
+                }
+
+                this.memberCacheLoaded.next(true);
+                this.memberCacheLoaded.complete();
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
             }
-
-            this.memberCacheLoaded.next(true);
-            this.memberCacheLoaded.complete();
-        },
-        error: (error) => {
-            this.toggleLoadingSpinner(false);
-        }});
+        });
     }
 
     loadTaxonomyRoot() {
@@ -629,15 +636,17 @@ export class RefsetDetails {
         };
 
         // load taxonomy root
-        this.refsetService.getConceptList(this.refsetData.id, restParams).subscribe({next: (results) => {
-            this.membersTaxonomyRoot = results.items[0];
-            this.taxonomyButtonLabel = "Taxonomy";
-            this.showTaxonomySearchTable = true;
-            this.showLoadingSpinner = false;
-        },
-        error: (error) => {
-            this.toggleLoadingSpinner(false);
-        }});
+        this.refsetService.getConceptList(this.refsetData.id, restParams).subscribe({
+            next: (results) => {
+                this.membersTaxonomyRoot = results.items[0];
+                this.taxonomyButtonLabel = "Taxonomy";
+                this.showTaxonomySearchTable = true;
+                this.showLoadingSpinner = false;
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
+            }
+        });
     }
 
     onTaxonomySelected(event) {
@@ -748,36 +757,38 @@ export class RefsetDetails {
             restParams.query = query;
         }
 
-        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({next: (results) => {
+        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
+            next: (results) => {
 
-            this.taxonomySearchNumberOfResults = results.total;
-            this.taxonomySearchResults = results.items;
+                this.taxonomySearchNumberOfResults = results.total;
+                this.taxonomySearchResults = results.items;
 
-            if (results.items.length == 0) {
+                if (results.items.length == 0) {
 
+                    this.taxonomySearchGridApi.showNoRowsOverlay();
+                    this.taxonomySearchGridApi.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
+                        this.taxonomySearchGridPaging.totalKnown = true;
+                        this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                    }
+                    this.showLoadingSpinner = false;
+
+                    return;
+                }
+
+                UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
+            },
+            error: (error) => {
+
+                this.taxonomySearchResults = [];
                 this.taxonomySearchGridApi.showNoRowsOverlay();
                 this.taxonomySearchGridApi.setRowData([]);
-
-                if (pageNumber > 1) {
-
-                    this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
-                    this.taxonomySearchGridPaging.totalKnown = true;
-                    this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
-                }
-                this.showLoadingSpinner = false;
-
-                return;
+                this.toggleLoadingSpinner(false);
             }
-
-            UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
-        },
-        error: (error) => {
-
-            this.taxonomySearchResults = [];
-            this.taxonomySearchGridApi.showNoRowsOverlay();
-            this.taxonomySearchGridApi.setRowData([]);
-            this.toggleLoadingSpinner(false);
-        }});
+        });
     };
 
     taxonomyPathValueGetter = function (params) {
@@ -925,130 +936,107 @@ export class RefsetDetails {
             restParams.editing = true;
         }
 
-        this.refsetService.getConceptList(this.id, restParams).subscribe({next: (results) => {
+        this.refsetService.getConceptList(this.id, restParams).subscribe({
+            next: (results) => {
 
-            let data = results.items;
-            this.membersGridData = data;
-            this.membersGridNumberOfMembers = this.membersGridNumberOfMembers && !this.resetRefsetTotal ? this.membersGridNumberOfMembers : results.total;
-            this.membersGridNumberOfResults = results.total;
+                let data = results.items;
+                this.membersGridData = data;
+                this.membersGridNumberOfMembers = this.membersGridNumberOfMembers && !this.resetRefsetTotal ? this.membersGridNumberOfMembers : results.total;
+                this.membersGridNumberOfResults = results.total;
 
 
-            if (results.items.length == 0) {
+                if (results.items.length == 0) {
+
+                    this.membersGridApi.showNoRowsOverlay();
+                    this.membersGridApi.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
+                        this.membersGridPaging.totalKnown = true;
+                        this.membersPaginationComponent.goToPage(pageNumber - 1);
+                    }
+                    this.showLoadingSpinner = false;
+
+                    return;
+                }
+
+                this.membersColumnDefs = [{
+                    field: "code", colId: "code", headerName: "Concept ID", minWidth: 120, tooltipField: "code", resizable: false,
+                    cellClass: "refset-tool-details-column-concept-id", cellRenderer: "templateRenderer", cellRendererParams: { template: this.conceptCodeSection }
+                }
+                ];
+
+                for (let i = 0; i < this.languageOptions.length; i++) {
+
+                    let language = this.languageOptions[i];
+                    let minWidth =
+                        language.value === "101FSN" ? 250 : 190;
+
+                    this.membersColumnDefs.push({
+                        field: i.toString(),
+                        flex: 1,
+                        minWidth: minWidth,
+                        colId: language.value,
+                        headerName: language.display,
+                        cellClass:
+                            "refset-tool-details-column-description",
+                        valueGetter: this.descriptionValueGetter,
+                        tooltipField: i.toString(),
+                    });
+                }
+
+                this.membersColumnDefs.push(
+                    ...[
+                        {
+                            field: "memberEffectiveTime",
+                            colId: "modified",
+                            flex: 1,
+                            minWidth: 180,
+                            maxWidth: 180,
+                            headerName: "Modified Date",
+                            cellClass:
+                                "refset-tool-details-column-modified-date",
+                            valueGetter:
+                                UiUtility.gridDateValueGetter,
+                            tooltipField: "memberEffectiveTime",
+                            sort: "desc",
+                            floatingFilterComponent: 'dateTextFilterComponent',
+                            floatingFilterComponentParams: { suppressFilterButton: true },
+                        },
+                        {
+                            field: "active",
+                            colId: "actions",
+                            flex: 1,
+                            headerName: "",
+                            minWidth: 120,
+                            cellClass:
+                                "refset-tool-details-column-actions",
+                            cellRenderer: "templateRenderer",
+                            cellRendererParams: {
+                                template: this.actionSection,
+                            },
+                            filter: false,
+                            tooltipField: "active",
+                            sortable: false,
+                            resizable: false
+                        },
+                    ]
+                );
+
+                UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
+                this.showLoadingSpinner = false;
+            },
+            error: (error) => {
 
                 this.membersGridApi.showNoRowsOverlay();
                 this.membersGridApi.setRowData([]);
-
-                if (pageNumber > 1) {
-
-                    this.membersGridPaging.totalRows = this.membersGridApi.paginationGetPageSize() * (pageNumber - 1);
-                    this.membersGridPaging.totalKnown = true;
-                    this.membersPaginationComponent.goToPage(pageNumber - 1);
-                }
-                this.showLoadingSpinner = false;
-
-                return;
+                this.toggleLoadingSpinner(false);
             }
-
-            this.membersColumnDefs = [
-                {
-                    field: "code",
-                    colId: "code",
-                    headerName: "Concept ID",
-                    minWidth: 120,
-                    cellClass:
-                        "refset-tool-details-column-concept-id",
-                    cellRenderer: "templateRenderer",
-                    cellRendererParams: {
-                        template: this.conceptCodeSection,
-                    },
-                    tooltipField: "code",
-                    resizable: false
-                },
-            ];
-
-            for (let i = 0; i < this.languageOptions.length; i++) {
-
-                let language = this.languageOptions[i];
-                let minWidth =
-                    language.value === "101FSN" ? 250 : 190;
-
-                this.membersColumnDefs.push({
-                    field: i.toString(),
-                    flex: 1,
-                    minWidth: minWidth,
-                    colId: language.value,
-                    headerName: language.display,
-                    cellClass:
-                        "refset-tool-details-column-description",
-                    valueGetter: this.descriptionValueGetter,
-                    tooltipField: i.toString(),
-                });
-            }
-
-            this.membersColumnDefs.push(
-                ...[
-                    {
-                        field: "memberEffectiveTime",
-                        colId: "modified",
-                        flex: 1,
-                        minWidth: 180,
-                        maxWidth: 180,
-                        headerName: "Modified Date",
-                        cellClass:
-                            "refset-tool-details-column-modified-date",
-                        valueGetter:
-                            UiUtility.gridDateValueGetter,
-                        tooltipField: "memberEffectiveTime",
-                        sort: "desc",
-                        floatingFilterComponent: 'dateTextFilterComponent',
-                        floatingFilterComponentParams: {suppressFilterButton: true},
-                    },
-                    {
-                        field: "active",
-                        colId: "actions",
-                        flex: 1,
-                        headerName: "",
-                        minWidth: 120,
-                        cellClass:
-                            "refset-tool-details-column-actions",
-                        cellRenderer: "templateRenderer",
-                        cellRendererParams: {
-                            template: this.actionSection,
-                        },
-                        filter: false,
-                        tooltipField: "active",
-                        sortable: false,
-                        resizable: false
-                    },
-                ]
-            );
-
-            UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
-            this.showLoadingSpinner = false;
-        },
-        error: (error) => {
-
-            this.membersGridApi.showNoRowsOverlay();
-            this.membersGridApi.setRowData([]);
-            this.toggleLoadingSpinner(false);
-        }});
+        });
 
         // set placeholders on the grid floating filter fields
-        Array.from(
-            document.querySelectorAll(
-                ".ag-floating-filter-full-body .ag-input-field-input"
-            )
-        ).forEach((obj: any) => {
-            if (obj.attributes["disabled"]) {
-                // skip columns with disabled filter
-                return;
-            }
-
-            let label = obj.getAttribute("aria-label");
-            let value =
-                label.substring(0, label.indexOf("Filter Input")) + "...";
-            obj.setAttribute("placeholder", value);
-        });
+        UiUtility.applyGridPlaceholders(".ag-floating-filter-full-body .ag-input-field-input");
     };
 
     onMembersColumnsLoaded() {
@@ -1101,41 +1089,43 @@ export class RefsetDetails {
 
         this.toggleLoadingSpinner(true);
 
-        this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({next: (results) => {
+        this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({
+            next: (results) => {
 
-            if (results) {
+                if (results) {
 
-                if (action.includes('UNASSIGN')) {
-                    this.router.navigateByUrl('projects');
+                    if (action.includes('UNASSIGN')) {
+                        this.router.navigateByUrl('projects');
 
-                } else if (this.refsetData.id != results.id) {
-                    this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
+                    } else if (this.refsetData.id != results.id) {
+                        this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
 
-                } else {
-
-                    if (action.includes('CANCEL_EDIT')) {
-                        this.loadWorkflowHistoryData();
-                        this.processChangedMemberEffects();
-                        this.loadRefset();
                     } else {
-                        this.loadRefset();
+
+                        if (action.includes('CANCEL_EDIT')) {
+                            this.loadWorkflowHistoryData();
+                            this.processChangedMemberEffects(null);
+                            this.loadRefset();
+                        } else {
+                            this.loadRefset();
+                        }
+
                     }
-
+                } else {
+                    this.loadRefset();
                 }
-            } else {
-                this.loadRefset();
+
+
+                // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                //     this.router.navigate(['/details', this.id]);
+                // });
+
+                // this.changeDetectorRef.detectChanges();
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
             }
-
-
-            // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            //     this.router.navigate(['/details', this.id]);
-            // });
-
-            // this.changeDetectorRef.detectChanges();
-        },
-        error: (error) => {
-            this.toggleLoadingSpinner(false);
-        }});
+        });
     }
 
     loadWorkflowHistoryData(): void {
@@ -1158,13 +1148,12 @@ export class RefsetDetails {
         this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
-        if (params.isInDetailsPanel) {
+        if (params.isParentConcept) {
             params.concept.hasChildren = true;
         }
 
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
-        this.isAddRemoveInDetailsPanel = params.isInDetailsPanel;
     }
 
     changeLockedStatus(lock: boolean) {
@@ -1172,9 +1161,10 @@ export class RefsetDetails {
         this.isLocked = lock;
         this.toggleLoadingSpinner(false);
         UiUtility.toggleLockedSections(lock);
+        console.timeEnd('refset detail changeLockedStatus');
     }
 
-    processChangedMemberEffects = () => {
+    processChangedMemberEffects = (conceptStatusArray) => {
 
         this.changeLockedStatus(false);
         this.showLoadingSpinner = true;
@@ -1185,19 +1175,13 @@ export class RefsetDetails {
 
         } else {
 
-            if (this.isAddRemoveInDetailsPanel) {
-                this.loadConceptDetail(this.selectedConcept);
-                this.reloadMembersGridAndTaxonomy();
-
-            } else {
-                this.reloadMembersGridAndTaxonomy();
-                this.showLoadingSpinner = false;
-            }
+            this.reloadMembersGridAndTaxonomy();
+            this.showLoadingSpinner = false;
         }
 
     }
 
-    reloadMembersGridAndTaxonomy(){
+    reloadMembersGridAndTaxonomy() {
         this.resetRefsetTotal = true;
 
         // reload the members grid
@@ -1262,27 +1246,29 @@ export class RefsetDetails {
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
         this.showLoadingSpinner = true;
-        this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({next: (results) => {
+        this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.refsetData.id, }).subscribe({
+            next: (results) => {
 
-            this.isConceptDetailsLoading = false;
-            this.showLoadingSpinner = false;
-            this.conceptDetail = results;
-            this.conceptDetail.roleGroups = results.roleGroups;
-            this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
+                this.isConceptDetailsLoading = false;
+                this.showLoadingSpinner = false;
+                this.conceptDetail = results;
+                this.conceptDetail.roleGroups = results.roleGroups;
+                this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
 
-            this.conceptDescriptions = results.descriptions.filter(
-                function (description) {
-                    return description != null;
-                }
-            );
+                this.conceptDescriptions = results.descriptions.filter(
+                    function (description) {
+                        return description != null;
+                    }
+                );
 
-            RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
-        },
-        error: (error) => {
+                RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+            },
+            error: (error) => {
 
-            this.isConceptDetailsLoading = false;
-            this.toggleLoadingSpinner(false);
-        }});
+                this.isConceptDetailsLoading = false;
+                this.toggleLoadingSpinner(false);
+            }
+        });
 
         this.loadConceptDetailParents(concept);
     }
@@ -1321,7 +1307,7 @@ export class RefsetDetails {
         this.selectedConcept = null;
     }
 
-    onTmcChange($event) {}
+    onTmcChange($event) { }
 
     openRichTextEditor(fieldName, displayName = fieldName) {
         const dialogId = "detailsRichTextDialog";
@@ -1368,7 +1354,7 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openArtifacts() {
@@ -1386,7 +1372,25 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
+    }
+
+    openCreateNewOrganizationDialog() {
+        const dialogId = "createNewOrganizationDialog";
+
+        const dialogData = {
+            headerText: `Create New Organization`,
+            template: this.refsetArtifactsDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openRefsetFeedback() {
@@ -1404,7 +1408,7 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openCloneRefset() {
@@ -1422,7 +1426,7 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openDeleteRefset() {
@@ -1440,7 +1444,7 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openCompareRefset() {
@@ -1458,7 +1462,7 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openRefsetVersionNotes() {
@@ -1476,10 +1480,10 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
-    changeLanguage() {}
+    changeLanguage() { }
 
     onChangeMembersListMode() {
         if (this.selectedMembersListMode == "table") {
@@ -1508,7 +1512,7 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {});
+        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openMemberHistory(conceptId) {
@@ -1629,12 +1633,12 @@ export class RefsetDetails {
     }
 
 
-    getFsn(descriptions: any)  : string{
+    getFsn(descriptions: any): string {
         for (let description of descriptions) {
-        	if (description.languageName.toLowerCase().indexOf("fsn") > 0) {
-				return description.term;
-			}
-		}
+            if (description.languageName.toLowerCase().indexOf("fsn") > 0) {
+                return description.term;
+            }
+        }
     }
 
     showMembersSearchBar(): boolean {
@@ -1680,11 +1684,25 @@ export class RefsetDetails {
         return refsetData?.descriptions;
     }
 
+    get displayOutdateWarning(): boolean{
+        const data = this.refsetData;
+        return data && data.upgradeWarning && data.availableActions?.includes('CANCEL_EDIT') && !data.availableActions?.includes('EDIT');
+    }
+
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
-          //backdrop : 'static',
-          //keyboard : false,
-          windowClass: 'alert-modal'
+            //backdrop : 'static',
+            //keyboard : false,
+            windowClass: 'alert-modal'
+        });
+    }
+
+    openFeedbackModal(dialog: NgbModal) {
+        this.modalService.open(dialog, {
+            modalDialogClass: 'full-modal',
+            centered: true
+            //backdrop : 'static',
+            //keyboard : false,
         });
     }
 

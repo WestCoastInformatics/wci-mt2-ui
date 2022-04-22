@@ -200,8 +200,14 @@ export class CodeUtility {
             .join(splitter);
     }
 
-    static async delay(delayMilliseconds = 200) {
-        return await new Promise(resolve => setTimeout(resolve, delayMilliseconds));
+    static delay(delayMilliseconds = 200) {
+
+        const date = Date.now();
+        let currentDate = null;
+
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < delayMilliseconds);
     }
 
     static parseJsonDate(jsonDate) {

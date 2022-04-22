@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -49,7 +50,6 @@ export class UpgradeModalComponent implements OnInit {
       if (!x) {
         await this.getUpgradeData(upgradeDialog);
       }
-      this.sendLoadingSpinnerTrigger(false);
     });
 
   }
@@ -75,7 +75,28 @@ export class UpgradeModalComponent implements OnInit {
         size: 'lg'
       });
 
+      let finalResults = [];
+
+            members.items.forEach((item) => {
+              for (let i = 0; i < item.replacementConcecpts.length; i++) {
+                if (i === 0) {
+                  finalResults.push(item);
+                } else {
+                  const newItem = {...item, isHidden: true};
+
+                  newItem.inactivationReason = '';
+                  newItem.descriptions = '';
+                  newItem.replacementConcecpts = [item.replacementConcecpts[i]];
+                  finalResults.push(newItem);
+                }
+                }
+            });
+      
+      members.items = finalResults;
       this.membersInCommon = members;
+
+      this.sendLoadingSpinnerTrigger(false);
+
     });
   }
 
@@ -91,24 +112,28 @@ export class UpgradeModalComponent implements OnInit {
     if (this.isInitialUpgrade) {
       this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
         if (this.router.url.includes('/' + this.refsetId)) {
-          window.location.reload();
+          this.refsetDetails.ngOnInit();
+          this.refsetDetails.changeLockedStatus(false);
+          this.modalService.dismissAll();
+          this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]).then((page) => {
+            window.location.reload();
+        });
         } else {
           this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
             this.totalMembers = members?.miscCountA;
             this.inactiveConcepts = members?.total;
       
             this.membersInCommon = members;
-            this.getInactiveChangeReport(false);
+            this.modalService.dismissAll();
+            this.refsetDetails.initializeDetailsPage();
           });
         }
       });
-      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, this.refsetVersionDate, this.notificationService, this.refsetService, this.router, 'lookup');
-      this.modalService.dismissAll();
-      this.refsetDetails.initializeDetailsPage();
+      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
     }
   }
 
-  getInactiveChangeReport(shouldDownload = true): void {
+  getInactiveChangeReport(): void {
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
@@ -116,22 +141,24 @@ export class UpgradeModalComponent implements OnInit {
     let data = [];
     for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
-        'Inactive Concept ID': inactiveConcepts[i].code,
-        'Inactive Concept': this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/'),
-        'Reason': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
-        'Suggested Replacement Concept ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.transformReplacementDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
+        'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
+        'Inactive Concept': inactiveConcepts[i].descriptions ? this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
+        'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
+        'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
+        'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
-    if (shouldDownload) {
-      UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
-    } else {
-      if (localStorage.getItem('inactiveChangeReportData')) {
-        localStorage.removeItem('inactiveChangeReportData');
-      }
-      localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
-    }
+    // if (shouldDownload) {
+    //   UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+    // } else {
+    //   if (localStorage.getItem('inactiveChangeReportData')) {
+    //     localStorage.removeItem('inactiveChangeReportData');
+    //   }
+    //   console.log(data);
+    //   localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
+    // }
   }
 
   transformDescriptions(descriptions: any) {
@@ -158,27 +185,27 @@ export class UpgradeModalComponent implements OnInit {
     }
   }
 
-  transformReplacementDescriptions(descriptions: any) {
-    if (descriptions) {
-      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
-      if (getStringifiedJSON) {
-        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
-          if (x[x.length - 1] === ',') {
-            const modifiedString = x.slice(0, -1);
-            x = modifiedString;
-          }
-          if (!x.includes('"active"')) {
-            x = '{"active"' + x;
-          } else if (!x.includes('{"active"') && x.includes('"active"')) {
-            x = '{' + x;
-          }
-          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-            x = x + '"}';
-          }
-          return JSON.parse(x);
-        });
-        return formattedObjectArray[0];
-      }
-    }
-  }
+  // transformReplacementDescriptions(descriptions: any) {
+  //   if (descriptions) {
+  //     const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
+  //     if (getStringifiedJSON) {
+  //       const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
+  //         if (x[x.length - 1] === ',') {
+  //           const modifiedString = x.slice(0, -1);
+  //           x = modifiedString;
+  //         }
+  //         if (!x.includes('"active"')) {
+  //           x = '{"active"' + x;
+  //         } else if (!x.includes('{"active"') && x.includes('"active"')) {
+  //           x = '{' + x;
+  //         }
+  //         if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
+  //           x = x + '"}';
+  //         }
+  //         return JSON.parse(x);
+  //       });
+  //       return formattedObjectArray[0];
+  //     }
+  //   }
+  // }
 }

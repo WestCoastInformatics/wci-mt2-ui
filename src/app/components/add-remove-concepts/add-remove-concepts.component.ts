@@ -23,7 +23,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		{ value: '', display: '\=       (Self Only)' }
 	];
 
-	@Input() changeMethod: string;
+	changeMethod = '';
 	@Input() isAdd: boolean;
 	@Input() refset: any;
 	@Input() definitionExceptionType: string;
@@ -31,9 +31,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	@Input() conceptCode: string;
 	@Input() conceptName: string;
 	@Input() conceptHasChildren: boolean;
-	@Input() isInactive: boolean;
 	@Input() isReplacement: boolean;
-	@Input() processChangedMemberFunction: () => void;
+	@Input() processChangedMemberFunction: Function;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	@Output() onMembersGridReady = new EventEmitter<any>();
 	@Output() selectedEvent = new EventEmitter<string>();
@@ -76,19 +75,18 @@ export class AddRemoveConceptsComponent implements OnInit {
 	addRemoveConceptsForAdjudication(inactiveData: any, replacementData: any): void {
 		this.conceptCode = inactiveData?.code;
 		this.replacementCode = replacementData?.code;
-		console.log(this.replacementCode)
 		if (this.changeMethod === 'INACTIVE_ADDED' || this.changeMethod === 'REPLACEMENT_ADDED') {
 			this.actionText = "Add";
 		} else {
 			this.actionText = "Remove";
 		}
 
-			this.resetComponent();
-			this.addRemoveConcept(this.changeMethod);
+			this.addRemoveConcept();
 	
 	}
 
-	addRemoveConcept(changeMethod?: string): void {
+	addRemoveConcept(): void {
+
         let conceptId: string = '';
 		let ecl = '';
 		let description: string;
@@ -105,7 +103,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 
         if (ecl == '' && CodeUtility.hasValue(this.conceptCode)) {
 
-            if (this.conceptHasChildren && this.refset.type != RefsetUtility.INTENSIONAL) {
+            if (CodeUtility.testBoolean(this.conceptHasChildren) && this.refset.type != RefsetUtility.INTENSIONAL) {
 
                 this.openAddRemoveDescendantsModal();
                 return;
@@ -113,31 +111,30 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 			conceptId = this.conceptCode;
         }
-                
-        this.changeLockedStatus.emit(true);
 
+		console.timeEnd('add-remove addRemoveConcept before lock emit');
+		this.changeLockedStatus.emit(true);
+		console.timeEnd('add-remove addRemoveConcept after lock emit');
+		if (this.changeMethod) {
 
-		if (changeMethod) {
-
-			if (changeMethod === 'INACTIVE_ADDED') {
+			if (this.changeMethod === 'INACTIVE_ADDED') {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
-			} else if (changeMethod === 'INACTIVE_REMOVED'){
+			} else if (this.changeMethod === 'INACTIVE_REMOVED'){
 	
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
-			} else if (changeMethod === 'REPLACEMENT_ADDED') {
+			} else if (this.changeMethod === 'REPLACEMENT_ADDED') {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
-			} else if (changeMethod === 'REPLACEMENT_REMOVED'){
+			} else if (this.changeMethod === 'REPLACEMENT_REMOVED'){
 	
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
 			}
 
-			console.log(changeMethod)
 		}
 
 		// if this is an intensional refset
@@ -176,12 +173,14 @@ export class AddRemoveConceptsComponent implements OnInit {
 			operationFunction(this.refsetInternalId, null, conceptId, ecl).subscribe();
 		}
 
-			UiUtility.manageNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
+		console.timeEnd('add-remove addRemoveConcept before manageMemberNotifications');
+		UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
 		this.onMembersGridReady.emit();
+		console.timeEnd('add-remove addRemoveConcept after manageMemberNotifications');
     }
 
-	callMemberChangeFunction = () => {
-		this.processChangedMemberFunction();
+	callMemberChangeFunction = (data) => {
+		this.processChangedMemberFunction(data);
 	}
 
 	openAddRemoveDescendantsModal() {

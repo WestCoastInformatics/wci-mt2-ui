@@ -30,7 +30,6 @@ export class RestService {
     get(url: string, params: any = {}, parseParams: boolean = true, ignoreErrors: boolean = false): Observable<any> {
 
         let queryString: string;
-        
         // if parseParams is true then build the query string, else use the params argument as is
         if (parseParams) {
             queryString = CodeUtility.serialize(params);
@@ -84,6 +83,24 @@ export class RestService {
     put(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
 
         return this.http.put<any>(this.restUrl + url, params).pipe(
+            catchError((err) => {
+
+                if (!ignoreErrors) {
+
+                    const definedError = err.error.error ? err.error.error : err.statusText;
+                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+
+                    return err;
+                } else {
+                    return EMPTY;
+                }
+            })
+          );
+    }
+
+    delete(url: string, ignoreErrors: boolean = false): Observable<any> {
+
+        return this.http.delete<any>(this.restUrl + url).pipe(
             catchError((err) => {
 
                 if (!ignoreErrors) {

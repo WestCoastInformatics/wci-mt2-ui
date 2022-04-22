@@ -21,7 +21,7 @@
                 <div class="adjudicate-format-option-drop-down">
                     <mat-form-field appearance="fill">
                     <mat-label>Select Language(s):</mat-label>
-                    <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event)">
+                    <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event); showActionButton = true">
                         <option
                             *ngFor="let option of languageOptions"
                             [value]="option">
@@ -33,7 +33,7 @@
                 <div class="adjudicate-toggle">
                     <mat-slide-toggle
                     color="primary"
-                    (change)="hideIncludedReplacements($event)">
+                    (change)="hideIncludedReplacements($event); showActionButton = true">
                   Hide Included Replacements
                 </mat-slide-toggle>
                 </div>
@@ -43,16 +43,11 @@
                 class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                 [columnDefs]="columnDefs"
                 [gridOptions]="refsetGridOptions"
-                style="width: 100%; height: 433px">
-                </ag-grid-angular>
-                <!-- <ag-grid-angular
-                class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                [columnDefs]="columnDefs"
-                [gridOptions]="refsetGridOptions"
                 (cellMouseOver)="onCellMouseOver($event)"
                 style="width: 100%; height: 433px">
-                </ag-grid-angular> -->
-                <app-pagination
+                </ag-grid-angular>
+
+                <!-- <app-pagination
                [pageSize]="refsetGridPaging.pageSize"
                [gridOptions]="refsetGridOptions"
                [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
@@ -60,7 +55,7 @@
                [totalKnown]="refsetGridPaging.totalKnown"
                [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
                [numOfResults]="numOfResults">
-                </app-pagination>
+                </app-pagination> -->
             </div>
         </div>
     </div>
@@ -74,16 +69,16 @@
         <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
             Export Inactive Concept Report
         </button>
-        <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
+        <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
     </div>
 </ng-container>
 </ng-template>
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img *ngIf="!params?.data?.stillMember"
+    <img *ngIf="!params?.data?.isHidden && ((params?.data?.stillMember !== undefined && !params?.data?.stillMember) || params?.data?.replaced)"
     src="assets/add-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, false, 'INACTIVE_ADDED')"
+    (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')"
     width="18px"
     height="18px"
     title="Add {{actionText}}"
@@ -92,9 +87,9 @@
     alt="Add symbol shown when you're able to add a concept" 
 />
 
-<img *ngIf="params?.data?.stillMember"
+<img *ngIf="!params?.data?.isHidden && params?.data?.stillMember && !params?.data?.replaced"
     src="assets/subtract-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, false, 'INACTIVE_REMOVED')"
+    (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')"
     width="18px"
     height="18px"
     title="Remove {{actionText}}"
@@ -106,25 +101,31 @@
 
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
-    {{ params?.data?.code }}
+    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced && params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
+        {{ params?.data?.code }}
+    </span>
 </ng-template>
 
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
-    {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : 'No Translation' }}
+    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced && params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
+        {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : '' }}
+    </span>
 </ng-template>
 
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
-    {{ formatReason(params?.data?.inactivationReason) }}
+    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced && params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
+        {{ formatReason(params?.data?.inactivationReason) }}
+    </span>
 </ng-template>
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-<span *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
+<ng-container *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
     <img *ngIf="!params?.data?.replacementConcecpts[0]?.added"
     src="assets/add-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, true, 'REPLACEMENT_ADDED')"
+    (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')"
     width="18px"
     height="18px"
     title="Add {{actionText}}"
@@ -135,7 +136,7 @@
 
 <img *ngIf="params?.data?.replacementConcecpts[0]?.added"
     src="assets/subtract-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, true, 'REPLACEMENT_REMOVED')"
+    (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
     width="18px"
     height="18px"
     title="Remove {{actionText}}"
@@ -143,37 +144,90 @@
     class="subtract-symbol-icon"
     alt="Subtract symbol shown when you're able to remove a concept" 
 />
-</span>
+</ng-container>
     <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember" class="adjudicate-information-button" aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
 </ng-template>
 
 <!-- Replacement ID Templates -->
 <ng-template #adjudicateReplacementId let-params>
-    {{ params?.data?.replacementConcecpts[0]?.code }}
+    <span [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+        {{ params?.data?.replacementConcecpts[0]?.code }}
+    </span>
 </ng-template>
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    {{ transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : 'No Translation' }}
+    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+        {{ transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
+    </span>
+    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+        {{ transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
+    </span>
 </ng-template>
 
 <!-- Reason Section Templates -->
 <ng-template #adjudicateReason let-params>
-    {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
+    <span *ngIf="!params.data.isSearch" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+        {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
+    </span>
+    <span [hidden]="!params.data.isSearch">
+        <mat-form-field appearance="fill" style="width: 400px">
+            <mat-label>Add Concept by ID or FSN</mat-label>
+            <mat-select (selectionChange)="selectedConceptChanged($event)" >
+                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (keyup)="onKey($event.target.value)" (mouseover)="focus()" id="inputFocus">
+                <mat-option *ngIf="!selectedConcepts">None</mat-option>
+                <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{ transformDescriptions(concept.descriptions, true)?.length ? transformDescriptions(concept.descriptions, true)[0].term + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId : ''}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+            <img
+            src="assets/grey-add-symbol.svg"
+            (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true"
+            width="18px"
+            height="18px"
+            title=""
+            aria-label="Add"
+            class="grey-add-symbol-icon"
+            alt="Add symbol shown when you're able to add a concept" 
+            />
+    </span>
 </ng-template>
 
 <!-- Action Section Templates -->
-<!-- <ng-template #actionSection let-params>
-    <span>
+<ng-template #actionSection let-params>
+    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')">
         <img
-        src="assets/add-symbol-icon.svg"
-        (click)="getSelectedRowData()"
+        src="assets/grey-trash-bin.svg"
+        (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')"
+        width="18px"
+        height="18px"
+        title="Remove {{actionText}}"
+        aria-label="Subtract"
+        class="grey-trash-bin-icon"
+        alt="Subtract symbol shown when you're able to remove a concept" 
+        />
+    </span>
+    <span *ngIf="!params?.data?.isHidden && showActionButton">
+        <img
+        src="assets/grey-add-symbol.svg"
+        (click)="getSelectedRowData('add'); showActionButton = false;"
         width="18px"
         height="18px"
         title=""
         aria-label="Add"
-        class="add-symbol-icon"
+        class="grey-add-symbol-icon"
         alt="Add symbol shown when you're able to add a concept" 
     />
     </span>
-    </ng-template> -->
+    <span *ngIf="params?.data?.isSearch && !showActionButton">
+        <img
+        src="assets/grey-close-icon.svg"
+        (click)="getSelectedRowData('remove'); showActionButton = true;"
+        width="18px"
+        height="18px"
+        title="Remove {{actionText}}"
+        aria-label="Subtract"
+        class="grey-close-icon"
+        alt="Subtract symbol shown when you're able to remove a concept" 
+    />
+    </span>
+    </ng-template>

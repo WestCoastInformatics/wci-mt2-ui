@@ -10,7 +10,7 @@ import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
-import { ProjectsRefsetComponent } from 'src/app/pages/projects/projects-refset.component';
+import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
 
 @Component({
     selector: 'create-new-refset',
@@ -178,6 +178,7 @@ export class CreateNewRefsetComponent implements OnInit {
         };
 
         if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
@@ -231,6 +232,7 @@ export class CreateNewRefsetComponent implements OnInit {
         };
 
         if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 

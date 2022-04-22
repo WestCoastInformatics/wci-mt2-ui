@@ -18,11 +18,6 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @Input() totalKnown = false;
     @Input() manualStateRefresh = false;
     @Input() numOfResults: number;
-    @Input() isDetailPage = false;
-    @Input() isDirectoryPage = false;
-    @Input() isProjectsPage = false;
-    @Input() refsetId;
-    @Input() isSelectedProject;
     currentPage: number = 1;
     paginationPages: any = {};
     showTotal = true;
@@ -35,6 +30,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @ViewChild('paginationLastPage') lastPageButton: MatButton;
     @ViewChildren('paginationPageNumber') pageNumberButtons: QueryList<MatButton>;
     activeGridOptions: any;
+    @Input()
     showAll: boolean;
     
 

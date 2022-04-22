@@ -253,11 +253,11 @@ export class UiUtility {
         });
     }
 
-    // Function for background processesing of lengthy refset tasks, and notification to user of the status of those tasks
-    static manageNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+    // Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
+    static manageMemberNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
         // set a small delay so the original call has some time to process
-        CodeUtility.delay();
+        CodeUtility.delay(1500);
 
 		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
 				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
@@ -281,9 +281,7 @@ export class UiUtility {
 			} else if (callNumber == 30) {
 				callDelay = 15000;
 			}
-			refsetService.isRefsetLocked(refsetInternalId).subscribe(
-
-				(data) => {
+			refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
 
                     if (CodeUtility.testBoolean(data)) {
                         setTimeout(checkIfFinished, callDelay);
@@ -292,28 +290,41 @@ export class UiUtility {
                         let title = 'Member Change Notification';
                         let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
                         let notificationType = 'success';
-						let conceptArray = Object.keys(data);
+						let conceptIdArray = Object.keys(data);
+                        let conceptStatusArray: any[] = [];
                         let emptydata = {refset: refsetId, statuses: []};
                         let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
                         if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
                             this.memberChangeData[refsetId] = emptydata;
                         }
 
 						notificationService.close(notification);
+
+                        for (let conceptId of conceptIdArray) {
+
+                            let conceptStatus: any = data[conceptId];
+                            this.memberChangeData[refsetId].statuses.push({Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status});
+                            conceptStatusArray.push({
+                                code: conceptId, 
+                                added: conceptStatus.operation == 'Added', 
+                                failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member', 
+                                operation: conceptStatus.operation,
+                                status: conceptStatus.status,
+                                name: conceptStatus.name, 
+                                active: conceptStatus.active
+                            });
+                        }
+
                         if (router.url.includes('/details/' + refsetId)) {
+
 							successMessageTimeout = 5000;
-							callbackFunction(data);
+							callbackFunction(conceptStatusArray);
 						} else {
                             buttons.unshift(viewRefsetButton);
                         }
 
-                        for (let conceptID of conceptArray) {
-
-                            let conceptStatus: any = data[conceptID];
-                            this.memberChangeData[refsetId].statuses.push({Concept: conceptID, Operation: conceptStatus.operation, Status: conceptStatus.status});
-                        }
-
-                        if (conceptArray.length > 0) {
+                        if (conceptIdArray.length > 0) {
                             
                             let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
                             let someFailed = dataString.includes('Failed');
@@ -390,22 +401,34 @@ export class UiUtility {
         checkIfFinished();
     }
     
-    static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType?: string) {
+    // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
+    static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
-        let message = '';
-		let lookupMessage = 'Refset ' + refsetId + ' has started the upgrade process. The refset is locked until the operation completes. '
-            + 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
-        
-        if (processType?.includes('lookup')) {
-            message = lookupMessage;
+        // set a small delay so the original call has some time to process
+        CodeUtility.delay();
+
+        let message = 'Refset ' + refsetId + ' has started the ' + processType + ' process. The refset is locked until the operation completes. You can close this message and do other operations on the site, ';
+        let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
+        let buttons = [viewRefsetButton];
+
+        if (processType == ('upgrade')) {
+
+            message += 'you will be notified when the refset is ready if you do not refresh the page.';
+            
+            let downloadInactiveReportButton : IToastButton = {id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {}};
+            let downloadChangeReportButton : IToastButton = {id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {}};
+            // buttons.push(downloadInactiveReportButton);
+
+
+        } else if (processType == ('comparison')) {
+
+            message += 'but do not refresh the page or you will need to repeat the process.';
+            let showComparisonButton : IToastButton = {id: 'comparison', title: 'Show Comparison', data: {}};
+            buttons.push(showComparisonButton);
         }
         
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-		let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
-		let downloadInactiveReportButton : IToastButton = {id: 'inactive', title: 'Download Inactive Change Report', data: {}};
-		// let downloadChangeReportButton : IToastButton = {id: 'change', title: 'Download Finished Change Report', data: {}};
-        let buttons = [viewRefsetButton, downloadInactiveReportButton];
 		let callNumber = 0;
 		let callDelay = 1000;
 		let successMessageTimeout = 0;
@@ -421,6 +444,7 @@ export class UiUtility {
 			} else if (callNumber == 30) {
 				callDelay = 15000;
 			}
+
 			refsetService.isRefsetLocked(refsetInternalId).subscribe(
 
 				(data) => {
@@ -429,21 +453,17 @@ export class UiUtility {
                         setTimeout(checkIfFinished, callDelay);
                     } else {
 
-                        let title = 'Refset Change Notification';
+                        let title = 'Refset Process Complete Notification';
                         let notificationType = 'success';
                         let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 
-
 						notificationService.close(notification);
 
-						// if (router.url.includes('/' + refsetId)) {
-						// 	successMessageTimeout = 5000;
-						// 	callbackFunction(data);
-						// } else {
-                        //     buttons.unshift(viewRefsetButton);
-                        // }
+						if (router.url.includes('/' + refsetId)) {
+							buttons.shift();
+                        }
 
-                        message = 'Refset ' + refsetId + ' has successfully completed the '+ processType +' process. You may continue editing the refset.';
+                        message = 'Refset ' + refsetId + ' has successfully completed the '+ processType +' process. It is no longer locked.';
 
                         if (previousNotifications.length > 0) {
                             notificationService.close(previousNotifications[0]);
@@ -453,22 +473,26 @@ export class UiUtility {
                         
                         notification.onAction.subscribe(button => {
 
-                        if (button.id == 'view') {
-                            this.viewRefset(refsetId, versionDate);
-                            notificationService.close(notification);
-                        } else if (button.id == 'inactive') {
-                            this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
-                        }
-                        // else if (button.id == 'change') {
-                        //     this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
-                        // }
+                            if (button.id == 'view') {
+                                this.viewRefset(refsetId, versionDate);
+
+                            } else if (button.id == 'inactiveChangeReport') {
+                                this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
+                            
+                            } else if (button.id == 'comparison') {
+
+                                callbackFunction();
+                                notificationService.close(notification);
+                            } else if (button.id == 'finishedChangeReport') {
+                                this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
+                            }
                         });
 					}
 				},
 				(error) => {
 
 					console.log(error);
-                    message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. View the refset to determine changes or contact an administrator.';
+                    message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
 					notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
 				}
 			);
@@ -488,10 +512,10 @@ export class UiUtility {
     }
 
     static createInactiveChangeReport(refsetId: string, data): void {
-
+        console.log(data);
         let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-        this.downloadFile(data, ['Inactive Concept ID', 'Inactive Concept', 'Reason', 'Suggested Replacement Concept ID', 'Suggested Replacement Concept'], fileName);
+        this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
     }
 
     static createFinishedChangeReport(refsetId: string, data): void {
@@ -504,37 +528,24 @@ export class UiUtility {
             'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
             'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
         };
-        this.downloadMergedFile(data, headerObject, fileName);
+
+        this.downloadFile(data, headerObject, fileName, true);
     }
 
-    static downloadMergedFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
+    static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false) {
 
-        const csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+        let csvData;
+
+        if (!merge) {
+            csvData = this.convertToCsv(data, headerlist);
+        } else {
+            
+            csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
             + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
             + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
             + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
-
-        const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
-        const downloadLink = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
-        
-        if (isSafariBrowser) {
-            downloadLink.setAttribute('target', '_blank');
         }
 
-        downloadLink.setAttribute('href', url);
-        downloadLink.setAttribute('download', fileName + '.csv');
-        downloadLink.style.visibility = 'hidden';
-
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    }
-
-    static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString()) {
-
-        const csvData = this.convertToCsv(data, headerlist);
         const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
         const downloadLink = document.createElement('a');
         const url = URL.createObjectURL(blob);
@@ -573,7 +584,7 @@ export class UiUtility {
              for (const index in headerList) {
 
                 const head = headerList[index];
-                 line += ',' + array[i][head];
+                 line += ',' + array[i][head].replaceAll(',', ';');;
              }
 
              csvString += line + '\r\n';
@@ -629,6 +640,23 @@ export class UiUtility {
         image.onerror = function() { callback(false); };
     }
 
+    //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
+    static applyGridPlaceholders(classSelector) {
+
+        Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
+
+            // skip columns with disabled filter
+            if (field.attributes["disabled"]) {
+                return;
+            }
+
+            let label = field.getAttribute("aria-label");
+            let value = label.substring(0, label.indexOf("Filter Input")) + "...";
+            field.setAttribute("placeholder", value);
+        });
+    }
+    
+    
     //***** AG Grid Function to apply data and paging to table *****/
     static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 
