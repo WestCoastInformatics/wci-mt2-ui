@@ -48,4 +48,18 @@ export class PersonalConfigurationComponent implements OnInit {
       }
     });
   }
+
+  onPhotoChange(event){
+    const file:File = event.target.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append("icon", file);
+        this.userService.updateUserPhoto(this.currentUserId, formData).subscribe((result) => {
+          if(result){
+            this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+          }
+        });
+    }
+  }
 }

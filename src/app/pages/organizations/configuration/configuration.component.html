@@ -51,8 +51,10 @@
                         <div class="organization-profile-head section-header">Profile Picture</div>
                         <div class="organization-profile-mid organization-picture"><img src="assets/ihtsdo.svg"></div>
                         <div class="section-btn">
-                            <a aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">Edit
-                                Picture</a>
+                            <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">
+                                Edit Picture
+                                <input type="file" class="d-none" (change)="onPhotoChange($event)" />
+                            </label>
                         </div>
                     </div>
                 </div>

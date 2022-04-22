@@ -33,4 +33,8 @@ export class UsersService extends RestService {
     updateUser(userId: string, user: any): Observable<any> {
         return this.put(this.contextPath + 'user/' + userId, user);
     }
+
+    updateUserPhoto(userId: string, user: any): Observable<any> {
+        return this.put(this.contextPath + `user/${userId}/icon`, user);
+    }
 }
