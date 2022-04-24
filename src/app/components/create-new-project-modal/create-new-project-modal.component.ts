@@ -24,6 +24,7 @@ export class CreateNewProjectModalComponent {
     selectedOrganization: any;
     organization: any;
     privateProject: any;
+    emailError = '';
 
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     param: any;
@@ -88,6 +89,23 @@ export class CreateNewProjectModalComponent {
         this.organizationsService.getOrganization(this.selectedOrganization).subscribe((organizationResult) => {
             this.organization = organizationResult;
         }) 
+    }
+
+    isValidEmail(): boolean {
+        var lower = this.email.toLowerCase();
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+        if (flag == null) {
+            this.emailError = "Email is invalid.";
+        } else {
+            this.emailError = "";
+        }
+        return flag == null ? false : true;
+    }
+
+    onKeyDownEvent(event: any){
+        console.log(event.target.value);
+        this.isValidEmail();
     }
 
     createProjectObject(): void {
