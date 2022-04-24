@@ -56,9 +56,12 @@
                     <label class="modal-label">Email:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="primarycontactemail@orgname.org"
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"
                         [(ngModel)]="email" style="width: 250px; padding-bottom: 7px" />
                 </td>
+            </tr>
+            <tr class="modal-error-message" [hidden]="!emailError">
+                <div>{{emailError}}</div>
             </tr>
             <tr>
                 <td>
@@ -96,7 +99,7 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || description === '' || email === ''"
+        <button type="button" [disabled]="name === '' || description === '' || email === ''  || !isValidEmail()"
             (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false"
             class="refset-tool-action-button" aria-label="Create Team" title="Create Team"
             ng-reflect-color="green">
