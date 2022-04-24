@@ -50,7 +50,6 @@ export class UpgradeModalComponent implements OnInit {
       if (!x) {
         await this.getUpgradeData(upgradeDialog);
       }
-      this.sendLoadingSpinnerTrigger(false);
     });
 
   }
@@ -96,6 +95,8 @@ export class UpgradeModalComponent implements OnInit {
       members.items = finalResults;
       this.membersInCommon = members;
 
+      this.sendLoadingSpinnerTrigger(false);
+
     });
   }
 
@@ -114,14 +115,15 @@ export class UpgradeModalComponent implements OnInit {
           this.refsetDetails.ngOnInit();
           this.refsetDetails.changeLockedStatus(false);
           this.modalService.dismissAll();
-          this.refsetDetails.initializeDetailsPage();
+          this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]).then((page) => {
+            window.location.reload();
+        });
         } else {
           this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
             this.totalMembers = members?.miscCountA;
             this.inactiveConcepts = members?.total;
       
             this.membersInCommon = members;
-            this.getInactiveChangeReport(false);
             this.modalService.dismissAll();
             this.refsetDetails.initializeDetailsPage();
           });
@@ -131,7 +133,7 @@ export class UpgradeModalComponent implements OnInit {
     }
   }
 
-  getInactiveChangeReport(shouldDownload = true): void {
+  getInactiveChangeReport(): void {
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
@@ -148,14 +150,15 @@ export class UpgradeModalComponent implements OnInit {
       });
     }
 
-    if (shouldDownload) {
-      UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
-    } else {
-      if (localStorage.getItem('inactiveChangeReportData')) {
-        localStorage.removeItem('inactiveChangeReportData');
-      }
-      localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
-    }
+    // if (shouldDownload) {
+    //   UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+    // } else {
+    //   if (localStorage.getItem('inactiveChangeReportData')) {
+    //     localStorage.removeItem('inactiveChangeReportData');
+    //   }
+    //   console.log(data);
+    //   localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
+    // }
   }
 
   transformDescriptions(descriptions: any) {

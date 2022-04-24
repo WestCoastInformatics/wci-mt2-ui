@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { UsersService } from 'src/app/services/rest/users.service';
 
 @Component({
@@ -20,7 +21,7 @@ export class PersonalConfigurationComponent implements OnInit {
   currentUserId: any;
   user: any;
 
-  constructor(private readonly authService: AuthenticationService,
+  constructor(private readonly authService: AuthenticationService,private notificationService: NotificationService,
   private readonly userService: UsersService) { }
 
   ngOnInit(): void {
@@ -42,7 +43,9 @@ export class PersonalConfigurationComponent implements OnInit {
     this.user.email = this.profileEmailValue;
     this.user.company = this.profileCompanyValue;
     this.userService.updateUser(this.currentUserId, this.user).subscribe((x) => {
-      console.log(x);
+      if(x){
+        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+      }
     });
   }
 }

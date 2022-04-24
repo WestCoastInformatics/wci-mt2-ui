@@ -19,6 +19,8 @@ export class FinishUpgradeModalComponent implements OnInit {
   @Input()
   inactiveConcepts: any;
   @Input()
+  membersInCommonForChangeReport: any;
+  @Input()
   membersInCommon: any;
 
   constructor(private readonly modalService: NgbModal,
@@ -41,12 +43,12 @@ export class FinishUpgradeModalComponent implements OnInit {
   }
 
   getInactiveChangeReport(): void {
-    const memberItems = this.membersInCommon?.items;
-    const inactiveConcepts = memberItems?.filter((items: any) => {
+    const memberItems = this.membersInCommon.items;
+    const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
     });
     let data = [];
-    for (let i = 0; i < inactiveConcepts?.length; i++) {
+    for (let i = 0; i < inactiveConcepts.length; i++) {
       data.push({
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
@@ -63,45 +65,71 @@ export class FinishUpgradeModalComponent implements OnInit {
 
   getFinishedChangeReport(): void {
 
-    this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
-      this.membersInCommon = members;
-      // Get old members from inactive concepts
-      let memberItems = this.membersInCommon?.items;
-      let inactiveConcepts = memberItems?.filter((items: any) => {
-        return items?.replaced === true;
-      });
-      let oldMembers = [];
-      for (let i = 0; i < inactiveConcepts?.length; i++) {
-        oldMembers.push({
-          'Old Member ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-          'Old Member Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+    let memberItems = this.membersInCommonForChangeReport?.items;
+    let inactiveConcepts = [];
+    memberItems.forEach((items: any) => {
+      if (items.replacementConcecpts) {
+        for (let item of items.replacementConcecpts) {
+          if (item.added === true) {
+            inactiveConcepts.push(item);
+          }
+          }
+      }
+    });
+
+    let newMembers = [];
+    for (let concept of inactiveConcepts) {
+    if (!Boolean(newMembers.some((x) => {
+      return x['New Member ID'] === concept.code;
+      }))) {
+        newMembers.push({
+          'New Member ID': concept.code,
+          'New Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
         });
       }
+    }
 
       // Get new members from inactive concepts
-      memberItems = this.membersInCommon?.items;
-      inactiveConcepts = memberItems?.filter((items: any) => {
-        return items?.replaced === true;
+      inactiveConcepts = [];
+      memberItems.forEach((item: any) => {
+        if (item.replaced === true) {
+          inactiveConcepts.push(item);
+        }
       });
-      let newMembers = [];
-      for (let i = 0; i < inactiveConcepts?.length; i++) {
-        newMembers.push({
-          'New Member ID': inactiveConcepts[i].code,
-          'New Member Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/')
-        });
-      }
+      let oldMembers = [];
+      for (let concept of inactiveConcepts) {
+        if (!Boolean(oldMembers.some((x) => {
+          return x['Old Member ID'] === concept.code;
+        }))) {
+          oldMembers.push({
+            'Old Member ID': concept.code,
+            'Old Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+          });
+        }
+        }
 
       // Get manual replacements from inactive concepts
-      memberItems = this.membersInCommon?.items;
-      inactiveConcepts = memberItems?.filter((items: any) => {
-        return items?.replacementConcecpts[0].added === true;
+      inactiveConcepts = [];
+      memberItems.forEach((items: any) => {
+        if (items.replacementConcecpts) {
+          for (let item of items.replacementConcecpts) {
+            if (item.reason === 'MANUAL_REPLACEMENT') {
+              inactiveConcepts.push(item);
+            }
+            }
+        }
       });
+
       let manualReplacement = [];
-      for (let i = 0; i < inactiveConcepts?.length; i++) {
+    for (let concept of inactiveConcepts) {
+      if (!Boolean(manualReplacement.some((x) => {
+        return x['Manual Replacement ID'] === concept.code;
+      }))) {
         manualReplacement.push({
-          'Manual Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-          'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+          'Manual Replacement ID': concept.code,
+          'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
         });
+      }
       }
 
       // Get members in common
@@ -125,6 +153,5 @@ export class FinishUpgradeModalComponent implements OnInit {
         'membersInCommon': membersInCommon
       };
       UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
-    });
   }
 }

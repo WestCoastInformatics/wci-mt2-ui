@@ -2341,7 +2341,10 @@ button.refset-tool-table-action-icon {
         height: 525px;
     }
 }
-
+#comparisonGridSection .refset-tool-concept-details-taxonomy-section .row {
+    margin-left: 3px;
+    margin-right: 3px;
+}
 .refset-tool-refset-metadata-table {
 
     td.refset-tool-comparison-refset-member-total {
@@ -4213,7 +4216,7 @@ $sidebar-width: 294px;
         width: 72px;
         overflow: hidden;
         transition: width 0.2s;
-        
+
         ul {
             margin-bottom: 0;
             padding: 40px 0 0;

@@ -126,12 +126,12 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.comparisonRefsetVersionOptions = [];
     }
 
-    async onKeyUp(value): Promise<void> {
+    async onSearchChange(value): Promise<void> {
         await this.search(value);
     }
 
-    focus(input: any): void {
-        document.getElementById('inputFocus').focus();
+    handleInput(event: KeyboardEvent): void {
+        event.stopPropagation();
     }
 
     @Debounce()

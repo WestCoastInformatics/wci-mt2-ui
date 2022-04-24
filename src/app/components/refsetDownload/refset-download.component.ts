@@ -7,6 +7,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { data } from 'jquery';
 
 /**
  * @title Tree with nested nodes
@@ -140,9 +141,10 @@ export class RefsetDownloadComponent {
         }
 
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+        this.disableDownloadButton(data);
 
         this.dialog.confirmed().subscribe(data => {
-
+            
             if (data) {
 
                 // if this is a free set just open the link to the GPS site
@@ -284,6 +286,10 @@ export class RefsetDownloadComponent {
     }
 
     disableDownloadButton(formData): void {
+        if(!formData.selectedFormat){
+            this.disableChannel.postMessage(true);
+            return;
+        }
         if (((formData.selectedFormat == 'rf2' || formData.selectedFormat == 'rf2_with_names') && formData.selectedContent == 'snapshot')) {
             this.disableChannel.postMessage(false);
         } else if ((formData.selectedFormat == 'rf2' || formData.selectedFormat == 'rf2_with_names') && formData.selectedContent == 'delta' && formData.selectedComparisonFrom) {
