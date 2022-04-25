@@ -47,7 +47,8 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 	valueChanged() {
 
 		let valueToUse = this.selectedOption.value != null ? this.selectedOption.value : "";
-		this.params.parentFilterInstance((instance: TextFilter) => instance.onFloatingFilterChanged('equals', valueToUse === '' ? null : valueToUse));
+		const filterType = this.params.filterParams['defaultOption'] ?? 'equals';
+		this.params.parentFilterInstance((instance: TextFilter) => instance.onFloatingFilterChanged(filterType, valueToUse === '' ? null : valueToUse));
 	}
 
 	onParentModelChanged(parentModel: TextFilterModel): void {
