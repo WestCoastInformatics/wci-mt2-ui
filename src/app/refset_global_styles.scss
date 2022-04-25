@@ -395,7 +395,6 @@ button.refset-tool-table-icon,
 button.refset-tool-table-action-icon {
     //top: 7px;
     position: relative;
-    color: $cerulean;
     overflow: hidden;
     margin-top: auto;
     margin-bottom: auto;
@@ -4128,7 +4127,7 @@ img.refset-tool-edition-flag {
 
     .btn.btn-primary {
         background-color: $main-color;
-        border-radius: 0 !important;
+        border-radius: 0.25rem !important;
         border-color: $main-color;
         font-size: 14px;
     }
