@@ -137,7 +137,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		});
 		this.getOrganization();
 		this.getOrganizations();
-		//this.getTeams();
+		this.getTeams();
 	}
 
 	ngAfterViewInit() {
@@ -150,7 +150,6 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 	onGridReady = (params) => {
 		this.gridParams = params;
 		this.gridApi = params.api;
-		this.getTeams();
 		this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
 		this.gridApi.setColumnDefs(this.gridColumnDefs);
 	}
