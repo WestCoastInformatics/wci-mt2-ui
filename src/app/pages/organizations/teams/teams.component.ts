@@ -54,7 +54,15 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 			{ field: 'description', headerName: 'Description', flex: 1, minWidth: 200, maxWidth: 500, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
 			{
 				field: 'role', headerName: 'Role', flex: 1, minWidth: 250, maxWidth: 350, cellClass: 'text-camel',
-				filterParams: {defaultOption: 'contains'},
+				filter: 'agTextColumnFilter',
+				filterParams: {
+					textCustomComparator: (filter, value, filterText) => {
+						if(!value && filterText) return false;
+						if(!filterText) return true;
+						const filterTextLowerCase = filterText.toLowerCase();
+						return value.split(',').map((role) => role.trim().toLowerCase()).filter((role) => role === filterTextLowerCase).length > 0;
+					}
+				},
 				floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
 					suppressMenu: true, suppressFilterButton: true, names: [
 						{
@@ -96,7 +104,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
 				'templateRenderer': TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent
+				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {
 				sortable: true,
