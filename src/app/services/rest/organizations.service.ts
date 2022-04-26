@@ -33,7 +33,7 @@ export class OrganizationsService extends RestService {
     }
 
     updateOrganizationPhoto(organizationId: any, params: any): Observable<any> {
-        return this.post(`${this.contextPath}organization/${organizationId}/icon`, params);
+        return this.postWithFile(`${this.contextPath}organization/${organizationId}/icon`, params);
     }
 
     getOrganization(organizationId: string): Observable<any> {

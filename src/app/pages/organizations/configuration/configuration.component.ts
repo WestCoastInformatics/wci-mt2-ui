@@ -98,7 +98,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
     if (file) {
         const formData = new FormData();
-        formData.append("icon", file);
+        formData.append("file", file);
         this.organizationsService.updateOrganizationPhoto(this.id, formData).subscribe((result) => {
           if(result){
             this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });

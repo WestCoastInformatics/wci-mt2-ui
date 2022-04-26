@@ -34,7 +34,7 @@ export class UsersService extends RestService {
         return this.put(this.contextPath + 'user/' + userId, user);
     }
 
-    updateUserPhoto(userId: string, user: any): Observable<any> {
-        return this.put(this.contextPath + `user/${userId}/icon`, user);
+    updateUserPhoto(userId: string, form: any): Observable<any> {
+        return this.postWithFile(this.contextPath + `user/${userId}/icon`, form);
     }
 }
