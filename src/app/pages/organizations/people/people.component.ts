@@ -132,10 +132,10 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   getPeople(): void {
-    this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
-      this.peopleList = results.items;
-      console.log(this.peopleList);
-    });
+    // this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
+    //   this.peopleList = results.items;
+    //   console.log(this.peopleList);
+    // });
   }
 
   getOrganizations(): void {

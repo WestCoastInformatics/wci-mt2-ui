@@ -140,10 +140,10 @@ export class TeamsPeopleComponent implements OnInit {
   }
 
   getPeople(): void {
-    this.teamsService.getTeamUsers(this.id).subscribe((results) => {
-      this.peopleList = results.items;
-      console.log(this.peopleList);
-    });
+    // this.teamsService.getTeamUsers(this.id).subscribe((results) => {
+    //   this.peopleList = results.items;
+    //   console.log(this.peopleList);
+    // });
   }
 
   selectTeam($event): void {

@@ -126,10 +126,10 @@ export class ProjectsPeopleComponent implements OnInit {
   };
 
   getPeople(): void {
-    this.projectsService.getProjectUsers(this.id).subscribe((results) => {
-      this.peopleList = results.items;
-      console.log(this.peopleList);
-    });
+    // this.projectsService.getProjectUsers(this.id).subscribe((results) => {
+    //   this.peopleList = results.items;
+    //   console.log(this.peopleList);
+    // });
   }
 
   get dataCount() {
