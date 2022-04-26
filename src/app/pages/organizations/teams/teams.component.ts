@@ -135,9 +135,9 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		this.route.params.subscribe(params => {
 			this.id = params['id'];
 		});
-		//this.getTeams();
 		this.getOrganization();
 		this.getOrganizations();
+		//this.getTeams();
 	}
 
 	ngAfterViewInit() {

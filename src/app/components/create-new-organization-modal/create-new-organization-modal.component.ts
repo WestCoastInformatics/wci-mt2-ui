@@ -24,6 +24,7 @@ export class CreateNewOrganizationModalComponent {
     editionsArray: any;
     selectedEdition: any;
     edition:any;
+    emailError = '';
 
   
     @Output() changeLockedStatus = new EventEmitter<any>(true);
@@ -81,6 +82,23 @@ export class CreateNewOrganizationModalComponent {
         this.editionsService.getEdition(this.selectedEdition).subscribe((editionResult) => {
             this.edition = editionResult;
         }) 
+    }
+
+    isValidEmail(): boolean {
+        var lower = this.email.toLowerCase();
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+        if (flag == null) {
+            this.emailError = "Email is invalid.";
+        } else {
+            this.emailError = "";
+        }
+        return flag == null ? false : true;
+    }
+
+    onKeyDownEvent(event: any){
+        console.log(event.target.value);
+        this.isValidEmail();
     }
 
     createOrganizationObject(): void {
