@@ -15,7 +15,6 @@ export class TemplateRenderer {
     template = undefined;
  
     agInit(params) {
-        
         this.params = params;
         this.template = params.template;
     }
