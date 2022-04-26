@@ -5072,3 +5072,12 @@ app-category-floating-filter{
 #compare-sumary-table td{
     vertical-align: middle;
 }
+
+@media (min-width: 991px) and (max-width: 1041px){
+    #refset-type{
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        flex: none;
+    }
+}
