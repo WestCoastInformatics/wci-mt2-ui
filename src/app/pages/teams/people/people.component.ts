@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
@@ -34,6 +37,12 @@ export class TeamsPeopleComponent implements OnInit {
   id: any;
   teamList = [];
   currentUser: any;
+  gridOptions: any;
+  gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true)};
+  gridParams: any;
+  gridApi: any;
+  gridColumnDefs = [];
+  peopleList = [];
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly titleService: Title,
@@ -49,30 +58,92 @@ export class TeamsPeopleComponent implements OnInit {
       { path: '/teams/people', label: 'Teams' },
       { label: 'People' },
   ]);
-  
-  this.defaultColDef = {
-    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1, resizable: true
-  };
-
-  this.data = [
-    { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', company: 'West Coast Informatics', email: 'swhalen@westcoastinformatics.com' },
-    { name: 'Linda Bird', pic: 'assets/sampels/profile/2.svg', company: 'Snomed International', email: 'lbi@snomed.org' },
-    { name: 'Toni Morrison', pic: 'assets/sampels/profile/3.svg', company: 'Snomed International', email: 'tmo@snomed.org'},
-    { name: 'Monica Harry', pic: 'assets/sampels/profile/4.svg', company: 'Snomed International', email: 'mha@snomed.org' },
-    { name: 'Farzaneh Ashrafi', pic: 'assets/sampels/profile/5.svg', company: 'Snomed International', email: 'fas@snomed.org' },
-    { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Snomed International', email: 'aat@snomed.org' },
-    { name: 'Anna Nilsson', pic: 'assets/sampels/profile/7.svg', company: 'Swedish NRC', email: 'anilsson@swedishnrc.org' }
+  this.gridColumnDefs = [
+    {
+      field: 'name', headerName: 'Participant', minWidth: 300, flex: 1, cellRenderer: params => {
+        return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
+      }},
+    { field: 'company', flex: 1, headerName: 'Company Name' },
+    { field: 'email', flex: 1, headerName: 'Email' },
+    { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
   ];
-    
+
+  this.gridOptions = {
+    context: { componentParent: this },
+          pagination: false,
+          suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+          suppressPaginationPanel: true,
+          paginationPageSize: this.gridPaging.pageSize,
+          rowSelection: 'single',
+          enableCellTextSelection: true,
+          onCellClicked: this.onGridCellClick,
+          onGridReady: this.onGridReady,
+          frameworkComponents: {
+              templateRenderer: TemplateRenderer,
+              'categoryFilterComponent': CategoryFilterComponent
+          },
+          defaultColDef: {
+              sortable: true,
+              resizable: true,
+              suppressMenu: true,
+              filter: true,
+              floatingFilter: true,
+              floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+      unSortIcon: true
+          },
+          enableBrowserTooltips: true,
+          rowClassRules: {
+              refset_tool_grid_inactive_row: function (params) {
+
+                  var inactivatedRow = false;
+
+                  if (params.data) {
+                      inactivatedRow = params.data.active == false;
+                  }
+
+                  return inactivatedRow;
+              },
+          },
+      };
+
+  this.data = [];
+
   this.route.params.subscribe(params => {
     this.id = params['id'];
   });
   this.currentUser = this.authService.getUser();
   this.getTeam();
   this.getTeams();
+  this.getPeople();
   }
+
+  onGridReady = (params) => {
+		this.gridParams = params;
+		this.gridApi = params.api;
+  }
+
+	onGridCellClick = (event) => {
+
+		let selectedRows = this.gridApi.getSelectedRows();
+		let selectedId: string;
+
+		selectedRows.forEach(function (selectedRow, index) {
+
+			selectedId = selectedRow.id;
+		});
+
+		this.router.navigate(['/teams/people', selectedId]);
+  };
+
   get dataCount() {
     return this.data.length;
+  }
+
+  getPeople(): void {
+    this.teamsService.getTeamUsers(this.id).subscribe((results) => {
+      this.peopleList = results.items;
+      console.log(this.peopleList);
+    });
   }
 
   selectTeam($event): void {

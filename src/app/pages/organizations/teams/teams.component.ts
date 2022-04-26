@@ -124,9 +124,9 @@ export class OrganizationTeamsComponent implements OnInit {
 		this.route.params.subscribe(params => {
 			this.id = params['id'];
 		});
-		//this.getTeams();
 		this.getOrganization();
 		this.getOrganizations();
+		this.getTeams();
 	}
 
 	get dataCount() {
@@ -136,7 +136,6 @@ export class OrganizationTeamsComponent implements OnInit {
 	onGridReady = (params) => {
 		this.gridParams = params;
 		this.gridApi = params.api;
-		this.getTeams();
 	}
 
 	getTeams(): void {
@@ -151,7 +150,7 @@ export class OrganizationTeamsComponent implements OnInit {
 				}
 			}
 			roles = [...new Set(roles)].sort();
-			console.log(roles);
+			console.log(this.teamList);
 			this.gridApi.setRowData(this.data.slice(0, 10));
 		});
 	}
