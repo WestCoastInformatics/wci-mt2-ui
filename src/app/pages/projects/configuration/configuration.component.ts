@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
   selector: 'projects-configuration',
@@ -39,7 +41,8 @@ export class ProjectsConfigurationComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly authService: AuthenticationService,
-    private readonly teamsService: TeamsService) { }
+    private readonly teamsService: TeamsService,
+    private readonly notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Projects');
@@ -84,7 +87,9 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.selectedProject.primaryContactEmail = this.profileEmailValue;
     this.selectedProject.description = this.profileDescriptionValue;
     this.selectedProject.privateProject = this.isPrivate;
-    this.projectsService.updateProject(this.id, this.selectedProject).subscribe();
+    this.projectsService.updateProject(this.id, this.selectedProject).subscribe(() => {
+      this.notificationService.show("Update process complete.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+    });
   }
 
   updateProjectTeams(): void {
