@@ -145,8 +145,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.comparisonRefsetVersionOptions = [];
 
         const results = this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
-
-            this.refsetOptions = results.items;
+            this.refsetOptions = results.items.filter((item) => item.refsetId !== this.activeRefset.refsetId);
 
             for (let option of this.refsetOptions) {
                 option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
