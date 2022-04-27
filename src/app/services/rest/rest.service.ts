@@ -81,7 +81,7 @@ export class RestService {
     }
 
     postWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
-        return this.http.post<any>(this.restUrl + url, params, { 'headers': new HttpHeaders({'Content-Type': 'multipart/form-data',
+        return this.http.post<any>(this.restUrl + url, params, { 'headers': new HttpHeaders({
             'Accept': 'application/json',
             'enctype': 'multipart/form-data'})}).pipe(
             catchError((err) => {
