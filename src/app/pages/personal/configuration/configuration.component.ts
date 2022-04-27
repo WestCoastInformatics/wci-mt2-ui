@@ -20,6 +20,7 @@ export class PersonalConfigurationComponent implements OnInit {
   selectedTeam: any;
   currentUserId: any;
   user: any;
+  iconUriValue: '';
 
   constructor(private readonly authService: AuthenticationService,private notificationService: NotificationService,
   private readonly userService: UsersService) { }
@@ -35,6 +36,7 @@ export class PersonalConfigurationComponent implements OnInit {
       this.profileNameValue = this.user?.name;
       this.profileCompanyValue = this.user?.company;
       this.profileEmailValue = this.user?.email;
+      this.iconUriValue = this.user?.iconUri;
     });
   }
 
