@@ -25,6 +25,7 @@ export class OrganizationConfigurationComponent implements OnInit {
   selectedOrganization: any;
   id: any;
   organizationList = [];
+  iconUriValue: '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly notificationService: NotificationService,
@@ -40,7 +41,7 @@ export class OrganizationConfigurationComponent implements OnInit {
       { path: '/organizations/configuration', label: 'Organizations' },
       { label: 'Configurations' },
     ]);
-    
+
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -62,6 +63,7 @@ export class OrganizationConfigurationComponent implements OnInit {
       this.profileNameValue = this.selectedOrganization?.name;
       this.profileEmailValue = this.selectedOrganization?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedOrganization?.description;
+      this.iconUriValue = this.selectedOrganization?.iconUri;
     });
   }
 
