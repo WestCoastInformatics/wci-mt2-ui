@@ -25,6 +25,7 @@ export class OrganizationConfigurationComponent implements OnInit {
   selectedOrganization: any;
   id: any;
   organizationList = [];
+  emailError = '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly notificationService: NotificationService,
@@ -76,6 +77,23 @@ export class OrganizationConfigurationComponent implements OnInit {
       }
     });
   }
+
+  isValidEmail(): boolean {
+    var lower = this.profileEmailValue.toLowerCase();
+    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+    if (flag == null) {
+        this.emailError = "Email is invalid.";
+    } else {
+        this.emailError = "";
+    }
+    return flag == null ? false : true;
+}
+
+onKeyDownEvent(event: any){
+    console.log(event.target.value);
+    this.isValidEmail();
+}
 
   selectOrg($event): void {
     this.router.navigate(['/organizations/configuration', $event['value'].id]);
