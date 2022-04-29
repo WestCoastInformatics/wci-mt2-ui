@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GridApi } from 'ag-grid-community';
 import { OptionsFactory } from 'ag-grid-community/dist/lib/filter/provided/optionsFactory';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -79,6 +80,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   showActionButton = true;
   disableAddRemove = false;
   membersInCommonForChangeReport = { items: [] };
+  manualReplacementOptionsLoading = false;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -101,12 +103,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       { field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason', cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190,maxWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
       { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60,maxWidth:60},
       { field: 'inactiveId', tooltipField: 'inactiveId', headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110,maxWidth:120},
-      { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
+      { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
       { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220,maxWidth:220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1 },
       { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60,maxWidth:70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150,maxWidth:160,  cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
-      { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
-      { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 90, width: 90,maxWidth: 100, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
+      { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
+      { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60,maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
 
     this.refsetGridOptions = {
@@ -166,7 +168,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     }
 }
 
-  async onKey(value): Promise<void> {
+  async onSearchChange(value): Promise<void> {
     await this.search(value);
   }
 
@@ -174,13 +176,21 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     event.stopPropagation();
   } 
 
-search(value: string): void {
-  const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
-    this.selectedConcepts = results.items.filter((x) => {
-      return x.active === true;
-    });
-  });
-}
+  @Debounce()
+  search(value: string): void {
+
+      this.manualReplacementOptionsLoading = true;
+      this.selectedConcepts = undefined;
+
+      const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
+
+          this.selectedConcepts = results.items.filter((x) => {
+              return x.active === true;
+          });
+
+          this.manualReplacementOptionsLoading = false;
+      });
+  }
 
 selectedConceptChanged(concept: any): void {
   this.concept = concept['value'];
@@ -206,10 +216,6 @@ addManualReplacement(changeMethod: string): void {
   }
   this.selectedConcepts = undefined;
 }
-
-  focus(): void {
-    document.getElementById('inputFocus').focus();
-  }
 
 changeLockedStatus(lock: boolean) {
 

@@ -395,8 +395,6 @@ button.refset-tool-table-icon,
 button.refset-tool-table-action-icon {
     //top: 7px;
     position: relative;
-    color: $cerulean;
-    background-color: #c05d72;
     overflow: hidden;
     margin-top: auto;
     margin-bottom: auto;
@@ -954,6 +952,10 @@ button.refset-tool-table-action-icon {
     font-size: 14px;
 }
 
+.modal-error-message {
+    color: $error_color;
+}
+
 #detailsMemberSection,
 #detailsMemberSection .refset-tool-details-members-column {
     //padding-left: 0px;
@@ -1141,6 +1143,10 @@ button.refset-tool-table-action-icon {
     height: 130px;
     resize: vertical;
     overflow: auto;
+}
+
+.concept-detail-mid-padding {
+    padding-bottom: 20px;
 }
 
 // #detailsMembersTree tree-viewport {
@@ -2342,7 +2348,10 @@ button.refset-tool-table-action-icon {
         height: 525px;
     }
 }
-
+#comparisonGridSection .refset-tool-concept-details-taxonomy-section .row {
+    margin-left: 3px;
+    margin-right: 3px;
+}
 .refset-tool-refset-metadata-table {
 
     td.refset-tool-comparison-refset-member-total {

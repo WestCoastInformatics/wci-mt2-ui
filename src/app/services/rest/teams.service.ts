@@ -32,6 +32,10 @@ export class TeamsService extends RestService {
         return this.get(this.contextPath + 'team/' + teamId);
     }
 
+    getTeamUsers(teamId: string): Observable<any> {
+        return this.get(this.contextPath + 'team/' + teamId + '/users');
+    }
+
     updateTeam(teamId: any, params: any): Observable<any> {
         return this.put(this.contextPath + 'team/' + teamId, params);
     }

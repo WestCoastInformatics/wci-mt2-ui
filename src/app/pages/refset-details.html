@@ -152,7 +152,7 @@
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <app-launch-comparison-modal [isDetailPage]="true" [activeRefset]="refsetData" (changeLockedStatus)="changeLockedStatus($event)"></app-launch-comparison-modal>
+                    <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData" (changeLockedStatus)="changeLockedStatus($event)"></app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
 
@@ -861,7 +861,7 @@
                                             <div class="row">
                                                 <div class="col-2">
                                                     <button mat-icon-button
-                                                        *ngIf="params?.data?.historyVisible"
+                                                        *ngIf="params?.data?.historyVisible && params.data.released"
                                                         (click)="openMemberHistory(params.data.code)"
                                                         aria-hidden="false" #detailsDownloadIcon
                                                         class="

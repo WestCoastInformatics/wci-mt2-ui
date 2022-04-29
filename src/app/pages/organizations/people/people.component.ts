@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
@@ -22,19 +25,16 @@ export class OrganizationPeopleComponent implements OnInit {
 
   data = [];
   defaultColDef = {};
-  columnDefs = [
-    {
-      field: 'name', headerName: 'Members', minWidth: 300, cellRenderer: params => {
-        return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
-      }},
-    { field: 'company', headerName: 'Company Name' },
-    { field: 'email', headerName: 'Email' },
-    { field: 'teams', headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
-  ];
+
   peopleList = [];
   selectedOrganization: any;
   id: any;
   organizationList = [];
+  gridOptions: any;
+  gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true)};
+  gridParams: any;
+  gridApi: any;
+  gridColumnDefs = [];
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly titleService: Title,
@@ -44,42 +44,99 @@ export class OrganizationPeopleComponent implements OnInit {
     private readonly router: Router,
     private readonly teamService: TeamsService) { }
 
-  ngOnInit(): void {
+	ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Organizations');
     this.breadcrumbService.setBreadcrumbs([
       { path: '/organizations/people', label: 'Organizations' },
       { label: 'People' },
   ]);
+
+		this.gridColumnDefs = [
+      {
+        field: 'name', headerName: 'Participant', minWidth: 300, flex: 1, cellRenderer: params => {
+          return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
+        }},
+      { field: 'company', flex: 1, headerName: 'Company Name' },
+      { field: 'email', flex: 1, headerName: 'Email' },
+      { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+    ];
+
+		this.gridOptions = {
+			context: { componentParent: this },
+            pagination: false,
+            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressPaginationPanel: true,
+            paginationPageSize: this.gridPaging.pageSize,
+            rowSelection: 'single',
+            enableCellTextSelection: true,
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                templateRenderer: TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent
+            },
+            defaultColDef: {
+                sortable: true,
+                resizable: true,
+                suppressMenu: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+				unSortIcon: true
+            },
+            enableBrowserTooltips: true,
+            rowClassRules: {
+                refset_tool_grid_inactive_row: function (params) {
+
+                    var inactivatedRow = false;
+
+                    if (params.data) {
+                        inactivatedRow = params.data.active == false;
+                    }
+
+                    return inactivatedRow;
+                },
+            },
+        };
+
+		this.data = [];
+
+		this.route.params.subscribe(params => {
+			this.id = params['id'];
+		});
+		this.getOrganization();
+    this.getOrganizations();
+    this.getPeople();
+  }
   
-  this.defaultColDef = {
-    filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1, resizable: true
+  onGridReady = (params) => {
+		this.gridParams = params;
+		this.gridApi = params.api;
+  }
+
+	onGridCellClick = (event) => {
+
+		let selectedRows = this.gridApi.getSelectedRows();
+		let selectedId: string;
+
+		selectedRows.forEach(function (selectedRow, index) {
+
+			selectedId = selectedRow.id;
+		});
+
+		this.router.navigate(['/teams/people', selectedId]);
   };
 
-  this.data = [
-    { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', company: 'UX Designer', email: 'swhalen@westcoastinformatics.com', teams: '2 Teams' },
-    { name: 'Linda Bird', pic: 'assets/sampels/profile/2.svg', company: 'Head of Implementation Support', email: 'lbi@snomed.org', teams: '3 Teams' },
-    { name: 'Toni Morrison', pic: 'assets/sampels/profile/3.svg', company: 'Senior Terminologist', email: 'tmo@snomed.org', teams: '1 Team' },
-    { name: 'Monica Harry', pic: 'assets/sampels/profile/4.svg', company: 'Director of Content and Mapping', email: 'mha@snomed.org', teams: '1 Team' },
-    { name: 'Farzaneh Ashrafi', pic: 'assets/sampels/profile/5.svg', company: 'Senior Terminologist', email: 'fas@snomed.org', teams: '1 Team' },
-    { name: 'Andrew Atkinson', pic: 'assets/sampels/profile/6.svg', company: 'Release Manager', email: 'aat@snomed.org', teams: '3 Teams' }
-  ];
-    
-  this.route.params.subscribe(params => {
-    this.id = params['id'];
-  });
-  // this.getPeople();
-  this.getOrganization();
-    this.getOrganizations();
-  }
   get dataCount() {
     return this.data.length;
   }
 
-  // getPeople(): void {
-  //   this.refsetService.getPeople('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-  //     this.peopleList = results.items;
-  //   });
-  // }
+  getPeople(): void {
+    // this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
+    //   this.peopleList = results.items;
+    //   console.log(this.peopleList);
+    // });
+  }
 
   getOrganizations(): void {
     this.refsetService.getOrganizations().subscribe((results) => {

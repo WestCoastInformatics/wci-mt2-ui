@@ -14,6 +14,7 @@ import { TreeOptions } from 'src/app/models/tree-options.model';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-launch-comparison-modal',
@@ -62,6 +63,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     @Input() activeRefset: any;
     @Input() isDetailPage: boolean;
+    @Input() refsetBranchPath: string;
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
     @Output() changeLockedStatus = new EventEmitter<boolean>(true);
 
@@ -126,12 +128,12 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.comparisonRefsetVersionOptions = [];
     }
 
-    async onKeyUp(value): Promise<void> {
+    async onSearchChange(value): Promise<void> {
         await this.search(value);
     }
 
-    focus(input: any): void {
-        document.getElementById('inputFocus').focus();
+    handleInput(event: KeyboardEvent): void {
+        event.stopPropagation();
     }
 
     @Debounce()
@@ -673,5 +675,15 @@ export class LaunchComparisonModalComponent implements OnInit {
         } else {
             event.target.style.display = 'none';
         }
+    }
+
+    openInNewWindow(conceptId: string): void {
+        let snomedBrowserUrl =
+            environment["snomedBrowserUrl"] +
+            "&conceptId1=" +
+            conceptId +
+            "&edition=" +
+            this.refsetBranchPath;
+        window.open(snomedBrowserUrl);
     }
 }

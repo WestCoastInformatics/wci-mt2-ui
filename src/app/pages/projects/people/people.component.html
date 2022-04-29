@@ -25,10 +25,10 @@
                         <div class='dashboard-section'>
                             <div class="ag-theme-alpine">
                                 <ag-grid-angular
-                                    [columnDefs]="columnDefs"
+                                    [columnDefs]="gridColumnDefs"
                                     [rowData]="data"
-                                    [defaultColDef]="defaultColDef"
-                                    [tooltipShowDelay]="0"
+                                    (gridReady)="onGridReady($event)"
+                                    [gridOptions]="gridOptions"
                                     style="width: 100%">
                                 </ag-grid-angular>
                             </div>
