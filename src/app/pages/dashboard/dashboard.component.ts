@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IServerSideDatasource } from 'ag-grid-community';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
@@ -19,20 +23,37 @@ export class DashboardComponent implements OnInit {
     currentUser: any;
 
     columnDefs = [
-        { field: 'refsetName', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
+        { field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
             return `${params.data.refsetName}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
           }, cellClass:'pointer' },
-        { field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true },
+        { field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true,floatingFilterComponent: 'categoryFilterComponent',
+        floatingFilterComponentParams: {suppressFilterButton: true, names: [{
+            "name": "In development",
+            "value": "IN DEVELOPMENT"
+        },{
+            "name": "Published",
+            "value": "PUBLISHED"
+        },]} },
         {
-            field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', unSortIcon: true, sortable: true, valueGetter:
+            field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', filter:false, unSortIcon: true, sortable: true, valueGetter:
                 UiUtility.gridDateValueGetter,
         }
     ];
+    defaultColDef: any;
 
     data = [];
     api: any;
     columnApi: any;
+    searchInput: string;
+    selectedView: string = 'all';
+    refsetGridApi: any;
+    refsetGridColumnApi: any;
     refsetGridOptions: any;
+    refsetGridLastFilter: string = '';
+    refsetGridLastSort: string = '';
+    numOfResults: any;
+    numOfMembers: any;
+    showLoadingSpinner = false;
 
     constructor(
         private router: Router,
@@ -48,6 +69,25 @@ export class DashboardComponent implements OnInit {
             { path: '/dashboard', label: 'Dashboard' }
         ]);
         this.currentUser = this.authService.getUser();
+        this.refsetGridOptions = {
+            context: { componentParent: this },
+            rowModelType: 'infinite',
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                'templateRenderer': TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent
+            },
+            defaultColDef: {
+                sortable: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                suppressMenu: true,
+                menuTabs: ['columnsMenuTab'],
+                resizable: true
+            }
+        };
         this.getOrganizations();
         this.getProjects();
         this.getTeams();
@@ -59,14 +99,108 @@ export class DashboardComponent implements OnInit {
     }
 
 
-    onGridReady = (params) => {
-        this.api = params.api;
-        this.columnApi = params.columnApi;
-        this.getRefSets();
-    }
+    // onGridReady = (params) => {
+    //     this.api = params.api;
+    //     this.columnApi = params.columnApi;
+    //     this.getRefSets();
+    // }
+
+    onGridReady = (gridReadyParams) => {
+        this.refsetGridApi = gridReadyParams.api;
+        this.refsetGridColumnApi = gridReadyParams.columnApi;
+        let dataSource = {
+            rowCount: null,
+            getRows: (rowParams) => {
+
+                this.refsetGridApi.showLoadingOverlay();
+                // this.showLoadingSpinner = true;
+
+                let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+                let query = UiUtility.formatFilterData(rowParams.filterModel);
+                let sort = UiUtility.formatSortData(rowParams.sortModel);
+
+                let newFilterString = query;
+                let newSortString = JSON.stringify(sort);
+
+                // if the filters or sort have changed then move to the first page
+                if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+
+                    pageNumber = 1;
+                    this.refsetGridApi?.api?.paginationGoToPage(0);
+                }
+
+
+                this.refsetGridLastFilter = newFilterString;
+                this.refsetGridLastSort = newSortString;
+
+                let restParams: any = {
+                    limit: 500,
+                    offset: 0,
+                    searchConcepts: true,
+                    showInDevelopment: true,
+                    sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
+                    filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
+                };
+
+                if (CodeUtility.hasValue(query)) {
+
+                    query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                    restParams.query = query;
+                }
+                this.data = [];
+                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({next: (results) => {
+                    
+                    for (let refset of results.items) {
+                        this.data.push({ name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
+                                        , refsetId: refset.refsetId 
+                                        , private: refset.privateRefset
+                                        , workflowStatus: `${refset?.workflowStatus}`
+                                        , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
+                                        , versionDate: `${refset.versionDate}` })
+                        
+                    }
+                    this.data = this.data.slice(0, 10);
+                    let data = this.data;
+
+                    if (data?.length > 0) {
+
+                        this.refsetGridApi.hideOverlay();
+
+                        rowParams.successCallback(data, data.length);
+
+                    } else {
+
+                        this.refsetGridApi.showNoRowsOverlay();
+                        rowParams.successCallback([], 0);
+                    }
+                   
+                },
+                error: (error) => {
+
+                    this.refsetGridApi.showNoRowsOverlay();
+                    rowParams.successCallback([], 0);
+                }});
+            }
+        };
+
+        gridReadyParams.api.setDatasource(dataSource);
+
+        // set placeholders on the grid floating filter fields
+        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+
+            if (obj.attributes['disabled']) {
+                // skip columns with disabled filter
+                return;
+            }
+
+            let label = obj.getAttribute('aria-label');
+            let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            obj.setAttribute('placeholder', value);
+        });
+    };
 
     onGridCellClick = (event) => {
-        if (event.column.colId === 'refsetName') {
+        if (event.column.colId === 'name') {
             const refsetId = event.data.refsetId;
             const versionDate = RefsetUtility.getVersionDateForRefsetApiCall(event.data);
 
@@ -89,16 +223,14 @@ export class DashboardComponent implements OnInit {
     getRefSets(): void {
         this.refsetService.getRefsets(`limit=500&offset=0&sort=name&sortAscending=true&assignedUser=${this.currentUser.userName}`, false).subscribe((x) => {
             for (let refset of x.items) {
-                this.data.push({ refsetName: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                , refsetId: refset.refsetId
+                this.data.push({ name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
+                , refsetId: refset.refsetId 
                 , private: refset.privateRefset
                 , workflowStatus: `${refset?.workflowStatus}`
                 , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`, versionDate: `${refset.versionDate}` })
-                if (refset.assignedUser === this.currentUser.userName) {
+                
 
-                }
             }
-            console.log(this.data)
             this.api.setRowData(this.data.slice(0, 10));
             this.api.redrawRows();
         });
@@ -119,4 +251,5 @@ export class DashboardComponent implements OnInit {
             });
         });
     }
+
 }

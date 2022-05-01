@@ -25,6 +25,7 @@ export class OrganizationConfigurationComponent implements OnInit {
   selectedOrganization: any;
   id: any;
   organizationList = [];
+  iconUriValue: '';
   emailError = '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
@@ -41,7 +42,7 @@ export class OrganizationConfigurationComponent implements OnInit {
       { path: '/organizations/configuration', label: 'Organizations' },
       { label: 'Configurations' },
     ]);
-    
+
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -63,6 +64,7 @@ export class OrganizationConfigurationComponent implements OnInit {
       this.profileNameValue = this.selectedOrganization?.name;
       this.profileEmailValue = this.selectedOrganization?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedOrganization?.description;
+      this.iconUriValue = this.selectedOrganization?.iconUri;
     });
   }
 
@@ -109,5 +111,18 @@ onKeyDownEvent(event: any){
 
   getSelectedOrganizationId(): string{
     return this.selectedOrganization?.id;
+  }
+
+  onPhotoChange(event){
+    const file:File = event.target.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        this.organizationsService.updateOrganizationPhoto(this.id, formData).subscribe((result) => {
+          this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+          this.getOrganization();
+        });
+    }
   }
 }
