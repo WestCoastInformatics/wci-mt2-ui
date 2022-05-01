@@ -150,24 +150,24 @@
 
 <!-- Replacement ID Templates -->
 <ng-template #adjudicateReplacementId let-params>
-    <span [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+    <span [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
         {{ params?.data?.replacementConcecpts[0]?.code }}
     </span>
 </ng-template>
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
         {{ transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
     </span>
-    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
         {{ transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
     </span>
 </ng-template>
 
 <!-- Reason Section Templates -->
 <ng-template #adjudicateReason let-params>
-    <span *ngIf="!params.data.isSearch" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
+    <span *ngIf="!params.data.isSearch" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
         {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
@@ -181,7 +181,7 @@
             </mat-select>
           </mat-form-field>
             <img
-            src="assets/grey-add-symbol.svg"
+            src="assets/add-symbol-icon.svg"
             (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true"
             width="18px"
             height="18px"

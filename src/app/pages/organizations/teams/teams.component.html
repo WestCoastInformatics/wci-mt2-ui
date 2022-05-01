@@ -32,6 +32,12 @@
                                 [gridOptions]="gridOptions"
                                 style="width: 100%">
                             </ag-grid-angular>
+                            <!-- Name Templates -->
+                            <ng-template #descriptionSection let-params>
+                                <label [ngbPopover]="params?.data.description" container="body" placement="top" popoverTitle="Description">
+                                    {{ params?.data.description }}
+                                </label>
+                            </ng-template>
                         </div>
                     </div>
                     <!-- <div class='text-right'>
@@ -42,3 +48,4 @@
         </div>
     </div>
 </div>
+

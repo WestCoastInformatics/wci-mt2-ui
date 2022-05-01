@@ -395,10 +395,10 @@ button.refset-tool-table-icon,
 button.refset-tool-table-action-icon {
     //top: 7px;
     position: relative;
-    color: $cerulean;
     overflow: hidden;
     margin-top: auto;
     margin-bottom: auto;
+    border-radius: 0.25rem;
     z-index: 1;
 
     mat-icon {
@@ -509,6 +509,9 @@ button.refset-tool-table-action-icon {
 
 .ag-theme-alpine .ag-cell {
     line-height: 50px;
+    .refset-tool-directory-column-actions {
+        width: 100px;
+    }
 }
 
 .ag-theme-alpine .ag-row-odd {
@@ -949,6 +952,10 @@ button.refset-tool-table-action-icon {
     font-size: 14px;
 }
 
+.modal-error-message {
+    color: $error_color;
+}
+
 #detailsMemberSection,
 #detailsMemberSection .refset-tool-details-members-column {
     //padding-left: 0px;
@@ -1136,6 +1143,10 @@ button.refset-tool-table-action-icon {
     height: 130px;
     resize: vertical;
     overflow: auto;
+}
+
+.concept-detail-mid-padding {
+    padding-bottom: 20px;
 }
 
 // #detailsMembersTree tree-viewport {
@@ -2337,7 +2348,10 @@ button.refset-tool-table-action-icon {
         height: 525px;
     }
 }
-
+#comparisonGridSection .refset-tool-concept-details-taxonomy-section .row {
+    margin-left: 3px;
+    margin-right: 3px;
+}
 .refset-tool-refset-metadata-table {
 
     td.refset-tool-comparison-refset-member-total {
@@ -2912,7 +2926,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
     & .refset-tool-concept-details-taxonomy-icon {
         img {
-            margin-left: 0;
+            margin-left: 3;
         }
     }
 }
@@ -4121,7 +4135,7 @@ img.refset-tool-edition-flag {
 
     .btn.btn-primary {
         background-color: $main-color;
-        border-radius: 0 !important;
+        border-radius: 0.25rem !important;
         border-color: $main-color;
         font-size: 14px;
     }
@@ -4157,7 +4171,7 @@ img.refset-tool-edition-flag {
 
     .btn.btn-primary {
         background-color: $main-color;
-        border-radius: 0 !important;
+        border-radius: 0.25rem !important;
         border-color: $main-color;
         font-size: 14px;
     }
@@ -4170,7 +4184,7 @@ img.refset-tool-edition-flag {
 }
 .btn.btn-main,.btn.btn-primary {
     background-color: $main-color;
-    border-radius: 0 !important;
+    border-radius: 0.25rem !important;
     border-color: $main-color;
     font-size: 14px;
 }
@@ -4178,7 +4192,7 @@ img.refset-tool-edition-flag {
     border-radius: 4px !important;
 }
 .radius-0 {
-    border-radius: 0 !important;
+    border-radius: 0.25rem !important;
 }
 .text-camel{
     text-transform: capitalize;
@@ -4288,7 +4302,7 @@ $sidebar-width: 294px;
 
 .btn.btn-main {
     background-color: $main-color;
-    border-radius: 0 !important;
+    border-radius: 0.25rem !important;
     color: #ffffff;
     border-color: $main-color;
 }
@@ -4608,6 +4622,7 @@ $sidebar-width: 294px;
     .remove-projects-button {
         width: 100%;
         height: 10%;
+            border-radius: 0.25rem !important;
     }
 
     .red-x {
@@ -5061,4 +5076,13 @@ app-category-floating-filter{
 }
 #compare-sumary-table td{
     vertical-align: middle;
+}
+
+@media (min-width: 991px) and (max-width: 1041px){
+    #refset-type{
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        flex: none;
+    }
 }

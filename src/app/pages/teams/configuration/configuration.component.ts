@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 
@@ -29,6 +30,7 @@ export class TeamsConfigurationComponent implements OnInit {
   selectedRoles: any;
   selectedForRemove = [];
   selectedForAdd = [];
+  emailError = '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly titleService: Title,
@@ -36,7 +38,8 @@ export class TeamsConfigurationComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly authService: AuthenticationService,
-    private readonly teamsService: TeamsService) { }
+    private readonly teamsService: TeamsService,
+    private readonly notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Teams');
@@ -85,11 +88,32 @@ export class TeamsConfigurationComponent implements OnInit {
     });
   }
 
+  isValidEmail(): boolean {
+    var lower = this.profileEmailValue.toLowerCase();
+    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+    if (flag == null) {
+      this.emailError = "Email is invalid.";
+    } else {
+      this.emailError = "";
+    }
+    return flag == null ? false : true;
+  }
+
+  onKeyDownEvent(event: any) {
+    console.log(event.target.value);
+    this.isValidEmail();
+  }
+
   updateTeam(): void {
     this.selectedTeam.name = this.profileNameValue;
     this.selectedTeam.primaryContactEmail = this.profileEmailValue;
     this.selectedTeam.description = this.profileDescriptionValue;
-    this.teamsService.updateTeam(this.id, this.selectedTeam).subscribe();
+    this.teamsService.updateTeam(this.id, this.selectedTeam).subscribe((x) => {
+      if(x){
+        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+      }
+    });
   }
 
   updateTeamRoles(): void {

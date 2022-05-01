@@ -279,7 +279,7 @@
                                         <div
                                             class="refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
 
-                                            <div class="row ml-1 mr-1">
+                                            <div class="row">
                                                 <div class="refset-tool-concept-details-section-title">Parents</div>
                                             </div>
 
@@ -335,18 +335,40 @@
                                                     <div class="container-fluid">
 
                                                         <!-- Name -->
-                                                        <div class="row refset-tool-concept-details-concept-title-row">
-                                                            <div class="refset-tool-concept-details-taxonomy-icon">
+                                                        <div class="row refset-tool-concept-details-concept-title-row concept-detail-mid-padding">
+                                                            <div style="text-align: left;">
+                                                                <div
+                                                                    class="refset-tool-concept-details-taxonomy-icon status-icon-container">
+                                                                    <img [hidden]="!conceptDetail.defined"
+                                                                        title="Fully Defined"
+                                                                        aria-label="Fully Defined"
+                                                                        src="/assets/linedTaxonomyIcon.png" />
+                                                                    <img *ngIf="!conceptDetail.defined"
+                                                                        title="Primitive"
+                                                                        aria-label="Primitive"
+                                                                        class="refset-tool-logo mr-2 p-0"
+                                                                        src="/assets/unlinedTaxonomyIcon.png" />
+                                                                </div>
                                                             </div>
                                                             <div class="col refset-tool-concept-details-concept-name">{{
                                                                 conceptDetail?.name }}</div>
-                                                            <div
-                                                                class="col-1 refset-tool-concept-details-concept-link text-right">
-                                                            </div>
+                                                                <div style="text-align: right;">
+                                                                    <div class="open-container">
+                                                                        <button mat-icon-button
+                                                                            (click)="openInNewWindow(conceptDetail.code)"
+                                                                            aria-hidden="false"
+                                                                            class="refset-tool-concept-details-action-icon"
+                                                                            aria-label="Open Concept in New SNOMED Browser Window"
+                                                                            title="Open Concept in SNOMED Browser Window">
+                                                                            <mat-icon>open_in_new
+                                                                            </mat-icon>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                         </div>
 
                                                         <!-- ID -->
-                                                        <div class="row refset-tool-concept-details-concept-row">
+                                                        <div class="row refset-tool-concept-details-concept-row concept-detail-mid-padding">
                                                             <div class="refset-tool-concept-details-concept-id-label">
                                                                 SCTID</div>
                                                             <div
@@ -355,7 +377,7 @@
                                                         </div>
 
                                                         <!-- ECL -->
-                                                        <div class="row refset-tool-concept-details-concept-row">
+                                                        <div class="row refset-tool-concept-details-concept-row concept-detail-mid-padding">
                                                             <div class="col refset-tool-concept-details-concept-ecl">
                                                                 {{ conceptDetail?.code }} | {{ conceptDetail?.name }} |
                                                             </div>
@@ -382,14 +404,14 @@
                                         <div
                                             class="refset-tool-concept-details-taxonomy-section children-section">
 
-                                            <div class="row mr-1 ml-1">
+                                            <div class="row">
                                                 <div class="refset-tool-concept-details-section-title">Children <span
                                                         [hidden]="!taxonomyNumberOfChildren"> ({{
                                                         taxonomyNumberOfChildren }})</span></div>
                                             </div>
 
                                             <!-- Children Taxonomy Tree -->
-                                            <div class="">
+                                            <div class="container-fluid">
                                                 <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree"
                                                     [refset]="activeRefset" [editMode]="allowedToEdit"
                                                     [rootNode]="conceptDetail" [options]="conceptDetailsOptions"

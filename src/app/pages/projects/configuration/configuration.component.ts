@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
   selector: 'projects-configuration',
@@ -30,7 +32,8 @@ export class ProjectsConfigurationComponent implements OnInit {
   selectedTeams = [];
   teamList = [];
   currentUser: any;
-  containsRole = false;
+  containsRole = false; 
+  emailError = '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly titleService: Title,
@@ -39,7 +42,8 @@ export class ProjectsConfigurationComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly authService: AuthenticationService,
-    private readonly teamsService: TeamsService) { }
+    private readonly teamsService: TeamsService,
+    private readonly notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Projects');
@@ -79,12 +83,31 @@ export class ProjectsConfigurationComponent implements OnInit {
     });
   }
 
+  isValidEmail(): boolean {
+    var lower = this.profileEmailValue.toLowerCase();
+    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+    if (flag == null) {
+      this.emailError = "Email is invalid.";
+    } else {
+      this.emailError = "";
+    }
+    return flag == null ? false : true;
+  }
+
+  onKeyDownEvent(event: any) {
+    console.log(event.target.value);
+    this.isValidEmail();
+  }
+
   updateProject(): void {
     this.selectedProject.name = this.profileNameValue;
     this.selectedProject.primaryContactEmail = this.profileEmailValue;
     this.selectedProject.description = this.profileDescriptionValue;
     this.selectedProject.privateProject = this.isPrivate;
-    this.projectsService.updateProject(this.id, this.selectedProject).subscribe();
+    this.projectsService.updateProject(this.id, this.selectedProject).subscribe(() => {
+      this.notificationService.show("Update process complete.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+    });
   }
 
   updateProjectTeams(): void {

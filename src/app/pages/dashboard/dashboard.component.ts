@@ -23,7 +23,9 @@ export class DashboardComponent implements OnInit {
     currentUser: any;
 
     columnDefs = [
-        { field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellClass:'pointer' },
+        { field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
+            return `${params.data.refsetName}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
+          }, cellClass:'pointer' },
         { field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true,floatingFilterComponent: 'categoryFilterComponent',
         floatingFilterComponentParams: {suppressFilterButton: true, names: [{
             "name": "In development",
@@ -93,7 +95,7 @@ export class DashboardComponent implements OnInit {
 
     ngAfterViewInit() {
 
-        
+
     }
 
 
@@ -150,9 +152,11 @@ export class DashboardComponent implements OnInit {
                     
                     for (let refset of results.items) {
                         this.data.push({ name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                        , refsetId: refset.refsetId 
-                        , workflowStatus: `${refset?.workflowStatus}`
-                        , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`, versionDate: `${refset.versionDate}` })
+                                        , refsetId: refset.refsetId 
+                                        , private: refset.privateRefset
+                                        , workflowStatus: `${refset?.workflowStatus}`
+                                        , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
+                                        , versionDate: `${refset.versionDate}` })
                         
                     }
                     this.data = this.data.slice(0, 10);
@@ -199,10 +203,10 @@ export class DashboardComponent implements OnInit {
         if (event.column.colId === 'name') {
             const refsetId = event.data.refsetId;
             const versionDate = RefsetUtility.getVersionDateForRefsetApiCall(event.data);
-           
+
             this.goToDetailsPage(refsetId, versionDate);
 
-        } 
+        }
     }
 
     goToDetailsPage(refsetId, versionDate) {
@@ -221,9 +225,11 @@ export class DashboardComponent implements OnInit {
             for (let refset of x.items) {
                 this.data.push({ name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
                 , refsetId: refset.refsetId 
+                , private: refset.privateRefset
                 , workflowStatus: `${refset?.workflowStatus}`
                 , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`, versionDate: `${refset.versionDate}` })
                 
+
             }
             this.api.setRowData(this.data.slice(0, 10));
             this.api.redrawRows();
