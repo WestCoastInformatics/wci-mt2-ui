@@ -7,6 +7,9 @@ import { Title } from '@angular/platform-browser';
 import { AuthoringService } from './services/authoring/authoring.service';
 import { EnvService } from './services/environment/env.service';
 import { Router, RoutesRecognized } from '@angular/router';
+import { Subject } from 'rxjs';
+import { AuthenticationService } from './services/authentication/authentication.service';
+import { BackendInterceptor } from './interceptors/backend.interceptor';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -16,13 +19,18 @@ export class AppComponent implements OnInit {
     versions: object;
     environment: string;
     isLanding = false;
+    userActivity;
+    userInactive: Subject<any> = new Subject();
 
     constructor(
         private authoringService: AuthoringService,
+        private authenticationService: AuthenticationService,
         private envService: EnvService,
         private titleService: Title,
         private router: Router
-    ) { }
+    ) { 
+        authenticationService.apiCalled.subscribe(() => this.refreshUserState());
+    }
 
     //***** Framework Functions *****/
     ngOnInit() {
@@ -42,7 +50,12 @@ export class AppComponent implements OnInit {
             if (event instanceof RoutesRecognized) {
                 this.isLanding = event.url.split('/')[1] === '';
             }
-          });
+        });
+
+        this.setTimeout();
+        this.userInactive.subscribe(() => {
+            this.authenticationService.logoutUser();
+        });
     }
 
     assignFavicon() {
@@ -65,5 +78,25 @@ export class AppComponent implements OnInit {
                 favicon.attr('href', 'favicon_red.ico');
                 break;
         }
+    }
+
+    setTimeout() {
+        let date = new Date();
+        console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+        this.userActivity = setTimeout(() => {
+            
+            if (this.authenticationService.isUserLoggedIn) {
+                this.userInactive.next(undefined);
+                console.log('logged out');
+            }else{
+                console.log('not logged in');
+            }
+        }, 900000);
+    }
+
+    refreshUserState() {
+        console.log('Session Refreshed');
+        clearTimeout(this.userActivity);
+        this.setTimeout();
     }
 }

@@ -12,6 +12,7 @@ import {AuthenticationService} from 'src/app/services/authentication/authenticat
 
 @Injectable()
 export class HeaderInterceptor implements HttpInterceptor {
+    
 
     constructor(private authService: AuthenticationService) {
     }
@@ -32,6 +33,7 @@ export class HeaderInterceptor implements HttpInterceptor {
         if (!this.authService.isAuthenticated()) {
             this.authService.notAuthenticated();
         }
+        this.authService.resetSession();
 
         return next
             .handle(request).pipe(tap((event: HttpEvent<any>) => {

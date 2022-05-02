@@ -5,7 +5,7 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { EventEmitter, Injectable, Injector } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { Concept } from 'src/app/models/concept';
@@ -346,7 +346,6 @@ export class BackendInterceptor implements HttpInterceptor {
         const { url, method, headers, body } = request;
         let totalResults = 0;
         let params: any = CodeUtility.getParamsAsObject(request.url);
-
         // wrap in delayed observable to simulate server api call
         return of(null)
             .pipe(mergeMap(handleRoute))

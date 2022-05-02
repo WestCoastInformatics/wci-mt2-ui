@@ -93,7 +93,6 @@ export class OrganizationConfigurationComponent implements OnInit {
 }
 
 onKeyDownEvent(event: any){
-    console.log(event.target.value);
     this.isValidEmail();
 }
 
