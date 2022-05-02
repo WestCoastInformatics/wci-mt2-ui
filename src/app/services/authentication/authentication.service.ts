@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../../models/user';
@@ -14,6 +14,7 @@ import { RestService } from '../rest/rest.service';
     providedIn: 'root',
 })
 export class AuthenticationService {
+    public apiCalled: EventEmitter<null>
 
     GUEST_USER = 'Guest';
     LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
@@ -28,7 +29,9 @@ export class AuthenticationService {
         private router: Router,
         private readonly notificationService: NotificationService,
         private restService: RestService,
-    ) { }
+    ) { 
+        this.apiCalled = new EventEmitter();
+    }
 
     imsLogin(successCallback: Function = this.handleImsSuccess) {
 
@@ -171,5 +174,9 @@ export class AuthenticationService {
 
         this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
         this.router.navigateByUrl('');
+    }
+
+    resetSession(){
+        this.apiCalled.emit(null);
     }
 }
