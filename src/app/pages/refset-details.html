@@ -267,6 +267,7 @@
                     <ready-for-publication-modal
                         *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
                         [refsetData]="refsetData" [labelPrefix]="inEditButtonPrefix"
+                        (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')"
                         (reloadPage)="initializeDetailsPage()"></ready-for-publication-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
