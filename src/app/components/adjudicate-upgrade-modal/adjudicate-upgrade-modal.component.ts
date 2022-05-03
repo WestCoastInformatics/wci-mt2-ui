@@ -245,7 +245,8 @@ processChangedMemberEffects = (conceptStatusArray) => {
 
   transformDescriptions(descriptions: any, isOption = false) {
     if (descriptions) {
-      const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
+
+      const getStringifiedJSON = descriptions.substring(1, descriptions.length -1);
       if (getStringifiedJSON) {
         const formattedObjectArray = getStringifiedJSON.slice(1).split('{"descriptionId"').map((x) => {
           if (x[x.length - 1] === ',') {
