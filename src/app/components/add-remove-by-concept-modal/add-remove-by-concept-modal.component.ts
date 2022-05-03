@@ -20,6 +20,7 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { environment } from 'src/environments/environment';
 import { RefsetDetails } from 'src/app/pages/refset-details';
+import { NotificationService } from "src/app/services/notification.service";
 
 @Component({
     selector: "add-remove-by-concept-modal",
@@ -31,6 +32,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     searchResults = [];
     displayedColumns: string[] = ["memberOfRefset", "name", "description"];
     dataSource = [];
+    conceptIdArray = [];
     color: ThemePalette = "primary";
     checked = false;
     showActiveConceptsOnly = true;
@@ -67,6 +69,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     constructor(
         private readonly modalService: NgbModal,
         private refsetService: RefsetService,
+        private notificationService: NotificationService,
         private router: Router,
         private readonly refsetDetails: RefsetDetails
     ) {}
@@ -272,7 +275,18 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     openEclBuilder(fieldId) {
         UiUtility.openEclBuilder(fieldId, RefsetUtility.getBranchPath(this.refset));
     }
-    
+
+    addRemoveAllMembers(type) {
+        for (var i=0; i<this.dataSource.length; i++) {
+          this.conceptIdArray.push(this.dataSource[i].code);
+        }
+        
+        RefsetUtility.addRemoveMembersByList(this.refset.id, this.refset.refsetId, this.conceptIdArray.join(), type, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
+        
+        this.closeModal();
+
+    }
+
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
 
