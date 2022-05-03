@@ -23,19 +23,25 @@ export class DashboardComponent implements OnInit {
     currentUser: any;
 
     columnDefs = [
-        { field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
-            return `${params.data.refsetName}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
-          }, cellClass:'pointer' },
-        { field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true,floatingFilterComponent: 'categoryFilterComponent',
-        floatingFilterComponentParams: {suppressFilterButton: true, names: [{
-            "name": "In development",
-            "value": "IN DEVELOPMENT"
-        },{
-            "name": "Published",
-            "value": "PUBLISHED"
-        },]} },
         {
-            field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', filter:false, unSortIcon: true, sortable: true, valueGetter:
+            field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
+                return `${params.data.refsetName}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
+            }, cellClass: 'pointer'
+        },
+        {
+            field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true, floatingFilterComponent: 'categoryFilterComponent',
+            floatingFilterComponentParams: {
+                suppressFilterButton: true, names: [{
+                    "name": "In development",
+                    "value": "IN DEVELOPMENT"
+                }, {
+                    "name": "Published",
+                    "value": "PUBLISHED"
+                },]
+            }
+        },
+        {
+            field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', filter: false, unSortIcon: true, sortable: true, valueGetter:
                 UiUtility.gridDateValueGetter,
         }
     ];
@@ -90,7 +96,6 @@ export class DashboardComponent implements OnInit {
         };
         this.getOrganizations();
         this.getProjects();
-        this.getTeams();
     }
 
     ngAfterViewInit() {
@@ -148,38 +153,42 @@ export class DashboardComponent implements OnInit {
                     restParams.query = query;
                 }
                 this.data = [];
-                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({next: (results) => {
-                    
-                    for (let refset of results.items) {
-                        this.data.push({ name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                                        , refsetId: refset.refsetId 
-                                        , private: refset.privateRefset
-                                        , workflowStatus: `${refset?.workflowStatus}`
-                                        , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
-                                        , versionDate: `${refset.versionDate}` })
-                        
-                    }
-                    this.data = this.data.slice(0, 10);
-                    let data = this.data;
+                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
+                    next: (results) => {
 
-                    if (data?.length > 0) {
+                        for (let refset of results.items) {
+                            this.data.push({
+                                name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
+                                , refsetId: refset.refsetId
+                                , private: refset.privateRefset
+                                , workflowStatus: `${refset?.workflowStatus}`
+                                , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
+                                , versionDate: `${refset.versionDate}`
+                            })
 
-                        this.refsetGridApi.hideOverlay();
+                        }
+                        this.data = this.data.slice(0, 10);
+                        let data = this.data;
 
-                        rowParams.successCallback(data, data.length);
+                        if (data?.length > 0) {
 
-                    } else {
+                            this.refsetGridApi.hideOverlay();
+
+                            rowParams.successCallback(data, data.length);
+
+                        } else {
+
+                            this.refsetGridApi.showNoRowsOverlay();
+                            rowParams.successCallback([], 0);
+                        }
+
+                    },
+                    error: (error) => {
 
                         this.refsetGridApi.showNoRowsOverlay();
                         rowParams.successCallback([], 0);
                     }
-                   
-                },
-                error: (error) => {
-
-                    this.refsetGridApi.showNoRowsOverlay();
-                    rowParams.successCallback([], 0);
-                }});
+                });
             }
         };
 
@@ -197,6 +206,8 @@ export class DashboardComponent implements OnInit {
             let value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
+
+        this.getTeams();
     };
 
     onGridCellClick = (event) => {
@@ -223,12 +234,14 @@ export class DashboardComponent implements OnInit {
     getRefSets(): void {
         this.refsetService.getRefsets(`limit=500&offset=0&sort=name&sortAscending=true&assignedUser=${this.currentUser.userName}`, false).subscribe((x) => {
             for (let refset of x.items) {
-                this.data.push({ name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                , refsetId: refset.refsetId 
-                , private: refset.privateRefset
-                , workflowStatus: `${refset?.workflowStatus}`
-                , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`, versionDate: `${refset.versionDate}` })
-                
+                this.data.push({
+                    name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
+                    , refsetId: refset.refsetId
+                    , private: refset.privateRefset
+                    , workflowStatus: `${refset?.workflowStatus}`
+                    , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`, versionDate: `${refset.versionDate}`
+                })
+
 
             }
             this.api.setRowData(this.data.slice(0, 10));

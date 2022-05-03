@@ -249,7 +249,7 @@ export class RefsetDetails {
             localStorage.setItem(parentRouteKey, prevUrl);
         }
         let parent = localStorage.getItem(parentRouteKey);
-        if(parent && parent.includes('projects')){
+        if (parent && parent.includes('projects')) {
             isProjects = true;
         }
 
@@ -273,7 +273,6 @@ export class RefsetDetails {
         this.refsetLoaded$.pipe(take(1)).subscribe((loaded) => {
 
             this.loadWorkflowHistoryData();
-
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -312,7 +311,7 @@ export class RefsetDetails {
             };
 
             this.showTable = true;
-
+            this.showLoadingSpinner = false;
             // If the member grid data is present manually reload the grid or it won't update
             if (CodeUtility.hasValue(this.originalGridParams)) {
                 this.onMembersGridReady(this.originalGridParams);
@@ -331,7 +330,6 @@ export class RefsetDetails {
             console.log('memberCacheLoaded: ' + memberCacheLoaded);
 
             this.loadTaxonomyRoot();
-
             this.taxonomySearchColumnDefs = [
                 {
                     field: "code",
@@ -404,7 +402,6 @@ export class RefsetDetails {
                 },
             };
 
-            this.showLoadingSpinner = false;
         });
 
         this.loadRefset();
@@ -468,6 +465,7 @@ export class RefsetDetails {
                 } else {
                     this.selectedVersion = RefsetUtility.IN_DEVELOPMENT;
                 }
+                this.showLoadingSpinner = false;
 
                 for (let language of languages) {
 
@@ -507,7 +505,6 @@ export class RefsetDetails {
                     this.refsetLoaded.complete();
                 }
 
-                this.showLoadingSpinner = false;
 
             },
             error: (error) => {
@@ -725,7 +722,6 @@ export class RefsetDetails {
         }
 
         this.taxonomySearchGridApi.showLoadingOverlay();
-        // this.showLoadingSpinner = true;
 
         let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
         let query = "";
@@ -1684,7 +1680,7 @@ export class RefsetDetails {
         return refsetData?.descriptions;
     }
 
-    get displayOutdateWarning(): boolean{
+    get displayOutdateWarning(): boolean {
         const data = this.refsetData;
         return data && data.upgradeWarning && data.availableActions?.includes('CANCEL_EDIT') && !data.availableActions?.includes('EDIT');
     }
