@@ -28,13 +28,18 @@
                             <ag-grid-angular
                                 [columnDefs]="columnDefs"
                                 [rowData]="data"
-                                [defaultColDef]="defaultColDef"
+                                [gridOptions]="gridOptions"
                                 (gridReady)="onGridReady($event)"
                                 (cellClicked)="onGridCellClick($event)"
                                 [tooltipShowDelay]="0"
                                 style="width: 100%">
                             </ag-grid-angular>
                         </div>
+                        <ng-template #descriptionSection let-params>
+                            <label [ngbPopover]="params?.data.description" container="body" placement="top" popoverTitle="Description">
+                                {{ params?.data.description }}
+                            </label>
+                        </ng-template>
                     </div>
                     <!-- <div class='text-right'>
                         <a class='text-muted light'>show/hide admin</a>

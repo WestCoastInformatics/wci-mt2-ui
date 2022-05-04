@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
@@ -9,32 +9,24 @@ import { OrganizationsService } from 'src/app/services/rest/organizations.servic
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 
 @Component({
   selector: 'organization-projects',
   templateUrl: './projects.component.html'
 })
 export class OrganizationProjectsComponent implements OnInit {
-  menu:SidebarMenuItem[] = [
-    {name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true},
-    {name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users'},
-    {name: 'People', link: '/organizations/people', icon: 'fa fa-user'},
-    {name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs'}
+  menu: SidebarMenuItem[] = [
+    { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true },
+    { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+    { name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
+    { name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' }
   ];
-  
+
   data = [];
-  defaultColDef = {};
-  columnDefs = [
-    {
-      field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => {
-        return `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
-      }, cellClass: 'pointer'
-    },
-    { field: 'description', headerName: 'Description', minWidth: 550 },
-    { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
-      return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
-    } }
-  ];
+  gridOptions: any;
+  @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
+  columnDefs = [];
   projectList = []
   organizationList = [];
   selectedOrganization: any;
@@ -58,14 +50,33 @@ export class OrganizationProjectsComponent implements OnInit {
       { label: 'Projects' },
     ]);
 
-    this.defaultColDef = {
-      filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, resizable: true
-    };
-
     this.data = [];
+    this.columnDefs = [{
+      field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => {
+        return `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
+      }, cellClass: 'pointer'
+    },
+    { field: 'description', headerName: 'Description', minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
+    {
+      field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
+        return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
+      }
+    }];
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
+
+    this.gridOptions = {
+      onCellClicked: this.onGridCellClick,
+      onGridReady: this.onGridReady,
+      frameworkComponents: {
+        'templateRenderer': TemplateRenderer,
+      },
+      defaultColDef: {
+        filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, resizable: true
+      }
+    };
+
     this.getOrganization();
     this.getOrganizations();
   }
@@ -74,14 +85,16 @@ export class OrganizationProjectsComponent implements OnInit {
     this.gridParams = params;
     this.api = params.api;
     this.columnApi = params.columnApi;
+    this.columnDefs[2].cellRendererParams = { template: this.descriptionSection };
+    this.api.setColumnDefs(this.columnDefs);
     this.getProjects();
   }
 
   onGridCellClick = (event) => {
     if (event.column.colId === 'name') {
-        this.router.navigate(['/projects', event.data.id]);
-    } 
-}
+      this.router.navigate(['/projects', event.data.id]);
+    }
+  }
 
   get dataCount() {
     return this.data.length;
@@ -103,7 +116,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
   async getTeams(teams: any): Promise<any> {
     console.log(teams)
-    const teamObject = { teams: []};
+    const teamObject = { teams: [] };
     if (teams === 'undefined' || teams === undefined) {
       return JSON.stringify(teamObject);
     } else {
