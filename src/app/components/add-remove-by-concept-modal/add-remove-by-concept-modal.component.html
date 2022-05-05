@@ -36,7 +36,7 @@
                                 <div class="
                                         add-remove-concept-hierarchy-modal-search-bar
                                     ">
-                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField" style="width: auto;"
+                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField" style="width: 475px;"
                                                     class="
                                             add-remove-concept-hierarchy-modal-input-field
                                         ">
@@ -54,7 +54,10 @@
                                             add-remove-concept-hierarchy-modal-cancel-search
                                         "
                                           (click)="clearSearch()">&#10005;</span>
-
+                                    <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')"
+                                          #addRemoveByConceptHierarchySearchEclButton
+                                          class="btn btn-primary i18n ml-3 ecl-button rounded">ECL Builder
+                                    </button>
                                         <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults"
                                              class="
@@ -320,7 +323,6 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    {{dataSource.length}}*
         
         <button type="button" (click)="onTableSearchChange()" mat-raised-button color="green" aria-hidden="false"
             class="refset-tool-action-button" aria-label="Search" title="Search Concepts" ng-reflect-color="green">
