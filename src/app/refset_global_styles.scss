@@ -441,6 +441,14 @@ button.refset-tool-table-action-icon {
     color: $delete_color;
 }
 
+.refset-tool-resize {
+    resize: both;
+}
+
+.refset-tool-resize-vertical {
+    resize: vertical;
+}
+
 .refset-tool-concept-details-concept-ecl {
     padding-left: 0px !important;
 }
@@ -4172,12 +4180,6 @@ img.refset-tool-edition-flag {
         font-size: 14px;
     }
 }
-
-.section-list:last-child {
-    border-bottom: 0;
-    padding: 15px;
-    padding-left: 10px;
-}
 .btn.btn-main,.btn.btn-primary {
     background-color: $main-color;
     border-radius: 0 !important;
@@ -5002,17 +5004,14 @@ $sidebar-width: 294px;
     }
 }
 .topic-title{
-    font-size: inherit;
+    font-size: large;
     font-weight: 700;
     color:#555555;
     margin: 10px 0 5px;
 }
-.topic-content{
-    font-size: 22px;
-    color:#555555;
-    .show-more{
-        font-size: inherit;
-    }
+
+.discussion-topic-field {
+    width: 100%;
 }
 
 .discussion-list{
@@ -5020,7 +5019,8 @@ $sidebar-width: 294px;
     border: 1px solid rgba(197, 196, 197, 1);
     font-size: 16px;
     font-weight: 400;
-    max-height: 300px;
+    min-height: 113px;
+    height: 340px;
     overflow: auto;
 
     .topic-header{

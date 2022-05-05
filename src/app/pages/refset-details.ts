@@ -179,15 +179,12 @@ export class RefsetDetails {
     @ViewChild("detailsActionSection") actionSection: TemplateRef<any>;
     @ViewChild("detailsRichTextDialog") richTextDialog: TemplateRef<any>;
     @ViewChild("detailsMembersPaging") membersPaginationComponent: PaginationComponent;
-    @ViewChild("refsetFeedbackDialog") refsetFeedbackDialog: TemplateRef<any>;
     @ViewChild("cloneRefsetDialog") cloneRefsetDialog: TemplateRef<any>;
     @ViewChild("deleteRefsetDialog") deleteRefsetDialog: TemplateRef<any>;
-    @ViewChild("compareRefsetDialog") compareRefsetDialog: TemplateRef<any>;
     @ViewChild("refsetVersionNotes") refsetVersionNotes: TemplateRef<any>;
     @ViewChild("refsetAuditDialog") refsetAuditDialog: TemplateRef<any>;
     @ViewChild("refsetArtifactsDialog") refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild("memberHistoryDialog") memberHistoryDialog: TemplateRef<any>;
-    @ViewChild("memberFeedbackDialog") memberFeedbackDialog: TemplateRef<any>;
     @ViewChild("detailsMembersTaxonomy") taxonomyMembersComponent: TaxonomyTreeComponent;
     @ViewChild("taxonomySearchPaginationComponent") taxonomySearchPaginationComponent: PaginationComponent;
     @ViewChild("taxonomyResultSection") taxonomyResultSection: TemplateRef<any>;
@@ -1393,30 +1390,12 @@ export class RefsetDetails {
         this.dialog.confirmed().subscribe((data) => { });
     }
 
-    openRefsetFeedback() {
-        const dialogId = "refsetFeedbackDialog";
-
-        const dialogData = {
-            headerText: `Refset Feedback`,
-            template: this.refsetFeedbackDialog,
-            data: this.refsetData,
-        };
-
-        const dialogOptions = {
-            id: dialogId,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe((data) => { });
-    }
-
     openCloneRefset() {
         const dialogId = "cloneRefsetDialog";
 
         const dialogData = {
             headerText: `Clone Refset`,
-            template: this.refsetFeedbackDialog,
+            template: this.cloneRefsetDialog,
             data: this.refsetData,
         };
 
@@ -1434,25 +1413,7 @@ export class RefsetDetails {
 
         const dialogData = {
             headerText: `Delete Refset`,
-            template: this.refsetFeedbackDialog,
-            data: this.refsetData,
-        };
-
-        const dialogOptions = {
-            id: dialogId,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe((data) => { });
-    }
-
-    openCompareRefset() {
-        const dialogId = "compareRefsetDialog";
-
-        const dialogData = {
-            headerText: `Compare Refset`,
-            template: this.refsetFeedbackDialog,
+            template: this.deleteRefsetDialog,
             data: this.refsetData,
         };
 
@@ -1494,25 +1455,6 @@ export class RefsetDetails {
             this.membersTaxonomyDisplay = "inline-block";
             this.changeTaxonomyLanguage();
         }
-    }
-
-    openMemberFeedback(conceptId: string) {
-        let concept = this.getMemberRow(conceptId);
-        const dialogId = "conceptFeedbackDialog";
-
-        const dialogData = {
-            headerText: `Member Feedback for ${concept.name} (${conceptId})`,
-            template: this.memberFeedbackDialog,
-            data: concept,
-        };
-
-        const dialogOptions = {
-            id: dialogId,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe((data) => { });
     }
 
     openMemberHistory(conceptId) {

@@ -1,127 +1,417 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Refset } from 'src/app/models/refset';
-import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
-import { TemplateRenderer } from '../cellRenderers/template.renderer';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { User } from 'src/app/models/user';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 
 @Component({
-  selector: 'app-refset-feedback-list',
-  templateUrl: './refset-feedback-list.component.html'
+	selector: 'app-refset-discussion-list',
+	templateUrl: './refset-feedback-list.component.html'
 })
 export class RefsetFeedbackListComponent implements OnInit {
 
-  @ViewChild('topicNameSection') nameSection: TemplateRef<any>;
-  @ViewChild('topicModal') topicModal: TemplateRef<NgbModal>;
-  
-  data = [];
-  discussions = [
-    {
-      author: 'Jesse Efron', pic: 'assets/sampels/profile/2.svg', date: '2022-03-12  02:38:19', locked: false,
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
-    },
-    {
-      author: 'Tim Williams', pic: 'assets/sampels/profile/3.svg', date: '2022-03-13  10:03:20', locked: true,
-      content: 'Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus sit pulvinar tempor sit et'
-    },
-    {
-      author: 'Wendy Boeger', pic: 'assets/sampels/profile/4.svg', date: '2022-03-14 11:43:29', locked: false,
-      content: 'Most recent entry goes here. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus sit.'
-    },
-    {
-      author: 'Jesse Efron', pic: 'assets/sampels/profile/5.svg', date: '2022-03-15  02:38:19', locked: false,
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
-    },
-    {
-      author: 'Jesse Efron', pic: 'assets/sampels/profile/2.svg', date: '2022-03-16  02:38:19', locked: false,
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
-    },
-    {
-      author: 'Jesse Efron', pic: 'assets/sampels/profile/3.svg', date: '2022-03-17  02:38:19', locked: false,
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
-    },
-    {
-      author: 'Jesse Efron', pic: 'assets/sampels/profile/4.svg', date: '2022-03-18  02:38:19', locked: false,
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.'
-    },
-  ];
+	user: User;
+	isUserLoggedIn: boolean;
+	openedThreadListModal: NgbModalRef;
+	openedThreadModal: NgbModalRef;
+	threadsData = [];
+	selectedThread: any;
+	displayHeader: string = 'Feedback';
+	refsetGridOptions = {};
+	newThread = false;
+	editThread = false;
+	showHiddenPosts = false;
+	isResolved = false;
+	gridApi: any;
+	gridColumnDefs = [];
+	gridOptions: any;
+	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+	showTable: boolean = false;
+	postTruncationLength = 500;
+	tinyMceConfig = {
+		base_url: '/tinymce',
+		suffix: '.min',
+		height: 200,
+		menubar: false,
+		plugins: ['lists advlist'],
+		toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+	};
+	postPrivateField: boolean;
+	postVisibilityField: boolean;
+	postStatusField: string;
+	postMessageField: string;
+	postSubjectField: string;
+	postButtonText: string;
+	RESOLVED = 'Resolved';
+	OPEN = 'Open';
+	VISIBLE = 'Visible';
+	HIDDEN = 'Hidden';
 
-  refsetGridOptions = {};
-  topic: string;
+	tempProfilePic1 = 'assets/sampels/profile/1.svg';
+	tempProfilePic2 = 'assets/sampels/profile/2.svg';
 
-  columnDefs = [];
-  @Input() refset: Refset;
+	@Input() type: string;
+	@Input() refsetInternalId: string;
+	@Input() refsetId: string;
+	@Input() refsetName: string;
+	@Input() conceptId: string = null;
+	@Input() conceptName: string;
+	@Input() roles: string[];
 
-  constructor(private readonly modalService: NgbModal) { }
+	@ViewChild('discussionListPagination') paginationComponent: PaginationComponent;
+	@ViewChild('discussionListAuthorSection') authorSection: TemplateRef<any>;
+	@ViewChild('discussionListSubjectSection') subjectSection: TemplateRef<any>;
+	@ViewChild('threadListModal') threadListModal: NgbModal;
+	@ViewChild('threadModal') threadModal: NgbModal;
 
-  ngOnInit() {
+	constructor(private readonly modalService: NgbModal, readonly refsetService: RefsetService, private authenticationService: AuthenticationService) { }
 
-    this.data = [
-      { name: 'Steph Whalen', pic: 'assets/sampels/profile/1.svg', topic: 'Consider adding long covid symptoms to this refset', lock: false, status: 'Open', lastComment: '2022-03-18', replies: 4, visibility: 'Visible' },
-      { name: 'Steph Whalen', pic: 'assets/sampels/profile/2.svg', topic: 'Is there a need for inclusion of Dyspnea? Suggesting an alternate like that… ', lock: false, status: 'Resolved', lastComment: '2022-03-15', replies: 10, visibility: 'Visible' },
-      { name: 'Steph Whalen', pic: 'assets/sampels/profile/3.svg', topic: 'Can you add more information on the purpose of the refset?', lock: true, status: 'Open', lastComment: '2022-03-14', replies: 2, visibility: 'Visible' },
-      { name: 'Steph Whalen', pic: 'assets/sampels/profile/4.svg', topic: 'It might be helpful to compare this refset to Covid-19 Refset authored by… ', lock: false, status: 'Open', lastComment: '2022-03-08', replies: 0, visibility: 'Visible' },
-      { name: 'Steph Whalen', pic: 'assets/sampels/profile/5.svg', topic: 'Infection of upper respiratory tract caused by severe acute respiratory sy…', lock: false, status: 'Open', lastComment: '2022-02-26', replies: 13, visibility: 'Hidden' },
-      { name: 'Steph Whalen', pic: 'assets/sampels/profile/6.svg', topic: 'What are your thoughts about the connection to exposure sources?', lock: false, status: 'Open', lastComment: '2022-02-11', replies: 3, visibility: 'Visible' }
-    ];
+	ngOnInit() {
 
-    this.refsetGridOptions = {
-      context: { componentParent: this },
-      onCellClicked: this.onGridCellClick,
-      defaultColDef: { filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, flex: 1 },
-      frameworkComponents: {
-        'templateRenderer': TemplateRenderer,
-        'categoryFilterComponent': CategoryFilterComponent
-      },
-    };
+		this.user = this.authenticationService.getUser();
+		this.isUserLoggedIn = this.user && this.user.userName != this.authenticationService.GUEST_USER;
+	}
 
-    this.columnDefs = [
-      {
-        field: 'name', headerName: 'Author', cellRenderer: params => {
-          return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
-        }
-      },
-      {
-        field: 'topic', headerName: 'Feedback Topic', minWidth: 300, cellRenderer: params => {
-          return `<a class='text-main pointer'>${params.value}</a>` + (params.data.locked? '<i class="ml-3 text-muted fa fa-lock" *ngIf="params.data.locked"></i>' : '');
-        }
-      },
-      {
-        field: 'status', headerName: 'Status', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
-          suppressFilterButton: true, names: [
-            { type: 'status', name: 'All', value: '' },
-            { type: 'status', name: 'Open', value: 'Open' },
-            { type: 'status', name: 'Resolved', value: 'Resolved' }
-          ]
-        }
-      },
-      { field: 'lastComment', headerName: 'Last Comment' },
-      { field: 'replies', headerName: 'Replies' },
-      { field: 'visibility', headerName: 'visibility', cellClass: 'text-primary font-weight-bold', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
-        suppressFilterButton: true, names: [
-          { type: 'status', name: 'All', value: '' },
-          { type: 'status', name: 'Visible', value: 'Visible' },
-          { type: 'status', name: 'Hidden', value: 'Hidden' }
-        ]
-      } }]
-  }
-  onGridCellClick = (event) => {
+	ngOnChanges(changes: SimpleChanges) {
 
-    if (event.column.colId === 'topic') {
-      this.topic = event.data.topic;
-      this.modalService.open(this.topicModal, {
-        modalDialogClass: 'full-modal',
-        centered: true
-        //backdrop : 'static',
-        //keyboard : false,
-      });
+        for (const propertyName in changes) {
+
+            if (propertyName === "refsetName" || propertyName === "conceptName") {
+
+				if (this.type == 'REFSET') {
+					this.displayHeader = 'Refset Feedback: ' + this.refsetName;
+				} else {
+					this.displayHeader = 'Member Feedback: ' + this.conceptName + ' (' + this.conceptId + ') for Refset: ' + this.refsetName;
+				}
+			}
+		}
+	}
+
+	openThreadListModal() {
+
+		this.openedThreadListModal = this.modalService.open(this.threadListModal, { backdrop: 'static', keyboard: false, modalDialogClass: 'full-modal', centered: true});
+
+		this.selectedThread = null;
+		this.newThread = false;
+		this.showTable = true;
+
+		this.gridOptions = {
+			context: { componentParent: this },
+			pagination: false,
+			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressPaginationPanel: true,
+			paginationPageSize: this.gridPaging.pageSize,
+			rowSelection: 'single',
+			enableCellTextSelection: true,
+			onCellClicked: this.onGridCellClick,
+			onGridReady: this.onGridReady,
+			frameworkComponents: {
+				templateRenderer: TemplateRenderer,
+				categoryFilterComponent: CategoryFilterComponent,
+				dateTextFilterComponent: DateTextFilterComponent
+			},
+			defaultColDef: {
+				sortable: true,
+				resizable: true,
+				suppressMenu: true,
+				flex: 1,
+				filter: true,
+				floatingFilter: true,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				refset_tool_grid_inactive_row: function (params) {
+
+					var inactivatedRow = false;
+
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
+
+					return inactivatedRow;
+				},
+			},
+		};
+
+		this.gridColumnDefs = [
+			{ field: 'id', headerName: 'Author', minWidth: 120, tooltipField: 'Author', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.authorSection } },
+			{ field: 'subject', headerName: 'Feedback Topic', tooltipField: 'Feedback Topic', minWidth: 300, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.subjectSection } },
+			{
+				field: 'status', headerName: 'Status', tooltipField: 'Status', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
+					names: [
+						{ type: 'status', name: 'All', value: '' },
+						{ type: 'status', name: this.OPEN, value: this.OPEN },
+						{ type: 'status', name: this.RESOLVED, value: this.RESOLVED }
+					]
+				}
+			},
+			{ field: 'lastPost', headerName: 'Last Comment', tooltipField: 'Last Comment', valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
+			{ field: 'numberReplies', headerName: 'Replies', tooltipField: 'Replies' },
+			{
+				field: 'Visibility', headerName: 'visibility', tooltipField: 'visibility', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
+					names: [
+						{ type: 'status', name: 'All', value: '' },
+						{ type: 'status', name: this.VISIBLE, value: this.VISIBLE },
+						{ type: 'status', name: this.HIDDEN, value: this.HIDDEN }
+					]
+				}
+			}
+		];
+
+		// set placeholders on the grid floating filter fields
+        UiUtility.applyGridPlaceholders('#discussionThreadListGridSection .ag-floating-filter-full-body .ag-input-field-input');
+	}
+
+	onGridReady = (gridReadyParams) => {
+
+        this.gridApi = gridReadyParams.api;
+		// let conceptId = null;
+
+		// if (CodeUtility.hasValue(this.conceptId)) {
+		// 	conceptId = this.conceptId;
+		// }
+
+        this.refsetService.getDiscussionThreads(this.type, this.refsetInternalId, this.conceptId).subscribe({
+            next: (results) => {
+
+                results.total = results.items.length;
+                results.totalKnown = true;
+                this.threadsData = results.items;
+                console.log(results);
+                let pageNumber = 1;
+
+                if (results.items.length == 0) {
+
+                    this.gridApi.showNoRowsOverlay();
+                    this.gridApi.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+                        this.gridPaging.totalKnown = true;
+                        this.paginationComponent.goToPage(pageNumber - 1);
+                    }
+
+                    return;
+                }
+
+                UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
+            },
+            error: (error) => {
+
+                this.gridApi.showNoRowsOverlay();
+                this.gridApi.setRowData([]);
+            }
+        });
     }
-  }
 
-  onTopicClick(row){
-    console.log(row);
-  }
+	onGridCellClick = (event) => {
 
-  get dataCount() {
-    return this.data.length;
-  }
+		this.selectedThread = event.data;
+		this.openThreadModal();
+	}
+
+	openThreadModal(newThread = false) {
+
+		this.newThread = newThread;
+		this.postPrivateField = false;
+		this.postMessageField = '';
+		this.postSubjectField = '';
+		this.showHiddenPosts = false;
+
+		if (newThread) {
+
+			this.isResolved = false;
+			this.selectedThread = null;
+			this.postButtonText = 'Start Discussion';
+		} else {
+
+			this.isResolved = this.selectedThread.status == this.RESOLVED;
+			this.postButtonText = 'Reply';
+		}
+
+		this.openedThreadModal = this.modalService.open(this.threadModal, { modalDialogClass: 'full-modal', centered: true });
+	}
+
+	updateThread() {
+
+		this.editThread = true;
+		this.postPrivateField = this.selectedThread.privateThread;
+		this.postMessageField = this.selectedThread.posts[0].message;
+		this.postSubjectField = this.selectedThread.subject;
+		this.postButtonText = 'Update Discussion';
+	}
+
+	saveChanges() {
+
+		let post: any = { message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE };
+
+		if (!this.newThread && !this.editThread) {
+
+			this.refsetService.addDiscussionPost(this.selectedThread.id, JSON.stringify(post)).subscribe({
+				next: (results) => {
+	
+					this.selectedThread.numberReplies += 1;
+					this.selectedThread.lastPost = results.created;
+					this.selectedThread.posts.push(results);
+
+					this.resetPostForm();
+					this.reloadGridData();
+				}
+			});
+
+		} else if (this.newThread) {
+
+			let thread: any = { 
+				type: this.type, 
+				refsetInternalId: this.refsetInternalId,
+				conceptId: this.conceptId,
+				subject: this.postSubjectField, 
+				privateThread: this.postPrivateField, 
+				visibility: this.VISIBLE, 
+				status: this.OPEN, 
+				posts: [post] 
+			};
+
+			this.refsetService.addDiscussionThread(JSON.stringify(thread)).subscribe({
+				next: (results) => {
+
+					this.threadsData.push(results);
+					this.selectedThread = results;
+					this.gridPaging.totalRows += 1;
+
+					this.resetPostForm();
+					this.reloadGridData();
+				}
+			});
+		
+		} else {
+
+			let updatedThread = CodeUtility.clone(this.selectedThread);
+
+			updatedThread.subject = this.postSubjectField;
+			updatedThread.privateThread = this.postPrivateField;
+
+			let updatedPost = updatedThread.posts[0];
+			updatedPost.message = this.postMessageField;
+			updatedPost.privatePost = this.postPrivateField;
+
+			this.refsetService.updateDiscussionThread(updatedThread.id, JSON.stringify(updatedThread)).subscribe({
+				next: (results) => {
+
+					this.selectedThread = updatedThread;
+
+					this.resetPostForm();
+					this.reloadGridData();
+				}
+			});
+		}
+	}
+
+	changeStatus(newStatus: string) {
+
+		this.refsetService.updateDiscussionThreadStatus(this.selectedThread.id, newStatus).subscribe({
+			next: (results) => {
+
+				this.selectedThread.status = newStatus;
+				this.isResolved = newStatus == this.RESOLVED;
+
+				this.reloadGridData();
+			}
+		});
+	}
+
+	changeThreadPrivacy(thread: any, isPrivate: boolean) {
+
+		this.refsetService.updateDiscussionThreadPrivacy(thread.id, isPrivate).subscribe({
+			next: (results) => {
+
+				thread.privateThread = isPrivate;
+				thread.posts[0].privatePost = isPrivate;
+
+				this.reloadGridData();
+			}
+		});
+	}
+
+	changeThreadVisibility(thread: any, visibility: string) {
+
+		this.refsetService.updateDiscussionThreadVisibility(thread.id, visibility).subscribe({
+			next: (results) => {
+
+				thread.visibility = visibility;
+
+				this.reloadGridData();
+			}
+		});
+	}
+
+	changePostPrivacy(threadId: string, post: any, isPrivate: boolean) {
+
+		this.refsetService.updateDiscussionPostPrivacy(threadId, post.id, isPrivate).subscribe({
+			next: (results) => {
+				post.privatePost = isPrivate;
+			}
+		});
+	}
+
+	changePostVisibility(threadId: string, post: any, visibility: string) {
+
+		this.refsetService.updateDiscussionPostVisibility(threadId, post.id, visibility).subscribe({
+			next: (results) => {
+				post.visibility = visibility;
+			}
+		});
+	}
+
+	resetPostForm() {
+
+		this.newThread = false;
+		this.editThread = false;
+		this.postPrivateField = false;
+		this.postMessageField = '';
+		this.postSubjectField = '';
+		this.postButtonText = 'Reply';
+	}
+
+	reloadGridData() {
+
+		this.gridApi.setRowData(this.threadsData);
+		this.gridApi.redrawRows();
+	}
+
+	getUserIcon(icon) {
+		return '/assets/profile/' + icon;
+	}
+
+	getGenericUserIcon(event) {
+		event.target.src = '/assets/user_logo.png';
+	}
+
+	getPostText(message: string, truncate: boolean = true) {
+
+		let strippedMessage = CodeUtility.stripHtml(message);
+
+		if (truncate && strippedMessage.length > this.postTruncationLength) {
+			return CodeUtility.shortenText(strippedMessage, this.postTruncationLength);
+		} else {
+			return message;
+		}
+	}
+
+	formatDate(date) {
+		return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE);
+	}
+
+	formatDateTime(date) {
+		return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE_WITH_24_HOUR_TIME);
+	}
 }
