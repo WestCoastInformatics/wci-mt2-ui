@@ -85,7 +85,7 @@ export class OrganizationProjectsComponent implements OnInit {
     this.gridParams = params;
     this.api = params.api;
     this.columnApi = params.columnApi;
-    this.columnDefs[2].cellRendererParams = { template: this.descriptionSection };
+    this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
     this.api.setColumnDefs(this.columnDefs);
     this.getProjects();
   }
