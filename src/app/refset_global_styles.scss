@@ -2872,8 +2872,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .add-remove-concept-hierarchy-modal-size>.modal-dialog {
-    width: 500px;
-    max-width: 500px;
+    width: 1000px;
+    max-width: 1000px;
 
     .modal-content {
         height: 300px;
@@ -2945,7 +2945,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     max-height: 274px;
 }
 
-#addRemoveByConceptHierarchySearchInputField {
+#addRemoveByConceptHierarchySearchInput {
     width: 375px;
 }
 
