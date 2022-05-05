@@ -105,7 +105,7 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   latestDate(versionList: any[]): string {
-    return versionList[0].date;
+    return `${versionList[0].date} (${versionList[0].status})`;
   }
 
   upgrade(): void {

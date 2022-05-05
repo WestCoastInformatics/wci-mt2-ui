@@ -20,6 +20,7 @@ export class PersonalConfigurationComponent implements OnInit {
   selectedTeam: any;
   currentUserId: any;
   user: any;
+  iconUriValue: '';
 
   constructor(private readonly authService: AuthenticationService,private notificationService: NotificationService,
   private readonly userService: UsersService) { }
@@ -35,6 +36,7 @@ export class PersonalConfigurationComponent implements OnInit {
       this.profileNameValue = this.user?.name;
       this.profileCompanyValue = this.user?.company;
       this.profileEmailValue = this.user?.email;
+      this.iconUriValue = this.user?.iconUri;
     });
   }
 
@@ -47,5 +49,18 @@ export class PersonalConfigurationComponent implements OnInit {
         this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
       }
     });
+  }
+
+  onPhotoChange(event){
+    const file:File = event.target.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        this.userService.updateUserPhoto(this.currentUserId, formData).subscribe((result) => {
+          this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+          this. getUser();
+        });
+    }
   }
 }

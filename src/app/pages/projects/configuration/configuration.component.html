@@ -32,7 +32,8 @@
     
                         <mat-form-field class="profile-email-field" appearance="none">
                             <mat-label>Primary Contact Email</mat-label>
-                            <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+                            <input matInput type="text" name="email"  (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
+                            <div class="modal-error-message" [hidden]="!emailError">{{emailError}}</div>
                         </mat-form-field>
     
                         <mat-form-field class="profile-description-field" appearance="none">
@@ -47,7 +48,7 @@
                     </div>
                             
                             <div class="update-profile-button">
-                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue" (click)="updateProject()">Update Profile</button></div>
+                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()" (click)="updateProject()">Update Profile</button></div>
                             </div>
                     </div>
         

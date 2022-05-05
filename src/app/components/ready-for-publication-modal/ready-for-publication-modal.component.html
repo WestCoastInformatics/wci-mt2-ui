@@ -44,12 +44,9 @@
     <div class="modal-footer rt2-modal-footer">
         <button type="button"
                 (click)="
-                        modal.close('Request Publication');
                         setWorkflowStatusByAction(
-                            requestForPublicationNotes,
-                            'REQUEST_PUBLICATION'
+                            requestForPublicationNotes
                         );
-                        clearModal()
                     "
                 mat-raised-button
                 color="green"

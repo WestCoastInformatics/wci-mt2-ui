@@ -32,7 +32,8 @@
     
                         <mat-form-field class="profile-email-field" appearance="none">
                             <mat-label>Primary Contact Email</mat-label>
-                            <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+                            <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
+                            <div class="modal-error-message" [hidden]="!emailError">{{emailError}}</div>
                         </mat-form-field>
     
                         <mat-form-field class="profile-description-field" appearance="none">
@@ -42,7 +43,7 @@
                     </div>
                             
                             <div class="update-profile-button">
-                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue" (click)="updateTeam()">Update Profile</button></div>
+                                <div class="section-list text-right" aria-label="Update Profile" title="Update Profile"><button class="btn btn-primary btn-lg" [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue || !isValidEmail()" (click)="updateTeam()">Update Profile</button></div>
                             </div>
                     </div>
         
@@ -66,13 +67,13 @@
                                 <div class="section-list text-right" aria-label="Save Permissions" title="Save Permissions"><button class="btn btn-primary btn-lg" [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles" (click)="updateTeamRoles()">Save Permissions</button></div>
                             </div>
                         </div>
-                        <div class="teams-configuration-block-row team-members-block">
+                        <!-- <div class="teams-configuration-block-row team-members-block">
                             <div class="add-members-head section-header">Members</div>
                             <div class="add-members-mid">Add members to your team to begin reference set creation & modeling.</div>
                             <div class="add-members-button">
                                 <div class="section-list text-right" aria-label="Add Members" title="Add Members"><button class="btn btn-primary btn-lg">Add Members</button></div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="teams-configuration-block-row remove-teams-block">
                             <div class="remove-team-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
                             <div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>

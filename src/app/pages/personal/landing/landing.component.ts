@@ -28,7 +28,6 @@ export class PersonalLandingComponent implements OnInit {
   ngOnInit(): void {
     this.currentUserId = this.authService.getUser().id;
     this.getUser();
-    console.log(this.currentUserId);
     this.getOrganizations();
     this.getTeams();
   }
@@ -36,7 +35,6 @@ export class PersonalLandingComponent implements OnInit {
   getUser(): void {
     this.userService.getUser(this.currentUserId).subscribe((x) => {
       this.user = x;
-      console.log(this.user);
     });
   }
 

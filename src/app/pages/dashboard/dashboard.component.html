@@ -13,7 +13,7 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.value">
-                                    <!-- <img src='assets/sampels/u102.svg' /> -->
+                                    <img [src]="organization.iconUri" />
                                     <span
                                         [routerLink]="['/organizations/projects', organization.id]"><a>{{
                                             organization.value }}</a></span>
@@ -77,8 +77,8 @@
                                     </button>
                                 </mat-form-field> -->
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data"
-                                (gridReady)="onGridReady($event)" (cellClicked)="onGridCellClick($event)" style="width: 100%">
+                            <ag-grid-angular [columnDefs]="columnDefs"
+                            [gridOptions]="refsetGridOptions" style="width: 100%">
                             </ag-grid-angular>
                         </div>
                     </div>

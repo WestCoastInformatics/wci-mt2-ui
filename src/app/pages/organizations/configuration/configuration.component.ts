@@ -25,6 +25,8 @@ export class OrganizationConfigurationComponent implements OnInit {
   selectedOrganization: any;
   id: any;
   organizationList = [];
+  iconUriValue: '';
+  emailError = '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly notificationService: NotificationService,
@@ -40,7 +42,7 @@ export class OrganizationConfigurationComponent implements OnInit {
       { path: '/organizations/configuration', label: 'Organizations' },
       { label: 'Configurations' },
     ]);
-    
+
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
@@ -62,6 +64,7 @@ export class OrganizationConfigurationComponent implements OnInit {
       this.profileNameValue = this.selectedOrganization?.name;
       this.profileEmailValue = this.selectedOrganization?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedOrganization?.description;
+      this.iconUriValue = this.selectedOrganization?.iconUri;
     });
   }
 
@@ -77,6 +80,22 @@ export class OrganizationConfigurationComponent implements OnInit {
     });
   }
 
+  isValidEmail(): boolean {
+    var lower = this.profileEmailValue.toLowerCase();
+    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+    if (flag == null) {
+        this.emailError = "Email is invalid.";
+    } else {
+        this.emailError = "";
+    }
+    return flag == null ? false : true;
+}
+
+onKeyDownEvent(event: any){
+    this.isValidEmail();
+}
+
   selectOrg($event): void {
     this.router.navigate(['/organizations/configuration', $event['value'].id]);
     this.route.params.subscribe(params => {
@@ -91,5 +110,18 @@ export class OrganizationConfigurationComponent implements OnInit {
 
   getSelectedOrganizationId(): string{
     return this.selectedOrganization?.id;
+  }
+
+  onPhotoChange(event){
+    const file:File = event.target.files[0];
+
+    if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        this.organizationsService.updateOrganizationPhoto(this.id, formData).subscribe((result) => {
+          this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+          this.getOrganization();
+        });
+    }
   }
 }

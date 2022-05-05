@@ -12,13 +12,13 @@ import {AuthenticationService} from 'src/app/services/authentication/authenticat
 
 @Injectable()
 export class HeaderInterceptor implements HttpInterceptor {
+    
 
     constructor(private authService: AuthenticationService) {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-        if (!request.headers.has('Content-Type')) {
+        if (!request.headers.has('Content-Type') && !request.headers.has('enctype')) {
             request = request.clone({
                 headers: request.headers.set('Content-Type', 'application/json'),
             });
@@ -33,14 +33,15 @@ export class HeaderInterceptor implements HttpInterceptor {
         if (!this.authService.isAuthenticated()) {
             this.authService.notAuthenticated();
         }
+        this.authService.resetSession();
 
         return next
             .handle(request).pipe(tap((event: HttpEvent<any>) => {
-                    
+
                     // if (event instanceof HttpResponse) {
                     //     console.log('HttpResponse: ', event);
                     // }
-                    
+
                     // else if (event instanceof HttpRequest) {
                     //     console.log('HttpRequest: ', event);
                     // }
