@@ -175,7 +175,6 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 		console.timeEnd('add-remove addRemoveConcept before manageMemberNotifications');
 		UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
-		this.onMembersGridReady.emit();
 		console.timeEnd('add-remove addRemoveConcept after manageMemberNotifications');
     }
 
