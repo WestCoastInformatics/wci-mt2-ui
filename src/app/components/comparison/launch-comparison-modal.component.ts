@@ -455,6 +455,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     addRemoveConceptGroup(params: any): void {
 
+        this.showLoadingSpinner = true;
         let operation = 'add';
 
         if (!params.addConcept) {
