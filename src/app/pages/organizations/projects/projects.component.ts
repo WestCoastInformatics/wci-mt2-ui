@@ -101,8 +101,8 @@ export class OrganizationProjectsComponent implements OnInit {
   }
 
   getProjects(): void {
-    this.data = [];
     this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(async (results) => {
+      this.data = [];
       this.projectList = results.items;
       for (let project of this.projectList) {
         if (project?.organization?.id === this.selectedOrganization?.id) {

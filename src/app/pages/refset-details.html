@@ -117,7 +117,9 @@
                 <div>
 
                     <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
-                    <a class="ml-3 pointer"  (click)="openFeedbackModal(feedbackDialog)"><i class="fa fa-comment-dots text-main"></i></a>
+                    <app-refset-discussion-list type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData?.name" [roles]="refsetData?.roles">
+                    </app-refset-discussion-list>
+                    
                     <br *ngIf="editMode">
 
                     <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
@@ -144,8 +146,6 @@
                     <button *ngIf="editMode" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #collaborationMenu="matMenu">
-                        <button mat-menu-item [hidden]="true">Create New Feedback</button>
-                        <button mat-menu-item (click)="openRefsetFeedback()" title="View Feedback" aria-label="View Feedback">Manage Feedback</button>
                         <button mat-menu-item [hidden]="true">Share Reference Set</button>
                         <button mat-menu-item [hidden]="true">Request Project Access</button>
                     </mat-menu>
@@ -565,19 +565,11 @@
                     </div>
                 </div>
 
-                <ng-template #refsetFeedbackDialog let-data>
-                    This functionality will be implemented in subsequent phases.
-                </ng-template>
-
                 <ng-template #cloneRefsetDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
                 <ng-template #deleteRefsetDialog let-data>
-                    This functionality will be implemented in subsequent phases.
-                </ng-template>
-
-                <ng-template #compareRefsetDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
@@ -907,10 +899,6 @@
                                         </div>
                                     </ng-template>
 
-                                    <ng-template #memberFeedbackDialog let-data>
-                                        This functionality will be implemented
-                                        in subsequent phases.
-                                    </ng-template>
                                 </div>
 
                                 <!-- Members Taxonomy Tree -->
@@ -1264,70 +1252,4 @@
         </button>
     </div>
 </ng-template>
-<ng-template #feedbackDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <h4 class="modal-title">Refset Feedback: {{refsetData?.name}}</h4>
-        <button type="button" class="close" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body pr-0 pl-0 pb-0">
-            <div class="text-right">
-                <a class="btn btn-main mb-3" (click)="openFeedbackModal(newTopicModal)">Start New Discussion</a>
-            </div>
-            <div class='dashboard-section pr-1 pl-1'>
-                <app-refset-feedback-list [refset]="refsetData"></app-refset-feedback-list>
-            </div>
-        </div>
-    </div>
-</ng-template>
-<ng-template #newTopicModal let-modal>
-    <div class="modal-header review-modal-header">
-      <h4 class="modal-title">New Refset Feedback Discussion: {{refsetData.name}}</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-      <div class="modal-body">
-        <div class="dashboard-section p-3">
-          <div>
-            <div class="topic-header">
-              <img src="assets/sampels/profile/1.svg" class="author-pic" />
-              <div class="topic-author">
-                <div>Steph Whalen</div>
-                <div class="topic-time"></div>
-              </div>
-            </div>
-            <div class="mb-2 mt-2">
-                <mat-form-field class="full-form-field" appearance="fill">
-                    <mat-label style="margin-top: 0">Feedback Topic</mat-label>
-                    <input matInput type="text"
-                        placeholder="Add a descriptive title for your new feedback topic" />
 
-                </mat-form-field>
-            </div>
-            <div class="mb-2">
-              <mat-checkbox >Mark Feedback Private</mat-checkbox>
-            </div>
-            <div>
-              <editor [init]="{
-                base_url: '/tinymce',
-                suffix: '.min',
-                height: 200,
-                menubar: false,
-                plugins: ['lists advlist'],
-                toolbar:
-                    'undo redo | bold italic | bullist numlist outdent indent'
-              }"></editor>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer mt-0 mb-3">
-        <a class="btn btn-main">Start Discussion</a>
-      </div>
-    </div>
-  </ng-template>

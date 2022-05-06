@@ -137,7 +137,6 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		});
 		this.getOrganization();
 		this.getOrganizations();
-		this.getTeams();
 	}
 
 	ngAfterViewInit() {
@@ -152,12 +151,13 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		this.gridApi = params.api;
 		this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
 		this.gridApi.setColumnDefs(this.gridColumnDefs);
+		this.getTeams();
 	}
 
 	getTeams(): void {
-		this.data = [];
 		let roles = [];
 		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+			this.data = [];
 			this.teamList = results.items;
 			for (let team of this.teamList) {
 				if (team?.organization?.id === this.selectedOrganization?.id) {

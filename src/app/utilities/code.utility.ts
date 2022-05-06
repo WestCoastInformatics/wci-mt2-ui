@@ -177,12 +177,12 @@ export class CodeUtility {
     /*
     * textOverflow - return a string up to a certain number of characters with '...' at the end if it excedes the limit.
     */
-    static textOverflow(text: string, characterLimit: number) {
+    static shortenText(text: string, characterLimit: number) {
 
         if (text.length <= characterLimit) {
             return text;
         } else {
-            return text.substr(0, characterLimit);
+            return text.substr(0, characterLimit) + ' ...';
         }
     }
 
