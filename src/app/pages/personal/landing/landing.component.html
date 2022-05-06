@@ -13,7 +13,7 @@
                         <div class='section-header'>About</div>
                         <div class='dashboard-section pr-2 pl-2'>
                             <div class="about-section">
-                                <div><img class="landing-profile-pic" src="assets/ihtsdo.svg"></div>
+                                <div><img class="landing-profile-pic" [src]="user?.iconUri"></div>
                                 <div class="about-name-section">{{ this.user?.name }}</div>
                                 <div class="about-data-section">
                                     <div class="about-data-text">{{ this.user?.company }}</div>
