@@ -5087,3 +5087,8 @@ app-category-floating-filter{
         flex: none;
     }
 }
+.ellipsed-label{
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+}
