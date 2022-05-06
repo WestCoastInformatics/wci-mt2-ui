@@ -233,7 +233,11 @@ export class RefsetService extends RestService {
     }
 	
 	getOrganizations(): Observable<any> {
-        return this.get(this.contextPath + 'organizations');
+        return this.get(this.contextPath + 'refset/organizations');
+    }
+
+    getOrganizationsWithIcon(): Observable<any> {
+        return this.get(this.contextPath + 'organization/search?includeMembers=false');
     }
 
     getVersions(): Observable<any> {

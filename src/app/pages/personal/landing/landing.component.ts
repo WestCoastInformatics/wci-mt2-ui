@@ -39,7 +39,7 @@ export class PersonalLandingComponent implements OnInit {
   }
 
   getOrganizations(): void {
-    this.refsetService.getOrganizations().subscribe((results) => {
+    this.refsetService.getOrganizationsWithIcon().subscribe((results) => {
       this.organizationList = results.items;
     });
   }

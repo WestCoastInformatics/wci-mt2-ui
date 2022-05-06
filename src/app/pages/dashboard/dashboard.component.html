@@ -12,11 +12,11 @@
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let organization of organizationList">
-                                <div class='section-list' *ngIf="organization.value">
-                                    <img [src]="organization.iconUri" />
+                                <div class='section-list' *ngIf="organization.name">
+                                    <img [src]="organization.iconUri" *ngIf="organization.iconUri" />
                                     <span
                                         [routerLink]="['/organizations/projects', organization.id]"><a>{{
-                                            organization.value }}</a></span>
+                                            organization.name }}</a></span>
                                 </div>
                             </ng-container>
                         </div>
