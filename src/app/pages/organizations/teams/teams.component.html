@@ -34,7 +34,7 @@
                             </ag-grid-angular>
                             <!-- Name Templates -->
                             <ng-template #descriptionSection let-params>
-                                <label [ngbPopover]="params?.data.description" container="body" placement="top" popoverTitle="Description">
+                                <label class="ellipsed-label" [ngbPopover]="params?.data.description" container="body" placement="top" popoverTitle="Description">
                                     {{ params?.data.description }}
                                 </label>
                             </ng-template>
