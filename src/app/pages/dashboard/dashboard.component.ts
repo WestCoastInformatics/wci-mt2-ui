@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
     columnDefs = [
         {
             field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
-                return `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '');
+                return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
             }, cellClass: 'pointer'
         },
         {
@@ -225,9 +225,8 @@ export class DashboardComponent implements OnInit {
     }
 
     getOrganizations(): void {
-        this.refsetService.getOrganizations().subscribe((results) => {
+        this.refsetService.getOrganizationsWithIcon().subscribe((results) => {
             this.organizationList = results.items;
-            console.log(this.organizationList);
         });
     }
 
