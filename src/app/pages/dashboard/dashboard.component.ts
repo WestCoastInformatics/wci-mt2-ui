@@ -31,13 +31,17 @@ export class DashboardComponent implements OnInit {
         {
             field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true, floatingFilterComponent: 'categoryFilterComponent',
             floatingFilterComponentParams: {
-                suppressFilterButton: true, names: [{
-                    "name": "In development",
-                    "value": "IN DEVELOPMENT"
-                }, {
-                    "name": "Published",
-                    "value": "PUBLISHED"
-                },]
+                suppressFilterButton: true, names: [
+                    { type: 'status', name: "In development", value: "IN DEVELOPMENT" },
+                    { type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT' },
+                    { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
+                    { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+                    { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
+                    { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
+                    { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+                    { type: 'status', name: 'Ready for PUBLICATION', value: 'READY_FOR_PUBLICATION' },
+                    { type: 'status', name: 'Published', value: 'PUBLISHED' }
+                ]
             }
         },
         {
