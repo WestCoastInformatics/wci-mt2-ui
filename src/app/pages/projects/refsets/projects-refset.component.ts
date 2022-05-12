@@ -74,6 +74,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     @ViewChild('projectNameSection') nameSection: TemplateRef<any>;
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
+    @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
 
     constructor(
         private router: Router,
@@ -139,7 +140,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 {
                     field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 180, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
                     floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, sort: 'desc'
-                }
+                },
+                { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
 
             this.refsetGridOptions = {
@@ -292,6 +294,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: this.metadataAndConcepts,
                     showInDevelopment: true,
+                    countComments: true,
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
                     query: query

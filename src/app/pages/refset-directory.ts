@@ -121,7 +121,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
                     { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
                     floatingFilterComponentParams: {suppressFilterButton: true}},
-                    { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', minwidth: 80,maxWidth:80, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, filter: false, resizable: false}
+                    { field: 'downloadable', tooltipField: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false}
                 ];
                 this.refsetGridOptions = {
                     context: { componentParent: this },
@@ -234,6 +234,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: true,
                     showInDevelopment: false,
+                    countComments: true,
                     sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
                 };

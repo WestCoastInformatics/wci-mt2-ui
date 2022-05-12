@@ -522,9 +522,6 @@ button.refset-tool-table-action-icon {
 
 .ag-theme-alpine .ag-cell {
     line-height: 50px;
-    .refset-tool-directory-column-actions {
-        width: 100px;
-    }
 }
 
 .ag-theme-alpine .ag-row-odd {
@@ -546,7 +543,7 @@ button.refset-tool-table-action-icon {
 }
 
 .refset-tool-directory-column-actions {
-    padding-left: 12px !important;
+    padding-left: 2px !important;
 }
 
 .column-download-button {

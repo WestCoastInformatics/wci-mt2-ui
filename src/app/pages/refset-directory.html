@@ -295,31 +295,22 @@
 
         <!-- Action Templates -->
         <ng-template #directoryActionSection let-params>
-            <div class="container-fluid action-buttons">
+            <div class="container-fluid">
                 <div class="row">
-                    <div class="column-download-button">
+
+                    <div class="col-2">
                         <app-refset-download [isDetailPage]="false"
                             *ngIf="params?.data?.downloadable"
-                            [class.centerDownload]="!params?.data?.downloadable"
                             [disabled]="!params?.data?.downloadable"
                             [refset]="getRefsetRow(params.data.refsetId)">
                         </app-refset-download>
                     </div>
 
-                    <!-- <div class="col-2 column-feedback-button">
-                        <button
-                            mat-icon-button
-                            *ngIf="params?.data?.feedbackVisible"
-                            (click)="openFeedback(params.data.refsetId)"
-                            aria-hidden="false"
-                            #directoryFeedbackIcon
-                            class="refset-tool-table-action-icon"
-                            aria-label="Open Feedback"
-                            title="Open Feedback"
-                        >
-                            <mat-icon>comment-processing-outline</mat-icon>
-                        </button>
-                    </div> -->
+                    <div class="col-2">
+                        <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId" 
+                            [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.discussionCount">
+                        </app-refset-discussion-list>
+                    </div>
                 </div>
             </div>
         </ng-template>

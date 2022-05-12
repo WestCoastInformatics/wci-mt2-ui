@@ -5,7 +5,7 @@
 <button mat-menu-item *ngIf="isDetailPage" [disabled]="disabled" (click)="openDownload(refset.refsetId)">Download Refset</button>
 
 <button *ngIf="!isDetailPage" mat-icon-button aria-hidden="false" (click)="openDownload(refset.refsetId)" aria-label="Download Refset" title="Download Refset"
-        class="mat-focus-indicator refset-tool-table-action-icon mat-icon-button mat-button-base ng-star-inserted {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">
+        class="refset-tool-table-action-icon {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">
     <span class="mat-button-wrapper">
         <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download</mat-icon>
     </span>
