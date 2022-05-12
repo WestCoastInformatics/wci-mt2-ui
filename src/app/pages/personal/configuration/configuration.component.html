@@ -16,7 +16,7 @@
                         <div class="account-profile-head section-header">Profile</div>
                         <div class="account-profile-mid">
                             <mat-form-field class="profile-name-field" appearance="none">
-                                <mat-label>Name</mat-label>
+                                <mat-label>Name <span class="mandatory-field">*</span></mat-label>
                                 <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
@@ -26,13 +26,13 @@
                             </mat-form-field>
 
                             <mat-form-field class="profile-email-field" appearance="none">
-                                <mat-label>Email</mat-label>
+                                <mat-label>Email <span class="mandatory-field">*</span></mat-label>
                                 <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
                             <button class="btn btn-primary btn-lg" aria-label="Update Profile" title="Update Profile"
-                                [disabled]="!profileNameValue || !profileEmailValue || !profileCompanyValue"
+                                [disabled]="!profileNameValue || !profileEmailValue"
                                 (click)="updateProfile()">Update Profile</button>
                         </div>
                     </div>

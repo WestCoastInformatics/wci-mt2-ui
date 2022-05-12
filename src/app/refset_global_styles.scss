@@ -1212,7 +1212,12 @@ button.refset-tool-table-action-icon {
 .refset-tool-concept-details-taxonomy-description {
     margin-left: 10px;
 }
-
+.refset-tool-concept-details-taxonomy-icon + .refset-tool-concept-details-taxonomy-description{
+    max-width: calc(100% - 40px);
+}
+.refset-tool-concept-details-taxonomy-icon.taxonomy-icon-edit-mode + .refset-tool-concept-details-taxonomy-description{
+    max-width: calc(100% - 60px);
+}
 .refset-tool-concept-details-concept-name {
     font-size: 15px;
     padding-left: 0px !important;
@@ -2939,7 +2944,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
     & .refset-tool-concept-details-taxonomy-icon {
         img {
-            margin-left: 3;
+            margin-left: 3px;
         }
     }
 }
@@ -4960,6 +4965,7 @@ $sidebar-width: 294px;
 
 .landing-profile-pic {
     border-radius: 50%;
+    max-width: 100%;
 }
 
 .about-section {
