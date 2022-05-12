@@ -425,16 +425,6 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.changeLockedStatus.emit(value);
     }
 
-    test() {
-
-        this.indicateChanges(null);
-
-        let func = () => {
-            this.showLoadingSpinner = false;
-        }
-        setTimeout(func, 3000);
-    }
-
     indicateChanges(data) {
 
         this.showLoadingSpinner = true;
@@ -477,6 +467,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         console.timeEnd('comparison processChangedMemberEffects');
         let thatConceptDetail = this.conceptDetail;
+        let filterModel = this.gridApi.getFilterModel();
 
         // re-cache the members for the taxonomy
         this.refsetService.cacheMemberAncestors(this.activeRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.activeRefset)).subscribe({
@@ -577,6 +568,8 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         this.gridApi.setRowData(this.comparisonData.items);
         this.gridApi.redrawRows();
+        this.gridApi.setFilterModel(filterModel);
+        this.gridApi.onFilterChanged();
         this.gridPaging.totalRows = this.comparisonData.items.length;
     }
 
