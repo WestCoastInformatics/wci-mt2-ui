@@ -51,9 +51,6 @@ export class NavbarComponent implements OnInit {
     }
 
     setUserInfo() {
-
-        let userWasLoggedin = this.isUserLoggedIn;
-
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
     }

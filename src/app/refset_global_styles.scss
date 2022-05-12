@@ -190,6 +190,7 @@ strong {
 .refset-tool-nav-logo-section {
     width: 350px;
     margin-left: 15px;
+    margin-top: 0.5rem;
 }
 
 nav a img {
@@ -275,6 +276,7 @@ a.footer-link {
 .refset-tool-breadcrumb-bar {
     display: flex;
     align-items: center;
+    margin-top:0.5rem;
     //font-size: smaller;
 
     .refset-tool-breadcrumb {
@@ -4127,14 +4129,13 @@ img.refset-tool-edition-flag {
     .action-btn {
         cursor: pointer;
     }
-
-    .profile-pic {
-        width: 43px;
-        height: 43px;
-        border-radius: 100%;
-        margin-right: 40px;
-        vertical-align: middle;
-    }
+}
+.profile-pic {
+    width: 43px;
+    height: 43px;
+    border-radius: 100%;
+    margin-right: 40px;
+    vertical-align: middle;
 }
 
 .dashboard-section-mid {
