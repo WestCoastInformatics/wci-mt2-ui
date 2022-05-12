@@ -25,7 +25,9 @@ export class LaunchComparisonModalComponent implements OnInit {
     comparisonRefsetInternalId: string;
     activeRefsetVersionOptions: any[];
     comparisonRefsetVersionOptions: any[];
-    comparisonTypeSelected: String
+    comparisonTypeSelected: string
+    comparisonSearchInput: string
+    comparisonRefsetSelect: string
     activeRefsetVersionDate: string;
     refsetOptions: any[];
     refsetOptionsLoading = false;
@@ -99,6 +101,8 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.isConceptDetailsLoading = false;
         this.taxonomyManualStateRefresh = new Boolean(false);
         this.changeReportData = [];
+        this.comparisonSearchInput = '';
+        this.comparisonRefsetSelect = '';
 
         this.activeRefsetVersionDate = CodeUtility.formatJsonDate(this.activeRefset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         this.activeRefsetVersionOptions = RefsetUtility.getVersionOptions(this.activeRefset);
@@ -126,6 +130,8 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.comparisonTypeSelected = event.value;
         this.comparisonRefsetInternalId = null;
         this.comparisonRefsetVersionOptions = [];
+        this.comparisonSearchInput = '';
+        this.comparisonRefsetSelect = '';
     }
 
     async onSearchChange(value): Promise<void> {
