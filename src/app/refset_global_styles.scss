@@ -208,6 +208,10 @@ nav a span {
     background-color: #434955 !important;
 }
 
+.refset-tool-text-white {
+    color: white;
+}
+
 #bg-landing-header {
     background-color: rgb(33, 37, 41) !important;
     padding: 5px !important;
@@ -5014,6 +5018,12 @@ $sidebar-width: 294px;
     font-weight: 700;
     color:#555555;
     margin: 10px 0 5px;
+}
+
+.discussion-icon {
+    width: 24px;
+    height: 24px;
+    filter: invert(49%) sepia(23%) saturate(4194%) hue-rotate(165deg) brightness(95%) contrast(102%); // to get text-main color
 }
 
 .discussion-topic-field {

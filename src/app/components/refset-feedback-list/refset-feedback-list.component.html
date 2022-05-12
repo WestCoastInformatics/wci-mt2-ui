@@ -1,4 +1,7 @@
-<a *ngIf="isUserLoggedIn" class="ml-3 pointer" (click)="openThreadListModal()"><i class="fa fa-comment-dots text-main"></i></a>
+<a *ngIf="isUserLoggedIn" class="ml-3 pointer" (click)="openThreadListModal()" >
+	<img *ngIf="discussionCount == 0" src="/assets/comment-dots-regular.svg" title="Add a Discussion" aria-label="Add a Discussion" class="discussion-icon"/>
+	<img *ngIf="discussionCount > 0" src="/assets/comment-dots-solid.svg" title="Add or View Discussions" aria-label="Add or View Discussions" class="discussion-icon" />
+</a>
 
 <!-- THREAD LIST SECTION -->
 <ng-template #threadListModal let-modal>
@@ -81,7 +84,7 @@
 
 						<mat-checkbox [(ngModel)]="showHiddenPosts" class="mr-2">Show Hidden Posts</mat-checkbox>
 
-						<button mat-button [matMenuTriggerFor]="topicMenu" class="manage-refset-menu"><i class="fa fa-ellipsis-v text-main fa-2x"></i></button>
+						<button *ngIf="canEditThread" mat-button [matMenuTriggerFor]="topicMenu" class="manage-refset-menu"><i class="fa fa-ellipsis-v text-main fa-2x"></i></button>
 						<span class="menu-spacer">&nbsp;</span>
 						<mat-menu #topicMenu="matMenu">
 							<button mat-menu-item (click)="updateThread()">Edit</button>
@@ -91,7 +94,7 @@
 							<button *ngIf="selectedThread.visibility == VISIBLE" mat-menu-item (click)="changeThreadVisibility(selectedThread, HIDDEN)">Hide Discussion</button>
 							<button *ngIf="!isResolved" mat-menu-item (click)="changeStatus(RESOLVED)">Resolve Discussion</button>
 							<button *ngIf="isResolved" mat-menu-item (click)="changeStatus(OPEN)">Reopen Discussion</button>
-							<!-- <button mat-menu-item>Delete</button> -->
+							<button *ngIf="canDeleteThread" mat-menu-item (click)="confirmThreadDelete()">Delete</button>
 						</mat-menu>
 					</div>
 
@@ -131,11 +134,13 @@
 								</div>
 
 								<div class="topic-action">
-									<button mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu"><i class="fa fa-ellipsis-v text-main fa-lg"></i></button>
+									<button *ngIf="canUserEditPost(post)" mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu">
+										<i class="fa fa-ellipsis-v text-main fa-lg"></i>
+									</button>
 									<span class="menu-spacer">&nbsp;</span>
 									<mat-menu #discussionMenu="matMenu">
-										<button *ngIf="!post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, true)">Mark Private</button>
-										<button *ngIf="post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, false)">Mark Public</button>
+										<button *ngIf="false && !post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, true)">Mark Private</button>
+										<button *ngIf="false && post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, false)">Mark Public</button>
 										<button *ngIf="post.visibility == HIDDEN" mat-menu-item (click)="changePostVisibility(selectedThread.id, post, VISIBLE)">Unhide Reply</button>
 										<button *ngIf="post.visibility == VISIBLE" mat-menu-item (click)="changePostVisibility(selectedThread.id, post, HIDDEN)">Hide Reply</button>
 									</mat-menu>
@@ -168,11 +173,11 @@
 						</mat-form-field>
 					</div>
 
-					<div class="mb-2 mt-2">
+					<div *ngIf="(newThread || editThread) && canViewPrivateThreads" class="mt-2">
 						<mat-checkbox [(ngModel)]="postPrivateField">Mark Feedback Private</mat-checkbox>
 					</div>
 
-					<div>
+					<div class="mt-2">
 						<editor [(ngModel)]="postMessageField" [init]="tinyMceConfig"></editor>
 					</div>
 
@@ -183,14 +188,33 @@
 
 		<div class="feedback-modal-footer modal-footer mt-0 mb-3">
 			
-			<button *ngIf="!isResolved" (click)="saveChanges()" mat-raised-button color="green" class="refset-tool-action-button mr-2" ng-reflect-color="green">
-				{{ postButtonText }}
-			</button>
+			<button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" mat-raised-button class="refset-tool-action-button mat-green mr-2">{{ postButtonText }}</button>
 
-			<button (click)="modal.dismiss()" mat-raised-button color="green" class="refset-tool-action-button" ng-reflect-color="green">
-				Close
-			</button>
+			<button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Close</button>
 		</div>
 
 	</div>
+</ng-template>
+
+<ng-template #confirmDeleteThreadModal let-modal>
+
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Thread Confirmation</h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="container-fluid ">
+        <div class="modal-body">
+            <div class="notes-title">Are you sure you want to delete the discussion thread "{{ selectedThread.subject }}?"</div>
+        </div>
+    </div>
+
+    <div class="modal-footer rt2-modal-footer">
+
+        <button type="button" (click)="deleteThread();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Thread</button>
+
+		<button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel</button>
+    </div>
 </ng-template>

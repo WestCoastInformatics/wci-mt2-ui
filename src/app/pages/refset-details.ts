@@ -917,7 +917,8 @@ export class RefsetDetails {
         let restParams: any = {
             displayType: "list",
             limit: this.membersGridApi.paginationGetPageSize(),
-            offset: pageNumber - 1
+            offset: pageNumber - 1,
+            countComments: true
         };
 
         if (CodeUtility.hasValue(query)) {

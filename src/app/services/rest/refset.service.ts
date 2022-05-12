@@ -187,6 +187,12 @@ export class RefsetService extends RestService {
         return this.put(url, '');
     }
 
+    deleteDiscussionThread(threadId: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId;
+        return this.delete(url);
+    }
+
     updateDiscussionPostPrivacy(threadId: string, postId: string, isPrivate: boolean): Observable<any> {
 
         let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/privacy?isPrivate=' + isPrivate;

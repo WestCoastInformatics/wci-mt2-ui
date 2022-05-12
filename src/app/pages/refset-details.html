@@ -117,9 +117,11 @@
                 <div>
 
                     <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
-                    <app-refset-discussion-list type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData?.name" [roles]="refsetData?.roles">
-                    </app-refset-discussion-list>
                     
+                    <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" 
+                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [(discussionCount)]="refsetData.discussionCount">
+                    </app-refset-discussion-list>
+
                     <br *ngIf="editMode">
 
                     <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
@@ -866,18 +868,10 @@
                                                 </div>
 
                                                 <div class="col-2">
-                                                    <!-- <button mat-icon-button
-                                                            *ngIf="params?.data?.feedbackVisible"
-                                                            (click)="openMemberFeedback(params.data.code)"
-                                                            aria-hidden="false"
-                                                            #detailsFeedbackIcon
-                                                            class="
-                                                            refset-tool-table-action-icon
-                                                        "
-                                                            aria-label="Open Feedback on Member"
-                                                            title="Open Member Feedback">
-                                                        <mat-icon>comment-processing-outline</mat-icon>
-                                                    </button> -->
+                                                    <app-refset-discussion-list *ngIf="refsetData && params && params.data" type="REFSET_MEMBER" [refsetInternalId]="id" 
+                                                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [refsetId]="refsetId" [conceptId]="params.data.code" 
+                                                        [conceptName]="params.data.name" [(discussionCount)]="params.data.discussionCount">
+                                                    </app-refset-discussion-list>
                                                 </div>
                                             </div>
                                         </div>
