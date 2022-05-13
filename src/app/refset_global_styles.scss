@@ -2944,6 +2944,12 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
             margin-left: 3px;
         }
     }
+
+    & .refset-tool-concept-details-taxonomy-icon.taxonomy-icon-edit-mode {
+        img {
+            margin-left: 10px;
+        }
+    }
 }
 
 .add-remove-concept-hierarchy-modal-children-size {
