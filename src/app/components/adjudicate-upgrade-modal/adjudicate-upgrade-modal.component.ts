@@ -203,6 +203,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.refsetDetails.toggleLoadingSpinner(false);
     });
     this.selectedConcepts = undefined;
+    this.concept = '';
   }
 
   addManualReplacement(changeMethod: string): void {
