@@ -29,6 +29,7 @@ export class UpgradeModalComponent implements OnInit {
   membersInCommon: any;
   inactiveConcepts = 0;
   totalMembers = 0;
+  existingBranchVersions: any;
 
 
 
@@ -40,6 +41,7 @@ export class UpgradeModalComponent implements OnInit {
     readonly refsetDetails: RefsetDetails) { }
 
   ngOnInit(): void {
+    this.getBranchVersions();
   }
 
   openUpgradeModal(upgradeDialog: NgbModal) {
@@ -108,6 +110,12 @@ export class UpgradeModalComponent implements OnInit {
     return `${versionList[0].date} (${versionList[0].status})`;
   }
 
+  private getBranchVersions(): void {
+        this.refsetService.getBranchVersions(`branch=${this.refsetData?.edition?.branch.toString()}`).subscribe(results => {
+          this.existingBranchVersions = results.items ? results.items : undefined;
+        });
+  }
+  
   upgrade(): void {
     if (this.isInitialUpgrade) {
       this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
