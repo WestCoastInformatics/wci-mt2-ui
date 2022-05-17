@@ -60,7 +60,7 @@
                     <div class="dropdown-item pl-3" routerLink="/personal/landing/1">
                         <div class="d-flex pointer">
                             <img class="rounded-circle mr-2 profile-pic"
-                                [src]="user.iconUri">
+                                [src]="user.iconUri ? user.iconUri : '/assets/user_logo.png'">
                             <div class="profile-block">
                                 <strong>{{user.userName}}</strong>
                                 <div class="text-sm-left">{{user.company}}</div>
