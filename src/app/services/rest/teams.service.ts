@@ -48,8 +48,8 @@ export class TeamsService extends RestService {
         return this.delete(this.contextPath + 'team/' + teamId + '/role/' + role);
     }
 
-    addUser(teamId: any, userId: any): Observable<any> {
-        return this.post(this.contextPath + 'team/' + teamId + '/member/' + userId, '');
+    addUser(teamId: any, email: any): Observable<any> {
+        return this.post(this.contextPath + 'team/' + teamId + '/member?email=' + email, '');
     }
 
     removeUser(teamId: any, userId: any): Observable<any> {

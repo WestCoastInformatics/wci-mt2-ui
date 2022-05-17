@@ -46,18 +46,7 @@ export class RestService {
 
         return this.http.get<any>(this.restUrl + url + queryString).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    let message = 'There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError;
-                    this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                    this.notificationService.handleDuplicates('error', message);
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
         );
     }
@@ -66,16 +55,7 @@ export class RestService {
 
         return this.http.post<any>(this.restUrl + url, params).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
         );
     }
@@ -85,16 +65,7 @@ export class RestService {
             'Accept': 'application/json',
             'enctype': 'multipart/form-data'})}).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
         );
     }
@@ -103,16 +74,7 @@ export class RestService {
 
         return this.http.put<any>(this.restUrl + url, params).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
         );
     }
@@ -121,18 +83,31 @@ export class RestService {
 
         return this.http.delete<any>(this.restUrl + url).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
         );
+    }
+
+    giveErrorNotification(error: any, ignoreErrors: boolean = false) {
+
+        if (!ignoreErrors) {
+
+            let definedError = ' Error Status: ' + error?.status;
+            
+            if (error?.error?.error) {
+                definedError = ' ' + error.error.error;
+            } else if (error?.error) {
+                definedError = ' ' + error.error;
+            }
+            
+            let message = 'There was a problem with the request, please try again!'  + definedError;
+            this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+            this.notificationService.handleDuplicates('error', message);
+
+            return error;
+        } else {
+            return EMPTY;
+        }
     }
 
     getHttpClient(): HttpClient {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
@@ -10,94 +10,97 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
-  selector: 'organization-people',
-  templateUrl: './people.component.html'
+	selector: 'organization-people',
+	templateUrl: './people.component.html'
 })
 export class OrganizationPeopleComponent implements OnInit {
-  menu:SidebarMenuItem[] = [
-    {name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open'},
-    {name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users'},
-    {name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true},
-    {name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs'}
-  ];
 
-  data = [];
-  defaultColDef = {};
+	menu: SidebarMenuItem[] = [
+		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true },
+		{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' }
+	];
+	data = [];
+	defaultColDef = {};
+	peopleList = [];
+	selectedOrganization: any;
+	id: any;
+	organizationList = [];
+	gridOptions: any;
+	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+	gridParams: any;
+	gridApi: any;
+	gridColumnDefs = [];
+	showTable = false;
 
-  peopleList = [];
-  selectedOrganization: any;
-  id: any;
-  organizationList = [];
-  gridOptions: any;
-  gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true)};
-  gridParams: any;
-  gridApi: any;
-  gridColumnDefs = [];
+	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
 
-  constructor(private readonly breadcrumbService: BreadcrumbService,
-    private readonly titleService: Title,
-    private readonly refsetService: RefsetService,
-    private readonly organizationsService: OrganizationsService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly teamService: TeamsService) { }
+	constructor(private readonly breadcrumbService: BreadcrumbService,
+		private readonly titleService: Title,
+		private readonly refsetService: RefsetService,
+		private readonly organizationsService: OrganizationsService,
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
+		private readonly teamService: TeamsService) { }
 
 	ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Organizations');
-    this.breadcrumbService.setBreadcrumbs([
-      { path: '/organizations/people', label: 'Organizations' },
-      { label: 'People' },
-  ]);
+		this.titleService.setTitle('Refset Tool - Organizations');
+		this.breadcrumbService.setBreadcrumbs([
+			{ path: '/organizations/people', label: 'Organizations' },
+			{ label: 'People' },
+		]);
+	}
+
+	ngAfterViewInit() {
 
 		this.gridColumnDefs = [
-      {
-        field: 'name', headerName: 'Participant', minWidth: 300, flex: 1, cellRenderer: params => {
-          return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
-        }},
-      { field: 'company', flex: 1, headerName: 'Company Name' },
-      { field: 'email', flex: 1, headerName: 'Email' },
-      { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
-    ];
+			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
+			{ field: 'company', flex: 1, headerName: 'Company Name' },
+			{ field: 'email', flex: 1, headerName: 'Email' },
+			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+		];
 
 		this.gridOptions = {
 			context: { componentParent: this },
-            pagination: false,
-            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-            suppressPaginationPanel: true,
-            paginationPageSize: this.gridPaging.pageSize,
-            rowSelection: 'single',
-            enableCellTextSelection: true,
-            onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady,
-            frameworkComponents: {
-                templateRenderer: TemplateRenderer,
-                'categoryFilterComponent': CategoryFilterComponent
-            },
-            defaultColDef: {
-                sortable: true,
-                resizable: true,
-                suppressMenu: true,
-                filter: true,
-                floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+			pagination: false,
+			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressPaginationPanel: true,
+			paginationPageSize: this.gridPaging.pageSize,
+			rowSelection: 'single',
+			enableCellTextSelection: true,
+			onCellClicked: this.onGridCellClick,
+			onGridReady: this.onGridReady,
+			frameworkComponents: {
+				templateRenderer: TemplateRenderer,
+				'categoryFilterComponent': CategoryFilterComponent
+			},
+			defaultColDef: {
+				sortable: true,
+				resizable: true,
+				suppressMenu: true,
+				filter: true,
+				floatingFilter: true,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
 				unSortIcon: true
-            },
-            enableBrowserTooltips: true,
-            rowClassRules: {
-                refset_tool_grid_inactive_row: function (params) {
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+					var inactivatedRow = false;
 
-                    if (params.data) {
-                        inactivatedRow = params.data.active == false;
-                    }
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
 
-                    return inactivatedRow;
-                },
-            },
-        };
+					return inactivatedRow;
+				},
+			},
+		};
 
 		this.data = [];
 
@@ -105,14 +108,14 @@ export class OrganizationPeopleComponent implements OnInit {
 			this.id = params['id'];
 		});
 		this.getOrganization();
-    this.getOrganizations();
-    this.getPeople();
-  }
-  
-  onGridReady = (params) => {
+		this.getOrganizations();
+		this.getPeople();
+	}
+
+	onGridReady = (params) => {
 		this.gridParams = params;
 		this.gridApi = params.api;
-  }
+	}
 
 	onGridCellClick = (event) => {
 
@@ -125,50 +128,60 @@ export class OrganizationPeopleComponent implements OnInit {
 		});
 
 		this.router.navigate(['/teams/people', selectedId]);
-  };
+	};
 
-  get dataCount() {
-    return this.data.length;
-  }
+	get dataCount() {
+		return this.data.length;
+	}
 
-  getPeople(): void {
-    // this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
-    //   this.peopleList = results.items;
-    //   console.log(this.peopleList);
-    // });
-  }
+	getPeople(): void {
 
-  getOrganizations(): void {
-    this.refsetService.getOrganizations().subscribe((results) => {
-      this.organizationList = results.items;
-    });
-  }
+		this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
 
-  getOrganization(): void {
-    this.organizationsService.getOrganization(this.id).subscribe((result) => {
-      this.selectedOrganization = result;
-    });
-  }
+			this.data = results.items;
+			this.showTable = true;
+		});
+	}
 
-  selectOrg($event): void {
-    this.router.navigate(['/organizations/people', $event['value'].id]);
-  }
+	getOrganizations(): void {
+		this.refsetService.getOrganizations().subscribe((results) => {
+			this.organizationList = results.items;
+		});
+	}
 
-  async getTeams(teams: any): Promise<any> {
-    console.log(teams)
-    const teamObject = { teams: []};
-    if (teams === 'undefined' || teams === undefined) {
-      return JSON.stringify(teamObject);
-    } else {
-      for (let team of teams) {
-        teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
-      }
-      return JSON.stringify(teamObject);
-    }
-  }
-  
-  getTeamCount(data: any): number {
+	getOrganization(): void {
+		this.organizationsService.getOrganization(this.id).subscribe((result) => {
+			this.selectedOrganization = result;
+		});
+	}
 
-    return data.teams.length;
-  }
+	selectOrg($event): void {
+		this.router.navigate(['/organizations/people', $event['value'].id]);
+	}
+
+	async getTeams(teams: any): Promise<any> {
+		console.log(teams)
+		const teamObject = { teams: [] };
+		if (teams === 'undefined' || teams === undefined) {
+			return JSON.stringify(teamObject);
+		} else {
+			for (let team of teams) {
+				teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
+			}
+			return JSON.stringify(teamObject);
+		}
+	}
+
+	getTeamCount(data: any): number {
+
+		return data.teams.length;
+	}
+
+	getUserIcon(icon) {
+		return '/assets/profile/' + icon;
+	}
+
+	getGenericUserIcon(event) {
+		event.target.src = UiUtility.getGenericUserIcon();
+	}
 }

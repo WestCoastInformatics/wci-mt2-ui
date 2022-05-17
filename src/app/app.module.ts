@@ -56,6 +56,7 @@ import { ImportFromListModalComponent } from 'src/app/components/import-from-lis
 import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
+import { AddMemberModalComponent } from 'src/app/components/add-member-modal/add-member-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
 import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
@@ -173,6 +174,7 @@ const appRoutes: Routes = [
         ImportFromEclModalComponent,
         CreateNewOrganizationModalComponent,
         CreateNewTeamModalComponent,
+        AddMemberModalComponent,
         CreateNewProjectModalComponent,
         dragAndDropDirective,
         AddRemoveByConceptModalComponent,

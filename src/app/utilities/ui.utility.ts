@@ -640,6 +640,10 @@ export class UiUtility {
         image.onerror = function() { callback(false); };
     }
 
+    static getGenericUserIcon() {
+		return '/assets/user_logo.png';
+	}
+
     //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
     static applyGridPlaceholders(classSelector) {
 
