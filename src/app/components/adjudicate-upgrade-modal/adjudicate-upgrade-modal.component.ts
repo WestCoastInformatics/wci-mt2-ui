@@ -130,6 +130,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       enableCellTextSelection: true,
       rowSelection: 'single',
       onGridReady: this.onGridReady,
+      onCellClicked: this.onGridCellClick,
       frameworkComponents: {
         'templateRenderer': TemplateRenderer,
       },
@@ -149,6 +150,10 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
   onCellMouseOver(params) {
     this.selectedRow = params;
+  }
+
+  onGridCellClick = (event) => {
+    this.selectConcept(event.data);
   }
 
   getSelectedRowData(option: string) {
@@ -554,7 +559,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         'Members In Common ID': commonConcepts[i].code,
         'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
       });
-    } 
+    }
 
     const changeReportObject = {
       'oldMember': oldMembers,
@@ -570,51 +575,51 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.conceptSelected = true;
     this.selectedConcept = concept;
     this.loadConceptDetail(concept);
-}
-getTaxonomyLanguageWithoutType() {
-  return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
-}
+  }
+  getTaxonomyLanguageWithoutType() {
+    return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
+  }
 
-loadConceptDetail(concept) {
+  loadConceptDetail(concept) {
 
     this.conceptDetail = null;
     this.isConceptDetailsLoading = true;
     this.loadConceptDetailParents(concept);
 
     this.refsetService
-        .getMembersDetails(concept.code, {
-            refsetInternalId: this.refsetInternalId,
-        })
-        .subscribe((results) => {
+      .getMembersDetails(concept.code, {
+        refsetInternalId: this.refsetInternalId,
+      })
+      .subscribe((results) => {
 
-            this.isConceptDetailsLoading = false;
-            this.conceptDetail = results;
-            this.conceptDescriptions =
-                this.conceptDetail.descriptions.filter(function(description) {
-                    return description != null;
-                });
+        this.isConceptDetailsLoading = false;
+        this.conceptDetail = results;
+        this.conceptDescriptions =
+          this.conceptDetail.descriptions.filter(function (description) {
+            return description != null;
+          });
 
-            RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
-        });
-}
+        RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+      });
+  }
 
-loadConceptDetailParents(concept) {
+  loadConceptDetailParents(concept) {
 
     this.conceptDetailParents = [];
 
     const restParams = {
-        displayType: "taxonomy",
-        returnChildren: false,
-        language: this.getTaxonomyLanguageWithoutType(),
-        depth: 1,
-        startingConceptId: concept.code,
-        offset: 0,
-        limit: 1000,
+      displayType: "taxonomy",
+      returnChildren: false,
+      language: this.getTaxonomyLanguageWithoutType(),
+      depth: 1,
+      startingConceptId: concept.code,
+      offset: 0,
+      limit: 1000,
     };
 
     // load the parents
     this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
-        this.conceptDetailParents = results.items;
+      this.conceptDetailParents = results.items;
     });
-}
+  }
 }
