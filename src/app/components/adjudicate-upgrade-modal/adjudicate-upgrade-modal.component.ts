@@ -13,6 +13,7 @@ import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-co
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
+import { RefsetUtility } from "src/app/utilities/refset.utility";
 
 @Component({
   selector: 'adjudicate-upgrade-modal',
@@ -35,6 +36,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   hideReplacements = false;
   refsetGridLastFilter: string = '';
   refsetGridLastSort: string = '';
+  selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
   @ViewChild('adjudicatePaging') paginationComponent: PaginationComponent;
   @ViewChild('inactiveConceptCodeSection') inactiveCodeSection: TemplateRef<any>;
   @ViewChild('adjudicateInactiveId') inactiveIdSection: TemplateRef<any>;
@@ -74,6 +76,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   changeMethod = '';
   selectedRow: any;
   selectedConcepts: any;
+  isConceptDetailsLoading = false;
+  conceptDetail: any;
+  conceptDetailParents: any;
+  conceptDescriptions: any;
+  conceptSelected: boolean;
+  refsetInternalId: string;
+  selectedConcept: any;
+  numOfChildren = undefined;
   chosenConceptCode: any;
   replacementCode: string;
   concept: any;
@@ -544,7 +554,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         'Members In Common ID': commonConcepts[i].code,
         'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
       });
-    }
+    } 
 
     const changeReportObject = {
       'oldMember': oldMembers,
@@ -555,4 +565,56 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
     // });
   }
+  selectConcept(concept: any): void {
+
+    this.conceptSelected = true;
+    this.selectedConcept = concept;
+    this.loadConceptDetail(concept);
+}
+getTaxonomyLanguageWithoutType() {
+  return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
+}
+
+loadConceptDetail(concept) {
+
+    this.conceptDetail = null;
+    this.isConceptDetailsLoading = true;
+    this.loadConceptDetailParents(concept);
+
+    this.refsetService
+        .getMembersDetails(concept.code, {
+            refsetInternalId: this.refsetInternalId,
+        })
+        .subscribe((results) => {
+
+            this.isConceptDetailsLoading = false;
+            this.conceptDetail = results;
+            this.conceptDescriptions =
+                this.conceptDetail.descriptions.filter(function(description) {
+                    return description != null;
+                });
+
+            RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+        });
+}
+
+loadConceptDetailParents(concept) {
+
+    this.conceptDetailParents = [];
+
+    const restParams = {
+        displayType: "taxonomy",
+        returnChildren: false,
+        language: this.getTaxonomyLanguageWithoutType(),
+        depth: 1,
+        startingConceptId: concept.code,
+        offset: 0,
+        limit: 1000,
+    };
+
+    // load the parents
+    this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
+        this.conceptDetailParents = results.items;
+    });
+}
 }
