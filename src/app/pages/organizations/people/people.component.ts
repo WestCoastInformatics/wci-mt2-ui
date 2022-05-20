@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
@@ -36,6 +36,7 @@ export class OrganizationPeopleComponent implements OnInit {
 	gridApi: any;
 	gridColumnDefs = [];
 	showTable = false;
+	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
 
@@ -107,6 +108,7 @@ export class OrganizationPeopleComponent implements OnInit {
 		this.route.params.subscribe(params => {
 			this.id = params['id'];
 		});
+
 		this.getOrganization();
 		this.getOrganizations();
 		this.getPeople();
@@ -175,13 +177,5 @@ export class OrganizationPeopleComponent implements OnInit {
 	getTeamCount(data: any): number {
 
 		return data.teams.length;
-	}
-
-	getUserIcon(icon) {
-		return '/assets/profile/' + icon;
-	}
-
-	getGenericUserIcon(event) {
-		event.target.src = UiUtility.getGenericUserIcon();
 	}
 }

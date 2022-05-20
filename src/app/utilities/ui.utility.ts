@@ -633,12 +633,23 @@ export class UiUtility {
         return rolesToShow.join(', ');
     }
 
-    static doesImageExist(url, callback) {
+    static prepareIconImage(image: any, iconUri: string) {
+		
+        if (iconUri) {
 
-        let image = new Image();
-        image.onload = function() { callback(true); };
-        image.onerror = function() { callback(false); };
-    }
+            image.scr = this.getIconImageUrl(iconUri);
+
+            image.onerror = ($event) => {
+                $event.target.src = this.getGenericUserIcon();
+            };
+
+            return image.scr;
+        }
+	}
+
+    static getIconImageUrl(iconUri) {
+		return environment.restUrl + environment.restContextPath + iconUri;
+	}
 
     static getGenericUserIcon() {
 		return '/assets/user_logo.png';
