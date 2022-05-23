@@ -36,7 +36,7 @@
 
 <!-- Author Template -->
 <ng-template #discussionListAuthorSection let-params>
-	<img [src]="getUserIcon(params?.data?.posts[0]?.user?.iconUri)" (error)="getGenericUserIcon($event)" class="profile-pic" /> {{ params?.data?.posts[0]?.user?.name }}
+	<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.posts[0]?.user?.iconUri)" class="medium-icon-image" /> {{ params?.data?.posts[0]?.user?.name }}
 </ng-template>
 
 <!-- Topic Template -->
@@ -73,7 +73,7 @@
 				<!-- ORIGINAL POST HEADER SECTION -->
 				<div *ngIf="!newThread && !editThread" class="topic-header">
 
-					<img [src]="getUserIcon(selectedThread.posts[0].iconUri)" (error)="getGenericUserIcon($event)" class="author-pic" />
+					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedThread.posts[0].user.iconUri)" class="medium-icon-image" />
 
 					<div class="topic-author">
 						<div>{{ selectedThread.posts[0].user.name }}</div>
@@ -122,7 +122,7 @@
 
 							<div class="topic-header">
 
-								<img [src]="getUserIcon(post.iconUri)" (error)="getGenericUserIcon($event)" class="author-pic" />
+								<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, post.user.iconUri)" class="medium-icon-image" />
 
 								<div class="topic-author">
 									<div>{{ post.user.name }}</div>
@@ -160,7 +160,7 @@
 				<div *ngIf="!isResolved">
 
 					<div class="topic-header">
-						<img [src]="getUserIcon(user.iconUrl)" (error)="getGenericUserIcon($event)" class="author-pic" />
+						<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user.iconUri)" class="medium-icon-image" />
 						<div class="topic-author">
 							<div>{{ user.name }}</div>
 						</div>

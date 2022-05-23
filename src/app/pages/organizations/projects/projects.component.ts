@@ -1,4 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
@@ -41,7 +42,8 @@ export class OrganizationProjectsComponent implements OnInit {
     private readonly organizationsService: OrganizationsService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly teamService: TeamsService) { }
+    private readonly teamService: TeamsService,
+    private location: Location) { }
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Organizations');
@@ -49,6 +51,8 @@ export class OrganizationProjectsComponent implements OnInit {
       { path: '/organizations/projects', label: 'Organizations' },
       { label: 'Projects' },
     ]);
+
+    this.getOrganizations();
 
     this.data = [];
     this.columnDefs = [{
@@ -76,9 +80,6 @@ export class OrganizationProjectsComponent implements OnInit {
         filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, resizable: true
       }
     };
-
-    this.getOrganization();
-    this.getOrganizations();
   }
 
   onGridReady = (params) => {
@@ -128,21 +129,33 @@ export class OrganizationProjectsComponent implements OnInit {
   }
 
   getOrganizations(): void {
-    this.refsetService.getOrganizations().subscribe((results) => {
-      this.organizationList = results.items;
-    });
-  }
 
-  getOrganization(): void {
-    this.organizationsService.getOrganization(this.id).subscribe((result) => {
-      this.selectedOrganization = result;
-    });
-  }
+		this.refsetService.getOrganizations().subscribe((results) => {
 
-  selectOrg($event): void {
-    this.router.navigate(['/organizations/projects', $event['value'].id]);
-    this.onGridReady(this.gridParams);
-  }
+			this.organizationList = results.items;
+
+			for (let organization of this.organizationList) {
+
+				if (this.id == organization.id) {
+					this.setOrganizationData(organization);
+				}
+			}
+		});
+	}
+
+	selectOrg($event): void {
+
+		this.setOrganizationData(this.selectedOrganization);
+		this.location.replaceState("/organizations/projects/" + this.selectedOrganization.id);
+	}
+
+	setOrganizationData(organization: any) { 
+
+		this.id = organization.id;
+		this.selectedOrganization = organization;
+		
+		this.onGridReady(this.gridParams);
+	}
 
   getTeamCount(data: any): number {
 

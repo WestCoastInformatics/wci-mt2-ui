@@ -7,7 +7,7 @@
                 <mat-option *ngFor="let organization of organizationList"
                             [value]="organization"
                             style="z-index: 3">
-                    {{ organization.value }}
+                    {{ organization.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -25,16 +25,15 @@
                         </div>
                         <div class='dashboard-section'>
                             <div class="ag-theme-alpine">
-                                <ag-grid-angular *ngIf="showTable"
+                                <ag-grid-angular
                                     [columnDefs]="gridColumnDefs"
-                                    [rowData]="data"
                                     (gridReady)="onGridReady($event)"
                                     [gridOptions]="gridOptions"
                                     style="width: 100%">
                                 </ag-grid-angular>
 
                                 <ng-template #peopleNameSection let-params>
-                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="author-pic" /> {{ params?.value}}
+                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
                                 </ng-template>
                             </div>
                         </div>

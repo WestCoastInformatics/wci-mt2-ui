@@ -39,7 +39,7 @@
 
                     <div class="account-configuration-block main-block profile-pic-block">
                         <div class="account-profile-head section-header">Profile Picture</div>
-                        <div class="account-profile-mid"><img class="account-picture" [src]="iconUriValue"></div>
+                        <div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
                         <div class="section-btn">
                             <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">
                                 Edit Picture

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'app-navbar',
@@ -18,10 +19,11 @@ export class NavbarComponent implements OnInit {
     environment: string;
     user: User;
     userSubscription: Subscription;
-    @Input()
-    breadcrumbs: any;
     guestUser: string;
     isUserLoggedIn = false;
+    uiUtility = UiUtility;
+
+    @Input() breadcrumbs: any;
 
     constructor(private authenticationService: AuthenticationService,
         private breadcrumbService: BreadcrumbService,

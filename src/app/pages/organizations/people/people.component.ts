@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
@@ -35,7 +36,6 @@ export class OrganizationPeopleComponent implements OnInit {
 	gridParams: any;
 	gridApi: any;
 	gridColumnDefs = [];
-	showTable = false;
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
@@ -46,17 +46,20 @@ export class OrganizationPeopleComponent implements OnInit {
 		private readonly organizationsService: OrganizationsService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
-		private readonly teamService: TeamsService) { }
+		private readonly teamService: TeamsService,
+		private location: Location) { }
 
 	ngOnInit(): void {
+
 		this.titleService.setTitle('Refset Tool - Organizations');
 		this.breadcrumbService.setBreadcrumbs([
 			{ path: '/organizations/people', label: 'Organizations' },
 			{ label: 'People' },
 		]);
-	}
 
-	ngAfterViewInit() {
+		this.route.params.subscribe(params => {
+			this.id = params['id'];
+		});
 
 		this.gridColumnDefs = [
 			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
@@ -64,6 +67,8 @@ export class OrganizationPeopleComponent implements OnInit {
 			{ field: 'email', flex: 1, headerName: 'Email' },
 			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
 		];
+
+		this.getOrganizations();
 
 		this.gridOptions = {
 			context: { componentParent: this },
@@ -104,19 +109,13 @@ export class OrganizationPeopleComponent implements OnInit {
 		};
 
 		this.data = [];
-
-		this.route.params.subscribe(params => {
-			this.id = params['id'];
-		});
-
-		this.getOrganization();
-		this.getOrganizations();
-		this.getPeople();
 	}
 
 	onGridReady = (params) => {
+
 		this.gridParams = params;
 		this.gridApi = params.api;
+		this.getPeople();
 	}
 
 	onGridCellClick = (event) => {
@@ -141,24 +140,37 @@ export class OrganizationPeopleComponent implements OnInit {
 		this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
 
 			this.data = results.items;
-			this.showTable = true;
+			this.gridApi.setRowData(results.items);
 		});
 	}
 
 	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe((results) => {
-			this.organizationList = results.items;
-		});
-	}
 
-	getOrganization(): void {
-		this.organizationsService.getOrganization(this.id).subscribe((result) => {
-			this.selectedOrganization = result;
+		this.refsetService.getOrganizations().subscribe((results) => {
+
+			this.organizationList = results.items;
+
+			for (let organization of this.organizationList) {
+
+				if (this.id == organization.id) {
+					this.setOrganizationData(organization);
+				}
+			}
 		});
 	}
 
 	selectOrg($event): void {
-		this.router.navigate(['/organizations/people', $event['value'].id]);
+
+		this.setOrganizationData(this.selectedOrganization);
+		this.location.replaceState("/organizations/people/" + this.selectedOrganization.id);
+	}
+
+	setOrganizationData(organization: any) { 
+
+		this.id = organization.id;
+		this.selectedOrganization = organization;
+		
+		this.onGridReady(this.gridParams);
 	}
 
 	async getTeams(teams: any): Promise<any> {
