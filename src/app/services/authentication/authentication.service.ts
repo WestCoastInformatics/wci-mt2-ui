@@ -144,7 +144,8 @@ export class AuthenticationService {
 
         // if the user is on a page that requires being logged in, then send them to the directory
         if (this.router.url.includes('project')) {
-            this.router.navigateByUrl('directory');
+            // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
+            this.router.navigateByUrl('login');
         }
 
         if (userWasLoggedin) {
