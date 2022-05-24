@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
@@ -111,6 +112,8 @@ import { RemoveDashboardComponentModalComponent } from './components/remove-dash
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
+import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
+import { DomService } from './services/dom.service';
 
 
 const appRoutes: Routes = [
@@ -205,7 +208,8 @@ const appRoutes: Routes = [
         LaunchComparisonModalComponent,
         RemoveDashboardComponentModalComponent,
         RefsetFeedbackListComponent,
-        CustomTooltipComponent
+        CustomTooltipComponent,
+        ComposeModalComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -233,6 +237,7 @@ const appRoutes: Routes = [
         MatMenuModule,
         MatIconModule,
         MatRadioModule,
+        DragDropModule,
         ToastNoAnimationModule.forRoot({
             toastComponent: NotificationComponent
           }),
@@ -262,6 +267,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsComponent,
         UsersService,
         NotificationService,
+        DomService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {
             provide: HTTP_INTERCEPTORS,
