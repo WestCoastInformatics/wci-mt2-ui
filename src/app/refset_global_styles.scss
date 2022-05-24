@@ -5110,8 +5110,13 @@ app-category-floating-filter{
         flex: none;
     }
 }
-.ellipsed-label{
+.ellipsed-label {
     text-overflow: ellipsis;
     width: 100%;
     overflow: hidden;
+}
+
+.modal.modal-static .modal-dialog {
+    -webkit-transform: none !important;
+    transform: none !important;
 }
