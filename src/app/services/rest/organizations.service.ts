@@ -40,8 +40,8 @@ export class OrganizationsService extends RestService {
         return this.get(this.contextPath + 'organization/' + organizationId);
     }
 
-    getOrgUsers(organizationId: string): Observable<any> {
-        return this.get(this.contextPath + 'organization/' + organizationId + '/users');
+    getOrgUsers(organizationId: string, showTeams?: boolean): Observable<any> {
+        return this.get(this.contextPath + 'organization/' + organizationId + '/users?includeTeams=' + showTeams);
     }
 
     deleteOrganization(organizationId: string): Observable<any> {

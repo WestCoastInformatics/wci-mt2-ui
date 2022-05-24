@@ -61,7 +61,9 @@ export class OrganizationPeopleComponent implements OnInit {
 			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
 			{ field: 'company', flex: 1, headerName: 'Company Name' },
 			{ field: 'email', flex: 1, headerName: 'Email' },
-			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
+				return `<span class="text-primary font-weight-bold">${this.getTeamCount(params.data.teams)} teams</span>`;
+			  } }
 		];
 
 		this.gridOptions = {
@@ -136,9 +138,10 @@ export class OrganizationPeopleComponent implements OnInit {
 
 	getPeople(): void {
 
-		this.organizationsService.getOrgUsers(this.id).subscribe((results) => {
+		this.organizationsService.getOrgUsers(this.id, true).subscribe((results) => {
 
 			this.data = results.items;
+			console.log(this.data);
 			this.showTable = true;
 		});
 	}
@@ -172,9 +175,9 @@ export class OrganizationPeopleComponent implements OnInit {
 		}
 	}
 
-	getTeamCount(data: any): number {
+	getTeamCount(teams: any): number {
 
-		return data.teams.length;
+		return teams.length;
 	}
 
 	getUserIcon(icon) {
