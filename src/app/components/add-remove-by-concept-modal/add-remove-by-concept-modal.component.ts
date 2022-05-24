@@ -38,19 +38,19 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     showActiveConceptsOnly = true;
     initialResults = [];
     selectedRowIndex = -1;
-    conceptDetailParents: any;
     selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
     };
-    conceptDetail: any;
     conceptDescriptions: any;
     editMode = true;
     showResults = false;
     conceptSelected: boolean;
     showLoadingSpinner = false;
     isConceptDetailsLoading = false;
+    conceptDetail: any;
+    conceptDetailParents: any;
     selectedConcept: any;
     numOfChildren = undefined;
     isConceptBeingAdded: Boolean;

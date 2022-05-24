@@ -33,8 +33,9 @@
                                     style="width: 100%">
                                 </ag-grid-angular>
 
+                                <!-- Name Template -->
                                 <ng-template #peopleNameSection let-params>
-                                    <img [src]="getUserIcon(params?.data?.iconUri)" (error)="getGenericUserIcon($event)" class="author-pic" /> {{ params?.value}}
+                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
                                 </ng-template>
                             </div>
                         </div>

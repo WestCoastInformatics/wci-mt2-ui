@@ -58,9 +58,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 	OPEN = 'Open';
 	VISIBLE = 'Visible';
 	HIDDEN = 'Hidden';
-
-	tempProfilePic1 = 'assets/sampels/profile/1.svg';
-	tempProfilePic2 = 'assets/sampels/profile/2.svg';
+	uiUtility = UiUtility;
 
 	@Input() type: string;
 	@Input() refsetInternalId: string;
@@ -448,14 +446,6 @@ export class RefsetFeedbackListComponent implements OnInit {
 
 		this.gridApi.setRowData(this.threadsData);
 		this.gridApi.redrawRows();
-	}
-
-	getUserIcon(icon) {
-		return '/assets/profile/' + icon;
-	}
-
-	getGenericUserIcon(event) {
-		event.target.src = '/assets/user_logo.png';
 	}
 
 	getPostText(message: string, truncate: boolean = true) {

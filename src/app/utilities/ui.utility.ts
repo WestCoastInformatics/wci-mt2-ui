@@ -633,14 +633,44 @@ export class UiUtility {
         return rolesToShow.join(', ');
     }
 
-    static doesImageExist(url, callback) {
+    static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
+		
+        let genericIconFunction = this.getGenericUserIcon;
+        let labelTag = 'User Icon';
 
-        let image = new Image();
-        image.onload = function() { callback(true); };
-        image.onerror = function() { callback(false); };
-    }
+        if (iconType == 'organization') {
+
+            genericIconFunction = this.getGenericOrganizationIcon;
+            labelTag = 'Organization Icon';
+        }
+
+        image.alt = labelTag;
+        image.ariaLabel = labelTag;
+
+        if (CodeUtility.hasValue(iconUri)) {
+
+            image.scr = this.getIconImageUrl(iconUri);
+
+            image.onerror = ($event) => {
+                $event.target.src = genericIconFunction();
+            };
+
+        } else {
+            image.scr = genericIconFunction();
+        }
+
+        return image.scr;
+	}
+
+    static getIconImageUrl(iconUri) {
+		return environment.restUrl + environment.restContextPath + iconUri;
+	}
 
     static getGenericUserIcon() {
+		return '/assets/user_logo.png';
+	}
+
+    static getGenericOrganizationIcon() {
 		return '/assets/user_logo.png';
 	}
 

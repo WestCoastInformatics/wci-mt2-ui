@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
@@ -39,14 +40,22 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		private readonly refsetService: RefsetService,
 		private readonly organizationsService: OrganizationsService,
 		private readonly route: ActivatedRoute,
-		private readonly router: Router) { }
+		private readonly router: Router,
+		private location: Location) { }
 
 	ngOnInit(): void {
 		this.titleService.setTitle('Refset Tool - Organizations');
+
 		this.breadcrumbService.setBreadcrumbs([
 			{ path: '/organizations/teams', label: 'Organizations' },
 			{ label: 'Teams' },
 		]);
+
+		this.route.params.subscribe(params => {
+			this.id = params['id'];
+		});
+
+		this.getOrganizations();
 
 		this.gridColumnDefs = [
 			{ field: 'id', hide: true },
@@ -131,12 +140,6 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		};
 
 		this.data = [];
-
-		this.route.params.subscribe(params => {
-			this.id = params['id'];
-		});
-		this.getOrganization();
-		this.getOrganizations();
 	}
 
 	ngAfterViewInit() {
@@ -166,24 +169,36 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 				}
 			}
 			roles = [...new Set(roles)].sort();
-			this.gridApi.setRowData(this.data.slice(0, 10));
+			this.gridApi.setRowData(this.data);
 		});
 	}
 
 	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe((results) => {
-			this.organizationList = results.items;
-		});
-	}
 
-	getOrganization(): void {
-		this.organizationsService.getOrganization(this.id).subscribe((result) => {
-			this.selectedOrganization = result;
+		this.refsetService.getOrganizations().subscribe((results) => {
+
+			this.organizationList = results.items;
+
+			for (let organization of this.organizationList) {
+
+				if (this.id == organization.id) {
+					this.setOrganizationData(organization);
+				}
+			}
 		});
 	}
 
 	selectOrg($event): void {
-		this.router.navigate(['/organizations/teams', $event['value'].id]);
+
+		this.setOrganizationData(this.selectedOrganization);
+		this.location.replaceState("/organizations/teams/" + this.selectedOrganization.id);
+	}
+
+	setOrganizationData(organization: any) { 
+
+		this.id = organization.id;
+		this.selectedOrganization = organization;
+		
 		this.onGridReady(this.gridParams);
 	}
 

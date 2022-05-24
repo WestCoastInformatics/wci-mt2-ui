@@ -4951,10 +4951,6 @@ $sidebar-width: 294px;
         text-align: center;
     }
 
-    .account-picture {
-        border-radius: 50%;
-    }
-
     .update-profile-button,
     .edit-picture-button,
     .create-team-button,
@@ -4969,11 +4965,6 @@ $sidebar-width: 294px;
     }
 
 
-}
-
-.landing-profile-pic {
-    border-radius: 50%;
-    max-width: 100%;
 }
 
 .about-section {
@@ -5006,13 +4997,24 @@ $sidebar-width: 294px;
     width: 100%;
 }
 
+.large-icon-image {
+    width: 120px;
+    height: 120px;
+}
+
+.medium-icon-image {
+    width: 45px;
+    height: 45px;
+}
+
+.small-icon-image {
+    width: 24px;
+    height: 24px;
+}
+
 .topic-header{
     display: flex;
     align-items: center;
-    .author-pic{
-        width: 60px;
-        height: 60px;
-    }
 
     .topic-author{
         flex-grow: 1;
@@ -5055,10 +5057,7 @@ $sidebar-width: 294px;
 
     .topic-header{
         font-size: 20px;
-        .author-pic{
-            width: 50px;
-            height: 50px;
-        }
+
         .topic-author{
             margin: 0 10px;
             font-size: 20px;

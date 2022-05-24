@@ -23,20 +23,6 @@ export class TeamsPeopleComponent implements OnInit {
 
 	data = [];
 	defaultColDef = {};
-	columnDefs = [
-		{
-			field: 'name', headerName: 'Participant', minWidth: 300, cellRenderer: params => {
-				return `<img class='profile-pic' src='${params.data.pic}' /> ${params.data.name}`;
-			}
-		},
-		{ field: 'company', headerName: 'Company Name' },
-		{ field: 'email', headerName: 'Email' },
-		{
-			field: null, headerName: 'Edit Member', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold', cellRenderer: params => {
-				return `<a class='action-btn'>Remove Member</a>`;
-			}
-		}
-	];
 	selectedTeam: any;
 	id: any;
 	teamList = [];
@@ -48,6 +34,7 @@ export class TeamsPeopleComponent implements OnInit {
 	gridColumnDefs = [];
 	peopleList = [];
 	showTable = false;
+	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
 
@@ -174,13 +161,5 @@ export class TeamsPeopleComponent implements OnInit {
 				});
 			});
 		});
-	}
-
-	getUserIcon(icon) {
-		return '/assets/profile/' + icon;
-	}
-
-	getGenericUserIcon(event) {
-		event.target.src = UiUtility.getGenericUserIcon();
 	}
 }

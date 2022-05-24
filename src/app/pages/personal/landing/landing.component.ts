@@ -3,6 +3,7 @@ import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UsersService } from 'src/app/services/rest/users.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
   selector: 'personal-landing',
@@ -20,6 +21,7 @@ export class PersonalLandingComponent implements OnInit {
   todayDate: Date = new Date();
   organizationList = [];
   teamList = [];
+  uiUtility = UiUtility;
 
   constructor(private readonly authService: AuthenticationService,
     private readonly userService: UsersService,

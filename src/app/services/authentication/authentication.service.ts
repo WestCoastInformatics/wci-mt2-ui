@@ -170,6 +170,25 @@ export class AuthenticationService {
         return user;
     }
 
+    updateUser(updatedUser) {
+
+        try {
+
+            let currentUser = JSON.parse(localStorage.getItem('refset_user'));
+
+            if (currentUser.userName != this.GUEST_USER) {
+
+                localStorage.setItem('refset_user', JSON.stringify(updatedUser));
+                this.userSubject.next(updatedUser);
+            }
+
+        } catch (ex) {
+
+            this.noCookieAccess();
+            return null;
+        }
+    }
+
     noCookieAccess() {
 
         this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
