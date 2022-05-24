@@ -690,11 +690,11 @@ export class RefsetDetails {
     }
 
     getTaxonomyLanguageWithoutType() {
-        return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
+        return this.selectedConceptDetailLanguage.replace(/:.*$/, "");
     }
 
     getTaxonomyLanguageType() {
-        return this.selectedTaxonomyLanguage.replace(/^.*:/, "");
+        return this.selectedConceptDetailLanguage.replace(/^.*:/, "");
     }
 
     getConceptDetailLanguageWithoutType() {
@@ -1268,7 +1268,6 @@ export class RefsetDetails {
     }
 
     loadConceptDetailParents(concept, language = this.getTaxonomyLanguageWithoutType()) {
-
         this.conceptDetailParents = [];
 
         if (!concept?.active) {
