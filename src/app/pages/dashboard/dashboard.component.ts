@@ -229,7 +229,7 @@ export class DashboardComponent implements OnInit {
     }
 
     getOrganizations(): void {
-        this.refsetService.getOrganizationsWithIcon().subscribe((results) => {
+        this.refsetService.getOrganizations().subscribe((results) => {
             this.organizationList = results.items;
         });
     }

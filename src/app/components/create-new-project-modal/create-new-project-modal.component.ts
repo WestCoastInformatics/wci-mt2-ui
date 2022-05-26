@@ -19,13 +19,12 @@ export class CreateNewProjectModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any;
-    organizationsArray: any;
+	organizations: any[] = [];
     selectedOrganization: any;
-    organization: any;
     privateProject: any;
     emailError = '';
 
+    @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     param: any;
 
@@ -37,13 +36,25 @@ export class CreateNewProjectModalComponent {
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
         private readonly route: ActivatedRoute
-    ) {
-        this.route.params.subscribe(params => {
-            this.selectedOrganization = this.param = params['id'];
-            if (this.selectedOrganization) {
-                this.getOrganization();
+    ) { }
+
+    openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
+
+        this.description = '';
+        this.openedModel = this.modalService.open(createNewProjectDialog, {});
+
+        // get list of organizations
+        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+
+            this.organizations = organizationResults.items;
+
+            for (let organization of this.organizations) {
+
+                if (organization.id == this.organizationId) {
+                    this.selectedOrganization = organization;
+                }
             }
-          });
+        }); 
     }
 
     callMemberOperation(): void {
@@ -66,29 +77,6 @@ export class CreateNewProjectModalComponent {
         this.refsetDetails.ngOnInit();
 
         this.description = '';
-    }
-
-    openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
-
-        this.description = '';
-
-        this.openedModel = this.modalService.open(createNewProjectDialog, {
-        });
-    }
-
-    ngOnInit() {
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-            this.organizations = organizationResults;
-            this.organizationsArray = this.organizations?.items;
-        }) 
-    }
-
-    getOrganization(): void {
-        // get details about selected organization
-        this.organizationsService.getOrganization(this.selectedOrganization).subscribe((organizationResult) => {
-            this.organization = organizationResult;
-        }) 
     }
 
     isValidEmail(): boolean {
@@ -117,7 +105,7 @@ export class CreateNewProjectModalComponent {
             primaryContactEmail: this.email,
             privateProject: this.privateProject,
             teams: [],
-            organization: this.organization
+            organization: this.selectedOrganization
         };
         
 
