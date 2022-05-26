@@ -80,18 +80,21 @@ export class CreateNewProjectModalComponent {
     }
 
     isValidEmail(): boolean {
+        
         var lower = this.email.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
         if (flag == null) {
             this.emailError = "Email is invalid.";
         } else {
             this.emailError = "";
         }
+
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any){
+    onKeyDownEvent(event: any) {
+
         console.log(event.target.value);
         this.isValidEmail();
     }
@@ -111,6 +114,7 @@ export class CreateNewProjectModalComponent {
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
+
                 this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
@@ -118,7 +122,6 @@ export class CreateNewProjectModalComponent {
             },
             (err) => {
                 this.changeLockedStatus.emit(false);
-                console.error(err);
             }
         );
     }
