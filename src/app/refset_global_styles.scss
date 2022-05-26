@@ -5120,3 +5120,7 @@ app-category-floating-filter{
     -webkit-transform: none !important;
     transform: none !important;
 }
+
+.profile-select .mat-form-field-infix{
+    border-bottom: 1px solid black;
+}

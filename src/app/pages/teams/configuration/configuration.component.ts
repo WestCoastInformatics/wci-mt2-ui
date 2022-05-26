@@ -23,6 +23,8 @@ export class TeamsConfigurationComponent implements OnInit {
   profileEmailValue = '';
   profileDescriptionValue = '';
   selectedTeam: any;
+  organizations: any;
+  selectedOrganization: any;
   id: any;
   teamList = [];
   currentUser: any;
@@ -56,6 +58,7 @@ export class TeamsConfigurationComponent implements OnInit {
     });
     this.currentUser = this.authService.getUser();
     this.getTeam();
+    this.getOrganizations();
     this.getTeams();
   }
 
@@ -74,7 +77,12 @@ export class TeamsConfigurationComponent implements OnInit {
       this.profileNameValue = this.selectedTeam?.name;
       this.profileEmailValue = this.selectedTeam?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedTeam?.description;
+      this.selectedOrganization = this.selectedTeam?.organization;
     });
+  }
+
+  selectOrganization($event): void {
+    
   }
 
   getTeams(): void {
@@ -86,6 +94,12 @@ export class TeamsConfigurationComponent implements OnInit {
       });
       console.log(this.teamList)
     });
+  }
+  getOrganizations(): void {
+    // get list of organizations
+    this.refsetService.getOrganizations().subscribe((organizationResults) => {
+      this.organizations = organizationResults?.items;
+    })
   }
 
   isValidEmail(): boolean {

@@ -16,12 +16,14 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class ProjectsConfigurationComponent implements OnInit {
   menu: SidebarMenuItem[] = [
-    {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy'},
-    {name: 'People', link: '/projects/people', icon: 'fa fa-user'},
-    {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs', isActive: true}
+    { name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy' },
+    { name: 'People', link: '/projects/people', icon: 'fa fa-user' },
+    { name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs', isActive: true }
   ];
 
   profileNameValue = '';
+  organizations: any;
+  selectedOrganization: any;
   profileEmailValue = '';
   profileDescriptionValue = '';
   isPrivate = false;
@@ -32,7 +34,7 @@ export class ProjectsConfigurationComponent implements OnInit {
   selectedTeams = [];
   teamList = [];
   currentUser: any;
-  containsRole = false; 
+  containsRole = false;
   emailError = '';
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
@@ -42,7 +44,6 @@ export class ProjectsConfigurationComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly authService: AuthenticationService,
-    private readonly teamsService: TeamsService,
     private readonly notificationService: NotificationService) { }
 
   ngOnInit(): void {
@@ -51,16 +52,23 @@ export class ProjectsConfigurationComponent implements OnInit {
       { path: '/projects/configuration', label: 'Projects' },
       { label: 'Configuration' },
     ]);
-    
+
     this.route.params.subscribe(params => {
       this.id = params['id'];
     });
     this.currentUser = this.authService.getUser();
     this.getProject();
+    this.getOrganizations();
     this.getProjects();
     this.getTeams();
   }
 
+  getOrganizations(): void {
+    // get list of organizations
+    this.refsetService.getOrganizations().subscribe((organizationResults) => {
+      this.organizations = organizationResults?.items;
+    })
+  }
   getProjects(): void {
     this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
       this.projectList = results.items;
@@ -73,11 +81,11 @@ export class ProjectsConfigurationComponent implements OnInit {
       this.profileNameValue = this.selectedProject?.name;
       this.profileEmailValue = this.selectedProject?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedProject?.description;
+      this.selectedOrganization = this.selectedProject?.organization;
       this.isPrivate = this.selectedProject?.privateProject;
 
-      console.log(this.selectedProject)
       if (!this.selectedProject?.teams) {
-        this.selectedProject = {...this.selectedProject, teams: []}
+        this.selectedProject = { ...this.selectedProject, teams: [] }
       }
       this.selectedTeamIds = this.selectedProject?.teams;
     });
@@ -106,12 +114,12 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.selectedProject.description = this.profileDescriptionValue;
     this.selectedProject.privateProject = this.isPrivate;
     this.projectsService.updateProject(this.id, this.selectedProject).subscribe(() => {
-      this.notificationService.show("Update process complete.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+      this.notificationService.show("Update process complete.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
     });
   }
 
   updateProjectTeams(): void {
-    this.selectedProject = {...this.selectedProject, teams: this.selectedTeamIds};
+    this.selectedProject = { ...this.selectedProject, teams: this.selectedTeamIds };
     this.projectsService.updateProject(this.id, this.selectedProject).subscribe();
   }
 
@@ -121,6 +129,10 @@ export class ProjectsConfigurationComponent implements OnInit {
       this.id = params['id'];
       this.getProject();
     });
+  }
+
+  selectOrganization($event): void {
+    
   }
 
   getTeams(): void {
@@ -181,11 +193,11 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   }
 
-  getSelectedProjectName(): string{
+  getSelectedProjectName(): string {
     return this.selectedProject?.name;
   }
 
-  getSelectedProjectId(): string{
+  getSelectedProjectId(): string {
     return this.selectedProject?.id;
   }
 }

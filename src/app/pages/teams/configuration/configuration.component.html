@@ -1,5 +1,16 @@
 <div class="content-header">
     <div class="row header-title">
+        <span class="title-label">Organizations</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
+                (selectionChange)="selectOrganization($event)">
+                <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3">
+                    {{ organization.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
         <span class="title-label">Teams</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedTeam?.name ? selectedTeam?.name : 'Choose Team'}}</mat-label>
