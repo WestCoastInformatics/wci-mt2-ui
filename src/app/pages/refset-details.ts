@@ -409,7 +409,6 @@ export class RefsetDetails {
 
         this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
             next: (results) => {
-
                 this.refsetStatus = results?.workflowStatus;
                 this.id = results?.id;
                 this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
@@ -474,7 +473,7 @@ export class RefsetDetails {
 
                     let languageValue = language.languageCode + "-X-" + language.languageRefset + ":" + type;
 
-                    if (CodeUtility.testBoolean(language.default)) {
+                    if (CodeUtility.testBoolean(language.default) && !this.selectedTaxonomyLanguage) {
                         this.selectedTaxonomyLanguage = languageValue;
                     }
 
@@ -484,7 +483,6 @@ export class RefsetDetails {
                 if (languageRefsetOptions.length > 0) {
                     this.languageOptions = languageRefsetOptions;
                 }
-
                 this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
                 this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
 
@@ -649,7 +647,6 @@ export class RefsetDetails {
     }
 
     changeTaxonomyLanguage() {
-
         this.selectedTaxonomyLanguageIndex = this.languageOptions.findIndex(
             (option) => option.value === this.selectedTaxonomyLanguage
         );
