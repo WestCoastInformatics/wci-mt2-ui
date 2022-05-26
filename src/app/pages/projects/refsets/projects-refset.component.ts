@@ -188,6 +188,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.projects = projectResults.items;
             
             this.route.params.subscribe(params => {
+
                 if (params['id']) {
                     this.getProject(params['id']);
                     sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
@@ -223,9 +224,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             // if the stored project ID doesn't match anything remove it
             sessionStorage.removeItem('selectedProjectId');
         }
+
         // set to first in project list if none stored
         else if (this.projects && this.projects.length > 0) {
+
             this.selectedProject = this.projects[0];
+            this.showRefsets();
         }
     }
 
