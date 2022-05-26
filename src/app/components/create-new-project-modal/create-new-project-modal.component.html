@@ -25,9 +25,9 @@
                     <div class="row" id="downloadContentRow" >
                         <div >
                             <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedOrganization" (selectionChange)="getOrganization()">
-                                    <mat-option *ngFor="let option of organizationsArray" [value]="option.id">
-                                        {{ option.value }}
+                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedOrganization">
+                                    <mat-option *ngFor="let option of organizations" [value]="option">
+                                        {{ option.name }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -80,7 +80,6 @@
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
         <button type="button" [disabled]="name === '' || description === '' || email === ''  || !isValidEmail()" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" 
-
                 aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>

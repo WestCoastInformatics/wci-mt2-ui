@@ -27,15 +27,9 @@
                 <td>
                     <div class="row" id="downloadContentRow">
                         <div>
-                            <mat-form-field appearance="fill"
-                                class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select"
-                                    [(value)]="selectedOrganization"
-                                    (selectionChange)="getOrganization()">
-                                    <mat-option *ngFor="let option of organizationsArray"
-                                        [value]="option.id">
-                                        {{ option.value }}
-                                    </mat-option>
+                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
+                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedOrganization">
+                                    <mat-option *ngFor="let option of organizations" [value]="option">{{ option.name }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>
@@ -47,8 +41,7 @@
                     <label class="modal-label">Name:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Team Name" [(ngModel)]="name"
-                        style="width: 250px; padding-bottom: 7px" />
+                    <input class="modal-input-field" placeholder="Team Name" [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr>
@@ -56,8 +49,7 @@
                     <label class="modal-label">Email:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"
-                        [(ngModel)]="email" style="width: 250px; padding-bottom: 7px" />
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">
@@ -69,8 +61,7 @@
                 </td>
                 <td>
                     <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area"
-                            [(ngModel)]="description">test</textarea>
+                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
                     </mat-form-field>
 
                 </td>
@@ -105,8 +96,6 @@
             ng-reflect-color="green">
             Create Team
         </button>
-
-
     </div>
 
 </ng-template>

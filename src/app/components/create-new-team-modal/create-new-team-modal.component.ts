@@ -18,18 +18,16 @@ export class CreateNewTeamModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any;
-    organizationsArray: any;
+	organizations: any[] = [];
     selectedOrganization: any;
-    organization:any;
     privateTeam: any;
     selectedRoles: any;
     members: any;
     refsetUser: any;
-
     roleOptions: any;
     emailError = '';
 
+    @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     param: any;
     
@@ -41,13 +39,40 @@ export class CreateNewTeamModalComponent {
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
         private readonly route: ActivatedRoute
-    ) {
-        this.route.params.subscribe(params => {
-            this.selectedOrganization = this.param = params['id'];
-            if (this.selectedOrganization) {
-                this.getOrganization();
+    ) { }
+
+    ngOnInit() {    
+
+        this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
+        { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
+        
+        try {
+            this.refsetUser = JSON.parse(localStorage.getItem('refset_user'));
+            this.members = [this.refsetUser.id];
+        } catch (ex) {
+            return null;
+        }
+    }
+
+    openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
+
+        this.description = '';
+
+        this.openedModel = this.modalService.open(createNewTeamDialog, {
+        });
+
+        // get list of organizations
+        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+
+            this.organizations = organizationResults.items;
+
+            for (let organization of this.organizations) {
+
+                if (organization.id == this.organizationId) {
+                    this.selectedOrganization = organization;
+                }
             }
-          });
+        }); 
     }
 
     callMemberOperation(): void {
@@ -72,55 +97,26 @@ export class CreateNewTeamModalComponent {
         this.description = '';
     }
 
-    openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
-
-        this.description = '';
-
-        this.openedModel = this.modalService.open(createNewTeamDialog, {
-        });
-    }
-
-    ngOnInit() {    
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-            this.organizations = organizationResults;
-            this.organizationsArray = this.organizations?.items;
-        }) 
-        this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
-        { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
-        
-        try {
-            this.refsetUser = JSON.parse(localStorage.getItem('refset_user'));
-            this.members = [this.refsetUser.id];
-        } catch (ex) {
-            return null;
-        }
-    }
-
-    getOrganization(): void {
-        // get details about selected organization
-        this.organizationsService.getOrganization(this.selectedOrganization).subscribe((organizationResult) => {
-            this.organization = organizationResult;
-        }) 
-    }
-
     setRoles(): void {
         console.log(this.selectedRoles);
     }
 
     isValidEmail(): boolean {
+
         var lower = this.email.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
         if (flag == null) {
             this.emailError = "Email is invalid.";
         } else {
             this.emailError = "";
         }
+
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any){
+    onKeyDownEvent(event: any) {
+
         console.log(event.target.value);
         this.isValidEmail();
     }
@@ -134,12 +130,13 @@ export class CreateNewTeamModalComponent {
             primaryContactEmail: this.email,
             privateTeam: this.privateTeam,
             roles: this.selectedRoles,
-            organization: this.organization,
+            organization: this.selectedOrganization,
             members: this.members
         };
         
         this.teamsService.createTeam(params).subscribe(
             (data) => {
+
                 this.notificationService.show("The team is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
@@ -147,7 +144,6 @@ export class CreateNewTeamModalComponent {
             },
             (err) => {
                 this.changeLockedStatus.emit(false);
-                console.error(err);
             }
         );
     }

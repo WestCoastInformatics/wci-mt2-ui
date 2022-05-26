@@ -19,13 +19,12 @@ export class CreateNewProjectModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any;
-    organizationsArray: any;
+	organizations: any[] = [];
     selectedOrganization: any;
-    organization: any;
     privateProject: any;
     emailError = '';
 
+    @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     param: any;
 
@@ -37,13 +36,25 @@ export class CreateNewProjectModalComponent {
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
         private readonly route: ActivatedRoute
-    ) {
-        this.route.params.subscribe(params => {
-            this.selectedOrganization = this.param = params['id'];
-            if (this.selectedOrganization) {
-                this.getOrganization();
+    ) { }
+
+    openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
+
+        this.description = '';
+        this.openedModel = this.modalService.open(createNewProjectDialog, {});
+
+        // get list of organizations
+        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+
+            this.organizations = organizationResults.items;
+
+            for (let organization of this.organizations) {
+
+                if (organization.id == this.organizationId) {
+                    this.selectedOrganization = organization;
+                }
             }
-          });
+        }); 
     }
 
     callMemberOperation(): void {
@@ -68,42 +79,22 @@ export class CreateNewProjectModalComponent {
         this.description = '';
     }
 
-    openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
-
-        this.description = '';
-
-        this.openedModel = this.modalService.open(createNewProjectDialog, {
-        });
-    }
-
-    ngOnInit() {
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-            this.organizations = organizationResults;
-            this.organizationsArray = this.organizations?.items;
-        }) 
-    }
-
-    getOrganization(): void {
-        // get details about selected organization
-        this.organizationsService.getOrganization(this.selectedOrganization).subscribe((organizationResult) => {
-            this.organization = organizationResult;
-        }) 
-    }
-
     isValidEmail(): boolean {
+        
         var lower = this.email.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
         if (flag == null) {
             this.emailError = "Email is invalid.";
         } else {
             this.emailError = "";
         }
+
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any){
+    onKeyDownEvent(event: any) {
+
         console.log(event.target.value);
         this.isValidEmail();
     }
@@ -117,12 +108,13 @@ export class CreateNewProjectModalComponent {
             primaryContactEmail: this.email,
             privateProject: this.privateProject,
             teams: [],
-            organization: this.organization
+            organization: this.selectedOrganization
         };
         
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
+
                 this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
@@ -130,7 +122,6 @@ export class CreateNewProjectModalComponent {
             },
             (err) => {
                 this.changeLockedStatus.emit(false);
-                console.error(err);
             }
         );
     }

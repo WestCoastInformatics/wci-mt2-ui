@@ -25,7 +25,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 	defaultColDef = {};
 	teamList = [];
 	selectedOrganization: any;
-	id: any;
+	organizationId: string;
 	organizationList: any;
 	gridParams: any;
 	gridApi: any;
@@ -52,7 +52,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		]);
 
 		this.route.params.subscribe(params => {
-			this.id = params['id'];
+			this.organizationId = params['id'];
 		});
 
 		this.getOrganizations();
@@ -181,7 +181,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
 			for (let organization of this.organizationList) {
 
-				if (this.id == organization.id) {
+				if (this.organizationId == organization.id) {
 					this.setOrganizationData(organization);
 				}
 			}
@@ -196,7 +196,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
 	setOrganizationData(organization: any) { 
 
-		this.id = organization.id;
+		this.organizationId = organization.id;
 		this.selectedOrganization = organization;
 		
 		this.onGridReady(this.gridParams);

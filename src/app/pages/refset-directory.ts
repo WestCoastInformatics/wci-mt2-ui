@@ -95,7 +95,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-		forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions(), this.refsetService.getOrganizations()).
+		forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions(), this.refsetService.getOrganizationsKeyValue()).
             subscribe({next: ([results, versionResults, editionResults, organizationResults]) => {
 
                 this.versionStatuses = results;
