@@ -1624,6 +1624,11 @@ export class RefsetDetails {
         return data && data.upgradeWarning && data.availableActions?.includes('CANCEL_EDIT') && !data.availableActions?.includes('EDIT');
     }
 
+    get conceptDescriptionTerm(): string {
+        const desc = this.conceptDescriptions.filter((desc) => this.getConceptDetailLanguageWithoutType().indexOf('-' + desc.languageCode) > -1 && desc.type == this.getConceptDetailLanguageType());
+        return (desc.length > 0 ? desc[0] : this.conceptDescriptions[0]).term;
+    }
+
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
             //backdrop : 'static',

@@ -1072,13 +1072,13 @@
                                                                 </td>
                                                                 <td style="text-align: center;">
                                                                     <div class="refset-tool-concept-details-concept-name"
-                                                                        title="{{conceptDescriptions[0].term}}"
-                                                                        aria-label="{{conceptDescriptions[0].term}}">
+                                                                        title="{{conceptDescriptionTerm}}"
+                                                                        aria-label="{{conceptDescriptionTerm}}">
                                                                         {{getFsn(conceptDescriptions)
                                                                         ?
                                                                         getFsn(conceptDescriptions)
                                                                         :
-                                                                        conceptDescriptions[0].term}}
+                                                                        conceptDescriptionTerm}}
                                                                     </div>
                                                                 </td>
                                                                 <td style="text-align: right;">
@@ -1119,10 +1119,7 @@
                                                         class="row refset-tool-concept-details-concept-row">
                                                         <div
                                                             class="col refset-tool-concept-details-concept-ecl">
-                                                            {{conceptDetail.code}}
-                                                            |
-                                                            {{conceptDescriptions[0].term}}
-                                                            |
+                                                            {{conceptDetail.code}} | {{conceptDescriptionTerm}} |
                                                         </div>
                                                     </div>
                                                     <br />
