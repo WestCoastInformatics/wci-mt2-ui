@@ -9,22 +9,21 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'teams-people',
 	templateUrl: './people.component.html'
 })
 export class TeamsPeopleComponent implements OnInit {
-	menu: SidebarMenuItem[] = [
-		{ name: 'People', link: '/teams/people', icon: 'fa fa-user', isActive: true },
-		{ name: 'Configuration', link: '/teams/configuration', icon: 'fa fa-cogs' }
-	];
 
+	menu: SidebarMenuItem[] = [];
 	data = [];
 	defaultColDef = {};
 	selectedTeam: any;
-	id: any;
+	teamId: any;
 	teamList = [];
 	currentUser: any;
 	gridOptions: any;
@@ -34,6 +33,9 @@ export class TeamsPeopleComponent implements OnInit {
 	gridColumnDefs = [];
 	peopleList = [];
 	showTable = false;
+	organizationList = [];
+	organizationId: string;
+	selectedOrganization: any;
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
@@ -44,14 +46,22 @@ export class TeamsPeopleComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly authService: AuthenticationService,
-		private readonly teamsService: TeamsService) { }
+		private readonly teamsService: TeamsService,
+		private location: Location) { }
 
 	ngOnInit(): void {
+		
 		this.titleService.setTitle('Refset Tool - Teams');
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/teams/people', label: 'Teams' },
-			{ label: 'People' },
-		]);
+		this.currentUser = this.authService.getUser();
+
+		this.route.params.subscribe(params => {
+
+			this.organizationId = params['organizationId'];
+			this.teamId = params['id'];
+			this.setNavigation();
+		});
+
+		this.getOrganizations();
 	}
 
 	ngAfterViewInit() {
@@ -102,17 +112,81 @@ export class TeamsPeopleComponent implements OnInit {
 		};
 
 		this.data = [];
+		this.getPeople();
+	}
 
-		this.route.params.subscribe(params => {
-			this.id = params['id'];
+	setNavigation() {
+
+		this.breadcrumbService.setBreadcrumbs([
+			{ path: '/dashboard', label: 'Dashboard' },
+			{ label: 'People' },
+		]);
+
+		this.menu = [
+			{ name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true },
+			{ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' }
+		];
+	}
+
+	getOrganizations() {
+
+		this.refsetService.getOrganizations().subscribe((results) => {
+
+			this.organizationList = results.items;
+
+			for (let organization of this.organizationList) {
+
+				if (this.organizationId == organization.id) {
+
+					this.selectedOrganization = organization;
+					this.getTeams();
+					break;
+				}
+			}
 		});
-		this.currentUser = this.authService.getUser();
-		this.getTeam();
+	}
+
+	selectOrganization(): void {
+
+		this.organizationId = this.selectedOrganization.id;
+		this.location.replaceState('organization/' + this.organizationId + '/teams/people/');
+		this.teamId = null;
+		this.selectedTeam = null;
+		this.data = [];
+
+		this.setNavigation();
 		this.getTeams();
+	}
+
+	getTeams(): void {
+
+		this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+
+			this.teamList = results.items.filter((team) => {
+				
+				return team.members.some((member) => {
+					return member.includes(this.currentUser.id);
+				});
+			});
+
+			for (let team of this.teamList) {
+
+				if (this.teamId == team.id) {
+					this.selectedTeam = team;
+				}
+			}
+		});
+	}
+
+	selectTeam($event): void {
+
+		this.teamId = this.selectedTeam.id;
+		this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.selectedTeam.id);
 		this.getPeople();
 	}
 
 	onGridReady = (params) => {
+
 		this.gridParams = params;
 		this.gridApi = params.api;
 	}
@@ -123,7 +197,6 @@ export class TeamsPeopleComponent implements OnInit {
 		let selectedId: string;
 
 		selectedRows.forEach(function (selectedRow, index) {
-
 			selectedId = selectedRow.id;
 		});
 
@@ -135,31 +208,13 @@ export class TeamsPeopleComponent implements OnInit {
 	}
 
 	getPeople(): void {
+		if (this.teamId) {
 
-		this.teamsService.getTeamUsers(this.id).subscribe((results) => {
+			this.teamsService.getTeamUsers(this.teamId).subscribe((results) => {
 
-			this.data = results.items;
-			this.showTable = true;
-		});
-	}
-
-	selectTeam($event): void {
-		this.router.navigate(['/teams/people', $event['value'].id]);
-	}
-
-	getTeam(): void {
-		this.teamsService.getTeam(this.id).subscribe((result) => {
-			this.selectedTeam = result;
-		});
-	}
-
-	getTeams(): void {
-		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.teamList = results.items.filter((x) => {
-				return x.members.some((member) => {
-					return member.includes(this.currentUser.id);
-				});
+				this.data = results.items;
+				this.showTable = true;
 			});
-		});
+		}
 	}
 }

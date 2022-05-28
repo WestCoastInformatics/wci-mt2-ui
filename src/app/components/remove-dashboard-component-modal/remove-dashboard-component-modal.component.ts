@@ -21,6 +21,7 @@ export class RemoveDashboardComponentModalComponent {
     @Input() componentType: string;  // should be organization, project or team
     @Input() componentId: string;
     @Input() componentName: string;
+    @Input() disabled: boolean = false;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     
     constructor(

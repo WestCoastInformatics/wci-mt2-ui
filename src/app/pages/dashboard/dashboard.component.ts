@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
     projectList = [];
     teamList = [];
     currentUser: any;
+    uiUtility = UiUtility;
 
     columnDefs = [
         {

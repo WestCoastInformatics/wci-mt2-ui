@@ -1,4 +1,5 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,158 +9,208 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
-  selector: 'teams-configuration',
-  templateUrl: './configuration.component.html'
+	selector: 'teams-configuration',
+	templateUrl: './configuration.component.html'
 })
 export class TeamsConfigurationComponent implements OnInit {
-  menu:SidebarMenuItem[] = [
-    {name: 'People', link: '/teams/people', icon: 'fa fa-user'},
-    {name: 'Configuration', link: '/teams/configuration', icon: 'fa fa-cogs', isActive: true}
-  ];
 
-  profileNameValue = '';
-  profileEmailValue = '';
-  profileDescriptionValue = '';
-  selectedTeam: any;
-  organizations: any;
-  selectedOrganization: any;
-  id: any;
-  teamList = [];
-  currentUser: any;
-  roleOptions: any;
-  selectedRoles: any;
-  selectedForRemove = [];
-  selectedForAdd = [];
-  emailError = '';
+	menu: SidebarMenuItem[] = [];
+	profileNameValue = '';
+	profileEmailValue = '';
+	profileDescriptionValue = '';
+	selectedTeam: any;
+	organizationList = [];
+	organizationId: string;
+	selectedOrganization: any;
+	teamId: string;
+	teamList = [];
+	currentUser: any;
+	roleOptions: any;
+	selectedRoles: any;
+	selectedForRemove = [];
+	selectedForAdd = [];
+	emailError = '';
 
-  constructor(private readonly breadcrumbService: BreadcrumbService,
-    private readonly titleService: Title,
-    private readonly refsetService: RefsetService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly authService: AuthenticationService,
-    private readonly teamsService: TeamsService,
-    private readonly notificationService: NotificationService) { }
+	constructor(private readonly breadcrumbService: BreadcrumbService,
+		private readonly titleService: Title,
+		private readonly refsetService: RefsetService,
+		private readonly route: ActivatedRoute,
+		private readonly router: Router,
+		private readonly authService: AuthenticationService,
+		private readonly teamsService: TeamsService,
+		private readonly notificationService: NotificationService,
+		private location: Location) { }
 
-  ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Teams');
-    this.breadcrumbService.setBreadcrumbs([
-      { path: '/teams/configuration', label: 'Teams' },
-      { label: 'Configuration' },
-    ]);
+	ngOnInit(): void {
 
-    this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
-      { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
+		this.titleService.setTitle('Refset Tool - Teams');
 
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-    });
-    this.currentUser = this.authService.getUser();
-    this.getTeam();
-    this.getOrganizations();
-    this.getTeams();
-  }
+		this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
+		{ value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
 
-  selectTeam($event): void {
-    this.router.navigate(['/teams/configuration', $event['value'].id]);
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-      this.getTeam();
-    });
-  }
+		this.route.params.subscribe(params => {
 
-  getTeam(): void {
-    this.teamsService.getTeam(this.id).subscribe((result) => {
-      this.selectedTeam = result;
-      this.selectedRoles = this.selectedTeam?.roles;
-      this.profileNameValue = this.selectedTeam?.name;
-      this.profileEmailValue = this.selectedTeam?.primaryContactEmail;
-      this.profileDescriptionValue = this.selectedTeam?.description;
-      this.selectedOrganization = this.selectedTeam?.organization;
-    });
-  }
+			this.organizationId = params['organizationId'];
+			this.teamId = params['id'];
+			this.setNavigation();
+		});
 
-  selectOrganization($event): void {
-    
-  }
+		this.currentUser = this.authService.getUser();
+		this.getOrganizations();
+	}
 
-  getTeams(): void {
-    this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-      this.teamList = results.items.filter((x) => {
-        return x.members.some((member) => {
-          return member.includes(this.currentUser.id);
-        });
-      });
-      console.log(this.teamList)
-    });
-  }
-  getOrganizations(): void {
-    // get list of organizations
-    this.refsetService.getOrganizations().subscribe((organizationResults) => {
-      this.organizations = organizationResults?.items;
-    })
-  }
+	setNavigation() {
 
-  isValidEmail(): boolean {
-    var lower = this.profileEmailValue.toLowerCase();
-    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-    if (flag == null) {
-      this.emailError = "Email is invalid.";
-    } else {
-      this.emailError = "";
-    }
-    return flag == null ? false : true;
-  }
+		this.breadcrumbService.setBreadcrumbs([
+			{ path: '/dashboard', label: 'Dashboard' },
+			{ label: 'Teams Configuration' },
+		]);
 
-  onKeyDownEvent(event: any) {
-    console.log(event.target.value);
-    this.isValidEmail();
-  }
+		this.menu = [
+			{ name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user' },
+			{ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs', isActive: true }
+		];
+	}
 
-  updateTeam(): void {
-    this.selectedTeam.name = this.profileNameValue;
-    this.selectedTeam.primaryContactEmail = this.profileEmailValue;
-    this.selectedTeam.description = this.profileDescriptionValue;
-    this.teamsService.updateTeam(this.id, this.selectedTeam).subscribe((x) => {
-      if(x){
-        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
-      }
-    });
-  }
+	getOrganizations() {
 
-  updateTeamRoles(): void {
+		this.refsetService.getOrganizations().subscribe((results) => {
 
-    if (this.selectedTeam['roles']) {
-      for (let role of this.selectedTeam['roles']) {
-        if (!this.selectedRoles.includes(role)) {
-          this.selectedForRemove.push(role);
-        }
-      }
+			this.organizationList = results.items;
 
-      this.selectedForRemove.forEach((x) => {
-        this.teamsService.removeRole(this.selectedTeam.id, x).subscribe();
-      });
-    }
+			for (let organization of this.organizationList) {
 
-    for (let role of this.selectedRoles) {
-      if (!this.selectedTeam['roles'].includes(role)) {
-        this.teamsService.addRole(this.selectedTeam.id, role).subscribe();
-        }
-      }
+				if (this.organizationId == organization.id) {
 
+					this.selectedOrganization = organization;
+					this.getTeams();
+					break;
+				}
+			}
+		});
+	}
 
+	selectOrganization(): void {
 
-    console.log(this.selectedTeam.roles);
-  }
+		this.organizationId = this.selectedOrganization.id;
+		this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
+		this.clearTeamData();
 
-  setRoles(): void {
-    console.log(this.selectedRoles);
-  }
+		this.setNavigation();
+		this.getTeams();
+	}
 
-  getSelectedTeamName(): string{
-    return this.selectedTeam?.name;
-  }
+	getTeams(): void {
+
+		this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+
+			this.teamList = results.items.filter((team) => {
+
+				return team.members.some((member) => {
+					return member.includes(this.currentUser.id);
+				});
+			});
+
+			for (let team of this.teamList) {
+
+				if (this.teamId == team.id) {
+					this.setTeamData(team);
+				}
+			}
+		});
+	}
+
+	setTeamData(team: any) {
+
+		this.teamId = team.id;
+		this.selectedTeam = team;
+		this.selectedRoles = this.selectedTeam.roles;
+		this.profileNameValue = this.selectedTeam.name;
+		this.profileEmailValue = this.selectedTeam.primaryContactEmail;
+		this.profileDescriptionValue = this.selectedTeam.description;
+	}
+
+	clearTeamData() {
+
+		this.teamId = null;
+		this.selectedTeam = null;
+		this.selectedRoles = [];
+		this.profileNameValue = null;
+		this.profileEmailValue = null;
+		this.profileDescriptionValue = null;
+	}
+
+	selectTeam($event): void {
+
+		this.setTeamData(this.selectedTeam);
+		this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/' + this.selectedTeam.id);
+	}
+
+	isValidEmail(): boolean {
+
+		var lower = this.profileEmailValue.toLowerCase();
+		var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+		if (flag == null) {
+			this.emailError = "Email is invalid.";
+		} else {
+			this.emailError = "";
+		}
+
+		return flag == null ? false : true;
+	}
+
+	onKeyDownEvent(event: any) {
+
+		console.log(event.target.value);
+		this.isValidEmail();
+	}
+
+	updateTeam(): void {
+
+		this.selectedTeam.name = this.profileNameValue;
+		this.selectedTeam.primaryContactEmail = this.profileEmailValue;
+		this.selectedTeam.description = this.profileDescriptionValue;
+
+		this.teamsService.updateTeam(this.teamId, this.selectedTeam).subscribe((team) => {
+
+			if (team) {
+				this.notificationService.show("Team was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+			}
+		});
+	}
+
+	updateTeamRoles(): void {
+
+		if (this.selectedTeam['roles']) {
+			for (let role of this.selectedTeam['roles']) {
+				if (!this.selectedRoles.includes(role)) {
+					this.selectedForRemove.push(role);
+				}
+			}
+
+			this.selectedForRemove.forEach((x) => {
+				this.teamsService.removeRole(this.selectedTeam.id, x).subscribe();
+			});
+		}
+
+		for (let role of this.selectedRoles) {
+			if (!this.selectedTeam['roles'].includes(role)) {
+				this.teamsService.addRole(this.selectedTeam.id, role).subscribe();
+			}
+		}
+
+		console.log(this.selectedTeam.roles);
+	}
+
+	setRoles(): void {
+		console.log(this.selectedRoles);
+	}
+
+	getSelectedTeamName(): string {
+		return this.selectedTeam?.name;
+	}
 }

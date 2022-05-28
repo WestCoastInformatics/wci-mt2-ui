@@ -69,10 +69,14 @@ export class CodeUtility {
      * hasValue - return a boolean if passed variable has a legitimate value (not undefined, null, or possibly empty string.
      * variable - the variable to test
      * rejectEmpty - a boolean to set if the function should count empty strings or empty objects as non-valid values. Defaults to true
+     * rejectNullStringValues - a boolean to set if the function should count strings that have "null" or "defined" as a string value. Defaults to false
      */
-    static hasValue(variable, rejectEmpty: boolean = true) {
+    static hasValue(variable, rejectEmpty: boolean = true, rejectNullStringValues: boolean = false) {
 
-        if (variable == undefined || variable == null || (rejectEmpty && (variable === '' || (Object.keys(variable).length === 0 && (Array.isArray(variable) || variable.constructor === Object))))) {
+        if (variable == undefined || variable == null 
+            || (rejectEmpty && (variable === '' || (Object.keys(variable).length === 0 && (Array.isArray(variable) || variable.constructor === Object))))
+            || (rejectNullStringValues && (typeof variable == 'string' && (variable.toLowerCase() == 'null' || variable.toLowerCase() == 'undefined')))
+        ) {
             return false;
         } else {
             return true;

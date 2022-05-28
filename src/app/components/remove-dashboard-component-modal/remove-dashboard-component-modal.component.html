@@ -1,8 +1,6 @@
-<!-- <button (click)="openImportFromEclModal(importFromEclDialog)" class="refset-tool-standard-icon-button">
-    <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
-</button> -->
-
-<button class="btn btn-primary btn-lg"  title="Remove {{componentType}}" (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">Remove {{componentType | titlecase}}</button>
+<button class="btn btn-primary btn-lg" title="Remove {{componentType}}" [disabled]="disabled" (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
+    Remove {{componentType | titlecase}}
+</button>
 
 <ng-template #removeDashboardComponentDialog let-modal>
 

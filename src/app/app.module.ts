@@ -140,10 +140,10 @@ const appRoutes: Routes = [
     { path: 'projects/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
     { path: 'projects/configuration/:id', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
-    { path: 'teams/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'teams/people/:id', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'teams/configuration', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
-    { path: 'teams/configuration/:id', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/teams/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/teams/people/:id', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/teams/configuration', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/teams/configuration/:id', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
     { path: 'personal/landing', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
     { path: 'personal/landing/:id', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },

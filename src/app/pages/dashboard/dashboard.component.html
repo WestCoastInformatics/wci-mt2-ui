@@ -13,7 +13,7 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
-                                    <img [src]="organization.iconUri" *ngIf="organization.iconUri" />
+                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
                                     <span
                                         [routerLink]="['/organizations/projects', organization.id]"><a>{{
                                             organization.name }}</a></span>
