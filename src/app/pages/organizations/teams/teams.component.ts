@@ -212,7 +212,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 				selectedId = selectedRow.id;
 			});
 
-			this.router.navigate(['/teams/people', selectedId]);
+			this.router.navigate(['/organization/' + this.organizationId + '/teams/people', selectedId]);
 		}
 	};
 }

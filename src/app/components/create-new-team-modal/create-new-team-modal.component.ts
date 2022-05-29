@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: "./create-new-team-modal.component.html",
 })
 export class CreateNewTeamModalComponent {
+
     name = '';
     email = '';
     description = '';
@@ -26,10 +27,10 @@ export class CreateNewTeamModalComponent {
     refsetUser: any;
     roleOptions: any;
     emailError = '';
+    param: any;
 
     @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    param: any;
     
     constructor(
         private modalService: NgbModal,
@@ -47,6 +48,7 @@ export class CreateNewTeamModalComponent {
         { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
         
         try {
+
             this.refsetUser = JSON.parse(localStorage.getItem('refset_user'));
             this.members = [this.refsetUser.id];
         } catch (ex) {
@@ -58,8 +60,7 @@ export class CreateNewTeamModalComponent {
 
         this.description = '';
 
-        this.openedModel = this.modalService.open(createNewTeamDialog, {
-        });
+        this.openedModel = this.modalService.open(createNewTeamDialog, {});
 
         // get list of organizations
         this.refsetService.getOrganizations().subscribe((organizationResults) => {

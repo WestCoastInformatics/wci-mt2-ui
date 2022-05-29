@@ -64,10 +64,14 @@ export class TeamsConfigurationComponent implements OnInit {
 
 	setNavigation() {
 
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/dashboard', label: 'Dashboard' },
-			{ label: 'Teams Configuration' },
-		]);
+		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+
+		if (CodeUtility.hasValue(this.organizationId), true, true) {
+			breadcrumbs.push({ path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams' });
+		}
+
+		breadcrumbs.push({ label: 'Configuration' });
+		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
 		this.menu = [
 			{ name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user' },

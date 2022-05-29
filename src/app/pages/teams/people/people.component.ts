@@ -47,10 +47,10 @@ export class TeamsPeopleComponent implements OnInit {
 		private readonly router: Router,
 		private readonly authService: AuthenticationService,
 		private readonly teamsService: TeamsService,
-		private location: Location) { }
+		private location: Location) {}
 
 	ngOnInit(): void {
-		
+
 		this.titleService.setTitle('Refset Tool - Teams');
 		this.currentUser = this.authService.getUser();
 
@@ -65,7 +65,7 @@ export class TeamsPeopleComponent implements OnInit {
 	}
 
 	ngAfterViewInit() {
-
+		
 		this.gridColumnDefs = [
 			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
 			{ field: 'company', flex: 1, headerName: 'Company Name' },
@@ -117,10 +117,14 @@ export class TeamsPeopleComponent implements OnInit {
 
 	setNavigation() {
 
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/dashboard', label: 'Dashboard' },
-			{ label: 'People' },
-		]);
+		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+
+		if (CodeUtility.hasValue(this.organizationId), true, true) {
+			breadcrumbs.push({ path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams' });
+		}
+
+		breadcrumbs.push({ label: 'People' });
+		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
 		this.menu = [
 			{ name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true },
@@ -163,7 +167,7 @@ export class TeamsPeopleComponent implements OnInit {
 		this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
 			this.teamList = results.items.filter((team) => {
-				
+
 				return team.members.some((member) => {
 					return member.includes(this.currentUser.id);
 				});
