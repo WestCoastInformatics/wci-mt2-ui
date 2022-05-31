@@ -29,7 +29,7 @@ export class TeamsService extends RestService {
     }
 
     getTeam(teamId: string): Observable<any> {
-        return this.get(this.contextPath + 'team/' + teamId);
+        return this.get(this.contextPath + 'team/' + teamId + '?includeMembers=true');
     }
 
     getTeamUsers(teamId: string): Observable<any> {
