@@ -1125,7 +1125,9 @@ export class RefsetDetails {
 
             this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
             this.workflowHistoryDataSource.sort = this.sort;
-            this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
+            this.workflowHistoryNotes = null; 
+            // Commented based on ticket 417 (needs this to add each time instead of editing existing note)
+            //this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes; 
 
             const source = this.workflowHistoryDataSource?.data[0];
             if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
