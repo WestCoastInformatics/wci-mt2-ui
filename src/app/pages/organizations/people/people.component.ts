@@ -36,6 +36,7 @@ export class OrganizationPeopleComponent implements OnInit {
 	gridParams: any;
 	gridApi: any;
 	gridColumnDefs = [];
+	showLoadingSpinner = true;
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
@@ -139,10 +140,12 @@ export class OrganizationPeopleComponent implements OnInit {
 
 	getPeople(): void {
 
+		this.showLoadingSpinner = true;
 		this.organizationsService.getOrgUsers(this.id, true).subscribe((results) => {
 
 			this.data = results.items;
 			this.gridApi.setRowData(results.items);
+			this.showLoadingSpinner = false;
 		});
 	}
 

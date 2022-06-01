@@ -35,6 +35,7 @@ export class OrganizationProjectsComponent implements OnInit {
 	api: any;
 	columnApi: any;
 	gridParams: any;
+	showLoadingSpinner = true;
 
 	constructor(private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
@@ -105,6 +106,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
 	getProjects(): void {
 
+		this.showLoadingSpinner = true;
 		this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(async (results) => {
 
 			this.data = [];
@@ -119,6 +121,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
 			this.api.setRowData(this.data.slice(0, 10));
 			this.api.redrawRows();
+			this.showLoadingSpinner = false;
 		});
 	}
 
