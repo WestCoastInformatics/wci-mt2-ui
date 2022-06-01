@@ -36,6 +36,7 @@ export class TeamsPeopleComponent implements OnInit {
 	organizationList = [];
 	organizationId: string;
 	selectedOrganization: any;
+	showLoadingSpinner = true;
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
@@ -220,7 +221,10 @@ export class TeamsPeopleComponent implements OnInit {
 
 				this.data = results.items;
 				this.showTable = true;
+				this.showLoadingSpinner = false;
 			});
+		}else{
+			this.showLoadingSpinner = false;
 		}
 	}
 

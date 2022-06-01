@@ -27,6 +27,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 	selectedOrganization: any;
 	organizationId: string;
 	organizationList: any;
+	showLoadingSpinner = true;
 	gridParams: any;
 	gridApi: any;
 	gridColumnDefs = [];
@@ -159,6 +160,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
 	getTeams(): void {
 		let roles = [];
+		this.showLoadingSpinner = true;
 		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 			this.data = [];
 			this.teamList = results.items;
@@ -170,6 +172,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 			}
 			roles = [...new Set(roles)].sort();
 			this.gridApi.setRowData(this.data);
+			this.showLoadingSpinner = false;
 		});
 	}
 
