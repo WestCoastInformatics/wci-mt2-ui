@@ -25,6 +25,7 @@ import { NotificationService } from "src/app/services/notification.service";
 @Component({
     selector: "add-remove-by-concept-modal",
     templateUrl: "./add-remove-by-concept-modal.component.html",
+    styleUrls: ["./add-remove-by-concept-modal.component.scss"]
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
 
