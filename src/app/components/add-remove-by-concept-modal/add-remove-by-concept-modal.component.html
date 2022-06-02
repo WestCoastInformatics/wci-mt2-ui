@@ -36,10 +36,9 @@
                                 <div class="
                                         add-remove-concept-hierarchy-modal-search-bar
                                     ">
-                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField" style="width: 475px;"
-                                                    class="
-                                            add-remove-concept-hierarchy-modal-input-field
-                                        ">
+                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField"
+                                                    class="add-remove-concept-hierarchy-modal-input-field "
+                                                    >
                                         <mat-label>Search by ID or Keyword</mat-label>
                                         <input aria-label="Search by ID or Keyword"
                                                matInput
@@ -227,7 +226,7 @@
 
                                         <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetailParents">
 
-                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
+                                            <div class="refset-tool-concept-details-taxonomy-icon parents" [class.taxonomy-icon-edit-mode]="editMode">
 
                                                 <add-remove-concepts-icons [concept]="parent" [isParentConcept]="true" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)">
                                                 </add-remove-concepts-icons>
