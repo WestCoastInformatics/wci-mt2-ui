@@ -7,7 +7,7 @@ import { ITooltipParams } from 'ag-grid-community';
   selector: 'tooltip-component',
   template: `<ng-container *ngIf="params.column.colId === 'teams'">
     <div class="custom-tooltip">
-            <p (click)="goToTeam(team.id)" class="text-primary font-weight-bold" *ngFor="let team of this.teamArray">{{ team.name }}</p>
+            <p (click)="goToTeam(team.id, team.organizationId)" class="text-primary font-weight-bold" *ngFor="let team of this.teamArray">{{ team.name }}</p>
         </div>
     </ng-container>`,
   styles: [
@@ -48,9 +48,9 @@ export class CustomTooltipComponent implements ITooltipAngularComp {
     }
   }
 
-  goToTeam(teamId): void {
+  goToTeam(teamId: string, organizationId: string): void {
     this.zone.run(() => {
-      this.router.navigate(['/teams/people', teamId]);
+      this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
     });
   }
 
