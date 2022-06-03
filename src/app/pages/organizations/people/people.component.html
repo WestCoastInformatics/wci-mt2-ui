@@ -13,36 +13,52 @@
         </mat-form-field>
     </div>
 </div>
-    <div class="content-wrapper">
-        <app-sidebar [menuItems]="menu"></app-sidebar>
-        <div class='container-fluid mt-3'>
-            <div class='row'>
-                <div class='col-12'>
-                    <div *ngIf="showLoadingSpinner" class="loading"></div>
-                    <section class="mb-3">
-                        <div class='section-header mb-4'>
-                            People ({{dataCount}})
-                            <add-member-modal type="Organization" [id]="selectedOrganization?.id" [name]="selectedOrganization?.name"></add-member-modal>
-                        </div>
-                        <div class='dashboard-section'>
-                            <div class="ag-theme-alpine">
-                                <ag-grid-angular
-                                    [columnDefs]="gridColumnDefs"
-                                    (gridReady)="onGridReady($event)"
-                                    [gridOptions]="gridOptions"
-                                    style="width: 100%">
-                                </ag-grid-angular>
 
-                                <ng-template #peopleNameSection let-params>
-                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                                </ng-template>
-                            </div>
+<div class="content-wrapper">
+
+    <app-sidebar [menuItems]="menu"></app-sidebar>
+
+    <div class='container-fluid mt-3'>
+        <div class='row'>
+            <div class='col-12'>
+                <div *ngIf="showLoadingSpinner" class="loading"></div>
+                <section class="mb-3">
+
+                    <div class='section-header mb-4'>
+                        People ({{dataCount}})
+                        <add-member-modal type="Organization" [id]="selectedOrganization?.id" [name]="selectedOrganization?.name"></add-member-modal>
+                    </div>
+
+                    <div class='dashboard-section'>
+                        <div class="ag-theme-alpine">
+
+                            <ag-grid-angular *ngIf="showTable"
+                                [columnDefs]="gridColumnDefs"
+                                [rowData]="data"
+                                (gridReady)="onGridReady($event)"
+                                [gridOptions]="gridOptions"
+                                style="width: 100%">
+                            </ag-grid-angular>
+
+                            <!-- Name Template -->
+                            <ng-template #peopleNameSection let-params>
+                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                            </ng-template>
+
+                            <!-- Teams Template -->
+                            <ng-template #peopleTeamsSection let-params>
+                                <span class="text-primary font-weight-bold">{{getTeamCount(params.data.teams)}} teams</span>
+                            </ng-template>
+                            
                         </div>
-                        <!-- <div class='text-right'>
-                            <a class='text-muted light'>show/hide admin</a>
-                        </div> -->
-                    </section>
-                </div>
+                    </div>
+
+                    <!-- <div class='text-right'>
+                        <a class='text-muted light'>show/hide admin</a>
+                    </div> -->
+
+                </section>
             </div>
         </div>
     </div>
+</div>
