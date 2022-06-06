@@ -38,9 +38,9 @@
                     <as-split direction="horizontal" gutterSize="4">
                         <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100"
                             [minSize]="37">
-                            <ag-grid-angular class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+                            <ag-grid-angular id="upgrade-grid" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter w-100"
                                 [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions"
-                                (cellMouseOver)="onCellMouseOver($event)" style="width: 100%; height: 433px">
+                                (cellMouseOver)="onCellMouseOver($event)">
                             </ag-grid-angular>
                         </as-split-area>
 
@@ -108,8 +108,7 @@
                                     </div>
 
                                     <!-- Details Section -->
-                                    <div class="container-fluid refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
-                                        style="height: fit-content">
+                                    <div class="container-fluid refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size height-fit">
                                         <div class="row">
 
                                             <!-- Info Section -->
@@ -317,11 +316,11 @@
         {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
-        <mat-form-field appearance="fill" style="width: 400px">
+        <mat-form-field appearance="fill" id="add-field">
             <mat-label>Add Concept by ID or FSN</mat-label>
             <mat-select (selectionChange)="selectedConceptChanged($event)">
-                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)"
-                    (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()">
+                <input placeholder="Type here..." (keydown)="handleInput($event)"
+                    (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" id="search-input">
                 <mat-option *ngIf="!selectedConcepts && !manualReplacementOptionsLoading">None</mat-option>
                 <mat-option *ngIf="manualReplacementOptionsLoading">Loading...</mat-option>
                 <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{
