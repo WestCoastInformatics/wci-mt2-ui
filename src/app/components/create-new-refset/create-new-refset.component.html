@@ -40,15 +40,15 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.7rem;">Project Name:</label>
+                        <label class="raised">Project Name:</label>
                     </div>
                     <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default" matInput type="text"
                                 [(ngModel)]="inputProperties.project.name" disabled />
                         </mat-form-field>
                     </div>
@@ -57,12 +57,12 @@
                 <div class="create-new-refset-form-field">
 
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0.7rem;">Owner/Organization:</label>
+                        <label class="raised">Owner/Organization:</label>
                     </div>
 
-                    <div class="col create-new-refset-field create-new-refset-flex-weight" style="">
+                    <div class="col create-new-refset-field create-new-refset-flex-weight" >
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" disabled
+                            <input class="cursor-default" matInput type="text" disabled
                                 [(ngModel)]="inputProperties.project.organization.name" />
                         </mat-form-field>
                     </div>
@@ -74,15 +74,15 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.7rem;">Edition/Extension:</label>
+                        <label class="raised">Edition/Extension:</label>
                     </div>
                     <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default" matInput type="text"
                                 [(ngModel)]="inputProperties.project.organization.edition.name"
                                 disabled />
                         </mat-form-field>
@@ -101,9 +101,9 @@
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default" matInput type="text"
                                 [(ngModel)]="refsetConcept" disabled />
                         </mat-form-field>
                     </div>
@@ -318,9 +318,9 @@
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default"matInput type="text"
                                 [(ngModel)]="referenceType" disabled />
                         </mat-form-field>
                     </div>
@@ -342,7 +342,7 @@
                             <span *ngIf="i == 0">
 
                                 <mat-form-field class="refset_tool_ecl_definition_field">
-                                    <input style="cursor: default" matInput
+                                    <input class="cursor-default" matInput
                                         [(ngModel)]="clause.value"
                                         id="createRefsetDefinitionClausesInput"
                                         #createRefsetDefinitionClausesInput />

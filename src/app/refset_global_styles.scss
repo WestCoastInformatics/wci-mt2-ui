@@ -4335,6 +4335,9 @@ $sidebar-width: 294px;
 .pointer {
     cursor: pointer;
 }
+.cursor-default{
+    cursor: default;
+}
 
 .modal-dialog.full-modal {
     max-width: 90%;
@@ -5128,4 +5131,17 @@ app-category-floating-filter{
 
 .profile-select .mat-form-field-infix{
     border-bottom: 1px solid black;
+}
+.height-fit{
+    height: fit-content;
+}
+.table-620{
+    max-height:622px;
+}
+.profile-field{
+    width: 250px; 
+    padding-bottom:8px;
+}
+label.raised{
+    margin-bottom: 0.7rem;
 }
