@@ -7,7 +7,7 @@
                 <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
                     <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
                     <mat-option *ngFor="let project of projects"
-                    [value]="project" style="z-index: 3">
+                    [value]="project" class="z-3">
                         {{ project.name }}
                     </mat-option>
                 </mat-select>
@@ -36,7 +36,6 @@
         <div class='container-fluid mt-3'>
     <!-- Page Title -->
     <div *ngIf="selectedProject" style="
-            width: 100%;
             justify-content: space-between;
             display: flex;
             padding-right: 20px;
@@ -44,7 +43,7 @@
             align-items: baseline;
             padding-left: 15px;
             padding-bottom: 10px;
-        " [class.container-toggled]="toggleService.isToggled">
+        " [class.container-toggled]="toggleService.isToggled" class="w-100">
         <div class="container-fluid page-title"
             style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)">
             Reference Sets
@@ -78,7 +77,7 @@
     <div class="container-fluid" [class.container-toggled]="toggleService.isToggled">
         <ag-grid-angular *ngIf="showTable" #projectTable
             class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
+            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100">
         </ag-grid-angular>
 
         <app-pagination *ngIf="showTable" #projectPaging [pageSize]="refsetGridPaging.pageSize"

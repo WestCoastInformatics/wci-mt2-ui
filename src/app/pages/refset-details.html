@@ -43,38 +43,33 @@
                 <ng-template matStepperIcon="number">
                     <mat-icon>done</mat-icon>
                 </ng-template>
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
-                        [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
+                <ng-template matStepLabel><span
+                        [class]="stepperInfo['READY_FOR_EDIT_COLOR'] + ' mat-step-span'">Ready
                         for Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
-                        [class]="stepperInfo['IN_EDIT_COLOR']">In
+                <ng-template matStepLabel><span [class]="stepperInfo['IN_EDIT_COLOR'] + ' mat-step-span'">In
                         Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
-                        [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
+                <ng-template matStepLabel><span [class]="stepperInfo['READY_FOR_REVIEW_COLOR'] + ' mat-step-span'">Ready for Review</span>
                 </ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
-                        [class]="stepperInfo['IN_REVIEW_COLOR']">In
+                <ng-template matStepLabel><span [class]="stepperInfo['IN_REVIEW_COLOR'] + ' mat-step-span'">In
                         Review</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
-                        [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
+                <ng-template matStepLabel><span [class]="stepperInfo['REVIEW_COMPLETED_COLOR'] + ' mat-step-span'">Review Completed</span>
                 </ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
-                        [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for
+                <ng-template matStepLabel><span [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR'] + ' mat-step-span'">Ready for
                         Publication</span></ng-template>
             </mat-step>
 
@@ -1055,7 +1050,7 @@
                                                         <table
                                                             class="refset-tool-concept-details-concept-info-column-title">
                                                             <tr>
-                                                                <td style="text-align: left;">
+                                                                <td class="text-left">
                                                                     <div
                                                                         class="refset-tool-concept-details-taxonomy-icon status-icon-container">
                                                                         <img [hidden]="!conceptDetail.defined"
@@ -1069,7 +1064,7 @@
                                                                             src="/assets/unlinedTaxonomyIcon.png" />
                                                                     </div>
                                                                 </td>
-                                                                <td style="text-align: center;">
+                                                                <td class="text-center">
                                                                     <div class="refset-tool-concept-details-concept-name"
                                                                         title="{{conceptDescriptionTerm}}"
                                                                         aria-label="{{conceptDescriptionTerm}}">
@@ -1080,7 +1075,7 @@
                                                                         conceptDescriptionTerm}}
                                                                     </div>
                                                                 </td>
-                                                                <td style="text-align: right;">
+                                                                <td class="text-right">
                                                                     <div class="open-container">
                                                                         <button mat-icon-button
                                                                             (click)="openInNewWindow(conceptDetail.code)"

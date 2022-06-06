@@ -1,10 +1,6 @@
-import { templateJitUrl } from '@angular/compiler';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridApi } from 'ag-grid-community';
-import { OptionsFactory } from 'ag-grid-community/dist/lib/filter/provided/optionsFactory';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';

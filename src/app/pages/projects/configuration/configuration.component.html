@@ -5,7 +5,7 @@
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
                 (selectionChange)="selectOrganization($event)">
-                <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3">
+                <mat-option *ngFor="let organization of organizations" [value]="organization"  class="z-3">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -16,7 +16,7 @@
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject"
                 (selectionChange)="selectProject($event)">
-                <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
+                <mat-option *ngFor="let project of projectList" [value]="project" class="z-3">
                     {{ project.name }}
                 </mat-option>
             </mat-select>
