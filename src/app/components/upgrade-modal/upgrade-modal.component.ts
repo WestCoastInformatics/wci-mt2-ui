@@ -93,7 +93,7 @@ export class UpgradeModalComponent implements OnInit {
                 }
                 }
             });
-      
+
       members.items = finalResults;
       this.membersInCommon = members;
 
@@ -115,7 +115,7 @@ export class UpgradeModalComponent implements OnInit {
           this.existingBranchVersions = results.items ? results.items : undefined;
         });
   }
-  
+
   upgrade(): void {
     if (this.isInitialUpgrade) {
       this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
@@ -130,7 +130,7 @@ export class UpgradeModalComponent implements OnInit {
           this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
             this.totalMembers = members?.miscCountA;
             this.inactiveConcepts = members?.total;
-      
+
             this.membersInCommon = members;
             this.modalService.dismissAll();
             this.refsetDetails.initializeDetailsPage();
@@ -142,6 +142,7 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   getInactiveChangeReport(): void {
+
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
@@ -157,6 +158,7 @@ export class UpgradeModalComponent implements OnInit {
         'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
+    UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
 
     // if (shouldDownload) {
     //   UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
