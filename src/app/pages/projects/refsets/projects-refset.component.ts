@@ -189,7 +189,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             this.route.params.subscribe(params => {
 
-                if (params['id']) {
+                if (params['id'] && params['id'] !== 'configuration') {
                     this.getProject(params['id']);
                     sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
                 }
