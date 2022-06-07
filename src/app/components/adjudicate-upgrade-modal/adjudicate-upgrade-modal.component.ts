@@ -1,10 +1,6 @@
-import { templateJitUrl } from '@angular/compiler';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridApi } from 'ag-grid-community';
-import { OptionsFactory } from 'ag-grid-community/dist/lib/filter/provided/optionsFactory';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -111,11 +107,26 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
     this.columnDefs = [
       { field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason', cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190, maxWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
-      { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60, maxWidth: 60 },
+      { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
+          template:
+            '<div class="ag-cell-label-container" role="presentation">'
+            + ' <a class="remove-all mr-auto ml-auto">'
+            + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Add All" class="subtract-symbol-icon" />'
+            + ' </a>'
+            + '</div>'
+          }
+      , cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60, maxWidth: 60 },
       { field: 'inactiveId', tooltipField: 'inactiveId', headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, maxWidth: 120 },
       { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
       { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220, maxWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1 },
-      { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
+      { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '' , headerComponentParams: {
+            template:
+              '<div class="ag-cell-label-container" role="presentation">'
+                + ' <a class="add-all mr-auto ml-auto">'
+                + '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
+                + ' </a>'
+                + '</div>'
+        }, cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150, maxWidth: 160, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
       { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
@@ -449,6 +460,30 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       let label = obj.getAttribute('aria-label');
       let value = label.substring(0, label.indexOf('Filter Input')) + '...';
       obj.setAttribute('placeholder', value);
+    });
+
+    let self = this;
+    document.querySelectorAll('.add-all, .remove-all').forEach((obj: HTMLElement) => {
+      obj.addEventListener('click', function(e){
+        const memberItems = self.membersInCommon.items;
+        const isAdd = obj.classList.contains('add-all');
+        const inactiveConcepts = memberItems.filter((items: any) => {
+          return items?.active == false && (!isAdd || !items.replacementConcecpts[0]?.existingMember);
+        });
+        if(inactiveConcepts.length > 0){
+          if(isAdd){
+            let conceptIds = inactiveConcepts.map(i => i.replacementConcecpts[0].code).join(",");
+            self.refsetService.addRefsetMembers(self.refsetData.id, null, conceptIds).subscribe(() => {
+              self.processChangedMemberEffects(null);
+            });
+          }else{
+            let conceptIds = inactiveConcepts.map(i => i.code).join(",");
+            self.refsetService.removeRefsetMembers(self.refsetData.id, null, conceptIds).subscribe(() => {
+              self.processChangedMemberEffects(null);
+            });
+          }
+        }
+      });
     });
     this.changeDetection.detectChanges();
   }
