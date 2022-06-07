@@ -40,6 +40,7 @@ export class TeamsPeopleComponent implements OnInit {
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+	@ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
 
 	constructor(private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
@@ -71,9 +72,7 @@ export class TeamsPeopleComponent implements OnInit {
 			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
 			{ field: 'company', flex: 1, headerName: 'Company Name' },
 			{ field: 'email', flex: 1, headerName: 'Email' },
-			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
-				return `<span class="text-primary font-weight-bold">${this.getTeamCount(params.data)} teams</span>`;
-			} }
+			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } }
 		];
 
 		this.gridOptions = {
@@ -100,18 +99,6 @@ export class TeamsPeopleComponent implements OnInit {
 				unSortIcon: true
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
-
-					var inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 
 		this.data = [];

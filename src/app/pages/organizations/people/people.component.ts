@@ -26,6 +26,7 @@ export class OrganizationPeopleComponent implements OnInit {
 		{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' }
 	];
 	data = [];
+	showTable = false;
 	defaultColDef = {};
 	peopleList = [];
 	selectedOrganization: any;
@@ -40,6 +41,7 @@ export class OrganizationPeopleComponent implements OnInit {
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+	@ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
 
 	constructor(private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
@@ -62,16 +64,17 @@ export class OrganizationPeopleComponent implements OnInit {
 			this.id = params['id'];
 		});
 
+		this.getOrganizations();
+	}
+
+	ngAfterViewInit() {
+
 		this.gridColumnDefs = [
 			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
 			{ field: 'company', flex: 1, headerName: 'Company Name' },
 			{ field: 'email', flex: 1, headerName: 'Email' },
-			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
-				return `<span class="text-primary font-weight-bold">${this.getTeamCount(params.data.teams)} teams</span>`;
-			  } }
+			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } }
 		];
-
-		this.getOrganizations();
 
 		this.gridOptions = {
 			context: { componentParent: this },
@@ -97,21 +100,10 @@ export class OrganizationPeopleComponent implements OnInit {
 				unSortIcon: true
 			},
 			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
-
-					var inactivatedRow = false;
-
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
-
-					return inactivatedRow;
-				},
-			},
 		};
 
 		this.data = [];
+		this.getPeople();
 	}
 
 	onGridReady = (params) => {
@@ -145,7 +137,7 @@ export class OrganizationPeopleComponent implements OnInit {
 		this.organizationsService.getOrgUsers(this.id, true).subscribe((results) => {
 
 			this.data = results.items;
-			this.gridApi.setRowData(results.items);
+			this.showTable = true;
 			this.showLoadingSpinner = false;
 		});
 	}
@@ -175,8 +167,6 @@ export class OrganizationPeopleComponent implements OnInit {
 
 		this.id = organization.id;
 		this.selectedOrganization = organization;
-		
-		this.onGridReady(this.gridParams);
 	}
 
 	async getTeams(teams: any): Promise<any> {
