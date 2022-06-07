@@ -186,7 +186,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             };
 
             this.projects = projectResults.items;
-            
+
             this.route.params.subscribe(params => {
 
                 if (params['id']) {
