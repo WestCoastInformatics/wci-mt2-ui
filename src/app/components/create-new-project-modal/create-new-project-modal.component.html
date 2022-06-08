@@ -19,7 +19,7 @@
         <table>
             <tr *ngIf="!param">
                 <td>
-                    <label class="modal-label">Parent Organization:</label>
+                    <label class="modal-label">Parent Organization: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <div class="row" id="downloadContentRow" >
@@ -37,7 +37,7 @@
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Name:</label>
+                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <input class="modal-input-field" placeholder="Project Name"  [(ngModel)]="name"/>
@@ -79,7 +79,7 @@
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button type="button" [disabled]="name === '' || description === '' || email === ''  || !isValidEmail()" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" 
+        <button type="button" [disabled]="name === '' || description === '' || email === ''  || !isValidEmail()" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
                 aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>

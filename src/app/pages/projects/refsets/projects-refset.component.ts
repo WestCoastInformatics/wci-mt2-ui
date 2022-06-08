@@ -23,7 +23,8 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
 
 @Component({
     selector: 'projects-refset',
-    templateUrl: './projects-refset.component.html'
+    templateUrl: './projects-refset.component.html',
+    styleUrls: ['./projects-refset.component.scss']
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     menu:SidebarMenuItem[] = [
@@ -186,10 +187,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             };
 
             this.projects = projectResults.items;
-            
+
             this.route.params.subscribe(params => {
 
-                if (params['id']) {
+                if (params['id'] && params['id'] !== 'configuration') {
                     this.getProject(params['id']);
                     sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
                 }

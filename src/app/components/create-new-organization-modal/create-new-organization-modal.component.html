@@ -22,7 +22,7 @@
         <table>
             <tr>
                 <td>
-                    <label class="modal-label">Edition:</label>
+                    <label class="modal-label">Edition: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <div class="row" id="downloadContentRow">
@@ -43,7 +43,7 @@
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Name:</label>
+                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <input class="modal-input-field profile-field" placeholder="Organization Name"
@@ -52,12 +52,11 @@
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Email:</label>
+                    <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <input class="modal-input-field profile-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"
                         [(ngModel)]="email" />
-                    
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">

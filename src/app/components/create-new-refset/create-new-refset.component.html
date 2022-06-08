@@ -93,7 +93,8 @@
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
-                        " style="margin-top: 5px">
+                            mt-5p
+                        ">
                         <label>Assigned Refset Concept:</label>
                     </div>
                     <div *ngIf="editMode" class="
@@ -120,7 +121,7 @@
 
                         <mat-radio-group>
 
-                            <mat-radio-button style="padding-right: 30px" value="1"
+                            <mat-radio-button value="1" class="pr-30p"
                                 (change)="checkRadioButtonValue($event)">Choose an existing metadata
                                 concept</mat-radio-button>
 
@@ -221,13 +222,13 @@
                 <!-- End both NARRATIVEs-->
 
                 <!-- Tags -->
-                <div class="create-new-refset-form-field" style="align-items: normal">
+                <div class="create-new-refset-form-field align-items-normal">
                     <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-top: 1.7rem">Reference Set Tags:</label>
+                        <label class="mt-1-7">Reference Set Tags:</label>
                     </div>
 
                     <!-- Tags for new refset-->
@@ -292,7 +293,7 @@
                             create-new-refset-flex-weight
                         ">
                         <mat-form-field appearance="fill">
-                            <mat-label style="margin-top: 0">Select Reference Set Type
+                            <mat-label class="mt-0">Select Reference Set Type
                             </mat-label>
                             <select matNativeControl [(ngModel)]="selectedReferenceType">
                                 <option *ngFor="let referenceType of referenceTypes"
@@ -311,7 +312,7 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.2rem;">Reference Set Type:</label>
+                        <label class="mb-1">Reference Set Type:</label>
                     </div>
                     <div class="
                             col

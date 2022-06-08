@@ -110,6 +110,8 @@ export class OrganizationPeopleComponent implements OnInit {
 
 		this.gridParams = params;
 		this.gridApi = params.api;
+		this.gridApi.setRowData([]);
+		this.getPeople();
 	}
 
 	onGridCellClick = (event) => {

@@ -29,11 +29,10 @@
 
             <button mat-button *ngIf="(paginationPages.totalPages - paginationPages.startPage) > 5"
                 (click)="goToPage(paginationPages.startPage + 5)"
-                class="pagination-page-buttons"
+                class="pagination-page-buttons p-0 pagination-btn"
                 title="Go To Page {{paginationPages.startPage + 5}}"
                 attr.aria-label="Go To Page {{paginationPages.startPage + 5}}"
-                title="Go To Page {{paginationPages.startPage + 5}}"
-                style="min-width: 32px; padding: 0">
+                title="Go To Page {{paginationPages.startPage + 5}}">
                 ...
             </button>
 

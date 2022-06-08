@@ -10,7 +10,6 @@ import { NotificationService } from '../notification.service';
     providedIn: 'root'
 })
 export class OrganizationsService extends RestService {
-
     taxonomyRootNode: any = null;
     contextPath = '/refsetservice/';
     assignedUser: string;
