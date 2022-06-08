@@ -121,7 +121,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
                 { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
                 { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-                { type: 'status', name: 'Ready for PUBLICATION', value: 'READY_FOR_PUBLICATION' },
+                { type: 'status', name: 'Ready for Publication', value: 'READY_FOR_PUBLICATION' },
                 { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
 
