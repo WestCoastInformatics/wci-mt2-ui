@@ -367,10 +367,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     };
 
     this.refsetService.getUpgradeData(this.refsetData?.id, restParams).subscribe(results => {
-
       results.items = results.items.filter((x) => {
         if (this.hideReplacements) {
-          return !x.replaced;
+          return !x.replaced && x.replacementConcecpts.filter(r => r.existingMember).length == 0;
         }
         return x.active === false;
       });
