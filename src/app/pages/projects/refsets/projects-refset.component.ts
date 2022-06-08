@@ -23,7 +23,8 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
 
 @Component({
     selector: 'projects-refset',
-    templateUrl: './projects-refset.component.html'
+    templateUrl: './projects-refset.component.html',
+    styleUrls: ['./projects-refset.component.scss']
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     menu:SidebarMenuItem[] = [

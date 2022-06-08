@@ -7,17 +7,12 @@
                 <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
                     <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
                     <mat-option *ngFor="let project of projects"
-                    [value]="project" style="z-index: 3">
+                    [value]="project" class="z-3">
                         {{ project.name }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        <div class="col-md-auto page-title" *ngIf="selectedProject" style="
-            margin-right: 20px;
-            color: #555555;
-            padding-left: 60px;
-            font-size: 14px;
-        ">
+        <div class="col-md-auto page-title" *ngIf="selectedProject" id="project-name">
         <b>Project Name: </b><span>{{selectedProject?.name +
             &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
     
@@ -35,37 +30,27 @@
         <app-sidebar [menuItems]="menu" [id]="selectedProject?.id ? selectedProject?.id : ''"></app-sidebar>
         <div class='container-fluid mt-3'>
     <!-- Page Title -->
-    <div *ngIf="selectedProject" style="
-            width: 100%;
-            justify-content: space-between;
-            display: flex;
-            padding-right: 20px;
-            padding-top: 20px;
-            align-items: baseline;
-            padding-left: 15px;
-            padding-bottom: 10px;
-        " [class.container-toggled]="toggleService.isToggled">
-        <div class="container-fluid page-title"
-            style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)">
+    <div *ngIf="selectedProject"  [class.container-toggled]="toggleService.isToggled" class="w-100" id="selected-project">
+        <div class="container-fluid page-title d-inline pl-0" id="refset-count">
             Reference Sets
             <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
         </div>
 
-        <!-- <div style="display: inline; padding-right: 10px; cursor: pointer;"
+        <!-- <div class="d-inline pointer pr-10p"
         (click)="openWorkflowDiagramModal(workflowDiagramDialog)">
             <img src="assets/help-icon.svg"
             alt="Display Workflow Diagram"
             title="Display Workflow Diagram"
             aria-label="Display Workflow Diagram" />
         </div> -->
-        <div style="display: inline">
+        <div class="d-inline">
             <create-new-refset
                 [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
                 [inputProperties]="createRefsetProperties"
                 [existingBranchVersions]="existingBranchVersions">
             </create-new-refset>
         </div>
-        <div style="display: inline; padding-left: 10px">
+        <div class="d-inline pl-10p">
             <button disabled mat-raised-button color="primary" aria-hidden="false"
                 #createRefsetButton class="refset-tool-action-button isDisabled"
                 aria-label="Bulk Publication" title="Bulk Publication" ng-reflect-color="primary">
@@ -78,7 +63,7 @@
     <div class="container-fluid" [class.container-toggled]="toggleService.isToggled">
         <ag-grid-angular *ngIf="showTable" #projectTable
             class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
+            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100">
         </ag-grid-angular>
 
         <app-pagination *ngIf="showTable" #projectPaging [pageSize]="refsetGridPaging.pageSize"
@@ -169,8 +154,8 @@
     </div>
     <div class="container-fluid ready-for-review-container-fluid">
         <div class="modal-body review-modal-body">
-            <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram"
-                aria-label="Workflow Diagram" style="max-width: 100%; max-height: 100%;" />
+            <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" id="workflow-diagram-img"
+                aria-label="Workflow Diagram"/>
         </div>
     </div>
 </ng-template>

@@ -21,7 +21,8 @@ import { forkJoin } from 'rxjs';
  */
 @Component({
     selector: 'app-refset-directory',
-    templateUrl: 'refset-directory.html'
+    templateUrl: 'refset-directory.html',
+    styleUrls: ['./refset-directory.scss']
 })
 
 export class RefsetDirectory implements OnInit, AfterViewInit {

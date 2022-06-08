@@ -40,15 +40,15 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.7rem;">Project Name:</label>
+                        <label class="raised">Project Name:</label>
                     </div>
                     <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default" matInput type="text"
                                 [(ngModel)]="inputProperties.project.name" disabled />
                         </mat-form-field>
                     </div>
@@ -57,53 +57,53 @@
                 <div class="create-new-refset-form-field">
 
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0.7rem;">Owner/Organization:</label>
+                        <label class="raised">Owner/Organization:</label>
                     </div>
 
-                    <div class="col create-new-refset-field create-new-refset-flex-weight" style="">
+                    <div class="col create-new-refset-field create-new-refset-flex-weight" >
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" disabled
+                            <input class="cursor-default" matInput type="text" disabled
                                 [(ngModel)]="inputProperties.project.organization.name" />
                         </mat-form-field>
                     </div>
                 </div>
 
-                <div class="create-new-refset-form-field" style="border-bottom: 1px solid;">
+                <div class="create-new-refset-form-field bordered">
                     <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.7rem;">Edition/Extension:</label>
+                        <label class="raised">Edition/Extension:</label>
                     </div>
                     <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default" matInput type="text"
                                 [(ngModel)]="inputProperties.project.organization.edition.name"
                                 disabled />
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="create-new-refset-form-field" id="create-new-refset-assign-refset-field"
-                    style="border-bottom: 1px solid; margin-bottom: 10px; padding-top: 10px; border-left: 1px solid; border-right: 1px solid">
+                <div class="create-new-refset-form-field bordered" id="create-new-refset-assign-refset-field">
                     <div *ngIf="editMode" class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
-                        " style="margin-top: 5px">
+                            mt-5p
+                        ">
                         <label>Assigned Refset Concept:</label>
                     </div>
                     <div *ngIf="editMode" class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default" matInput type="text"
                                 [(ngModel)]="refsetConcept" disabled />
                         </mat-form-field>
                     </div>
@@ -121,7 +121,7 @@
 
                         <mat-radio-group>
 
-                            <mat-radio-button style="padding-right: 30px" value="1"
+                            <mat-radio-button value="1" class="pr-30p"
                                 (change)="checkRadioButtonValue($event)">Choose an existing metadata
                                 concept</mat-radio-button>
 
@@ -222,13 +222,13 @@
                 <!-- End both NARRATIVEs-->
 
                 <!-- Tags -->
-                <div class="create-new-refset-form-field" style="align-items: normal">
+                <div class="create-new-refset-form-field align-items-normal">
                     <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-top: 1.7rem">Reference Set Tags:</label>
+                        <label class="mt-1-7">Reference Set Tags:</label>
                     </div>
 
                     <!-- Tags for new refset-->
@@ -293,7 +293,7 @@
                             create-new-refset-flex-weight
                         ">
                         <mat-form-field appearance="fill">
-                            <mat-label style="margin-top: 0">Select Reference Set Type
+                            <mat-label class="mt-0">Select Reference Set Type
                             </mat-label>
                             <select matNativeControl [(ngModel)]="selectedReferenceType">
                                 <option *ngFor="let referenceType of referenceTypes"
@@ -312,15 +312,15 @@
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.2rem;">Reference Set Type:</label>
+                        <label class="mb-1">Reference Set Type:</label>
                     </div>
                     <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
-                        " style="">
+                        ">
                         <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text"
+                            <input class="cursor-default"matInput type="text"
                                 [(ngModel)]="referenceType" disabled />
                         </mat-form-field>
                     </div>
@@ -332,7 +332,7 @@
                     *ngIf="selectedReferenceType === INTENSIONAL">
 
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0">ECL Definition:</label>
+                        <label class="mb-0">ECL Definition:</label>
                     </div>
 
                     <div class="col create-new-refset-field create-new-refset-flex-weight">
@@ -342,7 +342,7 @@
                             <span *ngIf="i == 0">
 
                                 <mat-form-field class="refset_tool_ecl_definition_field">
-                                    <input style="cursor: default" matInput
+                                    <input class="cursor-default" matInput
                                         [(ngModel)]="clause.value"
                                         id="createRefsetDefinitionClausesInput"
                                         #createRefsetDefinitionClausesInput />

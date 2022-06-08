@@ -46,8 +46,8 @@
                     <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Organization Name"
-                        [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
+                    <input class="modal-input-field profile-field" placeholder="Organization Name"
+                        [(ngModel)]="name" />
                 </td>
             </tr>
             <tr>
@@ -55,9 +55,8 @@
                     <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"
-                        [(ngModel)]="email" style="width: 250px; padding-bottom: 9px" />
-
+                    <input class="modal-input-field profile-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"
+                        [(ngModel)]="email" />
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">

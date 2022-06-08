@@ -2,7 +2,7 @@
 
 <!-- Search Bar -->
 <div class="container-fluid sticky-top top-search-bar">
-    <div class="row justify-content-end" style="align-items: baseline">
+    <div class="row justify-content-end align-items-baseline">
         <div class="page-title">Reference Set Directory <span [hidden]="!numOfMembers">{{'(' +
                 numOfMembers + ')'}}</span></div>
         <div class="dropdown-group">
@@ -24,7 +24,7 @@
 
                 </div>
             </div>
-            <div class="col-md-auto" style="padding-left: 5px">
+            <div class="col-md-auto pl-5p">
                 <mat-form-field id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
                     <mat-select title="Public/Private Refsets" #directoryViewSelect
@@ -44,11 +44,11 @@
     <!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
     <!-- Refset Table -->
-    <div class="container-fluid" style="margin-top: 19px">
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="
+    <div class="container-fluid mt-20p">
+        <ag-grid-angular #directoryTable *ngIf="showTable" id="directory-tbl" class="
                 ag-theme-alpine
-                refset-tool-ag-grid refset-tool-ag-grid-filter
-            " [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
+                refset-tool-ag-grid refset-tool-ag-grid-filter w-100" 
+                [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
         </ag-grid-angular>
 
         <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize"
@@ -75,11 +75,11 @@
         </ng-template>
 
         <ng-template #directoryInfoDialog let-data>
-            <div class="container-fluid" id="directoryInformationSection" style="overflow: auto;min-width: 350px;">
-                <div class="row refset-tool-refset-details-title-name" style="display: block;"
+            <div class="container-fluid" id="directoryInformationSection">
+                <div class="row refset-tool-refset-details-title-name d-block"
                     title="{{data.name}}" aria-label="{{data.name}}">
-                    <p style="font-size:18px; margin-bottom: 0px;">{{data.name}}</p>
-                    <p style="font-size:16px"><span
+                    <p class="mb-0 f18-p">{{data.name}}</p>
+                    <p class="font-16p"><span
                             *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
                             *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
                 </div>
