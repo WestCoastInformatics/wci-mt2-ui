@@ -15,7 +15,6 @@ import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects
 @Component({
     selector: 'create-new-refset',
     templateUrl: './create-new-refset.component.html',
-    styleUrls: ['./create-new-refset.component.scss']
 })
 export class CreateNewRefsetComponent implements OnInit {
 

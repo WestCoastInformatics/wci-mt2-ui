@@ -43,33 +43,38 @@
                 <ng-template matStepperIcon="number">
                     <mat-icon>done</mat-icon>
                 </ng-template>
-                <ng-template matStepLabel><span
-                        [class]="stepperInfo['READY_FOR_EDIT_COLOR'] + ' mat-step-span'">Ready
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
                         for Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['IN_EDIT_COLOR'] + ' mat-step-span'">In
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['IN_EDIT_COLOR']">In
                         Edit</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['READY_FOR_REVIEW_COLOR'] + ' mat-step-span'">Ready for Review</span>
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
                 </ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['IN_REVIEW_COLOR'] + ' mat-step-span'">In
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['IN_REVIEW_COLOR']">In
                         Review</span></ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['REVIEW_COMPLETED_COLOR'] + ' mat-step-span'">Review Completed</span>
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
                 </ng-template>
             </mat-step>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-                <ng-template matStepLabel><span [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR'] + ' mat-step-span'">Ready for
+                <ng-template matStepLabel><span style="font-size: 15px; font-weight: bold;"
+                        [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for
                         Publication</span></ng-template>
             </mat-step>
 
@@ -711,9 +716,11 @@
 
                                 <!-- Search Bar -->
                                 <div class="container-fluid pr-0">
-                                    <div class="row justify-content-start no-gutters align-items-baseline">
+                                    <div class="row justify-content-start no-gutters"
+                                        style="align-items: baseline">
 
-                                        <div class="refset-tool-details-chooser-column pl-5p "
+                                        <div class="refset-tool-details-chooser-column"
+                                            style="padding-left: 5px"
                                             [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
                                             <app-column-chooser title="Select Columns to Display"
                                                 [gridColumnApi]="membersGridColumnApi"
@@ -738,7 +745,7 @@
                                             </mat-form-field>
                                         </div>
 
-                                        <div class="col-lg ml-3 pr-90p"
+                                        <div class="col-lg ml-3" style="padding-right: 90px;"
                                             [style.display]="membersTableDisplay">
                                             <mat-form-field
                                                 class="refset-tool-details-search-field">
@@ -762,7 +769,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="col-lg ml-3 pr-90p"
+                                        <div class="col-lg ml-3" style="padding-right: 90px;"
                                             [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field class="refset-tool-details-search-field"
                                                 *ngIf="showMembersSearchBar()">
@@ -788,7 +795,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="col-md-3 d-contents" id="refset-type">
+                                        <div class="col-md-3" style="display: contents" id="refset-type">
                                             <mat-button-toggle-group
                                                 class="refset-tool-toggle-buttons"
                                                 name="membersListMode"
@@ -812,7 +819,8 @@
                                 <!-- Members Table -->
                                 <div class="container-fluid" [style.display]="membersTableDisplay">
                                     <ag-grid-angular #detailsMembersTable *ngIf="showTable"
-                                        class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter table-620"
+                                        style="max-height:622px"
+                                        class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                                         [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
                                         [columnDefs]="membersColumnDefs"
                                         [gridOptions]="membersGridOptions">
@@ -1049,7 +1057,7 @@
                                                         <table
                                                             class="refset-tool-concept-details-concept-info-column-title">
                                                             <tr>
-                                                                <td class="text-left">
+                                                                <td style="text-align: left;">
                                                                     <div
                                                                         class="refset-tool-concept-details-taxonomy-icon status-icon-container">
                                                                         <img [hidden]="!conceptDetail.defined"
@@ -1062,7 +1070,7 @@
                                                                             src="/assets/unlinedTaxonomyIcon.png" />
                                                                     </div>
                                                                 </td>
-                                                                <td class="text-center">
+                                                                <td style="text-align: center;">
                                                                     <div class="refset-tool-concept-details-concept-name"
                                                                         title="{{conceptDescriptionTerm}}"
                                                                         aria-label="{{conceptDescriptionTerm}}">
@@ -1073,7 +1081,7 @@
                                                                         conceptDescriptionTerm}}
                                                                     </div>
                                                                 </td>
-                                                                <td class="text-right">
+                                                                <td style="text-align: right;">
                                                                     <div class="open-container">
                                                                         <button mat-icon-button
                                                                             (click)="openInNewWindow(conceptDetail.code)"
@@ -1134,7 +1142,8 @@
                                             </div>
 
                                             <!-- Roles Section -->
-                                            <div class="col refset-tool-concept-details-concept-roles-column p-2p"
+                                            <div style="padding:2px;"
+                                                class="col refset-tool-concept-details-concept-roles-column"
                                                 [class.refset-tool-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length">
                                                 <div *ngIf="true">
                                                     <span class="no-attributes"
@@ -1222,8 +1231,8 @@
     <div class="modal-footer ready-for-review-footer">
         <button type="button"
             (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
-            mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button mr-20p"
-            aria-label="Yes" title="Yes" ng-reflect-color="primary">
+            mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+            aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
             Yes
         </button>
         <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"

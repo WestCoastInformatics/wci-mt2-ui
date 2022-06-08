@@ -6,7 +6,7 @@
             <mat-select #detailsVersionSelect  [disableOptionCentering]="true" [(value)]="selectedProject"  (selectionChange)="selectProject($event)">
                 <mat-option *ngFor="let project of projectList"
                             [value]="project"
-                            class="z-3">
+                            style="z-index: 3">
                     {{ project.name }}
                 </mat-option>
             </mat-select>
@@ -35,7 +35,7 @@
                                 [rowData]="data"
                                 (gridReady)="onGridReady($event)"
                                 [gridOptions]="gridOptions"
-                                class="w-100">
+                                style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->

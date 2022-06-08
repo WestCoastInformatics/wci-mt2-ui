@@ -22,7 +22,7 @@
         <table>
             <tr *ngIf="!param">
                 <td>
-                    <label class="modal-label pt-6p">Parent Organization: <span class="mandatory-field">*</span></label>
+                    <label class="modal-label" style="padding-top: 6px">Parent Organization: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <div class="row" id="downloadContentRow">
@@ -41,7 +41,7 @@
                     <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field profile-field" placeholder="Team Name" [(ngModel)]="name" />
+                    <input class="modal-input-field" placeholder="Team Name" [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr>
@@ -49,7 +49,7 @@
                     <label class="modal-label">Email:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field profile-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email" />
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">
@@ -68,7 +68,7 @@
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label pt-6p">Role: <span class="mandatory-field">*</span></label>
+                    <label class="modal-label" style="padding-top: 9px">Role: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
