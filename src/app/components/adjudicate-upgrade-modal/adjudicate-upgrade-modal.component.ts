@@ -13,8 +13,7 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 
 @Component({
   selector: 'adjudicate-upgrade-modal',
-  templateUrl: './adjudicate-upgrade-modal.component.html',
-  styleUrls: ['./adjudicate-upgrade-modal.component.scss']
+  templateUrl: './adjudicate-upgrade-modal.component.html'
 })
 export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, OnChanges {
 

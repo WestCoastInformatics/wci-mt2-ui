@@ -6,7 +6,7 @@
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"  (selectionChange)="selectOrg($event)">
                 <mat-option *ngFor="let organization of organizationList"
                             [value]="organization"
-                            class="z-3">
+                            style="z-index: 3">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -33,7 +33,7 @@
                                 (gridReady)="onGridReady($event)"
                                 (cellClicked)="onGridCellClick($event)"
                                 [tooltipShowDelay]="0"
-                                class="w-100">
+                                style="width: 100%">
                             </ag-grid-angular>
                         </div>
                         <ng-template #descriptionSection let-params>

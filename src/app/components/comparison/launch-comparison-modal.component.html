@@ -213,7 +213,7 @@
                             </div>
 
                             <!-- MEMBERS GRID -->
-                            <ag-grid-angular *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter "
+                            <ag-grid-angular *ngIf="showTable" style="max-height:622px" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
                                 [ngClass]="getGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'" [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
                             </ag-grid-angular>
 
@@ -292,7 +292,8 @@
                                         </div>
 
                                         <!-- Details Section -->
-                                        <div class="refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size height-fit">
+                                        <div class="refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
+                                            style="height: fit-content">
                                             <div class="row m-0">
 
                                                 <!-- Info Section -->
@@ -301,14 +302,14 @@
 
                                                         <!-- Name -->
                                                         <div class="row refset-tool-concept-details-concept-title-row">
-                                                            <div class="text-left">
+                                                            <div style="text-align: left;">
                                                                 <div class="refset-tool-concept-details-taxonomy-icon status-icon-container">
                                                                     <img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
                                                                     <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
                                                                 </div>
                                                             </div>
                                                             <div class="col refset-tool-concept-details-concept-name">{{ conceptDetail?.name }}</div>
-                                                            <div class="text-right">
+                                                            <div style="text-align: right;">
                                                                 <div class="open-container">
                                                                     <button mat-icon-button (click)="openInNewWindow(conceptDetail.code)" class="refset-tool-concept-details-action-icon" 
                                                                         aria-hidden="false" aria-label="Open Concept in New SNOMED Browser Window" title="Open Concept in SNOMED Browser Window"
