@@ -1,10 +1,6 @@
-import { templateJitUrl } from '@angular/compiler';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GridApi } from 'ag-grid-community';
-import { OptionsFactory } from 'ag-grid-community/dist/lib/filter/provided/optionsFactory';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -110,10 +106,19 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   ngAfterViewInit() {
 
     this.columnDefs = [
-      { field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason', cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190, maxWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
+      { field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
+      filterValueGetter: (params) => {
+        return this.formatReason(params.data.isHidden ? params.data._reaosn : params.data.inactivationReason);
+      }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190, maxWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
       { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60, maxWidth: 60 },
-      { field: 'inactiveId', tooltipField: 'inactiveId', headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, maxWidth: 120 },
-      { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
+      { field: 'inactiveId', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', valueGetter: (params) => {
+        return params.data.code;
+      }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, maxWidth: 120 },
+      { field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection',
+      filterValueGetter: (params) => {
+        const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
+        return this.transformDescriptions(desc)?.length ? this.transformDescriptions(desc)[0].term : '';
+      }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection } },
       { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220, maxWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1 },
       { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150, maxWidth: 160, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
@@ -396,11 +401,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       console.log(this.membersInCommonForChangeReport);
 
       results.items.forEach((item) => {
+        item.inactiveId = item.code.toString();
         for (let i = 0; i < item.replacementConcecpts.length; i++) {
           if (i === 0) {
             finalResults.push(item);
           } else {
-            const newItem = { ...item, isHidden: true };
+            const newItem = { ...item, isHidden: true, _reaosn:item.inactivationReason, 
+              _descriptions: item.descriptions
+            };
 
             newItem.inactivationReason = '';
             newItem.descriptions = '';
