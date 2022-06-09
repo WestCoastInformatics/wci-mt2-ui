@@ -107,7 +107,7 @@ export class CreateNewProjectModalComponent {
             active: true,
             name: this.name,
             description: this.description,
-            primaryContactEmail: this.email,
+            //primaryContactEmail: this.email,
             privateProject: this.privateProject,
             teams: [],
             organization: this.selectedOrganization
