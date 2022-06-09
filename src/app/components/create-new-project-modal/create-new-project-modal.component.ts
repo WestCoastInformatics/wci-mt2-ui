@@ -8,6 +8,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { ProjectsService } from "src/app/services/rest/projects.service";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-project-modal",
@@ -35,7 +36,8 @@ export class CreateNewProjectModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private authenticationService: AuthenticationService
     ) { }
 
     openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
@@ -124,5 +126,10 @@ export class CreateNewProjectModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
+    }
+
+    
+    get canAdd(): boolean{
+        return this.authenticationService.isAdmin();
     }
 }
