@@ -5,6 +5,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -18,8 +19,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
 	menu: SidebarMenuItem[] = [
 		{ name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy' },
-		{ name: 'People', link: '/projects/people', icon: 'fa fa-user', isActive: true },
-		{ name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs' }
+		{ name: 'People', link: '/projects/people', icon: 'fa fa-user', isActive: true }
 	];
 	data = [];
 	peopleList = [];
@@ -40,7 +40,12 @@ export class ProjectsPeopleComponent implements OnInit {
 		private readonly refsetService: RefsetService,
 		private readonly projectsService: ProjectsService,
 		private readonly route: ActivatedRoute,
-		private readonly router: Router) { }
+		private authenticationService: AuthenticationService,
+		private readonly router: Router) { 
+			if(authenticationService.isAdmin()){
+				this.menu.push({ name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs' });
+			}
+		}
 
 	ngOnInit(): void {
 		this.titleService.setTitle('Refset Tool - Projects');

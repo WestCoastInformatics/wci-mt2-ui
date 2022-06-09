@@ -9,6 +9,7 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { EditionsService } from "src/app/services/rest/editions.service";
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-organization-modal",
@@ -36,7 +37,8 @@ export class CreateNewOrganizationModalComponent {
         private editionsService: EditionsService,
         private notificationService: NotificationService, 
         private readonly refsetDetails: RefsetDetails,
-        private readonly router: Router
+        private readonly router: Router,
+        private authenticationService: AuthenticationService
     ) {}
 
     callMemberOperation(): void {
@@ -124,5 +126,9 @@ export class CreateNewOrganizationModalComponent {
                 console.error(err);
             }
         );
+    }
+
+    get canAdd(): boolean{
+        return this.authenticationService.isAdmin();
     }
 }

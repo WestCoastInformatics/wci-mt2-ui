@@ -8,6 +8,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-team-modal",
@@ -39,7 +40,8 @@ export class CreateNewTeamModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private readonly authenticationService: AuthenticationService
     ) { }
 
     ngOnInit() {
@@ -146,5 +148,9 @@ export class CreateNewTeamModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
+    }
+
+    get canAdd(): boolean{
+        return this.authenticationService.isAdmin();
     }
 }

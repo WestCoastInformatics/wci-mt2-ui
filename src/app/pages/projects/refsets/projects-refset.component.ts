@@ -28,8 +28,7 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     menu:SidebarMenuItem[] = [
       {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy', isActive: true},
-      {name: 'People', link: '/projects/people', icon: 'fa fa-user'},
-      {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs'}
+      {name: 'People', link: '/projects/people', icon: 'fa fa-user'}
     ];
 
     searchInput: string;
@@ -88,6 +87,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         private readonly route: ActivatedRoute,
         private readonly projectsService: ProjectsService
     ) {
+        if(authService.isAdmin()){
+            this.menu.push({ name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs' });
+        }
         refsetService.getTaxonomyRoot();
     }
 
