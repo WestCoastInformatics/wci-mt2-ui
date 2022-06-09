@@ -5,7 +5,7 @@
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>Choose Organization</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-3">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -16,7 +16,7 @@
             <mat-label>Choose Team</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
                 <mat-option *ngIf="teamList == null || teamList.length == 0">No Teams</mat-option>
-                <mat-option *ngFor="let team of teamList" [value]="team" class="z-3">
+                <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3">
                     {{ team.name }}
                 </mat-option>
             </mat-select>
@@ -24,7 +24,7 @@
         
     </div>
 </div>
-    
+
 <div class="content-wrapper">
 
     <app-sidebar [menuItems]="menu" [id]="teamId"></app-sidebar>
@@ -48,7 +48,7 @@
                                 [rowData]="data"
                                 (gridReady)="onGridReady($event)"
                                 [gridOptions]="gridOptions"
-                                class="w-100">
+                                style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->

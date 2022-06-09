@@ -13,8 +13,7 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 
 @Component({
   selector: 'adjudicate-upgrade-modal',
-  templateUrl: './adjudicate-upgrade-modal.component.html',
-  styleUrls: ['./adjudicate-upgrade-modal.component.scss']
+  templateUrl: './adjudicate-upgrade-modal.component.html'
 })
 export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, OnChanges {
 
@@ -367,10 +366,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     };
 
     this.refsetService.getUpgradeData(this.refsetData?.id, restParams).subscribe(results => {
-
       results.items = results.items.filter((x) => {
         if (this.hideReplacements) {
-          return !x.replaced;
+          return !x.replaced && x.replacementConcecpts.filter(r => r.existingMember).length == 0;
         }
         return x.active === false;
       });
