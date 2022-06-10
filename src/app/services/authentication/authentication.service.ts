@@ -29,7 +29,7 @@ export class AuthenticationService {
         private router: Router,
         private readonly notificationService: NotificationService,
         private restService: RestService,
-    ) { 
+    ) {
         this.apiCalled = new EventEmitter();
     }
 
@@ -54,7 +54,7 @@ export class AuthenticationService {
     generateImsUrl(endpoint: string): string {
 
         let url = window.location.origin + '/login';
-         
+
         if (!window.location.origin.includes("local")) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
         } else {
@@ -196,7 +196,31 @@ export class AuthenticationService {
         this.router.navigateByUrl('');
     }
 
-    resetSession(){
+    resetSession() {
         this.apiCalled.emit(null);
+    }
+    hasRole(role: string): boolean {
+        let user = this.getUser();
+        for (const role of user?.roles) {
+            if (role.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    isAdmin(): boolean {
+        return this.hasRole("admin");
+    }
+
+    isAuthor(): boolean {
+        return this.hasRole('AUTHOR');
+    }
+
+    isReviewer(): boolean{
+        return this.hasRole('REVIEWER');
+    }
+
+    isViewer(): boolean{
+        return this.hasRole('VIEWER');
     }
 }

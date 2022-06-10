@@ -79,7 +79,7 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.projectsService.getProject(this.id).subscribe((result) => {
       this.selectedProject = result;
       this.profileNameValue = this.selectedProject?.name;
-      this.profileEmailValue = this.selectedProject?.primaryContactEmail;
+      // this.profileEmailValue = this.selectedProject?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedProject?.description;
       this.selectedOrganization = this.selectedProject?.organization;
       this.isPrivate = this.selectedProject?.privateProject;
@@ -110,7 +110,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   updateProject(): void {
     this.selectedProject.name = this.profileNameValue;
-    this.selectedProject.primaryContactEmail = this.profileEmailValue;
+    // this.selectedProject.primaryContactEmail = this.profileEmailValue;
     this.selectedProject.description = this.profileDescriptionValue;
     this.selectedProject.privateProject = this.isPrivate;
     this.projectsService.updateProject(this.id, this.selectedProject).subscribe(() => {

@@ -412,6 +412,19 @@
                                 <tr>
                                     <td class="
                                             refset-tool-refset-metadata-label
+                                        " aria-label="Project:">
+                                        Project:
+                                    </td>
+                                    <td class="
+                                            refset-tool-refset-metadata-value
+                                        ">
+                                        {{refsetData?.project?.name}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="
+                                            refset-tool-refset-metadata-label
                                         " aria-label="Refset Names:">
                                         Refset Names:
                                     </td>
@@ -421,19 +434,6 @@
                                         <span
                                             *ngFor="let description of setDescriptions(refsetData)">{{
                                             description?.term }}<br></span>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="
-                                            refset-tool-refset-metadata-label
-                                        " aria-label="Project:">
-                                        Project:
-                                    </td>
-                                    <td class="
-                                            refset-tool-refset-metadata-value
-                                        ">
-                                        {{refsetData?.project?.name}}
                                     </td>
                                 </tr>
                             </tbody>
@@ -452,7 +452,7 @@
                                     <td class="
                                             refset-tool-refset-metadata-label
                                         " aria-label="Version Date:">
-                                        Version Date:
+                                        Refset Version Date:
                                     </td>
                                     <td *ngIf="refsetData?.versionDate" class="
                                             refset-tool-refset-metadata-value
@@ -496,6 +496,19 @@
                                             capitalize-metadata-value
                                         ">
                                         {{capitalizeFirstLetterOfString(refsetData?.versionStatus)}}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="
+                                            refset-tool-refset-metadata-label
+                                        " aria-label="Terminology Version:">
+                                        Terminology Version:
+                                    </td>
+                                    <td class="
+                                            refset-tool-refset-metadata-value
+                                        ">
+                                        {{latestDate(refsetData?.versionList)}} of {{refsetData?.editionShortName}}
                                     </td>
                                 </tr>
 
@@ -1018,6 +1031,7 @@
 
                                                 <img *ngIf="parent.defined" title="Fully Defined"
                                                     aria-label="Fully Defined"
+                                                    class="refset-tool-logo mr-2 p-0"
                                                     src="/assets/linedTaxonomyIcon.png" />
 
                                                 <img *ngIf="!parent.defined" title="Primitive"
@@ -1066,7 +1080,6 @@
                                                                         <img *ngIf="!conceptDetail.defined"
                                                                             title="Primitive"
                                                                             aria-label="Primitive"
-                                                                            class="refset-tool-logo mr-2 p-0"
                                                                             src="/assets/unlinedTaxonomyIcon.png" />
                                                                     </div>
                                                                 </td>

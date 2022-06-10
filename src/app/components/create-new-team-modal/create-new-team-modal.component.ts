@@ -8,6 +8,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-team-modal",
@@ -31,7 +32,7 @@ export class CreateNewTeamModalComponent {
 
     @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
@@ -39,14 +40,15 @@ export class CreateNewTeamModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private readonly authenticationService: AuthenticationService
     ) { }
 
-    ngOnInit() {    
+    ngOnInit() {
 
         this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
         { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
-        
+
         try {
 
             this.refsetUser = JSON.parse(localStorage.getItem('refset_user'));
@@ -57,7 +59,7 @@ export class CreateNewTeamModalComponent {
     }
 
     openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
-
+        this.selectedRoles = [];
         this.description = '';
 
         this.openedModel = this.modalService.open(createNewTeamDialog, {});
@@ -73,7 +75,7 @@ export class CreateNewTeamModalComponent {
                     this.selectedOrganization = organization;
                 }
             }
-        }); 
+        });
     }
 
     callMemberOperation(): void {
@@ -83,13 +85,13 @@ export class CreateNewTeamModalComponent {
         }
 
         this.changeLockedStatus.emit(true);
-        
+
         this.createTeamObject();
 
         //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -103,7 +105,6 @@ export class CreateNewTeamModalComponent {
     }
 
     isValidEmail(): boolean {
-
         var lower = this.email.toLowerCase();
         var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -134,7 +135,7 @@ export class CreateNewTeamModalComponent {
             organization: this.selectedOrganization,
             members: this.members
         };
-        
+
         this.teamsService.createTeam(params).subscribe(
             (data) => {
 
@@ -147,5 +148,9 @@ export class CreateNewTeamModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
+    }
+
+    get canAdd(): boolean{
+        return this.authenticationService.isAdmin();
     }
 }

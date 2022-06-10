@@ -1,5 +1,5 @@
-<div *ngIf="!param" class='section-list text-right rounded' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary rounded btn-lg'>Create New Project</a></div>
-<a *ngIf="param" class="btn btn-primary rounded float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<div *ngIf="!param && canAdd" class='section-list text-right rounded' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary rounded btn-lg'>Create New Project</a></div>
+<a *ngIf="param && canAdd" class="btn btn-primary rounded float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
@@ -19,7 +19,7 @@
         <table>
             <tr *ngIf="!param">
                 <td>
-                    <label class="modal-label">Parent Organization:</label>
+                    <label class="modal-label">Parent Organization: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <div class="row" id="downloadContentRow" >
@@ -37,13 +37,13 @@
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Name:</label>
+                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
                     <input class="modal-input-field" placeholder="Project Name"  [(ngModel)]="name"/>
                 </td>
             </tr>
-            <tr>
+            <!-- <tr>
                 <td>
                     <label class="modal-label">Email:</label>
                 </td>
@@ -53,7 +53,7 @@
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">
                 <div>{{emailError}}</div>
-            </tr>
+            </tr> -->
             <tr>
                 <td>
                     <label class="modal-label">Description:</label>
@@ -79,7 +79,7 @@
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button type="button" [disabled]="name === '' || description === '' || email === ''  || !isValidEmail()" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" 
+        <button type="button" [disabled]="name === '' || description === ''" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
                 aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>

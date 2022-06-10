@@ -8,6 +8,7 @@ import { OrganizationsService } from 'src/app/services/rest/organizations.servic
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	selector: 'organization-teams',
@@ -18,7 +19,6 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
 		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true },
 		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
-		{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' }
 	];
 
 	data = [];
@@ -42,7 +42,12 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		private readonly organizationsService: OrganizationsService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
-		private location: Location) { }
+		private authenticationService: AuthenticationService,
+		private location: Location) { 
+			if(authenticationService.isAdmin()){
+				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+			}
+		}
 
 	ngOnInit(): void {
 		this.titleService.setTitle('Refset Tool - Organizations');

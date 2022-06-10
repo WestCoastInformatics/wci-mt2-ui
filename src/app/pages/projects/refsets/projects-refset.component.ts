@@ -28,8 +28,7 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     menu:SidebarMenuItem[] = [
       {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy', isActive: true},
-      {name: 'People', link: '/projects/people', icon: 'fa fa-user'},
-      {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs'}
+      {name: 'People', link: '/projects/people', icon: 'fa fa-user'}
     ];
 
     searchInput: string;
@@ -88,6 +87,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         private readonly route: ActivatedRoute,
         private readonly projectsService: ProjectsService
     ) {
+        if(authService.isAdmin()){
+            this.menu.push({ name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs' });
+        }
         refsetService.getTaxonomyRoot();
     }
 
@@ -121,7 +123,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
                 { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
                 { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-                { type: 'status', name: 'Ready for PUBLICATION', value: 'READY_FOR_PUBLICATION' },
+                { type: 'status', name: 'Ready for Publication', value: 'READY_FOR_PUBLICATION' },
                 { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
 
@@ -186,10 +188,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             };
 
             this.projects = projectResults.items;
-            
+
             this.route.params.subscribe(params => {
 
-                if (params['id']) {
+                if (params['id'] && params['id'] !== 'configuration') {
                     this.getProject(params['id']);
                     sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
                 }
