@@ -358,6 +358,7 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     get canAdd(): boolean{
-        return this.authenticationService.isAdmin() || this.authenticationService.isAuthor();
+        let project = this.inputProperties.project;
+        return project?.roles?.includes('AUTHOR') || project?.roles?.includes("ADMIN");
     }
 }

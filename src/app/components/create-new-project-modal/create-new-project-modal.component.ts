@@ -20,8 +20,7 @@ export class CreateNewProjectModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any[] = [];
-    selectedOrganization: any;
+	@Input() organizations: any[] = [];
     privateProject: any;
     emailError = '';
 
@@ -45,18 +44,12 @@ export class CreateNewProjectModalComponent {
         this.description = '';
         this.openedModel = this.modalService.open(createNewProjectDialog, {});
 
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-
-            this.organizations = organizationResults.items;
-
-            for (let organization of this.organizations) {
-
-                if (organization.id == this.organizationId) {
-                    this.selectedOrganization = organization;
-                }
-            }
-        }); 
+        if(!this.organizations){
+            // get list of organizations
+            this.refsetService.getOrganizations().subscribe((organizationResults) => {
+                this.organizations = organizationResults.items;
+            });
+        } 
     }
 
     callMemberOperation(): void {
@@ -129,7 +122,19 @@ export class CreateNewProjectModalComponent {
     }
 
     
+    get selectedOrganization(): any{
+
+        if(this.organizations && this.organizationId){
+            let org = this.organizations.filter(o => o.id == this.organizationId)
+            if(org.length > 0){
+                return org[0];
+            }
+        }
+        return null;
+    }
+
     get canAdd(): boolean{
-        return this.authenticationService.isAdmin();
+        let org = this.selectedOrganization;
+        return this.authenticationService.isAdmin() || org && org.roles.includes("ADMIN");
     }
 }
