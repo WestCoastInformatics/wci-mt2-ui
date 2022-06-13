@@ -46,10 +46,6 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Projects');
-    // this.breadcrumbService.setBreadcrumbs([
-    //   { path: '/projects/configuration', label: 'Projects' },
-    //   { label: 'Configuration' },
-    // ]);
 
     this.route.params.subscribe(params => {
 
