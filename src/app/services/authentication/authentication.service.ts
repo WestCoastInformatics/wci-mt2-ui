@@ -143,7 +143,7 @@ export class AuthenticationService {
         this.userSubject.next(user);
 
         // if the user is on a page that requires being logged in, then send them to the directory
-        if (this.router.url.includes('project')) {
+        if (!this.isUserLoggedIn) {
             // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
             this.router.navigateByUrl('login');
         }
@@ -201,9 +201,11 @@ export class AuthenticationService {
     }
     hasRole(role: string): boolean {
         let user = this.getUser();
-        for (const role of user?.roles) {
-            if (role.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
-                return true;
+        if (user?.roles) {
+            for (const role of user?.roles) {
+                if (role.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
+                    return true;
+                }
             }
         }
         return false;
@@ -216,11 +218,11 @@ export class AuthenticationService {
         return this.hasRole('AUTHOR');
     }
 
-    isReviewer(): boolean{
+    isReviewer(): boolean {
         return this.hasRole('REVIEWER');
     }
 
-    isViewer(): boolean{
+    isViewer(): boolean {
         return this.hasRole('VIEWER');
     }
 }
