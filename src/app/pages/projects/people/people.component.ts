@@ -9,6 +9,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -17,13 +18,11 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class ProjectsPeopleComponent implements OnInit {
 
-	menu: SidebarMenuItem[] = [
-		{ name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy' },
-		{ name: 'People', link: '/projects/people', icon: 'fa fa-user', isActive: true }
-	];
+	menu: SidebarMenuItem[] = [];
 	data = [];
 	peopleList = [];
 	selectedProject: any;
+	selectedOrganization: any;
 	id: any;
 	projectList = [];
 	gridOptions: any;
@@ -34,6 +33,8 @@ export class ProjectsPeopleComponent implements OnInit {
 	uiUtility = UiUtility;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+	organizations: any;
+	organizationId: string;
 
 	constructor(private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
@@ -41,18 +42,10 @@ export class ProjectsPeopleComponent implements OnInit {
 		private readonly projectsService: ProjectsService,
 		private readonly route: ActivatedRoute,
 		private authenticationService: AuthenticationService,
-		private readonly router: Router) { 
-			if(authenticationService.isAdmin()){
-				this.menu.push({ name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs' });
-			}
-		}
+		private readonly router: Router) {}
 
 	ngOnInit(): void {
 		this.titleService.setTitle('Refset Tool - Projects');
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/projects/people', label: 'Projects' },
-			{ label: 'People' },
-		]);
 
 		this.gridColumnDefs = [
 			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
@@ -102,11 +95,51 @@ export class ProjectsPeopleComponent implements OnInit {
 		this.data = [];
 
 		this.route.params.subscribe(params => {
-			this.id = params['id'];
+
+			this.organizationId = params['organizationId'];
+			if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
+				this.id = params['id'];
+				this.getProject();
+			}
+			this.setNavigation();
 		});
-		this.getProject();
 		this.getProjects();
 		this.getPeople();
+        this.getOrganizations();
+	}
+
+	setNavigation() {
+
+		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+
+		if (CodeUtility.hasValue(this.organizationId), true, true) {
+			breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+		}
+
+		breadcrumbs.push({ label: 'People' });
+		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+
+        this.menu = [
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy'},
+			{ name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
+		];
+		
+		if(true){
+			this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+		}
+	}
+	
+	getOrganizations(): void {
+		// get list of organizations
+		this.refsetService.getOrganizations().subscribe((organizationResults) => {
+		  this.organizations = organizationResults?.items;
+		})
+	}
+
+	selectOrganization($event): void {
+		this.organizationId = $event.value.id;
+		this.selectedProject = null;
+		this.getProjects();
 	}
 
 	onGridReady = (params) => {
@@ -140,18 +173,24 @@ export class ProjectsPeopleComponent implements OnInit {
 
 	getProjects(): void {
 		this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.projectList = results.items;
+			this.projectList = results.items.filter((items) => {
+				return this.organizationId === items.organizationId;
+			});
 		});
 	}
 
 	getProject(): void {
 		this.projectsService.getProject(this.id).subscribe((result) => {
 			this.selectedProject = result;
+			this.selectedOrganization = this.selectedProject?.organization;
 		});
 	}
 
 	selectProject($event): void {
-		this.router.navigate(['/projects/people', $event['value'].id]);
-	}
-
+	this.router.navigate(['organization/' + this.organizationId + '/projects/people', $event['value'].id]);
+    this.route.params.subscribe(params => {
+      this.id = params['id'];
+      this.getProject();
+    });
+  }
 }

@@ -2,10 +2,21 @@
 
     <div class="content-header">
         <div class="row header-title">
+            <span class="title-label">Organizations</span>
+            <mat-form-field appearance="outline" class="project-drop-down">
+                <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+                <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
+                    (selectionChange)="selectOrganization($event)">
+                    <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3">
+                        {{ organization.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <span class="title-label">Projects</span>
             <mat-form-field appearance="outline" class="project-drop-down">
                 <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-                    <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
+                    <mat-select [disabled]="organizationId === '0'" #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
                     <mat-option *ngFor="let project of projects"
                     [value]="project" style="z-index: 3">
                         {{ project.name }}
@@ -32,7 +43,7 @@
 
     </div>
     <div class="content-wrapper">
-        <app-sidebar [menuItems]="menu" [id]="selectedProject?.id ? selectedProject?.id : ''"></app-sidebar>
+        <app-sidebar [menuItems]="menu"></app-sidebar>
         <div class='container-fluid mt-3'>
     <!-- Page Title -->
     <div *ngIf="selectedProject" style="
