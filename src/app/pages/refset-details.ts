@@ -1651,4 +1651,8 @@ export class RefsetDetails {
     showFlagIcon(showFlag: boolean) {
         this.showFlag = showFlag;
     }
+
+    latestDate(versionList: any[]): string {
+        return versionList ? `${versionList[0].date}` : '';
+      }
 }

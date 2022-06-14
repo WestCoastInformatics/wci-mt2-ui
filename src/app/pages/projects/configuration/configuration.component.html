@@ -14,7 +14,7 @@
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject"
+            <mat-select [disabled]="organizationId === '0'" #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject"
                 (selectionChange)="selectProject($event)">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}
@@ -41,12 +41,12 @@
                                 <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
-                            <mat-form-field class="profile-email-field" appearance="none">
+                            <!-- <mat-form-field class="profile-email-field" appearance="none">
                                 <mat-label>Primary Contact Email</mat-label>
                                 <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)"
                                     [(ngModel)]="profileEmailValue">
                                 <div class="modal-error-message" [hidden]="!emailError">{{emailError}}</div>
-                            </mat-form-field>
+                            </mat-form-field> -->
 
                             <mat-form-field class="profile-description-field" appearance="none">
                                 <mat-label>Description</mat-label>
@@ -65,7 +65,7 @@
                         <div class="update-profile-button">
                             <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
                                 <button class="btn btn-primary btn-lg"
-                                    [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()"
+                                    [disabled]="!profileNameValue || !profileDescriptionValue "
                                     (click)="updateProject()">Update Profile</button></div>
                         </div>
                     </div>

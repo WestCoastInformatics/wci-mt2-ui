@@ -70,6 +70,10 @@ export class RefsetService extends RestService {
         return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&ecl=${ecl}`, conceptIds, true);
     }
 
+    addRemoveAllInactiveRefsetMembers(refsetInternalId: string, isAdd: boolean): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/${isAdd ? 'addAllUpgradeReplacementConcepts': 'removeAllUpgradeInactiveConcepts'}`, {});
+    }
+
     addRefsetDefinitionExceptions(refsetInternalId: string, fileType: string, definitionExceptionType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&ecl=${ecl}`, conceptIds, true);
     }

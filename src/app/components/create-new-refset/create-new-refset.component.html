@@ -1,4 +1,4 @@
-<button *ngIf="!isDetailsPage" mat-raised-button color="primary"
+<button *ngIf="!isDetailsPage && canAdd" mat-raised-button color="primary"
     (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
     class="refset-tool-action-button" [ngClass]="{ inactive: disabled }"
     aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">

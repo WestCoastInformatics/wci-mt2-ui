@@ -26,12 +26,8 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
     templateUrl: './projects-refset.component.html'
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
-    menu:SidebarMenuItem[] = [
-      {name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy', isActive: true},
-      {name: 'People', link: '/projects/people', icon: 'fa fa-user'},
-      {name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs'}
-    ];
 
+    menu:SidebarMenuItem[] = [];
     searchInput: string;
     user: User;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
@@ -75,6 +71,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
     @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
+    organizationId: any;
+    projectId: any;
+    selectedOrganization: any;
+    organizations: any;
 
     constructor(
         private router: Router,
@@ -95,11 +95,41 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Projects');
-        this.breadcrumbService.setBreadcrumbs([
-            { path: '/projects', label: 'Projects' },
-            { label: 'Reference Sets' },
-        ]);
+        this.route.params.subscribe(params => {
+
+			this.organizationId = params['organizationId'];
+            if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
+                this.projectId = params['id'];
+            }
+            this.setNavigation();
+		});
         this.getUser();
+        this.getOrganizations();
+    }
+
+    setNavigation() {
+
+		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+
+		if (CodeUtility.hasValue(this.organizationId), true, true) {
+			breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+		}
+
+		breadcrumbs.push({ label: 'Reference Sets' });
+		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+
+        this.menu = [
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy', isActive: true},
+			{ name: 'People', link: '/organization/' + this.organizationId + '/projects/people/', icon: 'fa fa-user' },
+        ];
+        if(true){
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+        }
+    }
+
+    selectOrganization($event): void {
+        this.organizationId = $event.value.id;
+        this.ngAfterViewInit();
     }
 
     getUser(): void {
@@ -109,7 +139,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
 
         forkJoin(this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true'), this.refsetService.getVersions()).subscribe(([projectResults, versionResults]) => {
-
             this.versions = versionResults;
             let versionsArray = this.versions?.items;
             this.showLoadingSpinner = false;
@@ -185,11 +214,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 }
             };
 
-            this.projects = projectResults.items;
+            this.projects = projectResults.items.filter((items) => {
+                return this.organizationId === items.organizationId;
+            });
 
             this.route.params.subscribe(params => {
-
-                if (params['id'] && params['id'] !== 'configuration') {
+                if (params['id'] !== undefined && params['id'] !== 'configuration' && params['id'] !== 'people') {
                     this.getProject(params['id']);
                     sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
                 }
@@ -201,8 +231,15 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     getProject(id: string): void {
         this.projectsService.getProject(id).subscribe((result) => {
             this.isSelectedProject = result;
-            console.log(this.isSelectedProject)
+            this.selectedOrganization = this.selectedProject?.organization;
         });
+    }
+
+    getOrganizations(): void {
+        // get list of organizations
+        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+          this.organizations = organizationResults?.items;
+        })
     }
 
     getStorageItems(): void {
