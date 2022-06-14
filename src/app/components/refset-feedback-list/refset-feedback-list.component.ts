@@ -362,6 +362,17 @@ export class RefsetFeedbackListComponent implements OnInit {
         }
     }
 
+    dismissModal() { // needed for different behavior in different situations
+        if (this.postButtonText == "Reply") {
+            this.openedThreadModal.dismiss();
+        }
+        else if (this.postButtonText == "Update Discussion") {
+            this.resetPostForm();
+            this.reloadGridData();
+            this.editThread = false;
+        }
+    }
+
     changeStatus(newStatus: string) {
 
         this.refsetService.updateDiscussionThreadStatus(this.selectedThread.id, newStatus).subscribe({
