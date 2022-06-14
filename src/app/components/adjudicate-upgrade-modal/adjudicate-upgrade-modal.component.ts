@@ -91,6 +91,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   disableAddRemove = false;
   membersInCommonForChangeReport = { items: [] };
   manualReplacementOptionsLoading = false;
+  addReplacementFlag = false;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -159,7 +160,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   getSelectedRowData(option: string) {
     console.log(this.selectedRow?.rowIndex);
     console.log(this.selectedRow?.data);
-    let newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
+    const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
     newItem.inactivationReason = '';
     newItem.descriptions = '';
     newItem.replacementConcecpts = '';
@@ -225,7 +226,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     if (this.concept) {
       this.refsetDetails.toggleLoadingSpinner(true);
       const body = { ...this.concept };
-      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
+      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {  
+        // force auto-add of the replacement concept to the refset
+        this.addReplacementFlag = true;
         this.onGridReady(this.originalGridParams);
         this.refsetDetails.toggleLoadingSpinner(false);
       });
@@ -405,6 +408,15 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
             newItem.inactivationReason = '';
             newItem.descriptions = '';
             newItem.replacementConcecpts = [item.replacementConcecpts[i]];
+            // if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
+            if (this.addReplacementFlag && (item.replacementConcecpts[i].code == this.concept.code)) {
+              this.addRemoveConceptsComponent.changeMethod = "REPLACEMENT_ADDED";
+              this.addRemoveConceptsComponent.refset = this.refsetData;
+              this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+              this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+              this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(newItem, newItem.replacementConcecpts[0]);
+              this.addReplacementFlag = false;
+            }
             finalResults.push(newItem);
           }
         }
