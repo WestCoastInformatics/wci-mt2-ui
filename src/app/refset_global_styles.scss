@@ -753,17 +753,24 @@ button.refset-tool-table-action-icon {
     padding-left: 2px;
 }
 
-.refset-tool-directory-column-workflow-status .ag-cell-value {
+
+.refset-tool-directory-column-assignee .ag-cell-value {
     text-transform: lowercase;
 }
 
-.refset-tool-directory-column-workflow-status .ag-cell-value::first-letter {
-    text-transform: uppercase;
+.refset-tool-directory-column-workflow-status .ag-cell-value {
+    text-transform: capitalize;
 }
 
+.refset-tool-directory-column-version-status .ag-cell-value {
+    text-transform: capitalize;
+}
+
+
+/**
 #refsetProjectsPage .refset-tool-directory-column-workflow-status .ag-cell-value {
     text-transform: none;
-}
+}*/
 
 .capitalize-metadata-value {
     text-transform: lowercase;
@@ -830,7 +837,12 @@ button.refset-tool-table-action-icon {
 
 .ag-floating-filter-full-body app-category-floating-filter select {
     padding: 0px;
+    text-transform: capitalize;
 }
+
+//.ag-floating-filter-full-body::first-letter {
+//    text-transform: capitalize;
+//} 
 
 // .scroll-override {
 //     width: auto !important;
