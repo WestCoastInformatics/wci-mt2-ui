@@ -66,6 +66,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     numOfResults: number;
     isSelectedProject: boolean;
     projectIsUat: boolean;
+    uiUtility = UiUtility;
 
     @ViewChild('projectNameSection') nameSection: TemplateRef<any>;
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
