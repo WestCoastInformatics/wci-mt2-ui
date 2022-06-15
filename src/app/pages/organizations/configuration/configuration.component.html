@@ -78,7 +78,7 @@
                             <create-new-project-modal [organizationId]="id" [organizations]="organizationList"></create-new-project-modal>
                         </div>
                     </div>
-                    <div class="organizations-configuration-block secondary-block teams-block">
+                    <div class="organizations-configuration-block secondary-block teams-block" *ngIf="canRemove">
                         <div class="organization-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
                             Remove this Organization</div>
                         <div class="organization-profile-mid">Warning! This is a permanent operation and cannot be
