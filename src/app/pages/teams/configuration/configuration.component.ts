@@ -217,4 +217,8 @@ export class TeamsConfigurationComponent implements OnInit {
 	getSelectedTeamName(): string {
 		return this.selectedTeam?.name;
 	}
+
+	get canRemove(): boolean{
+		return this.authService.isAdmin();
+	}
 }

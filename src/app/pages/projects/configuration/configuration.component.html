@@ -101,7 +101,7 @@
                                         (click)="updateProjectTeams()">Save Teams</button></div>
                             </div>
                         </div>
-                        <div class="projects-configuration-block remove-project-block">
+                        <div class="projects-configuration-block remove-project-block" *ngIf="canRemove">
                             <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
                                 Remove this Project</div>
                             <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be

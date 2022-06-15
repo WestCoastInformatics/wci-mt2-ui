@@ -200,4 +200,8 @@ export class ProjectsConfigurationComponent implements OnInit {
   getSelectedProjectId(): string {
     return this.selectedProject?.id;
   }
+
+	get canRemove(): boolean{
+		return this.authService.isAdmin();
+	}
 }
