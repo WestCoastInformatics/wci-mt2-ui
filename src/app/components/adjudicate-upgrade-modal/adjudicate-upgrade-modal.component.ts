@@ -154,6 +154,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       frameworkComponents: {
         'templateRenderer': TemplateRenderer,
       },
+      suppressScrollOnNewData: true,
       defaultColDef: {
         sortable: true,
         filter: true,
