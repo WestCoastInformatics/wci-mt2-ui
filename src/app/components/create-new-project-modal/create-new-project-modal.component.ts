@@ -135,6 +135,6 @@ export class CreateNewProjectModalComponent {
 
     get canAdd(): boolean{
         let org = this.selectedOrganization;
-        return this.authenticationService.isAdmin() || org && org.roles.includes("ADMIN");
+        return this.authenticationService.isAdmin() || org && org.roles?.includes("ADMIN");
     }
 }

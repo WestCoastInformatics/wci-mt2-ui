@@ -32,8 +32,8 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let project of projectList">
                                 <div class='section-list' *ngIf="project.name">
-                                    <span [routerLink]="['/projects', project.id]"><a>{{
-                                            project.organization.edition.name }}/{{
+                                    <span [routerLink]="['/organization/' + project.organization.id + '/projects', project.id]"><a>{{
+                                            project.organization.name }}/{{
                                             project.name }}</a><i *ngIf="project.privateProject"
                                             class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
@@ -52,7 +52,7 @@
                             <ng-container *ngFor="let team of teamList">
                                 <div class='section-list' *ngIf="team.name">
                                     <span [routerLink]="['/organization/' + team.organizationId + '/teams/people', team.id]"><a>{{
-                                            team.organization.edition.name }}/{{ team.name
+                                            team.organization.name }}/{{ team.name
                                             }}</a></span>
                                 </div>
                             </ng-container>

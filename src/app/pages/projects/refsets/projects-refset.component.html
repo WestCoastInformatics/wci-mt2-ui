@@ -2,10 +2,21 @@
 
     <div class="content-header">
         <div class="row header-title">
+            <span class="title-label">Organizations</span>
+            <mat-form-field appearance="outline" class="project-drop-down">
+                <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+                <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
+                    (selectionChange)="selectOrganization($event)">
+                    <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3">
+                        {{ organization.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <span class="title-label">Projects</span>
             <mat-form-field appearance="outline" class="project-drop-down">
                 <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-                    <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
+                    <mat-select [disabled]="organizationId === '0'" #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
                     <mat-option *ngFor="let project of projects"
                     [value]="project" style="z-index: 3">
                         {{ project.name }}
@@ -32,7 +43,7 @@
 
     </div>
     <div class="content-wrapper">
-        <app-sidebar [menuItems]="menu" [id]="selectedProject?.id ? selectedProject?.id : ''"></app-sidebar>
+        <app-sidebar [menuItems]="menu"></app-sidebar>
         <div class='container-fluid mt-3'>
     <!-- Page Title -->
     <div *ngIf="selectedProject" style="
@@ -105,28 +116,28 @@
         <ng-template #projectWorkflowStatusSection let-params>
 
             <ng-container *ngIf="params?.data?.workflowStatus == 'PUBLISHED'">
-                <div>Published</div>
+                Published
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_EDIT'">
-                <div class="ready-for-edit-projects-button">Ready for Edit</div>
+                Ready for Edit
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_EDIT'">
-                <div class="in-edit-projects-button">In Edit</div>
+                In Edit
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_UPGRADE'">
-                <div class="in-upgrade-projects-button">In Upgrade</div>
+                In Upgrade
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
-                <div class="ready-for-review-projects-button">Ready for Review</div>
+                Ready for Review
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_REVIEW'">
-                <div class="in-review-projects-button">In Review</div>
+                In Review
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'REVIEW_COMPLETED'">
-                <div class="review-completed-projects-button">Review Completed</div>
+                Review Completed
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_PUBLICATION'">
-                <div class="ready-for-publication-projects-button">Ready for Publication</div>
+                Ready for Publication
             </ng-container>
 
         </ng-template>

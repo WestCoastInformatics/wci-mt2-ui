@@ -30,17 +30,17 @@ export class DashboardComponent implements OnInit {
             }, cellClass: 'pointer'
         },
         {
-            field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true, floatingFilterComponent: 'categoryFilterComponent',
+            field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, cellClass: 'refset-tool-dashboard-column-workflow-status', sortable: true, floatingFilterComponent: 'categoryFilterComponent',
             floatingFilterComponentParams: {
                 suppressFilterButton: true, names: [
-                    { type: 'status', name: "In Development", value: "IN DEVELOPMENT" },
-                    { type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT' },
+                    { type: 'status', name: "In Development", value: "IN_DEVELOPMENT" },
+                    { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
                     { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
                     { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-                    { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
+                    { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
                     { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
                     { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-                    { type: 'status', name: 'Ready for Publication', value: 'READY_FOR_PUBLICATION' },
+                    { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
                     { type: 'status', name: 'Published', value: 'PUBLISHED' }
                 ]
             }
@@ -179,6 +179,13 @@ export class DashboardComponent implements OnInit {
 
                             this.refsetGridApi.hideOverlay();
 
+							// convert workflowStatus to titleCase
+                            for (let i = 0; i < data.length; i++) {
+                              data[i].workflowStatus = data[i].workflowStatus.toLowerCase();
+                              data[i].workflowStatus = data[i].workflowStatus.replaceAll("_", " ");
+                              data[i].workflowStatus = this.toTitleCase(data[i].workflowStatus);
+                            }
+
                             rowParams.successCallback(data, data.length);
 
                         } else {
@@ -214,6 +221,15 @@ export class DashboardComponent implements OnInit {
 
         this.getTeams();
     };
+
+    toTitleCase(str) {
+      return str.replace(
+        /\w\S*/g,
+        function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
+    }
 
     onGridCellClick = (event) => {
         if (event.column.colId === 'name') {
