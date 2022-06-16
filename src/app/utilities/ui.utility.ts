@@ -345,7 +345,7 @@ export class UiUtility {
                         } else {
 
                             let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
-                            let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # ect.).';
+                            let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
                             let continueEditingMessage = ' You may continue editing the refset.';
                             notificationType = 'warning';
 
