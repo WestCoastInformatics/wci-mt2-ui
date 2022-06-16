@@ -207,12 +207,10 @@ export class RefsetFeedbackListComponent implements OnInit {
                 this.threadsData = results.items;
                 console.log(results);
                 let pageNumber = 1;
-                this.gridApi.showNoRowsOverlay();
-                this.gridApi.setRowData([]);
 
                 if (results.items.length == 0) {
-
-                    
+                    this.gridApi.showNoRowsOverlay();
+                    this.gridApi.setRowData([]);
 
                     if (pageNumber > 1) {
 
