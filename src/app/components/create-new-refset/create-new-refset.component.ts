@@ -359,6 +359,6 @@ export class CreateNewRefsetComponent implements OnInit {
 
     get canAdd(): boolean{
         let project = this.inputProperties.project;
-        return project?.roles?.includes('AUTHOR') || project?.roles?.includes("ADMIN");
+        return project?.roles?.includes('AUTHOR');
     }
 }
