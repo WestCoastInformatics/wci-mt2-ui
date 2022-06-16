@@ -205,7 +205,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
-                console.log(results);
                 let pageNumber = 1;
 
                 if (results.items.length == 0) {
@@ -465,9 +464,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     reloadGridData() {
-
-        this.gridApi.setRowData(this.threadsData);
-        this.gridApi.redrawRows();
+        this.onGridReady({api: this.gridApi});
     }
 
     getPostText(message: string, truncate: boolean = true) {
