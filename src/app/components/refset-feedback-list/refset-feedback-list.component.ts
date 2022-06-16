@@ -125,7 +125,14 @@ export class RefsetFeedbackListComponent implements OnInit {
             rowSelection: 'single',
             enableCellTextSelection: true,
             onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady,
+            onGridReady: this.onGridReady, 
+            onFilterChanged: function() {
+                if (this.api.getDisplayedRowCount() === 0) {
+                    this.api.showNoRowsOverlay();
+                } else {
+                    this.api.hideOverlay();
+                };
+            },
             frameworkComponents: {
                 templateRenderer: TemplateRenderer,
                 categoryFilterComponent: CategoryFilterComponent,
@@ -185,6 +192,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     onGridReady = (gridReadyParams) => {
 
         this.gridApi = gridReadyParams.api;
+        
         // let conceptId = null;
 
         // if (CodeUtility.hasValue(this.conceptId)) {
@@ -201,7 +209,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 let pageNumber = 1;
 
                 if (results.items.length == 0) {
-
                     this.gridApi.showNoRowsOverlay();
                     this.gridApi.setRowData([]);
 
