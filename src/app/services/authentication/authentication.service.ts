@@ -202,8 +202,8 @@ export class AuthenticationService {
     hasRole(role: string): boolean {
         let user = this.getUser();
         if (user?.roles) {
-            for (const role of user?.roles) {
-                if (role.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
+            for (const userRole of user?.roles) {
+                if (userRole.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
                     return true;
                 }
             }
