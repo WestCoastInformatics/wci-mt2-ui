@@ -201,6 +201,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
       this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
       this.disableAddRemove = true;
+
+      if (changeMethod == 'INACTIVE_ADDED') {
+        this.inactiveConcepts++;
+      } else if(changeMethod == 'INACTIVE_REMOVED') {
+        this.inactiveConcepts--;
+      }
     }
   }
 
@@ -404,10 +410,15 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
       let finalResults = [];
       let changeReportResults = [];
+      
+      this.inactiveConcepts = 0;
 
       results.items.forEach((item) => {
         for (let i = 0; i < item.replacementConcecpts.length; i++) {
           changeReportResults.push(item);
+        }
+        if (item.stillMember) {
+          this.inactiveConcepts++;
         }
       });
 
