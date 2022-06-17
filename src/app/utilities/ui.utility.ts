@@ -487,6 +487,10 @@ export class UiUtility {
                                 this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
                             }
                         });
+
+                        if (processType == 'upgrade') {
+                            callbackFunction();
+                        }
 					}
 				},
 				(error) => {
