@@ -79,7 +79,12 @@ export class UpgradeModalComponent implements OnInit {
 
       let finalResults = [];
 
+            this.inactiveConcepts = 0;
+
             members.items.forEach((item) => {
+              if (item.stillMember) {
+                this.inactiveConcepts++;
+              }
               for (let i = 0; i < item.replacementConcecpts.length; i++) {
                 if (i === 0) {
                   finalResults.push(item);
@@ -90,8 +95,8 @@ export class UpgradeModalComponent implements OnInit {
                   newItem.descriptions = '';
                   newItem.replacementConcecpts = [item.replacementConcecpts[i]];
                   finalResults.push(newItem);
-                }
-                }
+                }             
+              }
             });
 
       members.items = finalResults;
