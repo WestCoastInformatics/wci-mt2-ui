@@ -115,7 +115,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         template:
           '<div class="ag-cell-label-container" role="presentation">'
           + ' <a class="remove-all mr-auto ml-auto">'
-          + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Add All" class="subtract-symbol-icon" />'
+          + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
           + ' </a>'
           + '</div>'
         }, cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60, maxWidth: 60 },
