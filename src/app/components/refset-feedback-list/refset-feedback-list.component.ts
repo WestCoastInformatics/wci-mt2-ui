@@ -464,7 +464,10 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     reloadGridData() {
-        this.onGridReady({api: this.gridApi});
+
+        this.gridApi.setRowData(this.threadsData);
+        this.gridApi.redrawRows();
+        //this.onGridReady({api: this.gridApi});
     }
 
     getPostText(message: string, truncate: boolean = true) {

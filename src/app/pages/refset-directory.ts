@@ -123,9 +123,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     { field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}},
                     { field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false, 
-                    cellRenderer: 'templateRenderer', cellRendererParams: { template: this.versionStatus }, 
-                    floatingFilterComponent: 'categoryFilterComponent',
-                floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
+                        valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
                     { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
                     { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
@@ -299,9 +297,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
                         }
 
-                        for (let i = 0; i < data.length; i++) {
-                            data[i].versionStatus = data[i].versionStatus.toLowerCase();
-                        }
 
                         rowParams.successCallback(data, lastRow);
 
@@ -347,6 +342,15 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         let flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
         params.data.flagIcon = flagIcon;
         return params?.data?.edition?.name;
+    };
+
+    versionStatusValueGetter = function (params) {
+
+        if (!CodeUtility.hasValue(params?.data)) {
+            return '';
+        }
+
+        return params.data.versionStatus.toLowerCase();
     };
 
     onGridCellClick = (event) => {
