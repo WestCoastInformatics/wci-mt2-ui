@@ -432,8 +432,8 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         <span
-                                            *ngFor="let description of setDescriptions(refsetData)">{{
-                                            description?.term }}<br></span>
+                                            *ngFor="let description of setDescriptions(refsetData)">
+                                            {{ description?.term }}   {{ description?.languageName }}<br></span>
                                     </td>
                                 </tr>
                             </tbody>
