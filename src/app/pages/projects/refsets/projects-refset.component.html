@@ -119,25 +119,25 @@
                 Published
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_EDIT'">
-                Ready For Edit
+                <div class="ready-for-edit-projects-button">Ready For Edit</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_EDIT'">
-                In Edit
+                <div class="in-edit-projects-button">In Edit</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_UPGRADE'">
-                In Upgrade
+                <div class="in-upgrade-projects-button">In Upgrade</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_REVIEW'">
-                Ready For Review
+                <div class="ready-for-review-projects-button">Ready For Review</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'IN_REVIEW'">
-                In Review
+                <div class="in-review-projects-button">In Review</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'REVIEW_COMPLETED'">
-                Review Completed
+                <div class="review-completed-projects-button">Review Completed</div>
             </ng-container>
             <ng-container *ngIf="params?.data?.workflowStatus == 'READY_FOR_PUBLICATION'">
-                Ready For Publication
+                <div class="ready-for-publication-projects-button">Ready For Publication</div>
             </ng-container>
 
         </ng-template>
