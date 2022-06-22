@@ -233,8 +233,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.projectsService.getProject(id).subscribe((result) => {
             this.isSelectedProject = result;
             this.selectedOrganization = this.selectedProject?.organization;
+            console.log("Clicked getProject's Organization : " + result.organization.id + " project: ", id );
         });
     }
+
 
     getOrganizations(): void {
         // get list of organizations

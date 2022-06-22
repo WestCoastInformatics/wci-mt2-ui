@@ -16,6 +16,7 @@ import { AuthenticationService } from "src/app/services/authentication/authentic
 })
 export class CreateNewProjectModalComponent {
 
+    // Create New Project Modal Variables
     name = '';
     email = '';
     description = '';
@@ -27,6 +28,11 @@ export class CreateNewProjectModalComponent {
     @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     param: any;
+
+    // Project artifact Variables for Navigation to resource page after project creation
+    selectedProject: any;
+    isSelectedProject: boolean;
+    projectId: any;
 
     constructor(
         private modalService: NgbModal,
@@ -49,7 +55,7 @@ export class CreateNewProjectModalComponent {
             this.refsetService.getOrganizations().subscribe((organizationResults) => {
                 this.organizations = organizationResults.items;
             });
-        } 
+        }
     }
 
     callMemberOperation(): void {
@@ -59,13 +65,13 @@ export class CreateNewProjectModalComponent {
         }
 
         this.changeLockedStatus.emit(true);
-        
+
         this.createProjectObject();
 
         //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -75,7 +81,7 @@ export class CreateNewProjectModalComponent {
     }
 
     isValidEmail(): boolean {
-        
+
         var lower = this.email.toLowerCase();
         var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -95,7 +101,6 @@ export class CreateNewProjectModalComponent {
     }
 
     createProjectObject(): void {
-
         let params: any = {
             active: true,
             name: this.name,
@@ -105,7 +110,6 @@ export class CreateNewProjectModalComponent {
             teams: [],
             organization: this.selectedOrganization
         };
-        
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
@@ -119,9 +123,15 @@ export class CreateNewProjectModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
+        this.getProject(this.selectedOrganization);
     }
 
-    
+    getProject(id: string): void {
+        this.projectsService.getProject(id).subscribe((result) => {
+            this.isSelectedProject = result;
+        });
+    }
+
     get selectedOrganization(): any{
 
         if(this.organizations && this.organizationId){
