@@ -16,8 +16,10 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
-    
+
     @ViewChild('dashboardWorkflowStatusSection') workflowStatus: TemplateRef<any>;
+
+    // Dashboard Variables
     searchText = '';
     organizationList = [];
     projectList = [];
@@ -25,9 +27,8 @@ export class DashboardComponent implements OnInit {
     currentUser: any;
     uiUtility = UiUtility;
 
-   
+    // Table Variables
     defaultColDef: any;
-
     columnDefs = [];
     data = [];
     api: any;
@@ -43,7 +44,6 @@ export class DashboardComponent implements OnInit {
     numOfMembers: any;
     showLoadingSpinner = false;
 
-    
     constructor(
         private router: Router,
         private readonly route: ActivatedRoute,
@@ -90,8 +90,8 @@ export class DashboardComponent implements OnInit {
                 }, cellClass: 'pointer'
             },
             {
-                field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, cellClass: 'refset-tool-dashboard-column-workflow-status', 
-                cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus }, 
+                field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, cellClass: 'refset-tool-dashboard-column-workflow-status',
+                cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
                 sortable: true, floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     suppressFilterButton: true, names: [
