@@ -10,6 +10,8 @@ import { TemplateRenderer } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
 import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 
 @Component({
   selector: 'adjudicate-upgrade-modal',
@@ -49,6 +51,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   @ViewChild('adjudicateReplacementNlPtSection') replacementNlPtSection: TemplateRef<any>;
   @ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
   @ViewChild('actionSection') actionSection: TemplateRef<any>;
+  @ViewChild("pauseUpdateDialog") pauseUpdateDialog: TemplateRef<any>;
 
   gridOptions: any;
   columnDefs: any;
@@ -87,6 +90,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   disableAddRemove = false;
   membersInCommonForChangeReport = { items: [] };
   manualReplacementOptionsLoading = false;
+  dialog: DialogService;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -94,6 +98,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     private readonly changeDetection: ChangeDetectorRef,
     private readonly route: ActivatedRoute,
     readonly upgradeModalComponent: UpgradeModalComponent,
+    private dialogFactoryService: DialogFactoryService,
     private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
 
   ngOnInit(): void {
@@ -661,4 +666,34 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.conceptDetailParents = results.items;
     });
   }
+
+  openPauseUpdate() {
+    const dialogId = "pauseUpdateDialog";
+
+    const dialogData = {
+        headerText: `Pause Update`,
+        template: this.pauseUpdateDialog,
+        data: this.refsetData,
+        showCloseIcon: false
+    };
+
+    const dialogOptions = {
+        id: dialogId,
+    };
+
+    this.dialog = this.dialogFactoryService.open(dialogData);
+
+    this.dialog.confirmed().subscribe((data) => {
+      // if 'ok', close pause modal and update modal
+      if (data) {
+        this.modalService.dismissAll();
+      }
+      // else close only pause modal
+    });
+
+
+    
+   
+}
+
 }
