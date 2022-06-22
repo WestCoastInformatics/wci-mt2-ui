@@ -8,6 +8,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-team-modal",
@@ -19,8 +20,7 @@ export class CreateNewTeamModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any[] = [];
-    selectedOrganization: any;
+	@Input() organizations: any[] = [];
     privateTeam: any;
     selectedRoles: any;
     members: any;
@@ -39,7 +39,8 @@ export class CreateNewTeamModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private readonly authenticationService: AuthenticationService
     ) { }
 
     ngOnInit() {
@@ -61,19 +62,15 @@ export class CreateNewTeamModalComponent {
         this.description = '';
 
         this.openedModel = this.modalService.open(createNewTeamDialog, {});
-
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-
-            this.organizations = organizationResults.items;
-
-            for (let organization of this.organizations) {
-
-                if (organization.id == this.organizationId) {
-                    this.selectedOrganization = organization;
-                }
-            }
-        });
+        
+        if(!this.organizations){
+            // get list of organizations
+            this.refsetService.getOrganizations().subscribe((organizationResults) => {
+                this.organizations = organizationResults.items;
+            });
+        }
+        
+        
     }
 
     callMemberOperation(): void {
@@ -146,5 +143,21 @@ export class CreateNewTeamModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
+    }
+
+    get selectedOrganization(): any{
+
+        if(this.organizations && this.organizationId){
+            let org = this.organizations.filter(o => o.id == this.organizationId)
+            if(org.length > 0){
+                return org[0];
+            }
+        }
+        return null;
+    }
+
+    get canAdd(): boolean{
+        let org = this.selectedOrganization;
+        return this.authenticationService.isAdmin() || org && org.roles?.includes("ADMIN");
     }
 }

@@ -11,6 +11,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
     selector: 'create-new-refset',
@@ -75,7 +76,8 @@ export class CreateNewRefsetComponent implements OnInit {
         private refsetService: RefsetService,
         private readonly refsetDetails: RefsetDetails,
         private readonly notificationService: NotificationService,
-        private readonly projectsRefsetComponent: ProjectsRefsetComponent
+        private readonly projectsRefsetComponent: ProjectsRefsetComponent,
+        private readonly authenticationService: AuthenticationService
     ) { }
 
     ngOnInit(): void { }
@@ -353,5 +355,10 @@ export class CreateNewRefsetComponent implements OnInit {
     openEclBuilder(fieldId) {
 
         UiUtility.openEclBuilder(fieldId, this.inputProperties.project.organization.edition.branch);
+    }
+
+    get canAdd(): boolean{
+        let project = this.inputProperties.project;
+        return project?.roles?.includes('AUTHOR');
     }
 }

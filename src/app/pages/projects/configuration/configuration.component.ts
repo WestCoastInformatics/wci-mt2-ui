@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -15,12 +16,8 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
   templateUrl: './configuration.component.html'
 })
 export class ProjectsConfigurationComponent implements OnInit {
-  menu: SidebarMenuItem[] = [
-    { name: 'Reference Sets', link: '/projects', icon: 'fa fa-copy' },
-    { name: 'People', link: '/projects/people', icon: 'fa fa-user' },
-    { name: 'Configuration', link: '/projects/configuration', icon: 'fa fa-cogs', isActive: true }
-  ];
 
+  menu: SidebarMenuItem[] = [];
   profileNameValue = '';
   organizations: any;
   selectedOrganization: any;
@@ -36,6 +33,7 @@ export class ProjectsConfigurationComponent implements OnInit {
   currentUser: any;
   containsRole = false;
   emailError = '';
+  organizationId: any;
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly titleService: Title,
@@ -48,21 +46,40 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle('Refset Tool - Projects');
-    this.breadcrumbService.setBreadcrumbs([
-      { path: '/projects/configuration', label: 'Projects' },
-      { label: 'Configuration' },
-    ]);
 
     this.route.params.subscribe(params => {
-      this.id = params['id'];
-    });
+
+      this.organizationId = params['organizationId'];
+      if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
+        this.id = params['id'];
+        this.getProject();
+      }
+			this.setNavigation();
+		});
     this.currentUser = this.authService.getUser();
-    this.getProject();
     this.getOrganizations();
     this.getProjects();
     this.getTeams();
   }
 
+  setNavigation() {
+
+		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+
+		if (CodeUtility.hasValue(this.organizationId), true, true) {
+			breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+		}
+
+		breadcrumbs.push({ label: 'Configuration' });
+		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+
+        this.menu = [
+            {name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy'},
+			    { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user' },
+			    { name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs', isActive: true }
+		    ];
+  }
+  
   getOrganizations(): void {
     // get list of organizations
     this.refsetService.getOrganizations().subscribe((organizationResults) => {
@@ -71,7 +88,9 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
   getProjects(): void {
     this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-      this.projectList = results.items;
+      this.projectList = results.items.filter((items) => {
+        return this.organizationId === items.organizationId;
+    });
     });
   }
 
@@ -79,7 +98,7 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.projectsService.getProject(this.id).subscribe((result) => {
       this.selectedProject = result;
       this.profileNameValue = this.selectedProject?.name;
-      this.profileEmailValue = this.selectedProject?.primaryContactEmail;
+      // this.profileEmailValue = this.selectedProject?.primaryContactEmail;
       this.profileDescriptionValue = this.selectedProject?.description;
       this.selectedOrganization = this.selectedProject?.organization;
       this.isPrivate = this.selectedProject?.privateProject;
@@ -110,7 +129,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   updateProject(): void {
     this.selectedProject.name = this.profileNameValue;
-    this.selectedProject.primaryContactEmail = this.profileEmailValue;
+    // this.selectedProject.primaryContactEmail = this.profileEmailValue;
     this.selectedProject.description = this.profileDescriptionValue;
     this.selectedProject.privateProject = this.isPrivate;
     this.projectsService.updateProject(this.id, this.selectedProject).subscribe(() => {
@@ -124,7 +143,7 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   selectProject($event): void {
-    this.router.navigate(['/projects/configuration', $event['value'].id]);
+		this.router.navigate(['organization/' + this.organizationId + '/projects/configuration', $event['value'].id]);
     this.route.params.subscribe(params => {
       this.id = params['id'];
       this.getProject();
@@ -132,8 +151,10 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   selectOrganization($event): void {
-    
-  }
+    this.organizationId = $event.value.id;
+    this.selectedProject = null;
+    this.getProjects();
+}
 
   getTeams(): void {
     this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
@@ -200,4 +221,8 @@ export class ProjectsConfigurationComponent implements OnInit {
   getSelectedProjectId(): string {
     return this.selectedProject?.id;
   }
+
+	get canRemove(): boolean{
+		return this.authService.isAdmin();
+	}
 }

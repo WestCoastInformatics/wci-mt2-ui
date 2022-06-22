@@ -97,7 +97,7 @@
                             </div>
                         </div> -->
 
-                        <div class="teams-configuration-block-row remove-teams-block">
+                        <div class="teams-configuration-block-row remove-teams-block" *ngIf="canRemove">
 
                             <div class="remove-team-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
                             <div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>

@@ -8,7 +8,7 @@
                 Upgrade Reference Set
             </h4>
             <button type="button" class="close dialog-close-x" aria-label="Close"
-                (click)="modal.dismiss('Cross click')">
+                (click)="openPauseUpdate()">
                 <span aria-hidden="true" class="dialog-close-x">&times;</span>
             </button>
         </div>
@@ -214,13 +214,17 @@
             </button>
             <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()"
                 aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button"
-                aria-label="Export" title="Export" ng-reflect-color="green">
-                Export Change Report
+                aria-label="Download" title="Download" ng-reflect-color="green">
+                Download Change Report
             </button>
             <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()"
                 aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button"
-                aria-label="Export" title="Export" ng-reflect-color="green">
-                Export Inactive Concept Report
+                aria-label="Download" title="Download" ng-reflect-color="green">
+                Download Inactive Concept Report
+            </button>
+            <button type="button" mat-raised-button color="green" aria-label="Pause"
+                (click)="openPauseUpdate()" title="Pause">
+                Pause Upgrade
             </button>
             <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset"
                 [membersInCommon]="membersInCommon" [membersInCommonForChangeReport]="membersInCommonForChangeReport"
@@ -354,4 +358,8 @@
             width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract" class="grey-close-icon"
             alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
+</ng-template>
+
+<ng-template #pauseUpdateDialog let-data>
+    You are about to pause the upgrade process. You will be able to retrieve any changes you made by continuing the upgrade at a later time. Would you like to proceed?
 </ng-template>

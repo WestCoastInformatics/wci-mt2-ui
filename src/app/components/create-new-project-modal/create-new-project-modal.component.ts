@@ -8,6 +8,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { ProjectsService } from "src/app/services/rest/projects.service";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-project-modal",
@@ -15,18 +16,23 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CreateNewProjectModalComponent {
 
+    // Create New Project Modal Variables
     name = '';
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any[] = [];
-    selectedOrganization: any;
+	@Input() organizations: any[] = [];
     privateProject: any;
     emailError = '';
 
     @Input() organizationId = String;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     param: any;
+
+    // Project artifact Variables for Navigation to resource page after project creation
+    selectedProject: any;
+    isSelectedProject: boolean;
+    projectId: any;
 
     constructor(
         private modalService: NgbModal,
@@ -35,7 +41,8 @@ export class CreateNewProjectModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute
+        private readonly route: ActivatedRoute,
+        private authenticationService: AuthenticationService
     ) { }
 
     openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
@@ -43,18 +50,12 @@ export class CreateNewProjectModalComponent {
         this.description = '';
         this.openedModel = this.modalService.open(createNewProjectDialog, {});
 
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-
-            this.organizations = organizationResults.items;
-
-            for (let organization of this.organizations) {
-
-                if (organization.id == this.organizationId) {
-                    this.selectedOrganization = organization;
-                }
-            }
-        }); 
+        if(!this.organizations){
+            // get list of organizations
+            this.refsetService.getOrganizations().subscribe((organizationResults) => {
+                this.organizations = organizationResults.items;
+            });
+        }
     }
 
     callMemberOperation(): void {
@@ -64,13 +65,13 @@ export class CreateNewProjectModalComponent {
         }
 
         this.changeLockedStatus.emit(true);
-        
+
         this.createProjectObject();
 
         //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -80,7 +81,7 @@ export class CreateNewProjectModalComponent {
     }
 
     isValidEmail(): boolean {
-        
+
         var lower = this.email.toLowerCase();
         var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -100,17 +101,15 @@ export class CreateNewProjectModalComponent {
     }
 
     createProjectObject(): void {
-
         let params: any = {
             active: true,
             name: this.name,
             description: this.description,
-            primaryContactEmail: this.email,
+            //primaryContactEmail: this.email,
             privateProject: this.privateProject,
             teams: [],
             organization: this.selectedOrganization
         };
-        
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
@@ -124,5 +123,28 @@ export class CreateNewProjectModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
+        this.getProject(this.selectedOrganization);
+    }
+
+    getProject(id: string): void {
+        this.projectsService.getProject(id).subscribe((result) => {
+            this.isSelectedProject = result;
+        });
+    }
+
+    get selectedOrganization(): any{
+
+        if(this.organizations && this.organizationId){
+            let org = this.organizations.filter(o => o.id == this.organizationId)
+            if(org.length > 0){
+                return org[0];
+            }
+        }
+        return null;
+    }
+
+    get canAdd(): boolean{
+        let org = this.selectedOrganization;
+        return this.authenticationService.isAdmin() || org && org.roles?.includes("ADMIN");
     }
 }

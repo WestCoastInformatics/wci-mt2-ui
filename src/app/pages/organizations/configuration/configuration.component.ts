@@ -8,6 +8,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	selector: 'organization-configuration',
@@ -35,6 +36,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 		private readonly titleService: Title,
 		private readonly refsetService: RefsetService,
 		private readonly organizationsService: OrganizationsService,
+		private authenticationService: AuthenticationService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private location: Location) { }
@@ -140,5 +142,9 @@ export class OrganizationConfigurationComponent implements OnInit {
 				this.selectedOrganization.iconUri = iconUri;
 			});
 		}
+	}
+
+	get canRemove(): boolean{
+		return this.authenticationService.isAdmin();
 	}
 }

@@ -12,6 +12,7 @@ import { OrganizationsService } from 'src/app/services/rest/organizations.servic
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	selector: 'organization-people',
@@ -22,8 +23,7 @@ export class OrganizationPeopleComponent implements OnInit {
 	menu: SidebarMenuItem[] = [
 		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
 		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true },
-		{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' }
+		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true }
 	];
 	data = [];
 	showTable = false;
@@ -50,7 +50,12 @@ export class OrganizationPeopleComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly teamService: TeamsService,
-		private location: Location) { }
+		private authenticationService: AuthenticationService,
+		private location: Location) { 
+			if(authenticationService.isAdmin()){
+				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+			}
+		}
 
 	ngOnInit(): void {
 

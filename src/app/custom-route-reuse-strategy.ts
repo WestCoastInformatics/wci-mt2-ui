@@ -62,21 +62,22 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
   }
 
   private setBreadcrumbs(route: ActivatedRouteSnapshot): void {
+    if (route.url[0]) {
+      if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Directory') ) {
 
-    if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Directory') ) {
-
-      this.breadcrumbService.setBreadcrumbs([
-          { path: "/directory", label: "Directory" },
-          { label: "Refset Details" },
-      ]);
-    } else if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Projects')) {
-
-      this.breadcrumbService.setBreadcrumbs([
-          { path: "/projects", label: "Projects" },
-          { label: "Refset Details" },
-      ]);
-    } else {
-      this.breadcrumbService.setBreadcrumbs([{ label: route.data['breadcrumbLabel'] }]);
+        this.breadcrumbService.setBreadcrumbs([
+            { path: "/directory", label: "Directory" },
+            { label: "Refset Details" },
+        ]);
+      } else if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Projects')) {
+  
+        this.breadcrumbService.setBreadcrumbs([
+            { path: "/projects", label: "Projects" },
+            { label: "Refset Details" },
+        ]);
+      } else {
+        this.breadcrumbService.setBreadcrumbs([{ label: route.data['breadcrumbLabel'] }]);
+      }
     }
   }
 }
