@@ -654,41 +654,41 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.isConceptDetailsLoading = true;
     this.loadConceptDetailParents(concept);
 
-    this.refsetService
-      .getMembersDetails(concept.code, {
-        refsetInternalId: this.refsetInternalId,
-      })
-      .subscribe((results) => {
+    // this.refsetService
+    //   .getMembersDetails(concept.code, {
+    //     refsetInternalId: this.refsetInternalId,
+    //   })
+    //   .subscribe((results) => {
 
-        this.isConceptDetailsLoading = false;
-        this.conceptDetail = results;
-        this.conceptDescriptions =
-          this.conceptDetail.descriptions.filter(function (description) {
-            return description != null;
-          });
+    //     this.isConceptDetailsLoading = false;
+    //     this.conceptDetail = results;
+    //     this.conceptDescriptions =
+    //       this.conceptDetail.descriptions.filter(function (description) {
+    //         return description != null;
+    //       });
 
-        RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
-      });
+    //     RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+    //   });
   }
 
   loadConceptDetailParents(concept) {
 
     this.conceptDetailParents = [];
 
-    const restParams = {
-      displayType: "taxonomy",
-      returnChildren: false,
-      language: this.getTaxonomyLanguageWithoutType(),
-      depth: 1,
-      startingConceptId: concept.code,
-      offset: 0,
-      limit: 1000,
-    };
+    // const restParams = {
+    //   displayType: "taxonomy",
+    //   returnChildren: false,
+    //   language: this.getTaxonomyLanguageWithoutType(),
+    //   depth: 1,
+    //   startingConceptId: concept.code,
+    //   offset: 0,
+    //   limit: 1000,
+    // };
 
     // load the parents
-    this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
-      this.conceptDetailParents = results.items;
-    });
+    // this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
+    //   this.conceptDetailParents = results.items;
+    // });
   }
 
   openPauseUpdate() {
