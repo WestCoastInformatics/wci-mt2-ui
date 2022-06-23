@@ -61,6 +61,7 @@ import { AddMemberModalComponent } from 'src/app/components/add-member-modal/add
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
 import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
+import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
 // import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
@@ -114,6 +115,7 @@ import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
+import { ProjectsBaseComponent } from './pages/projects/base/projects.base.component';
 
 
 const appRoutes: Routes = [
@@ -210,7 +212,9 @@ const appRoutes: Routes = [
         RemoveDashboardComponentModalComponent,
         RefsetFeedbackListComponent,
         CustomTooltipComponent,
-        ComposeModalComponent
+        ComposeModalComponent,
+        WorkflowStatusBadgeComponent,
+        ProjectsBaseComponent
     ],
     imports: [
         RouterModule.forRoot(

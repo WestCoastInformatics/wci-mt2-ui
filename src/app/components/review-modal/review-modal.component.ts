@@ -30,8 +30,11 @@ export class ReviewModalComponent {
 
 	addNoteAndSetWorkflowStatus(): void {
 		if (this.checkIfNoteAdded()) {
-			this.workflowService.saveNotes(this.refsetInternalId, this.reviewNotes);
-			this.setWorkflowStatus.emit(true);
+			this.workflowService.saveNotes(this.refsetInternalId, this.reviewNotes).subscribe(response => {
+				if(response){
+					this.setWorkflowStatus.emit(true);
+				}
+			});
 		}
 	}
 }

@@ -252,7 +252,7 @@
                         Reject Refset
                     </button>
 
-                    <review-modal
+                    <review-modal [refsetInternalId]="refsetData.id"
                         *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
                         (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
                     </review-modal>
@@ -707,10 +707,6 @@
                 <add-remove-by-concept-modal [refset]="refsetData"
                     (loadingSpinner)="toggleLoadingSpinner($event)"
                     (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
-
-                <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id"
-                    [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
-                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </mat-menu>
         </span>
         <br>

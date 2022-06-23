@@ -17,19 +17,16 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { User } from 'src/app/models/user';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
+import { ProjectsBaseComponent } from '../base/projects.base.component';
 
 @Component({
     selector: 'projects-refset',
     templateUrl: './projects-refset.component.html'
 })
-export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
+export class ProjectsRefsetComponent extends ProjectsBaseComponent implements OnInit, AfterViewInit {
 
-    menu:SidebarMenuItem[] = [];
     searchInput: string;
-    user: User;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView: string = 'all';
     refsetGridApi: any;
@@ -58,13 +55,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     metadataAndConcepts = true;
     dummydata = ['Your Usual Project', 'Project 2', 'Project 3'];
     selectedValue = this.dummydata[0];
-    projects = [];
-    selectedProject: any;
     context: Context;
     originalGridParams: any;
     existingBranchVersions: any;
     numOfResults: number;
-    isSelectedProject: boolean;
     projectIsUat: boolean;
     uiUtility = UiUtility;
 
@@ -72,65 +66,48 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
     @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
-    organizationId: any;
     projectId: any;
-    selectedOrganization: any;
-    organizations: any;
 
     constructor(
-        private router: Router,
-        private titleService: Title,
-        private refsetService: RefsetService,
+        protected router: Router,
+        protected titleService: Title,
+        protected refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService,
         readonly toggleService: ToggleService,
-        private authService: AuthenticationService,
+        protected authService: AuthenticationService,
         private readonly modalService: NgbModal,
-        private readonly route: ActivatedRoute,
-        private readonly projectsService: ProjectsService
+        protected route: ActivatedRoute,
+        protected readonly projectsService: ProjectsService
     ) {
+        super(router, route, authService, projectsService, refsetService, titleService);
         refsetService.getTaxonomyRoot();
     }
 
     //***** Framework Functions *****/
     ngOnInit() {
+        super.ngOnInit();
         this.showLoadingSpinner = true;
-        this.titleService.setTitle('Refset Tool - Projects');
-        this.route.params.subscribe(params => {
-
-			this.organizationId = params['organizationId'];
-            if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
-                this.projectId = params['id'];
-            }
-            this.setNavigation();
-		});
-        this.getUser();
-        this.getOrganizations();
     }
 
     setNavigation() {
 
-		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+        let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
-		if (CodeUtility.hasValue(this.organizationId), true, true) {
-			breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
-		}
+        if (CodeUtility.hasValue(this.organizationId), true, true) {
+            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+        }
 
-		breadcrumbs.push({ label: 'Reference Sets' });
-		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+        breadcrumbs.push({ label: 'Reference Sets' });
+        this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy', isActive: true},
-			{ name: 'People', link: '/organization/' + this.organizationId + '/projects/people/', icon: 'fa fa-user' },
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy', isActive: true },
+            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people/', icon: 'fa fa-user' },
         ];
-        if(true){
+        if (true) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
-    }
-
-    selectOrganization($event): void {
-        this.organizationId = $event.value.id;
-        this.ngAfterViewInit();
     }
 
     getUser(): void {
@@ -229,22 +206,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
     }
 
-    getProject(id: string): void {
-        this.projectsService.getProject(id).subscribe((result) => {
-            this.isSelectedProject = result;
-            this.selectedOrganization = this.selectedProject?.organization;
-            console.log("Clicked getProject's Organization : " + result.organization.id + " project: ", id );
-        });
-    }
-
-
-    getOrganizations(): void {
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-          this.organizations = organizationResults?.items;
-        })
-    }
-
     getStorageItems(): void {
 
         if (sessionStorage.getItem('selectedProjectId')) {
@@ -274,7 +235,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     }
 
     showRefsets() {
-
+        this.selectProject();
         if (this.originalGridParams) {
             this.onGridReady(this.originalGridParams);
         } else {
@@ -500,5 +461,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             //keyboard : false,
             windowClass: 'workflow-diagram-modal'
         });
+    }
+
+    get routeUrl(): any[] {
+        let url = ['/organization', this.organizationId ? this.organizationId : 0, 'projects'];
+        if (this.selectedProject?.id) {
+            url.push(this.selectedProject.id);
+        }
+        return url;
     }
 }
