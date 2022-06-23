@@ -115,6 +115,7 @@ import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
+import { ProjectsBaseComponent } from './pages/projects/base/projects.base.component';
 
 
 const appRoutes: Routes = [
@@ -212,7 +213,8 @@ const appRoutes: Routes = [
         RefsetFeedbackListComponent,
         CustomTooltipComponent,
         ComposeModalComponent,
-        WorkflowStatusBadgeComponent
+        WorkflowStatusBadgeComponent,
+        ProjectsBaseComponent
     ],
     imports: [
         RouterModule.forRoot(
