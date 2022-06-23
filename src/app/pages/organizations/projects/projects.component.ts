@@ -45,7 +45,7 @@ export class OrganizationProjectsComponent implements OnInit {
 		private readonly router: Router,
 		private readonly teamService: TeamsService,
 		private authenticationService: AuthenticationService,
-		private location: Location) {  
+		private location: Location) {
 			if(authenticationService.isAdmin()){
 				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
 			}
@@ -134,7 +134,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
 		console.log(teams)
 		const teamObject = { teams: [] };
-		
+
 		if (teams === 'undefined' || teams === undefined) {
 			return JSON.stringify(teamObject);
 		} else {
@@ -163,7 +163,6 @@ export class OrganizationProjectsComponent implements OnInit {
 	}
 
 	selectOrg($event): void {
-
 		this.setOrganizationData(this.selectedOrganization);
 		this.location.replaceState("/organizations/projects/" + this.selectedOrganization.id);
 	}

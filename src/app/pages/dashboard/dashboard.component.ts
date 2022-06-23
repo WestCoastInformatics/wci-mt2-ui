@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IServerSideDatasource } from 'ag-grid-community';
@@ -16,6 +16,10 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
+
+    @ViewChild('dashboardWorkflowStatusSection') workflowStatus: TemplateRef<any>;
+
+    // Dashboard Variables
     searchText = '';
     organizationList = [];
     projectList = [];
@@ -23,35 +27,9 @@ export class DashboardComponent implements OnInit {
     currentUser: any;
     uiUtility = UiUtility;
 
-    columnDefs = [
-        {
-            field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
-                return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
-            }, cellClass: 'pointer'
-        },
-        {
-            field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, sortable: true, floatingFilterComponent: 'categoryFilterComponent',
-            floatingFilterComponentParams: {
-                suppressFilterButton: true, names: [
-                    { type: 'status', name: "In Development", value: "IN DEVELOPMENT" },
-                    { type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT' },
-                    { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
-                    { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-                    { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
-                    { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
-                    { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-                    { type: 'status', name: 'Ready for Publication', value: 'READY_FOR_PUBLICATION' },
-                    { type: 'status', name: 'Published', value: 'PUBLISHED' }
-                ]
-            }
-        },
-        {
-            field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', filter: false, unSortIcon: true, sortable: true, valueGetter:
-                UiUtility.gridDateValueGetter,
-        }
-    ];
+    // Table Variables
     defaultColDef: any;
-
+    columnDefs = [];
     data = [];
     api: any;
     columnApi: any;
@@ -75,6 +53,7 @@ export class DashboardComponent implements OnInit {
         private readonly authService: AuthenticationService) { }
 
     ngOnInit(): void {
+
         this.titleService.setTitle('Refset Tool - Dashboard');
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' }
@@ -104,7 +83,35 @@ export class DashboardComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-
+        this.columnDefs = [
+            {
+                field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
+                    return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
+                }, cellClass: 'pointer'
+            },
+            {
+                field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, cellClass: 'refset-tool-dashboard-column-workflow-status',
+                cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
+                sortable: true, floatingFilterComponent: 'categoryFilterComponent',
+                floatingFilterComponentParams: {
+                    suppressFilterButton: true, names: [
+                        { type: 'status', name: "In Development", value: "IN_DEVELOPMENT" },
+                        { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
+                        { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
+                        { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+                        { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
+                        { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
+                        { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+                        { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+                        { type: 'status', name: 'Published', value: 'PUBLISHED' }
+                    ]
+                }
+            },
+            {
+                field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', filter: false, unSortIcon: true, sortable: true, valueGetter:
+                    UiUtility.gridDateValueGetter,
+            }
+        ];
 
     }
 
@@ -179,6 +186,7 @@ export class DashboardComponent implements OnInit {
 
                             this.refsetGridApi.hideOverlay();
 
+
                             rowParams.successCallback(data, data.length);
 
                         } else {
@@ -214,6 +222,15 @@ export class DashboardComponent implements OnInit {
 
         this.getTeams();
     };
+
+    toTitleCase(str) {
+      return str.replace(
+        /\w\S*/g,
+        function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
+    }
 
     onGridCellClick = (event) => {
         if (event.column.colId === 'name') {

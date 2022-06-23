@@ -275,6 +275,11 @@
             </div>
         </ng-template>
 
+        <!-- Workflow Status Templates -->
+        <ng-template #directoryWorkflowStatusSection let-params>
+            <object  [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"  > {{ params?.value}}</object>
+        </ng-template>
+
         <!-- Name Templates -->
         <ng-template #directoryNameSection let-params>
             {{params?.value}}

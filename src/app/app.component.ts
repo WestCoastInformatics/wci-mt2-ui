@@ -96,7 +96,7 @@ export class AppComponent implements OnInit {
 
     setTimeout() {
         let date = new Date();
-        console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+        // console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
         this.userActivity = setTimeout(() => {
             
             if (this.authenticationService.isUserLoggedIn) {
@@ -109,7 +109,6 @@ export class AppComponent implements OnInit {
     }
 
     refreshUserState() {
-        console.log('Session Refreshed');
         clearTimeout(this.userActivity);
         this.setTimeout();
     }

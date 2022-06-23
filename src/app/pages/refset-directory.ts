@@ -59,6 +59,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     directUrl: string;
     numOfMembers: any;
     disableChannel = new BroadcastChannel('disable-button-channel');
+	uiUtility = UiUtility;
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -68,6 +69,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
+    @ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
     //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -106,6 +108,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 let editionsArray = this.editions?.items;
                 this.organizations = organizationResults;
                 let organizationsArray = this.organizations?.items;
+
+                for (let i = 0; i < versionStatusArray.length; i++) {
+                    versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();              
+                    versionStatusArray[i].value = versionStatusArray[i].value.toLowerCase();
+                } 
                 
                 this.columnDefs = [
                     { field: 'id', colId: 'information', headerName: '',maxWidth: 65,minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false},
@@ -115,8 +122,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
                     { field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}},
-                    { field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status',minWidth: 140, resizable: false, floatingFilterComponent: 'categoryFilterComponent',
-                floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
+                    { field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false, 
+                        valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
                     { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
                     { field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
@@ -290,6 +297,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
                         }
 
+
                         rowParams.successCallback(data, lastRow);
 
                     } else {
@@ -334,6 +342,15 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         let flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
         params.data.flagIcon = flagIcon;
         return params?.data?.edition?.name;
+    };
+
+    versionStatusValueGetter = function (params) {
+
+        if (!CodeUtility.hasValue(params?.data)) {
+            return '';
+        }
+
+        return params.data.versionStatus.toLowerCase();
     };
 
     onGridCellClick = (event) => {
@@ -528,6 +545,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onResize(event) {
         let gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0].clientWidth;
         document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
+        //document.getElementsByClassName('ag-floating-filter-full-body')[0].setAttribute('style', `text-transform: lowercase;`);
     }
 
     setDescriptions(refsetData: any): Array<string> {

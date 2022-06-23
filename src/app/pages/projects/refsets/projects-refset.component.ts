@@ -66,6 +66,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     numOfResults: number;
     isSelectedProject: boolean;
     projectIsUat: boolean;
+    uiUtility = UiUtility;
 
     @ViewChild('projectNameSection') nameSection: TemplateRef<any>;
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
@@ -144,13 +145,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.showLoadingSpinner = false;
             this.changeDetectorRef.detectChanges();
             let workflowStatuses = [
-                { type: 'status', name: 'Ready for Edit', value: 'READY_FOR_EDIT' },
+                { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
                 { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
                 { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-                { type: 'status', name: 'Ready for Review', value: 'READY_FOR_REVIEW' },
+                { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
                 { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
                 { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-                { type: 'status', name: 'Ready for Publication', value: 'READY_FOR_PUBLICATION' },
+                { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
                 { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
 
@@ -232,8 +233,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.projectsService.getProject(id).subscribe((result) => {
             this.isSelectedProject = result;
             this.selectedOrganization = this.selectedProject?.organization;
+            console.log("Clicked getProject's Organization : " + result.organization.id + " project: ", id );
         });
     }
+
 
     getOrganizations(): void {
         // get list of organizations

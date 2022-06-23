@@ -10,6 +10,8 @@ import { TemplateRenderer } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
 import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 
 @Component({
   selector: 'adjudicate-upgrade-modal',
@@ -49,6 +51,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   @ViewChild('adjudicateReplacementNlPtSection') replacementNlPtSection: TemplateRef<any>;
   @ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
   @ViewChild('actionSection') actionSection: TemplateRef<any>;
+  @ViewChild("pauseUpdateDialog") pauseUpdateDialog: TemplateRef<any>;
 
   gridOptions: any;
   columnDefs: any;
@@ -87,6 +90,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   disableAddRemove = false;
   membersInCommonForChangeReport = { items: [] };
   manualReplacementOptionsLoading = false;
+  addReplacementFlag = false;
+  dialog: DialogService;
 
   constructor(private readonly modalService: NgbModal,
     private readonly refsetService: RefsetService,
@@ -94,6 +99,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     private readonly changeDetection: ChangeDetectorRef,
     private readonly route: ActivatedRoute,
     readonly upgradeModalComponent: UpgradeModalComponent,
+    private dialogFactoryService: DialogFactoryService,
     private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
 
   ngOnInit(): void {
@@ -115,7 +121,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         template:
           '<div class="ag-cell-label-container" role="presentation">'
           + ' <a class="remove-all mr-auto ml-auto">'
-          + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Add All" class="subtract-symbol-icon" />'
+          + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
           + ' </a>'
           + '</div>'
         }, cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60, maxWidth: 60 },
@@ -154,6 +160,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       frameworkComponents: {
         'templateRenderer': TemplateRenderer,
       },
+      suppressScrollOnNewData: true,
       defaultColDef: {
         sortable: true,
         filter: true,
@@ -179,7 +186,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   getSelectedRowData(option: string) {
     console.log(this.selectedRow?.rowIndex);
     console.log(this.selectedRow?.data);
-    let newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
+    const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
     newItem.inactivationReason = '';
     newItem.descriptions = '';
     newItem.replacementConcecpts = '';
@@ -200,6 +207,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
       this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
       this.disableAddRemove = true;
+
+      if (changeMethod == 'INACTIVE_ADDED') {
+        this.inactiveConcepts++;
+      } else if(changeMethod == 'INACTIVE_REMOVED') {
+        this.inactiveConcepts--;
+      }
     }
   }
 
@@ -245,7 +258,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     if (this.concept) {
       this.refsetDetails.toggleLoadingSpinner(true);
       const body = { ...this.concept };
-      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
+      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {  
+        // force auto-add of the replacement concept to the refset
+        this.addReplacementFlag = true;
         this.onGridReady(this.originalGridParams);
         this.refsetDetails.toggleLoadingSpinner(false);
       });
@@ -403,10 +418,15 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
       let finalResults = [];
       let changeReportResults = [];
+      
+      this.inactiveConcepts = 0;
 
       results.items.forEach((item) => {
         for (let i = 0; i < item.replacementConcecpts.length; i++) {
           changeReportResults.push(item);
+        }
+        if (item.stillMember) {
+          this.inactiveConcepts++;
         }
       });
 
@@ -427,6 +447,15 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
             newItem.inactivationReason = '';
             newItem.descriptions = '';
             newItem.replacementConcecpts = [item.replacementConcecpts[i]];
+            // if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
+            if (this.addReplacementFlag && (item.replacementConcecpts[i].code == this.concept.code)) {
+              this.addRemoveConceptsComponent.changeMethod = "REPLACEMENT_ADDED";
+              this.addRemoveConceptsComponent.refset = this.refsetData;
+              this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+              this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+              this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(newItem, newItem.replacementConcecpts[0]);
+              this.addReplacementFlag = false;
+            }
             finalResults.push(newItem);
           }
         }
@@ -661,4 +690,34 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.conceptDetailParents = results.items;
     });
   }
+
+  openPauseUpdate() {
+    const dialogId = "pauseUpdateDialog";
+
+    const dialogData = {
+        headerText: `Pause Update`,
+        template: this.pauseUpdateDialog,
+        data: this.refsetData,
+        showCloseIcon: false
+    };
+
+    const dialogOptions = {
+        id: dialogId,
+    };
+
+    this.dialog = this.dialogFactoryService.open(dialogData);
+
+    this.dialog.confirmed().subscribe((data) => {
+      // if 'ok', close pause modal and update modal
+      if (data) {
+        this.modalService.dismissAll();
+      }
+      // else close only pause modal
+    });
+
+
+    
+   
+}
+
 }

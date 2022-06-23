@@ -79,7 +79,12 @@ export class UpgradeModalComponent implements OnInit {
 
       let finalResults = [];
 
+            this.inactiveConcepts = 0;
+
             members.items.forEach((item) => {
+              if (item.stillMember) {
+                this.inactiveConcepts++;
+              }
               for (let i = 0; i < item.replacementConcecpts.length; i++) {
                 if (i === 0) {
                   finalResults.push(item);
@@ -90,8 +95,8 @@ export class UpgradeModalComponent implements OnInit {
                   newItem.descriptions = '';
                   newItem.replacementConcecpts = [item.replacementConcecpts[i]];
                   finalResults.push(newItem);
-                }
-                }
+                }             
+              }
             });
 
       members.items = finalResults;
@@ -117,27 +122,21 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   upgrade(): void {
-    if (this.isInitialUpgrade) {
-      this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe((x) => {
-        if (this.router.url.includes('/' + this.refsetId)) {
-          this.refsetDetails.ngOnInit();
-          this.refsetDetails.changeLockedStatus(false);
-          this.modalService.dismissAll();
-          this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]).then((page) => {
-            window.location.reload();
-        });
-        } else {
-          this.refsetService.getUpgradeData(this.refsetData?.id, '').subscribe((members) => {
-            this.totalMembers = members?.miscCountA;
-            this.inactiveConcepts = members?.total;
 
-            this.membersInCommon = members;
-            this.modalService.dismissAll();
-            this.refsetDetails.initializeDetailsPage();
-          });
-        }
-      });
-      UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, null, this.notificationService, this.refsetService, this.router, 'upgrade');
+    this.modalService.dismissAll();
+    this.refsetDetails.changeLockedStatus(true);  
+
+    this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe();
+    
+    UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, this.processCompileDataResult, this.notificationService, this.refsetService, this.router, 'upgrade');
+  }
+
+  processCompileDataResult = () => {
+
+    if (this.router.url.includes('/' + this.refsetId)) {
+
+      this.refsetDetails.changeLockedStatus(false);
+      this.refsetDetails.loadNewRefsetVersion(this.refsetId, RefsetUtility.IN_DEVELOPMENT);
     }
   }
 

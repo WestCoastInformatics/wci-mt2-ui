@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from "@angular/core";
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute, ParamMap, RoutesRecognized } from "@angular/router";
 import { DialogService } from "src/app/dialog/services/dialog.service";
 import { DialogFactoryService } from "src/app/dialog/services/dialog-factory.service";
@@ -208,7 +209,8 @@ export class RefsetDetails {
         private readonly workflowService: WorkflowService,
         private readonly modalService: NgbModal,
         private routerExtentionService: RouterExtentionService,
-        readonly projectsRefsetComponent: ProjectsRefsetComponent
+        readonly projectsRefsetComponent: ProjectsRefsetComponent,
+        private location: Location
     ) {
         refsetService.getTaxonomyRoot();
     }
@@ -1089,7 +1091,7 @@ export class RefsetDetails {
                         this.router.navigateByUrl('projects');
 
                     } else if (this.refsetData.id != results.id) {
-                        this.router.navigate(['/details', results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results)]);
+                        this.loadNewRefsetVersion(results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results));
 
                     } else {
 
@@ -1106,7 +1108,6 @@ export class RefsetDetails {
                     this.loadRefset();
                 }
 
-
                 // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
                 //     this.router.navigate(['/details', this.id]);
                 // });
@@ -1117,6 +1118,17 @@ export class RefsetDetails {
                 this.toggleLoadingSpinner(false);
             }
         });
+    }
+
+    loadNewRefsetVersion(refsetId: string, versionDate: string) {
+
+        this.refsetId = refsetId;
+        this.versionDate = versionDate;
+
+        this.changeLockedStatus(false);
+        this.location.replaceState("/details/" + refsetId + '/' + versionDate);
+        this.initializeDetailsPage();
+        //this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     loadWorkflowHistoryData(): void {
@@ -1560,6 +1572,15 @@ export class RefsetDetails {
 
         return stringValue;
     }
+
+    toTitleCase(str) {
+        return str?.replace(
+          /\w\S*/g,
+          function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+          }
+        );
+      }
 
     modifyStatusSyntax(value: string): string {
         return this.capitalizeFirstLetterOfString(value?.replace(/\_/g, ' ').toLowerCase());
