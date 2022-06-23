@@ -707,10 +707,6 @@
                 <add-remove-by-concept-modal [refset]="refsetData"
                     (loadingSpinner)="toggleLoadingSpinner($event)"
                     (changeLockedStatus)="changeLockedStatus($event)"></add-remove-by-concept-modal>
-
-                <import-from-ecl-modal *ngIf="!isIntensional" [refsetInternalId]="id"
-                    [refsetId]="refsetId" [refsetBranchPath]="refsetBranchPath"
-                    (changeLockedStatus)="changeLockedStatus($event)"></import-from-ecl-modal>
             </mat-menu>
         </span>
         <br>
