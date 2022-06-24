@@ -14,6 +14,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
+import { stringify } from 'querystring';
 
 
 /**
@@ -385,6 +386,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     }
 
     goToDetailsPage(refsetId, versionDate){
+        const url = new URL(window.location.href);
+        url.searchParams.set('reload', 'true');
+        window.history.pushState({}, '', url.href);
         this.router.navigate(['/details', refsetId, versionDate]);
     }
 
