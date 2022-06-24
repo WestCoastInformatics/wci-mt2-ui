@@ -62,8 +62,8 @@ export class CreateNewTeamModalComponent {
         this.description = '';
 
         this.openedModel = this.modalService.open(createNewTeamDialog, {});
-        
-        if(!this.organizations){
+
+        if (!this.organizations.length) {
             // get list of organizations
             this.refsetService.getOrganizations().subscribe((organizationResults) => {
                 this.organizations = organizationResults.items;

@@ -50,7 +50,7 @@ export class CreateNewProjectModalComponent {
         this.description = '';
         this.openedModel = this.modalService.open(createNewProjectDialog, {});
 
-        if(!this.organizations){
+        if(!this.organizations.length){
             // get list of organizations
             this.refsetService.getOrganizations().subscribe((organizationResults) => {
                 this.organizations = organizationResults.items;
