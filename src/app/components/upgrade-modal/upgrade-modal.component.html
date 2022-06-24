@@ -1,10 +1,10 @@
-<button type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
-    {{ !isInitialUpgrade ? 'Continue Upgrade' : 'Upgrade' }}
+<button *ngIf="isInitialUpgrade" type="button" mat-raised-button color="primary" aria-hidden="false" #upgradeButton class="refset-tool-action-button refset-action-button" (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">
+    Upgrade
 </button>
-<!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button> -->
+<adjudicate-upgrade-modal *ngIf="!isInitialUpgrade" [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
 <ng-template #upgradeDialog
              let-modal>
-<ng-container *ngIf="isInitialUpgrade">
+<ng-container>
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title"
             id="modal-basic-title">
@@ -38,47 +38,6 @@
         <button type="button" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade" ng-reflect-color="green" (click)="modal.dismiss('Cross click'); upgrade()">
             Upgrade
         </button>
-    </div>
-</ng-container>
-<ng-container *ngIf="!isInitialUpgrade">
-    <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title"
-            id="modal-basic-title">
-            Upgrade Reference Set
-        </h4>
-        <button type="button"
-                class="close dialog-close-x"
-                aria-label="Close"
-                (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid upgrade-container-fluid">
-        <div class="modal-body upgrade-modal-body">
-            <div class="successful-upgrade-modal-body-header">
-                <ngb-alert [dismissible]="false" type="success" class="upgrade-modal-success-warning">
-                    <div class="success-header">
-                        <img class="circled-check" src="assets/circled-check.svg" alt="circled check" aria-label="Circled Check" title="Circled Check" />
-                        <div class="success-body upgrade-modal-success">
-                            <strong>Success!</strong><br />Lookup complete. Inactive Concept Report available for download. Upgrade can continue.
-                        </div>
-                    </div>
-                </ngb-alert>
-            </div>
-            <div class="upgrade-modal-body-mid">
-                <div class="upgrade-success-inactive"><span class="upgrade-success-inactive-label">Inactive Concepts:</span><span>{{inactiveConcepts}}</span></div>
-                <div class="upgrade-success-members"><span class="upgrade-success-members-label">Members in Common:</span><span>{{totalMembers}}</span></div>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button type="button" mat-raised-button color="red" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click');" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
-            Cancel Upgrade
-        </button>
-        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
-            Download Inactive Concept Report
-        </button>
-        <adjudicate-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
     </div>
 </ng-container>
 </ng-template>

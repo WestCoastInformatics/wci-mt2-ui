@@ -159,15 +159,6 @@ export class UpgradeModalComponent implements OnInit {
     }
     UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
 
-    // if (shouldDownload) {
-    //   UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
-    // } else {
-    //   if (localStorage.getItem('inactiveChangeReportData')) {
-    //     localStorage.removeItem('inactiveChangeReportData');
-    //   }
-    //   console.log(data);
-    //   localStorage.setItem('inactiveChangeReportData', JSON.stringify(data));
-    // }
   }
 
   transformDescriptions(descriptions: any) {
@@ -194,27 +185,4 @@ export class UpgradeModalComponent implements OnInit {
     }
   }
 
-  // transformReplacementDescriptions(descriptions: any) {
-  //   if (descriptions) {
-  //     const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
-  //     if (getStringifiedJSON) {
-  //       const formattedObjectArray = getStringifiedJSON.slice(1).split('{"active"').map((x) => {
-  //         if (x[x.length - 1] === ',') {
-  //           const modifiedString = x.slice(0, -1);
-  //           x = modifiedString;
-  //         }
-  //         if (!x.includes('"active"')) {
-  //           x = '{"active"' + x;
-  //         } else if (!x.includes('{"active"') && x.includes('"active"')) {
-  //           x = '{' + x;
-  //         }
-  //         if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-  //           x = x + '"}';
-  //         }
-  //         return JSON.parse(x);
-  //       });
-  //       return formattedObjectArray[0];
-  //     }
-  //   }
-  // }
 }

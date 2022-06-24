@@ -190,7 +190,13 @@
                         [refsetData]="refsetData" [membersOfRefset]="membersGridData"
                         [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
                         [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
-
+                    <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
+                        *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
+                        (click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE');"
+                        aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button cancel-upgrade"
+                        aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+                        Cancel Upgrade
+                    </button>
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
                         mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
                         class="refset-tool-action-button refset-action-button"
