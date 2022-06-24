@@ -119,11 +119,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 190, maxWidth: 210, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason } },
       { field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
         template:
-          '<div class="ag-cell-label-container" role="presentation">'
+          ''
           + ' <a class="remove-all mr-auto ml-auto">'
           + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
           + ' </a>'
-          + '</div>'
+          + ''
         }, cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, width: 60, maxWidth: 60 },
       { field: 'inactiveId', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', valueGetter: (params) => {
         return params.data.code;
@@ -136,11 +136,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       { field: 'reason', tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 220, maxWidth: 220, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1 },
       { field: 'replacementCode', tooltipField: 'replacementCode', headerName: '' , headerComponentParams: {
             template:
-              '<div class="ag-cell-label-container" role="presentation">'
+              ''
                 + ' <a class="add-all mr-auto ml-auto">'
                 + '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
                 + ' </a>'
-                + '</div>'
+                + ''
         }, cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection } },
       { field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', flex: 1, minWidth: 150, maxWidth: 160, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection } },
       { field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', flex: 1, minWidth: 235, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection } },
@@ -464,9 +464,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       results.items = finalResults;
       this.membersInCommon = results;
       // console.log(results.items)
-
+      let addRemoveAllBtns = document.querySelectorAll('.add-all, .remove-all');
       if (results.items.length == 0) {
-
+        addRemoveAllBtns.forEach((element: HTMLElement) => {
+          element.classList.add("disabled");
+        });
         this.refsetGridApi.showNoRowsOverlay();
         this.refsetGridApi.setRowData([]);
 
@@ -480,6 +482,10 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         this.refsetDetails.showLoadingSpinner = false;
 
         return;
+      }else{
+        addRemoveAllBtns.forEach((element: HTMLElement) => {
+          element.classList.remove("disabled");
+        });
       }
 
       UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
@@ -505,16 +511,18 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     let self = this;
     document.querySelectorAll('.add-all, .remove-all').forEach((obj: HTMLElement) => {
       obj.addEventListener('click', function(e){
-        const memberItems = self.membersInCommon.items;
-        const isAdd = obj.classList.contains('add-all');
-        const inactiveConcepts = memberItems.filter((items: any) => {
-          return items?.active == false && (!isAdd || !items.replacementConcecpts[0]?.existingMember);
-        });
-        if(inactiveConcepts.length > 0){
-          self.refsetDetails.showLoadingSpinner = true;
-          self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(()  => {
-            self.processChangedMemberEffects(null);
+        if(!obj.classList.contains('disabled')){
+          const memberItems = self.membersInCommon.items;
+          const isAdd = obj.classList.contains('add-all');
+          const inactiveConcepts = memberItems.filter((items: any) => {
+            return items?.active == false && (!isAdd || !items.replacementConcecpts[0]?.existingMember);
           });
+          if(inactiveConcepts.length > 0){
+            self.refsetDetails.showLoadingSpinner = true;
+            self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(()  => {
+              self.processChangedMemberEffects(null);
+            });
+          }
         }
       });
     });

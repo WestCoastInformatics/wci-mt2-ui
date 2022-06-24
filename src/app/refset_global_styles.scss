@@ -5208,3 +5208,12 @@ app-category-floating-filter {
 .cancel-upgrade .mat-button-wrapper {
     color: white !important;
 }
+.add-all.disabled img, .remove-all.disabled img{
+    cursor: not-allowed;
+    -webkit-filter: grayscale(100%);
+       -moz-filter: grayscale(100%);
+         -o-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+            filter: grayscale(100%);
+    opacity: 0.5;
+}
