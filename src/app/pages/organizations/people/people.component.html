@@ -2,11 +2,12 @@
     <div class="row header-title">
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"  (selectionChange)="selectOrg($event)">
-                <mat-option *ngFor="let organization of organizationList"
-                            [value]="organization"
-                            style="z-index: 3">
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose
+                Organization'}}</mat-label>
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true"
+                [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization"
+                    style="z-index: 3">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -26,30 +27,40 @@
 
                     <div class='section-header mb-4'>
                         People ({{dataCount}})
-                        <add-member-modal type="Organization" [id]="selectedOrganization?.id" [name]="selectedOrganization?.name"></add-member-modal>
+                        <add-member-modal type="Organization" [id]="selectedOrganization?.id"
+                            [name]="selectedOrganization?.name"></add-member-modal>
                     </div>
 
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular *ngIf="showTable"
-                                [columnDefs]="gridColumnDefs"
-                                [rowData]="data"
-                                (gridReady)="onGridReady($event)"
-                                [gridOptions]="gridOptions"
-                                style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs"
+                                [rowData]="data" (gridReady)="onGridReady($event)"
+                                [gridOptions]="gridOptions" style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
                             <ng-template #peopleNameSection let-params>
-                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                                <img #iconImg
+                                    [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)"
+                                    class="medium-icon-image" /> {{ params?.value}}
                             </ng-template>
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold">{{getTeamCount(params.data.teams)}} teams</span>
+                                <span
+                                    class="text-primary font-weight-bold">{{getTeamCount(params.data.teams)}}
+                                    teams</span>
                             </ng-template>
-                            
+
+                            <ng-template #inactivateUserSection let-params>
+
+                                <img src="assets/subtract-symbol-icon.svg" (click)="removeUser(id)"
+                                    width="30px" height="30px" title="Inactivate User"
+                                    aria-label="Subtract" class="subtract-symbol-icon"
+                                    alt="Subtract symbol shown when you're able to remove a user" />
+                            </ng-template>
+
                         </div>
                     </div>
 

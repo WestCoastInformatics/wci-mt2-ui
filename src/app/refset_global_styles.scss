@@ -3467,6 +3467,15 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     background-color: rgba(249, 238, 238, 1);
 }
 
+.column-inactiveOrgMember,
+.column-inactiveTeamMember {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center
+}
+
 .adjudicate-upgrade-modal-body-header {
     display: flex;
     height: 50px;
@@ -5208,12 +5217,14 @@ app-category-floating-filter {
 .cancel-upgrade .mat-button-wrapper {
     color: white !important;
 }
-.add-all.disabled img, .remove-all.disabled img{
+
+.add-all.disabled img,
+.remove-all.disabled img {
     cursor: not-allowed;
     -webkit-filter: grayscale(100%);
-       -moz-filter: grayscale(100%);
-         -o-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-            filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    filter: grayscale(100%);
     opacity: 0.5;
 }
