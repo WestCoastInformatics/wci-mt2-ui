@@ -64,12 +64,12 @@
         </div>
 
         <div class="refset-tool-pagination-total-label ">
-            <div *ngIf="showTotal && totalKnown && numOfResults > 0">
+            <div *ngIf="showTotal && totalKnown && displayedResults > 0">
                 Showing <span class="refset-tool-pagination-count">{{startRecord}}</span> to <span
                     class="refset-tool-pagination-count">{{endRecord}}</span>
-                of <span class="refset-tool-pagination-count">{{this.numOfResults}}</span> results
+                of <span class="refset-tool-pagination-count">{{this.displayedResults}}</span> results
             </div>
-            <div *ngIf="numOfResults == 0">
+            <div *ngIf="displayedResults == 0">
                 No Results to Show
             </div>
         </div>
@@ -80,7 +80,7 @@
 
         <ng-container *ngIf="!showAll">
             <span *ngFor="let sizeOption of pageSizeOptions">
-                <button [hidden]="((numOfResults < sizeOption) || (numOfResults < 25))"
+                <button [hidden]="((displayedResults < sizeOption) || (displayedResults < 25))"
                     mat-raised-button [color]="pageSize === sizeOption ? 'primary' : ''"
                     class="pagination-page-buttons"
                     (click)="setPageSize(sizeOption); goToPage(1)"
@@ -89,10 +89,10 @@
                 </button>
             </span>
         </ng-container>
-        <span *ngIf="numOfResults > 10 && numOfResults < 100">
+        <span *ngIf="displayedResults > 10 && displayedResults < 100">
             <ng-container *ngIf="showAll">
                 <span *ngFor="let sizeOption of pageSizeOptions">
-                    <button [hidden]="numOfResults < sizeOption" mat-raised-button
+                    <button [hidden]="displayedResults < sizeOption" mat-raised-button
                         class="pagination-page-buttons"
                         [color]="pageSize === sizeOption ? 'primary' : ''"
                         (click)="setPageSize(sizeOption); goToPage(1)"
@@ -102,7 +102,7 @@
                 </span>
             </ng-container>
             <button mat-raised-button [color]="showAll ? 'primary' : ''"
-                (click)="setPageSize(numOfResults, true); goToPage(1)"
+                (click)="setPageSize(displayedResults, true); goToPage(1)"
                 class="pagination-page-buttons"
                 title="Show All Members per Page">
                 All

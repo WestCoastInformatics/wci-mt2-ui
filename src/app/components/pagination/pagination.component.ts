@@ -13,16 +13,18 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     @Input() pageSize: number = 0;
     @Input() gridOptions;
-    @Input() numberOfPages: number = 0;
     @Input() pageSizeOptions: Array<number> = [10, 25, 50];
     @Input() totalKnown = false;
     @Input() manualStateRefresh = false;
-    @Input() numOfResults: number;
+    @Input() showAll: boolean;
+
     currentPage: number = 1;
     paginationPages: any = {};
     showTotal = true;
     startRecord: number;
     endRecord: number;
+    displayedPages: number = 0;
+    displayedResults: number = 0;
 
     @ViewChild('paginationFirstPage') firstPageButton: MatButton;
     @ViewChild('paginationPreviousPage') previousPageButton: MatButton;
@@ -30,9 +32,6 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @ViewChild('paginationLastPage') lastPageButton: MatButton;
     @ViewChildren('paginationPageNumber') pageNumberButtons: QueryList<MatButton>;
     activeGridOptions: any;
-    @Input()
-    showAll: boolean;
-    
 
     constructor(
         private pagerService: PaginationService,
@@ -41,10 +40,16 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     getCurrentPage(): number {
 
+        if (this.activeGridOptions?.api) {
+
+            this.displayedPages = this.activeGridOptions.api.paginationGetTotalPages();
+            this.displayedResults = this.activeGridOptions.api.getDisplayedRowCount();
+        }
+
         this.currentPage = this.activeGridOptions?.api ? this.activeGridOptions.api.paginationGetCurrentPage() + 1 : 1;
         this.startRecord = (this.currentPage * this.pageSize) - (this.pageSize - 1);
         this.endRecord = this.currentPage * this.pageSize;
-        this.endRecord = this.numOfResults < this.endRecord ? this.numOfResults : this.endRecord;
+        this.endRecord = this.displayedResults < this.endRecord ? this.displayedResults : this.endRecord;
         return this.currentPage;
     }
 
@@ -87,15 +92,13 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         // }
         this.activeGridOptions = this.activeGridOptions ? this.activeGridOptions : changes.gridOptions.currentValue;
         this.changeState();
-        // if (changes.numberOfPages && this.numOfResults > 0) {
-        //     this.getStorageItems();
-        // }
+
         this.changeDetectorRef.detectChanges();
     }
 
     changeState(currentPage: number = this.getCurrentPage()) { 
 
-        this.paginationPages = this.numberOfPages ? this.pagerService.getPager(this.numberOfPages, currentPage, this.totalKnown) : {};
+        this.paginationPages = this.displayedPages ? this.pagerService.getPager(this.displayedPages, currentPage, this.totalKnown) : {};
         this.checkButtons();
     }
 
@@ -151,7 +154,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     goToPrevious(index: number) {
         this.activeGridOptions.api.paginationGoToPreviousPage();
-        this.paginationPages = this.pagerService.getPager(this.numberOfPages, this.getCurrentPage(), this.totalKnown);
+        this.paginationPages = this.pagerService.getPager(this.displayedPages, this.getCurrentPage(), this.totalKnown);
         this.changeState();
     }
 
