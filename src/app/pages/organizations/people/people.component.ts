@@ -193,8 +193,9 @@ export class OrganizationPeopleComponent implements OnInit {
         }
     }
 
-    removeUser(userId) {
-        this.organizationsService.removeUser(this.id, userId);
+    removeUser(user) {
+        if (confirm("Are you sure you want to remove " + user.name + " from the organization?"))
+            this.organizationsService.removeUser(this.id, user.id);
     }
 
     getTeamCount(teams: any): number {
