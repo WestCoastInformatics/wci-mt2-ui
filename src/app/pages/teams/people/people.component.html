@@ -68,9 +68,10 @@
 
                             <ng-template #inactivateUserSection let-params>
 
-                                <img src="assets/subtract-symbol-icon.svg" (click)="removeUser(id)"
-                                    width="30px" height="30px" title="Inactivate User"
-                                    aria-label="Subtract" class="subtract-symbol-icon"
+                                <img src="assets/subtract-symbol-icon.svg"
+                                    (click)="removeUser(params?.data)" width="30px" height="30px"
+                                    title="Inactivate User" aria-label="Subtract"
+                                    class="subtract-symbol-icon"
                                     alt="Subtract symbol shown when you're able to remove a user" />
                             </ng-template>
 
