@@ -52,6 +52,6 @@ export class OrganizationsService extends RestService {
     }
 
     removeUser(organizationId: any, userId: any) {
-        return this.post(this.contextPath + 'organization/' + organizationId + '/user/' + userId, '');
+        return this.delete(this.contextPath + 'organization/' + organizationId + '/user/' + userId);
     }
 }
