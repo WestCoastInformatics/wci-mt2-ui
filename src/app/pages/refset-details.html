@@ -142,9 +142,9 @@
 
                     </mat-menu>
 
-                    <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
+                    <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span>
 
-                    <button *ngIf="editMode" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <button *ngIf="editMode && false" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #collaborationMenu="matMenu">
                         <button mat-menu-item [hidden]="true">Share Reference Set</button>
