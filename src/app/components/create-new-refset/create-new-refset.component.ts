@@ -178,7 +178,6 @@ export class CreateNewRefsetComponent implements OnInit {
             tags: this.selectedTags,
             versionNotes: this.selectedVersionNotes,
         };
-        console.log(this.trim(name), "from params");
 
         if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
             this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
