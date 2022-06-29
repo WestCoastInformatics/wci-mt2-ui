@@ -218,8 +218,8 @@
                             </ag-grid-angular>
 
                             <app-pagination class="compare-pagination" *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize" [gridOptions]="gridOptions"
-                                [numberOfPages]="gridApi?.paginationGetTotalPages()" [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown"
-                                [manualStateRefresh]="gridPaging.manualStateRefresh" [numOfResults]="gridPaging.totalRows" [isDetailPage]="true" [refsetId]="activeRefset.refsetId">
+                                [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown"
+                                [manualStateRefresh]="gridPaging.manualStateRefresh" [isDetailPage]="true" [refsetId]="activeRefset.refsetId">
                             </app-pagination>
 
                         </div>

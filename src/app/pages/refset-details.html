@@ -843,11 +843,9 @@
                                     <app-pagination #detailsMembersPaging *ngIf="showTable"
                                         [pageSize]="membersGridPaging.pageSize"
                                         [gridOptions]="membersGridOptions"
-                                        [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
                                         [pageSizeOptions]="membersGridPaging.pageSizeOptions"
                                         [totalKnown]="membersGridPaging.totalKnown"
                                         [manualStateRefresh]="membersGridPaging.manualStateRefresh"
-                                        [numOfResults]="membersGridNumberOfResults"
                                         [isDetailPage]="true" [refsetId]="refsetId">
                                     </app-pagination>
 
@@ -927,11 +925,9 @@
                                             *ngIf="showTaxonomySearchTable"
                                             [pageSize]="taxonomySearchGridPaging.pageSize"
                                             [gridOptions]="taxonomySearchGridOptions"
-                                            [numberOfPages]="taxonomySearchGridApi?.paginationGetTotalPages()"
                                             [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
                                             [totalKnown]="taxonomySearchGridPaging.totalKnown"
                                             [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
-                                            [numOfResults]="taxonomySearchNumberOfResults"
                                             [refsetId]="refsetId">
                                         </app-pagination>
 
