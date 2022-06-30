@@ -192,6 +192,9 @@ export class TeamsPeopleComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
+        if (event.column.colId == "id") {
+            return;
+        }
 
         let selectedRows = this.gridApi.getSelectedRows();
         let selectedId: string;
