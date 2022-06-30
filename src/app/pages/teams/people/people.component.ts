@@ -226,7 +226,12 @@ export class TeamsPeopleComponent implements OnInit {
 
     removeUser(user) {
         if (confirm("Are you sure you want to remove " + user.name + " from the team?"))
-            this.teamsService.removeUser(this.teamId, user.id);
+            this.teamsService.removeUser(this.teamId, user.id).subscribe({
+                next: (data) => {
+                    console.log(data);
+                },
+                complete: () => window.location.reload()
+            });
     }
 
     getTeamCount(data: any): number {

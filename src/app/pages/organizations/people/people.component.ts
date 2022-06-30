@@ -198,7 +198,13 @@ export class OrganizationPeopleComponent implements OnInit {
 
     removeUser(user) {
         if (confirm("Are you sure you want to remove " + user.name + " from the organization?"))
-            this.organizationsService.removeUser(this.id, user.id);
+            this.organizationsService.removeUser(this.id, user.id).subscribe({
+                next: (data) => {
+                    var datum = data;
+                    console.log(datum);
+                },
+                complete: () => this.router.navigate(['/organizations/projects/', this.id])
+            });
     }
 
     getTeamCount(teams: any): number {
