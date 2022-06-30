@@ -47,7 +47,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         this.startRecord = (this.currentPage * this.pageSize) - (this.pageSize - 1);
         this.endRecord = this.currentPage * this.pageSize;
         this.endRecord = this.displayedResults < this.endRecord ? this.displayedResults : this.endRecord;
-        
+
         return this.currentPage;
     }
 
@@ -64,7 +64,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
             if (propertyName === 'gridOptions') {
 
-                if (!this.activeGridOptions && changes.gridOptions.previousValue == null) {
+                if (!this.activeGridOptions && changes.gridOptions.previousValue == null && changes.gridOptions.currentValue != null) {
 
                     this.activeGridOptions = changes.gridOptions.currentValue;
 
