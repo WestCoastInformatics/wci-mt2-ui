@@ -64,15 +64,18 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
             if (propertyName === 'gridOptions') {
 
-                if (!this.activeGridOptions && changes.gridOptions.previousValue == null && changes.gridOptions.currentValue != null) {
+                if (!this.activeGridOptions && changes.gridOptions.previousValue == null && changes.gridOptions.currentValue) {
 
                     this.activeGridOptions = changes.gridOptions.currentValue;
 
-                    this.activeGridOptions.api.eventService.addEventListener('filterChanged', (event) => {
+                    if (this.activeGridOptions.api) {
 
-                        this.activeGridOptions?.api.paginationGoToPage(0);
-                        this.changeState();
-                    });
+                        this.activeGridOptions.api.eventService.addEventListener('filterChanged', (event) => {
+
+                            this.activeGridOptions?.api.paginationGoToPage(0);
+                            this.changeState();
+                        });
+                    }
                 }
 
                 break;
