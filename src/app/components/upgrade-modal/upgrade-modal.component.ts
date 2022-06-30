@@ -85,7 +85,7 @@ export class UpgradeModalComponent implements OnInit {
               if (item.stillMember) {
                 this.inactiveConcepts++;
               }
-              for (let i = 0; i < item.replacementConcecpts.length; i++) {
+              for (let i = 0; i < item.replacementConcepts.length; i++) {
                 if (i === 0) {
                   finalResults.push(item);
                 } else {
@@ -93,7 +93,7 @@ export class UpgradeModalComponent implements OnInit {
 
                   newItem.inactivationReason = '';
                   newItem.descriptions = '';
-                  newItem.replacementConcecpts = [item.replacementConcecpts[i]];
+                  newItem.replacementConcepts = [item.replacementConcepts[i]];
                   finalResults.push(newItem);
                 }             
               }
@@ -152,9 +152,9 @@ export class UpgradeModalComponent implements OnInit {
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
-        'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
-        'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Association':inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+        'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+        'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
     UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);

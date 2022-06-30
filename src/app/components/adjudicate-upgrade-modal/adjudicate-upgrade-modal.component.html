@@ -307,20 +307,20 @@
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-    <ng-container *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
-        <img *ngIf="!params?.data?.replacementConcecpts[0]?.added" src="assets/add-symbol-icon.svg"
+    <ng-container *ngIf="!params?.data?.replacementConcepts[0]?.existingMember">
+        <img *ngIf="!params?.data?.replacementConcepts[0]?.added" src="assets/add-symbol-icon.svg"
             (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')" width="18px" height="18px"
             title="Add {{actionText}}" aria-label="Add" class="add-symbol-icon"
             alt="Add symbol shown when you're able to add a concept" />
 
-        <img *ngIf="params?.data?.replacementConcecpts[0]?.added"
+        <img *ngIf="params?.data?.replacementConcepts[0]?.added"
             src="assets/subtract-symbol-icon.svg"
             (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')" width="18px"
             height="18px" title="Remove {{actionText}}" aria-label="Subtract"
             class="subtract-symbol-icon"
             alt="Subtract symbol shown when you're able to remove a concept" />
     </ng-container>
-    <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember"
+    <mat-icon *ngIf="params?.data?.replacementConcepts[0]?.existingMember"
         class="adjudicate-information-button"
         aria-label="Replacement concept is already a member of the refset."
         title="Replacement concept is already a member of the refset.">information</mat-icon>
@@ -329,33 +329,33 @@
 <!-- Replacement ID Templates -->
 <ng-template #adjudicateReplacementId let-params>
     <span
-        [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
-        {{ params?.data?.replacementConcecpts[0]?.code }}
+        [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{ params?.data?.replacementConcepts[0]?.code }}
     </span>
 </ng-template>
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')"
-        [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
+    <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')"
+        [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
         {{
-        transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length
+        transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length
         ?
-        transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term
+        transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term
         : '' }}
     </span>
-    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')"
-        [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
-        {{ transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ?
-        transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
+    <span *ngIf="!params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')"
+        [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{ transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length ?
+        transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term : '' }}
     </span>
 </ng-template>
 
 <!-- Reason Section Templates -->
 <ng-template #adjudicateReason let-params>
     <span *ngIf="!params.data.isSearch"
-        [class.add-bold]="params?.data?.replacementConcecpts[0]?.added || params?.data?.replacementConcecpts[0]?.existingMember">
-        {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
+        [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{ formatReason(params?.data?.replacementConcepts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
         <mat-form-field appearance="fill" style="width: 400px">
@@ -382,7 +382,7 @@
 
 <!-- Action Section Templates -->
 <ng-template #actionSection let-params>
-    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')">
+    <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')">
         <img src="assets/grey-trash-bin.svg"
             (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')" width="18px"
             height="18px" title="Remove {{actionText}}" aria-label="Subtract"

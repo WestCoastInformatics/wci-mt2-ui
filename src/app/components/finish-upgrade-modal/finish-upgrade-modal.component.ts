@@ -53,9 +53,9 @@ export class FinishUpgradeModalComponent implements OnInit {
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
-        'Suggested Replacement Association':inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
-        'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Association':inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+        'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
@@ -68,8 +68,8 @@ export class FinishUpgradeModalComponent implements OnInit {
     let memberItems = this.membersInCommonForChangeReport?.items;
     let inactiveConcepts = [];
     memberItems.forEach((items: any) => {
-      if (items.replacementConcecpts) {
-        for (let item of items.replacementConcecpts) {
+      if (items.replacementConcepts) {
+        for (let item of items.replacementConcepts) {
           if (item.added === true) {
             inactiveConcepts.push(item);
           }
@@ -111,8 +111,8 @@ export class FinishUpgradeModalComponent implements OnInit {
       // Get manual replacements from inactive concepts
       inactiveConcepts = [];
       memberItems.forEach((items: any) => {
-        if (items.replacementConcecpts) {
-          for (let item of items.replacementConcecpts) {
+        if (items.replacementConcepts) {
+          for (let item of items.replacementConcepts) {
             if (item.reason === 'MANUAL_REPLACEMENT') {
               inactiveConcepts.push(item);
             }
