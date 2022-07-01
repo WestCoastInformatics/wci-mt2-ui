@@ -444,6 +444,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                        
+                        <div class="my-3 text-right" *ngIf="refsetData?.id">
+                            <artifacts-modal [refsetInternalId]="refsetData?.id"></artifacts-modal>
+                        </div>
                     </div>
 
                     <!-- Versioned Metadata Section -->
@@ -592,9 +596,6 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #refsetArtifactsDialog let-data>
-                    This functionality will be implemented in subsequent phases.
-                </ng-template>
 
                 <ng-template #refsetAuditDialog let-data>
                     This functionality will be implemented in subsequent phases.
