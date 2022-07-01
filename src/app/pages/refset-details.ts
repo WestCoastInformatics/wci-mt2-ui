@@ -1096,7 +1096,6 @@ export class RefsetDetails {
                     } else {
 
                         if (action.includes('CANCEL_EDIT')) {
-                            this.loadWorkflowHistoryData();
                             this.processChangedMemberEffects(null);
                             this.loadRefset();
                         } else {
@@ -1107,7 +1106,7 @@ export class RefsetDetails {
                 } else {
                     this.loadRefset();
                 }
-
+                this.loadWorkflowHistoryData();
                 // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
                 //     this.router.navigate(['/details', this.id]);
                 // });
