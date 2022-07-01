@@ -107,7 +107,8 @@ export class AuthenticationService {
                 console.log("Back end logged out");
             }
         );
-
+        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = this.generateImsUrl('logout');
     }
 
