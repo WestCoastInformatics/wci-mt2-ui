@@ -166,7 +166,7 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         let params: any = {
-            name: name,
+            name: this.trim(name),
             parentConceptId: parentConceptId,
             moduleId: '',
             refsetId: refsetId,
@@ -183,7 +183,6 @@ export class CreateNewRefsetComponent implements OnInit {
             this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
-
         this.refsetService.createRefset(params).subscribe(
             (status) => {
 
@@ -361,4 +360,19 @@ export class CreateNewRefsetComponent implements OnInit {
         let project = this.inputProperties.project;
         return project?.roles?.includes('AUTHOR');
     }
+
+    /* This Method prevent the user from adding Special Characters to the form */
+    omit_special_char(event) {
+        var k;
+        k = event.keyCode;
+        return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+    }
+
+    /* This method prevents user from copying special characters into a field */
+    trim(entry) {
+        entry = entry.replace(/[^a-zA-Z0-9 ]/g, "");
+        console.log(entry);
+        return entry;
+    }
+
 }

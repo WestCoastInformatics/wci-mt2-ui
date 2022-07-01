@@ -5171,6 +5171,7 @@ app-category-floating-filter {
 }
 
 .ellipsed-label {
+    display: inline;
     text-overflow: ellipsis;
     width: 100%;
     overflow: hidden;

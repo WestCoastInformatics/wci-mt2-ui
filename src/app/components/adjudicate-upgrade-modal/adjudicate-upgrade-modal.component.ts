@@ -186,7 +186,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
     newItem.inactivationReason = '';
     newItem.descriptions = '';
-    newItem.replacementConcecpts = '';
+    newItem.replacementConcepts = '';
     if (option.includes('add')) {
       this.chosenConceptCode = this.selectedRow['data'].code;
       this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow?.rowIndex + 1 });
@@ -202,7 +202,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.addRemoveConceptsComponent.refset = this.refsetData;
       this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
       this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcecpts[0]);
+      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcepts[0]);
       this.disableAddRemove = true;
 
       if (changeMethod == 'INACTIVE_ADDED') {
@@ -243,7 +243,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
   removeManualReplacement(changeMethod: string): void {
     this.refsetDetails.toggleLoadingSpinner(true);
-    this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode ? this.chosenConceptCode : this.selectedRow['data'].code, changeMethod, this.concept ? this.concept.code : this.selectedRow['data'].replacementConcecpts[0].code).subscribe((x) => {
+    this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode ? this.chosenConceptCode : this.selectedRow['data'].code, changeMethod, this.concept ? this.concept.code : this.selectedRow['data'].replacementConcepts[0].code).subscribe((x) => {
       this.onGridReady(this.originalGridParams);
       this.refsetDetails.toggleLoadingSpinner(false);
     });
@@ -395,14 +395,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.refsetService.getUpgradeData(this.refsetData?.id, restParams).subscribe(results => {
       results.items = results.items.filter((x) => {
         if (this.hideReplacements) {
-          return !x.replaced && x.replacementConcecpts.filter(r => r.existingMember).length == 0;
+          return !x.replaced && x.replacementConcepts.filter(r => r.existingMember).length == 0;
         }
         return x.active === false;
       });
 
       results.items.sort(function (a, b) {
-        let nameA = a.replacementConcecpts[0].reason.toUpperCase();
-        let nameB = b.replacementConcecpts[0].reason.toUpperCase();
+        let nameA = a.replacementConcepts[0].reason.toUpperCase();
+        let nameB = b.replacementConcepts[0].reason.toUpperCase();
         if (nameA > nameB) {
           return -1;
         }
@@ -419,7 +419,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       this.inactiveConcepts = 0;
 
       results.items.forEach((item) => {
-        for (let i = 0; i < item.replacementConcecpts.length; i++) {
+        for (let i = 0; i < item.replacementConcepts.length; i++) {
           changeReportResults.push(item);
         }
         if (item.stillMember) {
@@ -433,7 +433,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
       results.items.forEach((item) => {
         item.inactiveId = item.code.toString();
-        for (let i = 0; i < item.replacementConcecpts.length; i++) {
+        for (let i = 0; i < item.replacementConcepts.length; i++) {
           if (i === 0) {
             finalResults.push(item);
           } else {
@@ -443,14 +443,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
             newItem.inactivationReason = '';
             newItem.descriptions = '';
-            newItem.replacementConcecpts = [item.replacementConcecpts[i]];
+            newItem.replacementConcepts = [item.replacementConcepts[i]];
             // if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
-            if (this.addReplacementFlag && (item.replacementConcecpts[i].code == this.concept.code)) {
+            if (this.addReplacementFlag && (item.replacementConcepts[i].code == this.concept.code)) {
               this.addRemoveConceptsComponent.changeMethod = "REPLACEMENT_ADDED";
               this.addRemoveConceptsComponent.refset = this.refsetData;
               this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
               this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-              this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(newItem, newItem.replacementConcecpts[0]);
+              this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(newItem, newItem.replacementConcepts[0]);
               this.addReplacementFlag = false;
             }
             finalResults.push(newItem);
@@ -512,7 +512,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           const memberItems = self.membersInCommon.items;
           const isAdd = obj.classList.contains('add-all');
           const inactiveConcepts = memberItems.filter((items: any) => {
-            return items?.active == false && (!isAdd || !items.replacementConcecpts[0]?.existingMember);
+            return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
           });
           if(inactiveConcepts.length > 0){
             self.refsetDetails.showLoadingSpinner = true;
@@ -537,9 +537,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
-        'Suggested Replacement Association': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].reason : '',
-        'Suggested Replacement ID': inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcecpts ? inactiveConcepts[i].replacementConcecpts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+        'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term.replaceAll(',', '/')
       });
     }
 
@@ -556,8 +556,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     let memberItems = this.membersInCommonForChangeReport?.items;
     let inactiveConcepts = [];
     memberItems.forEach((items: any) => {
-      if (items.replacementConcecpts) {
-        for (let item of items.replacementConcecpts) {
+      if (items.replacementConcepts) {
+        for (let item of items.replacementConcepts) {
           if (item.added === true) {
             inactiveConcepts.push(item);
           }
@@ -599,8 +599,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     // Get manual replacements from inactive concepts
     inactiveConcepts = [];
     memberItems.forEach((items: any) => {
-      if (items.replacementConcecpts) {
-        for (let item of items.replacementConcecpts) {
+      if (items.replacementConcepts) {
+        for (let item of items.replacementConcepts) {
           if (item.reason === 'MANUAL_REPLACEMENT') {
             inactiveConcepts.push(item);
           }

@@ -156,7 +156,8 @@
                                 [hidden]="isSelected == 1 || isSelected == 0">
                                 <input matInput type="text"
                                     placeholder="Enter the name of the new concept"
-                                    [(ngModel)]="createdMetaDataConcept" />
+                                    [(ngModel)]="createdMetaDataConcept"
+                                    (keypress)="omit_special_char($event)"/>
                                 <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
                                     (click)="value2a = ''">
                                     <mat-icon>close</mat-icon>

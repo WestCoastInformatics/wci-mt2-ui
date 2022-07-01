@@ -53,10 +53,9 @@
 
         <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize"
             [gridOptions]="refsetGridOptions"
-            [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
             [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
             [totalKnown]="refsetGridPaging.totalKnown"
-            [manualStateRefresh]="refsetGridPaging.manualStateRefresh" [numOfResults]="numOfResults"
+            [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
             [isDirectoryPage]="true">
         </app-pagination>
 

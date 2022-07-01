@@ -113,7 +113,6 @@ export class CreateNewProjectModalComponent {
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
-
                 this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
@@ -123,14 +122,8 @@ export class CreateNewProjectModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
-        this.getProject(this.selectedOrganization);
     }
 
-    getProject(id: string): void {
-        this.projectsService.getProject(id).subscribe((result) => {
-            this.isSelectedProject = result;
-        });
-    }
 
     get selectedOrganization(): any{
 

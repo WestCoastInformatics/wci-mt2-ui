@@ -369,7 +369,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     dismissModal() { // needed for different behavior in different situations
-        if (this.postButtonText == "Reply") {
+        if (this.postButtonText == "Reply" || this.postButtonText == "Start Discussion") {
             this.openedThreadModal.dismiss();
         }
         else if (this.postButtonText == "Update Discussion") {
