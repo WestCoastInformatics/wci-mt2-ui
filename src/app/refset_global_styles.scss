@@ -3433,7 +3433,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 
 .adjudicate-upgrade-modal>.modal-dialog {
-    max-width: 2560px
+    max-width: 2560px;
+    padding-bottom: 40px;
 }
 
 @media only screen and (max-height: 1440px) {
@@ -5194,7 +5195,7 @@ app-category-floating-filter {
 }
 
 .modal-dialog.modal-dialog-centered {
-    margin: 0px;
+    margin: 0px auto;
 }
 
 #dashboard-teams-section {

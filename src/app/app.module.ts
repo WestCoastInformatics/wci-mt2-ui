@@ -8,7 +8,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort'; 
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -62,6 +62,8 @@ import { CreateNewProjectModalComponent } from 'src/app/components/create-new-pr
 import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
+import { ProjectsBaseComponent } from './pages/projects/base/projects.base.component';
+
 // import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
@@ -115,8 +117,7 @@ import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
-import { ProjectsBaseComponent } from './pages/projects/base/projects.base.component';
-
+import { ArtifactsModule } from './components/artifacts/artifacts.module';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -254,7 +255,8 @@ const appRoutes: Routes = [
         NgbModule,
         ReactiveFormsModule,
         MatSlideToggleModule,
-        CommonModule
+        CommonModule,
+        ArtifactsModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

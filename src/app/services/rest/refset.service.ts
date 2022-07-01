@@ -114,6 +114,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'ancestors/' + refsetId + '/versionDate/' + versionDate, params);
     }
 
+    getArtifacts(refsetId: string, params: any) {
+        return this.get(this.contextPath + `refset/${refsetId}/artifacts${params}`);
+    }
+
     getWorkflowHistory(refsetId: string, params: any) {
         return this.get(this.contextPath + `refset/${refsetId}/workflowHistory${params}`);
     }
@@ -251,7 +255,7 @@ export class RefsetService extends RestService {
 	getOrganizations(includeMembers: boolean = false): Observable<any> {
         return this.get(this.contextPath + 'organization/search?includeMembers=' + includeMembers);
     }
-
+    
     getOrganizationsKeyValue(): Observable<any> {
         return this.get(this.contextPath + 'refset/organizations');
     }
@@ -275,4 +279,4 @@ export class RefsetService extends RestService {
     getComparisonData(activeRefsetInternalId: string): Observable<any> {
         return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
-}
+}   
