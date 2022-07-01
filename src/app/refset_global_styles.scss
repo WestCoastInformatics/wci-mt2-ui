@@ -5092,6 +5092,13 @@ $sidebar-width: 294px;
     filter: invert(49%) sepia(23%) saturate(4194%) hue-rotate(165deg) brightness(95%) contrast(102%); // to get text-main color
 }
 
+.discussion-icon-text {
+    margin-top: -1px;
+    margin-left: -9px; 
+    display: block;
+    color: black;
+}
+
 .discussion-topic-field {
     width: 100%;
 }
