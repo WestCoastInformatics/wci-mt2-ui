@@ -160,7 +160,7 @@
                     <button *ngIf="editMode" mat-button [matMenuTriggerFor]="documentationMenu" class="documentation-menu">Documentation <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #documentationMenu="matMenu">
-                        <button mat-menu-item (click)="openArtifacts()" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
+                        <artifacts-modal [refsetInternalId]="refsetData?.id"  *ngIf="refsetData?.id"></artifacts-modal>
                         <button mat-menu-item (click)="openAuditTrail()" title="Open Audit Trail" aria-label="Audit Trail">Audit Trail</button>
                     </mat-menu>
 
@@ -445,9 +445,6 @@
                             </tbody>
                         </table>
                         
-                        <div class="my-3 text-right" *ngIf="refsetData?.id">
-                            <artifacts-modal [refsetInternalId]="refsetData?.id"></artifacts-modal>
-                        </div>
                     </div>
 
                     <!-- Versioned Metadata Section -->
