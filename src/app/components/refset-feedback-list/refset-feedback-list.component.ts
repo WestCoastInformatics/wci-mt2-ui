@@ -74,6 +74,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     @ViewChild('threadListModal') threadListModal: NgbModal;
     @ViewChild('threadModal') threadModal: NgbModal;
     @ViewChild('confirmDeleteThreadModal') confirmDeleteThreadModal: NgbModal;
+    @ViewChild('confirmDeletePostModal') confirmDeletePostModal: NgbModal;
 
     constructor(private readonly modalService: NgbModal, readonly refsetService: RefsetService, private authenticationService: AuthenticationService) { }
 
@@ -168,7 +169,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                     ]
                 }
             },
-            { field: 'lastPost', headerName: 'Last Comment', sort: "desc", tooltipField: 'Last Comment', valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
+            { field: 'lastPost', headerName: 'Last Comment', sort: "desc", tooltipField: 'Last Comment', valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
             { field: 'numberReplies', headerName: 'Replies', tooltipField: 'Replies' }
         ];
 
@@ -363,6 +364,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                     post.user = this.user;
                     this.threadsData.push(results);
                     this.selectedThread = results;
+                    this.selectedThread.lastPost = results.created;
                     this.gridPaging.totalRows++;
                     this.discussionCount++;
                     this.discussionCountChange.emit(this.discussionCount);
@@ -391,27 +393,11 @@ export class RefsetFeedbackListComponent implements OnInit {
                     this.selectedThread.posts[0].message = this.postMessageField;
                     this.selectedThread.posts[0].modified = results.posts[0].modified;
                     this.selectedThread.modified = results.modified;
-
+                    
                     this.resetPostForm();
                     this.reloadGridData();
                 }
             });
-        }
-    }
-
-    cancelChanges() {
-        
-    }
-
-    dismissModal() { 
-
-        if (!this.editMode.includes('Thread')) {
-            this.openedThreadModal.dismiss();
-
-        } else if (this.postButtonText == "Update Discussion") {
-
-            this.resetPostForm();
-            this.reloadGridData();
         }
     }
 
@@ -448,12 +434,42 @@ export class RefsetFeedbackListComponent implements OnInit {
     deleteThread() {
 
         this.openedConfirmModal.dismiss();
+        this.openedConfirmModal = null;
 
         this.refsetService.deleteDiscussionThread(this.selectedThread.id).subscribe({
             next: (results) => {
 
                 this.threadsData.splice(this.threadsData.indexOf(this.selectedThread), 1);
+                this.gridPaging.totalRows--;
+                this.discussionCount--;
+                this.discussionCountChange.emit(this.discussionCount);
                 this.openedThreadModal.dismiss();
+                this.reloadGridData();
+            }
+        });
+    }
+
+    confirmPostDelete(post: any) {
+
+        this.selectedPost = post;
+        this.openedConfirmModal = this.modalService.open(this.confirmDeletePostModal, { centered: true });
+    }
+
+    deletePost() {
+
+        this.openedConfirmModal.dismiss();
+        this.openedConfirmModal = null;
+        let postId = this.selectedPost.id;
+        let postIndex = this.selectedThread.posts.indexOf(this.selectedPost);
+        this.selectedPost = null;
+
+        this.refsetService.deleteDiscussionPost(this.selectedThread.id, postId).subscribe({
+            next: (results) => {
+
+                this.selectedThread.posts.splice(postIndex, 1);
+                this.selectedThread.numberReplies--;
+                this.selectedThread.lastPost = this.selectedThread.posts[this.selectedThread.posts.length - 1].created;
+
                 this.reloadGridData();
             }
         });

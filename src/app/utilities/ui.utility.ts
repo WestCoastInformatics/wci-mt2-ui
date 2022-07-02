@@ -25,16 +25,20 @@ export class UiUtility {
     }
 
     /*
-     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined
+     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined. Can also specify valueFormat on the colDef
      * @param [object] params - The ag-grid valuegetter params object.
      */
     static gridDateValueGetter(params) {
 
         if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
 
-                let format = CodeUtility.DATE_FORMAT_REVERSE
+            let format = CodeUtility.DATE_FORMAT_REVERSE
 
+            if (params.colDef.valueFormat) {
+                format = params.colDef.valueFormat;
+            }
             return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
+
         } else {
             return '';
         }

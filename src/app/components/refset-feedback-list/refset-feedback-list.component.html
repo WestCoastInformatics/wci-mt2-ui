@@ -67,7 +67,7 @@
             <span *ngIf="editMode == 'newThread'">{{ OPEN }}</span>
         </span>
 
-        <button type="button" class="close" aria-label="Close" (click)="dismissModal()">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
             <span aria-hidden="true">&times;</span>
         </button>
 
@@ -147,9 +147,10 @@
                                     </button>
                                     <span class="menu-spacer">&nbsp;</span>
                                     <mat-menu #discussionMenu="matMenu">
-                                        <button *ngIf="canEditPost(post)" mat-menu-item (click)="updatePost(post, false)">Edit</button>
+                                        <button mat-menu-item (click)="updatePost(post, false)">Edit</button>
                                         <button *ngIf="canViewPrivateThreads && !post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, true)">Mark Private</button>
                                         <button *ngIf="canViewPrivateThreads && post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, false)">Mark Public</button>
+                                        <button mat-menu-item (click)="confirmPostDelete(post)">Delete</button>
                                     </mat-menu>
                                 </div>
 
@@ -207,27 +208,43 @@
 <ng-template #confirmDeleteThreadModal let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Thread Confirmation
-        </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Thread Confirmation</h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
 
     <div class="container-fluid ">
         <div class="modal-body">
-            <div class="notes-title">Are you sure you want to delete the discussion thread "{{
-                selectedThread.subject }}?"</div>
+            <div class="notes-title">Are you sure you want to delete the discussion thread "{{ selectedThread.subject }}?"</div>
         </div>
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-
-        <button type="button" (click)="deleteThread();" mat-raised-button
-            class="refset-tool-action-button mat-red mr-2">Delete Thread</button>
-
-        <button (click)="modal.dismiss()" mat-raised-button
-            class="refset-tool-action-button mat-primary">Cancel</button>
+        <button type="button" (click)="deleteThread();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Thread</button>
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel</button>
     </div>
+
+</ng-template>
+
+<ng-template #confirmDeletePostModal let-modal>
+
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Post Confirmation</h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div *ngIf="selectedPost" class="container-fluid ">
+        <div class="modal-body">
+            <div class="notes-title">Are you sure you want to delete the discussion post dated " {{ formatDateTime(selectedPost.created) }}?"</div>
+        </div>
+    </div>
+
+    <div class="modal-footer rt2-modal-footer">
+        <button type="button" (click)="deletePost();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Post</button>
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel</button>
+    </div>
+
 </ng-template>
