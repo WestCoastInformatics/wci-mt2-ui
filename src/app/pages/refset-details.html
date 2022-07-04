@@ -161,7 +161,7 @@
 
                     <mat-menu #documentationMenu="matMenu">
                         <button mat-menu-item (click)="openArtifacts()" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
-                        <button mat-menu-item (click)="openAuditTrail()" title="Open Audit Trail" aria-label="Audit Trail">Audit Trail</button>
+                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id"></audit-trail-modal>
                     </mat-menu>
 
                     <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
