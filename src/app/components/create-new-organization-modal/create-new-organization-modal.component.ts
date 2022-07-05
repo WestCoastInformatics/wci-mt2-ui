@@ -43,10 +43,6 @@ export class CreateNewOrganizationModalComponent {
 
     callMemberOperation(): void {
 
-        if (!CodeUtility.hasValue(this.description)) {
-            return;
-        }
-
         this.changeLockedStatus.emit(true);
         
         this.createOrganizationObject();
@@ -96,6 +92,13 @@ export class CreateNewOrganizationModalComponent {
             this.emailError = "";
         }
         return flag == null ? false : true;
+    }
+
+    isSelectedEdition(): boolean {
+        if (this.edition?.name.length > 0) {
+            return true;
+        }
+        return false;
     }
 
     onKeyDownEvent(event: any){

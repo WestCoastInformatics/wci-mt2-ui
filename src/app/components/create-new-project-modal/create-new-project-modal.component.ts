@@ -60,10 +60,6 @@ export class CreateNewProjectModalComponent {
 
     callMemberOperation(): void {
 
-        if (!CodeUtility.hasValue(this.description)) {
-            return;
-        }
-
         this.changeLockedStatus.emit(true);
 
         this.createProjectObject();
@@ -81,7 +77,9 @@ export class CreateNewProjectModalComponent {
     }
 
     isValidEmail(): boolean {
-
+        if (this.email.length == 0) {
+            return true;
+        }
         var lower = this.email.toLowerCase();
         var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -98,6 +96,13 @@ export class CreateNewProjectModalComponent {
 
         console.log(event.target.value);
         this.isValidEmail();
+    }
+
+    isSelectedOrganization(): boolean {
+        if (this.selectedOrganization?.name.length > 0) {
+            return true;
+        }
+        return false;
     }
 
     createProjectObject(): void {
