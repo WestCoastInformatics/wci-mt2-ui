@@ -17,15 +17,7 @@
 
         </div>
 
-        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
-            <div class="success-header">
-                <i class="fa fa-exclamation-triangle fa-2x"></i>
-                <div class="success-body">
-                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
-                    <br>It is recommended to perform an Upgrade before doing other edits.
-                </div>
-            </div>
-        </ngb-alert>
+        
 
         <!-- Locked Refset bar -->
         <div *ngIf="isLocked" id="refsetLockBanner" class="col-5">
@@ -104,6 +96,17 @@
 
         </div>
 
+    </div>
+    <div class="container mt-3">
+        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
+            <div class="success-header">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
+                <div class="success-body">
+                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
+                    <br>It is recommended to perform an Upgrade before doing other edits.
+                </div>
+            </div>
+        </ngb-alert>
     </div>
 
     <!-- Refset Name Bar -->
