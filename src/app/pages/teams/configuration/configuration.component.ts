@@ -221,4 +221,9 @@ export class TeamsConfigurationComponent implements OnInit {
 	get canRemove(): boolean{
 		return this.authService.isAdmin();
 	}
+
+	get canAdd(): boolean{
+        let org = this.selectedOrganization;
+        return this.authService.isAdmin() || this.selectedRoles?.includes("ADMIN");
+    }
 }

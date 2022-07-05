@@ -23,6 +23,7 @@ export class CreateNewTeamModalComponent {
 	@Input() organizations: any[] = [];
     privateTeam: any;
     selectedRoles: any;
+    selectedOrganization: any;
     members: any;
     refsetUser: any;
     roleOptions: any;
@@ -100,6 +101,9 @@ export class CreateNewTeamModalComponent {
     }
 
     isValidEmail(): boolean {
+        if (this.email.length == 0) {
+            return true;
+        }
         var lower = this.email.toLowerCase();
         var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -110,6 +114,13 @@ export class CreateNewTeamModalComponent {
         }
 
         return flag == null ? false : true;
+    }
+
+    isSelectedOrganization(): boolean {
+        if (this.selectedOrganization?.name.length > 0) {
+            return true;
+        }
+        return false;
     }
 
     onKeyDownEvent(event: any) {
@@ -145,7 +156,7 @@ export class CreateNewTeamModalComponent {
         );
     }
 
-    get selectedOrganization(): any{
+    getSelectedOrganization(): any{
 
         if(this.organizations && this.organizationId){
             let org = this.organizations.filter(o => o.id == this.organizationId)
@@ -156,7 +167,7 @@ export class CreateNewTeamModalComponent {
         return null;
     }
 
-    set selectedOrganization(value) {
+    setSelectedOrganization(value) {
         this.organizationId = value?.id;
     }
 
