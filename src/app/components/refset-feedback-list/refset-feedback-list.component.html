@@ -6,6 +6,7 @@
             <span class="discussion-icon-text" title="Add or View {{discussionCount}} Discussions">
                 {{discussionCount}}
             </span>
+            <!-- <span *ngIf="discussionCount > 0">{{discussionCount}}</span> -->
         </span>
     </span>
 </a>
@@ -90,7 +91,7 @@
                             <span *ngIf="selectedThread.posts[0].created != selectedThread.posts[0].modified"> (Edited: {{ formatDateTime(selectedThread.posts[0].modified) }})</span>
                             <i *ngIf="selectedThread.privateThread" class="refset-tool-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
                         </div>
-                        
+
                     </div>
 
                     <div class="topic-action">
