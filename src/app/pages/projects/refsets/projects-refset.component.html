@@ -94,10 +94,9 @@
 
         <app-pagination *ngIf="showTable" #projectPaging [pageSize]="refsetGridPaging.pageSize"
             [gridOptions]="refsetGridOptions"
-            [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
             [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
             [totalKnown]="refsetGridPaging.totalKnown"
-            [manualStateRefresh]="refsetGridPaging.manualStateRefresh" [numOfResults]="numOfResults"
+            [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
             [isSelectedProject]="isSelectedProject" [isProjectsPage]="true">
         </app-pagination>
 

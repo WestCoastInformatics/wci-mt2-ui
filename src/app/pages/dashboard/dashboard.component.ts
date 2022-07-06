@@ -278,11 +278,21 @@ export class DashboardComponent implements OnInit {
 
     getTeams(): void {
         this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-            this.teamList = results.items.filter((x) => {
+            for (var team of results.items) {
+                if (team?.members) {
+                for (var member of team?.members) {
+                    if (member.includes(this.currentUser.id)) {
+                        this.teamList.push(team);
+                    }
+                }
+            }
+            }
+
+            /**this.teamList = results.items.filter((x) => {
                 return x.members.some((member) => {
                     return member.includes(this.currentUser.id);
                 });
-            });
+            }); */
         });
     }
 

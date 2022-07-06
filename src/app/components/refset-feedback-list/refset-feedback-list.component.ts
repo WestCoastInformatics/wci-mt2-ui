@@ -19,20 +19,18 @@ export class RefsetFeedbackListComponent implements OnInit {
 
     user: User;
     isUserLoggedIn: boolean;
-    hasEditingRoles = false;
     canViewPrivateThreads = false;
     openedThreadListModal: NgbModalRef;
     openedThreadModal: NgbModalRef;
     openedConfirmModal: NgbModalRef;
     threadsData = [];
     selectedThread: any;
+    selectedPost: any;
     displayHeader: string = 'Feedback';
     refsetGridOptions = {};
     canEditThread = false;
     canDeleteThread = false;
-    newThread = false;
-    editThread = false;
-    showHiddenPosts = false;
+    editMode: string = '';
     isResolved = false;
     gridApi: any;
     gridColumnDefs = [];
@@ -76,6 +74,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     @ViewChild('threadListModal') threadListModal: NgbModal;
     @ViewChild('threadModal') threadModal: NgbModal;
     @ViewChild('confirmDeleteThreadModal') confirmDeleteThreadModal: NgbModal;
+    @ViewChild('confirmDeletePostModal') confirmDeletePostModal: NgbModal;
 
     constructor(private readonly modalService: NgbModal, readonly refsetService: RefsetService, private authenticationService: AuthenticationService) { }
 
@@ -83,10 +82,6 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.authenticationService.GUEST_USER;
-
-        if (this.roles.includes("AUTHOR") || this.roles.includes("REVIEWER") || this.roles.includes("ADMIN")) {
-            this.hasEditingRoles = true;
-        }
 
         if (this.roles.includes("VIEWER")) {
             this.canViewPrivateThreads = true;
@@ -113,7 +108,8 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.openedThreadListModal = this.modalService.open(this.threadListModal, { backdrop: 'static', keyboard: false, modalDialogClass: 'full-modal', centered: true });
 
         this.selectedThread = null;
-        this.newThread = false;
+        this.selectedPost = null;
+        this.editMode = '';
         this.showTable = true;
 
         this.gridOptions = {
@@ -173,16 +169,8 @@ export class RefsetFeedbackListComponent implements OnInit {
                     ]
                 }
             },
-            { field: 'lastPost', headerName: 'Last Comment', sort: "desc", tooltipField: 'Last Comment', valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
-            { field: 'numberReplies', headerName: 'Replies', tooltipField: 'Replies' },
-            {
-                field: 'visibility', headerName: 'Visibility', tooltipField: 'visibility', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
-                    names: [
-                        { type: 'status', name: this.VISIBLE, value: this.VISIBLE },
-                        { type: 'status', name: this.HIDDEN, value: this.HIDDEN }
-                    ]
-                }
-            }
+            { field: 'lastPost', headerName: 'Last Comment', sort: "desc", tooltipField: 'Last Comment', valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
+            { field: 'numberReplies', headerName: 'Replies', tooltipField: 'Replies' }
         ];
 
         // set placeholders on the grid floating filter fields
@@ -233,24 +221,23 @@ export class RefsetFeedbackListComponent implements OnInit {
 
     onGridCellClick = (event) => {
 
-        this.selectedThread = event.data;
+        for (let thread of this.threadsData) {
+
+            if (thread.id == event.data.id) {
+                this.selectedThread = thread;
+            }
+        }
+        
         this.openThreadModal();
     }
 
     openThreadModal(newThread = false) {
 
-        if (this.editThread) { //make sure editThread is cleaned up
-            this.editThread = false;
-        }
-
-        this.newThread = newThread;
-        this.postPrivateField = false;
-        this.postMessageField = '';
-        this.postSubjectField = '';
-        this.showHiddenPosts = false;
+        this.resetPostForm();
 
         if (newThread) {
 
+            this.editMode = 'newThread';
             this.isResolved = false;
             this.selectedThread = null;
             this.postButtonText = 'Start Discussion';
@@ -262,15 +249,13 @@ export class RefsetFeedbackListComponent implements OnInit {
             this.isResolved = this.selectedThread.status == this.RESOLVED;
             this.postButtonText = 'Reply';
 
-            if (this.hasEditingRoles || this.selectedThread.posts[0].user.userName == this.user.userName) {
-                this.canEditThread = true;
-            } else {
-                this.canEditThread = false;
-            }
-
             if (this.roles.includes("ADMIN") || this.selectedThread.posts[0].user.userName == this.user.userName) {
+
+                this.canEditThread = true;
                 this.canDeleteThread = true;
             } else {
+
+                this.canEditThread = false;
                 this.canDeleteThread = false;
             }
         }
@@ -278,20 +263,40 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.openedThreadModal = this.modalService.open(this.threadModal, { modalDialogClass: 'full-modal', centered: true });
     }
 
-    updateThread() {
+    canEditPost(post) {
 
-        this.editThread = true;
-        this.postPrivateField = this.selectedThread.privateThread;
-        this.postMessageField = this.selectedThread.posts[0].message;
-        this.postSubjectField = this.selectedThread.subject;
-        this.postButtonText = 'Update Discussion';
+        if (this.roles.includes("ADMIN") || post.user.userName == this.user.userName) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    updatePost(post: any, editThread: boolean) {
+
+        if (editThread) {
+
+            this.editMode = 'editThread';
+            this.postSubjectField = this.selectedThread.subject;
+            this.postButtonText = 'Update Discussion';
+
+        } else {
+
+            this.selectedPost = post;
+            this.editMode = 'editPost';
+            this.postButtonText = 'Update Post';
+        }
+
+        this.postMessageField = post.message;
+        this.postPrivateField = post.privatePost;
+        
     }
 
     checkComplete() {
 
         let complete = this.postMessageField != '';
 
-        if (this.newThread || this.editThread) {
+        if (this.editMode.includes('Thread')) {
             complete = complete && this.postSubjectField != '';
         }
 
@@ -300,9 +305,18 @@ export class RefsetFeedbackListComponent implements OnInit {
 
     saveChanges() {
 
-        let post: any = { message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE };
+        let post: any;
+        
+        if (this.selectedPost == null) {
+            post = { message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE };
+        } else {
 
-        if (!this.newThread && !this.editThread) {
+            post = CodeUtility.clone(this.selectedPost);
+            post.message = this.postMessageField;
+            post.privatePost = this.postPrivateField;
+        }
+
+        if (this.editMode == '') {
 
             this.refsetService.addDiscussionPost(this.selectedThread.id, JSON.stringify(post)).subscribe({
                 next: (results) => {
@@ -317,7 +331,21 @@ export class RefsetFeedbackListComponent implements OnInit {
                 }
             });
 
-        } else if (this.newThread) {
+        } else if (this.editMode == 'editPost') {
+
+            this.refsetService.updateDiscussionPost(this.selectedThread.id, this.selectedPost.id, JSON.stringify(post)).subscribe({
+                next: (results) => {
+
+                    this.selectedPost.message = this.postMessageField;
+                    this.selectedPost.privatePost = this.postPrivateField;
+                    this.selectedPost.modified = results.modified;
+
+                    this.resetPostForm();
+                    this.reloadGridData();
+                }
+            });
+
+        } else if (this.editMode == 'newThread') {
 
             let thread: any = {
                 type: this.type,
@@ -336,6 +364,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                     post.user = this.user;
                     this.threadsData.push(results);
                     this.selectedThread = results;
+                    this.selectedThread.lastPost = results.created;
                     this.gridPaging.totalRows++;
                     this.discussionCount++;
                     this.discussionCountChange.emit(this.discussionCount);
@@ -359,23 +388,16 @@ export class RefsetFeedbackListComponent implements OnInit {
             this.refsetService.updateDiscussionThread(updatedThread.id, JSON.stringify(updatedThread)).subscribe({
                 next: (results) => {
 
-                    this.selectedThread = updatedThread;
-
+                    this.selectedThread.subject = this.postSubjectField;
+                    this.selectedThread.privateThread = this.postPrivateField;
+                    this.selectedThread.posts[0].message = this.postMessageField;
+                    this.selectedThread.posts[0].modified = results.posts[0].modified;
+                    this.selectedThread.modified = results.modified;
+                    
                     this.resetPostForm();
                     this.reloadGridData();
                 }
             });
-        }
-    }
-
-    dismissModal() { // needed for different behavior in different situations
-        if (this.postButtonText == "Reply") {
-            this.openedThreadModal.dismiss();
-        }
-        else if (this.postButtonText == "Update Discussion") {
-            this.resetPostForm();
-            this.reloadGridData();
-            this.editThread = false;
         }
     }
 
@@ -405,18 +427,6 @@ export class RefsetFeedbackListComponent implements OnInit {
         });
     }
 
-    changeThreadVisibility(thread: any, visibility: string) {
-
-        this.refsetService.updateDiscussionThreadVisibility(thread.id, visibility).subscribe({
-            next: (results) => {
-
-                thread.visibility = visibility;
-
-                this.reloadGridData();
-            }
-        });
-    }
-
     confirmThreadDelete() {
         this.openedConfirmModal = this.modalService.open(this.confirmDeleteThreadModal, { centered: true });
     }
@@ -424,12 +434,42 @@ export class RefsetFeedbackListComponent implements OnInit {
     deleteThread() {
 
         this.openedConfirmModal.dismiss();
+        this.openedConfirmModal = null;
 
         this.refsetService.deleteDiscussionThread(this.selectedThread.id).subscribe({
             next: (results) => {
 
                 this.threadsData.splice(this.threadsData.indexOf(this.selectedThread), 1);
+                this.gridPaging.totalRows--;
+                this.discussionCount--;
+                this.discussionCountChange.emit(this.discussionCount);
                 this.openedThreadModal.dismiss();
+                this.reloadGridData();
+            }
+        });
+    }
+
+    confirmPostDelete(post: any) {
+
+        this.selectedPost = post;
+        this.openedConfirmModal = this.modalService.open(this.confirmDeletePostModal, { centered: true });
+    }
+
+    deletePost() {
+
+        this.openedConfirmModal.dismiss();
+        this.openedConfirmModal = null;
+        let postId = this.selectedPost.id;
+        let postIndex = this.selectedThread.posts.indexOf(this.selectedPost);
+        this.selectedPost = null;
+
+        this.refsetService.deleteDiscussionPost(this.selectedThread.id, postId).subscribe({
+            next: (results) => {
+
+                this.selectedThread.posts.splice(postIndex, 1);
+                this.selectedThread.numberReplies--;
+                this.selectedThread.lastPost = this.selectedThread.posts[this.selectedThread.posts.length - 1].created;
+
                 this.reloadGridData();
             }
         });
@@ -444,19 +484,10 @@ export class RefsetFeedbackListComponent implements OnInit {
         });
     }
 
-    changePostVisibility(threadId: string, post: any, visibility: string) {
-
-        this.refsetService.updateDiscussionPostVisibility(threadId, post.id, visibility).subscribe({
-            next: (results) => {
-                post.visibility = visibility;
-            }
-        });
-    }
-
     resetPostForm() {
 
-        this.newThread = false;
-        this.editThread = false;
+        this.editMode = '';
+        this.selectedPost = null;
         this.postPrivateField = false;
         this.postMessageField = '';
         this.postSubjectField = '';

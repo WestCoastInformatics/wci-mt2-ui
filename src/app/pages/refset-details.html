@@ -17,15 +17,7 @@
 
         </div>
 
-        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
-            <div class="success-header">
-                <i class="fa fa-exclamation-triangle fa-2x"></i>
-                <div class="success-body">
-                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
-                    <br>It is recommended to perform an Upgrade before doing other edits.
-                </div>
-            </div>
-        </ngb-alert>
+        
 
         <!-- Locked Refset bar -->
         <div *ngIf="isLocked" id="refsetLockBanner" class="col-5">
@@ -105,6 +97,17 @@
         </div>
 
     </div>
+    <div class="container mt-3">
+        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
+            <div class="success-header">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
+                <div class="success-body">
+                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
+                    <br>It is recommended to perform an Upgrade before doing other edits.
+                </div>
+            </div>
+        </ngb-alert>
+    </div>
 
     <!-- Refset Name Bar -->
     <div class="refset-title-container refset-tool-lockable">
@@ -142,9 +145,9 @@
 
                     </mat-menu>
 
-                    <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
+                    <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span>
 
-                    <button *ngIf="editMode" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <button *ngIf="editMode && false" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #collaborationMenu="matMenu">
                         <button mat-menu-item [hidden]="true">Share Reference Set</button>
@@ -161,7 +164,7 @@
 
                     <mat-menu #documentationMenu="matMenu">
                         <button mat-menu-item (click)="openArtifacts()" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
-                        <button mat-menu-item (click)="openAuditTrail()" title="Open Audit Trail" aria-label="Audit Trail">Audit Trail</button>
+                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id"></audit-trail-modal>
                     </mat-menu>
 
                     <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
@@ -444,6 +447,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                        
+                        <div class="my-3 text-right" *ngIf="refsetData?.id">
+                            <artifacts-modal [refsetInternalId]="refsetData?.id"></artifacts-modal>
+                        </div>
                     </div>
 
                     <!-- Versioned Metadata Section -->
@@ -592,9 +599,6 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #refsetArtifactsDialog let-data>
-                    This functionality will be implemented in subsequent phases.
-                </ng-template>
 
                 <ng-template #refsetAuditDialog let-data>
                     This functionality will be implemented in subsequent phases.
@@ -843,11 +847,9 @@
                                     <app-pagination #detailsMembersPaging *ngIf="showTable"
                                         [pageSize]="membersGridPaging.pageSize"
                                         [gridOptions]="membersGridOptions"
-                                        [numberOfPages]="membersGridApi?.paginationGetTotalPages()"
                                         [pageSizeOptions]="membersGridPaging.pageSizeOptions"
                                         [totalKnown]="membersGridPaging.totalKnown"
                                         [manualStateRefresh]="membersGridPaging.manualStateRefresh"
-                                        [numOfResults]="membersGridNumberOfResults"
                                         [isDetailPage]="true" [refsetId]="refsetId">
                                     </app-pagination>
 
@@ -927,11 +929,9 @@
                                             *ngIf="showTaxonomySearchTable"
                                             [pageSize]="taxonomySearchGridPaging.pageSize"
                                             [gridOptions]="taxonomySearchGridOptions"
-                                            [numberOfPages]="taxonomySearchGridApi?.paginationGetTotalPages()"
                                             [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
                                             [totalKnown]="taxonomySearchGridPaging.totalKnown"
                                             [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
-                                            [numOfResults]="taxonomySearchNumberOfResults"
                                             [refsetId]="refsetId">
                                         </app-pagination>
 

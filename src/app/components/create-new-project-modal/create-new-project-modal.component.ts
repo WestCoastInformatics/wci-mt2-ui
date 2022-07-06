@@ -60,10 +60,6 @@ export class CreateNewProjectModalComponent {
 
     callMemberOperation(): void {
 
-        if (!CodeUtility.hasValue(this.description)) {
-            return;
-        }
-
         this.changeLockedStatus.emit(true);
 
         this.createProjectObject();
@@ -81,7 +77,9 @@ export class CreateNewProjectModalComponent {
     }
 
     isValidEmail(): boolean {
-
+        if (this.email.length == 0) {
+            return true;
+        }
         var lower = this.email.toLowerCase();
         var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
@@ -100,6 +98,13 @@ export class CreateNewProjectModalComponent {
         this.isValidEmail();
     }
 
+    isSelectedOrganization(): boolean {
+        if (this.selectedOrganization?.name.length > 0) {
+            return true;
+        }
+        return false;
+    }
+
     createProjectObject(): void {
         let params: any = {
             active: true,
@@ -113,7 +118,6 @@ export class CreateNewProjectModalComponent {
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
-
                 this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
@@ -123,14 +127,8 @@ export class CreateNewProjectModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
-        this.getProject(this.selectedOrganization);
     }
 
-    getProject(id: string): void {
-        this.projectsService.getProject(id).subscribe((result) => {
-            this.isSelectedProject = result;
-        });
-    }
 
     get selectedOrganization(): any{
 
@@ -141,6 +139,10 @@ export class CreateNewProjectModalComponent {
             }
         }
         return null;
+    }
+
+    set selectedOrganization(value) {
+        this.organizationId = value?.id;
     }
 
     get canAdd(): boolean{

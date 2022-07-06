@@ -114,6 +114,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'ancestors/' + refsetId + '/versionDate/' + versionDate, params);
     }
 
+    getArtifacts(refsetId: string, params: any) {
+        return this.get(this.contextPath + `refset/${refsetId}/artifacts${params}`);
+    }
+
     getWorkflowHistory(refsetId: string, params: any) {
         return this.get(this.contextPath + `refset/${refsetId}/workflowHistory${params}`);
     }
@@ -203,16 +207,22 @@ export class RefsetService extends RestService {
         return this.put(url, '');
     }
 
-    updateDiscussionPostVisibility(threadId: string, postId: string, visibility: string): Observable<any> {
-
-        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/visibility?visibility=' + visibility;
-        return this.put(url, '');
-    }
-
     addDiscussionPost(threadId: string, postBody: string): Observable<any> {
 
         let url = this.contextPath + 'discussion/' + threadId + '/post';
         return this.post(url, postBody);
+    }
+
+    updateDiscussionPost(threadId: string, postId: string, postBody: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        return this.put(url, postBody);
+    }
+
+    deleteDiscussionPost(threadId: string, postId: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        return this.delete(url);
     }
 
     downloadRefset(refsetId: string, params: any): Observable<any> {
@@ -245,7 +255,7 @@ export class RefsetService extends RestService {
 	getOrganizations(includeMembers: boolean = false): Observable<any> {
         return this.get(this.contextPath + 'organization/search?includeMembers=' + includeMembers);
     }
-
+    
     getOrganizationsKeyValue(): Observable<any> {
         return this.get(this.contextPath + 'refset/organizations');
     }
@@ -269,4 +279,4 @@ export class RefsetService extends RestService {
     getComparisonData(activeRefsetInternalId: string): Observable<any> {
         return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
-}
+}   

@@ -3433,7 +3433,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 
 .adjudicate-upgrade-modal>.modal-dialog {
-    max-width: 2560px
+    max-width: 2560px;
+    padding-bottom: 40px;
 }
 
 @media only screen and (max-height: 1440px) {
@@ -5101,6 +5102,19 @@ $sidebar-width: 294px;
     filter: invert(49%) sepia(23%) saturate(4194%) hue-rotate(165deg) brightness(95%) contrast(102%); // to get text-main color
 }
 
+.discussion-icon-text {
+    display: flex;
+    color: white;
+    background-color: red;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    margin-left: 13px;
+    align-items: center;
+    justify-content: center;
+}
+
 .discussion-topic-field {
     width: 100%;
 }
@@ -5180,6 +5194,7 @@ app-category-floating-filter {
 }
 
 .ellipsed-label {
+    display: inline;
     text-overflow: ellipsis;
     width: 100%;
     overflow: hidden;
@@ -5195,7 +5210,7 @@ app-category-floating-filter {
 }
 
 .modal-dialog.modal-dialog-centered {
-    margin: 0px;
+    margin: 0px auto;
 }
 
 #dashboard-teams-section {
