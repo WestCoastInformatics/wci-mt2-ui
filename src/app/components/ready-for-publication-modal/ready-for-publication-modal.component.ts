@@ -14,7 +14,7 @@ export class ReadyForPublicationModalComponent implements OnInit {
   @Output() setWorkflowStatus = new EventEmitter<boolean>();
 
   requestForPublicationNotes = '';
-  
+
   constructor(private readonly modalService: NgbModal,
     private readonly workflowService: WorkflowService) { }
 

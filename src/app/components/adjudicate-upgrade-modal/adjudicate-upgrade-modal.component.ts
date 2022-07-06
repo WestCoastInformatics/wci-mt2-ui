@@ -52,6 +52,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   @ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
   @ViewChild('actionSection') actionSection: TemplateRef<any>;
   @ViewChild("pauseUpdateDialog") pauseUpdateDialog: TemplateRef<any>;
+  @ViewChild("cancelUpgradeDialog") cancelUpgradeDialog: TemplateRef<any>;
 
   gridOptions: any;
   columnDefs: any;
@@ -255,7 +256,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     if (this.concept) {
       this.refsetDetails.toggleLoadingSpinner(true);
       const body = { ...this.concept };
-      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {  
+      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
         // force auto-add of the replacement concept to the refset
         this.addReplacementFlag = true;
         this.onGridReady(this.originalGridParams);
@@ -415,7 +416,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
       let finalResults = [];
       let changeReportResults = [];
-      
+
       this.inactiveConcepts = 0;
 
       results.items.forEach((item) => {
@@ -437,7 +438,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           if (i === 0) {
             finalResults.push(item);
           } else {
-            const newItem = { ...item, isHidden: true, _reaosn:item.inactivationReason, 
+            const newItem = { ...item, isHidden: true, _reaosn:item.inactivationReason,
               _descriptions: item.descriptions
             };
 
@@ -695,6 +696,31 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     //   this.conceptDetailParents = results.items;
     // });
   }
+  openCancelUpgrade() {
+    const dialogId = "cancelUpgradeDialog";
+
+    const dialogData = {
+        headerText: `Cancel Upgrade`,
+        template: this.cancelUpgradeDialog,
+        data: this.refsetData,
+        showCloseIcon: false
+    };
+
+    const dialogOptions = {
+        id: dialogId,
+    };
+
+    this.dialog = this.dialogFactoryService.open(dialogData);
+
+    this.dialog.confirmed().subscribe((data) => {
+      // if 'ok', close pause modal and update modal
+      if (data) {
+        console.log("workflow status: ", data.workflowStatus);
+        this.modalService.dismissAll();
+      }
+      // else close only pause modal
+    });
+}
 
   openPauseUpdate() {
     const dialogId = "pauseUpdateDialog";
@@ -715,14 +741,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     this.dialog.confirmed().subscribe((data) => {
       // if 'ok', close pause modal and update modal
       if (data) {
+        console.log("workflow status: ", data.workflowStatus);
         this.modalService.dismissAll();
       }
       // else close only pause modal
     });
-
-
-    
-   
 }
 
 }
