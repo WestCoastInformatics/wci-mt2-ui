@@ -15,180 +15,200 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
-	selector: 'organization-people',
-	templateUrl: './people.component.html'
+    selector: 'organization-people',
+    templateUrl: './people.component.html'
 })
 export class OrganizationPeopleComponent implements OnInit {
 
-	menu: SidebarMenuItem[] = [
-		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
-		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true }
-	];
-	data = [];
-	showTable = false;
-	defaultColDef = {};
-	peopleList = [];
-	selectedOrganization: any;
-	id: any;
-	organizationList = [];
-	gridOptions: any;
-	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
-	gridParams: any;
-	gridApi: any;
-	gridColumnDefs = [];
-	showLoadingSpinner = true;
-	uiUtility = UiUtility;
+    menu: SidebarMenuItem[] = [
+        { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+        { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+        { name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true }
+    ];
+    data = [];
+    showTable = false;
+    defaultColDef = {};
+    peopleList = [];
+    selectedOrganization: any;
+    id: any;
+    organizationList = [];
+    gridOptions: any;
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    gridParams: any;
+    gridApi: any;
+    gridColumnDefs = [];
+    showLoadingSpinner = true;
+    uiUtility = UiUtility;
 
-	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
-	@ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
+    @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+    @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
+    @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
 
-	constructor(private readonly breadcrumbService: BreadcrumbService,
-		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
-		private readonly organizationsService: OrganizationsService,
-		private readonly route: ActivatedRoute,
-		private readonly router: Router,
-		private readonly teamService: TeamsService,
-		private authenticationService: AuthenticationService,
-		private location: Location) { 
-			if(authenticationService.isAdmin()){
-				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-			}
-		}
+    constructor(private readonly breadcrumbService: BreadcrumbService,
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly organizationsService: OrganizationsService,
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private readonly teamService: TeamsService,
+        private authenticationService: AuthenticationService,
+        private location: Location) {
+        if (authenticationService.isAdmin()) {
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+        }
+    }
 
-	ngOnInit(): void {
+    ngOnInit(): void {
 
-		this.titleService.setTitle('Refset Tool - Organizations');
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/organizations/people', label: 'Organizations' },
-			{ label: 'People' },
-		]);
+        this.titleService.setTitle('Refset Tool - Organizations');
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/people', label: 'Organizations' },
+            { label: 'People' },
+        ]);
 
-		this.route.params.subscribe(params => {
-			this.id = params['id'];
-		});
+        this.route.params.subscribe(params => {
+            this.id = params['id'];
+        });
 
-		this.getOrganizations();
-	}
+        this.getOrganizations();
+    }
 
-	ngAfterViewInit() {
+    ngAfterViewInit() {
 
-		this.gridColumnDefs = [
-			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
-			{ field: 'company', flex: 1, headerName: 'Company Name' },
-			{ field: 'email', flex: 1, headerName: 'Email' },
-			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } }
-		];
+        this.gridColumnDefs = [
+            { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
+            { field: 'company', flex: 1, headerName: 'Company Name' },
+            { field: 'email', flex: 1, maxWidth: 400, headerName: 'Email' },
+            { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
+            {
+                field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+                    template: this.inactivateUserSection
+                }, flex: 1, maxWidth: 190
+            },
+        ];
 
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			enableCellTextSelection: true,
-			onCellClicked: this.onGridCellClick,
-			onGridReady: this.onGridReady,
-			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent
-			},
-			defaultColDef: {
-				sortable: true,
-				resizable: true,
-				suppressMenu: true,
-				filter: true,
-				floatingFilter: true,
-				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-				unSortIcon: true
-			},
-			enableBrowserTooltips: true,
-		};
+        this.gridOptions = {
+            context: { componentParent: this },
+            pagination: false,
+            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressPaginationPanel: true,
+            paginationPageSize: this.gridPaging.pageSize,
+            rowSelection: 'single',
+            enableCellTextSelection: true,
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                templateRenderer: TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent
+            },
+            defaultColDef: {
+                sortable: true,
+                resizable: true,
+                suppressMenu: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                unSortIcon: true
+            },
+            enableBrowserTooltips: true,
+        };
 
-		this.data = [];
-		this.getPeople();
-	}
+        this.data = [];
+        this.getPeople();
+    }
 
-	onGridReady = (params) => {
+    onGridReady = (params) => {
 
-		this.gridParams = params;
-		this.gridApi = params.api;
-		this.gridApi.setRowData([]);
-		this.getPeople();
-	}
+        this.gridParams = params;
+        this.gridApi = params.api;
+        this.gridApi.setRowData([]);
+        this.getPeople();
+    }
 
-	onGridCellClick = (event) => {
+    onGridCellClick = (event) => {
+        if (event.column.colId == "id") {
+            return;
+        }
 
-		let selectedRows = this.gridApi.getSelectedRows();
-		let selectedId: string;
+        let selectedRows = this.gridApi.getSelectedRows();
+        let selectedId: string;
 
-		selectedRows.forEach(function (selectedRow, index) {
+        selectedRows.forEach(function (selectedRow, index) {
 
-			selectedId = selectedRow.id;
-		});
+            selectedId = selectedRow.id;
+        });
 
-		this.router.navigate(['/teams/people', selectedId]);
-	};
+        this.router.navigate(['/teams/people', selectedId]);
+    };
 
-	get dataCount() {
-		return this.data.length;
-	}
+    get dataCount() {
+        return this.data.length;
+    }
 
-	getPeople(): void {
+    getPeople(): void {
 
-		this.showLoadingSpinner = true;
-		this.organizationsService.getOrgUsers(this.id, true).subscribe((results) => {
+        this.showLoadingSpinner = true;
+        this.organizationsService.getOrgUsers(this.id, true).subscribe((results) => {
 
-			this.data = results.items;
-			this.showTable = true;
-			this.showLoadingSpinner = false;
-		});
-	}
+            this.data = results.items;
+            this.showTable = true;
+            this.showLoadingSpinner = false;
+        });
+    }
 
-	getOrganizations(): void {
+    getOrganizations(): void {
 
-		this.refsetService.getOrganizations().subscribe((results) => {
+        this.refsetService.getOrganizations().subscribe((results) => {
 
-			this.organizationList = results.items;
+            this.organizationList = results.items;
 
-			for (let organization of this.organizationList) {
+            for (let organization of this.organizationList) {
 
-				if (this.id == organization.id) {
-					this.setOrganizationData(organization);
-				}
-			}
-		});
-	}
+                if (this.id == organization.id) {
+                    this.setOrganizationData(organization);
+                }
+            }
+        });
+    }
 
-	selectOrg($event): void {
+    selectOrg($event): void {
 
-		this.setOrganizationData(this.selectedOrganization);
-		this.location.replaceState("/organizations/people/" + this.selectedOrganization.id);
-	}
+        this.setOrganizationData(this.selectedOrganization);
+        this.location.replaceState("/organizations/people/" + this.selectedOrganization.id);
+    }
 
-	setOrganizationData(organization: any) { 
+    setOrganizationData(organization: any) {
 
-		this.id = organization.id;
-		this.selectedOrganization = organization;
-	}
+        this.id = organization.id;
+        this.selectedOrganization = organization;
+    }
 
-	async getTeams(teams: any): Promise<any> {
-		console.log(teams)
-		const teamObject = { teams: [] };
-		if (teams === 'undefined' || teams === undefined) {
-			return JSON.stringify(teamObject);
-		} else {
-			for (let team of teams) {
-				teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
-			}
-			return JSON.stringify(teamObject);
-		}
-	}
+    async getTeams(teams: any): Promise<any> {
+        console.log(teams)
+        const teamObject = { teams: [] };
+        if (teams === 'undefined' || teams === undefined) {
+            return JSON.stringify(teamObject);
+        } else {
+            for (let team of teams) {
+                teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
+            }
+            return JSON.stringify(teamObject);
+        }
+    }
 
-	getTeamCount(teams: any): number {
+    removeUser(user) {
+        if (confirm("Are you sure you want to remove " + user.name + " from the organization?"))
+            this.organizationsService.removeUser(this.id, user.id).subscribe({
+                next: (data) => {
+                    var datum = data;
+                    console.log(datum);
+                },
+                complete: () => this.router.navigate(['/organizations/projects/', this.id])
+            });
+    }
 
-		return teams.length;
-	}
+    getTeamCount(teams: any): number {
+
+        return teams.length;
+    }
 }
