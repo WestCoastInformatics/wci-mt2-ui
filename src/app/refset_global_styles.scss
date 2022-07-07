@@ -4033,12 +4033,15 @@ span.title {
 
 .landing-page-guest-has-account {
     color: black;
-    font-weight: 500;
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 50px;
+    margin-left: 275px;
 }
 
 .landing-page-log-in-link {
     cursor: pointer;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     text-decoration: underline;
     color: rgb(50, 50, 212);
@@ -5102,7 +5105,7 @@ $sidebar-width: 294px;
     width: 20px;
     height: 20px;
     margin-top: 2px;
-    margin-left: 13px;
+    margin-left: 8px;
     align-items: center;
     justify-content: center;
 }
