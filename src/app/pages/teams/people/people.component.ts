@@ -164,7 +164,7 @@ export class TeamsPeopleComponent implements OnInit {
 
             this.teamList = results.items.filter((team) => {
 
-                return team.members.some((member) => {
+                return team.members?.some((member) => {
                     return member.includes(this.currentUser.id);
                 });
             });
