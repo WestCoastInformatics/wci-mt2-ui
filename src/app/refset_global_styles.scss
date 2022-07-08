@@ -3287,7 +3287,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-bottom: 20px;
 }
 
-.upgrade-modal-body-mid {
+.upgrade-modal-body-mid-term {
+    padding-left: 25px;
     text-align: left;
 }
 
@@ -3295,7 +3296,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-weight: 500;
 }
 
-.upgrade-modal-current-version {}
+.upgrade-modal-current-version {
+    text-align: left;
+}
 
 .upgrade-footer-warning-message {
     color: red;
@@ -3308,9 +3311,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .upgrade-modal-current-version-term {
     padding-left: 25px;
+    text-align: left;
 }
 
 .upgrade-modal-current-terminology {}
+
+.upgrade-modal-message{
+    padding-top: 25px;
+}
 
 .circled-check {
     height: 24px;
@@ -3331,6 +3339,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .upgrade-modal-current-terminology-term {
     padding-left: 25px;
+    text-align: left;
 }
 
 .rt2-modal-footer .export-inactive-concept-modal-button {
@@ -5107,6 +5116,9 @@ $sidebar-width: 294px;
 }
 
 .discussion-icon-text {
+    font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-weight: 500;
+    font-size: 1rem;
     display: flex;
     color: white;
     background-color: red;
