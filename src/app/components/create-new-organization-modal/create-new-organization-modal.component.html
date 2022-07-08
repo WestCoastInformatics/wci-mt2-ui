@@ -1,6 +1,6 @@
 <div class='section-list text-right' title="Create New Organization"
-    aria-label="Create New Organization" *ngIf="canAdd"
-    (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"><a
+    aria-label="Create New Organization" *ngIf="canAdd">
+    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"
         class='btn btn-primary rounded btn-lg'>Create New Organization</a></div>
 
 <ng-template #createNewOrganizationDialog let-modal>

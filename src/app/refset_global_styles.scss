@@ -3477,6 +3477,15 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     background-color: rgba(249, 238, 238, 1);
 }
 
+.column-inactiveOrgMember,
+.column-inactiveTeamMember {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center
+}
+
 .adjudicate-upgrade-modal-body-header {
     display: flex;
     height: 50px;
@@ -4042,12 +4051,15 @@ span.title {
 
 .landing-page-guest-has-account {
     color: black;
-    font-weight: 500;
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 50px;
+    margin-left: 275px;
 }
 
 .landing-page-log-in-link {
     cursor: pointer;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     text-decoration: underline;
     color: rgb(50, 50, 212);
@@ -4145,6 +4157,7 @@ img.refset-tool-edition-flag {
 .content-header {
     position: sticky;
     z-index: 2;
+    top: 62px;
 
     .header-title {
         align-items: baseline;
@@ -4222,7 +4235,7 @@ img.refset-tool-edition-flag {
 
 .section-list {
     padding: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    //border-bottom: 1px solid rgba(0, 0, 0, .1);
     font-weight: 700;
     color: $main-color;
 
@@ -5113,7 +5126,7 @@ $sidebar-width: 294px;
     width: 20px;
     height: 20px;
     margin-top: 2px;
-    margin-left: 13px;
+    margin-left: 8px;
     align-items: center;
     justify-content: center;
 }
@@ -5181,6 +5194,7 @@ $sidebar-width: 294px;
 
 app-category-floating-filter {
     width: 100%;
+    padding-bottom:15px;
 }
 
 #compare-sumary-table td {
@@ -5235,12 +5249,14 @@ app-category-floating-filter {
 .cancel-upgrade .mat-button-wrapper {
     color: white !important;
 }
-.add-all.disabled img, .remove-all.disabled img{
+
+.add-all.disabled img,
+.remove-all.disabled img {
     cursor: not-allowed;
     -webkit-filter: grayscale(100%);
-       -moz-filter: grayscale(100%);
-         -o-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-            filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    filter: grayscale(100%);
     opacity: 0.5;
 }
