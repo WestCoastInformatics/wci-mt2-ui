@@ -66,9 +66,9 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		this.gridColumnDefs = [
 			{ field: 'id', hide: true },
 			{ field: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500 },
-			{ field: 'description', headerName: 'Description', flex: 1, minWidth: 200, maxWidth: 500, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
+			{ field: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
 			{
-				field: 'role', headerName: 'Role', flex: 1, minWidth: 250, maxWidth: 350, cellClass: 'text-camel',
+				field: 'role', headerName: 'Role', maxWidth: 110, cellClass: 'text-camel',
 				filter: 'agTextColumnFilter',
 				filterParams: {
 					textCustomComparator: (filter, value, filterText) => {
@@ -103,8 +103,8 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 					],
 				}
 			},
-			{ field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: false },
-			{ field: 'members', headerName: 'Members', minWidth: 100, filter: false ,resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+			{ field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true },
+			{ field: 'members', headerName: 'Members', maxWidth: 110, filter: false ,resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
 		];
 
 		this.gridOptions = {
