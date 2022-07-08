@@ -234,7 +234,7 @@
         </div>
         <div class="modal-footer rt2-modal-footer">
             <button type="button" mat-raised-button color="red"
-                (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click');"
+                (click)="openCancelUpgrade()"
                 aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button"
                 aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
                 Cancel Upgrade
@@ -407,4 +407,9 @@
 <ng-template #pauseUpdateDialog let-data>
     You are about to pause the upgrade process. You will be able to retrieve any changes you made by
     continuing the upgrade at a later time. Would you like to proceed?
+</ng-template>
+
+
+<ng-template #cancelUpgradeDialog let-data>
+    You are about to undo your work. Are you sure you want to cancel your changes?
 </ng-template>

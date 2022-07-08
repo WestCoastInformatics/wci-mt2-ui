@@ -63,6 +63,8 @@ import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-c
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
 import { ProjectsBaseComponent } from './pages/projects/base/projects.base.component';
+import { ArtifactsModule } from './components/artifacts/artifacts.module';
+import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
@@ -117,7 +119,6 @@ import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
-import { ArtifactsModule } from './components/artifacts/artifacts.module';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -256,7 +257,8 @@ const appRoutes: Routes = [
         ReactiveFormsModule,
         MatSlideToggleModule,
         CommonModule,
-        ArtifactsModule
+        ArtifactsModule,
+        AuditTrailModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

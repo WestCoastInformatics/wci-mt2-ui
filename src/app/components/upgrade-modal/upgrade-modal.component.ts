@@ -58,6 +58,7 @@ export class UpgradeModalComponent implements OnInit {
 
   get isInitialUpgrade(): boolean {
     if (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) {
+        // console.log("CANCEL & FINISH upgrade code");
       return false;
     } else if (this.refsetData?.availableActions?.includes('EDIT')) {
       return true;
@@ -95,7 +96,7 @@ export class UpgradeModalComponent implements OnInit {
                   newItem.descriptions = '';
                   newItem.replacementConcepts = [item.replacementConcepts[i]];
                   finalResults.push(newItem);
-                }             
+                }
               }
             });
 
@@ -122,12 +123,13 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   upgrade(): void {
+    console.log("Here i am");
 
     this.modalService.dismissAll();
-    this.refsetDetails.changeLockedStatus(true);  
+    this.refsetDetails.changeLockedStatus(true);
 
     this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe();
-    
+
     UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, this.processCompileDataResult, this.notificationService, this.refsetService, this.router, 'upgrade');
   }
 

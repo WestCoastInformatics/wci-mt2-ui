@@ -39,7 +39,7 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div>
+                        <div  class="section-list text-right" id="dashboard-teams-section">
                             <create-new-project-modal></create-new-project-modal>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             <ng-container *ngFor="let team of teamList">
                                 <div class='section-list' *ngIf="team.name">
                                     <span [routerLink]="['/organization/' + team.organizationId + '/teams/people', team.id]"><a>{{
-                                            team.organization.name }}/{{ team.name
+                                            team.organization?.name }}/{{ team?.name
                                             }}</a></span>
                                 </div>
                             </ng-container>

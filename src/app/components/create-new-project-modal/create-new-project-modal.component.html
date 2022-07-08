@@ -1,5 +1,10 @@
-<div *ngIf="!param && canAdd" class='section-list text-right rounded' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary rounded btn-lg'>Create New Project</a></div>
-<a *ngIf="param && canAdd" class="btn btn-primary rounded float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<!--<div *ngIf="!param && canAdd" class='section-list text-right rounded' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary rounded btn-lg'>Create New Project</a></div>
+<a *ngIf="param && canAdd" class="btn btn-primary rounded float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a> -->
+
+<a *ngIf="!param && canAdd" title="Create New Project" class='btn btn-primary rounded btn-lg  float-right'
+    aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<a *ngIf="param && canAdd" class="btn btn-primary rounded radius-0 float-right" title="Create New Project"
+    aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
@@ -79,7 +84,7 @@
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button type="button" [disabled]="name === '' || description === ''" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+        <button type="button" [disabled]="name === '' || !isSelectedOrganization()" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
                 aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>

@@ -207,16 +207,22 @@ export class RefsetService extends RestService {
         return this.put(url, '');
     }
 
-    updateDiscussionPostVisibility(threadId: string, postId: string, visibility: string): Observable<any> {
-
-        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/visibility?visibility=' + visibility;
-        return this.put(url, '');
-    }
-
     addDiscussionPost(threadId: string, postBody: string): Observable<any> {
 
         let url = this.contextPath + 'discussion/' + threadId + '/post';
         return this.post(url, postBody);
+    }
+
+    updateDiscussionPost(threadId: string, postId: string, postBody: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        return this.put(url, postBody);
+    }
+
+    deleteDiscussionPost(threadId: string, postId: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        return this.delete(url);
     }
 
     downloadRefset(refsetId: string, params: any): Observable<any> {

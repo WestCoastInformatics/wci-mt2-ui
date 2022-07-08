@@ -2,7 +2,7 @@
 
 <div id="refsetDetailsPage" class="container-fluid">
     <!-- Page Title -->
-    <div class="row refset-title sticky-top workflow-stepper-bar">
+    <div class="row refset-title content-header workflow-stepper-bar">
 
         <!-- Refset Name, action icons, and roles -->
         <div class="col-4 refset-tool-refset-details-title-name-section">
@@ -16,16 +16,6 @@
             </div>
 
         </div>
-
-        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
-            <div class="success-header">
-                <i class="fa fa-exclamation-triangle fa-2x"></i>
-                <div class="success-body">
-                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
-                    <br>It is recommended to perform an Upgrade before doing other edits.
-                </div>
-            </div>
-        </ngb-alert>
 
         <!-- Locked Refset bar -->
         <div *ngIf="isLocked" id="refsetLockBanner" class="col-5">
@@ -105,6 +95,17 @@
         </div>
 
     </div>
+    <div class="container mt-3">
+        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
+            <div class="success-header">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
+                <div class="success-body">
+                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
+                    <br>It is recommended to perform an Upgrade before doing other edits.
+                </div>
+            </div>
+        </ngb-alert>
+    </div>
 
     <!-- Refset Name Bar -->
     <div class="refset-title-container refset-tool-lockable">
@@ -116,8 +117,8 @@
                 <div>
 
                     <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
-                    
-                    <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" 
+
+                    <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId"
                         [refsetName]="refsetData.name" [roles]="refsetData.roles" [(discussionCount)]="refsetData.discussionCount">
                     </app-refset-discussion-list>
 
@@ -161,7 +162,7 @@
 
                     <mat-menu #documentationMenu="matMenu">
                         <artifacts-modal [refsetInternalId]="refsetData?.id"  *ngIf="refsetData?.id"></artifacts-modal>
-                        <button mat-menu-item (click)="openAuditTrail()" title="Open Audit Trail" aria-label="Audit Trail">Audit Trail</button>
+                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id"></audit-trail-modal>
                     </mat-menu>
 
                     <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
@@ -192,7 +193,7 @@
                         [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
                     <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
                         *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
-                        (click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE');"
+                        (click)="openCancelUpgrade(cancelUpgradeDialog)"
                         aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button cancel-upgrade"
                         aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
                         Cancel Upgrade
@@ -444,7 +445,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        
+
                     </div>
 
                     <!-- Versioned Metadata Section -->
@@ -877,8 +878,8 @@
                                                 </div>
 
                                                 <div class="col-2">
-                                                    <app-refset-discussion-list *ngIf="refsetData && params && params.data" type="REFSET_MEMBER" [refsetInternalId]="id" 
-                                                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [refsetId]="refsetId" [conceptId]="params.data.code" 
+                                                    <app-refset-discussion-list *ngIf="refsetData && params && params.data" type="REFSET_MEMBER" [refsetInternalId]="id"
+                                                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [refsetId]="refsetId" [conceptId]="params.data.code"
                                                         [conceptName]="params.data.name" [(discussionCount)]="params.data.discussionCount">
                                                     </app-refset-discussion-list>
                                                 </div>
@@ -1224,6 +1225,7 @@
 </add-remove-concepts>
 <scroll-top></scroll-top>
 
+<!--Undo Edit Modal-->
 <ng-template #undoEditDialog let-modal>
     <div class="modal-header review-modal-header">
         <button type="button" class="close" aria-label="Close"
@@ -1251,3 +1253,30 @@
     </div>
 </ng-template>
 
+<!--Cancel Upgrade Modal-->
+<ng-template #cancelUpgradeDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <button type="button" class="close" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <div>You are about to undo your work. Are you sure you want to cancel your changes?</div>
+        </div>
+    </div>
+    <div class="modal-footer ready-for-review-footer">
+        <button type="button"
+            (click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click');"
+            mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+            aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
+            Yes
+        </button>
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"
+            aria-hidden="false" class="refset-tool-action-button" aria-label="No" title="No"
+            ng-reflect-color="red">
+            No
+        </button>
+    </div>
+</ng-template>

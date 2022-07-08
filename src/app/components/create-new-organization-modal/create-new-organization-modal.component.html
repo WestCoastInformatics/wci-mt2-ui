@@ -1,6 +1,6 @@
 <div class='section-list text-right' title="Create New Organization"
-    aria-label="Create New Organization" *ngIf="canAdd"
-    (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"><a
+    aria-label="Create New Organization" *ngIf="canAdd">
+    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"
         class='btn btn-primary rounded btn-lg'>Create New Organization</a></div>
 
 <ng-template #createNewOrganizationDialog let-modal>
@@ -79,7 +79,7 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || description === '' || email === '' || !isValidEmail()"
+        <button type="button" [disabled]="name === ''  || !isSelectedEdition() || email === '' || !isValidEmail()"
             (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false"
             class="refset-tool-action-button" aria-label="Create Organization"
             title="Create Organization" ng-reflect-color="green">

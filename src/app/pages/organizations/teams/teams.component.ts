@@ -165,20 +165,26 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
 	getTeams(): void {
 		let roles = [];
-		this.showLoadingSpinner = true;
-		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.data = [];
-			this.teamList = results.items;
-			for (let team of this.teamList) {
-				if (team?.organization?.id === this.selectedOrganization?.id) {
-					roles = roles.concat(team.roles);
-					this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0' + 'Members' });
+		if(this.selectedOrganization?.id){
+			this.showLoadingSpinner = true;
+			this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+				this.data = [];
+				this.teamList = results.items;
+				for (let team of this.teamList) {
+					if (team?.organization?.id === this.selectedOrganization?.id) {
+						roles = roles.concat(team.roles);
+						this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0'});
+					}
 				}
-			}
-			roles = [...new Set(roles)].sort();
+				roles = [...new Set(roles)].sort();
+				this.gridApi.setRowData(this.data);
+				this.showLoadingSpinner = false;
+			});
+		}else{
+			this.data = [];
 			this.gridApi.setRowData(this.data);
 			this.showLoadingSpinner = false;
-		});
+		}
 	}
 
 	getOrganizations(): void {
