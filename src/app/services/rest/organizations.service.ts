@@ -50,4 +50,8 @@ export class OrganizationsService extends RestService {
     addUser(organizationId: any, email: any): Observable<any> {
         return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '');
     }
+
+    removeUser(organizationId: any, userId: any) {
+        return this.delete(this.contextPath + 'organization/' + organizationId + '/user/' + userId);
+    }
 }

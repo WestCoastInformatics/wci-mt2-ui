@@ -3287,7 +3287,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     margin-bottom: 20px;
 }
 
-.upgrade-modal-body-mid {
+.upgrade-modal-body-mid-term {
+    padding-left: 25px;
     text-align: left;
 }
 
@@ -3295,7 +3296,9 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     font-weight: 500;
 }
 
-.upgrade-modal-current-version {}
+.upgrade-modal-current-version {
+    text-align: left;
+}
 
 .upgrade-footer-warning-message {
     color: red;
@@ -3308,9 +3311,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .upgrade-modal-current-version-term {
     padding-left: 25px;
+    text-align: left;
 }
 
 .upgrade-modal-current-terminology {}
+
+.upgrade-modal-message{
+    padding-top: 25px;
+}
 
 .circled-check {
     height: 24px;
@@ -3331,6 +3339,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .upgrade-modal-current-terminology-term {
     padding-left: 25px;
+    text-align: left;
 }
 
 .rt2-modal-footer .export-inactive-concept-modal-button {
@@ -3466,6 +3475,15 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .adjudicate-column-inactivationReason,
 .adjudicate-column-inactiveNlPtSection {
     background-color: rgba(249, 238, 238, 1);
+}
+
+.column-inactiveOrgMember,
+.column-inactiveTeamMember {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+    justify-content: center
 }
 
 .adjudicate-upgrade-modal-body-header {
@@ -4033,12 +4051,15 @@ span.title {
 
 .landing-page-guest-has-account {
     color: black;
-    font-weight: 500;
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 50px;
+    margin-left: 275px;
 }
 
 .landing-page-log-in-link {
     cursor: pointer;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     text-decoration: underline;
     color: rgb(50, 50, 212);
@@ -4136,6 +4157,7 @@ img.refset-tool-edition-flag {
 .content-header {
     position: sticky;
     z-index: 2;
+    top: 62px;
 
     .header-title {
         align-items: baseline;
@@ -5094,6 +5116,9 @@ $sidebar-width: 294px;
 }
 
 .discussion-icon-text {
+    font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-weight: 500;
+    font-size: 1rem;
     display: flex;
     color: white;
     background-color: red;
@@ -5101,7 +5126,7 @@ $sidebar-width: 294px;
     width: 20px;
     height: 20px;
     margin-top: 2px;
-    margin-left: 13px;
+    margin-left: 8px;
     align-items: center;
     justify-content: center;
 }
@@ -5169,8 +5194,11 @@ $sidebar-width: 294px;
 
 app-category-floating-filter {
     width: 100%;
+    padding-bottom:15px;
 }
-
+app-date-text-floating-filter{
+    padding-bottom:15px;
+}
 #compare-sumary-table td {
     vertical-align: middle;
 }
@@ -5223,12 +5251,14 @@ app-category-floating-filter {
 .cancel-upgrade .mat-button-wrapper {
     color: white !important;
 }
-.add-all.disabled img, .remove-all.disabled img{
+
+.add-all.disabled img,
+.remove-all.disabled img {
     cursor: not-allowed;
     -webkit-filter: grayscale(100%);
-       -moz-filter: grayscale(100%);
-         -o-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-            filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    filter: grayscale(100%);
     opacity: 0.5;
 }

@@ -160,17 +160,17 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.gridColumnDefs = [
             { field: 'id', headerName: 'Author', minWidth: 120, tooltipField: 'Author', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.authorSection } },
-            { field: 'subject', headerName: 'Feedback Topic', tooltipField: 'Feedback Topic', minWidth: 300, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.subjectSection } },
+            { field: 'subject', headerName: 'Feedback Topic', tooltipField: 'Feedback Topic', flex: 2, minWidth: 300, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.subjectSection } },
             {
-                field: 'status', headerName: 'Status', tooltipField: 'Status', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
+                field: 'status', headerName: 'Status', maxWidth: 125, tooltipField: 'Status', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
                     names: [
                         { type: 'status', name: this.OPEN, value: this.OPEN },
                         { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
                     ]
                 }
             },
-            { field: 'lastPost', headerName: 'Last Comment', sort: "desc", tooltipField: 'Last Comment', valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
-            { field: 'numberReplies', headerName: 'Replies', tooltipField: 'Replies' }
+            { field: 'lastPost', headerName: 'Last Comment', maxWidth: 185, sort: "desc", tooltipField: 'Last Comment', valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
         ];
 
         // set placeholders on the grid floating filter fields

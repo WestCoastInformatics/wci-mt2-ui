@@ -173,7 +173,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 				for (let team of this.teamList) {
 					if (team?.organization?.id === this.selectedOrganization?.id) {
 						roles = roles.concat(team.roles);
-						this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0' + 'Members' });
+						this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0'});
 					}
 				}
 				roles = [...new Set(roles)].sort();
