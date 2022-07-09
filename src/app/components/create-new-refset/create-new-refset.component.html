@@ -157,12 +157,14 @@
                                 <input matInput type="text"
                                     placeholder="Enter the name of the new concept"
                                     [(ngModel)]="createdMetaDataConcept"
-                                    (keypress)="omit_special_char($event)"/>
-                                <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
+                                    (keyup)="this.isValidConceptName()"
+                                    />
+                                    <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
                                     (click)="value2a = ''">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </mat-form-field>
+                            <div class="modal-error-message" [hidden]="!conceptError">{{ conceptError }}</div>
 
                         </mat-radio-group>
                     </div>

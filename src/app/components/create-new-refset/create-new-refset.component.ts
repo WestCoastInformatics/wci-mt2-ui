@@ -28,7 +28,7 @@ export class CreateNewRefsetComponent implements OnInit {
     isSelected = 0;
     selectedMetaDataConcept: any;
     createdMetaDataConcept = '';
-    selectedParentConcept = undefined;
+    selectedParentConcept = '';
     selectedNarrative = '';
     selectedTags = [];
     definitionClauses = [];
@@ -49,6 +49,7 @@ export class CreateNewRefsetComponent implements OnInit {
     INTENSIONAL = RefsetUtility.INTENSIONAL;
     existingMetadataConcepts: any;
     parentConcepts: any;
+    conceptError = '';
 
     @Input() existingBranchVersions: any;
     @Input() isDetailsPage = false;
@@ -113,13 +114,14 @@ export class CreateNewRefsetComponent implements OnInit {
         this.isSelected = 0;
         this.selectedMetaDataConcept = '';
         this.createdMetaDataConcept = '';
-        this.selectedParentConcept = undefined;
+        this.selectedParentConcept = '';
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = '';
         this.privateRefset = false;
+        this.conceptError ='';
     }
 
     setupEditMode(): void {
@@ -147,7 +149,6 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     createRefsetObject(): void {
-
         this.showLoadingSpinner = true;
         let name = '';
         let refsetId = null;
@@ -166,7 +167,7 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         let params: any = {
-            name: this.trim(name),
+            name: name,
             parentConceptId: parentConceptId,
             moduleId: '',
             refsetId: refsetId,
@@ -258,7 +259,6 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isComplete(): boolean {
-
         let typeCheck = false;
 
         if (this.selectedReferenceType == RefsetUtility.EXTENSIONAL) {
@@ -270,8 +270,19 @@ export class CreateNewRefsetComponent implements OnInit {
             console.log("this.definitionClauses: ", this.definitionClauses);
         }
 
+        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName());
+    }
 
-        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
+    isValidConceptName(): boolean {
+        var format = /^[0-9A-Za-z]+$/;
+        var lower = this.createdMetaDataConcept.toLowerCase();
+        var flag = lower.match(format);
+        if (flag == null) {
+            this.conceptError = "The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.";
+        } else {
+            this.conceptError = "";
+        }
+        return flag == null ? false : true;
     }
 
     isUat(): boolean {
@@ -359,20 +370,6 @@ export class CreateNewRefsetComponent implements OnInit {
     get canAdd(): boolean{
         let project = this.inputProperties.project;
         return project?.roles?.includes('AUTHOR');
-    }
-
-    /* This Method prevent the user from adding Special Characters to the form */
-    omit_special_char(event) {
-        var k;
-        k = event.keyCode;
-        return((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-    }
-
-    /* This method prevents user from copying special characters into a field */
-    trim(entry) {
-        entry = entry.replace(/[^a-zA-Z0-9 ]/g, "");
-        console.log(entry);
-        return entry;
     }
 
 }
