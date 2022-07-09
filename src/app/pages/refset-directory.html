@@ -113,7 +113,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{data?.edition?.name}}
-                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{data?.flagIcon}}" 
+                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{data?.flagIcon}}"
                                             class="refset-tool-edition-flag" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag" />
 
                                     </td>
@@ -203,7 +203,7 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{data?.project?.organization?.name}}
-                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{data?.flagIcon}}" 
+                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{data?.flagIcon}}"
                                             class="refset-tool-edition-flag" title="{{data?.editionName}} Flag" aria-label="{{data?.editionName}} Flag" />
                                     </td>
                                 </tr>
@@ -292,7 +292,7 @@
 
         <!-- Edition Templates -->
         <ng-template #directoryEditionSection let-params>
-            <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}" 
+            <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}"
                 class="refset-tool-edition-flag" title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag" />
             {{params?.data?.edition?.name}}
         </ng-template>
@@ -306,12 +306,12 @@
                         <app-refset-download [isDetailPage]="false"
                             *ngIf="params?.data?.downloadable"
                             [disabled]="!params?.data?.downloadable"
-                            [refset]="getRefsetRow(params.data.refsetId)">
+                            [refset]="params.data">
                         </app-refset-download>
                     </div>
 
                     <div class="col-2">
-                        <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId" 
+                        <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
                             [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.discussionCount">
                         </app-refset-discussion-list>
                     </div>
