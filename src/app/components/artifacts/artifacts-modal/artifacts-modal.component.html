@@ -1,8 +1,9 @@
-<button #artifactsButton mat-raised-button color="primary" aria-hidden="false"
+<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false"
     (click)="openArtifactsModal(artifactsDialog)" class="refset-tool-action-button refset-action-button"
     aria-label="Artifacts" title="Artifacts" ng-reflect-color="primary">
     Artifacts
 </button>
+<button mat-menu-item *ngIf="isDetails" (click)="openArtifactsModal(artifactsDialog)" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
 
 <ng-template #artifactsDialog let-modal>
     <div class="modal-header rt2-modal-header">
