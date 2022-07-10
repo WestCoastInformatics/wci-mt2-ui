@@ -41,7 +41,7 @@
                     <div class='section-header mb-4'>
                         People ({{dataCount}})
                         <add-member-modal type="Team" [id]="selectedTeam?.id"
-                            [name]="selectedTeam?.name"></add-member-modal>
+                            [name]="selectedTeam?.name" *ngIf="teamList.length > 0 && selectedTeam"></add-member-modal>
                     </div>
 
                     <div class='dashboard-section'>
