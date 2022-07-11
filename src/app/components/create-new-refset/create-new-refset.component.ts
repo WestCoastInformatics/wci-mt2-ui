@@ -28,7 +28,7 @@ export class CreateNewRefsetComponent implements OnInit {
     isSelected = 0;
     selectedMetaDataConcept: any;
     createdMetaDataConcept = '';
-    selectedParentConcept = '';
+    selectedParentConcept = undefined;
     selectedNarrative = '';
     selectedTags = [];
     definitionClauses = [];
@@ -114,7 +114,7 @@ export class CreateNewRefsetComponent implements OnInit {
         this.isSelected = 0;
         this.selectedMetaDataConcept = '';
         this.createdMetaDataConcept = '';
-        this.selectedParentConcept = '';
+        this.selectedParentConcept = undefined;
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
@@ -274,13 +274,13 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isValidConceptName(): boolean {
-        var format = /^[0-9A-Za-z]+$/;
+        var format = /^[0-9A-Za-z ]+$/;
         var lower = this.createdMetaDataConcept.toLowerCase();
         var flag = lower.match(format);
         if (flag == null) {
-            this.conceptError = "The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.";
+            this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';
         } else {
-            this.conceptError = "";
+            this.conceptError = '';
         }
         return flag == null ? false : true;
     }
