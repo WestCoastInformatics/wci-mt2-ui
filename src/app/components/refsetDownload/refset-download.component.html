@@ -41,14 +41,15 @@
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
                     <mat-select #downloadContentField [(value)]="data.selectedContent" (selectionChange)="changeContent(data)">
-                        <mat-option *ngFor="let option of data.contentOptions" [value]="option.value">
-                            {{ option.display }}
-                        </mat-option>
+                        <ng-container *ngFor="let option of data.contentOptions">
+                            <mat-option *ngIf="option.value != 'delta' || (showVersions && shouldShowDeltaContentLabel() && showDeltaOption(data) && option.value == 'delta')" [value]="option.value">
+                                {{ option.display }}
+                            </mat-option>
+                        </ng-container>
                     </mat-select>
                 </mat-form-field>
             </div>
         </div>
-
         <div class="row" id="downloadContentRow"
              *ngIf="showVersions && !shouldShowDeltaContentLabel() && showDeltaOption(data)">
             <div class="col refset-tool-download-column-label"></div>

@@ -18,6 +18,7 @@ export class ArtifactsModalComponent implements AfterViewInit{
     showTable: boolean = false;
 
 	@Input() refsetInternalId: string;
+	@Input() isDetails: boolean = true;
 
 	constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private refsetService: RefsetService) { }
 

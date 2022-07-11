@@ -11,6 +11,7 @@ import { ArtifactFormComponent } from './artifact-form/artifact-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
+        MatMenuModule,
         NgbModule
     ],
      exports: [ArtifactsModalComponent]
