@@ -406,9 +406,17 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.refsetService.updateDiscussionThreadStatus(this.selectedThread.id, newStatus).subscribe({
             next: (results) => {
 
+                if (newStatus == 'Resolved') {
+                    this.discussionCount--;
+                } else {     
+                    this.discussionCount++;
+                }               
+                this.discussionCountChange.emit(this.discussionCount);
+
                 this.selectedThread.status = newStatus;
                 this.isResolved = newStatus == this.RESOLVED;
 
+                
                 this.reloadGridData();
             }
         });

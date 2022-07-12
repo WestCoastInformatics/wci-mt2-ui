@@ -134,6 +134,7 @@ export class RefsetDetails {
     originalGridParams: any;
     membersGridNumberOfResults: number;
     taxonomySearchNumberOfResults: number;
+    unresolvedDiscussionCount: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
     editMode = false;
@@ -447,6 +448,18 @@ export class RefsetDetails {
                         this.editMetadataProperties.definitionClauses = this.refsetData.definitionClauses;
                     }
                 }
+
+                this.refsetService.getDiscussionThreads("REFSET", this.id, null).subscribe({
+                    next: (results) => {
+                        this.unresolvedDiscussionCount = 0;
+                        for (let discussion of results.items) {
+     
+                            if (discussion.status == 'Open') {
+                                this.unresolvedDiscussionCount++;
+                            }
+                        }
+                    }
+                });
 
                 this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
                 this.titleService.setTitle("Refset Tool - Refset Details: " + this.refsetId);
