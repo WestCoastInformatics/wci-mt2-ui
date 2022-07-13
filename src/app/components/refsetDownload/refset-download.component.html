@@ -42,7 +42,7 @@
                 <mat-form-field appearance="fill">
                     <mat-select #downloadContentField [(value)]="data.selectedContent" (selectionChange)="changeContent(data)">
                         <ng-container *ngFor="let option of data.contentOptions">
-                            <mat-option *ngIf="option.value != 'delta' || (showVersions && shouldShowDeltaContentLabel() && showDeltaOption(data) && option.value == 'delta')" [value]="option.value">
+                            <mat-option *ngIf="checkContentValues(data, option)" [value]="option.value">
                                 {{ option.display }}
                             </mat-option>
                         </ng-container>

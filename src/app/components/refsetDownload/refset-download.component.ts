@@ -166,7 +166,7 @@ export class RefsetDownloadComponent {
                         const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, 'info', {timeOut: 0, extendedTimeOut: 0});
                         let fileNameDate: any = this.selectedVersionDate;
 
-                        if (fileNameDate == '') {
+                        if (fileNameDate == '' || fileNameDate == RefsetUtility.IN_DEVELOPMENT) {
                             fileNameDate = CodeUtility.getCurrentDate();
                         }
 
@@ -310,6 +310,12 @@ export class RefsetDownloadComponent {
         } else {
             this.disableChannel.postMessage(true);
         }
+    }
+
+    checkContentValues(data, option) {
+        
+        let show = option.value != 'delta' || (this.shouldShowDeltaContentLabel() && this.showDeltaOption(data) && option.value == 'delta');
+        return show;
     }
 
     changeContent(formData) {
