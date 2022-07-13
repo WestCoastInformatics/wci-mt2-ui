@@ -33,7 +33,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
     @ViewChild('paginationLastPage') lastPageButton: MatButton;
     @ViewChildren('paginationPageNumber') pageNumberButtons: QueryList<MatButton>;
 
-    constructor(private pagerService: PaginationService,private changeDetectorRef: ChangeDetectorRef) {}
+    constructor(private pagerService: PaginationService, private changeDetectorRef: ChangeDetectorRef) { }
 
     getCurrentPage(): number {
 
@@ -85,7 +85,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
         this.changeState();
     }
 
-    changeState(currentPage: number = this.getCurrentPage()) { 
+    changeState(currentPage: number = this.getCurrentPage()) {
 
         this.paginationPages = this.displayedPages ? this.pagerService.getPager(this.displayedPages, currentPage, this.totalKnown) : {};
         this.checkButtons();
@@ -93,13 +93,13 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 
     checkButtons() {
 
-        if (this.firstPageButton == undefined){
+        if (this.firstPageButton == undefined) {
             return;
         }
 
         this.currentPage = this.getCurrentPage();
 
-        if (this.currentPage === 1){
+        if (this.currentPage === 1) {
 
             this.firstPageButton.disabled = true;
             this.previousPageButton.disabled = true;
@@ -109,13 +109,13 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             this.previousPageButton.disabled = false;
         }
 
-        if (this.currentPage === this.paginationPages.totalPages){
+        if (this.currentPage === this.paginationPages.totalPages) {
             this.nextPageButton.disabled = true;
         } else {
             this.nextPageButton.disabled = false;
         }
-        
-        if (this.currentPage === this.paginationPages.totalPages || !this.totalKnown){
+
+        if (this.currentPage === this.paginationPages.totalPages || !this.totalKnown) {
             this.lastPageButton.disabled = true;
         } else {
             this.lastPageButton.disabled = false;
@@ -165,6 +165,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             } else {
 
                 this.activeGridOptions.api.paginationSetPageSize(pageSize);
+                this.displayedPages = this.activeGridOptions.api.paginationGetTotalPages();
                 this.activeGridOptions.api.paginationGoToPage(0);
             }
         }
