@@ -203,7 +203,7 @@ export class TeamsPeopleComponent implements OnInit {
             selectedId = selectedRow.id;
         });
 
-        this.router.navigate(['/teams/people', selectedId]);
+        this.router.navigate(['/personal/landing', selectedId]);
     };
 
     get dataCount() {
