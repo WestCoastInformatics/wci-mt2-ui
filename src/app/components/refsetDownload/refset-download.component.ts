@@ -83,6 +83,9 @@ export class RefsetDownloadComponent {
                 const languageRefsetOptions = [];
                 let selectedLanguage = '';
                 this.versionOptions = RefsetUtility.getVersionOptions(this.refset, 'date');
+                if(this.versionOptions.length > 1){
+                    this.versionOptions = this.versionOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
+                }
                 this.comparisonFromOptions = this.versionOptions;
                 this.comparisonToOptions = this.versionOptions;
                 this.selectedVersionDate = CodeUtility.formatJsonDate(versionDate, CodeUtility.DATE_FORMAT_REVERSE);
