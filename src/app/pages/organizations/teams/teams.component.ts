@@ -11,230 +11,230 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
-	selector: 'organization-teams',
-	templateUrl: './teams.component.html'
+    selector: 'organization-teams',
+    templateUrl: './teams.component.html'
 })
 export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
-	menu: SidebarMenuItem[] = [
-		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
-		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true },
-		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
-	];
+    menu: SidebarMenuItem[] = [
+        { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+        { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true },
+        { name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
+    ];
 
-	data = [];
-	defaultColDef = {};
-	teamList = [];
-	selectedOrganization: any;
-	organizationId: string;
-	organizationList: any;
-	showLoadingSpinner = true;
-	gridParams: any;
-	gridApi: any;
-	gridColumnDefs = [];
-	gridOptions: any;
-	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    data = [];
+    defaultColDef = {};
+    teamList = [];
+    selectedOrganization: any;
+    organizationId: string;
+    organizationList: any;
+    showLoadingSpinner = true;
+    gridParams: any;
+    gridApi: any;
+    gridColumnDefs = [];
+    gridOptions: any;
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
 
-	@ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
+    @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
 
-	constructor(private readonly breadcrumbService: BreadcrumbService,
-		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
-		private readonly organizationsService: OrganizationsService,
-		private readonly route: ActivatedRoute,
-		private readonly router: Router,
-		private authenticationService: AuthenticationService,
-		private location: Location) {
-			if(authenticationService.isAdmin()){
-				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-			}
-		}
+    constructor(private readonly breadcrumbService: BreadcrumbService,
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly organizationsService: OrganizationsService,
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private authenticationService: AuthenticationService,
+        private location: Location) {
+        if (authenticationService.isAdmin()) {
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+        }
+    }
 
-	ngOnInit(): void {
-		this.titleService.setTitle('Refset Tool - Organizations');
+    ngOnInit(): void {
+        this.titleService.setTitle('Refset Tool - Organizations');
 
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/organizations/teams', label: 'Organizations' },
-			{ label: 'Teams' },
-		]);
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/teams', label: 'Organizations' },
+            { label: 'Teams' },
+        ]);
 
-		this.route.params.subscribe(params => {
-			this.organizationId = params['id'];
-		});
+        this.route.params.subscribe(params => {
+            this.organizationId = params['id'];
+        });
 
-		this.getOrganizations();
+        this.getOrganizations();
 
-		this.gridColumnDefs = [
-			{ field: 'id', hide: true },
-			{ field: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500 },
-			{ field: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
-			{
-				field: 'role', headerName: 'Role', maxWidth: 110, cellClass: 'text-camel',
-				filter: 'agTextColumnFilter',
-				filterParams: {
-					textCustomComparator: (filter, value, filterText) => {
-						if(!value && filterText) return false;
-						if(!filterText) return true;
-						const filterTextLowerCase = filterText.toLowerCase();
-						return value.split(',').map((role) => role.trim().toLowerCase()).filter((role) => role === filterTextLowerCase).length > 0;
-					}
-				},
-				floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
-					suppressMenu: true, suppressFilterButton: true, names: [
-						{
-							"type": "role",
-							"name": "Admin",
-							"value": "Admin"
-						},
-						{
-							"type": "role",
-							"name": "Author",
-							"value": "Author"
-						},
-						{
-							"type": "role",
-							"name": "Reviewer",
-							"value": "Reviewer"
-						},
-						{
-							"type": "role",
-							"name": "Viewer",
-							"value": "Viewer"
-						}
-					],
-				}
-			},
-			{ field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true },
-			{ field: 'members', headerName: 'Members', maxWidth: 120, filter: false ,resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
-		];
+        this.gridColumnDefs = [
+            { field: 'id', hide: true },
+            { field: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500 },
+            { field: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
+            {
+                field: 'role', headerName: 'Role', maxWidth: 110, cellClass: 'text-camel',
+                filter: 'agTextColumnFilter',
+                filterParams: {
+                    textCustomComparator: (filter, value, filterText) => {
+                        if (!value && filterText) return false;
+                        if (!filterText) return true;
+                        const filterTextLowerCase = filterText.toLowerCase();
+                        return value.split(',').map((role) => role.trim().toLowerCase()).filter((role) => role === filterTextLowerCase).length > 0;
+                    }
+                },
+                floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
+                    suppressMenu: true, suppressFilterButton: true, names: [
+                        {
+                            "type": "role",
+                            "name": "Admin",
+                            "value": "Admin"
+                        },
+                        {
+                            "type": "role",
+                            "name": "Author",
+                            "value": "Author"
+                        },
+                        {
+                            "type": "role",
+                            "name": "Reviewer",
+                            "value": "Reviewer"
+                        },
+                        {
+                            "type": "role",
+                            "name": "Viewer",
+                            "value": "Viewer"
+                        }
+                    ],
+                }
+            },
+            { field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true },
+            { field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+        ];
 
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			enableCellTextSelection: true,
-			onCellClicked: this.onGridCellClick,
-			onGridReady: this.onGridReady,
-			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent,
-			},
-			defaultColDef: {
-				sortable: true,
-				resizable: true,
-				suppressMenu: true,
-				filter: true,
-				floatingFilter: true,
-				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-				unSortIcon: true
-			},
-			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
+        this.gridOptions = {
+            context: { componentParent: this },
+            pagination: false,
+            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressPaginationPanel: true,
+            paginationPageSize: this.gridPaging.pageSize,
+            rowSelection: 'single',
+            enableCellTextSelection: true,
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                'templateRenderer': TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent,
+            },
+            defaultColDef: {
+                sortable: true,
+                resizable: true,
+                suppressMenu: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                unSortIcon: true
+            },
+            enableBrowserTooltips: true,
+            rowClassRules: {
+                refset_tool_grid_inactive_row: function (params) {
 
-					var inactivatedRow = false;
+                    var inactivatedRow = false;
 
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
+                    if (params.data) {
+                        inactivatedRow = params.data.active == false;
+                    }
 
-					return inactivatedRow;
-				},
-			},
-		};
+                    return inactivatedRow;
+                },
+            },
+        };
 
-		this.data = [];
-	}
+        this.data = [];
+    }
 
-	ngAfterViewInit() {
-	}
+    ngAfterViewInit() {
+    }
 
-	get dataCount() {
-		return this.data.length;
-	}
+    get dataCount() {
+        return this.data.length;
+    }
 
-	onGridReady = (params) => {
-		this.gridParams = params;
-		this.gridApi = params.api;
-		this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
-		this.gridApi.setColumnDefs(this.gridColumnDefs);
-		this.getTeams();
-	}
+    onGridReady = (params) => {
+        this.gridParams = params;
+        this.gridApi = params.api;
+        this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
+        this.gridApi.setColumnDefs(this.gridColumnDefs);
+        this.getTeams();
+    }
 
-	getTeams(): void {
-		let roles = [];
+    getTeams(): void {
+        let roles = [];
 
-		if (this.selectedOrganization?.id) {
+        if (this.selectedOrganization?.id) {
 
-			this.showLoadingSpinner = true;
+            this.showLoadingSpinner = true;
 
-			this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+            this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
-				this.data = [];
-				this.teamList = results.items;
+                this.data = [];
+                this.teamList = results.items;
 
-				for (let team of this.teamList) {
+                for (let team of this.teamList) {
 
-					if (team?.organization?.id === this.selectedOrganization?.id) {
+                    if (team?.organization?.id === this.selectedOrganization?.id) {
 
-						roles = roles.concat(team.roles);
-						this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0'});
-					}
-				}
+                        roles = roles.concat(team.roles);
+                        this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0' });
+                    }
+                }
 
-				roles = [...new Set(roles)].sort();
-				this.gridApi.setRowData(this.data);
-				this.showLoadingSpinner = false;
-			});
-		} else {
-			this.data = [];
-			this.gridApi.setRowData(this.data);
-			this.showLoadingSpinner = false;
-		}
-	}
+                roles = [...new Set(roles)].sort();
+                this.gridApi.setRowData(this.data);
+                this.showLoadingSpinner = false;
+            });
+        } else {
+            this.data = [];
+            this.gridApi.setRowData(this.data);
+            this.showLoadingSpinner = false;
+        }
+    }
 
-	getOrganizations(): void {
+    getOrganizations(): void {
 
-		this.refsetService.getOrganizations().subscribe((results) => {
+        this.refsetService.getOrganizations().subscribe((results) => {
 
-			this.organizationList = results.items;
+            this.organizationList = results.items;
 
-			for (let organization of this.organizationList) {
+            for (let organization of this.organizationList) {
 
-				if (this.organizationId == organization.id) {
-					this.setOrganizationData(organization);
-				}
-			}
-		});
-	}
+                if (this.organizationId == organization.id) {
+                    this.setOrganizationData(organization);
+                }
+            }
+        });
+    }
 
-	selectOrg($event): void {
+    selectOrg($event): void {
 
-		this.setOrganizationData(this.selectedOrganization);
-		this.location.replaceState("/organizations/teams/" + this.selectedOrganization.id);
-	}
+        this.setOrganizationData(this.selectedOrganization);
+        this.location.replaceState("/organizations/teams/" + this.selectedOrganization.id);
+    }
 
-	setOrganizationData(organization: any) {
+    setOrganizationData(organization: any) {
 
-		this.organizationId = organization.id;
-		this.selectedOrganization = organization;
+        this.organizationId = organization.id;
+        this.selectedOrganization = organization;
 
-		this.onGridReady(this.gridParams);
-	}
+        this.onGridReady(this.gridParams);
+    }
 
-	onGridCellClick = (event) => {
-		if (event.column.colId !== 'description') {
-			let selectedRows = this.gridApi.getSelectedRows();
-			let selectedId: string;
+    onGridCellClick = (event) => {
+        if (event.column.colId !== 'description') {
+            let selectedRows = this.gridApi.getSelectedRows();
+            let selectedId: string;
 
-			selectedRows.forEach(function (selectedRow, index) {
+            selectedRows.forEach(function (selectedRow, index) {
 
-				selectedId = selectedRow.id;
-			});
+                selectedId = selectedRow.id;
+            });
 
-			this.router.navigate(['/organization/' + this.organizationId + '/teams/people', selectedId]);
-		}
-	};
+            this.router.navigate(['/organization/' + this.organizationId, 'teams', 'people', selectedId]);
+        }
+    };
 }

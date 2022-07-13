@@ -13,184 +13,184 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
-	selector: 'projects-people',
-	templateUrl: './people.component.html'
+    selector: 'projects-people',
+    templateUrl: './people.component.html'
 })
 export class ProjectsPeopleComponent implements OnInit {
 
-	menu: SidebarMenuItem[] = [];
-	data = [];
-	peopleList = [];
-	selectedProject: any;
-	selectedOrganization: any;
-	id: any;
-	projectList = [];
-	gridOptions: any;
-	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
-	gridParams: any;
-	gridApi: any;
-	gridColumnDefs = [];
-	uiUtility = UiUtility;
+    menu: SidebarMenuItem[] = [];
+    data = [];
+    peopleList = [];
+    selectedProject: any;
+    selectedOrganization: any;
+    id: any;
+    projectList = [];
+    gridOptions: any;
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    gridParams: any;
+    gridApi: any;
+    gridColumnDefs = [];
+    uiUtility = UiUtility;
 
-	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
-	organizations: any;
-	organizationId: string;
+    @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+    organizations: any;
+    organizationId: string;
 
-	constructor(private readonly breadcrumbService: BreadcrumbService,
-		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
-		private readonly projectsService: ProjectsService,
-		private readonly route: ActivatedRoute,
-		private authenticationService: AuthenticationService,
-		private readonly router: Router) {}
+    constructor(private readonly breadcrumbService: BreadcrumbService,
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly projectsService: ProjectsService,
+        private readonly route: ActivatedRoute,
+        private authenticationService: AuthenticationService,
+        private readonly router: Router) { }
 
-	ngOnInit(): void {
-		this.titleService.setTitle('Refset Tool - Projects');
+    ngOnInit(): void {
+        this.titleService.setTitle('Refset Tool - Projects');
 
-		this.gridColumnDefs = [
-			{ field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
-			{ field: 'company', flex: 1, headerName: 'Company Name' },
-			{ field: 'email', flex: 1, headerName: 'Email' },
-			{ field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
-		];
+        this.gridColumnDefs = [
+            { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
+            { field: 'company', flex: 1, headerName: 'Company Name' },
+            { field: 'email', flex: 1, headerName: 'Email' },
+            { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+        ];
 
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			enableCellTextSelection: true,
-			onCellClicked: this.onGridCellClick,
-			onGridReady: this.onGridReady,
-			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent
-			},
-			defaultColDef: {
-				sortable: true,
-				resizable: true,
-				suppressMenu: true,
-				filter: true,
-				floatingFilter: true,
-				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-				unSortIcon: true
-			},
-			enableBrowserTooltips: true,
-			rowClassRules: {
-				refset_tool_grid_inactive_row: function (params) {
+        this.gridOptions = {
+            context: { componentParent: this },
+            pagination: false,
+            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressPaginationPanel: true,
+            paginationPageSize: this.gridPaging.pageSize,
+            rowSelection: 'single',
+            enableCellTextSelection: true,
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                templateRenderer: TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent
+            },
+            defaultColDef: {
+                sortable: true,
+                resizable: true,
+                suppressMenu: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                unSortIcon: true
+            },
+            enableBrowserTooltips: true,
+            rowClassRules: {
+                refset_tool_grid_inactive_row: function (params) {
 
-					var inactivatedRow = false;
+                    var inactivatedRow = false;
 
-					if (params.data) {
-						inactivatedRow = params.data.active == false;
-					}
+                    if (params.data) {
+                        inactivatedRow = params.data.active == false;
+                    }
 
-					return inactivatedRow;
-				},
-			},
-		};
+                    return inactivatedRow;
+                },
+            },
+        };
 
-		this.data = [];
+        this.data = [];
 
-		this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
 
-			this.organizationId = params['organizationId'];
-			if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
-				this.id = params['id'];
-				this.getProject();
-			}
-			this.setNavigation();
-		});
-		this.getProjects();
-		this.getPeople();
+            this.organizationId = params['organizationId'];
+            if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
+                this.id = params['id'];
+                this.getProject();
+            }
+            this.setNavigation();
+        });
+        this.getProjects();
+        this.getPeople();
         this.getOrganizations();
-	}
+    }
 
-	setNavigation() {
+    setNavigation() {
 
-		let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+        let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
-		if (CodeUtility.hasValue(this.organizationId), true, true) {
-			breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
-		}
+        if (CodeUtility.hasValue(this.organizationId), true, true) {
+            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+        }
 
-		breadcrumbs.push({ label: 'People' });
-		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+        breadcrumbs.push({ label: 'People' });
+        this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy'},
-			{ name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
-		];
-		
-		if(true){
-			this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
-		}
-	}
-	
-	getOrganizations(): void {
-		// get list of organizations
-		this.refsetService.getOrganizations().subscribe((organizationResults) => {
-		  this.organizations = organizationResults?.items;
-		})
-	}
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy' },
+            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
+        ];
 
-	selectOrganization($event): void {
-		this.organizationId = $event.value.id;
-		this.selectedProject = null;
-		this.getProjects();
-	}
+        if (true) {
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+        }
+    }
 
-	onGridReady = (params) => {
-		this.gridParams = params;
-		this.gridApi = params.api;
-	}
+    getOrganizations(): void {
+        // get list of organizations
+        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+            this.organizations = organizationResults?.items;
+        })
+    }
 
-	onGridCellClick = (event) => {
+    selectOrganization($event): void {
+        this.organizationId = $event.value.id;
+        this.selectedProject = null;
+        this.getProjects();
+    }
 
-		let selectedRows = this.gridApi.getSelectedRows();
-		let selectedId: string;
+    onGridReady = (params) => {
+        this.gridParams = params;
+        this.gridApi = params.api;
+    }
 
-		selectedRows.forEach(function (selectedRow, index) {
+    onGridCellClick = (event) => {
 
-			selectedId = selectedRow.id;
-		});
+        let selectedRows = this.gridApi.getSelectedRows();
+        let selectedId: string;
 
-		this.router.navigate(['/teams/people', selectedId]);
-	};
+        selectedRows.forEach(function (selectedRow, index) {
 
-	getPeople(): void {
-		// this.projectsService.getProjectUsers(this.id).subscribe((results) => {
-		//   this.peopleList = results.items;
-		//   console.log(this.peopleList);
-		// });
-	}
+            selectedId = selectedRow.id;
+        });
 
-	get dataCount() {
-		return this.data.length;
-	}
+        this.router.navigate(['/personal/landing', selectedId]);
+    };
 
-	getProjects(): void {
-		this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.projectList = results.items.filter((items) => {
-				return this.organizationId === items.organizationId;
-			});
-		});
-	}
+    getPeople(): void {
+        // this.projectsService.getProjectUsers(this.id).subscribe((results) => {
+        //   this.peopleList = results.items;
+        //   console.log(this.peopleList);
+        // });
+    }
 
-	getProject(): void {
-		this.projectsService.getProject(this.id).subscribe((result) => {
-			this.selectedProject = result;
-			this.selectedOrganization = this.selectedProject?.organization;
-		});
-	}
+    get dataCount() {
+        return this.data.length;
+    }
 
-	selectProject($event): void {
-	this.router.navigate(['organization/' + this.organizationId + '/projects/people', $event['value'].id]);
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-      this.getProject();
-    });
-  }
+    getProjects(): void {
+        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+            this.projectList = results.items.filter((items) => {
+                return this.organizationId === items.organizationId;
+            });
+        });
+    }
+
+    getProject(): void {
+        this.projectsService.getProject(this.id).subscribe((result) => {
+            this.selectedProject = result;
+            this.selectedOrganization = this.selectedProject?.organization;
+        });
+    }
+
+    selectProject($event): void {
+        this.router.navigate(['organization/' + this.organizationId + '/projects/people', $event['value'].id]);
+        this.route.params.subscribe(params => {
+            this.id = params['id'];
+            this.getProject();
+        });
+    }
 }

@@ -14,169 +14,169 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
-	selector: 'organization-projects',
-	templateUrl: './projects.component.html'
+    selector: 'organization-projects',
+    templateUrl: './projects.component.html'
 })
 export class OrganizationProjectsComponent implements OnInit {
-	menu: SidebarMenuItem[] = [
-		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true },
-		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
-	];
+    menu: SidebarMenuItem[] = [
+        { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true },
+        { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+        { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
+    ];
 
-	data = [];
-	gridOptions: any;
-	@ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
-	columnDefs = [];
-	projectList = []
-	organizationList = [];
-	selectedOrganization: any;
-	organizationId: string;
-	api: any;
-	columnApi: any;
-	gridParams: any;
-	showLoadingSpinner = true;
+    data = [];
+    gridOptions: any;
+    @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
+    columnDefs = [];
+    projectList = []
+    organizationList = [];
+    selectedOrganization: any;
+    organizationId: string;
+    api: any;
+    columnApi: any;
+    gridParams: any;
+    showLoadingSpinner = true;
 
-	constructor(private readonly breadcrumbService: BreadcrumbService,
-		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
-		private readonly organizationsService: OrganizationsService,
-		private readonly route: ActivatedRoute,
-		private readonly router: Router,
-		private readonly teamService: TeamsService,
-		private authenticationService: AuthenticationService,
-		private location: Location) {
-			if(authenticationService.isAdmin()){
-				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-			}
-		}
+    constructor(private readonly breadcrumbService: BreadcrumbService,
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly organizationsService: OrganizationsService,
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private readonly teamService: TeamsService,
+        private authenticationService: AuthenticationService,
+        private location: Location) {
+        if (authenticationService.isAdmin()) {
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+        }
+    }
 
-	ngOnInit(): void {
+    ngOnInit(): void {
 
-		this.titleService.setTitle('Refset Tool - Organizations');
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/organizations/projects', label: 'Organizations' },
-			{ label: 'Projects' },
-		]);
+        this.titleService.setTitle('Refset Tool - Organizations');
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/projects', label: 'Organizations' },
+            { label: 'Projects' },
+        ]);
 
-		this.getOrganizations();
+        this.getOrganizations();
 
-		this.data = [];
-		this.columnDefs = [
-			{ field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => { return `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''); }, cellClass: 'pointer' },
-			{ field: 'description', headerName: 'Description', minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
-			{
-				field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
-					return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
-				}
-			}
-		];
+        this.data = [];
+        this.columnDefs = [
+            { field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => { return `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''); }, cellClass: 'pointer' },
+            { field: 'description', headerName: 'Description', minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
+            {
+                field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
+                    return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
+                }
+            }
+        ];
 
-		this.route.params.subscribe(params => {
-			this.organizationId = params['id'];
-		});
+        this.route.params.subscribe(params => {
+            this.organizationId = params['id'];
+        });
 
-		this.gridOptions = {
-			onCellClicked: this.onGridCellClick,
-			onGridReady: this.onGridReady,
-			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
-			},
-			defaultColDef: {
-				filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, resizable: true
-			}
-		};
-	}
+        this.gridOptions = {
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                'templateRenderer': TemplateRenderer,
+            },
+            defaultColDef: {
+                filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, resizable: true
+            }
+        };
+    }
 
-	onGridReady = (params) => {
+    onGridReady = (params) => {
 
-		this.gridParams = params;
-		this.api = params.api;
-		this.columnApi = params.columnApi;
-		this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
-		this.api.setColumnDefs(this.columnDefs);
-		this.getProjects();
-	}
+        this.gridParams = params;
+        this.api = params.api;
+        this.columnApi = params.columnApi;
+        this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
+        this.api.setColumnDefs(this.columnDefs);
+        this.getProjects();
+    }
 
-	onGridCellClick = (event) => {
+    onGridCellClick = (event) => {
 
-		if (event.column.colId === 'name') {
-			this.router.navigate(['/projects', event.data.id]);
-		}
-	}
+        if (event.column.colId === 'name') {
+            this.router.navigate(['organization', this.organizationId, 'projects', event.data.id]);
+        }
+    }
 
-	get dataCount() {
-		return this.data.length;
-	}
+    get dataCount() {
+        return this.data.length;
+    }
 
-	getProjects(): void {
+    getProjects(): void {
 
-		this.showLoadingSpinner = true;
-		this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(async (results) => {
+        this.showLoadingSpinner = true;
+        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(async (results) => {
 
-			this.data = [];
-			this.projectList = results.items;
+            this.data = [];
+            this.projectList = results.items;
 
-			for (let project of this.projectList) {
+            for (let project of this.projectList) {
 
-				if (project?.organization?.id === this.selectedOrganization?.id) {
-					this.data.push({ name: `${project?.name}`, locked: project?.privateProject, description: `${project?.description}`, teams: `${(await this.getTeams(project?.teams))}`, id: project.id })
-				}
-			}
+                if (project?.organization?.id === this.selectedOrganization?.id) {
+                    this.data.push({ name: `${project?.name}`, locked: project?.privateProject, description: `${project?.description}`, teams: `${(await this.getTeams(project?.teams))}`, id: project.id })
+                }
+            }
 
-			this.api.setRowData(this.data.slice(0, 10));
-			this.api.redrawRows();
-			this.showLoadingSpinner = false;
-		});
-	}
+            this.api.setRowData(this.data.slice(0, 10));
+            this.api.redrawRows();
+            this.showLoadingSpinner = false;
+        });
+    }
 
-	async getTeams(teams: any): Promise<any> {
+    async getTeams(teams: any): Promise<any> {
 
-		console.log(teams)
-		const teamObject = { teams: [] };
+        console.log(teams)
+        const teamObject = { teams: [] };
 
-		if (teams === 'undefined' || teams === undefined) {
-			return JSON.stringify(teamObject);
-		} else {
+        if (teams === 'undefined' || teams === undefined) {
+            return JSON.stringify(teamObject);
+        } else {
 
-			for (let team of teams) {
-				teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
-			}
+            for (let team of teams) {
+                teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
+            }
 
-			return JSON.stringify(teamObject);
-		}
-	}
+            return JSON.stringify(teamObject);
+        }
+    }
 
-	getOrganizations(): void {
+    getOrganizations(): void {
 
-		this.refsetService.getOrganizations().subscribe((results) => {
+        this.refsetService.getOrganizations().subscribe((results) => {
 
-			this.organizationList = results.items;
+            this.organizationList = results.items;
 
-			for (let organization of this.organizationList) {
+            for (let organization of this.organizationList) {
 
-				if (this.organizationId == organization.id) {
-					this.setOrganizationData(organization);
-				}
-			}
-		});
-	}
+                if (this.organizationId == organization.id) {
+                    this.setOrganizationData(organization);
+                }
+            }
+        });
+    }
 
-	selectOrg($event): void {
-		this.setOrganizationData(this.selectedOrganization);
-		this.location.replaceState("/organizations/projects/" + this.selectedOrganization.id);
-	}
+    selectOrg($event): void {
+        this.setOrganizationData(this.selectedOrganization);
+        this.location.replaceState("/organizations/projects/" + this.selectedOrganization.id);
+    }
 
-	setOrganizationData(organization: any) {
+    setOrganizationData(organization: any) {
 
-		this.organizationId = organization.id;
-		this.selectedOrganization = organization;
+        this.organizationId = organization.id;
+        this.selectedOrganization = organization;
 
-		this.onGridReady(this.gridParams);
-	}
+        this.onGridReady(this.gridParams);
+    }
 
-	getTeamCount(data: any): number {
-		return data.teams.length;
-	}
+    getTeamCount(data: any): number {
+        return data.teams.length;
+    }
 }
 
