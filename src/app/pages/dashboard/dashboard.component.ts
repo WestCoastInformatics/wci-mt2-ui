@@ -151,7 +151,7 @@ export class DashboardComponent implements OnInit {
                 this.refsetGridLastSort = newSortString;
 
                 let restParams: any = {
-                    limit: 500,
+                    limit: 10,
                     offset: 0,
                     searchConcepts: true,
                     showInDevelopment: true,
@@ -179,7 +179,7 @@ export class DashboardComponent implements OnInit {
                             })
 
                         }
-                        this.data = this.data.slice(0, 10);
+
                         let data = this.data;
 
                         if (data?.length > 0) {
@@ -253,7 +253,7 @@ export class DashboardComponent implements OnInit {
     }
 
     getRefSets(): void {
-        this.refsetService.getRefsets(`limit=500&offset=0&sort=name&sortAscending=true&assignedUser=${this.currentUser.userName}`, false).subscribe((x) => {
+        this.refsetService.getRefsets(`limit=10&offset=0&sort=name&sortAscending=true&assignedUser=${this.currentUser.userName}`, false).subscribe((x) => {
             for (let refset of x.items) {
                 this.data.push({
                     name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
@@ -265,7 +265,7 @@ export class DashboardComponent implements OnInit {
 
 
             }
-            this.api.setRowData(this.data.slice(0, 10));
+            this.api.setRowData(this.data);
             this.api.redrawRows();
         });
     }
@@ -277,22 +277,9 @@ export class DashboardComponent implements OnInit {
     }
 
     getTeams(): void {
-        this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-            for (var team of results.items) {
-                if (team?.members) {
-                for (var member of team?.members) {
-                    if (member.includes(this.currentUser.id)) {
-                        this.teamList.push(team);
-                    }
-                }
-            }
-            }
 
-            /**this.teamList = results.items.filter((x) => {
-                return x.members.some((member) => {
-                    return member.includes(this.currentUser.id);
-                });
-            }); */
+        this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+            this.teamList = results.items;
         });
     }
 

@@ -46,15 +46,10 @@ export class PersonalLandingComponent implements OnInit {
     });
   }
 
-
   getTeams(): void {
+
     this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-      this.teamList = results.items.filter((x) => {
-        return x.members.some((member) => {
-          return member.includes(this.currentUserId);
-        });
-      });
+      this.teamList = results.items;
     });
   }
-
 }
