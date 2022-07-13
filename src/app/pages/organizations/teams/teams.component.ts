@@ -43,7 +43,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private authenticationService: AuthenticationService,
-		private location: Location) { 
+		private location: Location) {
 			if(authenticationService.isAdmin()){
 				this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
 			}
@@ -104,7 +104,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 				}
 			},
 			{ field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true },
-			{ field: 'members', headerName: 'Members', maxWidth: 110, filter: false ,resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+			{ field: 'members', headerName: 'Members', maxWidth: 120, filter: false ,resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
 		];
 
 		this.gridOptions = {
@@ -216,11 +216,11 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 		this.location.replaceState("/organizations/teams/" + this.selectedOrganization.id);
 	}
 
-	setOrganizationData(organization: any) { 
+	setOrganizationData(organization: any) {
 
 		this.organizationId = organization.id;
 		this.selectedOrganization = organization;
-		
+
 		this.onGridReady(this.gridParams);
 	}
 
