@@ -89,13 +89,11 @@ export class OrganizationProjectsComponent implements OnInit {
     }
 
     onGridReady = (params) => {
-
         this.gridParams = params;
         this.api = params.api;
         this.columnApi = params.columnApi;
         this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
         this.api.setColumnDefs(this.columnDefs);
-        this.getProjects();
     }
 
     onGridCellClick = (event) => {
@@ -159,6 +157,9 @@ export class OrganizationProjectsComponent implements OnInit {
                     this.setOrganizationData(organization);
                 }
             }
+
+            this.getProjects();
+
         });
     }
 
