@@ -33,8 +33,12 @@ export class ReadyForPublicationModalComponent implements OnInit {
 
   setWorkflowStatusByAction(notes: string): void {
     if (notes) {
-      this.workflowService.saveNotes(this.refsetData.id, notes);
-      this.setWorkflowStatus.emit(true);
+      this.workflowService.saveNotes(this.refsetData.id, notes).subscribe(response => {
+				if(response){
+					this.setWorkflowStatus.emit(true);
+				}
+			});
+      
       this.modalService.dismissAll();
       this.clearModal();
     }
