@@ -6,50 +6,58 @@ import { UsersService } from 'src/app/services/rest/users.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
-  selector: 'personal-landing',
-  templateUrl: './landing.component.html'
+    selector: 'personal-landing',
+    templateUrl: './landing.component.html'
 })
 export class PersonalLandingComponent implements OnInit {
-  menu:SidebarMenuItem[] = [
-    {name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true},
-    {name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs'}
-  ];
+    menu: SidebarMenuItem[] = [
+        { name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true },
+        { name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs' }
+    ];
 
-  selectedTeam: any;
-  currentUserId: any;
-  user: any;
-  todayDate: Date = new Date();
-  organizationList = [];
-  teamList = [];
-  uiUtility = UiUtility;
+    selectedTeam: any;
+    userId: any;
+    user: any;
+    todayDate: Date = new Date();
+    organizationList = [];
+    teamList = [];
+    uiUtility = UiUtility;
 
-  constructor(private readonly authService: AuthenticationService,
-    private readonly userService: UsersService,
-    private readonly refsetService: RefsetService) { }
+    constructor(private readonly authService: AuthenticationService,
+        private readonly userService: UsersService,
+        private readonly refsetService: RefsetService) { }
 
-  ngOnInit(): void {
-    this.currentUserId = this.authService.getUser().id;
-    this.getUser();
-    this.getOrganizations();
-    this.getTeams();
-  }
+    ngOnInit(): void {
+        if (window.location.pathname.split("/").length > 3)
+            this.userId = window.location.pathname.split("/")[3];
+        else
+            this.userId = this.authService.getUser().id;
+        this.getUser();
+        this.getOrganizations();
+        this.getTeams();
+        //this.setNavigation();
+    }
 
-  getUser(): void {
-    this.userService.getUser(this.currentUserId).subscribe((x) => {
-      this.user = x;
-    });
-  }
+    /* setNavigation() {
 
-  getOrganizations(): void {
-    this.refsetService.getOrganizations().subscribe((results) => {
-      this.organizationList = results.items;
-    });
-  }
+    } */
 
-  getTeams(): void {
+    getUser(): void {
+        this.userService.getUser(this.userId).subscribe((x) => {
+            this.user = x;
+        });
+    }
 
-    this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-      this.teamList = results.items;
-    });
-  }
+    getOrganizations(): void {
+        this.refsetService.getOrganizations().subscribe((results) => {
+            this.organizationList = results.items;
+        });
+    }
+
+    getTeams(): void {
+
+        this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+            this.teamList = results.items;
+        });
+    }
 }
