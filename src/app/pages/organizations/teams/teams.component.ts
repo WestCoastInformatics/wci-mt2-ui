@@ -68,7 +68,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
             { field: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500 },
             { field: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
             {
-                field: 'role', headerName: 'Role', maxWidth: 110, cellClass: 'text-camel',
+                field: 'role', headerName: 'Role', maxWidth: 135, cellClass: 'text-camel',
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {
