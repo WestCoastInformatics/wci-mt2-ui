@@ -203,7 +203,7 @@ export class OrganizationPeopleComponent implements OnInit {
                     var datum = data;
                     console.log(datum);
                 },
-                complete: () => this.router.navigate(['/organizations/projects/', this.id])
+                complete: () => window.location.reload()
             });
     }
 
