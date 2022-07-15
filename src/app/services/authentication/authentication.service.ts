@@ -111,12 +111,18 @@ export class AuthenticationService {
             }
         );
 
+        this.http.post<any>('/ims-api/account/logout', {}).subscribe(
+            (data) => {
+                console.log("IMS logout");
+            }
+        );
+
         window.location.href = this.generateImsUrl('logout');
     }
 
     private readonly deleteAllCookies = () => {
         var cookies = document.cookie.split(";");
-    
+
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i];
             var eqPos = cookie.indexOf("=");
