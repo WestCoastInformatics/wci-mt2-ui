@@ -8,7 +8,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort'; 
+import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -119,6 +119,8 @@ import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
+import {PaginationModule} from './components/pagination/pagination.module';
+import {AuditService} from './services/rest/audit.service';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -163,7 +165,6 @@ const appRoutes: Routes = [
         FooterComponent,
         TaxonomyTreeComponent,
         TemplateRenderer,
-        PaginationComponent,
         RefsetDownloadComponent,
         ColumnChooserComponent,
         NotificationComponent,
@@ -258,7 +259,8 @@ const appRoutes: Routes = [
         MatSlideToggleModule,
         CommonModule,
         ArtifactsModule,
-        AuditTrailModule
+        AuditTrailModule,
+        PaginationModule
     ],
     entryComponents: [NotificationComponent],
     providers: [
@@ -268,6 +270,7 @@ const appRoutes: Routes = [
         RestService,
         ConceptsService,
         RefsetService,
+        AuditService,
 		RefsetDetails,
         PaginationService,
         BreadcrumbService,

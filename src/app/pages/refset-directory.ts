@@ -111,10 +111,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 let organizationsArray = this.organizations?.items;
 
                 for (let i = 0; i < versionStatusArray.length; i++) {
-                    versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();              
+                    versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();
                     versionStatusArray[i].value = versionStatusArray[i].value.toLowerCase();
-                } 
-                
+                }
+
                 this.columnDefs = [
                     { field: 'id', colId: 'information', headerName: '',maxWidth: 65,minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false},
                     { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false},
@@ -123,7 +123,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray}},
                     { field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray}},
-                    { field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false, 
+                    { field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false,
                         valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray}},
                     { field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter , floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray}},
@@ -173,7 +173,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     }
                 };
 
-                this.showTable = true
+                this.showTable = true;
                 this.changeDetectorRef.detectChanges();
                 // this.overrideHeaderScroll();
             },
@@ -320,7 +320,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         rowParams.successCallback([], 0);
                     }
 
-                    this.refsetGridPaging.manualStateRefresh = new Boolean(true); 
+                    this.refsetGridPaging.manualStateRefresh = new Boolean(true);
                     this.showLoadingSpinner = false;
                 },
                 error: (error) => {
@@ -436,7 +436,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
             refset.descriptions = results.descriptions;
             const dialogId = 'directoryInfoDialog';
-            this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("directory", "details/" + refset.refsetId + '/' 
+            this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("directory", "details/" + refset.refsetId + '/'
                 + RefsetUtility.getVersionDateForRefsetApiCall(refset));
 
             if (CodeUtility.hasValue(refset)) {
@@ -570,7 +570,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     }
 
     showFlagIcon(event, show) {
-        
+
         if (show) {
             event.target.style.display = 'inline';
         } else {
