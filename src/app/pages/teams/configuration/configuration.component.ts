@@ -111,12 +111,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
 		this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
-			this.teamList = results.items.filter((team) => {
-
-				return team.members.some((member) => {
-					return member.includes(this.currentUser.id);
-				});
-			});
+			this.teamList = results.items;
 
 			for (let team of this.teamList) {
 
