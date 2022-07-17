@@ -29,6 +29,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
     gridLastFilter = '';
     gridLastSort = '';
     showTable = false;
+    showPaging = false;
 
     @Input() refsetInternalId: string;
     @ViewChild('detailsSection') detailsSection: TemplateRef<any>;
@@ -161,7 +162,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                         results.items.forEach(r => {
                             r.date = this.formatDate(r.modified);
                         });
-
+                        this.showPaging = results.total > 0;
                         if (results.items.length === 0 && pageNumber > 1) {
 
                             this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
@@ -209,7 +210,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
                         } else {
 
-                            // this.gridApi.showNoRowsOverlay();
+                            this.gridApi.showNoRowsOverlay();
                             rowParams.successCallback([], 0);
                         }
 
@@ -217,7 +218,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     },
                     error: (error) => {
 
-                        // this.gridApi.showNoRowsOverlay();
+                        this.gridApi.showNoRowsOverlay();
                         rowParams.successCallback([], 0);
                     }
                 });
@@ -238,11 +239,11 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-    }
+    };
 
     onGridCellClick = (event) => {
 
-    }
+    };
 
 
     onResize(event) {

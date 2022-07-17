@@ -3,7 +3,7 @@
         <ag-grid-angular [columnDefs]="columnDefs"  [gridOptions]="gridOptions"
             class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter w-100">
         </ag-grid-angular>
-        <app-pagination #pagination [pageSize]="gridPaging.pageSize"
+        <app-pagination #pagination [pageSize]="gridPaging.pageSize" *ngIf="showPaging"
                         [gridOptions]="gridOptions"
                         [pageSizeOptions]="gridPaging.pageSizeOptions"
                         [totalKnown]="gridPaging.totalKnown"
