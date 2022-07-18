@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Context, Logger } from 'ag-grid-community';
@@ -18,14 +19,24 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
+import { User } from 'src/app/models/user';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { ProjectsBaseComponent } from '../base/projects.base.component';
 
 @Component({
     selector: 'projects-refset',
     templateUrl: './projects-refset.component.html'
 })
-export class ProjectsRefsetComponent extends ProjectsBaseComponent implements OnInit, AfterViewInit {
+export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
+    menu: SidebarMenuItem[] = [];
+    user: User;
+    projectList = [];
+    selectedProject: any;
+    isSelectedProject: boolean;
+    organizationId: any;
+    selectedOrganization: any;
+    organizations: any;
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView: string = 'all';
@@ -60,13 +71,14 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
     existingBranchVersions: any;
     numOfResults: number;
     projectIsUat: boolean;
+    projectId: any;
     uiUtility = UiUtility;
 
     @ViewChild('projectNameSection') nameSection: TemplateRef<any>;
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
     @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
-    projectId: any;
+    
 
     constructor(
         protected router: Router,
@@ -78,15 +90,28 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
         protected authService: AuthenticationService,
         private readonly modalService: NgbModal,
         protected route: ActivatedRoute,
-        protected readonly projectsService: ProjectsService
+        protected readonly projectsService: ProjectsService,
+        private location: Location
     ) {
-        super(router, route, authService, projectsService, refsetService, titleService);
         refsetService.getTaxonomyRoot();
     }
 
     //***** Framework Functions *****/
     ngOnInit() {
-        super.ngOnInit();
+        
+        this.titleService.setTitle('Refset Tool - Projects');
+
+        this.route.params.subscribe(params => {
+
+            this.organizationId = params['organizationId'];
+			this.projectId = params['id'];
+			this.setNavigation();
+            sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
+        });
+
+        this.getUser();
+        this.getOrganizations();
+
         this.showLoadingSpinner = true;
     }
 
@@ -105,9 +130,6 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
             { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy', isActive: true },
             { name: 'People', link: '/organization/' + this.organizationId + '/projects/people/', icon: 'fa fa-user' },
         ];
-        if (true) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
-        }
     }
 
     getUser(): void {
@@ -116,11 +138,12 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
 
     ngAfterViewInit() {
 
-        forkJoin(this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true'), this.refsetService.getVersions()).subscribe(([projectResults, versionResults]) => {
+        this.refsetService.getVersions().subscribe((versionResults) => {
+
             this.versions = versionResults;
             let versionsArray = this.versions?.items;
             this.showLoadingSpinner = false;
-            this.changeDetectorRef.detectChanges();
+
             let workflowStatuses = [
                 { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
                 { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
@@ -131,7 +154,7 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
                 { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
                 { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
-
+    
             this.columnDefs = [
                 { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false },
                 { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
@@ -150,7 +173,7 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
                 },
                 { field: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
-
+    
             this.refsetGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -180,30 +203,86 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
                 },
                 rowClassRules: {
                     'refset_tool_grid_inactive_row': function (params) {
-
+    
                         var inactivatedRow = false;
-
+    
                         if (params.data) {
                             inactivatedRow = params.data.active == false;
                         }
-
+    
                         return inactivatedRow;
                     }
                 }
             };
-
-            this.projects = projectResults.items.filter((items) => {
-                return this.organizationId === items.organizationId;
-            });
-
-            this.route.params.subscribe(params => {
-                if (params['id'] !== undefined && params['id'] !== 'configuration' && params['id'] !== 'people') {
-                    this.getProject(params['id']);
-                    sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
-                }
-            });
-            this.getStorageItems();
         });
+
+        this.changeDetectorRef.detectChanges();
+    }
+
+    getOrganizations(): void {
+
+        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+
+            this.organizations = organizationResults?.items;
+
+            for (let organization of this.organizations) {
+
+                if (this.organizationId == organization.id) {
+
+                    this.selectedOrganization = organization;
+                    this.getProjects();
+                    break;
+                }
+            }
+        });
+    }
+
+    selectOrganization($event): void {
+
+        this.organizationId = $event.value.id;
+        this.selectedProject = null;
+        this.getProjects();
+    }
+
+    getProjects(): void {
+
+        this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+
+			this.projectList = results.items;
+
+			for (let project of this.projectList) {
+
+                if (this.projectId == project.id) {
+
+                    this.selectedProject = project;
+                    this.showProjectData();
+                    break; 
+                }
+            }
+
+            this.getStorageItems();
+		});
+    }
+
+    showProjectData(): void {
+
+		let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
+        }
+
+        this.showRefsets();
+	}
+
+    selectProject($event): void {
+        
+        this.projectId = this.selectedProject.id;
+        this.location.replaceState('organization/' + this.organizationId + '/projects/' + this.projectId);
+        this.showProjectData();
     }
 
     getStorageItems(): void {
@@ -212,12 +291,12 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
 
             let storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
 
-            for (let project of this.projects) {
+            for (let project of this.projectList) {
 
                 if (project.id == storedProjectId) {
 
                     this.selectedProject = project;
-                    this.showRefsets();
+                    this.selectProject(null);
                     return;
                 }
             }
@@ -227,20 +306,21 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
         }
 
         // set to first in project list if none stored
-        else if (this.projects && this.projects.length > 0) {
+        else if (this.projectList && this.projectList.length > 0) {
 
-            this.selectedProject = this.projects[0];
-            this.showRefsets();
+            this.selectedProject = this.projectList[0];
+            this.selectProject(null);
         }
     }
 
     showRefsets() {
-        this.selectProject();
+
         if (this.originalGridParams) {
             this.onGridReady(this.originalGridParams);
         } else {
             this.showTable = true;
         }
+        
         this.isSelectedProject = JSON.stringify(this.selectedProject.id) === sessionStorage.getItem('selectedProjectId');
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
         this.projectIsUat = this.selectedProject.name.includes("UAT");
@@ -306,7 +386,9 @@ export class ProjectsRefsetComponent extends ProjectsBaseComponent implements On
                 }
 
                 this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe(results => {
+
                     this.numOfResults = results.total;
+
                     if (results.items.length == 0 && pageNumber > 1) {
 
                         this.refsetGridPaging.totalRows = (this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1));

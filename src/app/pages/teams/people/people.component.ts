@@ -33,7 +33,6 @@ export class TeamsPeopleComponent implements OnInit {
     gridColumnDefs = [];
     peopleList = [];
     showTable = false;
-    showAddMembers = false;
     organizationList = [];
     organizationId: string;
     selectedOrganization: any;
@@ -125,8 +124,7 @@ export class TeamsPeopleComponent implements OnInit {
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true },
-            { name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' }
+            { name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true }
         ];
     }
 
@@ -188,13 +186,15 @@ export class TeamsPeopleComponent implements OnInit {
 
     showTeamMembers() {
 
-        if (this.selectedTeam) {
+        this.data = this.selectedTeam.memberList;
 
-            this.data = this.selectedTeam.memberList;
-            this.showAddMembers = this.selectedTeam.userRoles.includes('ADMIN');
+        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
 
-        } else {
-            this.showAddMembers = false;
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' });
+
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
         }
     }
 

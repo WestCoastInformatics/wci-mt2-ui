@@ -54,6 +54,11 @@
                                 <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
                             </ng-template>
 
+                            <!-- Teams Template -->
+                            <ng-template #peopleTeamsSection let-params>
+                                <span class="text-primary font-weight-bold">{{ getTeamCount(params.data.teams) }} teams</span>
+                            </ng-template>
+
                         </div>
                     </div>
 

@@ -170,9 +170,4 @@ export class CreateNewTeamModalComponent {
     setSelectedOrganization(value) {
         this.organizationId = value?.id;
     }
-
-    get canAdd(): boolean{
-        let org = this.selectedOrganization;
-        return this.authenticationService.isAdmin() || org && org.roles?.includes("ADMIN");
-    }
 }

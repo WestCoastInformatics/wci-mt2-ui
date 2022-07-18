@@ -130,8 +130,4 @@ export class CreateNewOrganizationModalComponent {
             }
         );
     }
-
-    get canAdd(): boolean{
-        return this.authenticationService.isAdmin();
-    }
 }

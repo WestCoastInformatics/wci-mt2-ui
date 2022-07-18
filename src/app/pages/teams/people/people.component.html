@@ -40,7 +40,7 @@
 
                     <div class='section-header mb-4'>
                         People ({{dataCount}})
-                        <add-member-modal *ngIf="showAddMembers" type="Team" [id]="selectedTeam?.id" [name]="selectedTeam?.name">
+                        <add-member-modal *ngIf="selectedTeam && selectedTeam.userRoles.includes('ADMIN')" type="Team" [id]="selectedTeam?.id" [name]="selectedTeam?.name">
                         </add-member-modal>
                     </div>
 

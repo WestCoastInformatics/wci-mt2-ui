@@ -212,13 +212,4 @@ export class TeamsConfigurationComponent implements OnInit {
 	getSelectedTeamName(): string {
 		return this.selectedTeam?.name;
 	}
-
-	get canRemove(): boolean{
-		return this.authService.isAdmin();
-	}
-
-	get canAdd(): boolean{
-        let org = this.selectedOrganization;
-        return this.authService.isAdmin() || this.selectedRoles?.includes("ADMIN");
-    }
 }

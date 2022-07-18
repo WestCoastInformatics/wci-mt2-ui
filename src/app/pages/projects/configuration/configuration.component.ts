@@ -9,7 +9,7 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'projects-configuration',
@@ -25,7 +25,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 	profileDescriptionValue = '';
 	isPrivate = false;
 	selectedProject: any;
-	id: any;
+	projectId: any;
 	projectList = [];
 	selectedTeamIds = [];
 	selectedTeams = [];
@@ -42,24 +42,22 @@ export class ProjectsConfigurationComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private readonly authService: AuthenticationService,
-		private readonly notificationService: NotificationService) { }
+		private readonly notificationService: NotificationService,
+		private location: Location) { }
 
 	ngOnInit(): void {
+
 		this.titleService.setTitle('Refset Tool - Projects');
 
 		this.route.params.subscribe(params => {
 
 			this.organizationId = params['organizationId'];
-			if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
-				this.id = params['id'];
-				this.getProject();
-			}
+			this.projectId = params['id'];
 			this.setNavigation();
 		});
+
 		this.currentUser = this.authService.getUser();
 		this.getOrganizations();
-		this.getProjects();
-		this.getTeams();
 	}
 
 	setNavigation() {
@@ -81,36 +79,54 @@ export class ProjectsConfigurationComponent implements OnInit {
 	}
 
 	getOrganizations(): void {
+
 		// get list of organizations
 		this.refsetService.getOrganizations().subscribe((organizationResults) => {
+
 			this.organizations = organizationResults?.items;
-		})
+
+			for (let organization of this.organizations) {
+
+                if (this.organizationId == organization.id) {
+
+                    this.selectedOrganization = organization;
+                    this.getProjects();
+					this.getTeams();
+                    break;
+                }
+            }
+		});
 	}
+
 	getProjects(): void {
-		this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.projectList = results.items.filter((items) => {
-				return this.organizationId === items.organizationId;
-			});
+
+		this.refsetService.getProjects('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+
+			this.projectList = results.items;
+
+			for (let project of this.projectList) {
+
+                if (this.projectId == project.id) {
+
+                    this.selectedProject = project;
+                    this.showProjectData(); 
+                }
+            }
 		});
 	}
 
-	getProject(): void {
-		this.projectsService.getProject(this.id).subscribe((result) => {
-			this.selectedProject = result;
-			this.profileNameValue = this.selectedProject?.name;
-			// this.profileEmailValue = this.selectedProject?.primaryContactEmail;
-			this.profileDescriptionValue = this.selectedProject?.description;
-			this.selectedOrganization = this.selectedProject?.organization;
-			this.isPrivate = this.selectedProject?.privateProject;
+	showProjectData(): void {
 
-			if (!this.selectedProject?.teams) {
-				this.selectedProject = { ...this.selectedProject, teams: [] }
-			}
-			this.selectedTeamIds = this.selectedProject?.teams;
-		});
+		this.profileNameValue = this.selectedProject.name;
+		// this.profileEmailValue = this.selectedProject.primaryContactEmail;
+		this.profileDescriptionValue = this.selectedProject.description;
+		this.selectedOrganization = this.selectedProject.organization;
+		this.isPrivate = this.selectedProject.privateProject;
+		this.selectedTeamIds = this.selectedProject?.teams;
 	}
 
 	isValidEmail(): boolean {
+
 		var lower = this.profileEmailValue.toLowerCase();
 		var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 		);
@@ -123,34 +139,37 @@ export class ProjectsConfigurationComponent implements OnInit {
 	}
 
 	onKeyDownEvent(event: any) {
+
 		console.log(event.target.value);
 		this.isValidEmail();
 	}
 
 	updateProject(): void {
+
 		this.selectedProject.name = this.profileNameValue;
 		// this.selectedProject.primaryContactEmail = this.profileEmailValue;
 		this.selectedProject.description = this.profileDescriptionValue;
 		this.selectedProject.privateProject = this.isPrivate;
-		this.projectsService.updateProject(this.id, this.selectedProject).subscribe(() => {
+		this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe(() => {
 			this.notificationService.show("Update process complete.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
 		});
 	}
 
 	updateProjectTeams(): void {
+
 		this.selectedProject = { ...this.selectedProject, teams: this.selectedTeamIds };
-		this.projectsService.updateProject(this.id, this.selectedProject).subscribe();
+		this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe();
 	}
 
 	selectProject($event): void {
-		this.router.navigate(['organization/' + this.organizationId + '/projects/configuration', $event['value'].id]);
-		this.route.params.subscribe(params => {
-			this.id = params['id'];
-			this.getProject();
-		});
+
+		this.projectId = this.selectedProject.id;
+        this.location.replaceState('organization/' + this.organizationId + '/projects/configuration/' + this.projectId);
+        this.showProjectData();  
 	}
 
 	selectOrganization($event): void {
+
 		this.organizationId = $event.value.id;
 		this.selectedProject = null;
 		this.getProjects();
@@ -162,7 +181,6 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
 			this.teamList = results.items;
-			console.log(this.teamList);
 		});
 	}
 
@@ -241,9 +259,5 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 	getSelectedProjectId(): string {
 		return this.selectedProject?.id;
-	}
-
-	get canRemove(): boolean {
-		return this.authService.isAdmin();
 	}
 }

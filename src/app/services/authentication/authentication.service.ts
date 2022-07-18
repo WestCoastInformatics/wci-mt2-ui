@@ -219,30 +219,4 @@ export class AuthenticationService {
     resetSession() {
         this.apiCalled.emit(null);
     }
-    hasRole(role: string): boolean {
-        let user = this.getUser();
-        if (user?.roles) {
-            for (const userRole of user?.roles) {
-                if (userRole.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    isAdmin(): boolean {
-        return this.hasRole("admin");
-    }
-
-    isAuthor(): boolean {
-        return this.hasRole('AUTHOR');
-    }
-
-    isReviewer(): boolean {
-        return this.hasRole('REVIEWER');
-    }
-
-    isViewer(): boolean {
-        return this.hasRole('VIEWER');
-    }
 }
