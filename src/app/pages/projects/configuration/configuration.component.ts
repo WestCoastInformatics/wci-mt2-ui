@@ -98,6 +98,14 @@ export class ProjectsConfigurationComponent implements OnInit {
 		});
 	}
 
+	selectOrganization($event): void {
+
+		this.organizationId = $event.value.id;
+		this.clearProjectData();
+		this.getProjects();
+		this.getTeams();
+	}
+
 	getProjects(): void {
 
 		this.refsetService.getProjects('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
@@ -115,14 +123,32 @@ export class ProjectsConfigurationComponent implements OnInit {
 		});
 	}
 
+	selectProject($event): void {
+
+		this.projectId = this.selectedProject.id;
+        this.location.replaceState('organization/' + this.organizationId + '/projects/configuration/' + this.projectId);
+        this.showProjectData();  
+	}
+
 	showProjectData(): void {
 
 		this.profileNameValue = this.selectedProject.name;
 		// this.profileEmailValue = this.selectedProject.primaryContactEmail;
 		this.profileDescriptionValue = this.selectedProject.description;
-		this.selectedOrganization = this.selectedProject.organization;
 		this.isPrivate = this.selectedProject.privateProject;
 		this.selectedTeamIds = this.selectedProject?.teams;
+	}
+
+	clearProjectData(): void {
+
+		this.selectedProject = null;
+		this.projectList = [];
+		this.profileNameValue = null;
+		// this.profileEmailValue = this.selectedProject.primaryContactEmail;
+		this.profileDescriptionValue = null;
+		this.isPrivate = null;
+		this.selectedTeamIds = [];
+		this.teamList = [];
 	}
 
 	isValidEmail(): boolean {
@@ -159,20 +185,6 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 		this.selectedProject = { ...this.selectedProject, teams: this.selectedTeamIds };
 		this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe();
-	}
-
-	selectProject($event): void {
-
-		this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/projects/configuration/' + this.projectId);
-        this.showProjectData();  
-	}
-
-	selectOrganization($event): void {
-
-		this.organizationId = $event.value.id;
-		this.selectedProject = null;
-		this.getProjects();
 	}
 
 	getTeams(): void {

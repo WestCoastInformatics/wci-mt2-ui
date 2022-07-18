@@ -150,6 +150,8 @@ export class ProjectsPeopleComponent implements OnInit {
 
         this.organizationId = $event.value.id;
         this.selectedProject = null;
+        this.projectList = [];
+        this.data = [];
         this.getProjects();
     }
 
@@ -209,7 +211,7 @@ export class ProjectsPeopleComponent implements OnInit {
     selectProject($event): void {
         
         this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.projectId);
+        this.location.replaceState('organization/' + this.organizationId + '/projects/people/' + this.projectId);
         this.showProjectData();
     }
 

@@ -101,9 +101,8 @@ export class TeamsConfigurationComponent implements OnInit {
 
 		this.organizationId = this.selectedOrganization.id;
 		this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
+		
 		this.clearTeamData();
-
-		this.setNavigation();
 		this.getTeams();
 	}
 
@@ -134,6 +133,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
 	clearTeamData() {
 
+		this.teamList = [];
 		this.teamId = null;
 		this.selectedTeam = null;
 		this.selectedRoles = [];

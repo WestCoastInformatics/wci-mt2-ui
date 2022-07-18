@@ -154,9 +154,9 @@ export class TeamsPeopleComponent implements OnInit {
         this.location.replaceState('organization/' + this.organizationId + '/teams/people/');
         this.teamId = null;
         this.selectedTeam = null;
+        this.teamList = [];
         this.data = [];
 
-        this.setNavigation();
         this.getTeams();
     }
 
