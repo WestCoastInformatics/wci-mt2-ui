@@ -1,8 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {UiUtility} from '../../../utilities/ui.utility';
+import {CodeUtility} from '../../../utilities/code.utility';
+import {PaginationComponent} from '../../pagination/pagination.component';
+import {AuditService} from 'src/app/services/rest/audit.service';
 
 @Component({
     selector: 'audit-trail-list',
@@ -11,53 +14,51 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
 
-    isResolved = false;
-    columnDefs = [
+    columnDefs = [];
 
-    ];
-
-    data = [
-        {'date': '2019-03-12 at 06:11:35', 'modifiedBy': 'TestUser', 'message': 'Workflow action', 'details': 'FINISH as AUTHOR on refset 8533297'},
-        {'date': '2019-03-12 at  01:46:11', 'modifiedBy': 'TestUser', 'message': 'Workflow action', 'details': 'ASSIGN as REVIEWER on refset 8533297'},
-        {'date': '2018-03-12 at 16:55:01', 'modifiedBy': 'TestUser', 'message': 'Upgrade refset', 'details': 'Upgrade refset 8533297'},
-        {'date': '2018-03-11 at 14:45:28', 'modifiedBy': 'TestUser', 'message': 'Clone refset', 'details': 'Clone from refset 8533297 to refset 7896523'},
-        {'date': '2020-07-20 at 16:06:50', 'modifiedBy': 'TestUser', 'message': 'Begin refset release', 'details': 'Begin release 8533297'},
-        {'date': '2020-07-20 at 15:00:12', 'modifiedBy': 'TestUser', 'message': 'Add member', 'details': 'Add Member 5216742 to refset 8533297'},
-        {'date': '2018-03-11 at 14:45:28', 'modifiedBy': 'TestUser', 'message': 'Clone refset', 'details': 'Clone from refset 8533297 to refset 7896523'},
-        {'date': '2020-07-20 at 16:06:50', 'modifiedBy': 'TestUser', 'message': 'Begin refset release', 'details': 'Begin release 8533297'},
-        {'date': '2020-07-20 at 15:00:12', 'modifiedBy': 'TestUser', 'message': 'Add member', 'details': 'Add Member 5216742 to refset 8533297'},
-        {'date': '2018-03-11 at 14:45:28', 'modifiedBy': 'TestUser', 'message': 'Clone refset', 'details': 'Clone from refset 8533297 to refset 7896523'},
-        {'date': '2020-07-20 at 16:06:50', 'modifiedBy': 'TestUser', 'message': 'Begin refset release', 'details': 'Begin release 8533297'},
-        {'date': '2020-07-20 at 15:00:12', 'modifiedBy': 'TestUser', 'message': 'Add member', 'details': 'Add Member 5216742 to refset 8533297'},
-        {'date': '2018-03-11 at 14:45:28', 'modifiedBy': 'TestUser', 'message': 'Clone refset', 'details': 'Clone from refset 8533297 to refset 7896523'}
-    ];
+    data: any;
 
     gridApi: any;
     gridColumnDefs = [];
     gridOptions: any;
-    gridPaging = { pageSize: 6, pageSizeOptions: [6, 10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
-    showTable: boolean = false;
+    gridPaging = {
+        pageSize: 6, pageSizeOptions: [6, 10, 25, 50, 100], totalKnown: false, totalRows: null,
+        manualStateRefresh: Boolean(true)
+    };
+    gridColumnApi: any;
+    gridLastFilter = '';
+    gridLastSort = '';
+    showTable = false;
+    showPaging = false;
 
     @Input() refsetInternalId: string;
     @ViewChild('detailsSection') detailsSection: TemplateRef<any>;
+    @ViewChild('pagination') paginationComponent: PaginationComponent;
 
-    constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private refsetService: RefsetService,
-        private changeDetectorRef: ChangeDetectorRef) { }
+    constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private auditService: AuditService,
+                private changeDetectorRef: ChangeDetectorRef) {
+    }
 
     ngOnInit(): void {
         this.columnDefs = [
-        { field: 'date', headerName: 'Date', unSortIcon: true, sortable: true },
-        { field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true },
-        { field: 'message', headerName: 'Message', unSortIcon: true, sortable: true },
-        { field: 'details', headerName: 'Details', minWidth: 550 }]; //, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
+            {field: 'date', headerName: 'Date', unSortIcon: true, sortable: true},
+            {field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true},
+            {field: 'message', headerName: 'Message', unSortIcon: true, sortable: true},
+            {field: 'details', headerName: 'Details', minWidth: 550}];
+        // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
-            context: { componentParent: this },
+            context: {componentParent: this},
             pagination: true,
-            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressPaginationPanel: true,
+            cacheBlockSize: this.gridPaging.pageSize,
+            maxBlocksInCache: 1,
+            rowModelType: 'infinite',
+            enableCellTextSelection: true,
+            // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             // suppressPaginationPanel: true,
             paginationPageSize: this.gridPaging.pageSize,
-            enableCellTextSelection: true,
             // onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             onFilterChanged: function () {
@@ -65,7 +66,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     this.api.showNoRowsOverlay();
                 } else {
                     this.api.hideOverlay();
-                };
+                }
             },
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
@@ -77,13 +78,13 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 flex: 1,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
             },
             enableBrowserTooltips: true,
             rowClassRules: {
                 refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+                    let inactivatedRow = false;
 
                     if (params.data) {
                         inactivatedRow = params.data.active == false;
@@ -99,58 +100,158 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
         this.showTable = true;
 
 
-        this.gridColumnDefs = [
-
-        ];
+        this.gridColumnDefs = [];
     }
 
     onGridReady = (gridReadyParams) => {
 
         this.gridApi = gridReadyParams.api;
-        // this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
-        // this.gridApi.setColumnDefs(this.columnDefs);
-        // let conceptId = null;
+        this.gridColumnApi = gridReadyParams.columnApi;
+        this.onResize(undefined);
+        const dataSource = {
+            rowCount: null,
+            getRows: (rowParams) => {
 
-        // if (CodeUtility.hasValue(this.conceptId)) {
-        // 	conceptId = this.conceptId;
-        // }
-        return;
+                this.gridApi.showLoadingOverlay();
+                // this.showLoadingSpinner = true;
 
-        this.refsetService.getArtifacts(this.refsetInternalId, '?limit=500&offset=0&sort=modified&sortAscending=false').subscribe({
-            next: (results) => {
+                let pageNumber = rowParams.endRow / this.gridApi.paginationGetPageSize();
+                let query = UiUtility.formatFilterData(rowParams.filterModel);
+                const sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                results.total = results.items.length;
-                results.totalKnown = true;
-                // this.threadsData = results.items;
-                let pageNumber = 1;
+                const newFilterString = query;
+                const newSortString = JSON.stringify(sort);
 
-                if (results.items.length == 0) {
-                    this.gridApi.showNoRowsOverlay();
-                    this.gridApi.setRowData([]);
+                // if the filters or sort have changed then move to the first page
+                if (newFilterString !== this.gridLastFilter || newSortString !== this.gridLastSort) {
 
-                    if (pageNumber > 1) {
-
-                        this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
-                        this.gridPaging.totalKnown = true;
-                        // this.paginationComponent.goToPage(pageNumber - 1);
-                    }
-
-                    return;
+                    pageNumber = 1;
+                    this.gridApi?.api?.paginationGoToPage(0);
                 }
 
-                // UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
-            },
-            error: (error) => {
+                // if the filters have changed then reset the total row variables
+                if (newFilterString !== this.gridLastFilter) {
 
-                this.gridApi.showNoRowsOverlay();
-                this.gridApi.setRowData([]);
+                    this.gridPaging.totalRows = null;
+                    this.gridPaging.totalKnown = false;
+                }
+
+                this.gridLastFilter = newFilterString;
+                this.gridLastSort = newSortString;
+
+                const restParams: any = {
+                    limit: this.gridApi.paginationGetPageSize(),
+                    offset: (pageNumber - 1) * this.gridApi.paginationGetPageSize(),
+                    sortModel: rowParams.sortModel, // not needed once we get rid of mocking the backend
+                    filterModel: rowParams.filterModel, // not needed once we get rid of mocking the backend
+                };
+                // const refsetFilter = `entityId:${this.refsetInternalId} AND entityType:REFSET`;
+                // if (CodeUtility.hasValue(query)) {
+                //     query += ` AND ${refsetFilter}`;
+                // } else {
+                //     query = refsetFilter;
+                // }
+                // query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                // restParams.query = query;
+                if (CodeUtility.hasValue(query)) {
+                    query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                    restParams.query = query;
+                }
+                this.auditService.getAuditTrial({...restParams, ...sort}).subscribe({
+                    next: (results) => {
+                        results.items.forEach(r => {
+                            r.date = this.formatDate(r.modified);
+                        });
+                        this.showPaging = results.total > 0;
+                        if (results.items.length === 0 && pageNumber > 1) {
+
+                            this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+                            this.gridPaging.totalKnown = true;
+                            this.paginationComponent.goToPage(pageNumber - 1);
+                            // this.showLoadingSpinner = false;
+
+                            return;
+                        }
+
+                        const data = results.items;
+                        this.data = data;
+                        if (results.total) {
+                            results.totalKnown = true;
+                        }
+                        if (data?.length > 0) {
+
+                            this.gridApi.hideOverlay();
+                            let currentRowCount = null;
+                            let lastRow = -1;
+
+                            if (results.totalKnown || data.length < this.gridApi.paginationGetPageSize() || this.gridPaging.totalKnown) {
+
+                                if (results.totalKnown) {
+                                    lastRow = results.total;
+
+                                } else if (this.gridPaging.totalKnown) {
+                                    lastRow = this.gridPaging.totalRows;
+
+                                } else {
+
+                                    currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+                                    lastRow = currentRowCount;
+                                }
+
+                                this.gridPaging.totalRows = lastRow;
+                                this.gridPaging.totalKnown = true;
+
+                            } else {
+                                currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+                            }
+
+
+                            rowParams.successCallback(data, lastRow);
+
+                        } else {
+
+                            this.gridApi.showNoRowsOverlay();
+                            rowParams.successCallback([], 0);
+                        }
+
+                        this.gridPaging.manualStateRefresh = Boolean(true);
+                    },
+                    error: (error) => {
+
+                        this.gridApi.showNoRowsOverlay();
+                        rowParams.successCallback([], 0);
+                    }
+                });
             }
+        };
+
+        gridReadyParams.api.setDatasource(dataSource);
+
+        // set placeholders on the grid floating filter fields
+        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+
+            if (obj.attributes['disabled']) {
+                // skip columns with disabled filter
+                return;
+            }
+
+            const label = obj.getAttribute('aria-label');
+            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            obj.setAttribute('placeholder', value);
         });
-    }
+    };
 
     onGridCellClick = (event) => {
 
+    };
+
+
+    onResize(event) {
+        const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
+        document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
     }
 
-    
+    formatDate(date) {
+        return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE);
+    }
 }
