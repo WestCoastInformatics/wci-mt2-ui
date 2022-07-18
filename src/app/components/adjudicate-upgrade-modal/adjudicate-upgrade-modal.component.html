@@ -280,7 +280,7 @@
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
     <span [class.linethrough-inactive]="!params?.data?.stillMember"
-        [class.add-bold]="params?.data?.stillMember"
+        [class.add-bold]="params?.data?.stillMember && !params?.data?.replaced"
         [class.hide-data]="params?.data?.isHidden">
         {{ params?.data?.code }}
     </span>
@@ -289,7 +289,7 @@
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
     <span [class.linethrough-inactive]="!params?.data?.stillMember"
-        [class.add-bold]="params?.data?.stillMember"
+        [class.add-bold]="params?.data?.stillMember && !params?.data?.replaced"
         [class.hide-data]="params?.data?.isHidden">
         {{ transformDescriptions(params?.data?.descriptions)?.length ?
         transformDescriptions(params?.data?.descriptions)[0].term : '' }}
@@ -299,7 +299,7 @@
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
     <span [class.linethrough-inactive]="!params?.data?.stillMember"
-        [class.add-bold]="params?.data?.stillMember"
+        [class.add-bold]="params?.data?.stillMember && !params?.data?.replaced"
         [class.hide-data]="params?.data?.isHidden">
         {{ formatReason(params?.data?.inactivationReason) }}
     </span>
