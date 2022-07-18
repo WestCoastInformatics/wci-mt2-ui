@@ -33,7 +33,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     user: User;
     projectList = [];
     selectedProject: any;
-    isSelectedProject: boolean;
     organizationId: any;
     selectedOrganization: any;
     organizations: any;
@@ -106,7 +105,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.organizationId = params['organizationId'];
 			this.projectId = params['id'];
 			this.setNavigation();
-            sessionStorage.setItem('selectedProjectId', JSON.stringify(params['id']));
         });
 
         this.getUser();
@@ -231,16 +229,19 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                     this.selectedOrganization = organization;
                     this.getProjects();
-                    break;
+                    return;
                 }
             }
+
+            this.getStoredOrganizationId();
         });
     }
 
     selectOrganization($event): void {
 
-        this.organizationId = $event.value.id;
+        this.organizationId = this.selectedOrganization.id;
         this.selectedProject = null;
+        this.projectList = [];
         this.getProjects();
     }
 
@@ -256,11 +257,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                     this.selectedProject = project;
                     this.showProjectData();
-                    break; 
+                    return; 
                 }
             }
 
-            this.getStorageItems();
+            this.getStoredProjectId();
 		});
     }
 
@@ -285,7 +286,28 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.showProjectData();
     }
 
-    getStorageItems(): void {
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            let storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (let organization of this.organizations) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization(null);
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
+        }
+    }
+
+    getStoredProjectId(): void {
 
         if (sessionStorage.getItem('selectedProjectId')) {
 
@@ -321,7 +343,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.showTable = true;
         }
         
-        this.isSelectedProject = JSON.stringify(this.selectedProject.id) === sessionStorage.getItem('selectedProjectId');
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
         this.projectIsUat = this.selectedProject.name.includes("UAT");
     }
