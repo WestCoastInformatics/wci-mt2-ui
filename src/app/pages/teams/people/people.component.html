@@ -40,8 +40,8 @@
 
                     <div class='section-header mb-4'>
                         People ({{dataCount}})
-                        <add-member-modal type="Team" [id]="selectedTeam?.id"
-                            [name]="selectedTeam?.name" *ngIf="teamList.length > 0 && selectedTeam"></add-member-modal>
+                        <add-member-modal *ngIf="showAddMembers" type="Team" [id]="selectedTeam?.id" [name]="selectedTeam?.name">
+                        </add-member-modal>
                     </div>
 
                     <div class='dashboard-section'>
@@ -68,7 +68,7 @@
 
                             <ng-template #inactivateUserSection let-params>
 
-                                <img src="assets/subtract-symbol-icon.svg"
+                                <img *ngIf="selectedTeam.userRoles.includes('ADMIN')" src="assets/subtract-symbol-icon.svg"
                                     (click)="removeUser(params?.data)" width="30px" height="30px"
                                     title="Inactivate User" aria-label="Subtract"
                                     class="subtract-symbol-icon"

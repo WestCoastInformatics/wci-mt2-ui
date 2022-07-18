@@ -33,6 +33,7 @@ export class TeamsPeopleComponent implements OnInit {
     gridColumnDefs = [];
     peopleList = [];
     showTable = false;
+    showAddMembers = false;
     organizationList = [];
     organizationId: string;
     selectedOrganization: any;
@@ -182,13 +183,18 @@ export class TeamsPeopleComponent implements OnInit {
 
         this.teamId = this.selectedTeam.id;
         this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.selectedTeam.id);
-        this.showTeamMembers();        
+        this.showTeamMembers();      
     }
 
     showTeamMembers() {
 
         if (this.selectedTeam) {
+
             this.data = this.selectedTeam.memberList;
+            this.showAddMembers = this.selectedTeam.userRoles.includes('ADMIN');
+
+        } else {
+            this.showAddMembers = false;
         }
     }
 
@@ -214,7 +220,12 @@ export class TeamsPeopleComponent implements OnInit {
     };
 
     get dataCount() {
-        return this.data.length;
+        
+        if (this.data) {
+            return this.data.length;
+        } else { 
+            return 0;
+        }
     }
 
     removeUser(user) {
@@ -230,4 +241,5 @@ export class TeamsPeopleComponent implements OnInit {
     getTeamCount(data: any): number {
         return data.teams.length;
     }
+
 }
