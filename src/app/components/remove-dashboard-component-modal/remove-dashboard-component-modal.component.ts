@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, Output } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { NotificationService } from "src/app/services/notification.service";
@@ -72,4 +72,11 @@ export class RemoveDashboardComponentModalComponent {
         return this.confirmString.trim() != 'remove ' + this.componentType;
     }
 
+    
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if(event.key == 'Enter'){
+      this.callMemberOperation();
+    }
+  }
 }

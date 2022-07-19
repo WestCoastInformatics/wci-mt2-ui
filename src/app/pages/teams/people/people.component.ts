@@ -64,6 +64,10 @@ export class TeamsPeopleComponent implements OnInit {
             this.setNavigation();
         });
 
+        this.data = [];
+        this.selectedOrganization = null;
+        this.selectedTeam = null;
+
         this.getOrganizations();
     }
 
@@ -106,9 +110,6 @@ export class TeamsPeopleComponent implements OnInit {
             },
             enableBrowserTooltips: true,
         };
-
-        this.data = [];
-        this.getPeople();
     }
 
     setNavigation() {
@@ -123,8 +124,7 @@ export class TeamsPeopleComponent implements OnInit {
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true },
-            { name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' }
+            { name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true }
         ];
     }
 
@@ -132,6 +132,8 @@ export class TeamsPeopleComponent implements OnInit {
 
         this.refsetService.getOrganizations().subscribe((results) => {
 
+            this.showLoadingSpinner = false;
+            this.showTable = true;
             this.organizationList = results.items;
 
             for (let organization of this.organizationList) {
@@ -152,27 +154,24 @@ export class TeamsPeopleComponent implements OnInit {
         this.location.replaceState('organization/' + this.organizationId + '/teams/people/');
         this.teamId = null;
         this.selectedTeam = null;
+        this.teamList = [];
         this.data = [];
 
-        this.setNavigation();
         this.getTeams();
     }
 
     getTeams(): void {
 
-        this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
-            this.teamList = results.items.filter((team) => {
-
-                return team.members?.some((member) => {
-                    return member.includes(this.currentUser.id);
-                });
-            });
+            this.teamList = results.items;
 
             for (let team of this.teamList) {
 
                 if (this.teamId == team.id) {
+
                     this.selectedTeam = team;
+                    this.showTeamMembers();
                 }
             }
         });
@@ -182,7 +181,21 @@ export class TeamsPeopleComponent implements OnInit {
 
         this.teamId = this.selectedTeam.id;
         this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.selectedTeam.id);
-        this.getPeople();
+        this.showTeamMembers();      
+    }
+
+    showTeamMembers() {
+
+        this.data = this.selectedTeam.memberList;
+
+        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' });
+
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
+        }
     }
 
     onGridReady = (params) => {
@@ -207,20 +220,11 @@ export class TeamsPeopleComponent implements OnInit {
     };
 
     get dataCount() {
-        return this.data.length;
-    }
-
-    getPeople(): void {
-        if (this.teamId) {
-
-            this.teamsService.getTeamUsers(this.teamId).subscribe((results) => {
-
-                this.data = results.items;
-                this.showTable = true;
-                this.showLoadingSpinner = false;
-            });
-        } else {
-            this.showLoadingSpinner = false;
+        
+        if (this.data) {
+            return this.data.length;
+        } else { 
+            return 0;
         }
     }
 
@@ -237,4 +241,5 @@ export class TeamsPeopleComponent implements OnInit {
     getTeamCount(data: any): number {
         return data.teams.length;
     }
+
 }

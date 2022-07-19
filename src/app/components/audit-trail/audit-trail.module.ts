@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { AuditTrailModalComponent } from './audit-trail-modal/audit-trail-modal.component';
 import { AuditTrailListComponent } from './audit-trail-list/audit-trail-list.component';
+import {PaginationModule} from '../pagination/pagination.module';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { AuditTrailListComponent } from './audit-trail-list/audit-trail-list.com
         MatInputModule,
         MatIconModule,
         MatMenuModule,
-        NgbModule
+        NgbModule,
+        PaginationModule
     ],
      exports: [AuditTrailModalComponent]
 })

@@ -1,7 +1,6 @@
-<div class='section-list text-right' title="Create New Organization"
-    aria-label="Create New Organization" *ngIf="canAdd">
-    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"
-        class='btn btn-primary rounded btn-lg'>Create New Organization</a></div>
+<div class='section-list text-right' title="Create New Organization" aria-label="Create New Organization">
+    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class='btn btn-primary rounded btn-lg'>Create New Organization</a>
+</div>
 
 <ng-template #createNewOrganizationDialog let-modal>
 
@@ -31,6 +30,7 @@
                                 class="col refset-tool-modal-select-field">
                                 <mat-select #downloadContentField class="refset-tool-modal-select"
                                     [(value)]="selectedEdition" (selectionChange)="getEdition()">
+                                    <mat-option *ngIf="editionsArray == null || editionsArray.length == 0">No Editions without an Organization</mat-option>
                                     <mat-option *ngFor="let option of editionsArray"
                                         [value]="option.id">
                                         {{ option.value }}

@@ -16,17 +16,12 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class OrganizationConfigurationComponent implements OnInit {
 
-	menu: SidebarMenuItem[] = [
-		{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
-		{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-		{ name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
-		{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs', isActive: true }
-	];
+	menu: SidebarMenuItem[] = [];
 	profileNameValue = '';
 	profileEmailValue = '';
 	profileDescriptionValue = '';
 	selectedOrganization: any;
-	id: any;
+	organizationId: any;
 	organizationList = [];
 	emailError = '';
 	uiUtility = UiUtility;
@@ -44,18 +39,31 @@ export class OrganizationConfigurationComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.titleService.setTitle('Refset Tool - Organizations');
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/organizations/configuration', label: 'Organizations' },
-			{ label: 'Configurations' },
-		]);
 
 		this.route.params.subscribe(params => {
-			this.id = params['id'];
+
+			this.organizationId = params['id'];
+			this.setNavigation();
 		});
 
 		// this.getPeople();
 		this.getOrganizations();
 	}
+
+	setNavigation() {
+
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/people', label: 'Organizations' },
+            { label: 'People' },
+        ]);
+
+        this.menu = [
+            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
+			{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs', isActive: true }
+        ];
+    }
 
 	getOrganizations(): void {
 
@@ -65,7 +73,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
 			for (let organization of this.organizationList) {
 
-				if (this.id == organization.id) {
+				if (this.organizationId == organization.id) {
 					this.setOrganizationData(organization);
 				}
 			}
@@ -80,7 +88,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
 	setOrganizationData(organization: any) { 
 
-		this.id = organization.id;
+		this.organizationId = organization.id;
 		this.selectedOrganization = organization;
 		this.profileNameValue = organization.name;
 		this.profileEmailValue = organization.primaryContactEmail;
@@ -93,7 +101,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 		this.selectedOrganization.primaryContactEmail = this.profileEmailValue;
 		this.selectedOrganization.description = this.profileDescriptionValue;
 
-		this.organizationsService.updateOrganization(this.id, this.selectedOrganization).subscribe((result) => {
+		this.organizationsService.updateOrganization(this.organizationId, this.selectedOrganization).subscribe((result) => {
 
 			if (result) {
 				this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
@@ -136,15 +144,11 @@ export class OrganizationConfigurationComponent implements OnInit {
 			const formData = new FormData();
 			formData.append("file", file);
 
-			this.organizationsService.updateOrganizationPhoto(this.id, formData).subscribe((iconUri) => {
+			this.organizationsService.updateOrganizationPhoto(this.organizationId, formData).subscribe((iconUri) => {
 
 				this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
 				this.selectedOrganization.iconUri = iconUri;
 			});
 		}
-	}
-
-	get canRemove(): boolean{
-		return this.authenticationService.isAdmin();
 	}
 }

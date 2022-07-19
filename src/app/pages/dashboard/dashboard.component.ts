@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IServerSideDatasource } from 'ag-grid-community';
@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit {
         private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
         private readonly refsetService: RefsetService,
+        private changeDetectorRef: ChangeDetectorRef,
         private readonly authService: AuthenticationService) { }
 
     ngOnInit(): void {
@@ -80,9 +81,11 @@ export class DashboardComponent implements OnInit {
         };
         this.getOrganizations();
         this.getProjects();
+        this.getTeams();
     }
 
     ngAfterViewInit() {
+        
         this.columnDefs = [
             {
                 field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
@@ -113,14 +116,8 @@ export class DashboardComponent implements OnInit {
             }
         ];
 
+        this.changeDetectorRef.detectChanges();
     }
-
-
-    // onGridReady = (params) => {
-    //     this.api = params.api;
-    //     this.columnApi = params.columnApi;
-    //     this.getRefSets();
-    // }
 
     onGridReady = (gridReadyParams) => {
         this.refsetGridApi = gridReadyParams.api;
@@ -219,8 +216,6 @@ export class DashboardComponent implements OnInit {
             let value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-
-        this.getTeams();
     };
 
     toTitleCase(str) {
@@ -252,24 +247,6 @@ export class DashboardComponent implements OnInit {
         });
     }
 
-    getRefSets(): void {
-        this.refsetService.getRefsets(`limit=10&offset=0&sort=name&sortAscending=true&assignedUser=${this.currentUser.userName}`, false).subscribe((x) => {
-            for (let refset of x.items) {
-                this.data.push({
-                    name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                    , refsetId: refset.refsetId
-                    , private: refset.privateRefset
-                    , workflowStatus: `${refset?.workflowStatus}`
-                    , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`, versionDate: `${refset.versionDate}`
-                })
-
-
-            }
-            this.api.setRowData(this.data);
-            this.api.redrawRows();
-        });
-    }
-
     getProjects(): void {
         this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
             this.projectList = results.items;
@@ -278,7 +255,7 @@ export class DashboardComponent implements OnInit {
 
     getTeams(): void {
 
-        this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getTeams('onlyUsersTeams=true&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
             this.teamList = results.items;
         });
     }

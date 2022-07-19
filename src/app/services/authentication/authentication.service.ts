@@ -111,12 +111,18 @@ export class AuthenticationService {
             }
         );
 
+        this.http.post<any>('/ims-api/account/logout', {}).subscribe(
+            (data) => {
+                console.log("IMS logout");
+            }
+        );
+
         window.location.href = this.generateImsUrl('logout');
     }
 
     private readonly deleteAllCookies = () => {
         var cookies = document.cookie.split(";");
-    
+
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i];
             var eqPos = cookie.indexOf("=");
@@ -212,31 +218,5 @@ export class AuthenticationService {
 
     resetSession() {
         this.apiCalled.emit(null);
-    }
-    hasRole(role: string): boolean {
-        let user = this.getUser();
-        if (user?.roles) {
-            for (const userRole of user?.roles) {
-                if (userRole.split("-").filter(x => x.toLowerCase() == role.toLowerCase()).length > 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    isAdmin(): boolean {
-        return this.hasRole("admin");
-    }
-
-    isAuthor(): boolean {
-        return this.hasRole('AUTHOR');
-    }
-
-    isReviewer(): boolean {
-        return this.hasRole('REVIEWER');
-    }
-
-    isViewer(): boolean {
-        return this.hasRole('VIEWER');
     }
 }

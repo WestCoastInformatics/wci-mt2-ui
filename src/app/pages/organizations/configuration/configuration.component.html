@@ -42,7 +42,8 @@
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
-                            <button [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()"
+                            <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                                [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()"
                                 aria-label="Update Profile" title="Update Profile" class="btn btn-primary btn-lg"
                                 (click)="updateOrganization()">Update Profile</button>
                         </div>
@@ -54,7 +55,7 @@
                             <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
                         </div>
                         <div class="section-btn">
-                            <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">
+                            <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">
                                 Edit Picture
                                 <input type="file" class="d-none" (change)="onPhotoChange($event)" />
                             </label>
@@ -67,7 +68,7 @@
                         <div class="organization-profile-mid">Create teams for your organization. Refset modeling
                             permissions are assigned through the use of teams.</div>
                         <div class="section-btn">
-                            <create-new-team-modal [organizationId]="id" [organizations]="organizationList"></create-new-team-modal>
+                            <create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId" [organizations]="organizationList"></create-new-team-modal>
                         </div>
                     </div>
                     <div class="organizations-configuration-block secondary-block teams-block">
@@ -75,10 +76,10 @@
                         <div class="organization-profile-mid">Add projects to your organization. Projects help to
                             organize your reference sets.</div>
                         <div class="section-btn">
-                            <create-new-project-modal [organizationId]="id" [organizations]="organizationList"></create-new-project-modal>
+                            <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId" [organizations]="organizationList"></create-new-project-modal>
                         </div>
                     </div>
-                    <div class="organizations-configuration-block secondary-block teams-block" *ngIf="canRemove">
+                    <div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="organizations-configuration-block secondary-block teams-block">
                         <div class="organization-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
                             Remove this Organization</div>
                         <div class="organization-profile-mid">Warning! This is a permanent operation and cannot be

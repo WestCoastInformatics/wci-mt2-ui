@@ -1319,6 +1319,11 @@ button.refset-tool-table-action-icon {
     vertical-align: top !important;
 }
 
+.refset-tool-new-refset-info-icon {
+    width: 25px !important;
+    height: 25px !important;
+    color: #00a9e0;;
+}
 
 // //override position
 // .mat-button .mat-button-wrapper>*, .mat-flat-button .mat-button-wrapper>*, .mat-stroked-button .mat-button-wrapper>*, .mat-raised-button .mat-button-wrapper>*, .mat-icon-button .mat-button-wrapper>*, .mat-fab .mat-button-wrapper>*, .mat-mini-fab .mat-button-wrapper>*
@@ -5270,3 +5275,17 @@ app-date-text-floating-filter{
     filter: grayscale(100%);
     opacity: 0.5;
 }
+
+.ag-body-viewport-wrapper.ag-layout-normal {
+    overflow-x: scroll;
+  }
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }

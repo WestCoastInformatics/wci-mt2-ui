@@ -100,7 +100,8 @@
             <div class="success-header">
                 <i class="fa fa-exclamation-triangle fa-2x"></i>
                 <div class="success-body">
-                    <strong>Warning!</strong><br />This refset is not based on the latest version of the Code System.
+                    <strong>Warning!</strong><br />This refset is not based on the latest version of
+                    the Code System.
                     <br>It is recommended to perform an Upgrade before doing other edits.
                 </div>
             </div>
@@ -116,35 +117,47 @@
 
                 <div>
 
-                    <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{ getRoleString() }}</span>
+                    <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{
+                        getRoleString() }}</span>
 
-                    <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId"
-                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
+                    <app-refset-discussion-list *ngIf="refsetData" type="REFSET"
+                        [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
+                        [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
                     </app-refset-discussion-list>
                     <br *ngIf="editMode">
 
-                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
+                    <button *ngIf="allowedToEdit || allowedToReview" mat-button
+                        [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
                         Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span>
                     </button>
 
-                    <mat-menu #refsetMenu="matMenu" >
+                    <mat-menu #refsetMenu="matMenu">
 
-                        <create-new-refset *ngIf="allowedToEdit" [status]="refsetStatus" [editMode]="editMode" [isDetailsPage]="true" [refsetId]="refsetId" [refsetInternalId]="id"
-                            [projectsRefsetComponent]="projectsRefsetComponent" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects($event)">
+                        <create-new-refset *ngIf="allowedToEdit" [status]="refsetStatus"
+                            [editMode]="editMode" [isDetailsPage]="true" [refsetId]="refsetId"
+                            [refsetInternalId]="id"
+                            [projectsRefsetComponent]="projectsRefsetComponent"
+                            [inputProperties]="editMetadataProperties"
+                            (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
 
-                        <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy"
+                        <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview"
+                            [refsetInternalId]="id" [user]="refsetData?.modifiedBy"
                             [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
 
                         <button mat-menu-item *ngIf="false">Convert Refset Type</button>
-                        <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
+                        <button mat-menu-item *ngIf="allowedToEdit"
+                            (click)="openDeleteRefset()">Delete Refset</button>
 
                     </mat-menu>
 
                     <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span>
 
-                    <button *ngIf="editMode && false" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <button *ngIf="editMode && false" mat-button
+                        [matMenuTriggerFor]="collaborationMenu"
+                        class="collaboration-menu">Collaboration <span
+                            class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #collaborationMenu="matMenu">
                         <button mat-menu-item [hidden]="true">Share Reference Set</button>
@@ -153,24 +166,39 @@
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData" (changeLockedStatus)="changeLockedStatus($event)"></app-launch-comparison-modal>
+                    <app-launch-comparison-modal [isDetailPage]="true"
+                        [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData"
+                        (changeLockedStatus)="changeLockedStatus($event)">
+                    </app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <button *ngIf="editMode" mat-button [matMenuTriggerFor]="documentationMenu" class="documentation-menu">Documentation <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <button *ngIf="editMode" mat-button [matMenuTriggerFor]="documentationMenu"
+                        class="documentation-menu">Documentation <span
+                            class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #documentationMenu="matMenu">
-                        <artifacts-modal [refsetInternalId]="refsetData?.id"  *ngIf="refsetData?.id"></artifacts-modal>
-                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id"></audit-trail-modal>
+                        <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id">
+                        </artifacts-modal>
+                        <audit-trail-modal [refsetInternalId]="refsetData?.id"
+                            *ngIf="refsetData?.id"></audit-trail-modal>
+                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser"
+                            title="Open Snomed Browser"><a (click)="snomedBrowserLink()">Snomed
+                                Browser</a>
+                        </button>
                     </mat-menu>
 
                     <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
 
-                    <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <button mat-button [matMenuTriggerFor]="downloadMenu"
+                        class="download-menu">Download <span
+                            class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #downloadMenu="matMenu">
-                        <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
-                        <button *ngIf="editMode" mat-menu-item [hidden]="true">Download Workflow History</button>
+                        <app-refset-download [isDetailPage]="true" [refset]="refsetData"
+                            [hidden]="!refsetData?.downloadable"></app-refset-download>
+                        <button *ngIf="editMode" mat-menu-item [hidden]="true">Download Workflow
+                            History</button>
                     </mat-menu>
 
                 </div>
@@ -190,10 +218,11 @@
                         [refsetData]="refsetData" [membersOfRefset]="membersGridData"
                         [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
                         [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
-                    <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
+                    <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button"
+                        mat-raised-button color="red"
                         *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
-                        (click)="openCancelUpgrade(cancelUpgradeDialog)"
-                        aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button cancel-upgrade"
+                        (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
+                        class="refset-tool-action-button adjudicate-cancel-modal-button cancel-upgrade"
                         aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
                         Cancel Upgrade
                     </button>
@@ -344,7 +373,8 @@
                                             refset-tool-refset-metadata-value
                                         ">
                                         {{refsetData?.refsetId}}
-                                        <i *ngIf="refsetData?.privateRefset" class='fa fa-lock ml-2 text-muted'></i>
+                                        <i *ngIf="refsetData?.privateRefset"
+                                            class='fa fa-lock ml-2 text-muted'></i>
                                     </td>
                                 </tr>
 
@@ -520,7 +550,8 @@
                                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                                        {{latestDate(refsetData?.versionList)}} of {{refsetData?.editionShortName}}
+                                        {{latestDate(refsetData?.versionList)}} of
+                                        {{refsetData?.editionShortName}}
                                     </td>
                                 </tr>
 
@@ -677,9 +708,6 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Notes
                                 </th>
-                                <!--<td mat-cell *matCellDef="let row">
-                                    <span [innerHTML]="row.notes"></span>
-                                </td> -->
                                 <td  mat-cell *matCellDef="let row">
                                 <ng-container>
                                     <readonly-text-modal
@@ -687,7 +715,7 @@
                                         [longText]="row.notes"
                                         [title]="'Notes'"></readonly-text-modal>
                                 </ng-container>
-                            </td>
+                                </td>
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true">
@@ -709,7 +737,7 @@
             Reference Set Members ({{refsetData?.memberCount}})
         </div>
 
-        <br *ngIf="allowedToEdit"/>
+        <br *ngIf="allowedToEdit" />
         <span *ngIf="allowedToEdit">
             <button mat-button [matMenuTriggerFor]="menu" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
@@ -821,7 +849,8 @@
                                             </button>
                                         </div>
 
-                                        <div class="col-md-3" style="display: contents" id="refset-type">
+                                        <div class="col-md-3" style="display: contents"
+                                            id="refset-type">
                                             <mat-button-toggle-group
                                                 class="refset-tool-toggle-buttons"
                                                 name="membersListMode"
@@ -891,9 +920,15 @@
                                                 </div>
 
                                                 <div class="col-2">
-                                                    <app-refset-discussion-list *ngIf="refsetData && params && params.data" type="REFSET_MEMBER" [refsetInternalId]="id"
-                                                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [refsetId]="refsetId" [conceptId]="params.data.code"
-                                                        [conceptName]="params.data.name" [(discussionCount)]="params.data.discussionCount">
+                                                    <app-refset-discussion-list
+                                                        *ngIf="refsetData && params && params.data"
+                                                        type="REFSET_MEMBER" [refsetInternalId]="id"
+                                                        [refsetName]="refsetData.name"
+                                                        [roles]="refsetData.roles"
+                                                        [refsetId]="refsetId"
+                                                        [conceptId]="params.data.code"
+                                                        [conceptName]="params.data.name"
+                                                        [(discussionCount)]="params.data.discussionCount">
                                                     </app-refset-discussion-list>
                                                 </div>
                                             </div>
@@ -1141,7 +1176,8 @@
                                                         class="row refset-tool-concept-details-concept-row">
                                                         <div
                                                             class="col refset-tool-concept-details-concept-ecl">
-                                                            {{conceptDetail.code}} | {{conceptDescriptionTerm}} |
+                                                            {{conceptDetail.code}} |
+                                                            {{conceptDescriptionTerm}} |
                                                         </div>
                                                     </div>
                                                     <br />
@@ -1225,11 +1261,9 @@
     </div>
 </div>
 
-<add-remove-concepts [isAdd]="isConceptBeingAdded"
-    [conceptCode]="conceptForAddRemove?.code"
+<add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code"
     [conceptName]="conceptForAddRemove?.name"
-    [conceptHasChildren]="conceptForAddRemove?.hasChildren"
-    [refset]="refsetData"
+    [conceptHasChildren]="conceptForAddRemove?.hasChildren" [refset]="refsetData"
     [definitionExceptionType]="addRemoveDefinitionExceptionType"
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
     (changeLockedStatus)="changeLockedStatus($event)"
@@ -1255,7 +1289,8 @@
         <button type="button"
             (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
             mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
-            aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
+            aria-label="Yes" title="Yes" ngbAutofocus ng-reflect-color="primary"
+            style="margin-right: 20px;">
             Yes
         </button>
         <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"
@@ -1276,14 +1311,16 @@
     </div>
     <div class="container-fluid ready-for-review-container-fluid">
         <div class="modal-body review-modal-body">
-            <div>You are about to undo your work. Are you sure you want to cancel your changes?</div>
+            <div>You are about to undo your work. Are you sure you want to cancel your changes?
+            </div>
         </div>
     </div>
     <div class="modal-footer ready-for-review-footer">
         <button type="button"
             (click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click');"
             mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
-            aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
+            aria-label="Yes" title="Yes" ngbAutofocus ng-reflect-color="primary"
+            style="margin-right: 20px;">
             Yes
         </button>
         <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"

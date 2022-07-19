@@ -113,7 +113,14 @@
                             create-new-refset-flex-weight
                         ">
                         <label>Assign Refset
-                            Concept:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
+                            Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
+                                <span><button mat-icon-button
+                                    (click)="openInfoDialog()" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
+                                    title="Open  Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                    <mat-icon class="refset-tool-new-refset-info-icon">info_icon
+                                    </mat-icon>
+                                </button></span> 
+                            </label>
                     </div>
 
                     <div *ngIf="!editMode"
@@ -121,8 +128,8 @@
 
                         <mat-radio-group>
 
-                            <mat-radio-button style="padding-right: 30px" value="1"
-                                (change)="checkRadioButtonValue($event)">Choose an existing metadata
+                            <mat-radio-button style="padding-right: 30px" value="1" (change)="checkRadioButtonValue($event)">Choose an existing
+                                metadata
                                 concept</mat-radio-button>
 
                             <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
@@ -425,4 +432,8 @@
             Update Metadata
         </button>
     </div>
+</ng-template>
+
+<ng-template #infoDialog let-data>
+    RT2-1119
 </ng-template>
