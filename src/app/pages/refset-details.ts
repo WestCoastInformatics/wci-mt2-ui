@@ -453,7 +453,7 @@ export class RefsetDetails {
                     next: (results) => {
                         this.unresolvedDiscussionCount = 0;
                         for (let discussion of results.items) {
-     
+
                             if (discussion.status == 'Open') {
                                 this.unresolvedDiscussionCount++;
                             }
@@ -1695,6 +1695,6 @@ export class RefsetDetails {
     }
 
     latestDate(versionList: any[]): string {
-        return versionList ? `${versionList[0].date}` : '';
+        return versionList && versionList[0] ? `${versionList[0].date}` : '';
       }
 }
