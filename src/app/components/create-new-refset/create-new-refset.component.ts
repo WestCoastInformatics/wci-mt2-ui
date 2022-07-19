@@ -279,8 +279,12 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isValidConceptName(): boolean {
-        var format = /^[0-9A-Za-zÀ-ú\s][^\t]+$/;
-        var lower = this.createdMetaDataConcept.toLowerCase();
+        var format = /^[\/-9A-Za-z\\()À-ú\s]+$/;
+        var lower = null;
+        if (this.createdMetaDataConcept)
+            lower = this.createdMetaDataConcept.toLowerCase();
+        else
+            lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
         console.log(lower);
         var flag = lower.match(format);
         if (flag == null) {
