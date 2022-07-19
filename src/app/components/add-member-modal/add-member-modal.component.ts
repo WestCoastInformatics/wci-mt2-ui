@@ -57,7 +57,6 @@ export class AddMemberModalComponent {
     }
 
     onKeyDownEvent(event: any){
-        console.log(event.target.value);
         this.isValidEmail();
     }
 
@@ -89,9 +88,5 @@ export class AddMemberModalComponent {
             }
         );
 
-    }
-
-    get canAdd(): boolean{
-        return this.authenticationService.isAdmin();
     }
 }

@@ -131,6 +131,15 @@ export class RefsetUtility {
         return image;
     }
 
+    static getLanguageRefsetFlagIcon(langRefsetId: string) {
+
+        let image = '';
+        image = '/assets/flags/' + langRefsetId + '.png';
+        
+        return image;
+    }
+
+
     static setEmptyChildrenNull(conceptList){
 
         for (let concept of conceptList){

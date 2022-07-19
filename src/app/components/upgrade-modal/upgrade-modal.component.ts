@@ -123,8 +123,6 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   upgrade(): void {
-    console.log("Here i am");
-
     this.modalService.dismissAll();
     this.refsetDetails.changeLockedStatus(true);
 

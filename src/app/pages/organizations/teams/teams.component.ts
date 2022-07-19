@@ -15,12 +15,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
     templateUrl: './teams.component.html'
 })
 export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
-    menu: SidebarMenuItem[] = [
-        { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
-        { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true },
-        { name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
-    ];
-
+    menu: SidebarMenuItem[] = [];
     data = [];
     defaultColDef = {};
     teamList = [];
@@ -44,21 +39,16 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
         private readonly router: Router,
         private authenticationService: AuthenticationService,
         private location: Location) {
-        if (authenticationService.isAdmin()) {
-            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-        }
     }
 
     ngOnInit(): void {
-        this.titleService.setTitle('Refset Tool - Organizations');
 
-        this.breadcrumbService.setBreadcrumbs([
-            { path: '/organizations/teams', label: 'Organizations' },
-            { label: 'Teams' },
-        ]);
+        this.titleService.setTitle('Refset Tool - Organizations')
 
         this.route.params.subscribe(params => {
+
             this.organizationId = params['id'];
+            this.setNavigation();
         });
 
         this.getOrganizations();
@@ -151,6 +141,20 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
     }
 
+    setNavigation() {
+
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/people', label: 'Organizations' },
+            { label: 'People' },
+        ]);
+
+        this.menu = [
+            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true },
+            { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
+        ];
+    }
+
     get dataCount() {
         return this.data.length;
     }
@@ -220,6 +224,14 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
+
+        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
+        }
 
         this.onGridReady(this.gridParams);
     }

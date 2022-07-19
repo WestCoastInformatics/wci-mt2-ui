@@ -1,4 +1,5 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
@@ -23,7 +24,7 @@ export class ProjectsPeopleComponent implements OnInit {
     peopleList = [];
     selectedProject: any;
     selectedOrganization: any;
-    id: any;
+    projectId: any;
     projectList = [];
     gridOptions: any;
     gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
@@ -31,27 +32,45 @@ export class ProjectsPeopleComponent implements OnInit {
     gridApi: any;
     gridColumnDefs = [];
     uiUtility = UiUtility;
-
-    @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     organizations: any;
     organizationId: string;
+    showLoadingSpinner = false;
+
+    @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+    @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
         private readonly refsetService: RefsetService,
         private readonly projectsService: ProjectsService,
         private readonly route: ActivatedRoute,
-        private authenticationService: AuthenticationService,
-        private readonly router: Router) { }
+        private changeDetectorRef: ChangeDetectorRef,
+        private readonly router: Router,
+        private location: Location) { }
 
     ngOnInit(): void {
+
         this.titleService.setTitle('Refset Tool - Projects');
+
+        this.route.params.subscribe(params => {
+
+            this.organizationId = params['organizationId'];
+			this.projectId = params['id'];
+			this.setNavigation();
+        });
+
+        this.showLoadingSpinner = true;
+        this.data = [];
+        this.getOrganizations();
+    }
+
+    ngAfterViewInit() {
 
         this.gridColumnDefs = [
             { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
             { field: 'company', flex: 1, headerName: 'Company Name' },
             { field: 'email', flex: 1, headerName: 'Email' },
-            { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+            { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } }
         ];
 
         this.gridOptions = {
@@ -92,20 +111,7 @@ export class ProjectsPeopleComponent implements OnInit {
             },
         };
 
-        this.data = [];
-
-        this.route.params.subscribe(params => {
-
-            this.organizationId = params['organizationId'];
-            if (!params['id']?.includes('configuration') && !params['id']?.includes('people')) {
-                this.id = params['id'];
-                this.getProject();
-            }
-            this.setNavigation();
-        });
-        this.getProjects();
-        this.getPeople();
-        this.getOrganizations();
+        this.changeDetectorRef.detectChanges();
     }
 
     setNavigation() {
@@ -123,22 +129,33 @@ export class ProjectsPeopleComponent implements OnInit {
             { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy' },
             { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
         ];
-
-        if (true) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
-        }
     }
 
     getOrganizations(): void {
-        // get list of organizations
+
         this.refsetService.getOrganizations().subscribe((organizationResults) => {
+
+            this.showLoadingSpinner = false;
             this.organizations = organizationResults?.items;
-        })
+
+            for (let organization of this.organizations) {
+
+                if (this.organizationId == organization.id) {
+
+                    this.selectedOrganization = organization;
+                    this.getProjects();
+                    break;
+                }
+            }
+        });
     }
 
     selectOrganization($event): void {
+
         this.organizationId = $event.value.id;
         this.selectedProject = null;
+        this.projectList = [];
+        this.data = [];
         this.getProjects();
     }
 
@@ -160,37 +177,58 @@ export class ProjectsPeopleComponent implements OnInit {
         this.router.navigate(['/personal/landing', selectedId]);
     };
 
-    getPeople(): void {
-        // this.projectsService.getProjectUsers(this.id).subscribe((results) => {
-        //   this.peopleList = results.items;
-        //   console.log(this.peopleList);
-        // });
-    }
-
     get dataCount() {
         return this.data.length;
     }
 
     getProjects(): void {
-        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-            this.projectList = results.items.filter((items) => {
-                return this.organizationId === items.organizationId;
-            });
-        });
+
+        this.showLoadingSpinner = true;
+
+        this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+
+            this.showLoadingSpinner = false;
+			this.projectList = results.items;
+
+			for (let project of this.projectList) {
+
+                if (this.projectId == project.id) {
+
+                    this.selectedProject = project;
+                    this.showProjectData(); 
+                }
+            }
+
+            if (this.projectList && this.projectList.length > 0) {
+
+                this.selectedProject = this.projectList[0];
+                this.selectProject(null);
+            }
+		});
     }
 
-    getProject(): void {
-        this.projectsService.getProject(this.id).subscribe((result) => {
-            this.selectedProject = result;
-            this.selectedOrganization = this.selectedProject?.organization;
-        });
-    }
+    showProjectData(): void {
+
+        this.data = this.selectedProject.memberList;
+
+		let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
+        }
+	}
 
     selectProject($event): void {
-        this.router.navigate(['organization/' + this.organizationId + '/projects/people', $event['value'].id]);
-        this.route.params.subscribe(params => {
-            this.id = params['id'];
-            this.getProject();
-        });
+        
+        this.projectId = this.selectedProject.id;
+        this.location.replaceState('organization/' + this.organizationId + '/projects/people/' + this.projectId);
+        this.showProjectData();
+    }
+
+    getTeamCount(teams: any): number {
+        return teams.length;
     }
 }

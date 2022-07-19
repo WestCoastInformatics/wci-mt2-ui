@@ -101,9 +101,8 @@ export class TeamsConfigurationComponent implements OnInit {
 
 		this.organizationId = this.selectedOrganization.id;
 		this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
+		
 		this.clearTeamData();
-
-		this.setNavigation();
 		this.getTeams();
 	}
 
@@ -111,12 +110,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
 		this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
-			this.teamList = results.items.filter((team) => {
-
-				return team.members.some((member) => {
-					return member.includes(this.currentUser.id);
-				});
-			});
+			this.teamList = results.items;
 
 			for (let team of this.teamList) {
 
@@ -139,6 +133,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
 	clearTeamData() {
 
+		this.teamList = [];
 		this.teamId = null;
 		this.selectedTeam = null;
 		this.selectedRoles = [];
@@ -217,13 +212,4 @@ export class TeamsConfigurationComponent implements OnInit {
 	getSelectedTeamName(): string {
 		return this.selectedTeam?.name;
 	}
-
-	get canRemove(): boolean{
-		return this.authService.isAdmin();
-	}
-
-	get canAdd(): boolean{
-        let org = this.selectedOrganization;
-        return this.authService.isAdmin() || this.selectedRoles?.includes("ADMIN");
-    }
 }

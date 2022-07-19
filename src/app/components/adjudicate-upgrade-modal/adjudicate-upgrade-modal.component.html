@@ -233,10 +233,7 @@
             </div>
         </div>
         <div class="modal-footer rt2-modal-footer">
-            <button type="button" mat-raised-button color="red"
-                (click)="openCancelUpgrade()"
-                aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button"
-                aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button"  aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
                 Cancel Upgrade
             </button>
             <button type="button" mat-raised-button color="green"
@@ -265,12 +262,12 @@
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img *ngIf="!params?.data?.isHidden && ((params?.data?.stillMember !== undefined && !params?.data?.stillMember))"
+    <img *ngIf="!params?.data?.isHidden && (params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
         src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')"
         width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
         class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
-    <img *ngIf="!params?.data?.isHidden && params?.data?.stillMember"
+    <img *ngIf="!params?.data?.isHidden && (params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)"
         src="assets/subtract-symbol-icon.svg"
         (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px"
         title="Remove {{actionText}}" aria-label="Subtract" class="subtract-symbol-icon"
@@ -410,6 +407,32 @@
 </ng-template>
 
 
-<ng-template #cancelUpgradeDialog let-data>
-    You are about to undo your work. Are you sure you want to cancel your changes?
+<!--Cancel Upgrade Modal-->
+<ng-template #cancelUpgradeDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <button type="button" class="close" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <div>You are about to undo your work. Are you sure you want to cancel your changes?
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer ready-for-review-footer">
+        <button type="button"
+            (click)="refsetDetails.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modalService.dismissAll(); "
+            mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+            aria-label="Yes" title="Yes" ngbAutofocus ng-reflect-color="primary"
+            style="margin-right: 20px;">
+            Yes
+        </button>
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red"
+            aria-hidden="false" class="refset-tool-action-button" aria-label="No" title="No"
+            ng-reflect-color="red">
+            No
+        </button>
+    </div>
 </ng-template>

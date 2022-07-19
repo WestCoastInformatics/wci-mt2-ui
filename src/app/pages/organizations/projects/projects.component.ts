@@ -18,12 +18,8 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
     templateUrl: './projects.component.html'
 })
 export class OrganizationProjectsComponent implements OnInit {
-    menu: SidebarMenuItem[] = [
-        { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true },
-        { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-        { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
-    ];
 
+    menu: SidebarMenuItem[] = [];
     data = [];
     gridOptions: any;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
@@ -46,18 +42,11 @@ export class OrganizationProjectsComponent implements OnInit {
         private readonly teamService: TeamsService,
         private authenticationService: AuthenticationService,
         private location: Location) {
-        if (authenticationService.isAdmin()) {
-            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-        }
     }
 
     ngOnInit(): void {
 
         this.titleService.setTitle('Refset Tool - Organizations');
-        this.breadcrumbService.setBreadcrumbs([
-            { path: '/organizations/projects', label: 'Organizations' },
-            { label: 'Projects' },
-        ]);
 
         this.getOrganizations();
 
@@ -73,7 +62,9 @@ export class OrganizationProjectsComponent implements OnInit {
         ];
 
         this.route.params.subscribe(params => {
+
             this.organizationId = params['id'];
+            this.setNavigation();
         });
 
         this.gridOptions = {
@@ -86,6 +77,20 @@ export class OrganizationProjectsComponent implements OnInit {
                 filter: true, suppressMenu: true, floatingFilter: true, unSortIcon: true, sortable: true, resizable: true
             }
         };
+    }
+
+    setNavigation() {
+
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/people', label: 'Organizations' },
+            { label: 'People' },
+        ]);
+
+        this.menu = [
+            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true },
+            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
+        ];
     }
 
     onGridReady = (params) => {
@@ -172,6 +177,15 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
+
+        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+            
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
+        }
 
         this.onGridReady(this.gridParams);
     }

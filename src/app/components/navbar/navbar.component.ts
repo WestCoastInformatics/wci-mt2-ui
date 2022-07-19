@@ -5,8 +5,6 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { Router } from '@angular/router';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { NotificationService } from 'src/app/services/notification.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -27,11 +25,9 @@ export class NavbarComponent implements OnInit {
 
     constructor(private authenticationService: AuthenticationService,
         private breadcrumbService: BreadcrumbService,
-        private readonly modalService: NgbModal,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
-        readonly refsetService: RefsetService,
-        private readonly notificationService: NotificationService) {
+        readonly refsetService: RefsetService) {
 
         this.guestUser = authenticationService.GUEST_USER;
         this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
@@ -61,29 +57,16 @@ export class NavbarComponent implements OnInit {
         return this.router.url.includes('details');
     }
 
-    getProjectRoleString(): string {
-
-        const projectRoles = [];
-
-        if (!this.user?.roles) {
-            return '';
-        }
-
-        for (const role of this.user?.roles) {
-
-            if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
-                projectRoles.push(role.toLowerCase().charAt(0).toUpperCase() + role.toLowerCase().slice(1));
-            }
-        }
-
-        return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
-    }
-
     navigate(breadcrumbId) {
-
+        
         let breadcrumb = this.breadcrumbs[breadcrumbId];
 
         if (breadcrumb.selectable) {
+
+            if (breadcrumb.path.includes('/projects')) {
+                breadcrumb.path = '/organization/0/projects'
+            }
+
             this.router.navigate([breadcrumb.path]);
         }
     }

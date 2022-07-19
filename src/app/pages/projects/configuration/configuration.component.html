@@ -1,3 +1,5 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">Organizations</span>
@@ -16,6 +18,7 @@
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
             <mat-select [disabled]="organizationId === '0'" #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject"
                 (selectionChange)="selectProject($event)">
+                <mat-option *ngIf="projectList == null || projectList.length == 0">No Projects</mat-option>
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}
                 </mat-option>
@@ -64,7 +67,7 @@
 
                         <div class="update-profile-button">
                             <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                                <button class="btn btn-primary btn-lg"
+                                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg"
                                     [disabled]="!profileNameValue || !profileDescriptionValue "
                                     (click)="updateProject()">Update Profile</button></div>
                         </div>
@@ -95,13 +98,13 @@
                                     </ng-container>
                                 </div>
                             </div>
-                            <div class="save-team-button">
+                            <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="save-team-button">
                                 <div class="section-list text-right" aria-label="Save Teams" title="Save Teams"><button
                                         class="btn btn-primary btn-lg" [disabled]="!containsRole"
                                         (click)="updateProjectTeams()">Save Teams</button></div>
                             </div>
                         </div>
-                        <div class="projects-configuration-block remove-project-block" *ngIf="canRemove">
+                        <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="projects-configuration-block remove-project-block">
                             <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
                                 Remove this Project</div>
                             <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be

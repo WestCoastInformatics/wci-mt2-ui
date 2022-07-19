@@ -20,17 +20,13 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class OrganizationPeopleComponent implements OnInit {
 
-    menu: SidebarMenuItem[] = [
-        { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
-        { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-        { name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true }
-    ];
+    menu: SidebarMenuItem[] = [];
     data = [];
     showTable = false;
     defaultColDef = {};
     peopleList = [];
     selectedOrganization: any;
-    id: any;
+    organizationId: any;
     organizationList = [];
     gridOptions: any;
     gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
@@ -53,21 +49,16 @@ export class OrganizationPeopleComponent implements OnInit {
         private readonly teamService: TeamsService,
         private authenticationService: AuthenticationService,
         private location: Location) {
-        if (authenticationService.isAdmin()) {
-            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-        }
     }
 
     ngOnInit(): void {
 
         this.titleService.setTitle('Refset Tool - Organizations');
-        this.breadcrumbService.setBreadcrumbs([
-            { path: '/organizations/people', label: 'Organizations' },
-            { label: 'People' },
-        ]);
 
         this.route.params.subscribe(params => {
-            this.id = params['id'];
+
+            this.organizationId = params['id'];
+            this.setNavigation();
         });
 
         this.getOrganizations();
@@ -117,6 +108,20 @@ export class OrganizationPeopleComponent implements OnInit {
         this.getPeople();
     }
 
+    setNavigation() {
+
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/people', label: 'Organizations' },
+            { label: 'People' },
+        ]);
+
+        this.menu = [
+            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true }
+        ];
+    }
+
     onGridReady = (params) => {
 
         this.gridParams = params;
@@ -148,7 +153,7 @@ export class OrganizationPeopleComponent implements OnInit {
     getPeople(): void {
 
         this.showLoadingSpinner = true;
-        this.organizationsService.getOrgUsers(this.id, true).subscribe((results) => {
+        this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 
             this.data = results.items;
             this.showTable = true;
@@ -164,7 +169,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
             for (let organization of this.organizationList) {
 
-                if (this.id == organization.id) {
+                if (this.organizationId == organization.id) {
                     this.setOrganizationData(organization);
                 }
             }
@@ -179,8 +184,17 @@ export class OrganizationPeopleComponent implements OnInit {
 
     setOrganizationData(organization: any) {
 
-        this.id = organization.id;
+        this.organizationId = organization.id;
         this.selectedOrganization = organization;
+
+        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+            this.menu.pop;
+        }
     }
 
     async getTeams(teams: any): Promise<any> {
@@ -198,7 +212,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
     removeUser(user) {
         if (confirm("Are you sure you want to remove " + user.name + " from the organization?"))
-            this.organizationsService.removeUser(this.id, user.id).subscribe({
+            this.organizationsService.removeUser(this.organizationId, user.id).subscribe({
                 next: (data) => {
                     var datum = data;
                     console.log(datum);
@@ -208,7 +222,6 @@ export class OrganizationPeopleComponent implements OnInit {
     }
 
     getTeamCount(teams: any): number {
-
         return teams.length;
     }
 }

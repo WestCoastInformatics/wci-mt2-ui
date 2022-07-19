@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -12,6 +12,8 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
 
 @Component({
     selector: 'create-new-refset',
@@ -50,6 +52,7 @@ export class CreateNewRefsetComponent implements OnInit {
     existingMetadataConcepts: any;
     parentConcepts: any;
     conceptError = '';
+    dialog: DialogService;
 
     @Input() existingBranchVersions: any;
     @Input() isDetailsPage = false;
@@ -69,6 +72,7 @@ export class CreateNewRefsetComponent implements OnInit {
         versionDate?: any;
         definitionClauses?: [];
     };
+    @ViewChild("infoDialog") infoDialog: TemplateRef<any>;
 
     constructor(
         private modalService: NgbModal,
@@ -76,6 +80,7 @@ export class CreateNewRefsetComponent implements OnInit {
         private router: Router,
         private refsetService: RefsetService,
         private readonly refsetDetails: RefsetDetails,
+        private dialogFactoryService: DialogFactoryService,
         private readonly notificationService: NotificationService,
         private readonly projectsRefsetComponent: ProjectsRefsetComponent,
         private readonly authenticationService: AuthenticationService
@@ -121,7 +126,7 @@ export class CreateNewRefsetComponent implements OnInit {
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = '';
         this.privateRefset = false;
-        this.conceptError ='';
+        this.conceptError = '';
     }
 
     setupEditMode(): void {
@@ -274,8 +279,13 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isValidConceptName(): boolean {
-        var format = /^[0-9A-Za-zÀ-ú ]+$/;
-        var lower = this.createdMetaDataConcept.toLowerCase();
+        var format = /^[\/-9A-Za-z\\()À-ú\s]+$/;
+        var lower = null;
+        if (this.createdMetaDataConcept)
+            lower = this.createdMetaDataConcept.toLowerCase();
+        else
+            lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
+        console.log(lower);
         var flag = lower.match(format);
         if (flag == null) {
             this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';
@@ -367,7 +377,26 @@ export class CreateNewRefsetComponent implements OnInit {
         UiUtility.openEclBuilder(fieldId, this.inputProperties.project.organization.edition.branch);
     }
 
-    get canAdd(): boolean{
+    openInfoDialog() {
+        const dialogId = "infoDialog";
+
+        const dialogData = {
+            headerText: `Information`,
+            template: this.infoDialog,
+            data: null,
+            showCancel: false,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => { });
+    }
+
+    get canAdd(): boolean {
         let project = this.inputProperties.project;
         return project?.roles?.includes('AUTHOR');
     }

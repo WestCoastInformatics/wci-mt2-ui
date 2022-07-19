@@ -1,3 +1,5 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">Organizations</span>
@@ -52,6 +54,11 @@
                             <!-- Name Template -->
                             <ng-template #peopleNameSection let-params>
                                 <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                            </ng-template>
+
+                            <!-- Teams Template -->
+                            <ng-template #peopleTeamsSection let-params>
+                                <span class="text-primary font-weight-bold">{{ getTeamCount(params.data.teams) }} teams</span>
                             </ng-template>
 
                         </div>
