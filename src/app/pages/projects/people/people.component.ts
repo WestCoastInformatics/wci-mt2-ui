@@ -34,6 +34,7 @@ export class ProjectsPeopleComponent implements OnInit {
     uiUtility = UiUtility;
     organizations: any;
     organizationId: string;
+    showLoadingSpinner = false;
 
     @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
@@ -57,6 +58,10 @@ export class ProjectsPeopleComponent implements OnInit {
 			this.projectId = params['id'];
 			this.setNavigation();
         });
+
+        this.showLoadingSpinner = true;
+        this.data = [];
+        this.getOrganizations();
     }
 
     ngAfterViewInit() {
@@ -106,8 +111,6 @@ export class ProjectsPeopleComponent implements OnInit {
             },
         };
 
-        this.data = [];
-        this.getOrganizations();
         this.changeDetectorRef.detectChanges();
     }
 
@@ -132,6 +135,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
         this.refsetService.getOrganizations().subscribe((organizationResults) => {
 
+            this.showLoadingSpinner = false;
             this.organizations = organizationResults?.items;
 
             for (let organization of this.organizations) {
@@ -179,8 +183,11 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getProjects(): void {
 
+        this.showLoadingSpinner = true;
+
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
+            this.showLoadingSpinner = false;
 			this.projectList = results.items;
 
 			for (let project of this.projectList) {
@@ -190,6 +197,12 @@ export class ProjectsPeopleComponent implements OnInit {
                     this.selectedProject = project;
                     this.showProjectData(); 
                 }
+            }
+
+            if (this.projectList && this.projectList.length > 0) {
+
+                this.selectedProject = this.projectList[0];
+                this.selectProject(null);
             }
 		});
     }

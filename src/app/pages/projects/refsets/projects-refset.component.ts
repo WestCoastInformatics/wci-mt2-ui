@@ -107,10 +107,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 			this.setNavigation();
         });
 
+        this.showLoadingSpinner = true;
+
         this.getUser();
         this.getOrganizations();
-
-        this.showLoadingSpinner = true;
     }
 
     setNavigation() {
@@ -140,7 +140,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             this.versions = versionResults;
             let versionsArray = this.versions?.items;
-            this.showLoadingSpinner = false;
 
             let workflowStatuses = [
                 { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
@@ -221,6 +220,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         this.refsetService.getOrganizations().subscribe((organizationResults) => {
 
+            this.showLoadingSpinner = false;
             this.organizations = organizationResults?.items;
 
             for (let organization of this.organizations) {
@@ -247,8 +247,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getProjects(): void {
 
+        this.showLoadingSpinner = true;
+
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
+            this.showLoadingSpinner = false;
 			this.projectList = results.items;
 
 			for (let project of this.projectList) {
@@ -325,6 +328,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             // if the stored project ID doesn't match anything remove it
             sessionStorage.removeItem('selectedProjectId');
+
+            if (this.projectList && this.projectList.length > 0) {
+
+                this.selectedProject = this.projectList[0];
+                this.selectProject(null);
+            }
         }
 
         // set to first in project list if none stored
@@ -365,14 +374,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             getRows: (rowParams) => {
 
                 this.refsetGridApi.showLoadingOverlay();
-                // this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
                 let sort = UiUtility.formatSortData(rowParams.sortModel);
 
                 query = CodeUtility.addIfNotEmpty(query, ' AND ') + "projectId:" + this.selectedProject.id;
-
 
                 let newFilterString = query;
                 let newSortString = JSON.stringify(sort);
@@ -480,6 +487,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                         this.refsetGridApi.showNoRowsOverlay();
                         rowParams.successCallback([], 0);
+                        this.showLoadingSpinner = false;
                     });
             }
         };
@@ -497,7 +505,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             let value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-        this.showLoadingSpinner = false;
 
     }
 
