@@ -57,24 +57,6 @@ export class NavbarComponent implements OnInit {
         return this.router.url.includes('details');
     }
 
-    getProjectRoleString(): string {
-
-        const projectRoles = [];
-
-        if (!this.user?.roles) {
-            return '';
-        }
-
-        for (const role of this.user?.roles) {
-
-            if (role?.includes('AUTHOR') || role?.includes('REVIEWER')) {
-                projectRoles.push(role.toLowerCase().charAt(0).toUpperCase() + role.toLowerCase().slice(1));
-            }
-        }
-
-        return projectRoles?.length > 1 ? projectRoles.join(', ') : projectRoles[0];
-    }
-
     navigate(breadcrumbId) {
         
         let breadcrumb = this.breadcrumbs[breadcrumbId];
