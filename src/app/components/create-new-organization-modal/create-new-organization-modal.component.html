@@ -30,6 +30,7 @@
                                 class="col refset-tool-modal-select-field">
                                 <mat-select #downloadContentField class="refset-tool-modal-select"
                                     [(value)]="selectedEdition" (selectionChange)="getEdition()">
+                                    <mat-option *ngIf="editionsArray == null || editionsArray.length == 0">No Editions without an Organization</mat-option>
                                     <mat-option *ngFor="let option of editionsArray"
                                         [value]="option.id">
                                         {{ option.value }}
