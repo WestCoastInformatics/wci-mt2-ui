@@ -174,7 +174,12 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     launchComparison() {
 
-        this.refsetService.launchComparison(this.activeRefset.id, this.comparisonRefsetInternalId).subscribe();
+        this.refsetDetails.changeLockedStatus(true);
+
+        this.refsetService.launchComparison(this.activeRefset.id, this.comparisonRefsetInternalId).subscribe((x) => {
+            this.refsetDetails.changeLockedStatus(false);
+        });
+
         UiUtility.manageProcessNotifications(this.activeRefset.id, this.activeRefset.refsetId, RefsetUtility.IN_DEVELOPMENT, this.showComparison, this.notificationService, this.refsetService, this.router, 'comparison');
 
         this.openedModel.close();
