@@ -42,7 +42,9 @@ export class TeamsConfigurationComponent implements OnInit {
 		private readonly authService: AuthenticationService,
 		private readonly teamsService: TeamsService,
 		private readonly notificationService: NotificationService,
-		private location: Location) { }
+		private location: Location) {
+			document.body.scrollTop = 0;
+		}
 
 	ngOnInit(): void {
 

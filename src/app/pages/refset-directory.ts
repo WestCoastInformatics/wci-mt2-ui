@@ -83,6 +83,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService
     ) {
+        document.body.scrollTop = 0;
         refsetService.getTaxonomyRoot();
     }
 

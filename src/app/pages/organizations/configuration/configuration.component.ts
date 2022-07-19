@@ -34,7 +34,9 @@ export class OrganizationConfigurationComponent implements OnInit {
 		private authenticationService: AuthenticationService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
-		private location: Location) { }
+		private location: Location) {
+			document.body.scrollTop = 0;
+		}
 
 	ngOnInit(): void {
 

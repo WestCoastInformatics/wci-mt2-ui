@@ -222,7 +222,9 @@ const appRoutes: Routes = [
     imports: [
         RouterModule.forRoot(
             appRoutes,
-            {onSameUrlNavigation: 'reload'}
+            {
+                onSameUrlNavigation: 'reload',
+                scrollPositionRestoration: 'top'}
             //{ enableTracing: true } // <-- debugging purposes only
         ),
         BrowserModule,

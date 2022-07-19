@@ -92,6 +92,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         protected readonly projectsService: ProjectsService,
         private location: Location
     ) {
+        document.body.scrollTop = 0;
         refsetService.getTaxonomyRoot();
     }
 

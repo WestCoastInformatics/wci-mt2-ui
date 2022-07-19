@@ -46,7 +46,9 @@ export class ProjectsPeopleComponent implements OnInit {
         private readonly route: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
         private readonly router: Router,
-        private location: Location) { }
+        private location: Location) {
+            document.body.scrollTop = 0;
+        }
 
     ngOnInit(): void {
 

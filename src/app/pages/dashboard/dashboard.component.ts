@@ -51,7 +51,9 @@ export class DashboardComponent implements OnInit {
         private readonly titleService: Title,
         private readonly refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
-        private readonly authService: AuthenticationService) { }
+        private readonly authService: AuthenticationService) {
+        document.body.scrollTop = 0;
+        }
 
     ngOnInit(): void {
 

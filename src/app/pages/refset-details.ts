@@ -213,6 +213,7 @@ export class RefsetDetails {
         readonly projectsRefsetComponent: ProjectsRefsetComponent,
         private location: Location
     ) {
+        document.body.scrollTop = 0;
         refsetService.getTaxonomyRoot();
     }
 

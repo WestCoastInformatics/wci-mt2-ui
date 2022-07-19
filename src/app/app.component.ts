@@ -51,14 +51,6 @@ export class AppComponent implements OnInit {
         this.titleService.setTitle('Refset Tool');
         this.environment = this.envService.env;
 
-        // this.authoringService.getVersions().subscribe(versions => {
-        //     this.versions = versions;
-        // });
-
-        // this.authoringService.getUIConfiguration().subscribe(config => {
-        //     this.authoringService.uiConfiguration = config;
-        // });
-
         this.assignFavicon();
         this.router.events.subscribe((event: any) => {
             if (event instanceof RoutesRecognized) {

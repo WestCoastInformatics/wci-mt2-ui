@@ -50,13 +50,14 @@ export class TeamsPeopleComponent implements OnInit {
         private readonly router: Router,
         private readonly authService: AuthenticationService,
         private readonly teamsService: TeamsService,
-        private location: Location) { }
+        private location: Location) {
+            document.body.scrollTop = 0;
+        }
 
     ngOnInit(): void {
 
         this.titleService.setTitle('Refset Tool - Teams');
         this.currentUser = this.authService.getUser();
-
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];

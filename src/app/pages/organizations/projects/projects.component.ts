@@ -42,6 +42,7 @@ export class OrganizationProjectsComponent implements OnInit {
         private readonly teamService: TeamsService,
         private authenticationService: AuthenticationService,
         private location: Location) {
+            document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {

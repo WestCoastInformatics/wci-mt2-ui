@@ -12,7 +12,9 @@ export class LandingPageComponent implements OnInit {
     loginForm: FormGroup;
 
     constructor(private authService: AuthenticationService,
-        private formBuilder: FormBuilder) { }
+        private formBuilder: FormBuilder) {
+            document.body.scrollTop = 0;
+        }
 
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
