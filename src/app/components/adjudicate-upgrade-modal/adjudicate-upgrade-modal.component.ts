@@ -696,32 +696,14 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     //   this.conceptDetailParents = results.items;
     // });
   }
-  openCancelUpgrade() {
-    const dialogId = "cancelUpgradeDialog";
 
-    const dialogData = {
-        headerText: `Cancel Upgrade`,
-        template: this.cancelUpgradeDialog,
-        data: this.refsetData,
-        showCloseIcon: false
-    };
-
-    const dialogOptions = {
-        id: dialogId,
-    };
-
-    this.dialog = this.dialogFactoryService.open(dialogData);
-
-    this.dialog.confirmed().subscribe((data) => {
-      // if 'ok', close pause modal and update modal
-      if (data) {
-        console.log("workflow status: ", data.workflowStatus);
-        this.modalService.dismissAll();
-      }
-      // else close only pause modal
+  openCancelUpgrade(dialog: NgbModal) {
+    this.modalService.open(dialog, {
+        modalDialogClass: 'alert-modal',
+        centered: true
     });
-}
-
+    console.log("Cancel Upgrade in initial screen");
+  }
   openPauseUpdate() {
     const dialogId = "pauseUpdateDialog";
 
