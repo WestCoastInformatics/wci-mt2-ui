@@ -94,4 +94,12 @@ export class NavbarComponent implements OnInit {
             return false;
         return this.breadcrumbs.find(bc => bc.label == "Projects") != undefined;
     }
+    
+    navigateToRoute(route: string): void {
+        if (this.router.url.includes(route)) {
+            window.location.reload();
+        } else {
+            this.router.navigate([route]);
+        }
+    }
 }

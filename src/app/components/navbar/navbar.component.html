@@ -33,7 +33,7 @@
                 assignedUser() }}</span>
         </div>
 
-        <div class="directory-nav" routerLink="/directory">
+        <div class="directory-nav" (click)="navigateToRoute('/directory')">
             <img class="directory-icon" src="/assets/directory-icon.svg">
             <span class="directory-icon-label">Directory</span>
         </div>
