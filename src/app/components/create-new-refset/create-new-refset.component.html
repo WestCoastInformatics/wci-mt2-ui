@@ -114,13 +114,15 @@
                         ">
                         <label>Assign Refset
                             Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
-                                <span><button mat-icon-button
-                                    (click)="openInfoDialog()" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
-                                    title="Open  Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                            <span><button mat-icon-button (click)="openInfoDialog()"
+                                    aria-hidden="false"
+                                    aria-label="Open Assign Refset Concept Information Dialog"
+                                    title="Open  Assign Refset Concept Information Dialog"
+                                    ng-reflect-color="primary">
                                     <mat-icon class="refset-tool-new-refset-info-icon">info_icon
                                     </mat-icon>
-                                </button></span> 
-                            </label>
+                                </button></span>
+                        </label>
                     </div>
 
                     <div *ngIf="!editMode"
@@ -128,7 +130,8 @@
 
                         <mat-radio-group>
 
-                            <mat-radio-button style="padding-right: 30px" value="1" (change)="checkRadioButtonValue($event)">Choose an existing
+                            <mat-radio-button style="padding-right: 30px" value="1"
+                                (change)="checkRadioButtonValue($event)">Choose an existing
                                 metadata
                                 concept</mat-radio-button>
 
@@ -164,14 +167,14 @@
                                 <input matInput type="text"
                                     placeholder="Enter the name of the new concept"
                                     [(ngModel)]="createdMetaDataConcept"
-                                    (keyup)="this.isValidConceptName()"
-                                    />
-                                    <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
+                                    (keyup)="this.isValidConceptName()" />
+                                <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
                                     (click)="value2a = ''">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </mat-form-field>
-                            <div class="modal-error-message" [hidden]="!conceptError">{{ conceptError }}</div>
+                            <div class="modal-error-message" [hidden]="!conceptError">{{
+                                conceptError }}</div>
 
                         </mat-radio-group>
                     </div>
@@ -342,7 +345,8 @@
                     *ngIf="selectedReferenceType === INTENSIONAL">
 
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0">ECL Definition:</label>
+                        <label style="margin-bottom: 0">ECL Definition:<span *ngIf="!editMode"
+                                class="mandatory-field">*</span></label>
                     </div>
 
                     <div class="col create-new-refset-field create-new-refset-flex-weight">
@@ -360,11 +364,11 @@
                                 <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
                                 <button
-                                (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
-                                class="btn btn-primary i18 ecl-buttonn rounded">ECL Builder
-                                <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
+                                    (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
+                                    class="btn btn-primary i18 ecl-buttonn rounded">ECL Builder
+                                    <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                     aria-label="ECL Builder" title="Open ECL Builder" /> -->
-                            </button>
+                                </button>
                             </span>
 
                             <span *ngIf="i > 0" class="refset-tool-flex-row">

@@ -126,7 +126,7 @@ export class CreateNewRefsetComponent implements OnInit {
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = '';
         this.privateRefset = false;
-        this.conceptError ='';
+        this.conceptError = '';
     }
 
     setupEditMode(): void {
@@ -279,8 +279,9 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isValidConceptName(): boolean {
-        var format = /^[0-9A-Za-zÀ-ú ]+$/;
+        var format = /^[0-9A-Za-zÀ-ú\s][^\t]+$/;
         var lower = this.createdMetaDataConcept.toLowerCase();
+        console.log(lower);
         var flag = lower.match(format);
         if (flag == null) {
             this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';
@@ -389,9 +390,9 @@ export class CreateNewRefsetComponent implements OnInit {
         this.dialog = this.dialogFactoryService.open(dialogData);
 
         this.dialog.confirmed().subscribe((data) => { });
-    }			
+    }
 
-    get canAdd(): boolean{
+    get canAdd(): boolean {
         let project = this.inputProperties.project;
         return project?.roles?.includes('AUTHOR');
     }
