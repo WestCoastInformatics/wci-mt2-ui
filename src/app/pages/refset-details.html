@@ -671,9 +671,18 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Notes
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <!--<td mat-cell *matCellDef="let row">
                                     <span [innerHTML]="row.notes"></span>
-                                </td>
+                                </td> -->
+                                <td  mat-cell *matCellDef="let row">
+                                <ng-container>
+                                    <readonly-text-modal
+                                        [shortText180]=true
+                                        [shortText]="row.notes"
+                                        [longText]="row.notes"
+                                        [title]="'Notes'"></readonly-text-modal>
+                                </ng-container>
+                            </td>
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true">
