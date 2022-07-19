@@ -178,6 +178,8 @@ export class UpgradeModalComponent implements OnInit {
           if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
             x = x + '"}';
           }
+          x = x.replace(/,null"}|,null/g, '');
+
           return JSON.parse(x);
         });
         return formattedObjectArray[0];
