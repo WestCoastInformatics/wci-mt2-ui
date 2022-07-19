@@ -1700,7 +1700,7 @@ export class RefsetDetails {
     }
 
     latestDate(versionList: any[]): string {
-        return versionList ? `${versionList[0].date}` : '';
+        return versionList && versionList[0] ? `${versionList[0].date}` : '';
     }
 
     snomedBrowserLink() {

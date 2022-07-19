@@ -80,8 +80,11 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 suppressMenu: true,
                 flex: 1,
                 filter: true,
+                filterParams: {
+                    debounceMs: 2000
+                },
                 floatingFilter: true,
-                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true, debounceMs: 2000},
             },
             enableBrowserTooltips: true,
             rowClassRules: {
