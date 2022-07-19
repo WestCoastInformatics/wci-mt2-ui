@@ -41,16 +41,19 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.columnDefs = [
-            {field: 'date', headerName: 'Date', unSortIcon: true, sortable: true},
+            {field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, cellRenderer: params => {
+                    return `${this.formatDate(params.data?.created)}`;
+                }},
             {field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true},
             {field: 'message', headerName: 'Message', unSortIcon: true, sortable: true},
-            {field: 'details', headerName: 'Details', minWidth: 550}];
+            {field: 'details', headerName: 'Details', minWidth: 550, sortable: false}];
         // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
             context: {componentParent: this},
             pagination: true,
-            suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressColumnVirtualisation: true,
             suppressPaginationPanel: true,
             cacheBlockSize: this.gridPaging.pageSize,
             maxBlocksInCache: 1,
@@ -107,6 +110,10 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
         this.gridApi = gridReadyParams.api;
         this.gridColumnApi = gridReadyParams.columnApi;
+        const sortModel = [
+            {colId: 'created', sort: 'desc'}
+        ];
+        this.gridApi.setSortModel(sortModel);
         this.onResize(undefined);
         const dataSource = {
             rowCount: null,
@@ -145,23 +152,20 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     sortModel: rowParams.sortModel, // not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, // not needed once we get rid of mocking the backend
                 };
-                // const refsetFilter = `entityId:${this.refsetInternalId} AND entityType:REFSET`;
-                // if (CodeUtility.hasValue(query)) {
-                //     query += ` AND ${refsetFilter}`;
-                // } else {
-                //     query = refsetFilter;
-                // }
-                // query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
-                // restParams.query = query;
+                const refsetFilter = `entityId:${this.refsetInternalId} AND entityType:REFSET`;
                 if (CodeUtility.hasValue(query)) {
-                    query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
-                    restParams.query = query;
+                    query += ` AND ${refsetFilter}`;
+                } else {
+                    query = refsetFilter;
                 }
+                query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                restParams.query = query;
+                // if (CodeUtility.hasValue(query)) {
+                //     query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                //     restParams.query = query;
+                // }
                 this.auditService.getAuditTrial({...restParams, ...sort}).subscribe({
                     next: (results) => {
-                        results.items.forEach(r => {
-                            r.date = this.formatDate(r.modified);
-                        });
                         this.showPaging = results.total > 0;
                         if (results.items.length === 0 && pageNumber > 1) {
 
@@ -252,6 +256,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
     }
 
     formatDate(date) {
-        return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE);
+        return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME);
     }
 }
