@@ -70,7 +70,7 @@ export class CreateNewOrganizationModalComponent {
     ngOnInit() {    
 
         // get list of editions
-        this.refsetService.getEditions(true).subscribe((editionResults) => {
+        this.refsetService.getEditions().subscribe((editionResults) => {
 
             this.editions = editionResults;
             this.editionsArray = this.editions?.items;
