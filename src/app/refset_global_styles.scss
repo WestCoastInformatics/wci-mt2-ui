@@ -3802,9 +3802,17 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: flex
 }
 
-.limit-text-30 {
+.limit-text-50 {
     white-space: nowrap;
-    width: 30ch;
+    width: 50ch;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.limit-text-180 {
+    white-space: nowrap;
+    width: 180ch;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
