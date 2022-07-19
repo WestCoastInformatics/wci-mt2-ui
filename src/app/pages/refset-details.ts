@@ -453,7 +453,7 @@ export class RefsetDetails {
                     next: (results) => {
                         this.unresolvedDiscussionCount = 0;
                         for (let discussion of results.items) {
-     
+
                             if (discussion.status == 'Open') {
                                 this.unresolvedDiscussionCount++;
                             }
@@ -1588,12 +1588,12 @@ export class RefsetDetails {
 
     toTitleCase(str) {
         return str?.replace(
-          /\w\S*/g,
-          function(txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-          }
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
         );
-      }
+    }
 
     modifyStatusSyntax(value: string): string {
         return this.capitalizeFirstLetterOfString(value?.replace(/\_/g, ' ').toLowerCase());
@@ -1682,10 +1682,10 @@ export class RefsetDetails {
         });
     }
 
-    openCancelUpgrade(dialog: NgbModal){
+    openCancelUpgrade(dialog: NgbModal) {
         this.modalService.open(dialog, {
-                modalDialogClass: 'alert-modal',
-                centered: true
+            modalDialogClass: 'alert-modal',
+            centered: true
         });
         console.log("Cancel Upgrade in initial screen");
     }
@@ -1696,5 +1696,14 @@ export class RefsetDetails {
 
     latestDate(versionList: any[]): string {
         return versionList ? `${versionList[0].date}` : '';
-      }
+    }
+
+    snomedBrowserLink() {
+        if (environment.production) {
+            window.open('http://browser.ihtsdotools.org/');
+        }
+        else {
+            window.open('http://dailybuild.ihtsdotools.org/');
+        }
+    }
 }
