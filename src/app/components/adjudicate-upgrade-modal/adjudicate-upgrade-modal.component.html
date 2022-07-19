@@ -265,12 +265,12 @@
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img *ngIf="!params?.data?.isHidden && ((params?.data?.stillMember !== undefined && !params?.data?.stillMember))"
+    <img *ngIf="!params?.data?.isHidden && (params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
         src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')"
         width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
         class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
-    <img *ngIf="!params?.data?.isHidden && params?.data?.stillMember"
+    <img *ngIf="!params?.data?.isHidden && (params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)"
         src="assets/subtract-symbol-icon.svg"
         (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px"
         title="Remove {{actionText}}" aria-label="Subtract" class="subtract-symbol-icon"
@@ -279,7 +279,7 @@
 
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
-    <span [class.linethrough-inactive]="!params?.data?.stillMember"
+    <span [class.linethrough-inactive]="!params?.data?.stillMember || params?.data?.replaced"
         [class.add-bold]="params?.data?.stillMember && !params?.data?.replaced"
         [class.hide-data]="params?.data?.isHidden">
         {{ params?.data?.code }}
@@ -288,7 +288,7 @@
 
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
-    <span [class.linethrough-inactive]="!params?.data?.stillMember"
+    <span [class.linethrough-inactive]="!params?.data?.stillMember || params?.data?.replaced"
         [class.add-bold]="params?.data?.stillMember && !params?.data?.replaced"
         [class.hide-data]="params?.data?.isHidden">
         {{ transformDescriptions(params?.data?.descriptions)?.length ?
@@ -298,7 +298,7 @@
 
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
-    <span [class.linethrough-inactive]="!params?.data?.stillMember"
+    <span [class.linethrough-inactive]="!params?.data?.stillMember || params?.data?.replaced"
         [class.add-bold]="params?.data?.stillMember && !params?.data?.replaced"
         [class.hide-data]="params?.data?.isHidden">
         {{ formatReason(params?.data?.inactivationReason) }}
