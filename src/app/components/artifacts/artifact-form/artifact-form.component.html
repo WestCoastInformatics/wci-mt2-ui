@@ -1,4 +1,7 @@
-<a class="btn btn-main mb-3" (click)="openArtifactsModal(artifactFormDialog)">Add an artifact</a>
+<a class="btn btn-main mb-3" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="!isEdit && loaded">Add an artifact</a>
+<a class="pointer ml-3" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="isEdit && loaded">
+    <mat-icon>edit</mat-icon>
+</a>
 
 <ng-template #artifactFormDialog let-modal>
     <div class="modal-header rt2-modal-header">
@@ -13,23 +16,19 @@
         <div class="modal-body pr-0 pl-0 pb-0">
             <div class="topic-content mb-3">
                 <mat-form-field appearance="fill" class="discussion-topic-field">
-                    <mat-label>Artifact Name</mat-label>
-                    <input matInput type="text" [(ngModel)]="name"
-                        placeholder="Add a name for the artifact" />
-                </mat-form-field>
-            </div>
-            <div class="topic-content mb-3">
-                <mat-form-field appearance="fill" class="discussion-topic-field">
                     <mat-label>Description</mat-label>
-                    <input matInput type="text" [(ngModel)]="description"
+                    <input matInput type="text" [(ngModel)]="artifact.description"
                         placeholder="Add a Description for the artifact" />
                 </mat-form-field>
             </div>
-            <!-- <div class="topic-content mb-3">
-                <input #fileInput hidden="true" type="file" onclick="this.value=null" (change)="fileChange($event)" />
-                <button mat-flat-button color="primary" (click)="fileInput.click()">Choose Artifact File</button>
-            </div> -->
-            <div class="container-file-import w-100" dragAndDrop (fileDropped)="onFileDropped($event)">
+            <div class="topic-content mb-3" *ngIf="artifact.fileName">
+                <mat-form-field appearance="fill" class="discussion-topic-field">
+                    <mat-label>Artifact Name</mat-label>
+                    <input matInput type="text" [(ngModel)]="artifact.fileName"
+                        placeholder="Add a name for the artifact" readonly />
+                </mat-form-field>
+            </div>
+            <div class="container-file-import w-100" dragAndDrop (fileDropped)="fileChange($event)">
                 <input type="file" #fileDropRef id="fileDropRef" (click)="$event.target.value = null" (change)="fileChange($event)" />
                 <img src="assets/import-file-upload-icon2.svg" title="Choose Artifact File" aria-label="Choose Artifact File" />
 
@@ -49,7 +48,7 @@
         </button>
         <button mat-raised-button color="primary" aria-hidden="false"
             class="refset-tool-action-button refset-action-button"
-            ng-reflect-color="primary">
+            ng-reflect-color="primary" (click)="onSave()">
             Save
         </button>
     </div>

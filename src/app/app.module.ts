@@ -44,7 +44,6 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { LaunchComparisonModalComponent } from 'src/app/components/comparison/launch-comparison-modal.component';
@@ -98,7 +97,6 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { dragAndDropDirective } from 'src/app/directives/drag-and-drop.directive';
 import { AddRemoveByConceptModalComponent } from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
 import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
@@ -119,8 +117,10 @@ import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
-import {PaginationModule} from './components/pagination/pagination.module';
-import {AuditService} from './services/rest/audit.service';
+import { PaginationModule } from './components/pagination/pagination.module';
+import { ArtifactsService } from './services/rest/artifacts.service';
+import { AuditService } from './services/rest/audit.service';
+import {DirectivesModule} from './directives/directives.module';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -174,7 +174,7 @@ const appRoutes: Routes = [
         SafeUrlPipe,
         RefsetDirectory,
         RefsetDetails,
-		CategoryFilterComponent,
+        CategoryFilterComponent,
         DateTextFilterComponent,
         CreateNewRefsetComponent,
         ProjectsRefsetComponent,
@@ -185,7 +185,6 @@ const appRoutes: Routes = [
         CreateNewTeamModalComponent,
         AddMemberModalComponent,
         CreateNewProjectModalComponent,
-        dragAndDropDirective,
         AddRemoveByConceptModalComponent,
         ScrollTopComponent,
         ReadonlyTextModalComponent,
@@ -262,18 +261,20 @@ const appRoutes: Routes = [
         CommonModule,
         ArtifactsModule,
         AuditTrailModule,
-        PaginationModule
+        PaginationModule,
+        DirectivesModule
     ],
     entryComponents: [NotificationComponent],
     providers: [
         AuthenticationService,
         AuthoringService,
+        ArtifactsService,
+        AuditService,
         EnvServiceProvider,
         RestService,
         ConceptsService,
         RefsetService,
-        AuditService,
-		RefsetDetails,
+        RefsetDetails,
         PaginationService,
         BreadcrumbService,
         RouterExtentionService,

@@ -1,14 +1,26 @@
 <div class='dashboard-section pr-1 pl-1'>
     <div class="ag-theme-alpine">
-        <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data"
-            class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter w-100" [gridOptions]="gridOptions" (gridReady)="onGridReady">
+        <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="gridOptions"
+            class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter w-100">
         </ag-grid-angular>
+
+        <app-pagination #pagination [pageSize]="gridPaging.pageSize" *ngIf="showPaging"
+                        [gridOptions]="gridOptions"
+                        [pageSizeOptions]="gridPaging.pageSizeOptions"
+                        [totalKnown]="gridPaging.totalKnown"
+                        [manualStateRefresh]="gridPaging.manualStateRefresh">
+        </app-pagination>
 
         <ng-template #descriptionSection let-params>
             <label class="ellipsed-label" [ngbPopover]="params?.data.description" container="body" placement="top"
                 popoverTitle="Description">
                 {{ params?.data.description }}
             </label>
+        </ng-template>
+
+        <ng-template #actionsSection let-params>
+            <a [href]="serviceUrl + params.data?.downloadUrl" target="_blank"><mat-icon>download</mat-icon></a>
+            <artifact-form [refsetInternalId]="refsetInternalId" (refresh)="onReload()" [artifact]="params.data"></artifact-form>
         </ng-template>
     </div>
 </div>

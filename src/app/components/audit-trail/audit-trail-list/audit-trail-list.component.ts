@@ -246,11 +246,11 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-    };
+    }
 
     onGridCellClick = (event) => {
 
-    };
+    }
 
 
     onResize(event) {

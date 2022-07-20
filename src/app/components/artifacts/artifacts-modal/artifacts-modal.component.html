@@ -18,10 +18,10 @@
         <div class="modal-body pr-0 pl-0 pb-0">
 
             <div class="text-right">
-                <artifact-form [refsetInternalId]="refsetInternalId"></artifact-form>
+                <artifact-form [refsetInternalId]="refsetInternalId" (refresh)="onRefresh(artifactsList)"></artifact-form>
             </div>
 
-            <artifacts-list [refsetInternalId]="refsetInternalId" (download)="downloadSelected"></artifacts-list>
+            <artifacts-list [refsetInternalId]="refsetInternalId" #artifactsList></artifacts-list>
 
         </div>
     </div>
@@ -31,10 +31,10 @@
             ng-reflect-color="red">
             Cancel
         </button>
-        <button mat-raised-button color="primary" aria-hidden="false"
+        <!--<button mat-raised-button color="primary" aria-hidden="false"
             class="refset-tool-action-button refset-action-button" ng-reflect-color="primary">
             Download
             <i class="fa fa-download"></i>
-        </button>
+        </button>-->
     </div>
 </ng-template>
