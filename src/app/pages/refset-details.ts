@@ -898,7 +898,6 @@ export class RefsetDetails {
         //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
         this.membersGridApi.showLoadingOverlay();
-        this.showLoadingSpinner = true;
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = "";
@@ -1268,7 +1267,6 @@ export class RefsetDetails {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-        this.showLoadingSpinner = true;
         this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.refsetData.id, }).subscribe({
             next: (results) => {
 

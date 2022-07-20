@@ -90,7 +90,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     //***** Framework Functions *****/
     ngOnInit() {
 
-        this.showLoadingSpinner = true;
         this.titleService.setTitle('Refset Tool - Refset Directory');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
 
