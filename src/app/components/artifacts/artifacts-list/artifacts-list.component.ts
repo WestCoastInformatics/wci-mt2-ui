@@ -1,8 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {UiUtility} from '../../../utilities/ui.utility';
+import {CodeUtility} from '../../../utilities/code.utility';
+import {PaginationComponent} from '../../pagination/pagination.component';
+import {ArtifactsService} from '../../../services/rest/artifacts.service';
 
 @Component({
     selector: 'artifacts-list',
@@ -10,48 +13,81 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 })
 export class ArtifactsListComponent implements OnInit, AfterViewInit {
 
+    columnDefs = [];
 
-    isResolved = false;
-    columnDefs = [
-
-    ];
-
-    data = [
-        { id: 1, name: 'File 1', type: 'XLS', uploader: 'Tim', uploaded: '2020-02-14 UTC at 16:05:22', description: 'List of concepts we must be in Refset based on ECL', checked: false },
-        { id: 2, name: 'File 2', type: 'TXT', uploader: 'Eza', uploaded: '2020-02-14 UTC at 16:05:22', description: 'We listed the expected ECL in this file', checked: false },
-        { id: 3, name: 'File 3', type: 'DOC', uploader: 'Tim', uploaded: '2020-02-14 UTC at 16:05:22', description: 'New additions for the laboratory tests', checked: false },
-        { id: 4, name: 'File 4', type: 'XLS', uploader: 'Wendy', uploaded: '2020-02-14 UTC at 16:05:22', description: 'Checking US descriptions for medications, new additions for laboratory tests, Upgraded the expected ECL in this file', checked: false },
-        { id: 5, name: 'File 5', type: 'PDF', uploader: 'Jesse', uploaded: '2020-02-14 UTC at 16:05:22', description: 'Review rules for nursing procedures refset', checked: false }
-    ];
+    data: any;
 
     gridApi: any;
     gridColumnDefs = [];
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
-    showTable: boolean = false;
+    gridPaging = {pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true};
+    gridLastFilter = '';
+    gridLastSort = '';
+    datasource: any;
+    showTable = false;
+    showPaging = false;
 
     @Input() refsetInternalId: string;
-    @Output() downloadSelected : EventEmitter<any> = new EventEmitter();
+    @Output() downloadSelected: EventEmitter<any> = new EventEmitter();
+    @ViewChild('pagination') paginationComponent: PaginationComponent;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
+    @ViewChild('actionsSection') actionsSection: TemplateRef<any>;
 
-    constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private refsetService: RefsetService,
-        private changeDetectorRef: ChangeDetectorRef) { }
+    constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private artifactsService: ArtifactsService,
+                private changeDetectorRef: ChangeDetectorRef) {
+    }
+
+    get serviceUrl(): string {
+        return this.artifactsService.contextPath.replace(/\/+$/, '');
+    }
 
     ngOnInit(): void {
         this.columnDefs = [
-        { field: 'name', headerName: 'Name', unSortIcon: true, sortable: true, checkboxSelection: true, headerCheckboxSelection: true },
-        { field: 'type', headerName: 'Type', unSortIcon: true, sortable: true },
-        { field: 'uploader', headerName: 'Uploaded By', unSortIcon: true, sortable: true },
-        { field: 'uploaded', tooltipField: 'Uploaded Date', headerName: 'Uploaded Date', unSortIcon: true, sortable: true },
-        { field: 'description', headerName: 'Description', minWidth: 550 }]; //, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
+            {
+                field: 'fileName',
+                headerName: 'Name',
+                unSortIcon: true,
+                sortable: true,
+                checkboxSelection: true,
+                headerCheckboxSelection: true
+            },
+            {field: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true},
+            {field: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, sortable: true},
+            {
+                field: 'created',
+                tooltipField: 'Uploaded Date',
+                headerName: 'Uploaded Date',
+                unSortIcon: true,
+                sortable: true,
+                cellRenderer: params => {
+                    return `${this.formatDate(params.data?.created)}`;
+                }
+            },
+            {field: 'description', headerName: 'Description', minWidth: 550},
+            {
+                field: 'id',
+                headerName: '',
+                filter: false,
+                sortable: false,
+                cellRenderer: 'templateRenderer',
+                resizable: false,
+                cellRendererParams: {template: this.actionsSection}, maxWidth: 110
+            }];
+        // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
-            context: { componentParent: this },
-            pagination: false,
-            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            context: {componentParent: this},
+            pagination: true,
+            suppressColumnVirtualisation: true,
+            // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
-            paginationPageSize: this.gridPaging.pageSize,
+            cacheBlockSize: this.gridPaging.pageSize,
+            maxBlocksInCache: 1,
+            rowModelType: 'infinite',
             enableCellTextSelection: true,
+            // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            // suppressPaginationPanel: true,
+            paginationPageSize: this.gridPaging.pageSize,
             // onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             onFilterChanged: function () {
@@ -59,7 +95,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                     this.api.showNoRowsOverlay();
                 } else {
                     this.api.hideOverlay();
-                };
+                }
             },
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
@@ -69,15 +105,17 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 resizable: true,
                 suppressMenu: true,
                 flex: 1,
-                filter: true,
+                filterParams: {
+                    debounceMs: 2000
+                },
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true, debounceMs: 2000},
             },
             enableBrowserTooltips: true,
             rowClassRules: {
                 refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+                    let inactivatedRow = false;
 
                     if (params.data) {
                         inactivatedRow = params.data.active == false;
@@ -93,52 +131,138 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
         this.showTable = true;
 
 
-        this.gridColumnDefs = [
-
-        ];
+        this.gridColumnDefs = [];
     }
 
     onGridReady = (gridReadyParams) => {
 
         this.gridApi = gridReadyParams.api;
-        this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
+        this.columnDefs[4].cellRendererParams = {template: this.descriptionSection};
+        this.columnDefs[5].cellRendererParams = {template: this.actionsSection};
         this.gridApi.setColumnDefs(this.columnDefs);
-        // let conceptId = null;
 
-        // if (CodeUtility.hasValue(this.conceptId)) {
-        // 	conceptId = this.conceptId;
-        // }
-        return;
+        this.onResize(undefined);
+        this.datasource = {
+            rowCount: null,
+            getRows: (rowParams) => {
 
-        this.refsetService.getArtifacts(this.refsetInternalId, '?limit=500&offset=0&sort=modified&sortAscending=false').subscribe({
-            next: (results) => {
+                this.gridApi.showLoadingOverlay();
+                // this.showLoadingSpinner = true;
 
-                results.total = results.items.length;
-                results.totalKnown = true;
-                // this.threadsData = results.items;
-                let pageNumber = 1;
+                let pageNumber = rowParams.endRow / this.gridApi.paginationGetPageSize();
+                let query = UiUtility.formatFilterData(rowParams.filterModel);
+                const sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                if (results.items.length == 0) {
-                    this.gridApi.showNoRowsOverlay();
-                    this.gridApi.setRowData([]);
+                const newFilterString = query;
+                const newSortString = JSON.stringify(sort);
 
-                    if (pageNumber > 1) {
+                // if the filters or sort have changed then move to the first page
+                if (newFilterString !== this.gridLastFilter || newSortString !== this.gridLastSort) {
 
-                        this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
-                        this.gridPaging.totalKnown = true;
-                        // this.paginationComponent.goToPage(pageNumber - 1);
-                    }
-
-                    return;
+                    pageNumber = 1;
+                    this.gridApi?.api?.paginationGoToPage(0);
                 }
 
-                // UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
-            },
-            error: (error) => {
+                // if the filters have changed then reset the total row variables
+                if (newFilterString !== this.gridLastFilter) {
 
-                this.gridApi.showNoRowsOverlay();
-                this.gridApi.setRowData([]);
+                    this.gridPaging.totalRows = null;
+                    this.gridPaging.totalKnown = false;
+                }
+
+                this.gridLastFilter = newFilterString;
+                this.gridLastSort = newSortString;
+
+                const restParams: any = {
+                    limit: this.gridApi.paginationGetPageSize(),
+                    offset: (pageNumber - 1) * this.gridApi.paginationGetPageSize(),
+                    sortModel: rowParams.sortModel, // not needed once we get rid of mocking the backend
+                    filterModel: rowParams.filterModel, // not needed once we get rid of mocking the backend
+                };
+                const refsetFilter = `entityId:${this.refsetInternalId} AND entityType:REFSET`;
+                if (CodeUtility.hasValue(query)) {
+                    query += ` AND ${refsetFilter}`;
+                } else {
+                    query = refsetFilter;
+                }
+                query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                restParams.query = query;
+                this.artifactsService.getArtifacts({...restParams, ...sort}).subscribe({
+                    next: (results) => {
+                        this.showPaging = results.total > 0;
+                        if (results.items.length === 0 && pageNumber > 1) {
+
+                            this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+                            this.gridPaging.totalKnown = true;
+                            this.paginationComponent.goToPage(pageNumber - 1);
+                            return;
+                        }
+
+                        const data = results.items;
+                        this.data = data;
+                        if (results.total) {
+                            results.totalKnown = true;
+                        }
+                        if (data?.length > 0) {
+
+                            this.gridApi.hideOverlay();
+                            let currentRowCount = null;
+                            let lastRow = -1;
+
+                            if (results.totalKnown || data.length < this.gridApi.paginationGetPageSize() || this.gridPaging.totalKnown) {
+
+                                if (results.totalKnown) {
+                                    lastRow = results.total;
+
+                                } else if (this.gridPaging.totalKnown) {
+                                    lastRow = this.gridPaging.totalRows;
+
+                                } else {
+
+                                    currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+                                    lastRow = currentRowCount;
+                                }
+
+                                this.gridPaging.totalRows = lastRow;
+                                this.gridPaging.totalKnown = true;
+
+                            } else {
+                                currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+                            }
+
+
+                            rowParams.successCallback(data, lastRow);
+
+                        } else {
+
+                            this.gridApi.showNoRowsOverlay();
+                            rowParams.successCallback([], 0);
+                        }
+
+                        this.gridPaging.manualStateRefresh = Boolean(true);
+                    },
+                    error: (error) => {
+
+                        this.gridApi.showNoRowsOverlay();
+                        rowParams.successCallback([], 0);
+                    }
+                });
             }
+        };
+
+        gridReadyParams.api.setDatasource(this.datasource);
+
+        // set placeholders on the grid floating filter fields
+        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+
+            if (obj.attributes['disabled']) {
+                // skip columns with disabled filter
+                return;
+            }
+
+            const label = obj.getAttribute('aria-label');
+            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            obj.setAttribute('placeholder', value);
         });
     }
 
@@ -150,15 +274,28 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 
     openArtifactsModal(artifactsDialog: NgbModal) {
         this.modalService.open(artifactsDialog, {
-            //backdrop : 'static',
-            //keyboard : false,
+            // backdrop : 'static',
+            // keyboard : false,
             modalDialogClass: 'full-modal',
             centered: true,
             windowClass: 'artifact-modal'
         });
     }
 
-    onDownloadSelected(){
+    onReload() {
+        this.gridApi.setDatasource(this.datasource);
+    }
+
+    onDownloadSelected() {
         this.downloadSelected.emit(this.gridApi.getSelectedRows());
+    }
+
+    onResize(event) {
+        const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
+        document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
+    }
+
+    formatDate(date) {
+        return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE);
     }
 }
