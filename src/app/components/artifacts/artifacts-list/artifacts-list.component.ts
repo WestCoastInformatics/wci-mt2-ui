@@ -181,9 +181,9 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 };
                 const refsetFilter = `entityId:${this.refsetInternalId} AND entityType:REFSET`;
                 if (CodeUtility.hasValue(query)) {
-                    // query += ` AND ${refsetFilter}`;
+                    query += ` AND ${refsetFilter}`;
                 } else {
-                    // query = refsetFilter;
+                    query = refsetFilter;
                 }
                 query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
                 restParams.query = query;
