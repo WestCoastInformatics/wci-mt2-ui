@@ -86,6 +86,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
 		this.setOrganizationData(this.selectedOrganization);
 		this.location.replaceState("/organizations/configuration/" + this.selectedOrganization.id);
+		this.organizationId = this.selectedOrganization.id;
 	}
 
 	setOrganizationData(organization: any) { 

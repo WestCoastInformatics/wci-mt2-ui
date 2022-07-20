@@ -4,11 +4,9 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
     selector: 'organization-teams',
@@ -34,10 +32,8 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
     constructor(private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
         private readonly refsetService: RefsetService,
-        private readonly organizationsService: OrganizationsService,
         private readonly route: ActivatedRoute,
         private readonly router: Router,
-        private authenticationService: AuthenticationService,
         private location: Location) {
             document.body.scrollTop = 0;
     }
@@ -49,6 +45,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['id'];
+            console.log(this.organizationId);
             this.setNavigation();
         });
 
@@ -219,6 +216,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
         this.setOrganizationData(this.selectedOrganization);
         this.location.replaceState("/organizations/teams/" + this.selectedOrganization.id);
+        this.organizationId = this.selectedOrganization.id;
     }
 
     setOrganizationData(organization: any) {

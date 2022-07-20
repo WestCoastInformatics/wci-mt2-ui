@@ -212,7 +212,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 	}
 
 	setTeamName(team: any): string {
-		const roleString = team.roles.map((role) => {
+		const roleString = team?.roles?.map((role) => {
 			const lowercaseRole = role.toLowerCase();
 			return lowercaseRole[0].toUpperCase() + lowercaseRole.substring(1);
 		});

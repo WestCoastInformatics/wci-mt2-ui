@@ -172,6 +172,8 @@ export class OrganizationProjectsComponent implements OnInit {
     selectOrg($event): void {
         this.setOrganizationData(this.selectedOrganization);
         this.location.replaceState("/organizations/projects/" + this.selectedOrganization.id);
+        this.getProjects();
+        this.organizationId = this.selectedOrganization.id;
     }
 
     setOrganizationData(organization: any) {

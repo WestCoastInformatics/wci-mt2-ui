@@ -181,6 +181,8 @@ export class OrganizationPeopleComponent implements OnInit {
 
         this.setOrganizationData(this.selectedOrganization);
         this.location.replaceState("/organizations/people/" + this.selectedOrganization.id);
+        this.getPeople();
+        this.organizationId = this.selectedOrganization.id;
     }
 
     setOrganizationData(organization: any) {
