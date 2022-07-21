@@ -261,7 +261,7 @@ export class RefsetDetails {
             ]);
         } else {
             this.breadcrumbService.setBreadcrumbs([
-                { path: "/directory", label: "Directory" },
+                { path: "/library", label: "Refset Library" },
                 { label: "Refset Details" },
             ]);
         }

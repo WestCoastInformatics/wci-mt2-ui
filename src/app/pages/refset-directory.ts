@@ -90,8 +90,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     //***** Framework Functions *****/
     ngOnInit() {
 
-        this.titleService.setTitle('Refset Tool - Refset Directory');
-        this.breadcrumbService.setBreadcrumbs([{ label: 'Directory' }]);
+        this.titleService.setTitle('Refset Tool - Refset Library');
+        this.breadcrumbService.setBreadcrumbs([{ label: 'Refset Library' }]);
 
         this.disableChannel.postMessage(false);
     }
@@ -450,7 +450,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
             refset.descriptions = results.descriptions;
             const dialogId = 'directoryInfoDialog';
-            this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("directory", "details/" + refset.refsetId + '/'
+            this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("library", "details/" + refset.refsetId + '/'
                 + RefsetUtility.getVersionDateForRefsetApiCall(refset));
 
             if (CodeUtility.hasValue(refset)) {
