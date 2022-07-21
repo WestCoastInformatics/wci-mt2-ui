@@ -21,36 +21,36 @@ export class CreateNewOrganizationModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	editions: any;
+    editions: any;
     editionsArray: any;
     selectedEdition: any;
-    edition:any;
+    edition: any;
     emailError = '';
 
-  
+
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
         private organizationsService: OrganizationsService,
         private editionsService: EditionsService,
-        private notificationService: NotificationService, 
+        private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
         private readonly router: Router,
         private authenticationService: AuthenticationService
-    ) {}
+    ) { }
 
     callMemberOperation(): void {
 
         this.changeLockedStatus.emit(true);
-        
+
         this.createOrganizationObject();
 
         //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -67,21 +67,21 @@ export class CreateNewOrganizationModalComponent {
         });
     }
 
-    ngOnInit() {    
+    ngOnInit() {
 
         // get list of editions
         this.refsetService.getEditions().subscribe((editionResults) => {
 
             this.editions = editionResults;
             this.editionsArray = this.editions?.items;
-        }) 
+        })
     }
 
     getEdition(): void {
         // get details about selected edition
         this.editionsService.getEdition(this.selectedEdition).subscribe((editionResult) => {
             this.edition = editionResult;
-        }) 
+        })
     }
 
     isValidEmail(): boolean {
@@ -103,7 +103,7 @@ export class CreateNewOrganizationModalComponent {
         return false;
     }
 
-    onKeyDownEvent(event: any){
+    onKeyDownEvent(event: any) {
         console.log(event.target.value);
         this.isValidEmail();
     }
@@ -117,11 +117,11 @@ export class CreateNewOrganizationModalComponent {
             primaryContactEmail: this.email,
             edition: this.edition
         };
-        
+
 
         this.organizationsService.createOrganization(params).subscribe(
             (data) => {
-                this.notificationService.show("The organization is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The organization is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();

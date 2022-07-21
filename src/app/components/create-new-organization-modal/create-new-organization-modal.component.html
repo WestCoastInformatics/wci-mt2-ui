@@ -10,8 +10,7 @@
             Create New Organization
         </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
@@ -26,13 +25,10 @@
                 <td>
                     <div class="row" id="downloadContentRow">
                         <div>
-                            <mat-form-field appearance="fill"
-                                class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select"
-                                    [(value)]="selectedEdition" (selectionChange)="getEdition()">
+                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
+                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedEdition" (selectionChange)="getEdition()">
                                     <mat-option *ngIf="editionsArray == null || editionsArray.length == 0">No Editions without an Organization</mat-option>
-                                    <mat-option *ngFor="let option of editionsArray"
-                                        [value]="option.id">
+                                    <mat-option *ngFor="let option of editionsArray" [value]="option.id">
                                         {{ option.value }}
                                     </mat-option>
                                 </mat-select>
@@ -46,8 +42,7 @@
                     <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Organization Name"
-                        [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
+                    <input class="modal-input-field" placeholder="Organization Name" [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr>
@@ -55,8 +50,8 @@
                     <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"
-                        [(ngModel)]="email" style="width: 250px; padding-bottom: 9px" />
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                      style="width: 250px; padding-bottom: 9px" />
 
                 </td>
             </tr>
@@ -69,8 +64,7 @@
                 </td>
                 <td>
                     <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area"
-                            [(ngModel)]="description">test</textarea>
+                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
                     </mat-form-field>
 
                 </td>
@@ -79,10 +73,8 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === ''  || !isSelectedEdition() || email === '' || !isValidEmail()"
-            (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false"
-            class="refset-tool-action-button" aria-label="Create Organization"
-            title="Create Organization" ng-reflect-color="green">
+        <button type="button" [disabled]="name === ''  || !isSelectedEdition() || email === '' || !isValidEmail()" (click)="callMemberOperation('add')" mat-raised-button
+          color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Create Organization" title="Create Organization" ng-reflect-color="green">
             Create Organization
         </button>
 

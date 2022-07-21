@@ -38,7 +38,7 @@ export class CustomTooltipComponent implements ITooltipAngularComp {
   params: ITooltipParams;
   teamArray = [];
 
-  constructor(private readonly router: Router, private readonly zone: NgZone) {}
+  constructor(private readonly router: Router, private readonly zone: NgZone) { }
   agInit(params: ITooltipParams): void {
     if (JSON.parse(params.data.teams).teams.length < 1) {
       return;

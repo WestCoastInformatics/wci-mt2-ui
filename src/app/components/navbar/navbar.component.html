@@ -1,18 +1,16 @@
-<nav class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row"
-    style="justify-content: center; padding-bottom: 0 !important;">
+<nav class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;">
 
     <div class="refset-tool-nav-item-row">
 
-        <a class="refset-tool-nav-logo-section" routerLink="/dashboard" title="Reference Set Tool Home"
-            aria-label="Reference set tool home">
+        <a class="refset-tool-nav-logo-section" routerLink="/dashboard" title="Reference Set Tool Home" aria-label="Reference set tool home">
             <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
             <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool
                 <b>(BETA)</b></span>
         </a>
 
         <div class="refset-tool-breadcrumb-bar text-ghost-grey">
-            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}"
-                [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
+            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
+              (click)="navigate(breadcrumb.id)">
                 {{breadcrumb.label}}
             </div>
         </div>
@@ -51,11 +49,10 @@
         <div *ngIf="isUserLoggedIn" class="float-right mr-2">
             <div class="dropdown" id="userDropdownMenu">
 
-                <label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
                 </label>
-                
+
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                     <div class="dropdown-item pl-3" routerLink="/personal/landing/1">
                         <div class="d-flex pointer">
@@ -74,9 +71,6 @@
         </div>
 
         <div *ngIf="!isUserLoggedIn" class="float-right mx-3">
-            <!-- <div class="user d-inline-block m-2">
-                <span class="px-2 text-ghost-grey">{{guestUser}}</span>
-            </div> -->
             <div class="logout d-inline-block m-2" (click)="login()">
                 <span class="px-2 text-ghost-grey">Login</span>
             </div>

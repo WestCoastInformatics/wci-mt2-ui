@@ -15,7 +15,7 @@ import { AuthenticationService } from "src/app/services/authentication/authentic
     templateUrl: "./add-member-modal.component.html",
 })
 export class AddMemberModalComponent {
- 
+
     email = '';
     emailError = '';
     openedModel: NgbModalRef;
@@ -24,7 +24,7 @@ export class AddMemberModalComponent {
     @Input() id: string;
     @Input() name: string;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
@@ -34,7 +34,7 @@ export class AddMemberModalComponent {
         private readonly refsetDetails: RefsetDetails,
         private readonly route: ActivatedRoute,
         private authenticationService: AuthenticationService
-    ) {}
+    ) { }
 
     openAddMemberModal(addMemberModal: NgbModal) {
 
@@ -56,7 +56,7 @@ export class AddMemberModalComponent {
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any){
+    onKeyDownEvent(event: any) {
         this.isValidEmail();
     }
 
@@ -67,7 +67,7 @@ export class AddMemberModalComponent {
         }
 
         this.changeLockedStatus.emit(true);
-        
+
         let operation = this.teamsService.addUser.bind(this.teamsService);
 
         if (this.type.toLowerCase() == 'organization') {
@@ -77,7 +77,7 @@ export class AddMemberModalComponent {
         operation(this.id, this.email).subscribe(
             (data) => {
 
-                this.notificationService.show("The user has been added.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The user has been added.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.openedModel.dismiss();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();

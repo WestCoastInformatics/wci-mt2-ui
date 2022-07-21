@@ -73,7 +73,7 @@ export class CodeUtility {
      */
     static hasValue(variable, rejectEmpty: boolean = true, rejectNullStringValues: boolean = false) {
 
-        if (variable == undefined || variable == null 
+        if (variable == undefined || variable == null
             || (rejectEmpty && (variable === '' || ((Array.isArray(variable) || variable.constructor === Object) && Object.keys(variable).length === 0)))
             || (rejectNullStringValues && (typeof variable == 'string' && (variable.toLowerCase() == 'null' || variable.toLowerCase() == 'undefined')))
         ) {

@@ -7,7 +7,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 	selector: 'audit-trail-modal',
 	templateUrl: './audit-trail-modal.component.html'
 })
-export class AuditTrailModalComponent implements AfterViewInit{
+export class AuditTrailModalComponent implements AfterViewInit {
 
 
 	@Input() refsetInternalId: string;
@@ -22,7 +22,7 @@ export class AuditTrailModalComponent implements AfterViewInit{
 			//backdrop : 'static',
 			//keyboard : false,
 			modalDialogClass: 'full-modal',
-            centered: true,
+			centered: true,
 			windowClass: 'audit-trail-modal'
 		});
 	}

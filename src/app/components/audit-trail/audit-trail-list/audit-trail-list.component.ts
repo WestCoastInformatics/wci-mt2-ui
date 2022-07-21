@@ -1,11 +1,11 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
-import {UiUtility} from '../../../utilities/ui.utility';
-import {CodeUtility} from '../../../utilities/code.utility';
-import {PaginationComponent} from '../../pagination/pagination.component';
-import {AuditService} from 'src/app/services/rest/audit.service';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { UiUtility } from '../../../utilities/ui.utility';
+import { CodeUtility } from '../../../utilities/code.utility';
+import { PaginationComponent } from '../../pagination/pagination.component';
+import { AuditService } from 'src/app/services/rest/audit.service';
 
 @Component({
     selector: 'audit-trail-list',
@@ -36,21 +36,23 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
     @ViewChild('pagination') paginationComponent: PaginationComponent;
 
     constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private auditService: AuditService,
-                private changeDetectorRef: ChangeDetectorRef) {
+        private changeDetectorRef: ChangeDetectorRef) {
     }
 
     ngOnInit(): void {
         this.columnDefs = [
-            {field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, cellRenderer: params => {
+            {
+                field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, cellRenderer: params => {
                     return `${this.formatDate(params.data?.created)}`;
-                }},
-            {field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true},
-            {field: 'message', headerName: 'Message', unSortIcon: true, sortable: true},
-            {field: 'details', headerName: 'Details', minWidth: 550, sortable: false}];
+                }
+            },
+            { field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true },
+            { field: 'message', headerName: 'Message', unSortIcon: true, sortable: true },
+            { field: 'details', headerName: 'Details', minWidth: 550, sortable: false }];
         // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
-            context: {componentParent: this},
+            context: { componentParent: this },
             pagination: true,
             // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressColumnVirtualisation: true,
@@ -84,7 +86,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     debounceMs: 2000
                 },
                 floatingFilter: true,
-                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true, debounceMs: 2000},
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true, debounceMs: 2000 },
             },
             enableBrowserTooltips: true,
             rowClassRules: {
@@ -114,7 +116,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
         this.gridApi = gridReadyParams.api;
         this.gridColumnApi = gridReadyParams.columnApi;
         const sortModel = [
-            {colId: 'created', sort: 'desc'}
+            { colId: 'created', sort: 'desc' }
         ];
         this.gridApi.setSortModel(sortModel);
         this.onResize(undefined);
@@ -167,7 +169,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 //     query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
                 //     restParams.query = query;
                 // }
-                this.auditService.getAuditTrial({...restParams, ...sort}).subscribe({
+                this.auditService.getAuditTrial({ ...restParams, ...sort }).subscribe({
                     next: (results) => {
                         this.showPaging = results.total > 0;
                         if (results.items.length === 0 && pageNumber > 1) {

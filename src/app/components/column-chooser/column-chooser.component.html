@@ -1,17 +1,16 @@
 <button *ngIf="useDialog" mat-raised-button color="primary" (click)="openColumnChooser()" aria-hidden="false"
-    class="refset-tool-action-button refset-tool-column-chooser-button outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser"
-    ng-reflect-color="primary">
+  class="refset-tool-action-button refset-tool-column-chooser-button outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser"
+  ng-reflect-color="primary">
     Choose Columns
 </button>
-<!-- JESSE -->
 <mat-form-field *ngIf="!useDialog" appearance="fill" class="refset-tool-column-chooser-select-field">
     <mat-select #detailsLanguageSelect placeholder="Select Columns" [ngModel]="columns" [(value)]="selectedColumns" multiple [compareWith]="valueCompare" [disabled]="disabled"
-        (selectionChange)="applyColumns()" class="refset-tool-column-chooser-select" panelClass="refset-tool-column-chooser-select-panel">
+      (selectionChange)="applyColumns()" class="refset-tool-column-chooser-select" panelClass="refset-tool-column-chooser-select-panel">
 
         <mat-select-trigger class="trigger">
             Select Columns
         </mat-select-trigger>
-        
+
         <mat-option *ngFor="let column of columns" [value]="column">
             {{column.name}}
         </mat-option>

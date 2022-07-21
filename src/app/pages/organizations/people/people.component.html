@@ -3,10 +3,8 @@
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true"
-                [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization"
-                    style="z-index: 3">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -26,46 +24,36 @@
                     <div class='section-header mb-4'>
                         People ({{dataCount}})
                         <add-member-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" type="Organization" [id]="selectedOrganization?.id"
-                            [name]="selectedOrganization?.name"></add-member-modal>
+                          [name]="selectedOrganization?.name"></add-member-modal>
                     </div>
 
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs"
-                                [rowData]="data" (gridReady)="onGridReady($event)"
-                                [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"
+                              style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
                             <ng-template #peopleNameSection let-params>
-                                <img #iconImg
-                                    [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)"
-                                    class="medium-icon-image" /> {{ params?.value}}
+                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
                             </ng-template>
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span
-                                    class="text-primary font-weight-bold">{{getTeamCount(params.data.teams)}}
+                                <span class="text-primary font-weight-bold">{{getTeamCount(params.data.teams)}}
                                     teams</span>
                             </ng-template>
 
                             <ng-template #inactivateUserSection let-params>
 
-                                <img *ngIf="selectedOrganization.roles.includes('ADMIN')" src="assets/subtract-symbol-icon.svg"
-                                    (click)="removeUser(params?.data)" width="30px" height="30px"
-                                    title="Inactivate User" aria-label="Subtract"
-                                    class="subtract-symbol-icon"
-                                    alt="Subtract symbol shown when you're able to remove a user" />
+                                <img *ngIf="selectedOrganization.roles.includes('ADMIN')" src="assets/subtract-symbol-icon.svg" (click)="removeUser(params?.data)" width="30px"
+                                  height="30px" title="Inactivate User" aria-label="Subtract" class="subtract-symbol-icon"
+                                  alt="Subtract symbol shown when you're able to remove a user" />
                             </ng-template>
 
                         </div>
                     </div>
-
-                    <!-- <div class='text-right'>
-                        <a class='text-muted light'>show/hide admin</a>
-                    </div> -->
 
                 </section>
             </div>
