@@ -126,7 +126,7 @@ const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
     { path: 'login', component: LoginComponent },
     { path: '', component: LandingPageComponent },
-    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
+    { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Refset Library' } },
     { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
     { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
