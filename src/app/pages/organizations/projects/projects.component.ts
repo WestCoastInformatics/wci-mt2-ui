@@ -84,7 +84,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/organizations/people', label: 'Organizations' },
-            { label: 'People' },
+            { label: 'Projects' },
         ]);
 
         this.menu = [
@@ -183,9 +183,9 @@ export class OrganizationProjectsComponent implements OnInit {
 
         let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-            
+
         } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
             this.menu.pop;
         }
