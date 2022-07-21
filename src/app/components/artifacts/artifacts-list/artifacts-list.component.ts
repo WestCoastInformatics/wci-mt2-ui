@@ -48,8 +48,8 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 headerName: 'Name',
                 unSortIcon: true,
                 sortable: true,
-                checkboxSelection: true,
-                headerCheckboxSelection: true
+                // checkboxSelection: true,
+                // headerCheckboxSelection: true
             },
             {field: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true},
             {field: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, sortable: true},
