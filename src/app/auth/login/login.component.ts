@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
         if (this.authService.isAuthenticated()) {
 
             console.log('is authenticated');
-            this.router.navigate(['directory']);
+            this.router.navigate(['library']);
             //$('.logout').css('display', 'block');
 
         } else {
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
             (data) => {
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
-                this.router.navigate(['directory']);
+                this.router.navigate(['library']);
             },
             (err) => {
                 //toastr.error(err.error.error);

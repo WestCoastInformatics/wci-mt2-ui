@@ -86,7 +86,7 @@ export class NavbarComponent implements OnInit {
     breadcrumbsHasDir(): boolean {
         if (this.breadcrumbs.length == 0)
             return false;
-        return this.breadcrumbs.find(bc => bc.label == "Directory") != undefined;
+        return this.breadcrumbs.find(bc => bc.label == "Refset Library") != undefined;
     }
 
     breadcrumbsHasProjects(): boolean {
