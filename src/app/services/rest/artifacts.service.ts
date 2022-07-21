@@ -26,7 +26,7 @@ export class ArtifactsService extends RestService {
     }
 
     getArtifact(artifactId: string): Observable<any> {
-        return this.get(this.baseUrl + artifactId);
+        return this.get(`${this.baseUrl}/${artifactId}`);
     }
 
     getArtifacts(params: any, parseParams = true): Observable<any> {
@@ -38,10 +38,10 @@ export class ArtifactsService extends RestService {
     }
 
     updateArtifact(artifactId: any, params: any): Observable<any> {
-        return this.putWithFile(this.baseUrl + artifactId, params);
+        return this.put(`${this.baseUrl}/${artifactId}`, params);
     }
 
     deleteArtifact(artifactId: string): Observable<any> {
-        return this.delete(this.baseUrl + artifactId);
+        return this.delete(`${this.baseUrl}/${artifactId}`);
     }
 }

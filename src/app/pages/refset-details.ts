@@ -463,7 +463,7 @@ export class RefsetDetails {
                 });
 
                 for (let description of this.refsetData.descriptions) {
-                    description.flagIcon = RefsetUtility.getLanguageRefsetFlagIcon(description.languageCode);
+                    description.flagIcon = description ? RefsetUtility.getLanguageRefsetFlagIcon(description.languageCode) : '';
                 }
 
                 this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
