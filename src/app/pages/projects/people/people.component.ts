@@ -47,8 +47,8 @@ export class ProjectsPeopleComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private readonly router: Router,
         private location: Location) {
-            document.body.scrollTop = 0;
-        }
+        document.body.scrollTop = 0;
+    }
 
     ngOnInit(): void {
 
@@ -57,8 +57,8 @@ export class ProjectsPeopleComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-			this.projectId = params['id'];
-			this.setNavigation();
+            this.projectId = params['id'];
+            this.setNavigation();
         });
 
         this.showLoadingSpinner = true;
@@ -179,6 +179,11 @@ export class ProjectsPeopleComponent implements OnInit {
         this.router.navigate(['/personal/landing', selectedId]);
     };
 
+    onMemberCellClick = (event) => {
+        if (event.data.id)
+            this.router.navigate(['/personal/landing', event.data.id]);
+    }
+
     get dataCount() {
         return this.data.length;
     }
@@ -190,14 +195,14 @@ export class ProjectsPeopleComponent implements OnInit {
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
-			this.projectList = results.items;
+            this.projectList = results.items;
 
-			for (let project of this.projectList) {
+            for (let project of this.projectList) {
 
                 if (this.projectId == project.id) {
 
                     this.selectedProject = project;
-                    this.showProjectData(); 
+                    this.showProjectData();
                 }
             }
 
@@ -206,25 +211,25 @@ export class ProjectsPeopleComponent implements OnInit {
                 this.selectedProject = this.projectList[0];
                 this.selectProject(null);
             }
-		});
+        });
     }
 
     showProjectData(): void {
 
         this.data = this.selectedProject.memberList;
 
-		let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+        let configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.pop;
         }
-	}
+    }
 
     selectProject($event): void {
-        
+
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/projects/people/' + this.projectId);
         this.showProjectData();
