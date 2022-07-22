@@ -41,11 +41,11 @@
     </div>
     <div class="modal-footer rt2-modal-footer">
         <button mat-raised-button aria-hidden="false"
-            class="refset-tool-action-button refset-action-button mr-3"
+            class="refset-tool-action-button refset-action-button mr-3 default-btn"
             (click)="modal.dismiss('Cross click');">
             Cancel
         </button>
-        <button mat-raised-button color="red" aria-hidden="false"
+        <button mat-raised-button color="red" aria-hidden="false" *ngIf="isEdit"
                 class="refset-tool-action-button refset-action-button mr-3"
                 (click)="confirmDelete()"
                 ng-reflect-color="red">
