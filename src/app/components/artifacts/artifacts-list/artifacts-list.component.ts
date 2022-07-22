@@ -6,6 +6,7 @@ import { UiUtility } from '../../../utilities/ui.utility';
 import { CodeUtility } from '../../../utilities/code.utility';
 import { PaginationComponent } from '../../pagination/pagination.component';
 import { ArtifactsService } from '../../../services/rest/artifacts.service';
+import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
     selector: 'artifacts-list',
@@ -59,9 +60,9 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 headerName: 'Uploaded Date',
                 unSortIcon: true,
                 sortable: true,
-                cellRenderer: params => {
-                    return `${this.formatDate(params.data?.created)}`;
-                }
+                valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
+                valueGetter: UiUtility.gridDateValueGetter,
+                floatingFilterComponent: 'dateTextFilterComponent'
             },
             { field: 'description', headerName: 'Description', minWidth: 550 },
             {
@@ -99,6 +100,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
             },
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
+                dateTextFilterComponent: DateTextFilterComponent
             },
             defaultColDef: {
                 sortable: true,

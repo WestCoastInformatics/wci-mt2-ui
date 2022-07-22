@@ -6,6 +6,7 @@ import { UiUtility } from '../../../utilities/ui.utility';
 import { CodeUtility } from '../../../utilities/code.utility';
 import { PaginationComponent } from '../../pagination/pagination.component';
 import { AuditService } from 'src/app/services/rest/audit.service';
+import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
     selector: 'audit-trail-list',
@@ -41,11 +42,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.columnDefs = [
-            {
-                field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, cellRenderer: params => {
-                    return `${this.formatDate(params.data?.created)}`;
-                }
-            },
+            { field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
             { field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true },
             { field: 'message', headerName: 'Message', unSortIcon: true, sortable: true },
             { field: 'details', headerName: 'Details', minWidth: 550, sortable: false }];
@@ -75,6 +72,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             },
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
+                dateTextFilterComponent: DateTextFilterComponent
             },
             defaultColDef: {
                 sortable: true,

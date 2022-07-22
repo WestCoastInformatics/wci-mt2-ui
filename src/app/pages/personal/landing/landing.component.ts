@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -25,7 +26,9 @@ export class PersonalLandingComponent implements OnInit {
 
     constructor(private readonly authService: AuthenticationService,
         private readonly userService: UsersService,
-        private readonly refsetService: RefsetService) { }
+        private readonly refsetService: RefsetService,
+        private readonly router: Router,
+        private readonly zone: NgZone) { }
 
     ngOnInit(): void {
         if (window.location.pathname.split("/").length > 3)
@@ -60,4 +63,10 @@ export class PersonalLandingComponent implements OnInit {
             this.teamList = results.items;
         });
     }
+
+    goToTeam(teamId: string, organizationId: string): void {
+        //this.zone.run(() => {
+          this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
+        //});
+      }
 }
