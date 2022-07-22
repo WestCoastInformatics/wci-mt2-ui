@@ -43,11 +43,8 @@
                         <div class='section-header'>Teams</div>
                         <div class='dashboard-section'>
                             <div class="dashboard-section-mid">
-                                <ng-container *ngFor="let team of teamList">
-                                    <div class='section-list' *ngIf="team.name">
-                                        <span [routerLink]="['/teams/people', team.id]"><a>{{ team.name }}</a></span>
-                                    </div>
-                                    </ng-container>
+                                <p (click)="goToTeam(team.id, team.organizationId)" class="text-primary font-weight-bold"
+                                    *ngFor="let team of teamList">{{ team.name }}</p>
                             </div>
                         </div>
                     </section>
