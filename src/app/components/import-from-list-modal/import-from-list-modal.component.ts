@@ -52,8 +52,8 @@ export class ImportFromListModalComponent {
         this.listOfIds = undefined;
 
         this.openedModel = this.modalService.open(importFromListDialog, {
-            //backdrop: "static",
-            //keyboard: false,
+            backdrop: "static",
+            keyboard: false,
         });
     }
 }

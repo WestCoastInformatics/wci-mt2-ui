@@ -49,7 +49,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     dialog: DialogService;
 	versionStatuses: any;
 	versions: any;
-	editions: any;
 	organizations: any;
     initialGridWidth: number;
     showFullNarrativeText = false;
@@ -98,15 +97,14 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-		forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions(), this.refsetService.getOrganizationsKeyValue()).
+		forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('limit=500&sort=name'), this.refsetService.getOrganizationsKeyValue()).
             subscribe({next: ([results, versionResults, editionResults, organizationResults]) => {
 
                 this.versionStatuses = results;
                 let versionStatusArray = this.versionStatuses?.items;
                 this.versions = versionResults;
                 let versionsArray = this.versions?.items;
-                this.editions = editionResults;
-                let editionsArray = this.editions?.items;
+                let editionsArray = editionResults.items;
                 this.organizations = organizationResults;
                 let organizationsArray = this.organizations?.items;
 

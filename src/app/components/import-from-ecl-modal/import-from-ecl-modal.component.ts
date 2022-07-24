@@ -71,8 +71,8 @@ export class ImportFromEclModalComponent {
         this.ecl = '';
 
         this.openedModel = this.modalService.open(importFromEclDialog, {
-            //backdrop: "static",
-            //keyboard: false,
+            backdrop: "static",
+            keyboard: false,
             modalDialogClass: 'import-from-ecl-modal'
         });
     }

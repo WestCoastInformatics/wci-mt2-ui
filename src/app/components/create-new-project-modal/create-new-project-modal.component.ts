@@ -48,7 +48,7 @@ export class CreateNewProjectModalComponent {
     openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
 
         this.description = '';
-        this.openedModel = this.modalService.open(createNewProjectDialog, {});
+        this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
 
         if(!this.organizations.length){
             // get list of organizations
