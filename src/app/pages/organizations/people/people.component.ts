@@ -49,7 +49,7 @@ export class OrganizationPeopleComponent implements OnInit {
         private readonly teamService: TeamsService,
         private authenticationService: AuthenticationService,
         private location: Location) {
-            document.body.scrollTop = 0;
+        document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {
@@ -190,12 +190,12 @@ export class OrganizationPeopleComponent implements OnInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+        let configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.pop;
         }
     }

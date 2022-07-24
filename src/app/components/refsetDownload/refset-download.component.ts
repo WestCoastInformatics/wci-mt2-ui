@@ -83,7 +83,7 @@ export class RefsetDownloadComponent {
                 const languageRefsetOptions = [];
                 let selectedLanguage = '';
                 this.versionOptions = RefsetUtility.getVersionOptions(this.refset, 'date');
-                if(this.versionOptions.length > 1){
+                if (this.versionOptions.length > 1) {
                     this.versionOptions = this.versionOptions.sort((a, b) => (a.value > b.value) ? 1 : -1);
                 }
                 this.comparisonFromOptions = this.versionOptions;
@@ -107,7 +107,7 @@ export class RefsetDownloadComponent {
                 }
 
                 if (this.versionOptions.length > 1) {
-                    this.comparisonFromOptions =  this.versionOptions.slice(0, selectedVersionDateIndex);
+                    this.comparisonFromOptions = this.versionOptions.slice(0, selectedVersionDateIndex);
                     this.comparisonToOptions = this.versionOptions;
                 }
 
@@ -162,8 +162,8 @@ export class RefsetDownloadComponent {
 
                         console.log('Download Form Data: ', data);
 
-                        const description = 'Refset ' +  this.refset.refsetId + ' download';
-                        const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, 'info', {timeOut: 0, extendedTimeOut: 0});
+                        const description = 'Refset ' + this.refset.refsetId + ' download';
+                        const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, 'info', { timeOut: 0, extendedTimeOut: 0 });
                         let fileNameDate: any = this.selectedVersionDate;
 
                         if (fileNameDate == '' || fileNameDate == RefsetUtility.IN_DEVELOPMENT) {
@@ -313,7 +313,7 @@ export class RefsetDownloadComponent {
     }
 
     checkContentValues(data, option) {
-        
+
         let show = option.value != 'delta' || (this.shouldShowDeltaContentLabel() && this.showDeltaOption(data) && option.value == 'delta');
         return show;
     }
@@ -346,12 +346,12 @@ export class RefsetDownloadComponent {
 
     private checkRefsetDates(): boolean {
 
-    	const jeComparisonToDate = new Date(this.selectedVersionDate);
-    	const keysToDelete = new Array();
+        const jeComparisonToDate = new Date(this.selectedVersionDate);
+        const keysToDelete = new Array();
 
-       	for (const entry of this.comparisonFromOptions.entries()) {
-	        let date;
-			if (entry[1].display?.includes('(')) {
+        for (const entry of this.comparisonFromOptions.entries()) {
+            let date;
+            if (entry[1].display?.includes('(')) {
                 date = new Date(entry[1].display?.split('(')[0]);
             } else {
                 date = new Date(entry[1].display);
@@ -359,14 +359,14 @@ export class RefsetDownloadComponent {
             }
 
             if (date >= jeComparisonToDate) {
-		    	keysToDelete.push(entry[0]);
-		    }
- 		}
+                keysToDelete.push(entry[0]);
+            }
+        }
 
-    	let idx = 0;
-   	 	for (const key of keysToDelete) {
-			this.comparisonFromOptions.splice((key - idx++), 1);
-    	}
+        let idx = 0;
+        for (const key of keysToDelete) {
+            this.comparisonFromOptions.splice((key - idx++), 1);
+        }
 
         const mappedComparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
             if (version.display?.includes('(')) {
@@ -382,10 +382,10 @@ export class RefsetDownloadComponent {
         const sortedComparisonFromOptionsArray = mappedComparisonFromOptionsArray.sort((a, b) => a - b);
 
         const comparisonToDate = new Date(this.selectedVersionDate)?.getTime();
-            if (sortedComparisonFromOptionsArray[0] >= comparisonToDate) {
+        if (sortedComparisonFromOptionsArray[0] >= comparisonToDate) {
 
-                return false;
-            }
+            return false;
+        }
         return true;
     }
 }

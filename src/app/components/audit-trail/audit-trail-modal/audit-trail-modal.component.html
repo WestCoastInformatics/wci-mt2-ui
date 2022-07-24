@@ -1,6 +1,5 @@
-<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false"
-    (click)="openTrailModal(trailDialog)" class="refset-tool-action-button refset-action-button"
-    aria-label="Audit Trail" title="Audit Trail" ng-reflect-color="primary">
+<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false" (click)="openTrailModal(trailDialog)"
+  class="refset-tool-action-button refset-action-button" aria-label="Audit Trail" title="Audit Trail" ng-reflect-color="primary">
     Audit Trail
 </button>
 <button mat-menu-item *ngIf="isDetails" (click)="openTrailModal(trailDialog)" title="Open Audit Trail List" aria-label="Audit Trail">Audit Trail</button>
@@ -20,9 +19,8 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button color="primary" aria-hidden="false"
-            class="refset-tool-action-button refset-action-button mr-3" (click)="modal.dismiss('Cross click');"
-            ng-reflect-color="primary">
+        <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button mr-3" (click)="modal.dismiss('Cross click');"
+          ng-reflect-color="primary">
             Close
         </button>
     </div>

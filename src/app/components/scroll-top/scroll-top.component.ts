@@ -7,7 +7,7 @@ import { Component, OnInit, Inject, HostListener } from '@angular/core';
 })
 export class ScrollTopComponent implements OnInit {
     windowScrolled: boolean;
-    constructor(@Inject(DOCUMENT) private document: Document) {}
+    constructor(@Inject(DOCUMENT) private document: Document) { }
     @HostListener('window:scroll', [])
     onWindowScroll() {
         if (document.documentElement.scrollTop > 130) {
@@ -25,5 +25,5 @@ export class ScrollTopComponent implements OnInit {
             }
         })();
     }
-    ngOnInit() {}
+    ngOnInit() { }
 }

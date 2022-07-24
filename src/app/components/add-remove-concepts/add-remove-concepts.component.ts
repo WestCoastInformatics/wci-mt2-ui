@@ -65,7 +65,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 					this.resetComponent();
 					this.addRemoveConcept();
 				}
-			
+
 			} else if (propertyName === "refset") {
 				this.refsetInternalId = this.refset?.id;
 			}
@@ -81,13 +81,13 @@ export class AddRemoveConceptsComponent implements OnInit {
 			this.actionText = "Remove";
 		}
 
-			this.addRemoveConcept();
-	
+		this.addRemoveConcept();
+
 	}
 
 	addRemoveConcept(): void {
 
-        let conceptId: string = '';
+		let conceptId: string = '';
 		let ecl = '';
 		let description: string;
 
@@ -97,20 +97,20 @@ export class AddRemoveConceptsComponent implements OnInit {
 			this.openedModel = null;
 		}
 
-		if (CodeUtility.hasValue(this.selectedOption)){
+		if (CodeUtility.hasValue(this.selectedOption)) {
 			ecl = this.selectedOption;
 		}
 
-        if (ecl == '' && CodeUtility.hasValue(this.conceptCode)) {
+		if (ecl == '' && CodeUtility.hasValue(this.conceptCode)) {
 
-            if (CodeUtility.testBoolean(this.conceptHasChildren) && this.refset.type != RefsetUtility.INTENSIONAL) {
+			if (CodeUtility.testBoolean(this.conceptHasChildren) && this.refset.type != RefsetUtility.INTENSIONAL) {
 
-                this.openAddRemoveDescendantsModal();
-                return;
-            }
+				this.openAddRemoveDescendantsModal();
+				return;
+			}
 
 			conceptId = this.conceptCode;
-        }
+		}
 
 		console.timeEnd('add-remove addRemoveConcept before lock emit');
 		this.changeLockedStatus.emit(true);
@@ -121,16 +121,16 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
-			} else if (this.changeMethod === 'INACTIVE_REMOVED'){
-	
+			} else if (this.changeMethod === 'INACTIVE_REMOVED') {
+
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod).subscribe();
 			} else if (this.changeMethod === 'REPLACEMENT_ADDED') {
 
 				description = 'added to';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
-			} else if (this.changeMethod === 'REPLACEMENT_REMOVED'){
-	
+			} else if (this.changeMethod === 'REPLACEMENT_REMOVED') {
+
 				description = 'removed from';
 				this.refsetService.modifyMembersForUpgrade(this.refsetInternalId, this.conceptCode, this.changeMethod, this.replacementCode).subscribe();
 			}
@@ -147,9 +147,9 @@ export class AddRemoveConceptsComponent implements OnInit {
 				description = 'added to';
 
 				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe();
-	
+
 			} else {
-	
+
 				description = 'removed from';
 				this.refsetService.removeRefsetDefinitionException(this.refsetInternalId, this.definitionExceptionId).subscribe();
 			}
@@ -176,7 +176,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		console.timeEnd('add-remove addRemoveConcept before manageMemberNotifications');
 		UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
 		console.timeEnd('add-remove addRemoveConcept after manageMemberNotifications');
-    }
+	}
 
 	callMemberChangeFunction = (data) => {
 		this.processChangedMemberFunction(data);

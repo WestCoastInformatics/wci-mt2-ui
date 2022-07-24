@@ -43,8 +43,8 @@ export class TeamsConfigurationComponent implements OnInit {
 		private readonly teamsService: TeamsService,
 		private readonly notificationService: NotificationService,
 		private location: Location) {
-			document.body.scrollTop = 0;
-		}
+		document.body.scrollTop = 0;
+	}
 
 	ngOnInit(): void {
 
@@ -103,7 +103,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
 		this.organizationId = this.selectedOrganization.id;
 		this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
-		
+
 		this.clearTeamData();
 		this.getTeams();
 	}

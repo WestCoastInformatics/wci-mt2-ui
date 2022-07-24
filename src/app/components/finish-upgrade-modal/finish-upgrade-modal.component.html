@@ -1,43 +1,40 @@
-<button type="button" mat-raised-button color="green" (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button adjudicate-finish-modal-button" aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="green">
+<button type="button" mat-raised-button color="green" (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)"
+  aria-hidden="false" class="refset-tool-action-button adjudicate-finish-modal-button" aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="green">
     Finish Upgrade
 </button>
-<!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Refset</button> -->
-<ng-template #finishUpgradeDialog
-             let-modal>
-<ng-container>
-    <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title"
-            id="modal-basic-title">
-            Upgrade Reference Set
-        </h4>
-        <button type="button"
-                class="close dialog-close-x"
-                aria-label="Close"
-                (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid upgrade-container-fluid">
-        <div class="modal-body finish-upgrade-modal-body">
-            <div class="successful-finish-upgrade-modal-body-header">
-                <ngb-alert [dismissible]="false" type="success" class="finish-upgrade-modal-success-warning">
-                    <div class="success-header">
-                        <img class="circled-check" src="assets/circled-check.svg" alt="circled check" aria-label="Circled Check" title="Circled Check" />
-                        <div class="success-body finish-upgrade-modal-success">
-                            <strong>Success!</strong><br />Members updated and Upgrade complete.
+<ng-template #finishUpgradeDialog let-modal>
+    <ng-container>
+        <div class="modal-header rt2-modal-header">
+            <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+                Upgrade Reference Set
+            </h4>
+            <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true" class="dialog-close-x">&times;</span>
+            </button>
+        </div>
+        <div class="container-fluid upgrade-container-fluid">
+            <div class="modal-body finish-upgrade-modal-body">
+                <div class="successful-finish-upgrade-modal-body-header">
+                    <ngb-alert [dismissible]="false" type="success" class="finish-upgrade-modal-success-warning">
+                        <div class="success-header">
+                            <img class="circled-check" src="assets/circled-check.svg" alt="circled check" aria-label="Circled Check" title="Circled Check" />
+                            <div class="success-body finish-upgrade-modal-success">
+                                <strong>Success!</strong><br />Members updated and Upgrade complete.
+                            </div>
                         </div>
-                    </div>
-                </ngb-alert>
+                    </ngb-alert>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
-            Download Inactive Concept Report
-        </button>
-        <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
-            Download Change Report
-        </button>
-    </div>
-</ng-container>
+        <div class="modal-footer rt2-modal-footer">
+            <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
+              class="refset-tool-action-button export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+                Download Inactive Concept Report
+            </button>
+            <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
+              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+                Download Change Report
+            </button>
+        </div>
+    </ng-container>
 </ng-template>

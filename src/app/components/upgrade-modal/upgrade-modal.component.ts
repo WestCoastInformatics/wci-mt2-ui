@@ -58,7 +58,7 @@ export class UpgradeModalComponent implements OnInit {
 
   get isInitialUpgrade(): boolean {
     if (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) {
-        // console.log("CANCEL & FINISH upgrade code");
+      // console.log("CANCEL & FINISH upgrade code");
       return false;
     } else if (this.refsetData?.availableActions?.includes('EDIT')) {
       return true;
@@ -80,25 +80,25 @@ export class UpgradeModalComponent implements OnInit {
 
       let finalResults = [];
 
-            this.inactiveConcepts = 0;
+      this.inactiveConcepts = 0;
 
-            members.items.forEach((item) => {
-              if (item.stillMember) {
-                this.inactiveConcepts++;
-              }
-              for (let i = 0; i < item.replacementConcepts.length; i++) {
-                if (i === 0) {
-                  finalResults.push(item);
-                } else {
-                  const newItem = {...item, isHidden: true};
+      members.items.forEach((item) => {
+        if (item.stillMember) {
+          this.inactiveConcepts++;
+        }
+        for (let i = 0; i < item.replacementConcepts.length; i++) {
+          if (i === 0) {
+            finalResults.push(item);
+          } else {
+            const newItem = { ...item, isHidden: true };
 
-                  newItem.inactivationReason = '';
-                  newItem.descriptions = '';
-                  newItem.replacementConcepts = [item.replacementConcepts[i]];
-                  finalResults.push(newItem);
-                }
-              }
-            });
+            newItem.inactivationReason = '';
+            newItem.descriptions = '';
+            newItem.replacementConcepts = [item.replacementConcepts[i]];
+            finalResults.push(newItem);
+          }
+        }
+      });
 
       members.items = finalResults;
       this.membersInCommon = members;
@@ -117,9 +117,9 @@ export class UpgradeModalComponent implements OnInit {
   }
 
   private getBranchVersions(): void {
-        this.refsetService.getBranchVersions(`branch=${this.refsetData?.edition?.branch.toString()}`).subscribe(results => {
-          this.existingBranchVersions = results.items ? results.items : undefined;
-        });
+    this.refsetService.getBranchVersions(`branch=${this.refsetData?.edition?.branch.toString()}`).subscribe(results => {
+      this.existingBranchVersions = results.items ? results.items : undefined;
+    });
   }
 
   upgrade(): void {
@@ -152,7 +152,7 @@ export class UpgradeModalComponent implements OnInit {
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
-        'Suggested Replacement Association':inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+        'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
         'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term.replaceAll(',', '/')
       });

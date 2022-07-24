@@ -6,7 +6,7 @@ export class Artifact {
     modified: string;
     created: string;
     modifiedBy: string;
-    fileName:  string;
-    fileType:  string;
-    downloadUrl:  string;
+    fileName: string;
+    fileType: string;
+    downloadUrl: string;
 }
