@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
-import { catchError } from 'rxjs/operators';
-import { NotificationService } from '../notification.service';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {EMPTY, Observable} from 'rxjs';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {environment} from 'src/environments/environment';
+import {catchError} from 'rxjs/operators';
+import {NotificationService} from '../notification.service';
 
 export class RestWrapper<T> {
     totalResults: number;
@@ -51,10 +51,13 @@ export class RestService {
         );
     }
 
-    post(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+    post(url: string, params: any, ignoreErrors: boolean = false, errorHandler: Function = null): Observable<any> {
 
         return this.http.post<any>(this.restUrl + url, params).pipe(
             catchError((err) => {
+                if (errorHandler) {
+                    return errorHandler(err);
+                }
                 return this.giveErrorNotification(err, ignoreErrors);
             })
         );
@@ -91,7 +94,7 @@ export class RestService {
     }
 
     delete(url: string, ignoreErrors: boolean = false): Observable<any> {
-
+        const self = this;
         return this.http.delete<any>(this.restUrl + url).pipe(
             catchError((err) => {
                 return this.giveErrorNotification(err, ignoreErrors);

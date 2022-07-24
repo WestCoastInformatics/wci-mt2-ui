@@ -15,7 +15,7 @@ import { AuthenticationService } from "src/app/services/authentication/authentic
     templateUrl: "./add-member-modal.component.html",
 })
 export class AddMemberModalComponent {
- 
+
     email = '';
     emailError = '';
     openedModel: NgbModalRef;
@@ -24,7 +24,7 @@ export class AddMemberModalComponent {
     @Input() id: string;
     @Input() name: string;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
@@ -67,7 +67,7 @@ export class AddMemberModalComponent {
         }
 
         this.changeLockedStatus.emit(true);
-        
+
         let operation = this.teamsService.addUser.bind(this.teamsService);
 
         if (this.type.toLowerCase() == 'organization') {
