@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { RestService } from './rest.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
-import { NotificationService } from '../notification.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {RestService} from './rest.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {environment} from 'src/environments/environment';
+import {NotificationService} from '../notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -48,7 +48,14 @@ export class OrganizationsService extends RestService {
     }
 
     addUser(organizationId: any, email: any): Observable<any> {
-        return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '');
+        const self = this;
+        return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '', false
+            , function (err) {
+                if (err.status === 404 && err.error?.error === 'Not Found') {
+                    err.error.error = `User with ${email} does not exist.`;
+                }
+                return self.giveErrorNotification(err);
+            });
     }
 
     removeUser(organizationId: any, userId: any) {
