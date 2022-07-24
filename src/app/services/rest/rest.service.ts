@@ -51,10 +51,13 @@ export class RestService {
         );
     }
 
-    post(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+    post(url: string, params: any, ignoreErrors: boolean = false, errorHandler: Function = null): Observable<any> {
 
         return this.http.post<any>(this.restUrl + url, params).pipe(
             catchError((err) => {
+                if (errorHandler) {
+                    return errorHandler(err);
+                }
                 return this.giveErrorNotification(err, ignoreErrors);
             })
         );
@@ -97,7 +100,7 @@ export class RestService {
     }
 
     delete(url: string, ignoreErrors: boolean = false): Observable<any> {
-
+        const self = this;
         return this.http.delete<any>(this.restUrl + url).pipe(
             catchError((err) => {
                 return this.giveErrorNotification(err, ignoreErrors);

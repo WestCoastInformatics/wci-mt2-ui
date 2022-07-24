@@ -39,7 +39,7 @@ export class AddMemberModalComponent {
     openAddMemberModal(addMemberModal: NgbModal) {
 
         this.email = '';
-        this.openedModel = this.modalService.open(addMemberModal, {});
+        this.openedModel = this.modalService.open(addMemberModal, { backdrop: 'static', keyboard: false });
     }
 
     isValidEmail(): boolean {

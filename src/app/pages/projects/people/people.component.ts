@@ -179,6 +179,11 @@ export class ProjectsPeopleComponent implements OnInit {
         this.router.navigate(['/personal/landing', selectedId]);
     };
 
+    onMemberCellClick = (event) => {
+        if (event.data.id)
+            this.router.navigate(['/personal/landing', event.data.id]);
+    }
+
     get dataCount() {
         return this.data.length;
     }

@@ -23,13 +23,13 @@
                     <label class="modal-label-edition">Edition: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <div class="row" id="downloadContentRow">
+                    <div class="row">
                         <div>
                             <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedEdition" (selectionChange)="getEdition()">
-                                    <mat-option *ngIf="editionsArray == null || editionsArray.length == 0">No Editions without an Organization</mat-option>
-                                    <mat-option *ngFor="let option of editionsArray" [value]="option.id">
-                                        {{ option.value }}
+                                <mat-select class="refset-tool-modal-select" [(value)]="selectedEdition">
+                                    <mat-option *ngIf="editionsList.length == 0">No Editions Avaialable</mat-option>
+                                    <mat-option *ngFor="let edition of editionsList" [value]="edition">
+                                        {{ edition.name }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -73,12 +73,10 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === ''  || !isSelectedEdition() || email === '' || !isValidEmail()" (click)="callMemberOperation('add')" mat-raised-button
+        <button type="button" [disabled]="name === ''  || !selectedEdition || email === '' || !isValidEmail()" (click)="createOrganizationObject()" mat-raised-button
           color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Create Organization" title="Create Organization" ng-reflect-color="green">
             Create Organization
         </button>
-
-
     </div>
 
 </ng-template>

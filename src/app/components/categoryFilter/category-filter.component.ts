@@ -25,21 +25,31 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 		this.params = params;
 		this.names = this.params.names;
-		let obj: SelectEntry = new SelectEntry(this.optionNum++, "");
-		this.options.push(obj);
+		this.options.push(new SelectEntry(this.optionNum++, ""));
 
 		for (let i = 0; i < this.names?.length; i++) {
 
 			let entry = this.names[i];
 
-			if (entry.type === "status") {
+			// If this is a Type Key Value property
+			if (entry.hasOwnProperty("type") && entry.hasOwnProperty("key") && entry.hasOwnProperty("value")) {
 
-				let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
-				this.options.push(obj);
-			} else {
+				if (entry.type === "status") {
 
-				let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
-				this.options.push(obj);
+					let option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
+					this.options.push(option);
+				} else {
+
+					let option: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
+					this.options.push(option);
+				}
+			}
+
+			// If this is a full object
+			else {
+
+				let option: SelectEntry = new SelectEntry(this.optionNum++, entry.name.charAt(0) + entry.name.slice(1).toLowerCase());
+				this.options.push(option);
 			}
 		}
 	}

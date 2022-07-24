@@ -26,9 +26,7 @@
                 </div>
             </ngb-alert>
             <div class="">
-                <editor [(ngModel)]="reviewNotes"
-                  [init]="{ base_url: '/tinymce', suffix: '.min', height: 200, menubar: false, plugins: ['lists advlist'], toolbar:'undo redo | bold italic | bullist numlist outdent indent'}">
-                </editor>
+                <editor [(ngModel)]="reviewNotes" [init]="editorConfig"></editor>
             </div>
         </div>
     </div>

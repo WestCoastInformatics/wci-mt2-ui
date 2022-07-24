@@ -162,9 +162,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 }
                 this.refreshModal();
                 return true;
-            }
-            //backdrop: "static",
-            //keyboard: false,
+            },
+            backdrop: "static",
+            keyboard: false,
         });
 
     }

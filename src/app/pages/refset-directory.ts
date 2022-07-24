@@ -49,7 +49,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     dialog: DialogService;
     versionStatuses: any;
     versions: any;
-    editions: any;
     organizations: any;
     initialGridWidth: number;
     showFullNarrativeText = false;
@@ -98,7 +97,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-        forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions(), this.refsetService.getOrganizationsKeyValue()).
+        forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('limit=500&sort=name'), this.refsetService.getOrganizationsKeyValue()).
             subscribe({
                 next: ([results, versionResults, editionResults, organizationResults]) => {
 
@@ -106,8 +105,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     let versionStatusArray = this.versionStatuses?.items;
                     this.versions = versionResults;
                     let versionsArray = this.versions?.items;
-                    this.editions = editionResults;
-                    let editionsArray = this.editions?.items;
+                    let editionsArray = editionResults.items;
                     this.organizations = organizationResults;
                     let organizationsArray = this.organizations?.items;
 
@@ -173,26 +171,88 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         rowClassRules: {
                             'refset_tool_grid_inactive_row': function (params) {
 
-                                var inactivatedRow = false;
+                                this.columnDefs = [
+                                    { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false },
+                                    { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false },
+                                    { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
+                                    {
+                                        field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
+                                        floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }
+                                    },
+                                    {
+                                        field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
+                                        floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }
+                                    },
+                                    {
+                                        field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false,
+                                        valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }
+                                    },
+                                    {
+                                        field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
+                                        floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }
+                                    },
+                                    {
+                                        field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                                        floatingFilterComponentParams: { suppressFilterButton: true }
+                                    },
+                                    { field: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
+                                ];
+                                this.refsetGridOptions = {
+                                    context: { componentParent: this },
+                                    pagination: true,
+                                    suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                                    suppressPaginationPanel: true,
+                                    paginationPageSize: this.refsetGridPaging.pageSize,
+                                    cacheBlockSize: this.refsetGridPaging.pageSize,
+                                    maxBlocksInCache: 1,
+                                    rowModelType: 'infinite',
+                                    enableCellTextSelection: true,
+                                    rowSelection: 'single',
+                                    onCellClicked: this.onGridCellClick,
+                                    onGridReady: this.onGridReady,
+                                    frameworkComponents: {
+                                        'templateRenderer': TemplateRenderer,
+                                        'categoryFilterComponent': CategoryFilterComponent,
+                                        'dateTextFilterComponent': DateTextFilterComponent
+                                    },
+                                    enableBrowserTooltips: true,
+                                    defaultColDef: {
+                                        sortable: true,
+                                        filter: true,
+                                        floatingFilter: true,
+                                        floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                                        suppressMenu: true,
+                                        menuTabs: ['columnsMenuTab'],
+                                        resizable: true
+                                    },
+                                    rowClassRules: {
+                                        'refset_tool_grid_inactive_row': function (params) {
 
-                                if (params.data) {
-                                    inactivatedRow = params.data.active == false;
-                                }
+                                            var inactivatedRow = false;
 
-                                return inactivatedRow;
+                                            if (params.data) {
+                                                inactivatedRow = params.data.active == false;
+                                            }
+
+                                            return inactivatedRow;
+                                        }
+                                    }
+                                };
+
+                                this.showTable = true;
+                                this.changeDetectorRef.detectChanges();
+                                // this.overrideHeaderScroll();
+                            },
+                            error: (error) => {
+                                this.showLoadingSpinner = true;
                             }
                         }
-                    };
-
-                    this.showTable = true;
-                    this.changeDetectorRef.detectChanges();
-                    // this.overrideHeaderScroll();
-                },
-                error: (error) => {
-                    this.showLoadingSpinner = true;
+                    }
                 }
             }
+
             );
+
     }
 
     showDropdown(): void {

@@ -4,7 +4,8 @@
     <div class="row header-title">
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose
+                Organization'}}</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization($event)">
                 <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3">
                     {{ organization.name }}
@@ -14,7 +15,8 @@
 
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
+            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
+            </mat-label>
             <mat-select #detailsVersionSelect [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject"
               (selectionChange)="selectProject($event)">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
@@ -41,7 +43,8 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" (cellClicked)="onMemberCellClick($event)"
+                              [gridOptions]="gridOptions" style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
@@ -51,7 +54,8 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold">{{ getTeamCount(params.data.teams) }} teams</span>
+                                <span class="text-primary font-weight-bold">{{
+                                    getTeamCount(params.data.teams) }} teams</span>
                             </ng-template>
 
                         </div>

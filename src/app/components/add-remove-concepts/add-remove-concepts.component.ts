@@ -185,8 +185,8 @@ export class AddRemoveConceptsComponent implements OnInit {
 	openAddRemoveDescendantsModal() {
 
 		this.openedModel = this.modalService.open(this.dialogSection, {
-			//backdrop: 'static',
-			//keyboard: false,
+			backdrop: 'static',
+			keyboard: false,
 			windowClass: 'add-remove-descendants-modal'
 		});
 

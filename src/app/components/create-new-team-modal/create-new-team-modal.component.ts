@@ -62,7 +62,7 @@ export class CreateNewTeamModalComponent {
         this.selectedRoles = [];
         this.description = '';
 
-        this.openedModel = this.modalService.open(createNewTeamDialog, {});
+        this.openedModel = this.modalService.open(createNewTeamDialog, { backdrop: 'static', keyboard: false });
 
         if (!this.organizations.length) {
             // get list of organizations

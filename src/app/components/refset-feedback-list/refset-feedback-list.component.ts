@@ -260,7 +260,7 @@ export class RefsetFeedbackListComponent implements OnInit {
             }
         }
 
-        this.openedThreadModal = this.modalService.open(this.threadModal, { modalDialogClass: 'full-modal', centered: true });
+        this.openedThreadModal = this.modalService.open(this.threadModal, { modalDialogClass: 'full-modal', centered: true, backdrop: 'static', keyboard: false });
     }
 
     canEditPost(post) {

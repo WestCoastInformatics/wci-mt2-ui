@@ -142,7 +142,7 @@ export class RefsetDownloadComponent {
 
                 const dialogOptions = {
                     id: dialogId,
-                    disableClose: false,
+                    disableClose: true,
                     width: '1000px'
                 };
 

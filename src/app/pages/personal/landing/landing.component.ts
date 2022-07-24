@@ -28,16 +28,16 @@ export class PersonalLandingComponent implements OnInit {
         private readonly userService: UsersService,
         private readonly refsetService: RefsetService,
         private readonly router: Router,
-        private readonly zone: NgZone) { }
+        private readonly zone: NgZone) {
+    }
 
     ngOnInit(): void {
-        if (window.location.pathname.split("/").length > 3)
-            this.userId = window.location.pathname.split("/")[3];
-        else
+        if (window.location.pathname.split('/').length > 3) {
+            this.userId = window.location.pathname.split('/')[3];
+        } else {
             this.userId = this.authService.getUser().id;
+        }
         this.getUser();
-        this.getOrganizations();
-        this.getTeams();
         //this.setNavigation();
     }
 
@@ -48,6 +48,8 @@ export class PersonalLandingComponent implements OnInit {
     getUser(): void {
         this.userService.getUser(this.userId).subscribe((x) => {
             this.user = x;
+            this.getTeams();
+            this.getOrganizations();
         });
     }
 
@@ -60,13 +62,15 @@ export class PersonalLandingComponent implements OnInit {
     getTeams(): void {
 
         this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-            this.teamList = results.items;
+            this.teamList = results.items.filter(i => {
+                return i.members.indexOf(this.userId) > -1;
+            });
         });
     }
 
     goToTeam(teamId: string, organizationId: string): void {
         //this.zone.run(() => {
-          this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
+        this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
         //});
-      }
+    }
 }

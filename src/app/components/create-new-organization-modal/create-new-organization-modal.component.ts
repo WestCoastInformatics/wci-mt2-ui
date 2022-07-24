@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { UiUtility } from "src/app/utilities/ui.utility";
@@ -21,17 +21,15 @@ export class CreateNewOrganizationModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-    editions: any;
-    editionsArray: any;
+    editionsList: any = [];
     selectedEdition: any;
-    edition: any;
     emailError = '';
-
 
     @Output() changeLockedStatus = new EventEmitter<any>(true);
 
     constructor(
         private modalService: NgbModal,
+        private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
         private organizationsService: OrganizationsService,
         private editionsService: EditionsService,
@@ -41,13 +39,30 @@ export class CreateNewOrganizationModalComponent {
         private authenticationService: AuthenticationService
     ) { }
 
-    callMemberOperation(): void {
+    ngOnInit() {
+    }
 
-        this.changeLockedStatus.emit(true);
+    openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
 
-        this.createOrganizationObject();
+        this.description = '';
+        this.selectedEdition = null;
+        this.openedModel = this.modalService.open(createNewOrganizationDialog, { backdrop: 'static', keyboard: false });
 
-        //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
+        // get list of editions
+        this.refsetService.getEditions('limit=500&sort=name').subscribe((editionResults) => {
+
+            this.editionsList = editionResults.items;
+
+            let defaultEditionIndex = this.editionsList.findIndex(edition => {
+                return edition.name == "International Edition";
+            });
+
+            if (defaultEditionIndex != -1) {
+                //this.selectedEdition = this.editionsList[defaultEditionIndex];
+            }
+
+            this.changeDetectorRef.detectChanges();
+        });
     }
 
     processOperationReturn = (data) => {
@@ -57,31 +72,6 @@ export class CreateNewOrganizationModalComponent {
         this.refsetDetails.ngOnInit();
 
         this.description = '';
-    }
-
-    openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
-
-        this.description = '';
-
-        this.openedModel = this.modalService.open(createNewOrganizationDialog, {
-        });
-    }
-
-    ngOnInit() {
-
-        // get list of editions
-        this.refsetService.getEditions().subscribe((editionResults) => {
-
-            this.editions = editionResults;
-            this.editionsArray = this.editions?.items;
-        })
-    }
-
-    getEdition(): void {
-        // get details about selected edition
-        this.editionsService.getEdition(this.selectedEdition).subscribe((editionResult) => {
-            this.edition = editionResult;
-        })
     }
 
     isValidEmail(): boolean {
@@ -96,13 +86,6 @@ export class CreateNewOrganizationModalComponent {
         return flag == null ? false : true;
     }
 
-    isSelectedEdition(): boolean {
-        if (this.edition?.name.length > 0) {
-            return true;
-        }
-        return false;
-    }
-
     onKeyDownEvent(event: any) {
         console.log(event.target.value);
         this.isValidEmail();
@@ -110,14 +93,15 @@ export class CreateNewOrganizationModalComponent {
 
     createOrganizationObject(): void {
 
+        this.changeLockedStatus.emit(true);
+
         let params: any = {
             active: true,
             name: this.name,
             description: this.description,
             primaryContactEmail: this.email,
-            edition: this.edition
+            edition: this.selectedEdition
         };
-
 
         this.organizationsService.createOrganization(params).subscribe(
             (data) => {
