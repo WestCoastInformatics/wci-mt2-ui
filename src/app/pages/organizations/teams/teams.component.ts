@@ -143,7 +143,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/organizations/people', label: 'Organizations' },
-            { label: 'People' },
+            { label: 'Teams' },
         ]);
 
         this.menu = [

@@ -206,7 +206,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 		let query = 'organizationId:' + this.organizationId;
 
-		this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
+		this.refsetService.getTeams('hideOrganizationTeams=true&limit=500&offset=0&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
 			this.teamList = results.items;
 		});
 	}
