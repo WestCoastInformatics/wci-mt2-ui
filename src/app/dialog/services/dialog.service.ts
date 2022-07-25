@@ -12,12 +12,12 @@ export class DialogService<T = undefined> {
 
 	opened$ = this.dialogRef.afterOpened().pipe(first());
 
-	constructor(private dialogRef: DialogRef<T>) { }
+	constructor(private dialogRef: DialogRef<T>) {}
 
 	get context() {
 		return this.dialogRef.componentInstance.config.context;
 	}
-
+	
 	public cancel() {
 		this.dialogRef.close();
 	}

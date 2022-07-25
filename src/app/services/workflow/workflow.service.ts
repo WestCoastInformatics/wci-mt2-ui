@@ -6,7 +6,7 @@ import { RefsetService } from '../rest/refset.service';
     providedIn: 'root',
 })
 export class WorkflowService {
-    constructor(private readonly refsetService: RefsetService) { }
+    constructor(private readonly refsetService: RefsetService) {}
 
     saveNotes(refsetInternalId: string, workflowHistoryNotes: string): Observable<any> {
         return this.refsetService

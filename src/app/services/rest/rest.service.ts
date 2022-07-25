@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
-import { catchError } from 'rxjs/operators';
-import { NotificationService } from '../notification.service';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {EMPTY, Observable} from 'rxjs';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {environment} from 'src/environments/environment';
+import {catchError} from 'rxjs/operators';
+import {NotificationService} from '../notification.service';
 
 export class RestWrapper<T> {
     totalResults: number;
@@ -64,12 +64,9 @@ export class RestService {
     }
 
     postWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
-        return this.http.post<any>(this.restUrl + url, params, {
-            'headers': new HttpHeaders({
-                'Accept': 'application/json',
-                'enctype': 'multipart/form-data'
-            })
-        }).pipe(
+        return this.http.post<any>(this.restUrl + url, params, { 'headers': new HttpHeaders({
+            'Accept': 'application/json',
+            'enctype': 'multipart/form-data'})}).pipe(
             catchError((err) => {
                 return this.giveErrorNotification(err, ignoreErrors);
             })
@@ -87,12 +84,9 @@ export class RestService {
 
     putWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
 
-        return this.http.put<any>(this.restUrl + url, params, {
-            'headers': new HttpHeaders({
+        return this.http.put<any>(this.restUrl + url, params, { 'headers': new HttpHeaders({
                 'Accept': 'application/json',
-                'enctype': 'multipart/form-data'
-            })
-        }).pipe(
+                'enctype': 'multipart/form-data'})}).pipe(
             catchError((err) => {
                 return this.giveErrorNotification(err, ignoreErrors);
             })
@@ -120,7 +114,7 @@ export class RestService {
                 definedError = ' ' + error.error;
             }
 
-            let message = 'There was a problem with the request, please try again!' + definedError;
+            let message = 'There was a problem with the request, please try again!'  + definedError;
             this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
             this.notificationService.handleDuplicates('error', message);
 

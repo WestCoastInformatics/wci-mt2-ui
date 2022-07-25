@@ -3,7 +3,7 @@ import { Router, RoutesRecognized } from '@angular/router';
 
 declare global {
     interface Window { ATL_JQ_PAGE_PROPS: any; }
-}
+  }
 
 window.ATL_JQ_PAGE_PROPS = window.ATL_JQ_PAGE_PROPS || {};
 
@@ -38,9 +38,9 @@ export class FeedbackCollectorComponent implements OnInit {
             dataType: 'script'
         });
 
-        window.ATL_JQ_PAGE_PROPS = {
-            "triggerFunction": function (showCollectorDialog) {
-                jQuery("#submit").on('click', function (e) {
+        window.ATL_JQ_PAGE_PROPS =  {
+            "triggerFunction": function(showCollectorDialog) {
+                jQuery("#submit").on('click', function(e) {
                     e.preventDefault();
                     showCollectorDialog();
                 });

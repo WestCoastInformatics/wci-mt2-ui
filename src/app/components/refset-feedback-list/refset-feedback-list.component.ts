@@ -121,8 +121,8 @@ export class RefsetFeedbackListComponent implements OnInit {
             rowSelection: 'single',
             enableCellTextSelection: true,
             onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady,
-            onFilterChanged: function () {
+            onGridReady: this.onGridReady, 
+            onFilterChanged: function() {
                 if (this.api.getDisplayedRowCount() === 0) {
                     this.api.showNoRowsOverlay();
                 } else {
@@ -180,7 +180,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     onGridReady = (gridReadyParams) => {
 
         this.gridApi = gridReadyParams.api;
-
+        
         // let conceptId = null;
 
         // if (CodeUtility.hasValue(this.conceptId)) {
@@ -227,7 +227,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 this.selectedThread = thread;
             }
         }
-
+        
         this.openThreadModal();
     }
 
@@ -289,7 +289,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.postMessageField = post.message;
         this.postPrivateField = post.privatePost;
-
+        
     }
 
     checkComplete() {
@@ -306,7 +306,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     saveChanges() {
 
         let post: any;
-
+        
         if (this.selectedPost == null) {
             post = { message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE };
         } else {
@@ -393,7 +393,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                     this.selectedThread.posts[0].message = this.postMessageField;
                     this.selectedThread.posts[0].modified = results.posts[0].modified;
                     this.selectedThread.modified = results.modified;
-
+                    
                     this.resetPostForm();
                     this.reloadGridData();
                 }
@@ -408,15 +408,15 @@ export class RefsetFeedbackListComponent implements OnInit {
 
                 if (newStatus == 'Resolved') {
                     this.discussionCount--;
-                } else {
+                } else {     
                     this.discussionCount++;
-                }
+                }               
                 this.discussionCountChange.emit(this.discussionCount);
 
                 this.selectedThread.status = newStatus;
                 this.isResolved = newStatus == this.RESOLVED;
 
-
+                
                 this.reloadGridData();
             }
         });

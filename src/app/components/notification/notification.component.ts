@@ -21,8 +21,8 @@ export class NotificationComponent extends Toast {
     }
 
     action(button: IToastButton) {
-
+        
         this.toastPackage.triggerAction(button);
         return false;
-    }
+      }
 }

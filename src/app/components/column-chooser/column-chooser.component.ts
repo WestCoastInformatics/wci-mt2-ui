@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ICellRendererParams } from "ag-grid-community";
+import {ICellRendererParams} from "ag-grid-community";
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -16,7 +16,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 export class ColumnChooserComponent {
 
     dialog: DialogService;
-
+    
     columns = [];
     selectedColumns = [];
     @Input() gridColumnApi;
@@ -24,7 +24,7 @@ export class ColumnChooserComponent {
     @Input() useDialog: boolean = true;
     @Input() manualStateRefresh = false;
     @ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;
-
+ 
     constructor(
         private dialogFactoryService: DialogFactoryService,
         private changeDetectorRef: ChangeDetectorRef
@@ -33,7 +33,7 @@ export class ColumnChooserComponent {
 
     ngOnChanges() {
 
-        if (this.gridColumnApi?.columnController?.columnDefs) {
+        if (this.gridColumnApi?.columnController?.columnDefs){
 
             // make sure not to lose previous column selections
             let previousColumns = this.columns;
@@ -42,27 +42,27 @@ export class ColumnChooserComponent {
             if (this.columns.length > 0) {
                 this.selectedColumns = [];
             }
-
+            
             let detectChanges = false;
 
-            for (let column of this.gridColumnApi?.columnController?.columnDefs) {
+            for (let column of this.gridColumnApi?.columnController?.columnDefs){
 
                 let columnData: any = {};
-
-                if (!column.colId) {
+    
+                if (!column.colId){
                     columnData.colId = column.field;
                 } else {
                     columnData.colId = column.colId;
                 }
-
-                if (CodeUtility.hasValue(column.headerName)) {
+    
+                if (CodeUtility.hasValue(column.headerName)){
                     columnData.name = column.headerName;
                 } else {
                     columnData.name = columnData.colId;
                 }
 
                 let previousColumn = previousColumns.find(element => element.colId == columnData.colId);
-
+    
                 // apply previous column selections if there were any
                 if (previousColumn) {
 
@@ -72,18 +72,18 @@ export class ColumnChooserComponent {
                         this.selectedColumns.push(columnData);
                     }
 
-                } else if (!column.hasOwnProperty('hide') || column.hide === false) {
+                } else if (!column.hasOwnProperty('hide') || column.hide === false){
                     columnData.show = true;
                 } else {
                     columnData.show = false;
                 }
-
+    
                 this.columns.push(columnData);
             }
         }
     }
 
-    openColumnChooser() {
+    openColumnChooser(){
 
         const dialogId = 'columnChooserDialog';
 
@@ -125,14 +125,14 @@ export class ColumnChooserComponent {
         this.selectedColumns;
         this.columns;
 
-        for (let column of this.columns) {
+        for (let column of this.columns){
 
-            if (!this.useDialog) {
+            if (!this.useDialog){
 
                 let found = false;
 
                 for (let selectedColumn of this.selectedColumns) {
-
+                    
                     if (column.colId === selectedColumn.colId) {
 
                         found = true;
@@ -143,9 +143,9 @@ export class ColumnChooserComponent {
                 column.show = found;
             }
 
-            state.push({ colId: column.colId, hide: !column.show });
+            state.push({colId: column.colId, hide: !column.show});
         }
 
-        this.gridColumnApi.applyColumnState({ state: state });
+        this.gridColumnApi.applyColumnState({state: state});
     }
-}
+ }

@@ -45,8 +45,8 @@ export class ProjectsConfigurationComponent implements OnInit {
 		private readonly authService: AuthenticationService,
 		private readonly notificationService: NotificationService,
 		private location: Location) {
-		document.body.scrollTop = 0;
-	}
+			document.body.scrollTop = 0;
+		}
 
 	ngOnInit(): void {
 
@@ -93,14 +93,14 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 			for (let organization of this.organizations) {
 
-				if (this.organizationId == organization.id) {
+                if (this.organizationId == organization.id) {
 
-					this.selectedOrganization = organization;
-					this.getProjects();
+                    this.selectedOrganization = organization;
+                    this.getProjects();
 					this.getTeams();
-					break;
-				}
-			}
+                    break;
+                }
+            }
 		});
 	}
 
@@ -123,26 +123,26 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 			for (let project of this.projectList) {
 
-				if (this.projectId == project.id) {
+                if (this.projectId == project.id) {
 
-					this.selectedProject = project;
-					this.showProjectData();
-				}
-			}
+                    this.selectedProject = project;
+                    this.showProjectData(); 
+                }
+            }
 
 			if (this.projectList && this.projectList.length > 0) {
 
-				this.selectedProject = this.projectList[0];
-				this.selectProject(null);
-			}
+                this.selectedProject = this.projectList[0];
+                this.selectProject(null);
+            }
 		});
 	}
 
 	selectProject($event): void {
 
 		this.projectId = this.selectedProject.id;
-		this.location.replaceState('organization/' + this.organizationId + '/projects/configuration/' + this.projectId);
-		this.showProjectData();
+        this.location.replaceState('organization/' + this.organizationId + '/projects/configuration/' + this.projectId);
+        this.showProjectData();  
 	}
 
 	showProjectData(): void {
@@ -272,7 +272,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 				break;
 			}
 		}
-
+		
 		if (hasAdmin && hasAuthor && hasReviewer) {
 			this.containsRole = true;
 		} else {

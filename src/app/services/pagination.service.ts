@@ -13,7 +13,7 @@ export class PaginationService {
         let startPage: number;
         let endPage: number;
 
-        if (!totalKnown) {
+        if (!totalKnown){
             totalPages = currentPage + 1;
         }
 

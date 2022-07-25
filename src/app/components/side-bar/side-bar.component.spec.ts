@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateNewRefsetComponent } from './create-new-refset.component';
+import { SideBarComponent } from './side-bar.component';
 
-describe('CreateNewRefsetComponent', () => {
-  let component: CreateNewRefsetComponent;
-  let fixture: ComponentFixture<CreateNewRefsetComponent>;
+describe('SideBarComponent', () => {
+  let component: SideBarComponent;
+  let fixture: ComponentFixture<SideBarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateNewRefsetComponent ]
+      declarations: [ SideBarComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateNewRefsetComponent);
+    fixture = TestBed.createComponent(SideBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -31,7 +31,7 @@ export class DateTextFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 			valueToUse = null;
 			this.currentValue = "";
-
+		
 		} else if (CodeUtility.isDateValid(this.value)) {
 
 			valueToUse = this.value;

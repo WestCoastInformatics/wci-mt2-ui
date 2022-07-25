@@ -8,11 +8,11 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
 
 @Injectable()
 export class HeaderInterceptor implements HttpInterceptor {
-
+    
 
     constructor(private authService: AuthenticationService) {
     }
@@ -38,14 +38,14 @@ export class HeaderInterceptor implements HttpInterceptor {
         return next
             .handle(request).pipe(tap((event: HttpEvent<any>) => {
 
-                // if (event instanceof HttpResponse) {
-                //     console.log('HttpResponse: ', event);
-                // }
+                    // if (event instanceof HttpResponse) {
+                    //     console.log('HttpResponse: ', event);
+                    // }
 
-                // else if (event instanceof HttpRequest) {
-                //     console.log('HttpRequest: ', event);
-                // }
-            })
+                    // else if (event instanceof HttpRequest) {
+                    //     console.log('HttpRequest: ', event);
+                    // }
+                })
             );
     }
 }

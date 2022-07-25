@@ -1,12 +1,12 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { UiUtility } from '../../../utilities/ui.utility';
-import { CodeUtility } from '../../../utilities/code.utility';
-import { PaginationComponent } from '../../pagination/pagination.component';
-import { ArtifactsService } from '../../../services/rest/artifacts.service';
-import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {UiUtility} from '../../../utilities/ui.utility';
+import {CodeUtility} from '../../../utilities/code.utility';
+import {PaginationComponent} from '../../pagination/pagination.component';
+import {ArtifactsService} from '../../../services/rest/artifacts.service';
+import {DateTextFilterComponent} from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
     selector: 'artifacts-list',
@@ -21,7 +21,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     gridApi: any;
     gridColumnDefs = [];
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
+    gridPaging = {pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true};
     gridLastFilter = '';
     gridLastSort = '';
     datasource: any;
@@ -35,7 +35,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     @ViewChild('actionsSection') actionsSection: TemplateRef<any>;
 
     constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private artifactsService: ArtifactsService,
-        private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef) {
     }
 
     get serviceUrl(): string {
@@ -52,8 +52,8 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 // checkboxSelection: true,
                 // headerCheckboxSelection: true
             },
-            { field: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true },
-            { field: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, sortable: true },
+            {field: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true},
+            {field: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, sortable: true},
             {
                 field: 'created',
                 tooltipField: 'Uploaded Date',
@@ -64,7 +64,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 valueGetter: UiUtility.gridDateValueGetter,
                 floatingFilterComponent: 'dateTextFilterComponent'
             },
-            { field: 'description', headerName: 'Description', minWidth: 550 },
+            {field: 'description', headerName: 'Description', minWidth: 550},
             {
                 field: 'id',
                 headerName: '',
@@ -72,12 +72,12 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 sortable: false,
                 cellRenderer: 'templateRenderer',
                 resizable: false,
-                cellRendererParams: { template: this.actionsSection }, maxWidth: 110
+                cellRendererParams: {template: this.actionsSection}, maxWidth: 110
             }];
         // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
-            context: { componentParent: this },
+            context: {componentParent: this},
             pagination: true,
             suppressColumnVirtualisation: true,
             // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
@@ -111,7 +111,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                     debounceMs: 2000
                 },
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true, debounceMs: 2000 },
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true, debounceMs: 2000},
             },
             enableBrowserTooltips: true,
             rowClassRules: {
@@ -139,8 +139,8 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     onGridReady = (gridReadyParams) => {
 
         this.gridApi = gridReadyParams.api;
-        this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
-        this.columnDefs[5].cellRendererParams = { template: this.actionsSection };
+        this.columnDefs[4].cellRendererParams = {template: this.descriptionSection};
+        this.columnDefs[5].cellRendererParams = {template: this.actionsSection};
         this.gridApi.setColumnDefs(this.columnDefs);
 
         this.onResize(undefined);
@@ -189,7 +189,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 }
                 query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
                 restParams.query = query;
-                this.artifactsService.getArtifacts({ ...restParams, ...sort }).subscribe({
+                this.artifactsService.getArtifacts({...restParams, ...sort}).subscribe({
                     next: (results) => {
                         this.showPaging = results.total > 0;
                         if (results.items.length === 0 && pageNumber > 1) {

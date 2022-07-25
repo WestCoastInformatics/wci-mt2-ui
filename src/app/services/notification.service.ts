@@ -25,13 +25,13 @@ export class NotificationService {
             'toastClass': 'refset-tool-notification'
         };
 
-        const toast = this.toastr.show(message, title, { ...additonalConfig, ...config }, 'toast-' + type);
+        const toast = this.toastr.show(message, title, {...additonalConfig, ...config}, 'toast-' + type);
         toast.toastRef.componentInstance.refsetId = refsetId;
 
         if (buttons.length > 0) {
             toast.toastRef.componentInstance.buttons = buttons;
         }
-
+        
         return toast;
     }
 
@@ -46,13 +46,13 @@ export class NotificationService {
             'progressAnimation': 'increasing'
         };
 
-        const toast = this.show(message, title, 'info', { ...additonalConfig, ...config }, refsetId, buttons);
+        const toast = this.show(message, title, 'info', {...additonalConfig, ...config}, refsetId, buttons);
 
         this.setProgressLength(toast, 0);
         return toast;
     }
 
-    update(toast: ActiveToast<any>, message: string = null, title: string = null, type: string = null, options: any = null, progress: number = null) {
+    update(toast: ActiveToast<any>, message: string = null, title: string = null, type: string = null, options: any = null, progress: number = null){
 
         if (message != null) {
             toast.toastRef.componentInstance.message = message; //this.sanitizeString(message);
@@ -67,7 +67,7 @@ export class NotificationService {
         }
 
         if (options != null) {
-            toast.toastRef.componentInstance.options = { ...toast.toastRef.componentInstance.options, ...options };
+            toast.toastRef.componentInstance.options = {...toast.toastRef.componentInstance.options, ...options};
         }
 
         // if (options != null && options['closeButton'] != null) {
@@ -114,19 +114,19 @@ export class NotificationService {
                 toastInstances.push(toast);
             }
         }
-
+        
         if (toastInstances.length <= 1) {
             return;
         }
 
         for (let i = 0; i < toastInstances.length; i++) {
-
+            
             const toast = toastInstances[i];
             const instance = toast.toastRef.componentInstance;
 
             if (consolidatedMessage == '') {
                 consolidatedMessage = (i + 1) + ': ' + instance.message;
-
+            
             } else if (instance.message != message && instance.message.includes(message)) {
                 consolidatedMessage += '<br>' + (i + 1) + ': ' + instance.message;
             }
@@ -139,7 +139,7 @@ export class NotificationService {
             consolidatedMessage = message;
         }
 
-        const newToast = this.show(consolidatedMessage, null, type, { timeOut: 0, extendedTimeOut: 0 });
+        const newToast = this.show(consolidatedMessage, null, type, {timeOut: 0, extendedTimeOut: 0});
         return newToast;
     }
 
@@ -166,11 +166,11 @@ export class NotificationService {
     }
 
     private setProgressLength(toast: ActiveToast<any>, progress: number) {
-
+        
         // A bit "hacky", the ngx-toastr progress bar only works with its own progress method, based on the specified timeout, and cannot be controlled manually
         // That's why we have to specify a big timeout in the options
         // We overload the default progress method to use the one we want, this way, we can have a manual control of the progress bar
-        (<any>toast).toastRef.componentInstance.updateProgress = () => {
+        (<any>toast).toastRef.componentInstance.updateProgress= () => {
             (<any>toast).toastRef.componentInstance.width = progress; //progressFn();
         };
     }

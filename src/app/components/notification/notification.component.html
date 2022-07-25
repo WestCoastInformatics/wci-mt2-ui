@@ -10,10 +10,12 @@
     <a [href]="options['url']" [download]="options['download']" [id]="options['urlId']">{{message}}</a>
 </div>
 
-<div *ngIf="message && options.enableHtml && !options['url']" role="alert" aria-live="polite" [class]="options.messageClass" [innerHTML]="message">
+<div *ngIf="message && options.enableHtml && !options['url']" role="alert" aria-live="polite"
+    [class]="options.messageClass" [innerHTML]="message">
 </div>
 
-<div *ngIf="message && !options.enableHtml" role="alert" aria-live="polite" [class]="options.messageClass" [attr.aria-label]="message">
+<div *ngIf="message && !options.enableHtml" role="alert" aria-live="polite" [class]="options.messageClass"
+    [attr.aria-label]="message">
     {{ message }}
 </div>
 

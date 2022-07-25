@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { AgFrameworkComponent } from 'ag-grid-angular';
 import { IFloatingFilter, IFloatingFilterParams, TextFilter, TextFilterModel } from 'ag-grid-community';
 
@@ -39,12 +39,12 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 					let option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
 					this.options.push(option);
 				} else {
-
+	
 					let option: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
 					this.options.push(option);
 				}
-			}
-
+			} 
+			
 			// If this is a full object
 			else {
 

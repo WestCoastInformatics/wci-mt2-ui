@@ -34,7 +34,7 @@ export class AddMemberModalComponent {
         private readonly refsetDetails: RefsetDetails,
         private readonly route: ActivatedRoute,
         private authenticationService: AuthenticationService
-    ) { }
+    ) {}
 
     openAddMemberModal(addMemberModal: NgbModal) {
 
@@ -56,7 +56,7 @@ export class AddMemberModalComponent {
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any) {
+    onKeyDownEvent(event: any){
         this.isValidEmail();
     }
 
@@ -77,7 +77,7 @@ export class AddMemberModalComponent {
         operation(this.id, this.email).subscribe(
             (data) => {
 
-                this.notificationService.show("The user has been added.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show("The user has been added.", null, "success", {timeOut: 0, extendedTimeOut: 0});
                 this.openedModel.dismiss();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();

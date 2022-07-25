@@ -20,7 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
@@ -120,9 +120,10 @@ import { DomService } from './services/dom.service';
 import { PaginationModule } from './components/pagination/pagination.module';
 import { ArtifactsService } from './services/rest/artifacts.service';
 import { AuditService } from './services/rest/audit.service';
-import { DirectivesModule } from './directives/directives.module';
+import {DirectivesModule} from './directives/directives.module';
 
 const appRoutes: Routes = [
+    // { path: '', pathMatch: 'full', redirectTo: '' },
     { path: 'login', component: LoginComponent },
     { path: '', component: LandingPageComponent },
     { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Refset Library' } },
@@ -222,8 +223,7 @@ const appRoutes: Routes = [
             appRoutes,
             {
                 onSameUrlNavigation: 'reload',
-                scrollPositionRestoration: 'top'
-            }
+                scrollPositionRestoration: 'top'}
             //{ enableTracing: true } // <-- debugging purposes only
         ),
         BrowserModule,
@@ -249,7 +249,7 @@ const appRoutes: Routes = [
         DragDropModule,
         ToastNoAnimationModule.forRoot({
             toastComponent: NotificationComponent
-        }),
+          }),
         DialogModule,
         TreeModule,
         AgGridModule.withComponents([TemplateRenderer, CustomTooltipComponent]),
@@ -297,7 +297,7 @@ const appRoutes: Routes = [
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
     ],
     bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class AppModule {
 }

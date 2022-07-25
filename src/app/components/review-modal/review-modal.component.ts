@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { WorkflowService } from 'src/app/services/workflow/workflow.service';
+import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 
 @Component({
     selector: 'review-modal',
@@ -28,7 +28,7 @@ export class ReviewModalComponent {
     private reviewNotes = '';
 
     constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private workflowService: WorkflowService,
-        private changeDetector: ChangeDetectorRef) {
+                private changeDetector: ChangeDetectorRef) {
     }
 
     checkIfNoteAdded(): boolean {
