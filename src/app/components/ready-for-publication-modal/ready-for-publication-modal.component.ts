@@ -24,7 +24,7 @@ export class ReadyForPublicationModalComponent implements OnInit {
   openreadyForPublicationModal(readyForPublicationDialog: NgbModal) {
     this.modalService.open(readyForPublicationDialog, {
       windowClass: 'ready-for-publication-modal',
-      backdrop: 'static',
+      backdrop: 'static', 
       keyboard: false
     });
   }
@@ -36,13 +36,13 @@ export class ReadyForPublicationModalComponent implements OnInit {
   setWorkflowStatusByAction(notes: string): void {
     if (notes) {
       this.workflowService.saveNotes(this.refsetData.id, notes).subscribe(response => {
-        if (response) {
-          this.setWorkflowStatus.emit(true);
-        }
-      });
-
+				if(response){
+					this.setWorkflowStatus.emit(true);
+				}
+			});
+      
       this.modalService.dismissAll();
       this.clearModal();
     }
-  }
+}
 }

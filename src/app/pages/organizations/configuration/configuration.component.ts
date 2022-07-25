@@ -35,8 +35,8 @@ export class OrganizationConfigurationComponent implements OnInit {
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
 		private location: Location) {
-		document.body.scrollTop = 0;
-	}
+			document.body.scrollTop = 0;
+		}
 
 	ngOnInit(): void {
 
@@ -54,18 +54,18 @@ export class OrganizationConfigurationComponent implements OnInit {
 
 	setNavigation() {
 
-		this.breadcrumbService.setBreadcrumbs([
-			{ path: '/organizations/people', label: 'Organizations' },
-			{ label: 'People' },
-		]);
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/organizations/people', label: 'Organizations' },
+            { label: 'People' },
+        ]);
 
-		this.menu = [
-			{ name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
-			{ name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-			{ name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
+        this.menu = [
+            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/people', icon: 'fa fa-user' },
 			{ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs', isActive: true }
-		];
-	}
+        ];
+    }
 
 	getOrganizations(): void {
 
@@ -89,7 +89,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 		this.organizationId = this.selectedOrganization.id;
 	}
 
-	setOrganizationData(organization: any) {
+	setOrganizationData(organization: any) { 
 
 		this.organizationId = organization.id;
 		this.selectedOrganization = organization;

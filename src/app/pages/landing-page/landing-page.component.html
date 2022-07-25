@@ -25,21 +25,32 @@
     </div>
     <div class="landing-page-login-section">
         <div *ngIf="isGuestMode">
-            <p class="landing-page-guest-has-account">Already have an account? <a class="landing-page-log-in-link" (click)="login()">Log In</a></p>
+            <!-- Disabled for now as per ticket RT2-946 -->
+            <!-- <div class="landing-page-guest-access">
+                <button class="landing-page-guest-access-button" [routerLink]="['/directory']"
+                    [routerLinkActive]="['active']">
+                    Access as Guest
+                </button>
+            </div>
+            <br> -->
+            <p class="landing-page-guest-has-account">Already have an account? <a
+                    class="landing-page-log-in-link" (click)="login()">Log In</a></p>
         </div>
         <div *ngIf="!isGuestMode">
             <div class="landing-page-login-form">
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     <div class="form-group">
-                        <input type="text" placeholder="Username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
-                          disabled />
+                        <input type="text" placeholder="Username" formControlName="username"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.username.errors }" disabled />
                         <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                             <div *ngIf="f.username.errors.required">Username is required</div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="password" placeholder="Password" formControlName="password" class="form-control"
-                          [ngClass]="{ 'is-invalid': submitted && f.password.errors }" disabled />
+                        <input type="password" placeholder="Password" formControlName="password"
+                            class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.password.errors }" disabled />
                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                             <div *ngIf="f.password.errors.required">Password is required</div>
                         </div>
@@ -55,8 +66,10 @@
                 </form>
             </div>
             <br>
-            <p class="landing-page-guest-has-account">Don't have an account? <a class="landing-page-log-in-link" (click)="isGuestMode = true">Proceed as a
-                    Guest</a> or <a class="landing-page-log-in-link" href="http://snomed.org/accounts" target="_blank">Create an Account</a></p>
+            <p class="landing-page-guest-has-account">Don't have an account? <a
+                    class="landing-page-log-in-link" (click)="isGuestMode = true">Proceed as a
+                    Guest</a> or <a class="landing-page-log-in-link"
+                    href="http://snomed.org/accounts" target="_blank">Create an Account</a></p>
         </div>
     </div>
 </div>

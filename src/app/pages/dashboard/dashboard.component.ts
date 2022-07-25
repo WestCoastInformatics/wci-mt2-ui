@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private readonly authService: AuthenticationService) {
         document.body.scrollTop = 0;
-    }
+        }
 
     ngOnInit(): void {
 
@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-
+        
         this.columnDefs = [
             {
                 field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
@@ -221,12 +221,12 @@ export class DashboardComponent implements OnInit {
     };
 
     toTitleCase(str) {
-        return str.replace(
-            /\w\S*/g,
-            function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            }
-        );
+      return str.replace(
+        /\w\S*/g,
+        function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+      );
     }
 
     onGridCellClick = (event) => {

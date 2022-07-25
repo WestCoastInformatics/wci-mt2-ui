@@ -14,7 +14,8 @@
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
                                     <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                                    <span [routerLink]="['/organizations/projects', organization.id]"><a>{{
+                                    <span
+                                        [routerLink]="['/organizations/projects', organization.id]"><a>{{
                                             organization.name }}</a></span>
                                 </div>
                             </ng-container>
@@ -33,7 +34,8 @@
                                 <div class='section-list' *ngIf="project.name">
                                     <span [routerLink]="['/organization/' + project.organization.id + '/projects', project.id]"><a>{{
                                             project.organization.name }}/{{
-                                            project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
+                                            project.name }}</a><i *ngIf="project.privateProject"
+                                            class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
                             </ng-container>
                         </div>
@@ -65,6 +67,15 @@
                 <section>
                     <div class='section-header'>My Refsets</div>
                     <div class='dashboard-section pr-2 pl-2'>
+                        <!-- <mat-form-field class="example-form-field" appearance="fill">
+                                    <input matInput type="text"
+                                        placeholder="Search"
+                                        [(ngModel)]="searchText" />
+                                    <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+                                        (click)="searchText = ''">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-form-field> -->
                         <div class="ag-theme-alpine">
                             <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
                             </ag-grid-angular>

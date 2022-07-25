@@ -77,7 +77,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
     @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
-
+    
 
     constructor(
         protected router: Router,
@@ -98,14 +98,14 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
-
+        
         this.titleService.setTitle('Refset Tool - Projects');
 
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-            this.projectId = params['id'];
-            this.setNavigation();
+			this.projectId = params['id'];
+			this.setNavigation();
         });
 
         this.showLoadingSpinner = true;
@@ -152,7 +152,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
                 { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
-
+    
             this.columnDefs = [
                 { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false },
                 { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
@@ -171,7 +171,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 },
                 { field: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
-
+    
             this.refsetGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -201,13 +201,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 },
                 rowClassRules: {
                     'refset_tool_grid_inactive_row': function (params) {
-
+    
                         var inactivatedRow = false;
-
+    
                         if (params.data) {
                             inactivatedRow = params.data.active == false;
                         }
-
+    
                         return inactivatedRow;
                     }
                 }
@@ -253,38 +253,38 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
-            this.projectList = results.items;
+			this.projectList = results.items;
 
-            for (let project of this.projectList) {
+			for (let project of this.projectList) {
 
                 if (this.projectId == project.id) {
 
                     this.selectedProject = project;
                     this.showProjectData();
-                    return;
+                    return; 
                 }
             }
 
             this.getStoredProjectId();
-        });
+		});
     }
 
     showProjectData(): void {
 
-        let configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+		let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN')) {
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
             this.menu.pop;
         }
 
         this.showRefsets();
-    }
+	}
 
     selectProject($event): void {
-
+        
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/projects/' + this.projectId);
         this.showProjectData();
@@ -352,7 +352,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
             this.showTable = true;
         }
-
+        
         sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
         this.projectIsUat = this.selectedProject.name.includes("UAT");
@@ -473,7 +473,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                                 }
                             });
                         }
-
+                        
                         rowParams.successCallback(data, lastRow);
                     } else {
 

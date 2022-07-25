@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit {
     }
 
     navigate(breadcrumbId) {
-
+        
         let breadcrumb = this.breadcrumbs[breadcrumbId];
 
         if (breadcrumb.selectable) {
@@ -94,7 +94,7 @@ export class NavbarComponent implements OnInit {
             return false;
         return this.breadcrumbs.find(bc => bc.label == "Projects") != undefined;
     }
-
+    
     navigateToRoute(route: string): void {
         if (this.router.url.includes(route)) {
             window.location.reload();

@@ -73,21 +73,21 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         private notificationService: NotificationService,
         private router: Router,
         private readonly refsetDetails: RefsetDetails
-    ) { }
+    ) {}
 
     ngOnInit(): void {
     }
 
     ngOnChanges(changes: SimpleChanges) {
 
-        for (const propertyName in changes) {
+		for (const propertyName in changes) {
 
-            if (propertyName === "refset" && CodeUtility.hasValue(this.refset)) {
-
+			if (propertyName === "refset" && CodeUtility.hasValue(this.refset)) {
+				
                 this.refsetInternalId = this.refset.id;
-            }
-        }
-    }
+			}
+		}
+	}
 
     toggleDisplayActiveConcepts($event: any): void {
 
@@ -202,7 +202,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 this.showLoadingSpinner = false;
                 this.conceptDetail = results;
                 this.conceptDescriptions =
-                    this.conceptDetail.descriptions.filter(function (description) {
+                    this.conceptDetail.descriptions.filter(function(description) {
                         return description != null;
                     });
 
@@ -278,12 +278,12 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     addRemoveAllMembers(type) {
-        for (var i = 0; i < this.dataSource.length; i++) {
-            this.conceptIdArray.push(this.dataSource[i].code);
+        for (var i=0; i<this.dataSource.length; i++) {
+          this.conceptIdArray.push(this.dataSource[i].code);
         }
-
+        
         RefsetUtility.addRemoveMembersByList(this.refset.id, this.refset.refsetId, this.conceptIdArray.join(), type, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
-
+        
         this.closeModal();
 
     }
@@ -297,36 +297,34 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 this.loadingSpinner.emit(true);
             }
 
-            this.refsetService.getConceptSearch(this.refsetInternalId, `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({
-                next: (results) => {
+            this.refsetService.getConceptSearch(this.refsetInternalId, `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({next: (results) => {
 
-                    this.dataSource = results.items;
-                    this.initialResults = this.dataSource;
+                this.dataSource = results.items;
+                this.initialResults = this.dataSource;
 
-                    // tslint:disable-next-line: no-unused-expression
-                    if (results.items.length) {
+                // tslint:disable-next-line: no-unused-expression
+                if (results.items.length) {
 
-                        this.changeModalSize();
-                        this.showResults = true;
-                        this.showNoResultsLabel = false;
-                    } else {
-
-                        this.showResults = false;
-                        this.showNoResultsLabel = true;
-                    }
-                    this.filterActiveConcepts();
-
-                    if (showLoadingSpinner) {
-                        this.loadingSpinner.emit(false);
-                    }
-                },
-                error: (error) => {
-
-                    this.searchResults = [];
+                    this.changeModalSize();
+                    this.showResults = true;
+                    this.showNoResultsLabel = false;
+                } else {
+                    
                     this.showResults = false;
+                    this.showNoResultsLabel = true;
+                }
+                this.filterActiveConcepts();
+
+                if (showLoadingSpinner) {
                     this.loadingSpinner.emit(false);
                 }
-            });
+            },
+            error: (error) => {
+
+                this.searchResults = [];
+                this.showResults = false;
+                this.loadingSpinner.emit(false);
+            }});
         }
     }
 }

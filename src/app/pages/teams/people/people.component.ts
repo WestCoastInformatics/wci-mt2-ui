@@ -51,8 +51,8 @@ export class TeamsPeopleComponent implements OnInit {
         private readonly authService: AuthenticationService,
         private readonly teamsService: TeamsService,
         private location: Location) {
-        document.body.scrollTop = 0;
-    }
+            document.body.scrollTop = 0;
+        }
 
     ngOnInit(): void {
 
@@ -182,19 +182,19 @@ export class TeamsPeopleComponent implements OnInit {
 
         this.teamId = this.selectedTeam.id;
         this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.selectedTeam.id);
-        this.showTeamMembers();
+        this.showTeamMembers();      
     }
 
     showTeamMembers() {
 
         this.data = this.selectedTeam.memberList;
 
-        let configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN')) {
+        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
             this.menu.pop;
         }
     }
@@ -221,10 +221,10 @@ export class TeamsPeopleComponent implements OnInit {
     };
 
     get dataCount() {
-
+        
         if (this.data) {
             return this.data.length;
-        } else {
+        } else { 
             return 0;
         }
     }

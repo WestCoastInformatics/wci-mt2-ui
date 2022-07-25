@@ -1,8 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ArtifactsService } from '../../../services/rest/artifacts.service';
-import { Artifact } from '../../../models/artifact';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ArtifactsService} from '../../../services/rest/artifacts.service';
+import {Artifact} from '../../../models/artifact';
 
 @Component({
     selector: 'artifact-form',
@@ -20,7 +20,7 @@ export class ArtifactFormComponent implements OnInit, AfterViewInit {
     loaded = false;
 
     constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private artifactsService: ArtifactsService,
-        private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef) {
     }
 
     get modalTitle(): string {

@@ -16,7 +16,7 @@ export class TeamsService extends RestService {
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-
+        
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {

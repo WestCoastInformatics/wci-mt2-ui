@@ -40,7 +40,7 @@ export class TaxonomyTreeComponent {
     staticOptions: any = { nodeClass: this.styleNodeClass };
     nodes: any[] = [];
     parentConcept: any;
-    loadNodeChildrenProcess: Function = (event) => { };
+    loadNodeChildrenProcess: Function = (event) => {};
     refsetUtility = RefsetUtility;
     isLoading: boolean = false;
     noData: boolean = false;
@@ -109,7 +109,7 @@ export class TaxonomyTreeComponent {
                 this.changeDetectorRef.detectChanges();
 
             } else if (propertyName === "rootNode" && CodeUtility.hasValue(this.rootNode)) {
-
+                
                 if (!this.rootNode.active) {
 
                     this.isLoading = false;
@@ -153,20 +153,18 @@ export class TaxonomyTreeComponent {
             limit: 1000,
         };
 
-        this.refsetService.getConceptList(this.refset.id, restParams).subscribe({
-            next: (results) => {
+        this.refsetService.getConceptList(this.refset.id, restParams).subscribe({next: (results) => {
 
-                this.prepareData(results.items);
-                this.sendnumOfChildrenTrigger(results?.items?.length);
-                console.log(results.items);
-            },
-            error: (error) => {
-
-                this.isLoading = false;
-                this.showLoadingSpinner = false;
-                this.showLoadingSpinner = false;
-            }
-        });
+            this.prepareData(results.items);
+            this.sendnumOfChildrenTrigger(results?.items?.length);
+            console.log(results.items);
+        },
+        error: (error) => {
+            
+            this.isLoading = false;
+            this.showLoadingSpinner = false;
+            this.showLoadingSpinner = false;
+        }});
     }
 
     prepareData(data) {
@@ -323,7 +321,7 @@ export class TaxonomyTreeComponent {
      * @param selectTheNode - should the target node be selected once it is found (default true)
      * @param suppressChangeEvent - should the tree onchange event be fired if the target node is selected (default true)
      */
-    findNodeInTree(conceptID, parentPath: any[] = [], returnFunction: Function = function () { }, selectTheNode = true, suppressChangeEvent = true) {
+    findNodeInTree(conceptID, parentPath: any[] = [],  returnFunction: Function = function () {}, selectTheNode = true, suppressChangeEvent = true) {
 
         let deferred;
 
@@ -380,7 +378,7 @@ export class TaxonomyTreeComponent {
 
                                         this.loadNodeChildrenProcess = (
                                             event
-                                        ) => { };
+                                        ) => {};
 
                                         // since the node has no children it is the parent of our target node, so the target node should now exist in the tree.
                                         // get the target node by its concept ID

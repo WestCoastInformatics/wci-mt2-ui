@@ -1,22 +1,35 @@
-<button #readyForPublicationButton (click)="openreadyForPublicationModal(readyForPublicationDialog)" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
-  class="refset-tool-action-button refset-action-button" attr.aria-label="{{labelPrefix}} Request Publication" title="{{labelPrefix}} Request Publication"
-  ng-reflect-color="primary">
+<button #readyForPublicationButton
+        (click)="openreadyForPublicationModal(readyForPublicationDialog)"
+        mat-raised-button
+        color="primary"
+        aria-hidden="false"
+        #finishEditButton
+        class="refset-tool-action-button refset-action-button"
+        attr.aria-label="{{labelPrefix}} Request Publication"
+        title="{{labelPrefix}} Request Publication"
+        ng-reflect-color="primary">
     {{labelPrefix}} Request Publication
 </button>
 
-<ng-template #readyForPublicationDialog let-modal>
+<ng-template #readyForPublicationDialog
+             let-modal>
     <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title"
+            id="modal-basic-title">
             Ready for Publication
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button"
+                class="close dialog-close-x"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
     <div class="container-fluid ready-for-publication-container-fluid">
         <div class="modal-body ready-for-publication-modal-body">
             <div class="notes-title">Notes:</div>
-            <editor [(ngModel)]="requestForPublicationNotes" [init]="{
+            <editor [(ngModel)]="requestForPublicationNotes"
+                    [init]="{
                     base_url: '/tinymce',
                     suffix: '.min',
                     height: 200,
@@ -29,12 +42,19 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="
+        <button type="button"
+                (click)="
                         setWorkflowStatusByAction(
                             requestForPublicationNotes
                         );
-                    " mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button request-publication-modal-button" aria-label="Request Publication"
-          title="Request Publication" ng-reflect-color="green">
+                    "
+                mat-raised-button
+                color="green"
+                aria-hidden="false"
+                class="refset-tool-action-button request-publication-modal-button"
+                aria-label="Request Publication"
+                title="Request Publication"
+                ng-reflect-color="green">
             Request Publication
         </button>
     </div>

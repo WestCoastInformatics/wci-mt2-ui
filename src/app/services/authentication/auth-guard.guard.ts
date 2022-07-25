@@ -9,19 +9,19 @@ import { Router } from '@angular/router';
 })
 export class AuthGuardGuard implements CanActivate {
 
-  constructor(private authService: AuthenticationService, private router: Router) { }
+  constructor(private authService: AuthenticationService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    const token = localStorage.getItem('auth_token');
+        const token = localStorage.getItem('auth_token');
 
-    if (this.authService.isAuthenticated()) {
-      return true;
-    } else {
-
-      this.authService.notAuthenticated();
-      this.router.navigate(['/']);
-      return false;
+        if (this.authService.isAuthenticated()) {
+            return true;
+        } else {
+          
+            this.authService.notAuthenticated();
+            this.router.navigate(['/']);
+            return false;
+        }
     }
-  }
 }
