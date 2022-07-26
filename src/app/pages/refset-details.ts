@@ -45,6 +45,7 @@ export class RefsetDetails {
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
     memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
+    membersReady: boolean = false;
     inEditButtonPrefix = '';
     tableSearchInput: string;
     versionOptions: any;
@@ -948,6 +949,7 @@ export class RefsetDetails {
         if (this.allowedToEdit) {
             restParams.editing = true;
         }
+        this.membersReady = false;
 
         this.refsetService.getConceptList(this.id, restParams).subscribe({
             next: (results) => {
@@ -1039,6 +1041,7 @@ export class RefsetDetails {
 
                 UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
                 this.showLoadingSpinner = false;
+                this.membersReady = true;
             },
             error: (error) => {
 

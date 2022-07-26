@@ -735,7 +735,7 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name refset-member-title">
             Reference Set Members ({{refsetData?.memberCount}})
-            <button *ngIf="showTable && refsetData?.memberCount > 0" mat-raised-button color="primary" aria-hidden="false"
+            <button *ngIf="showTable && membersReady && refsetData?.memberCount > 0" mat-raised-button color="primary" aria-hidden="false"
                     class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
                 Download Members Table
                 <i class="fa fa-download"></i>
