@@ -1692,7 +1692,7 @@ export class RefsetDetails {
         this.modalService.open(dialog, {
             modalDialogClass: 'alert-modal',
             centered: true
-        });
+        }); ``
         console.log("Cancel Upgrade in initial screen");
     }
 
@@ -1711,5 +1711,11 @@ export class RefsetDetails {
         else {
             window.open('http://dailybuild.ihtsdotools.org/');
         }
+    }
+
+    downloadMembersTable() {
+        this.membersGridApi.exportDataAsCsv({
+            columnKeys: this.membersColumnDefs.filter(value => value.colId !== 'actions').map(value => value.colId),
+            fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true});
     }
 }

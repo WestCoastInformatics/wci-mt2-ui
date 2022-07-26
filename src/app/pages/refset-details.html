@@ -469,7 +469,7 @@
                                         ">
                                         <span
                                             *ngFor="let description of setDescriptions(refsetData)">
-                                            {{ description?.term }}   {{ description?.languageName }}  
+                                            {{ description?.term }}   {{ description?.languageName }}
                                             <img *ngIf="description?.flagIcon != null"
                                             (error)="showFlagIcon(false)"
                                             src="{{description?.flagIcon}}"
@@ -735,6 +735,11 @@
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name refset-member-title">
             Reference Set Members ({{refsetData?.memberCount}})
+            <button *ngIf="showTable && refsetData?.memberCount > 0" mat-raised-button color="primary" aria-hidden="false"
+                    class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
+                Download Members Table
+                <i class="fa fa-download"></i>
+            </button>
         </div>
 
         <br *ngIf="allowedToEdit" />
@@ -771,7 +776,7 @@
                                 <!-- Search Bar -->
                                 <div class="container-fluid pr-0">
                                     <div class="row justify-content-start no-gutters"
-                                        style="align-items: baseline">
+                                            style="align-items: baseline">
 
                                         <div class="refset-tool-details-chooser-column"
                                             style="padding-left: 5px"
