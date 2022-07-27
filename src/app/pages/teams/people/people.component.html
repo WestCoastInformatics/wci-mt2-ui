@@ -7,7 +7,7 @@
             <mat-select #detailsVersionSelect [disableOptionCentering]="true"
                 [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization"
-                    style="z-index: 3">
+                    style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -19,7 +19,7 @@
             <mat-select #detailsVersionSelect [disableOptionCentering]="true"
                 [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
                 <mat-option *ngIf="teamList == null || teamList.length == 0">No Teams</mat-option>
-                <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3">
+                <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
                     {{ team.name }}
                 </mat-option>
             </mat-select>
