@@ -1,17 +1,16 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { ProjectsService } from 'src/app/services/rest/projects.service';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
+import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Location} from '@angular/common';
+import {Title} from '@angular/platform-browser';
+import {ActivatedRoute, Router} from '@angular/router';
+import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {CustomTooltipComponent} from 'src/app/components/custom-tooltip/custom-tooltip.component';
+import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
+import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
+import {ProjectsService} from 'src/app/services/rest/projects.service';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {UiUtility} from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'projects-people',
@@ -27,7 +26,13 @@ export class ProjectsPeopleComponent implements OnInit {
     projectId: any;
     projectList = [];
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    gridPaging = {
+        pageSize: 10,
+        pageSizeOptions: [10, 25, 50, 100],
+        totalKnown: false,
+        totalRows: null,
+        manualStateRefresh: new Boolean(true)
+    };
     gridParams: any;
     gridApi: any;
     gridColumnDefs = [];
@@ -35,19 +40,24 @@ export class ProjectsPeopleComponent implements OnInit {
     organizations: any;
     organizationId: string;
     showLoadingSpinner = false;
+    showTable = false;
 
     @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
-        private readonly titleService: Title,
-        private readonly refsetService: RefsetService,
-        private readonly projectsService: ProjectsService,
-        private readonly route: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef,
-        private readonly router: Router,
-        private location: Location) {
+                private readonly titleService: Title,
+                private readonly refsetService: RefsetService,
+                private readonly projectsService: ProjectsService,
+                private readonly route: ActivatedRoute,
+                private changeDetectorRef: ChangeDetectorRef,
+                private readonly router: Router,
+                private location: Location) {
         document.body.scrollTop = 0;
+    }
+
+    get dataCount() {
+        return this.data.length;
     }
 
     ngOnInit(): void {
@@ -69,14 +79,32 @@ export class ProjectsPeopleComponent implements OnInit {
     ngAfterViewInit() {
 
         this.gridColumnDefs = [
-            { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
-            { field: 'company', flex: 1, headerName: 'Company Name' },
-            { field: 'email', flex: 1, headerName: 'Email' },
-            { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } }
+            {
+                field: 'name',
+                headerName: 'Members',
+                minWidth: 300,
+                flex: 1,
+                cellRenderer: 'templateRenderer',
+                cellRendererParams: {template: this.peopleNameSection}
+            },
+            {field: 'company', flex: 1, headerName: 'Company Name'},
+            {field: 'email', flex: 1, headerName: 'Email'},
+            {
+                field: 'teams',
+                tooltipComponentFramework: CustomTooltipComponent,
+                tooltipField: 'teams',
+                tooltipComponentParams: {color: '#ececec'},
+                flex: 1,
+                headerName: 'Teams',
+                filter: false,
+                sortable: false,
+                cellRenderer: 'templateRenderer',
+                cellRendererParams: {template: this.peopleTeamsSection}
+            }
         ];
 
         this.gridOptions = {
-            context: { componentParent: this },
+            context: {componentParent: this},
             pagination: false,
             suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
@@ -95,7 +123,7 @@ export class ProjectsPeopleComponent implements OnInit {
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
                 unSortIcon: true
             },
             enableBrowserTooltips: true,
@@ -118,18 +146,18 @@ export class ProjectsPeopleComponent implements OnInit {
 
     setNavigation() {
 
-        let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+        let breadcrumbs: any = [{path: '/dashboard', label: 'Dashboard'}];
 
-        if (CodeUtility.hasValue(this.organizationId), true, true) {
-            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+        if (CodeUtility.hasValue(this.organizationId, true, true)) {
+            breadcrumbs.push({path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects'});
         }
 
-        breadcrumbs.push({ label: 'People' });
+        breadcrumbs.push({label: 'People'});
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy' },
-            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
+            {name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy'},
+            {name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true},
         ];
     }
 
@@ -138,6 +166,7 @@ export class ProjectsPeopleComponent implements OnInit {
         this.refsetService.getOrganizations().subscribe((organizationResults) => {
 
             this.showLoadingSpinner = false;
+            this.showTable = true;
             this.organizations = organizationResults?.items;
 
             for (let organization of this.organizations) {
@@ -177,15 +206,12 @@ export class ProjectsPeopleComponent implements OnInit {
         });
 
         this.router.navigate(['/personal/landing', selectedId]);
-    };
-
-    onMemberCellClick = (event) => {
-        if (event.data.id)
-            this.router.navigate(['/personal/landing', event.data.id]);
     }
 
-    get dataCount() {
-        return this.data.length;
+    onMemberCellClick = (event) => {
+        if (event.data.id) {
+            this.router.navigate(['/personal/landing', event.data.id]);
+        }
     }
 
     getProjects(): void {
@@ -218,10 +244,15 @@ export class ProjectsPeopleComponent implements OnInit {
 
         this.data = this.selectedProject.memberList;
 
+
         let configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+            this.menu.push({
+                name: 'Configuration',
+                link: '/organization/' + this.organizationId + '/projects/configuration',
+                icon: 'fa fa-cogs'
+            });
 
         } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.pop;
