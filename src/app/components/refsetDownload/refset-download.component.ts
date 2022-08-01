@@ -122,6 +122,7 @@ export class RefsetDownloadComponent {
                     showCancel: true,
                     confirmText: 'Download',
                     confirmIcon: 'download',
+                    cancelText: 'Cancel',
                     template: this.downloadDialog,
                     data: {
                         formatOptions: this.formatOptions,
@@ -313,7 +314,7 @@ export class RefsetDownloadComponent {
     }
 
     checkContentValues(data, option) {
-        
+
         let show = option.value != 'delta' || (this.shouldShowDeltaContentLabel() && this.showDeltaOption(data) && option.value == 'delta');
         return show;
     }
