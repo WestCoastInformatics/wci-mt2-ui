@@ -38,7 +38,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     organizations: any;
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
-    selectedView: string = 'all';
+    selectedView = 'all';
     refsetGridApi: any;
     refsetGridColumnApi: any;
     columnDefs = [];
@@ -51,9 +51,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         totalRows: null,
         manualStateRefresh: new Boolean(true)
     };
-    refsetGridLastFilter: string = '';
-    refsetGridLastSort: string = '';
-    showTable: boolean = false;
+    refsetGridLastFilter = '';
+    refsetGridLastSort = '';
+    showTable = false;
     refsetData: any;
     dialog: DialogService;
     versions: any;
@@ -77,7 +77,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     @ViewChild('projectWorkflowStatusSection') workflowStatus: TemplateRef<any>;
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
     @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
-    
+
 
     constructor(
         protected router: Router,
@@ -96,9 +96,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         refsetService.getTaxonomyRoot();
     }
 
-    //***** Framework Functions *****/
+    // ***** Framework Functions *****/
     ngOnInit() {
-        
+
         this.titleService.setTitle('Refset Tool - Projects');
 
         this.route.params.subscribe(params => {
@@ -116,7 +116,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     setNavigation() {
 
-        let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId), true, true) {
             breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
@@ -140,9 +140,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetService.getVersions().subscribe((versionResults) => {
 
             this.versions = versionResults;
-            let versionsArray = this.versions?.items;
+            const versionsArray = this.versions?.items;
 
-            let workflowStatuses = [
+            const workflowStatuses = [
                 { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
                 { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
                 { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
@@ -152,7 +152,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
                 { type: 'status', name: 'Published', value: 'PUBLISHED' }
             ];
-    
+
             this.columnDefs = [
                 { field: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false },
                 { field: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection } },
@@ -171,7 +171,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 },
                 { field: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
-    
+
             this.refsetGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -201,13 +201,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 },
                 rowClassRules: {
                     'refset_tool_grid_inactive_row': function (params) {
-    
-                        var inactivatedRow = false;
-    
+
+                        let inactivatedRow = false;
+
                         if (params.data) {
                             inactivatedRow = params.data.active == false;
                         }
-    
+
                         return inactivatedRow;
                     }
                 }
@@ -224,7 +224,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.showLoadingSpinner = false;
             this.organizations = organizationResults?.items;
 
-            for (let organization of this.organizations) {
+            for (const organization of this.organizations) {
 
                 if (this.organizationId == organization.id) {
 
@@ -255,13 +255,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.showLoadingSpinner = false;
 			this.projectList = results.items;
 
-			for (let project of this.projectList) {
+			for (const project of this.projectList) {
 
                 if (this.projectId == project.id) {
 
                     this.selectedProject = project;
                     this.showProjectData();
-                    return; 
+                    return;
                 }
             }
 
@@ -271,20 +271,17 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     showProjectData(): void {
 
-		let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+		const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
-
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
-            this.menu.pop;
         }
 
         this.showRefsets();
 	}
 
     selectProject($event): void {
-        
+
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/projects/' + this.projectId);
         this.showProjectData();
@@ -294,9 +291,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         if (sessionStorage.getItem('selectedOrganizationId')) {
 
-            let storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
 
-            for (let organization of this.organizations) {
+            for (const organization of this.organizations) {
 
                 if (organization.id == storedOrganizationId) {
 
@@ -315,9 +312,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         if (sessionStorage.getItem('selectedProjectId')) {
 
-            let storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
+            const storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
 
-            for (let project of this.projectList) {
+            for (const project of this.projectList) {
 
                 if (project.id == storedProjectId) {
 
@@ -335,10 +332,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 this.selectedProject = this.projectList[0];
                 this.selectProject(null);
             }
-        }
-
-        // set to first in project list if none stored
-        else if (this.projectList && this.projectList.length > 0) {
+        } else if (this.projectList && this.projectList.length > 0) {
 
             this.selectedProject = this.projectList[0];
             this.selectProject(null);
@@ -352,10 +346,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         } else {
             this.showTable = true;
         }
-        
+
         sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
-        this.projectIsUat = this.selectedProject.name.includes("UAT");
+        this.projectIsUat = this.selectedProject.name.includes('UAT');
     }
 
     onGridReady = (gridReadyParams) => {
@@ -370,7 +364,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
 
-        let dataSource = {
+        const dataSource = {
             rowCount: null,
             getRows: (rowParams) => {
 
@@ -378,12 +372,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
-                let sort = UiUtility.formatSortData(rowParams.sortModel);
+                const sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                query = CodeUtility.addIfNotEmpty(query, ' AND ') + "projectId:" + this.selectedProject.id;
+                query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'projectId:' + this.selectedProject.id;
 
-                let newFilterString = query;
-                let newSortString = JSON.stringify(sort);
+                const newFilterString = query;
+                const newSortString = JSON.stringify(sort);
 
                 // if the filters or sort have changed then move to the first page
                 if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
@@ -404,7 +398,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                 query = query.replace(/\//g, '%2F');
 
-                let restParams: any = {
+                const restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: this.metadataAndConcepts,
@@ -413,7 +407,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     sortModel: rowParams.sortModel,
                     filterModel: rowParams.filterModel,
                     query: query
-                }
+                };
 
                 this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe(results => {
 
@@ -429,7 +423,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                         return;
                     }
 
-                    let data = results.items;
+                    const data = results.items;
                     this.refsetData = data;
 
                     if (data?.length > 0) {
@@ -461,10 +455,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                         }
 
                         for (let i = 0; i < data?.length; i++) {
-                            this.refsetService.getDiscussionThreads("REFSET", data[i].id, null).subscribe({
+                            this.refsetService.getDiscussionThreads('REFSET', data[i].id, null).subscribe({
                                 next: (results) => {
                                     data[i].unresolvedDiscussionCount = 0;
-                                    for (let discussion of results.items) {
+                                    for (const discussion of results.items) {
 
                                         if (discussion.status == 'Open') {
                                             data[i].unresolvedDiscussionCount++;
@@ -473,7 +467,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                                 }
                             });
                         }
-                        
+
                         rowParams.successCallback(data, lastRow);
                     } else {
 
@@ -502,8 +496,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 return;
             }
 
-            let label = obj.getAttribute('aria-label');
-            let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            const label = obj.getAttribute('aria-label');
+            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
 
@@ -516,7 +510,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         } else {
 
-            let selectedRows = this.refsetGridApi.getSelectedRows();
+            const selectedRows = this.refsetGridApi.getSelectedRows();
             let refsetId: string;
             let versionDate: string;
 
@@ -583,14 +577,14 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {
         this.modalService.open(workflowDiagramModal, {
-            //backdrop : 'static',
-            //keyboard : false,
+            // backdrop : 'static',
+            // keyboard : false,
             windowClass: 'workflow-diagram-modal'
         });
     }
 
     get routeUrl(): any[] {
-        let url = ['/organization', this.organizationId ? this.organizationId : 0, 'projects'];
+        const url = ['/organization', this.organizationId ? this.organizationId : 0, 'projects'];
         if (this.selectedProject?.id) {
             url.push(this.selectedProject.id);
         }

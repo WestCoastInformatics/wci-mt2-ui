@@ -132,11 +132,11 @@ export class OrganizationPeopleComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
-        if (event.column.colId == "id") {
+        if (event.column.colId == 'id') {
             return;
         }
 
-        let selectedRows = this.gridApi.getSelectedRows();
+        const selectedRows = this.gridApi.getSelectedRows();
         let selectedId: string;
 
         selectedRows.forEach(function (selectedRow, index) {
@@ -145,7 +145,7 @@ export class OrganizationPeopleComponent implements OnInit {
         });
 
         this.router.navigate(['/personal/landing', selectedId]);
-    };
+    }
 
     get dataCount() {
         return this.data.length;
@@ -168,7 +168,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
             this.organizationList = results.items;
 
-            for (let organization of this.organizationList) {
+            for (const organization of this.organizationList) {
 
                 if (this.organizationId == organization.id) {
                     this.setOrganizationData(organization);
@@ -180,7 +180,7 @@ export class OrganizationPeopleComponent implements OnInit {
     selectOrg($event): void {
 
         this.setOrganizationData(this.selectedOrganization);
-        this.location.replaceState("/organizations/people/" + this.selectedOrganization.id);
+        this.location.replaceState('/organizations/people/' + this.selectedOrganization.id);
         this.getPeople();
         this.organizationId = this.selectedOrganization.id;
     }
@@ -190,23 +190,21 @@ export class OrganizationPeopleComponent implements OnInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
-            this.menu.pop;
         }
     }
 
     async getTeams(teams: any): Promise<any> {
-        console.log(teams)
+        console.log(teams);
         const teamObject = { teams: [] };
         if (teams === 'undefined' || teams === undefined) {
             return JSON.stringify(teamObject);
         } else {
-            for (let team of teams) {
+            for (const team of teams) {
                 teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
             }
             return JSON.stringify(teamObject);
@@ -214,14 +212,15 @@ export class OrganizationPeopleComponent implements OnInit {
     }
 
     removeUser(user) {
-        if (confirm("Are you sure you want to remove " + user.name + " from the organization?"))
+        if (confirm('Are you sure you want to remove ' + user.name + ' from the organization?')) {
             this.organizationsService.removeUser(this.organizationId, user.id).subscribe({
                 next: (data) => {
-                    var datum = data;
+                    const datum = data;
                     console.log(datum);
                 },
                 complete: () => window.location.reload()
             });
+        }
     }
 
     getTeamCount(teams: any): number {

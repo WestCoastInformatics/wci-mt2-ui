@@ -12,8 +12,8 @@ import {UiUtility} from 'src/app/utilities/ui.utility';
 })
 export class PersonalLandingComponent implements OnInit {
     menu: SidebarMenuItem[] = [
-        {name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true},
-        {name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs'}
+        {name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true}
+
     ];
 
     selectedTeam: any;
@@ -32,10 +32,14 @@ export class PersonalLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        const loggedUserId = this.authService.getUser().id;
         if (window.location.pathname.split('/').length > 3) {
             this.userId = window.location.pathname.split('/')[3];
         } else {
             this.userId = this.authService.getUser().id;
+        }
+        if (this.userId === loggedUserId) {
+            this.menu.push({name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs'});
         }
         this.getUser();
         //this.setNavigation();
