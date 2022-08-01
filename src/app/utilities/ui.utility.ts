@@ -232,7 +232,7 @@ export class UiUtility {
 
     // Function to open SNOMED ECL Builder
     static openEclBuilder(fieldId, branch) {
-        
+
         let field = $('#' + fieldId);
         let eclString: any = field.val();
         let snowstormApiUrl = environment['snowstormApiUrl'];
@@ -310,12 +310,12 @@ export class UiUtility {
                             let conceptStatus: any = data[conceptId];
                             this.memberChangeData[refsetId].statuses.push({Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status});
                             conceptStatusArray.push({
-                                code: conceptId, 
-                                added: conceptStatus.operation == 'Added', 
-                                failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member', 
+                                code: conceptId,
+                                added: conceptStatus.operation == 'Added',
+                                failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member',
                                 operation: conceptStatus.operation,
                                 status: conceptStatus.status,
-                                name: conceptStatus.name, 
+                                name: conceptStatus.name,
                                 active: conceptStatus.active
                             });
                         }
@@ -329,7 +329,7 @@ export class UiUtility {
                         }
 
                         if (conceptIdArray.length > 0) {
-                            
+
                             let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
                             let someFailed = dataString.includes('Failed');
                             let someSucceeded = dataString.includes('Success');
@@ -377,7 +377,7 @@ export class UiUtility {
                         }
 
 						notification = notificationService.show(message, title, notificationType, {timeOut: 0, extendedTimeOut: 0}, refsetId, buttons);
-                        
+
                         notification.onAction.subscribe(button => {
 
                             if (button.id == 'download') {
@@ -404,7 +404,7 @@ export class UiUtility {
 
         checkIfFinished();
     }
-    
+
     // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
     static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
@@ -418,7 +418,7 @@ export class UiUtility {
         if (processType == ('upgrade')) {
 
             message += 'you will be notified when the refset is ready if you do not refresh the page.';
-            
+
             let downloadInactiveReportButton : IToastButton = {id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {}};
             let downloadChangeReportButton : IToastButton = {id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {}};
             // buttons.push(downloadInactiveReportButton);
@@ -430,7 +430,7 @@ export class UiUtility {
             let showComparisonButton : IToastButton = {id: 'comparison', title: 'Show Comparison', data: {}};
             buttons.push(showComparisonButton);
         }
-        
+
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
 		let callNumber = 0;
@@ -474,7 +474,7 @@ export class UiUtility {
                         }
 
 						notification = notificationService.show(message, title, notificationType, {timeOut: 0, extendedTimeOut: 0}, refsetId, buttons);
-                        
+
                         notification.onAction.subscribe(button => {
 
                             if (button.id == 'view') {
@@ -482,7 +482,7 @@ export class UiUtility {
 
                             } else if (button.id == 'inactiveChangeReport') {
                                 this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
-                            
+
                             } else if (button.id == 'comparison') {
 
                                 callbackFunction();
@@ -547,7 +547,7 @@ export class UiUtility {
         if (!merge) {
             csvData = this.convertToCsv(data, headerlist);
         } else {
-            
+
             csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
             + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
             + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
@@ -558,7 +558,7 @@ export class UiUtility {
         const downloadLink = document.createElement('a');
         const url = URL.createObjectURL(blob);
         const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
-        
+
         if (isSafariBrowser) {
             downloadLink.setAttribute('target', '_blank');
         }
@@ -571,13 +571,13 @@ export class UiUtility {
         downloadLink.click();
         document.body.removeChild(downloadLink);
     }
-    
+
     static convertToCsv(objectArray, headerList) {
 
          const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
          let csvString = '';
          let row = '#,';
-    
+
          for (const index in headerList) {
              row += headerList[index] + ',';
          }
@@ -592,7 +592,7 @@ export class UiUtility {
              for (const index in headerList) {
 
                 const head = headerList[index];
-                 line += ',' + array[i][head].replaceAll(',', ';');;
+                 line += ',' + array[i][head].replaceAll(',', ';');
              }
 
              csvString += line + '\r\n';
@@ -637,12 +637,12 @@ export class UiUtility {
         }
 
         rolesToShow.sort();
-        
+
         return rolesToShow.join(', ');
     }
 
     static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
-		
+
         let genericIconFunction = this.getGenericUserIcon;
         let labelTag = 'User Icon';
 
@@ -697,8 +697,8 @@ export class UiUtility {
             field.setAttribute("placeholder", value);
         });
     }
-    
-    
+
+
     //***** AG Grid Function to apply data and paging to table *****/
     static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 
@@ -731,7 +731,7 @@ export class UiUtility {
             } else {
                 gridApi.setRowData(results.items);
             }
-            
+
         } else {
 
             gridApi.showNoRowsOverlay();
