@@ -8,7 +8,7 @@
             <mat-select #detailsVersionSelect [disableOptionCentering]="true"
                 [(value)]="selectedOrganization" (selectionChange)="selectOrganization($event)">
                 <mat-option *ngFor="let organization of organizations" [value]="organization"
-                    style="z-index: 3">
+                    style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -22,7 +22,7 @@
                 [disableOptionCentering]="true" [(value)]="selectedProject"
                 (selectionChange)="selectProject($event)">
                 <mat-option *ngFor="let project of projectList" [value]="project"
-                    style="z-index: 3">
+                    style="z-index: 3" [title]="project.name">
                     {{ project.name }}
                 </mat-option>
             </mat-select>

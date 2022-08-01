@@ -6,7 +6,7 @@
             <mat-select #detailsVersionSelect [disableOptionCentering]="true"
                 [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization"
-                    style="z-index: 3">
+                    style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
