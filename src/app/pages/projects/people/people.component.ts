@@ -27,7 +27,7 @@ export class ProjectsPeopleComponent implements OnInit {
     projectId: any;
     projectList = [];
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
     gridParams: any;
     gridApi: any;
     gridColumnDefs = [];
@@ -35,6 +35,7 @@ export class ProjectsPeopleComponent implements OnInit {
     organizations: any;
     organizationId: string;
     showLoadingSpinner = false;
+    showTable = false;
 
     @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
@@ -86,7 +87,7 @@ export class ProjectsPeopleComponent implements OnInit {
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             frameworkComponents: {
-                templateRenderer: TemplateRenderer,
+                'templateRenderer': TemplateRenderer,
                 'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
@@ -192,10 +193,12 @@ export class ProjectsPeopleComponent implements OnInit {
     getProjects(): void {
 
         this.showLoadingSpinner = true;
+        this.showTable = false;
 
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
+            this.showTable = true;
             this.projectList = results.items;
 
             for (const project of this.projectList) {
