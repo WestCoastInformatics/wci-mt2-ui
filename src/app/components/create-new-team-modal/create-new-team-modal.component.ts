@@ -20,7 +20,7 @@ export class CreateNewTeamModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	@Input() organizations: any[] = [];
+    @Input() organizations: any[] = [];
     privateTeam: any;
     selectedRoles: any;
     selectedOrganization: any;
@@ -70,8 +70,8 @@ export class CreateNewTeamModalComponent {
                 this.organizations = organizationResults.items;
             });
         }
-        
-        
+
+
     }
 
     callMemberOperation(): void {
@@ -145,7 +145,7 @@ export class CreateNewTeamModalComponent {
         this.teamsService.createTeam(params).subscribe(
             (data) => {
 
-                this.notificationService.show("The team is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The team is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();
@@ -156,11 +156,11 @@ export class CreateNewTeamModalComponent {
         );
     }
 
-    getSelectedOrganization(): any{
+    getSelectedOrganization(): any {
 
-        if(this.organizations && this.organizationId){
+        if (this.organizations && this.organizationId) {
             let org = this.organizations.filter(o => o.id == this.organizationId)
-            if(org.length > 0){
+            if (org.length > 0) {
                 return org[0];
             }
         }

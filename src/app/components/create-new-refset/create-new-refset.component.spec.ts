@@ -8,9 +8,9 @@ describe('CreateNewRefsetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateNewRefsetComponent ]
+      declarations: [CreateNewRefsetComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
