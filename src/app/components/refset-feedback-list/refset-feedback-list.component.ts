@@ -1,15 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Refset } from 'src/app/models/refset';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { User } from 'src/app/models/user';
-import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {UiUtility} from 'src/app/utilities/ui.utility';
+import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {PaginationComponent} from 'src/app/components/pagination/pagination.component';
+import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
+import {User} from 'src/app/models/user';
+import {DateTextFilterComponent} from 'src/app/components/dateTextFilter/date-text-filter.component';
 
 @Component({
     selector: 'app-refset-discussion-list',
@@ -26,17 +25,23 @@ export class RefsetFeedbackListComponent implements OnInit {
     threadsData = [];
     selectedThread: any;
     selectedPost: any;
-    displayHeader: string = 'Feedback';
+    displayHeader = 'Feedback';
     refsetGridOptions = {};
     canEditThread = false;
     canDeleteThread = false;
-    editMode: string = '';
+    editMode = '';
     isResolved = false;
     gridApi: any;
     gridColumnDefs = [];
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
-    showTable: boolean = false;
+    gridPaging = {
+        pageSize: 10,
+        pageSizeOptions: [10, 25, 50, 100],
+        totalKnown: false,
+        totalRows: null,
+        manualStateRefresh: new Boolean(true)
+    };
+    showTable = false;
     postTruncationLength = 500;
     tinyMceConfig = {
         base_url: '/tinymce',
@@ -57,6 +62,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     VISIBLE = 'Visible';
     HIDDEN = 'Hidden';
     uiUtility = UiUtility;
+    privateCount = 0;
 
     @Input() type: string;
     @Input() refsetInternalId: string;
@@ -76,14 +82,15 @@ export class RefsetFeedbackListComponent implements OnInit {
     @ViewChild('confirmDeleteThreadModal') confirmDeleteThreadModal: NgbModal;
     @ViewChild('confirmDeletePostModal') confirmDeletePostModal: NgbModal;
 
-    constructor(private readonly modalService: NgbModal, readonly refsetService: RefsetService, private authenticationService: AuthenticationService) { }
+    constructor(private readonly modalService: NgbModal, readonly refsetService: RefsetService, private authenticationService: AuthenticationService) {
+    }
 
     ngOnInit() {
 
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.authenticationService.GUEST_USER;
 
-        if (this.roles.includes("VIEWER")) {
+        if (this.roles.includes('VIEWER')) {
             this.canViewPrivateThreads = true;
         }
     }
@@ -92,7 +99,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         for (const propertyName in changes) {
 
-            if (propertyName === "refsetName" || propertyName === "conceptName") {
+            if (propertyName === 'refsetName' || propertyName === 'conceptName') {
 
                 if (this.type == 'REFSET') {
                     this.displayHeader = 'Refset Feedback: ' + this.refsetName;
@@ -105,7 +112,12 @@ export class RefsetFeedbackListComponent implements OnInit {
 
     openThreadListModal() {
 
-        this.openedThreadListModal = this.modalService.open(this.threadListModal, { backdrop: 'static', keyboard: false, modalDialogClass: 'full-modal', centered: true });
+        this.openedThreadListModal = this.modalService.open(this.threadListModal, {
+            backdrop: 'static',
+            keyboard: false,
+            modalDialogClass: 'full-modal',
+            centered: true
+        });
 
         this.selectedThread = null;
         this.selectedPost = null;
@@ -113,7 +125,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.showTable = true;
 
         this.gridOptions = {
-            context: { componentParent: this },
+            context: {componentParent: this},
             pagination: false,
             suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
@@ -121,13 +133,13 @@ export class RefsetFeedbackListComponent implements OnInit {
             rowSelection: 'single',
             enableCellTextSelection: true,
             onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady, 
-            onFilterChanged: function() {
+            onGridReady: this.onGridReady,
+            onFilterChanged: function () {
                 if (this.api.getDisplayedRowCount() === 0) {
                     this.api.showNoRowsOverlay();
                 } else {
                     this.api.hideOverlay();
-                };
+                }
             },
             frameworkComponents: {
                 templateRenderer: TemplateRenderer,
@@ -141,13 +153,13 @@ export class RefsetFeedbackListComponent implements OnInit {
                 flex: 1,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
             },
             enableBrowserTooltips: true,
             rowClassRules: {
                 refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+                    let inactivatedRow = false;
 
                     if (params.data) {
                         inactivatedRow = params.data.active == false;
@@ -159,18 +171,47 @@ export class RefsetFeedbackListComponent implements OnInit {
         };
 
         this.gridColumnDefs = [
-            { field: 'id', headerName: 'Author', minWidth: 120, tooltipField: 'Author', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.authorSection } },
-            { field: 'subject', headerName: 'Feedback Topic', tooltipField: 'Feedback Topic', flex: 2, minWidth: 300, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.subjectSection } },
             {
-                field: 'status', headerName: 'Status', maxWidth: 125, tooltipField: 'Status', floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
+                field: 'id',
+                headerName: 'Author',
+                minWidth: 120,
+                tooltipField: 'Author',
+                cellRenderer: 'templateRenderer',
+                cellRendererParams: {template: this.authorSection}
+            },
+            {
+                field: 'subject',
+                headerName: 'Feedback Topic',
+                tooltipField: 'Feedback Topic',
+                flex: 2,
+                minWidth: 300,
+                cellRenderer: 'templateRenderer',
+                cellRendererParams: {template: this.subjectSection}
+            },
+            {
+                field: 'status',
+                headerName: 'Status',
+                maxWidth: 125,
+                tooltipField: 'Status',
+                floatingFilterComponent: 'categoryFilterComponent',
+                floatingFilterComponentParams: {
                     names: [
-                        { type: 'status', name: this.OPEN, value: this.OPEN },
-                        { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
+                        {type: 'status', name: this.OPEN, value: this.OPEN},
+                        {type: 'status', name: this.RESOLVED, value: this.RESOLVED}
                     ]
                 }
             },
-            { field: 'lastPost', headerName: 'Last Comment', maxWidth: 185, sort: "desc", tooltipField: 'Last Comment', valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
+            {
+                field: 'lastPost',
+                headerName: 'Last Comment',
+                maxWidth: 185,
+                sort: 'desc',
+                tooltipField: 'Last Comment',
+                valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
+                valueGetter: UiUtility.gridDateValueGetter,
+                floatingFilterComponent: 'dateTextFilterComponent'
+            },
+            {field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies'}
         ];
 
         // set placeholders on the grid floating filter fields
@@ -180,7 +221,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     onGridReady = (gridReadyParams) => {
 
         this.gridApi = gridReadyParams.api;
-        
+
         // let conceptId = null;
 
         // if (CodeUtility.hasValue(this.conceptId)) {
@@ -189,13 +230,15 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.refsetService.getDiscussionThreads(this.type, this.refsetInternalId, this.conceptId).subscribe({
             next: (results) => {
-
+                this.privateCount = results.items.filter(t => t.privateThread).length;
+                results.items = results.items.filter(t => !t.privateThread ||
+                    t.posts.length > 0 && t.posts[0].user.userName === this.user.userName);
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
-                let pageNumber = 1;
+                const pageNumber = 1;
 
-                if (results.items.length == 0) {
+                if (results.items.length === 0) {
                     this.gridApi.showNoRowsOverlay();
                     this.gridApi.setRowData([]);
 
@@ -221,13 +264,14 @@ export class RefsetFeedbackListComponent implements OnInit {
 
     onGridCellClick = (event) => {
 
-        for (let thread of this.threadsData) {
+        for (const thread of this.threadsData) {
 
-            if (thread.id == event.data.id) {
+            if (thread.id === event.data.id) {
                 this.selectedThread = thread;
+                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName);
             }
         }
-        
+
         this.openThreadModal();
     }
 
@@ -249,7 +293,7 @@ export class RefsetFeedbackListComponent implements OnInit {
             this.isResolved = this.selectedThread.status == this.RESOLVED;
             this.postButtonText = 'Reply';
 
-            if (this.roles.includes("ADMIN") || this.selectedThread.posts[0].user.userName == this.user.userName) {
+            if (this.roles.includes('ADMIN') || this.selectedThread.posts[0].user.userName == this.user.userName) {
 
                 this.canEditThread = true;
                 this.canDeleteThread = true;
@@ -260,16 +304,17 @@ export class RefsetFeedbackListComponent implements OnInit {
             }
         }
 
-        this.openedThreadModal = this.modalService.open(this.threadModal, { modalDialogClass: 'full-modal', centered: true, backdrop: 'static', keyboard: false });
+        this.openedThreadModal = this.modalService.open(this.threadModal, {
+            modalDialogClass: 'full-modal',
+            centered: true,
+            backdrop: 'static',
+            keyboard: false
+        });
     }
 
     canEditPost(post) {
 
-        if (this.roles.includes("ADMIN") || post.user.userName == this.user.userName) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.roles.includes('ADMIN') || post.user.userName === this.user.userName;
     }
 
     updatePost(post: any, editThread: boolean) {
@@ -289,7 +334,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.postMessageField = post.message;
         this.postPrivateField = post.privatePost;
-        
+
     }
 
     checkComplete() {
@@ -306,9 +351,9 @@ export class RefsetFeedbackListComponent implements OnInit {
     saveChanges() {
 
         let post: any;
-        
+
         if (this.selectedPost == null) {
-            post = { message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE };
+            post = {message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE};
         } else {
 
             post = CodeUtility.clone(this.selectedPost);
@@ -347,7 +392,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         } else if (this.editMode == 'newThread') {
 
-            let thread: any = {
+            const thread: any = {
                 type: this.type,
                 refsetInternalId: this.refsetInternalId,
                 conceptId: this.conceptId,
@@ -376,12 +421,12 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         } else {
 
-            let updatedThread = CodeUtility.clone(this.selectedThread);
+            const updatedThread = CodeUtility.clone(this.selectedThread);
 
             updatedThread.subject = this.postSubjectField;
             updatedThread.privateThread = this.postPrivateField;
 
-            let updatedPost = updatedThread.posts[0];
+            const updatedPost = updatedThread.posts[0];
             updatedPost.message = this.postMessageField;
             updatedPost.privatePost = this.postPrivateField;
 
@@ -393,7 +438,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                     this.selectedThread.posts[0].message = this.postMessageField;
                     this.selectedThread.posts[0].modified = results.posts[0].modified;
                     this.selectedThread.modified = results.modified;
-                    
+
                     this.resetPostForm();
                     this.reloadGridData();
                 }
@@ -408,15 +453,15 @@ export class RefsetFeedbackListComponent implements OnInit {
 
                 if (newStatus == 'Resolved') {
                     this.discussionCount--;
-                } else {     
+                } else {
                     this.discussionCount++;
-                }               
+                }
                 this.discussionCountChange.emit(this.discussionCount);
 
                 this.selectedThread.status = newStatus;
                 this.isResolved = newStatus == this.RESOLVED;
 
-                
+
                 this.reloadGridData();
             }
         });
@@ -436,7 +481,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     confirmThreadDelete() {
-        this.openedConfirmModal = this.modalService.open(this.confirmDeleteThreadModal, { centered: true });
+        this.openedConfirmModal = this.modalService.open(this.confirmDeleteThreadModal, {centered: true});
     }
 
     deleteThread() {
@@ -460,15 +505,15 @@ export class RefsetFeedbackListComponent implements OnInit {
     confirmPostDelete(post: any) {
 
         this.selectedPost = post;
-        this.openedConfirmModal = this.modalService.open(this.confirmDeletePostModal, { centered: true });
+        this.openedConfirmModal = this.modalService.open(this.confirmDeletePostModal, {centered: true});
     }
 
     deletePost() {
 
         this.openedConfirmModal.dismiss();
         this.openedConfirmModal = null;
-        let postId = this.selectedPost.id;
-        let postIndex = this.selectedThread.posts.indexOf(this.selectedPost);
+        const postId = this.selectedPost.id;
+        const postIndex = this.selectedThread.posts.indexOf(this.selectedPost);
         this.selectedPost = null;
 
         this.refsetService.deleteDiscussionPost(this.selectedThread.id, postId).subscribe({
@@ -506,12 +551,12 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.gridApi.setRowData(this.threadsData);
         this.gridApi.redrawRows();
-        //this.onGridReady({api: this.gridApi});
+        // this.onGridReady({api: this.gridApi});
     }
 
     getPostText(message: string, truncate: boolean = true) {
 
-        let strippedMessage = CodeUtility.stripHtml(message);
+        const strippedMessage = CodeUtility.stripHtml(message);
 
         if (truncate && strippedMessage.length > this.postTruncationLength) {
             return CodeUtility.shortenText(strippedMessage, this.postTruncationLength);

@@ -24,7 +24,7 @@ export class OrganizationProjectsComponent implements OnInit {
     gridOptions: any;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
     columnDefs = [];
-    projectList = []
+    projectList = [];
     organizationList = [];
     selectedOrganization: any;
     organizationId: string;
@@ -42,7 +42,7 @@ export class OrganizationProjectsComponent implements OnInit {
         private readonly teamService: TeamsService,
         private authenticationService: AuthenticationService,
         private location: Location) {
-            document.body.scrollTop = 0;
+        document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {
@@ -53,7 +53,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.data = [];
         this.columnDefs = [
-            { field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => { return `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''); }, cellClass: 'pointer' },
+            { field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer' },
             { field: 'description', headerName: 'Description', minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
             {
                 field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
@@ -121,10 +121,10 @@ export class OrganizationProjectsComponent implements OnInit {
             this.data = [];
             this.projectList = results.items;
 
-            for (let project of this.projectList) {
+            for (const project of this.projectList) {
 
                 if (project?.organization?.id === this.selectedOrganization?.id) {
-                    this.data.push({ name: `${project?.name}`, locked: project?.privateProject, description: `${project?.description}`, teams: `${(await this.getTeams(project?.teams))}`, id: project.id })
+                    this.data.push({ name: `${project?.name}`, locked: project?.privateProject, description: `${project?.description}`, teams: `${(await this.getTeams(project?.teams))}`, id: project.id });
                 }
             }
 
@@ -136,14 +136,14 @@ export class OrganizationProjectsComponent implements OnInit {
 
     async getTeams(teams: any): Promise<any> {
 
-        console.log(teams)
+        console.log(teams);
         const teamObject = { teams: [] };
 
         if (teams === 'undefined' || teams === undefined) {
             return JSON.stringify(teamObject);
         } else {
 
-            for (let team of teams) {
+            for (const team of teams) {
                 teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
             }
 
@@ -157,7 +157,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
             this.organizationList = results.items;
 
-            for (let organization of this.organizationList) {
+            for (const organization of this.organizationList) {
 
                 if (this.organizationId == organization.id) {
                     this.setOrganizationData(organization);
@@ -171,7 +171,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
     selectOrg($event): void {
         this.setOrganizationData(this.selectedOrganization);
-        this.location.replaceState("/organizations/projects/" + this.selectedOrganization.id);
+        this.location.replaceState('/organizations/projects/' + this.selectedOrganization.id);
         this.getProjects();
         this.organizationId = this.selectedOrganization.id;
     }
@@ -181,13 +181,11 @@ export class OrganizationProjectsComponent implements OnInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
-            this.menu.pop;
         }
 
         this.onGridReady(this.gridParams);

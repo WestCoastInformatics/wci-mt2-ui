@@ -5,17 +5,17 @@
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>Choose Organization</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        
+
         <span class="title-label">Teams</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>Choose Team</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
-                <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3">
+                <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
                     {{ team.name }}
                 </mat-option>
             </mat-select>
@@ -27,10 +27,10 @@
 <div class="content-wrapper">
 
     <app-sidebar [menuItems]="menu" [id]="teamId"></app-sidebar>
-    
+
     <div class='container-fluid mt-3'>
         <span class="teams-configuration">
-        
+
             <div class="section-header mb-3"> Team Configuration </div>
             <div class="teams-configuration-details">
                 <div class="teams-configuration-blocks-1">
@@ -53,21 +53,22 @@
 
                             <mat-form-field class="profile-description-field" appearance="none">
                                 <mat-label>Description</mat-label>
-                                <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project" [(ngModel)]="profileDescriptionValue"></textarea>
+                                <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project"
+                                  [(ngModel)]="profileDescriptionValue"></textarea>
                             </mat-form-field>
                         </div>
-                            
+
                         <div class="update-profile-button">
                             <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                                <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="btn btn-primary btn-lg" 
-                                    [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue || !isValidEmail()" (click)="updateTeam()">
+                                <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="btn btn-primary btn-lg"
+                                  [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue || !isValidEmail()" (click)="updateTeam()">
                                     Update Profile
                                 </button>
                             </div>
                         </div>
                     </div>
-        
-                    <div  class="secondary-block">
+
+                    <div class="secondary-block">
 
                         <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row team-permissions-block">
 
@@ -76,9 +77,9 @@
                             <div class="save-permissions-mid">Choose the permission level or roles for your team.
                                 <br><br>
                                 <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
-                                    <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [ngModel]="roleOptions" [(value)]="selectedRoles" multiple
-                                            class="refset-tool-modal-select" panelClass="refset-tool-modal-panel"  (selectionChange)="setRoles()">
-                                        
+                                    <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [ngModel]="roleOptions" [(value)]="selectedRoles"
+                                      multiple class="refset-tool-modal-select" panelClass="refset-tool-modal-panel" (selectionChange)="setRoles()">
+
                                         <mat-option *ngFor="let role of roleOptions" [value]="role.value">
                                             {{role.display}}
                                         </mat-option>
@@ -88,7 +89,8 @@
 
                             <div class="save-permissions-button">
                                 <div class="section-list text-right" aria-label="Save Permissions" title="Save Permissions">
-                                    <button class="btn btn-primary btn-lg" [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles" (click)="updateTeamRoles()">Save Permissions</button>
+                                    <button class="btn btn-primary btn-lg" [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles"
+                                      (click)="updateTeamRoles()">Save Permissions</button>
                                 </div>
                             </div>
 
@@ -107,8 +109,9 @@
                             <div class="remove-team-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
                             <div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
                             <div class="remove-teams-button">
-                                <div class="section-list text-right" aria-label="Remove team" title="Remove team" >
-                                    <remove-dashboard-component-modal [componentType]="'team'" [componentId]="teamId" [componentName]=getSelectedTeamName() [disabled]="!teamId"></remove-dashboard-component-modal>
+                                <div class="section-list text-right" aria-label="Remove team" title="Remove team">
+                                    <remove-dashboard-component-modal [componentType]="'team'" [componentId]="teamId" [componentName]=getSelectedTeamName()
+                                      [disabled]="!teamId"></remove-dashboard-component-modal>
                                 </div>
                             </div>
 

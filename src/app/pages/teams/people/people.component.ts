@@ -51,8 +51,8 @@ export class TeamsPeopleComponent implements OnInit {
         private readonly authService: AuthenticationService,
         private readonly teamsService: TeamsService,
         private location: Location) {
-            document.body.scrollTop = 0;
-        }
+        document.body.scrollTop = 0;
+    }
 
     ngOnInit(): void {
 
@@ -115,7 +115,7 @@ export class TeamsPeopleComponent implements OnInit {
 
     setNavigation() {
 
-        let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId), true, true) {
             breadcrumbs.push({ path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams' });
@@ -137,7 +137,7 @@ export class TeamsPeopleComponent implements OnInit {
             this.showTable = true;
             this.organizationList = results.items;
 
-            for (let organization of this.organizationList) {
+            for (const organization of this.organizationList) {
 
                 if (this.organizationId == organization.id) {
 
@@ -167,7 +167,7 @@ export class TeamsPeopleComponent implements OnInit {
 
             this.teamList = results.items;
 
-            for (let team of this.teamList) {
+            for (const team of this.teamList) {
 
                 if (this.teamId == team.id) {
 
@@ -189,13 +189,11 @@ export class TeamsPeopleComponent implements OnInit {
 
         this.data = this.selectedTeam.memberList;
 
-        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' });
 
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
-            this.menu.pop;
         }
     }
 
@@ -206,11 +204,11 @@ export class TeamsPeopleComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
-        if (event.column.colId == "id") {
+        if (event.column.colId == 'id') {
             return;
         }
 
-        let selectedRows = this.gridApi.getSelectedRows();
+        const selectedRows = this.gridApi.getSelectedRows();
         let selectedId: string;
 
         selectedRows.forEach(function (selectedRow, index) {
@@ -230,13 +228,14 @@ export class TeamsPeopleComponent implements OnInit {
     }
 
     removeUser(user) {
-        if (confirm("Are you sure you want to remove " + user.name + " from the team?"))
+        if (confirm('Are you sure you want to remove ' + user.name + ' from the team?')) {
             this.teamsService.removeUser(this.teamId, user.id).subscribe({
                 next: (data) => {
                     console.log(data);
                 },
                 complete: () => window.location.reload()
             });
+        }
     }
 
     getTeamCount(data: any): number {

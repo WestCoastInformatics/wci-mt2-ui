@@ -45,6 +45,7 @@ export class RefsetDetails {
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
     memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
+    membersReady: boolean = false;
     inEditButtonPrefix = '';
     tableSearchInput: string;
     versionOptions: any;
@@ -948,6 +949,7 @@ export class RefsetDetails {
         if (this.allowedToEdit) {
             restParams.editing = true;
         }
+        this.membersReady = false;
 
         this.refsetService.getConceptList(this.id, restParams).subscribe({
             next: (results) => {
@@ -1039,6 +1041,7 @@ export class RefsetDetails {
 
                 UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
                 this.showLoadingSpinner = false;
+                this.membersReady = true;
             },
             error: (error) => {
 
@@ -1692,7 +1695,7 @@ export class RefsetDetails {
         this.modalService.open(dialog, {
             modalDialogClass: 'alert-modal',
             centered: true
-        });
+        }); ``
         console.log("Cancel Upgrade in initial screen");
     }
 
@@ -1711,5 +1714,12 @@ export class RefsetDetails {
         else {
             window.open('http://dailybuild.ihtsdotools.org/');
         }
+    }
+
+    downloadMembersTable() {
+        this.membersGridApi.exportDataAsCsv({
+            columnKeys: this.membersColumnDefs.filter(value => value.colId !== 'actions').map(value => value.colId),
+            fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true
+        });
     }
 }

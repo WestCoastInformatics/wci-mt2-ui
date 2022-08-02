@@ -13,7 +13,7 @@ export class ReviewModalComponent {
     @Output() setWorkflowStatus = new EventEmitter<boolean>();
     editorConfig: any = {
         base_url: '/tinymce', suffix: '.min', height: 200,
-        maxlength: 20, menubar: false, plugins: ['lists advlist wordcount'],
+        maxlength: 255, menubar: false, plugins: ['lists advlist wordcount'],
         toolbar: 'undo redo | bold italic | bullist numlist outdent indent',
         setup: function (ed) {
             ed.on('keydown', function (evt) {

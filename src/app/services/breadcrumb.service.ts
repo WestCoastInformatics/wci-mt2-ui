@@ -9,7 +9,7 @@ export class BreadcrumbService {
     breadcrumbs = new BehaviorSubject<any>([]);
     observable$: Observable<any> = this.breadcrumbs.asObservable();
 
-    constructor(){
+    constructor() {
     }
 
     getBreadcrumbs() {
@@ -17,12 +17,12 @@ export class BreadcrumbService {
         return this.observable$;
     }
 
-    setBreadcrumbs(breadcrumbs){
-         
+    setBreadcrumbs(breadcrumbs) {
+
         let breadcrumbNav = [];
         let i = 0;
 
-        for (let breadcrumb of breadcrumbs){
+        for (let breadcrumb of breadcrumbs) {
 
             breadcrumb.id = i;
             breadcrumb.class = 'refset-tool-breadcrumb';

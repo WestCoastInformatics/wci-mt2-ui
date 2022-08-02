@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
         private envService: EnvService,
         private titleService: Title,
         private router: Router
-    ) { 
+    ) {
         authenticationService.apiCalled.subscribe(() => this.refreshUserState());
 
         router.events
@@ -42,8 +42,8 @@ export class AppComponent implements OnInit {
             )
             .subscribe((event: NavigationStart) => {
                 location.reload();
-				
-        });
+
+            });
     }
 
     //***** Framework Functions *****/
@@ -90,11 +90,11 @@ export class AppComponent implements OnInit {
         let date = new Date();
         // console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
         this.userActivity = setTimeout(() => {
-            
+
             if (this.authenticationService.isUserLoggedIn) {
                 this.userInactive.next(undefined);
                 console.log('logged out');
-            }else{
+            } else {
                 console.log('not logged in');
             }
         }, 900000);

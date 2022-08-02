@@ -3,9 +3,8 @@
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
-                (selectionChange)="selectOrg($event)">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -37,15 +36,13 @@
 
                             <mat-form-field class="profile-description-field" appearance="none">
                                 <mat-label>Description</mat-label>
-                                <textarea matInput type="text" name="description"
-                                    [(ngModel)]="profileDescriptionValue"></textarea>
+                                <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
                             <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
-                                [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()"
-                                aria-label="Update Profile" title="Update Profile" class="btn btn-primary btn-lg"
-                                (click)="updateOrganization()">Update Profile</button>
+                              [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()" aria-label="Update Profile"
+                              title="Update Profile" class="btn btn-primary btn-lg" (click)="updateOrganization()">Update Profile</button>
                         </div>
                     </div>
 
@@ -55,7 +52,8 @@
                             <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
                         </div>
                         <div class="section-btn">
-                            <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">
+                            <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture"
+                              class="btn btn-primary btn-lg">
                                 Edit Picture
                                 <input type="file" class="d-none" (change)="onPhotoChange($event)" />
                             </label>
@@ -68,7 +66,8 @@
                         <div class="organization-profile-mid">Create teams for your organization. Refset modeling
                             permissions are assigned through the use of teams.</div>
                         <div class="section-btn">
-                            <create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId" [organizations]="organizationList"></create-new-team-modal>
+                            <create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId"
+                              [organizations]="organizationList"></create-new-team-modal>
                         </div>
                     </div>
                     <div class="organizations-configuration-block secondary-block teams-block">
@@ -76,7 +75,8 @@
                         <div class="organization-profile-mid">Add projects to your organization. Projects help to
                             organize your reference sets.</div>
                         <div class="section-btn">
-                            <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId" [organizations]="organizationList"></create-new-project-modal>
+                            <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId"
+                              [organizations]="organizationList"></create-new-project-modal>
                         </div>
                     </div>
                     <div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="organizations-configuration-block secondary-block teams-block">
@@ -85,8 +85,8 @@
                         <div class="organization-profile-mid">Warning! This is a permanent operation and cannot be
                             undone. Please be certain before taking action.</div>
                         <div class="section-btn">
-                            <remove-dashboard-component-modal [componentType]="'organization'"
-                                [componentId]=getSelectedOrganizationId() [componentName]=getSelectedOrganizationName()>
+                            <remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId()
+                              [componentName]=getSelectedOrganizationName()>
                             </remove-dashboard-component-modal>
                         </div>
                     </div>

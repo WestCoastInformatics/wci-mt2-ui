@@ -42,7 +42,7 @@ export class RefsetUtility {
             }
 
             let option: any = { value: value, display: version.date + ' (' + displayStatus + ')', date: version.date, status: displayStatus };
-        
+
             if (version.date === this.getVersionDate(refset) || (refset.versionStatus == this.IN_DEVELOPMENT && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
                 option.selected = true;
             }
@@ -50,7 +50,7 @@ export class RefsetUtility {
             versionOptions.push(option);
         }
 
-        if (versionOptions.length == 0){
+        if (versionOptions.length == 0) {
             versionOptions = CodeUtility.clone(this.mockedVersionOptions);
         }
 
@@ -61,10 +61,10 @@ export class RefsetUtility {
 
         let date = '';
 
-        if (refset.versionStatus == this.IN_DEVELOPMENT){
+        if (refset.versionStatus == this.IN_DEVELOPMENT) {
             date = CodeUtility.getCurrentDate();
         } else {
-            date= refset.versionDate;
+            date = refset.versionDate;
         }
 
         return date;
@@ -74,7 +74,7 @@ export class RefsetUtility {
 
         let date = '';
 
-        if (refset.versionStatus == this.IN_DEVELOPMENT){
+        if (refset.versionStatus == this.IN_DEVELOPMENT) {
             date = this.IN_DEVELOPMENT;
         } else {
             date = CodeUtility.formatJsonDate(refset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
@@ -98,7 +98,7 @@ export class RefsetUtility {
 
         let status = 'Active';
 
-        if (!CodeUtility.testBoolean(active)){
+        if (!CodeUtility.testBoolean(active)) {
             status = 'Inactive';
         }
 
@@ -109,7 +109,7 @@ export class RefsetUtility {
 
         let image = '/assets/linedTaxonomyIcon.png';
 
-        if (!CodeUtility.testBoolean(defined)){
+        if (!CodeUtility.testBoolean(defined)) {
             image = '/assets/unlinedTaxonomyIcon.png';
         }
 
@@ -135,30 +135,30 @@ export class RefsetUtility {
 
         let image = '';
         image = '/assets/flags/' + langRefsetId + '.png';
-        
+
         return image;
     }
 
 
-    static setEmptyChildrenNull(conceptList){
+    static setEmptyChildrenNull(conceptList) {
 
-        for (let concept of conceptList){
-            
-            if (concept.children != null && concept.children.length == 0){
+        for (let concept of conceptList) {
+
+            if (concept.children != null && concept.children.length == 0) {
                 concept.children = null;
             }
         }
     }
 
-    static sortDescriptions(descriptions, fullyQualifiedLanguageRefsets){
+    static sortDescriptions(descriptions, fullyQualifiedLanguageRefsets) {
 
         let languagePriority: any = {};
         let i = 1;
 
         // let the language priorities defined in the refset apply to the sort
-        for (let languageRefset of fullyQualifiedLanguageRefsets){
+        for (let languageRefset of fullyQualifiedLanguageRefsets) {
 
-            if (!languagePriority.hasOwnProperty(languageRefset.languageCode)){
+            if (!languagePriority.hasOwnProperty(languageRefset.languageCode)) {
 
                 languagePriority[languageRefset.languageCode] = i;
                 i++;
@@ -184,7 +184,7 @@ export class RefsetUtility {
             let typeCompareValue = typePriority[description1.type] - typePriority[description2.type];
 
             // sort second based on description type
-            if (typeCompareValue != 0 ) {
+            if (typeCompareValue != 0) {
                 return typeCompareValue;
             }
 
