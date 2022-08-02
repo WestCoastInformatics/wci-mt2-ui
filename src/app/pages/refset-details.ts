@@ -1719,6 +1719,7 @@ export class RefsetDetails {
     downloadMembersTable() {
         this.membersGridApi.exportDataAsCsv({
             columnKeys: this.membersColumnDefs.filter(value => value.colId !== 'actions').map(value => value.colId),
-            fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true});
+            fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true
+        });
     }
 }

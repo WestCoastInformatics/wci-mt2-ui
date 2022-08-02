@@ -35,7 +35,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private location: Location) {
-            document.body.scrollTop = 0;
+        document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {

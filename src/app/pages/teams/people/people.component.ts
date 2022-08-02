@@ -51,8 +51,8 @@ export class TeamsPeopleComponent implements OnInit {
         private readonly authService: AuthenticationService,
         private readonly teamsService: TeamsService,
         private location: Location) {
-            document.body.scrollTop = 0;
-        }
+        document.body.scrollTop = 0;
+    }
 
     ngOnInit(): void {
 

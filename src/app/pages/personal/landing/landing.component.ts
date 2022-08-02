@@ -1,10 +1,10 @@
-import {Component, NgZone, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {UsersService} from 'src/app/services/rest/users.service';
-import {UiUtility} from 'src/app/utilities/ui.utility';
+import { Component, NgZone, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { UsersService } from 'src/app/services/rest/users.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'personal-landing',
@@ -12,7 +12,7 @@ import {UiUtility} from 'src/app/utilities/ui.utility';
 })
 export class PersonalLandingComponent implements OnInit {
     menu: SidebarMenuItem[] = [
-        {name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true}
+        { name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true }
 
     ];
 
@@ -25,10 +25,10 @@ export class PersonalLandingComponent implements OnInit {
     uiUtility = UiUtility;
 
     constructor(private readonly authService: AuthenticationService,
-                private readonly userService: UsersService,
-                private readonly refsetService: RefsetService,
-                private readonly router: Router,
-                private readonly zone: NgZone) {
+        private readonly userService: UsersService,
+        private readonly refsetService: RefsetService,
+        private readonly router: Router,
+        private readonly zone: NgZone) {
     }
 
     ngOnInit(): void {
@@ -39,7 +39,7 @@ export class PersonalLandingComponent implements OnInit {
             this.userId = this.authService.getUser().id;
         }
         if (this.userId === loggedUserId) {
-            this.menu.push({name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs'});
+            this.menu.push({ name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs' });
         }
         this.getUser();
         //this.setNavigation();

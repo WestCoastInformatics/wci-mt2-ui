@@ -104,8 +104,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-			this.projectId = params['id'];
-			this.setNavigation();
+            this.projectId = params['id'];
+            this.setNavigation();
         });
 
         this.showLoadingSpinner = true;
@@ -253,9 +253,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
-			this.projectList = results.items;
+            this.projectList = results.items;
 
-			for (const project of this.projectList) {
+            for (const project of this.projectList) {
 
                 if (this.projectId == project.id) {
 
@@ -266,19 +266,19 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             }
 
             this.getStoredProjectId();
-		});
+        });
     }
 
     showProjectData(): void {
 
-		const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
 
         this.showRefsets();
-	}
+    }
 
     selectProject($event): void {
 

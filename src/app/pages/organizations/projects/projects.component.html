@@ -3,10 +3,8 @@
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.id ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"  (selectionChange)="selectOrg($event)">
-                <mat-option *ngFor="let organization of organizationList"
-                            [value]="organization"
-                            style="z-index: 3" [title]="organization.name">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -15,25 +13,20 @@
 </div>
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-        <div class='container-fluid mt-3'>
+    <div class='container-fluid mt-3'>
         <div class='row'>
             <div class='col-12'>
                 <div *ngIf="showLoadingSpinner" class="loading"></div>
                 <section class="mb-3">
                     <div class='section-header mb-4'>
                         Projects ({{dataCount}})
-                        <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId" [organizations]="organizationList"></create-new-project-modal>
+                        <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId"
+                          [organizations]="organizationList"></create-new-project-modal>
                     </div>
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular
-                                [columnDefs]="columnDefs"
-                                [rowData]="data"
-                                [gridOptions]="gridOptions"
-                                (gridReady)="onGridReady($event)"
-                                (cellClicked)="onGridCellClick($event)"
-                                [tooltipShowDelay]="0"
-                                style="width: 100%">
+                            <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                              (cellClicked)="onGridCellClick($event)" [tooltipShowDelay]="0" style="width: 100%">
                             </ag-grid-angular>
                         </div>
                         <ng-template #descriptionSection let-params>

@@ -4,10 +4,8 @@
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>Choose Organization</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true"
-                [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization"
-                    style="z-index: 3" [title]="organization.name">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -16,8 +14,7 @@
         <span class="title-label">Teams</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>Choose Team</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true"
-                [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
                 <mat-option *ngIf="teamList == null || teamList.length == 0">No Teams</mat-option>
                 <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
                     {{ team.name }}
@@ -47,32 +44,26 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs"
-                                [rowData]="data" (gridReady)="onGridReady($event)"
-                                [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"
+                              style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
                             <ng-template #peopleNameSection let-params>
-                                <img #iconImg
-                                    [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)"
-                                    class="medium-icon-image" /> {{ params?.value}}
+                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
                             </ng-template>
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span
-                                    class="text-primary font-weight-bold">{{getTeamCount(params.data)}}
+                                <span class="text-primary font-weight-bold">{{getTeamCount(params.data)}}
                                     teams</span>
                             </ng-template>
 
                             <ng-template #inactivateUserSection let-params>
 
-                                <img *ngIf="selectedTeam?.userRoles?.includes('ADMIN')" src="assets/subtract-symbol-icon.svg"
-                                    (click)="removeUser(params?.data)" width="30px" height="30px"
-                                    title="Inactivate User" aria-label="Subtract"
-                                    class="subtract-symbol-icon"
-                                    alt="Subtract symbol shown when you're able to remove a user" />
+                                <img *ngIf="selectedTeam?.userRoles?.includes('ADMIN')" src="assets/subtract-symbol-icon.svg" (click)="removeUser(params?.data)" width="30px"
+                                  height="30px" title="Inactivate User" aria-label="Subtract" class="subtract-symbol-icon"
+                                  alt="Subtract symbol shown when you're able to remove a user" />
                             </ng-template>
 
                         </div>
