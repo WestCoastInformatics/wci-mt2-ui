@@ -118,7 +118,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
-        if (CodeUtility.hasValue(this.organizationId), true, true) {
+        if (CodeUtility.hasValue(this.organizationId, true, true)) {
             breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
         }
 
@@ -243,6 +243,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.organizationId = this.selectedOrganization.id;
         this.selectedProject = null;
         this.projectList = [];
+        this.setNavigation();
         this.getProjects();
     }
 
@@ -277,6 +278,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
 
+        this.setNavigation();
         this.showRefsets();
     }
 
