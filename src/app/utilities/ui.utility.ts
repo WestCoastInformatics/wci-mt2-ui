@@ -124,7 +124,7 @@ export class UiUtility {
 
         let notifyOfError = () => {
 
-            if (CodeUtility.hasValue(downloadUrl)){
+            if (CodeUtility.hasValue(downloadUrl)) {
                 window.URL.revokeObjectURL(downloadUrl);
             }
 
@@ -132,7 +132,7 @@ export class UiUtility {
                 notificationService.close(downloadNotification);
             }
 
-            downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', {closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+            downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
             downloadNotification;
         };
 
@@ -177,7 +177,7 @@ export class UiUtility {
 
                             let message = 'Your ' + description + ' is complete. Click this message to download your file';
 
-                            notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id}, 100);
+                            notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id }, 100);
 
                             setTimeout(function () {
 
@@ -191,10 +191,10 @@ export class UiUtility {
 
                                 window.URL.revokeObjectURL(downloadUrl);
 
-                                if (notificationService.isOpen(downloadNotification)){
+                                if (notificationService.isOpen(downloadNotification)) {
 
                                     notificationService.close(downloadNotification);
-                                    notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', {closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+                                    notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
                                 }
                             }, 300000);
                         }
@@ -232,7 +232,7 @@ export class UiUtility {
 
     // Function to open SNOMED ECL Builder
     static openEclBuilder(fieldId, branch) {
-        
+
         let field = $('#' + fieldId);
         let eclString: any = field.val();
         let snowstormApiUrl = environment['snowstormApiUrl'];
@@ -258,200 +258,200 @@ export class UiUtility {
     }
 
     // Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
-    static manageMemberNotifications (refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+    static manageMemberNotifications(refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
         // set a small delay so the original call has some time to process
         CodeUtility.delay(1500);
 
-		let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
-				+ 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
-		let notification = notificationService.show(message, null, 'info', {timeOut: 0, extendedTimeOut: 0});
+        let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
+            + 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+        let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-		let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
-		let downloadReportButton : IToastButton = {id: 'download', title: 'Download Report', data: {}};
+        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
+        let downloadReportButton: IToastButton = { id: 'download', title: 'Download Report', data: {} };
         let buttons = [downloadReportButton];
-		let callNumber = 0;
-		let callDelay = 1000;
-		let successMessageTimeout = 0;
+        let callNumber = 0;
+        let callDelay = 1000;
+        let successMessageTimeout = 0;
         this.router = router;
 
-		let checkIfFinished = () => {
+        let checkIfFinished = () => {
 
-			callNumber++;
+            callNumber++;
 
-			if (callNumber == 20) {
-				callDelay = 4000;
+            if (callNumber == 20) {
+                callDelay = 4000;
 
-			} else if (callNumber == 30) {
-				callDelay = 15000;
-			}
-			refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
+            } else if (callNumber == 30) {
+                callDelay = 15000;
+            }
+            refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
 
-                    if (CodeUtility.testBoolean(data)) {
-                        setTimeout(checkIfFinished, callDelay);
+                if (CodeUtility.testBoolean(data)) {
+                    setTimeout(checkIfFinished, callDelay);
+                } else {
+
+                    let title = 'Member Change Notification';
+                    let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
+                    let notificationType = 'success';
+                    let conceptIdArray = Object.keys(data);
+                    let conceptStatusArray: any[] = [];
+                    let emptydata = { refset: refsetId, statuses: [] };
+                    let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
+                    if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
+                        this.memberChangeData[refsetId] = emptydata;
+                    }
+
+                    notificationService.close(notification);
+
+                    for (let conceptId of conceptIdArray) {
+
+                        let conceptStatus: any = data[conceptId];
+                        this.memberChangeData[refsetId].statuses.push({ Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status });
+                        conceptStatusArray.push({
+                            code: conceptId,
+                            added: conceptStatus.operation == 'Added',
+                            failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member',
+                            operation: conceptStatus.operation,
+                            status: conceptStatus.status,
+                            name: conceptStatus.name,
+                            active: conceptStatus.active
+                        });
+                    }
+
+                    if (router.url.includes('/details/' + refsetId)) {
+
+                        successMessageTimeout = 5000;
+                        callbackFunction(conceptStatusArray);
                     } else {
+                        buttons.unshift(viewRefsetButton);
+                    }
 
-                        let title = 'Member Change Notification';
-                        let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
-                        let notificationType = 'success';
-						let conceptIdArray = Object.keys(data);
-                        let conceptStatusArray: any[] = [];
-                        let emptydata = {refset: refsetId, statuses: []};
-                        let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+                    if (conceptIdArray.length > 0) {
 
-                        if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
-                            this.memberChangeData[refsetId] = emptydata;
-                        }
+                        let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
+                        let someFailed = dataString.includes('Failed');
+                        let someSucceeded = dataString.includes('Success');
 
-						notificationService.close(notification);
+                        if (!someFailed && someSucceeded) {
+                            message = 'All members were successfully ' + messageEnd;
 
-                        for (let conceptId of conceptIdArray) {
+                        } else if (someFailed && !someSucceeded) {
 
-                            let conceptStatus: any = data[conceptId];
-                            this.memberChangeData[refsetId].statuses.push({Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status});
-                            conceptStatusArray.push({
-                                code: conceptId, 
-                                added: conceptStatus.operation == 'Added', 
-                                failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member', 
-                                operation: conceptStatus.operation,
-                                status: conceptStatus.status,
-                                name: conceptStatus.name, 
-                                active: conceptStatus.active
-                            });
-                        }
-
-                        if (router.url.includes('/details/' + refsetId)) {
-
-							successMessageTimeout = 5000;
-							callbackFunction(conceptStatusArray);
-						} else {
-                            buttons.unshift(viewRefsetButton);
-                        }
-
-                        if (conceptIdArray.length > 0) {
-                            
-                            let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
-                            let someFailed = dataString.includes('Failed');
-                            let someSucceeded = dataString.includes('Success');
-
-                            if (!someFailed && someSucceeded) {
-                                message = 'All members were successfully ' + messageEnd;
-
-                            } else if (someFailed && !someSucceeded) {
-
-                                notificationType = 'error';
-                                message = 'No members were able to be ' + messageEnd;
-                            } else {
-
-                                notificationType = 'warning';
-                                message = 'Some members were not able to be ' + messageEnd;
-                            }
+                            notificationType = 'error';
+                            message = 'No members were able to be ' + messageEnd;
                         } else {
 
-                            let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
-                            let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
-                            let continueEditingMessage = ' You may continue editing the refset.';
                             notificationType = 'warning';
-
-                            if (previousNotifications.length > 0) {
-
-                                if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
-                                    notificationType = 'error';
-                                }
-
-                                if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
-                                    message = previousNotifications[0].message;
-                                } else {
-                                    message = 'There were no concepts in the last request for refset ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
-                                }
-
-                            } else {
-
-                                message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
-                                buttons.pop();
-                            }
+                            message = 'Some members were not able to be ' + messageEnd;
                         }
+                    } else {
+
+                        let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
+                        let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
+                        let continueEditingMessage = ' You may continue editing the refset.';
+                        notificationType = 'warning';
 
                         if (previousNotifications.length > 0) {
-                            notificationService.close(previousNotifications[0]);
-                        }
 
-						notification = notificationService.show(message, title, notificationType, {timeOut: 0, extendedTimeOut: 0}, refsetId, buttons);
-                        
-                        notification.onAction.subscribe(button => {
-
-                            if (button.id == 'download') {
-                                this.createMemberChangeReport(refsetId, notification, notificationService);
-
-                            } else if (button.id == 'view') {
-                                this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
+                            if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
+                                notificationType = 'error';
                             }
-                        });
 
-                        // notification.onHidden.subscribe(() => {
-                        //     this.memberChangeData[refsetId] = emptydata;
-                        // });
-					}
-				},
-				(error) => {
+                            if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
+                                message = previousNotifications[0].message;
+                            } else {
+                                message = 'There were no concepts in the last request for refset ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
+                            }
 
-					console.log(error);
+                        } else {
+
+                            message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
+                            buttons.pop();
+                        }
+                    }
+
+                    if (previousNotifications.length > 0) {
+                        notificationService.close(previousNotifications[0]);
+                    }
+
+                    notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+
+                    notification.onAction.subscribe(button => {
+
+                        if (button.id == 'download') {
+                            this.createMemberChangeReport(refsetId, notification, notificationService);
+
+                        } else if (button.id == 'view') {
+                            this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
+                        }
+                    });
+
+                    // notification.onHidden.subscribe(() => {
+                    //     this.memberChangeData[refsetId] = emptydata;
+                    // });
+                }
+            },
+                (error) => {
+
+                    console.log(error);
                     message = 'There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator.';
-					notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-				}
-			);
-		};
+                    notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                }
+            );
+        };
 
         checkIfFinished();
     }
-    
+
     // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
-    static manageProcessNotifications (refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
+    static manageProcessNotifications(refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
         // set a small delay so the original call has some time to process
         CodeUtility.delay();
 
         let message = 'Refset ' + refsetId + ' has started the ' + processType + ' process. The refset is locked until the operation completes. You can close this message and do other operations on the site, ';
-        let viewRefsetButton : IToastButton = {id: 'view', title: 'View Refset', data: {}};
+        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
         let buttons = [viewRefsetButton];
 
         if (processType == ('upgrade')) {
 
             message += 'you will be notified when the refset is ready if you do not refresh the page.';
-            
-            let downloadInactiveReportButton : IToastButton = {id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {}};
-            let downloadChangeReportButton : IToastButton = {id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {}};
+
+            let downloadInactiveReportButton: IToastButton = { id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {} };
+            let downloadChangeReportButton: IToastButton = { id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {} };
             // buttons.push(downloadInactiveReportButton);
 
 
         } else if (processType == ('comparison')) {
 
             message += 'but do not refresh the page or you will need to repeat the process.';
-            let showComparisonButton : IToastButton = {id: 'comparison', title: 'Show Comparison', data: {}};
+            let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
             buttons.push(showComparisonButton);
         }
-        
+
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-		let callNumber = 0;
-		let callDelay = 1000;
-		let successMessageTimeout = 0;
+        let callNumber = 0;
+        let callDelay = 1000;
+        let successMessageTimeout = 0;
         this.router = router;
 
-		let checkIfFinished = () => {
+        let checkIfFinished = () => {
 
-			callNumber++;
+            callNumber++;
 
-			if (callNumber == 20) {
-				callDelay = 4000;
+            if (callNumber == 20) {
+                callDelay = 4000;
 
-			} else if (callNumber == 30) {
-				callDelay = 15000;
-			}
+            } else if (callNumber == 30) {
+                callDelay = 15000;
+            }
 
-			refsetService.isRefsetLocked(refsetInternalId).subscribe(
+            refsetService.isRefsetLocked(refsetInternalId).subscribe(
 
-				(data) => {
+                (data) => {
 
                     if (CodeUtility.testBoolean(data)) {
                         setTimeout(checkIfFinished, callDelay);
@@ -461,20 +461,20 @@ export class UiUtility {
                         let notificationType = 'success';
                         let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 
-						notificationService.close(notification);
+                        notificationService.close(notification);
 
-						if (router.url.includes('/' + refsetId)) {
-							buttons.shift();
+                        if (router.url.includes('/' + refsetId)) {
+                            buttons.shift();
                         }
 
-                        message = 'Refset ' + refsetId + ' has successfully completed the '+ processType +' process. It is no longer locked.';
+                        message = 'Refset ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
 
                         if (previousNotifications.length > 0) {
                             notificationService.close(previousNotifications[0]);
                         }
 
-						notification = notificationService.show(message, title, notificationType, {timeOut: 0, extendedTimeOut: 0}, refsetId, buttons);
-                        
+                        notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+
                         notification.onAction.subscribe(button => {
 
                             if (button.id == 'view') {
@@ -482,7 +482,7 @@ export class UiUtility {
 
                             } else if (button.id == 'inactiveChangeReport') {
                                 this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
-                            
+
                             } else if (button.id == 'comparison') {
 
                                 callbackFunction();
@@ -495,19 +495,19 @@ export class UiUtility {
                         if (processType == 'upgrade') {
                             callbackFunction();
                         }
-					}
-				},
-				(error) => {
+                    }
+                },
+                (error) => {
 
-					console.log(error);
+                    console.log(error);
                     message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
-					notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-				}
-			);
-		};
+                    notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                }
+            );
+        };
 
-		checkIfFinished();
-	}
+        checkIfFinished();
+    }
 
     static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
 
@@ -547,18 +547,18 @@ export class UiUtility {
         if (!merge) {
             csvData = this.convertToCsv(data, headerlist);
         } else {
-            
+
             csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
-            + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
-            + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
-            + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+                + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+                + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
+                + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
         }
 
         const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
         const downloadLink = document.createElement('a');
         const url = URL.createObjectURL(blob);
         const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
-        
+
         if (isSafariBrowser) {
             downloadLink.setAttribute('target', '_blank');
         }
@@ -571,41 +571,41 @@ export class UiUtility {
         downloadLink.click();
         document.body.removeChild(downloadLink);
     }
-    
+
     static convertToCsv(objectArray, headerList) {
 
-         const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
-         let csvString = '';
-         let row = '#,';
-    
-         for (const index in headerList) {
-             row += headerList[index] + ',';
-         }
+        const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
+        let csvString = '';
+        let row = '#,';
 
-         row = row.slice(0, -1);
-         csvString += row + '\r\n';
+        for (const index in headerList) {
+            row += headerList[index] + ',';
+        }
 
-         for (let i = 0; i < array?.length; i++) {
+        row = row.slice(0, -1);
+        csvString += row + '\r\n';
 
-             let line = (i + 1) + '';
+        for (let i = 0; i < array?.length; i++) {
 
-             for (const index in headerList) {
+            let line = (i + 1) + '';
+
+            for (const index in headerList) {
 
                 const head = headerList[index];
-                 line += ',' + array[i][head].replaceAll(',', ';');;
-             }
+                line += ',' + array[i][head].replaceAll(',', ';');
+            }
 
-             csvString += line + '\r\n';
-         }
+            csvString += line + '\r\n';
+        }
 
-         return csvString;
-     }
+        return csvString;
+    }
 
     static viewRefset(refsetId, versionDate) {
         if (!versionDate) {
             versionDate = RefsetUtility.IN_DEVELOPMENT;
         }
-            this.router.navigate(['/details', refsetId, versionDate]);
+        this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     static toggleLockedSections(lock: boolean) {
@@ -637,12 +637,12 @@ export class UiUtility {
         }
 
         rolesToShow.sort();
-        
+
         return rolesToShow.join(', ');
     }
 
     static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
-		
+
         let genericIconFunction = this.getGenericUserIcon;
         let labelTag = 'User Icon';
 
@@ -668,19 +668,19 @@ export class UiUtility {
         }
 
         return image.scr;
-	}
+    }
 
     static getIconImageUrl(iconUri) {
-		return environment.restUrl + environment.restContextPath + iconUri;
-	}
+        return environment.restUrl + environment.restContextPath + iconUri;
+    }
 
     static getGenericUserIcon() {
-		return '/assets/user_logo.png';
-	}
+        return '/assets/user_logo.png';
+    }
 
     static getGenericOrganizationIcon() {
-		return '/assets/user_logo.png';
-	}
+        return '/assets/user_logo.png';
+    }
 
     //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
     static applyGridPlaceholders(classSelector) {
@@ -697,8 +697,8 @@ export class UiUtility {
             field.setAttribute("placeholder", value);
         });
     }
-    
-    
+
+
     //***** AG Grid Function to apply data and paging to table *****/
     static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 
@@ -731,7 +731,7 @@ export class UiUtility {
             } else {
                 gridApi.setRowData(results.items);
             }
-            
+
         } else {
 
             gridApi.showNoRowsOverlay();
@@ -892,10 +892,10 @@ export class UiUtility {
 
     static toTitleCase(str) {
         return str?.replace(
-          /\w\S*/g,
-          function(txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-          }
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
         );
-      }
+    }
 }

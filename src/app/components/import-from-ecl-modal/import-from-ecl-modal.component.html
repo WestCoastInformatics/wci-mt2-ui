@@ -2,7 +2,8 @@
     <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
 </button> -->
 
-<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" (click)="openImportFromEclModal(importFromEclDialog)">ECL Builder</button>
+<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL"
+  (click)="openImportFromEclModal(importFromEclDialog)">ECL Builder</button>
 
 <ng-template #importFromEclDialog let-modal>
 
@@ -18,7 +19,7 @@
     </div>
 
     <div class="modal-body refset-tool-lockable">
-        
+
         <div class="container-fluid import-from-container-fluid">
             <div class="modal-body import-from-modal-body">
 
@@ -28,9 +29,8 @@
                     <textarea id="importFromEclInput" matInput class="import-from-ecl-text-area" [(ngModel)]="ecl"></textarea>
                 </mat-form-field>
 
-                <button (click)="openEclBuilder('importFromEclInput')" mat-raised-button color="primary" aria-hidden="false" 
-                class="refset-tool-action-button ecl-builder-action-button"
-                ng-reflect-color="primary" style="
+                <button (click)="openEclBuilder('importFromEclInput')" mat-raised-button color="primary" aria-hidden="false"
+                  class="refset-tool-action-button ecl-builder-action-button" ng-reflect-color="primary" style="
                 font-size: 12px;">ECL Builder
                 </button>
 
@@ -41,16 +41,16 @@
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button type="button" (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" 
-                aria-label="Add Members" title="Add Members" ng-reflect-color="green">
+        <button type="button" (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+          aria-label="Add Members" title="Add Members" ng-reflect-color="green">
             Add Members
         </button>
 
         <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="red" aria-hidden="false"
-                class="refset-tool-action-button import-from-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
+          class="refset-tool-action-button import-from-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
             Remove Members
         </button>
 
     </div>
-    
+
 </ng-template>

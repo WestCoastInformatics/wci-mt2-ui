@@ -6,15 +6,15 @@ import { BreadcrumbService } from './services/breadcrumb.service';
 @Injectable()
 export class CustomReuseStrategy implements RouteReuseStrategy {
 
-    handlers: { [key: string]: DetachedRouteHandle } = {};
-    back = false;
-    previousBreadcrumbLabel: any;
+  handlers: { [key: string]: DetachedRouteHandle } = {};
+  back = false;
+  previousBreadcrumbLabel: any;
 
-    constructor(location: LocationStrategy, private breadcrumbService: BreadcrumbService) {
-        location.onPopState(() => {
-            this.back = true;
-        });
-    }
+  constructor(location: LocationStrategy, private breadcrumbService: BreadcrumbService) {
+    location.onPopState(() => {
+      this.back = true;
+    });
+  }
 
   calcKey(route: ActivatedRouteSnapshot) {
     let next = route;
@@ -42,17 +42,17 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
     let url = route.url.join("/") || route.parent.url.join("/");
     this.setBreadcrumbs(route);
-      if (this.back && url !== 'projects') {
-          this.back = false;
-        return !!route.routeConfig && !!this.handlers[url];
-      }
+    if (this.back && url !== 'projects') {
+      this.back = false;
+      return !!route.routeConfig && !!this.handlers[url];
+    }
 
-      return;
+    return;
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
     let url = route.url.join("/") || route.parent.url.join("/");
-    
+
     if (!route.routeConfig) return null;
     return this.handlers[url];
   }
@@ -63,17 +63,17 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
   private setBreadcrumbs(route: ActivatedRouteSnapshot): void {
     if (route.url[0]) {
-      if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Refset Library') ) {
+      if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Refset Library')) {
 
         this.breadcrumbService.setBreadcrumbs([
-            { path: "/library", label: "Refset Library" },
-            { label: "Refset Details" },
+          { path: "/library", label: "Refset Library" },
+          { label: "Refset Details" },
         ]);
       } else if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Projects')) {
-  
+
         this.breadcrumbService.setBreadcrumbs([
-            { path: "/projects", label: "Projects" },
-            { label: "Refset Details" },
+          { path: "/projects", label: "Projects" },
+          { label: "Refset Details" },
         ]);
       } else {
         this.breadcrumbService.setBreadcrumbs([{ label: route.data['breadcrumbLabel'] }]);

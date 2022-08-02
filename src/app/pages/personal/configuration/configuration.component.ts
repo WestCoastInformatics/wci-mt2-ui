@@ -23,7 +23,7 @@ export class PersonalConfigurationComponent implements OnInit {
 	user: any;
 	uiUtility = UiUtility;
 
-	constructor(private authService: AuthenticationService, private notificationService: NotificationService, private changeDetectorRef: ChangeDetectorRef, private userService: UsersService) { 
+	constructor(private authService: AuthenticationService, private notificationService: NotificationService, private changeDetectorRef: ChangeDetectorRef, private userService: UsersService) {
 	}
 
 	ngOnInit(): void {

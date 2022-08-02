@@ -3,7 +3,8 @@
     <span *ngIf="discussionCount > 0" class="fa-stack">
         <img class="discussion-icon" src="/assets/comment-solid.svg" aria-label="Add or View {{discussionCount}} Discussions" />
         <span class="fa fa-stack-1x">
-            <span class="discussion-icon-text" title="Add or View {{discussionCount}} Unresolved Discussions">
+            <span class="discussion-icon-text"
+              title="Add or View {{discussionCount}} Unresolved Discussions{{privateCount > 0 ? ', '+privateCount+' Private Discussions' : ''}} ">
                 {{discussionCount}}
             </span>
         </span>
@@ -15,8 +16,7 @@
 
     <div class="modal-header review-modal-header">
         <h4 class="modal-title">{{displayHeader}}</h4>
-        <button type="button" class="close" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -31,7 +31,8 @@
             <div id="discussionThreadListGridSection" class='dashboard-section pr-1 pl-1'>
                 <div class="ag-theme-alpine">
 
-                    <ag-grid-angular [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" style="width: 100%">
+                    <ag-grid-angular [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+                      style="width: 100%">
                     </ag-grid-angular>
 
                 </div>
@@ -44,7 +45,7 @@
 
 <!-- Author Template -->
 <ng-template #discussionListAuthorSection let-params>
-    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.posts[0]?.user?.iconUri)"  class="medium-icon-image" /> {{ params?.data?.posts[0]?.user?.name }}
+    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.posts[0]?.user?.iconUri)" class="medium-icon-image" /> {{ params?.data?.posts[0]?.user?.name }}
 </ng-template>
 
 <!-- Topic Template -->
@@ -80,14 +81,14 @@
                 <!-- ORIGINAL POST HEADER SECTION -->
                 <div *ngIf="editMode != 'newThread' && !editMode.includes('edit')" class="topic-header">
 
-                    <img #iconImg
-                        [src]="uiUtility.prepareIconImage(iconImg, selectedThread.posts[0].user.iconUri)" class="medium-icon-image" />
+                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedThread.posts[0].user.iconUri)" class="medium-icon-image" />
 
                     <div class="topic-author">
                         <div>{{ selectedThread.posts[0].user.name }}</div>
                         <div class="topic-time">
                             {{ formatDateTime(selectedThread.posts[0].created) }}
-                            <span *ngIf="selectedThread.posts[0].created != selectedThread.posts[0].modified"> (Edited: {{ formatDateTime(selectedThread.posts[0].modified) }})</span>
+                            <span *ngIf="selectedThread.posts[0].created != selectedThread.posts[0].modified"> (Edited: {{ formatDateTime(selectedThread.posts[0].modified) }}
+                                )</span>
                             <i *ngIf="selectedThread.privateThread" class="refset-tool-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
                         </div>
 
@@ -95,15 +96,25 @@
 
                     <div class="topic-action">
 
-                        <button *ngIf="canEditThread" mat-button [matMenuTriggerFor]="topicMenu" class="manage-refset-menu"><i class="fa fa-ellipsis-v text-main fa-2x"></i></button>
+                        <button *ngIf="canEditThread" mat-button [matMenuTriggerFor]="topicMenu" class="manage-refset-menu"><i
+                              class="fa fa-ellipsis-v text-main fa-2x"></i></button>
                         <span class="menu-spacer">&nbsp;</span>
                         <mat-menu #topicMenu="matMenu">
-                            <button *ngIf="!isResolved" mat-menu-item (click)="updatePost(selectedThread.posts[0], true)">Edit</button>
-                            <button *ngIf="!isResolved && canViewPrivateThreads && !selectedThread.privateThread" mat-menu-item (click)="changeThreadPrivacy(selectedThread, true)">Mark Private</button>
-                            <button *ngIf="!isResolved && canViewPrivateThreads && selectedThread.privateThread" mat-menu-item (click)="changeThreadPrivacy(selectedThread, false)">Mark Public</button>
-                            <button *ngIf="!isResolved" mat-menu-item (click)="changeStatus(RESOLVED)">Resolve Discussion</button>
-                            <button *ngIf="isResolved" mat-menu-item (click)="changeStatus(OPEN)">Reopen Discussion</button>
-                            <button *ngIf="canDeleteThread" mat-menu-item (click)="confirmThreadDelete()">Delete</button>
+                            <button *ngIf="!isResolved" mat-menu-item (click)="updatePost(selectedThread.posts[0], true)">Edit
+                            </button>
+                            <button *ngIf="!isResolved && canViewPrivateThreads && !selectedThread.privateThread" mat-menu-item
+                              (click)="changeThreadPrivacy(selectedThread, true)">Mark Private
+                            </button>
+                            <button *ngIf="!isResolved && canViewPrivateThreads && selectedThread.privateThread" mat-menu-item
+                              (click)="changeThreadPrivacy(selectedThread, false)">Mark Public
+                            </button>
+                            <button *ngIf="!isResolved" mat-menu-item (click)="changeStatus(RESOLVED)">Resolve
+                                Discussion
+                            </button>
+                            <button *ngIf="isResolved" mat-menu-item (click)="changeStatus(OPEN)">Reopen Discussion
+                            </button>
+                            <button *ngIf="canDeleteThread" mat-menu-item (click)="confirmThreadDelete()">Delete
+                            </button>
                         </mat-menu>
                     </div>
 
@@ -136,7 +147,8 @@
                                     <div>{{ post.user.name }}</div>
                                     <div class="topic-time">
                                         {{ formatDateTime(post.created) }}
-                                        <span *ngIf="post.created != post.modified"> (Edited: {{ formatDateTime(post.modified) }})</span>
+                                        <span *ngIf="post.created != post.modified"> (Edited: {{ formatDateTime(post.modified) }}
+                                            )</span>
                                         <i *ngIf="post.privatePost" class="fa fa-lock ml-2"></i>
                                     </div>
                                 </div>
@@ -148,8 +160,12 @@
                                     <span class="menu-spacer">&nbsp;</span>
                                     <mat-menu #discussionMenu="matMenu">
                                         <button mat-menu-item (click)="updatePost(post, false)">Edit</button>
-                                        <button *ngIf="canViewPrivateThreads && !post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, true)">Mark Private</button>
-                                        <button *ngIf="canViewPrivateThreads && post.privatePost" mat-menu-item (click)="changePostPrivacy(selectedThread.id, post, false)">Mark Public</button>
+                                        <button *ngIf="canViewPrivateThreads && !post.privatePost" mat-menu-item
+                                          (click)="changePostPrivacy(selectedThread.id, post, true)">Mark Private
+                                        </button>
+                                        <button *ngIf="canViewPrivateThreads && post.privatePost" mat-menu-item
+                                          (click)="changePostPrivacy(selectedThread.id, post, false)">Mark Public
+                                        </button>
                                         <button mat-menu-item (click)="confirmPostDelete(post)">Delete</button>
                                     </mat-menu>
                                 </div>
@@ -196,10 +212,13 @@
 
         <div class="feedback-modal-footer modal-footer mt-0 mb-3">
 
-            <button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" mat-raised-button class="refset-tool-action-button mat-green mr-2">{{ postButtonText }}</button>
-            <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" mat-raised-button class="refset-tool-action-button mat-red mr-2">Cancel Edit</button>
+            <button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" mat-raised-button class="refset-tool-action-button mat-green mr-2">{{
+                postButtonText }}</button>
+            <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" mat-raised-button class="refset-tool-action-button mat-red mr-2">Cancel Edit
+            </button>
 
-            <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Close</button>
+            <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Close
+            </button>
         </div>
 
     </div>
@@ -216,13 +235,17 @@
 
     <div class="container-fluid ">
         <div class="modal-body">
-            <div class="notes-title">Are you sure you want to delete the discussion thread "{{ selectedThread.subject }}?"</div>
+            <div class="notes-title">Are you sure you want to delete the discussion thread "{{ selectedThread.subject }}
+                ?"
+            </div>
         </div>
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deleteThread();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Thread</button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel</button>
+        <button type="button" (click)="deleteThread();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Thread
+        </button>
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel
+        </button>
     </div>
 
 </ng-template>
@@ -238,13 +261,18 @@
 
     <div *ngIf="selectedPost" class="container-fluid ">
         <div class="modal-body">
-            <div class="notes-title">Are you sure you want to delete the discussion post dated " {{ formatDateTime(selectedPost.created) }}?"</div>
+            <div class="notes-title">Are you sure you want to delete the discussion post dated
+                " {{ formatDateTime(selectedPost.created) }}?"
+            </div>
         </div>
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deletePost();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Post</button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel</button>
+        <button type="button" (click)="deletePost();" mat-raised-button class="refset-tool-action-button mat-red mr-2">
+            Delete Post
+        </button>
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel
+        </button>
     </div>
 
 </ng-template>

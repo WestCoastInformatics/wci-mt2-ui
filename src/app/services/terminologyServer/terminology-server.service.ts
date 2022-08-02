@@ -13,7 +13,7 @@ export class TerminologyServerService {
     private branchPathSubscription: Subscription;
 
     constructor(private http: HttpClient,
-                private authoringService: AuthoringService) {
+        private authoringService: AuthoringService) {
     }
 
     getTypeahead(term) {

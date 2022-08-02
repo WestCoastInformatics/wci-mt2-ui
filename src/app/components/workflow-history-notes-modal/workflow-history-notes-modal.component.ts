@@ -84,12 +84,12 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
 
 	saveNotes(): void {
 		this.workflowService.saveNotes(this.refsetInternalId, this.workflowHistoryNotes).subscribe(response => {
-			if(response){
+			if (response) {
 				this.workflowHistoryNotes = '';
 				this.modal.instance.isHidden = true;
 			}
 		});
-		
+
 		this.refsetDetails.ngOnInit();
 	}
 }

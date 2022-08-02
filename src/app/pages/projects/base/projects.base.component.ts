@@ -27,7 +27,7 @@ export class ProjectsBaseComponent implements OnInit, AfterViewInit {
     //***** Framework Functions *****/
     ngOnInit() {
     }
-    ngAfterViewInit(){
+    ngAfterViewInit() {
     }
 
 }

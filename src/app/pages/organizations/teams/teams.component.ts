@@ -35,12 +35,12 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private location: Location) {
-            document.body.scrollTop = 0;
+        document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Organizations')
+        this.titleService.setTitle('Refset Tool - Organizations');
 
         this.route.params.subscribe(params => {
 
@@ -60,8 +60,8 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {
-                        if (!value && filterText) return false;
-                        if (!filterText) return true;
+                        if (!value && filterText) { return false; }
+                        if (!filterText) { return true; }
                         const filterTextLowerCase = filterText.toLowerCase();
                         return value.split(',').map((role) => role.trim().toLowerCase()).filter((role) => role === filterTextLowerCase).length > 0;
                     }
@@ -69,24 +69,24 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
                 floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
                     suppressMenu: true, suppressFilterButton: true, names: [
                         {
-                            "type": "role",
-                            "name": "Admin",
-                            "value": "Admin"
+                            'type': 'role',
+                            'name': 'Admin',
+                            'value': 'Admin'
                         },
                         {
-                            "type": "role",
-                            "name": "Author",
-                            "value": "Author"
+                            'type': 'role',
+                            'name': 'Author',
+                            'value': 'Author'
                         },
                         {
-                            "type": "role",
-                            "name": "Reviewer",
-                            "value": "Reviewer"
+                            'type': 'role',
+                            'name': 'Reviewer',
+                            'value': 'Reviewer'
                         },
                         {
-                            "type": "role",
-                            "name": "Viewer",
-                            "value": "Viewer"
+                            'type': 'role',
+                            'name': 'Viewer',
+                            'value': 'Viewer'
                         }
                     ],
                 }
@@ -122,7 +122,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
             rowClassRules: {
                 refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+                    let inactivatedRow = false;
 
                     if (params.data) {
                         inactivatedRow = params.data.active == false;
@@ -177,7 +177,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
                 this.data = [];
                 this.teamList = results.items;
 
-                for (let team of this.teamList) {
+                for (const team of this.teamList) {
 
                     if (team?.organization?.id === this.selectedOrganization?.id) {
 
@@ -203,7 +203,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
             this.organizationList = results.items;
 
-            for (let organization of this.organizationList) {
+            for (const organization of this.organizationList) {
 
                 if (this.organizationId == organization.id) {
                     this.setOrganizationData(organization);
@@ -215,7 +215,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
     selectOrg($event): void {
 
         this.setOrganizationData(this.selectedOrganization);
-        this.location.replaceState("/organizations/teams/" + this.selectedOrganization.id);
+        this.location.replaceState('/organizations/teams/' + this.selectedOrganization.id);
         this.organizationId = this.selectedOrganization.id;
     }
 
@@ -224,12 +224,10 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        let configShowing = this.menu[this.menu.length -1].name == 'Configuration';
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) { 
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN'))  {
-            this.menu.pop;
         }
 
         this.onGridReady(this.gridParams);
@@ -237,7 +235,7 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
     onGridCellClick = (event) => {
         if (event.column.colId !== 'description') {
-            let selectedRows = this.gridApi.getSelectedRows();
+            const selectedRows = this.gridApi.getSelectedRows();
             let selectedId: string;
 
             selectedRows.forEach(function (selectedRow, index) {
@@ -247,5 +245,5 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
 
             this.router.navigate(['/organization/' + this.organizationId, 'teams', 'people', selectedId]);
         }
-    };
+    }
 }

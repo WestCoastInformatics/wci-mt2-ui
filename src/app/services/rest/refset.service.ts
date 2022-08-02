@@ -16,7 +16,7 @@ export class RefsetService extends RestService {
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-        
+
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
@@ -71,7 +71,7 @@ export class RefsetService extends RestService {
     }
 
     addRemoveAllInactiveRefsetMembers(refsetInternalId: string, isAdd: boolean): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/${isAdd ? 'addAllUpgradeReplacementConcepts': 'removeAllUpgradeInactiveConcepts'}`, {});
+        return this.post(this.contextPath + `refset/${refsetInternalId}/${isAdd ? 'addAllUpgradeReplacementConcepts' : 'removeAllUpgradeInactiveConcepts'}`, {});
     }
 
     addRefsetDefinitionExceptions(refsetInternalId: string, fileType: string, definitionExceptionType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
@@ -157,7 +157,7 @@ export class RefsetService extends RestService {
     getDiscussionThreads(type: string, refsetInternalId: string, conceptId: string = null): Observable<any> {
 
         let url = this.contextPath + 'discussion/' + type + '/' + refsetInternalId;
-        
+
         if (conceptId != null) {
             url += '?conceptId=' + conceptId;
         }
@@ -231,11 +231,11 @@ export class RefsetService extends RestService {
 
     getTaxonomyRoot() {
 
-        if (this.taxonomyRootNode == null){
+        if (this.taxonomyRootNode == null) {
 
             this.get(this.contextPath + 'terminology/taxonomyRoot').subscribe(results => {
 
-                if (CodeUtility.hasValue(results)){
+                if (CodeUtility.hasValue(results)) {
                     this.taxonomyRootNode = results;
                 }
             });
@@ -248,14 +248,14 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/versionStatuses');
     }
 
-	getEditions(params: any): Observable<any> {
+    getEditions(params: any): Observable<any> {
         return this.get(this.contextPath + 'edition/search', params, false);
     }
-	
-	getOrganizations(includeMembers: boolean = false): Observable<any> {
+
+    getOrganizations(includeMembers: boolean = false): Observable<any> {
         return this.get(this.contextPath + 'organization/search?includeMembers=' + includeMembers);
     }
-    
+
     getOrganizationsKeyValue(): Observable<any> {
         return this.get(this.contextPath + 'refset/organizations');
     }

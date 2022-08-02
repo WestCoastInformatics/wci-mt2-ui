@@ -27,7 +27,7 @@ export class ProjectsPeopleComponent implements OnInit {
     projectId: any;
     projectList = [];
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
     gridParams: any;
     gridApi: any;
     gridColumnDefs = [];
@@ -35,6 +35,7 @@ export class ProjectsPeopleComponent implements OnInit {
     organizations: any;
     organizationId: string;
     showLoadingSpinner = false;
+    showTable = false;
 
     @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
@@ -86,7 +87,7 @@ export class ProjectsPeopleComponent implements OnInit {
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             frameworkComponents: {
-                templateRenderer: TemplateRenderer,
+                'templateRenderer': TemplateRenderer,
                 'categoryFilterComponent': CategoryFilterComponent
             },
             defaultColDef: {
@@ -102,7 +103,7 @@ export class ProjectsPeopleComponent implements OnInit {
             rowClassRules: {
                 refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+                    let inactivatedRow = false;
 
                     if (params.data) {
                         inactivatedRow = params.data.active == false;
@@ -118,7 +119,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     setNavigation() {
 
-        let breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId), true, true) {
             breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
@@ -140,7 +141,7 @@ export class ProjectsPeopleComponent implements OnInit {
             this.showLoadingSpinner = false;
             this.organizations = organizationResults?.items;
 
-            for (let organization of this.organizations) {
+            for (const organization of this.organizations) {
 
                 if (this.organizationId == organization.id) {
 
@@ -168,7 +169,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     onGridCellClick = (event) => {
 
-        let selectedRows = this.gridApi.getSelectedRows();
+        const selectedRows = this.gridApi.getSelectedRows();
         let selectedId: string;
 
         selectedRows.forEach(function (selectedRow, index) {
@@ -177,11 +178,12 @@ export class ProjectsPeopleComponent implements OnInit {
         });
 
         this.router.navigate(['/personal/landing', selectedId]);
-    };
+    }
 
     onMemberCellClick = (event) => {
-        if (event.data.id)
+        if (event.data.id) {
             this.router.navigate(['/personal/landing', event.data.id]);
+        }
     }
 
     get dataCount() {
@@ -191,13 +193,15 @@ export class ProjectsPeopleComponent implements OnInit {
     getProjects(): void {
 
         this.showLoadingSpinner = true;
+        this.showTable = false;
 
         this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
+            this.showTable = true;
             this.projectList = results.items;
 
-            for (let project of this.projectList) {
+            for (const project of this.projectList) {
 
                 if (this.projectId == project.id) {
 
@@ -218,13 +222,10 @@ export class ProjectsPeopleComponent implements OnInit {
 
         this.data = this.selectedProject.memberList;
 
-        let configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
-
-        } else if (configShowing && !this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.pop;
         }
     }
 

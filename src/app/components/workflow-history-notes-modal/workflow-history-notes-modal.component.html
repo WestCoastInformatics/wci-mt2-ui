@@ -8,13 +8,11 @@
          aria-label="Edit Workflow History" />
 </button> -->
 
-<button mat-menu-item alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled"
-    (click)="openReadyForReviewModal()">Create Note</button>
+<button mat-menu-item alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
 
 <ng-template #modalContent>
     <div class="compose-modal-body">
-        <editor class="fill-height" #workflowHistoryNotesEditor id="workflowHistoryNotesEditor" [(ngModel)]="workflowHistoryNotes"
-            [init]="{
+        <editor class="fill-height" #workflowHistoryNotesEditor id="workflowHistoryNotesEditor" [(ngModel)]="workflowHistoryNotes" [init]="{
                 base_url: '/tinymce',
                 suffix: '.min',
                 height: 200,
@@ -27,9 +25,8 @@
         </editor>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="saveNotes(modal)" mat-raised-button color="green" aria-hidden="false"
-            class="refset-tool-action-button request-review-modal-button" aria-label="Save" title="Save Notes"
-            ng-reflect-color="green">
+        <button type="button" (click)="saveNotes(modal)" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button request-review-modal-button"
+          aria-label="Save" title="Save Notes" ng-reflect-color="green">
             Save
         </button>
     </div>

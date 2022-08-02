@@ -14,8 +14,7 @@
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
                                     <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                                    <span
-                                        [routerLink]="['/organizations/projects', organization.id]"><a>{{
+                                    <span [routerLink]="['/organizations/projects', organization.id]"><a>{{
                                             organization.name }}</a></span>
                                 </div>
                             </ng-container>
@@ -34,8 +33,7 @@
                                 <div class='section-list' *ngIf="project.name">
                                     <span [routerLink]="['/organization/' + project.organization.id + '/projects', project.id]"><a>{{
                                             project.organization.name }}/{{
-                                            project.name }}</a><i *ngIf="project.privateProject"
-                                            class='fa fa-lock ml-2 text-muted'></i></span>
+                                            project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
                             </ng-container>
                         </div>
