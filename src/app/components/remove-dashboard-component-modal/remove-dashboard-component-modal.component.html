@@ -16,9 +16,9 @@
     </div>
 
     <div class="modal-body refset-tool-lockable">
-        
-        <table>       
-            <tr [hidden]="componentType != 'organization'">       
+
+        <table>
+            <tr [hidden]="componentType != 'organization'">
                 <p>Are you sure you want to remove organization {{componentName}}? <br>Once removed, it cannot be recovered.</p>
                 <p> You will lose access to all objects associated with this organization:</p>
                 <li>{{componentName}} Teams</li>
@@ -26,35 +26,35 @@
                 <li>{{componentName}} Reference Sets</li>
                 <ul></ul>
             </tr>
-            <tr [hidden]="componentType != 'project'">       
+            <tr [hidden]="componentType != 'project'">
                 <p>Are you sure you want to remove project {{componentName}}? <br>Once removed, it cannot be recovered.</p>
                 <p> You will lose access to all objects associated with this project:</p>
                 <li>{{componentName}} Reference Sets</li>
                 <ul></ul>
             </tr>
-            <tr [hidden]="componentType != 'team'">       
+            <tr [hidden]="componentType != 'team'">
                 <p>Are you sure you want to remove team {{componentName}}? <br>Once removed, it cannot be recovered.</p>
                 <ul></ul>
             </tr>
             <tr>
-                <p>Type "remove {{componentType}}" to confirm:</p>            
+                <p>Type "remove {{componentType}}" to confirm:</p>
             </tr>
             <tr>
-                <input class="modal-input-field-border-bottom" placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />       
-            </tr>   
+                <input class="modal-input-field-border-bottom" placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />
+            </tr>
         </table>
 
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button"  (click)="modal.dismiss('Cross click')" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button" 
-                aria-label="No, Cancel" title="No, Cancel" ng-reflect-color="primary">
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+          aria-label="No, Cancel" title="No, Cancel" ng-reflect-color="primary">
             No, Cancel
         </button>
-        <button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" 
-            aria-label="Remove" title="Remove" ng-reflect-color="red">
+        <button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button"
+          aria-label="Remove" title="Remove" ng-reflect-color="red">
             Remove
-        </button>        
+        </button>
     </div>
-    
+
 </ng-template>
