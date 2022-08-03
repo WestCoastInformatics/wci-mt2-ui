@@ -124,7 +124,11 @@ export class DashboardComponent implements OnInit {
     onGridReady = (gridReadyParams) => {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
-        let dataSource = {
+        const sortModel = [
+            {colId: 'modified', sort: 'desc'}
+        ];
+        this.refsetGridApi.setSortModel(sortModel);
+        const dataSource = {
             rowCount: null,
             getRows: (rowParams) => {
 
