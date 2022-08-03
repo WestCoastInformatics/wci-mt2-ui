@@ -17,15 +17,13 @@
             <div class="topic-content mb-3">
                 <mat-form-field appearance="fill" class="discussion-topic-field">
                     <mat-label>Description</mat-label>
-                    <input matInput type="text" [(ngModel)]="artifact.description"
-                        placeholder="Add a Description for the artifact" />
+                    <input matInput type="text" [(ngModel)]="artifact.description" placeholder="Add a Description for the artifact" />
                 </mat-form-field>
             </div>
             <div class="topic-content mb-3" *ngIf="artifact.fileName">
                 <mat-form-field appearance="fill" class="discussion-topic-field">
                     <mat-label>Artifact Name</mat-label>
-                    <input matInput type="text" [(ngModel)]="artifact.fileName"
-                        placeholder="Add a name for the artifact" readonly />
+                    <input matInput type="text" [(ngModel)]="artifact.fileName" placeholder="Add a name for the artifact" readonly />
                 </mat-form-field>
             </div>
             <div class="container-file-import w-100" dragAndDrop (fileDropped)="fileChange($event)" *ngIf="!isEdit">
@@ -40,20 +38,14 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button aria-hidden="false"
-            class="refset-tool-action-button refset-action-button mr-3 default-btn"
-            (click)="modal.dismiss('Cross click');">
+        <button mat-raised-button aria-hidden="false" class="refset-tool-action-button refset-action-button mr-3 default-btn" (click)="modal.dismiss('Cross click');">
             Cancel
         </button>
-        <button mat-raised-button color="red" aria-hidden="false" *ngIf="isEdit"
-                class="refset-tool-action-button refset-action-button mr-3"
-                (click)="confirmDelete()"
-                ng-reflect-color="red">
+        <button mat-raised-button color="red" aria-hidden="false" *ngIf="isEdit" class="refset-tool-action-button refset-action-button mr-3" (click)="confirmDelete()"
+          ng-reflect-color="red">
             Delete
         </button>
-        <button mat-raised-button color="primary" aria-hidden="false"
-            class="refset-tool-action-button refset-action-button"
-            ng-reflect-color="primary" (click)="onSave()">
+        <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="onSave()">
             Save
         </button>
     </div>
