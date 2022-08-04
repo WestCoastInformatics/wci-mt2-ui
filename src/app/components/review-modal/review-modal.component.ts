@@ -16,10 +16,10 @@ export class ReviewModalComponent {
         maxlength: 255, menubar: false, plugins: ['lists advlist wordcount'],
         toolbar: 'undo redo | bold italic | bullist numlist outdent indent',
         setup: function (ed) {
-            ed.on('keydown', function (evt) {
-                if ($(ed.getBody()).text().length > ed.getParam('maxlength')) {
+            ed.on('keypress', function (evt) {
+                if ($(ed.getBody()).text().length + 1 > ed.getParam('maxlength')) {
                     evt.preventDefault();
-                    evt.stopPropagation();
+                    // evt.stopPropagation();
                     return false;
                 }
             });
