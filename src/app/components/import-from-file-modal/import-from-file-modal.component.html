@@ -2,7 +2,8 @@
     <img src="assets/import-file-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
 </button> -->
 
-<button mat-menu-item (click)="openImportFromFileModal(importFromFileDialog)" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file">Import from File</button>
+<button mat-menu-item (click)="openImportFromFileModal(importFromFileDialog)" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file">Import
+    from File</button>
 
 <ng-template #importFromFileDialog let-modal>
 
@@ -55,13 +56,13 @@
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button *ngIf="!showBanner" [disabled]="disableActionButtons" type="button" (click)="callMemberOperation('add')" mat-raised-button
-                color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members" title="Add Members" ng-reflect-color="green">
+        <button *ngIf="!showBanner" [disabled]="disableActionButtons" type="button" (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false"
+          class="refset-tool-action-button" aria-label="Add Members" title="Add Members" ng-reflect-color="green">
             Add Members
         </button>
-        
-        <button *ngIf="!showBanner && !isIntensional" [disabled]="disableActionButtons" type="button" (click)="callMemberOperation('remove')" mat-raised-button
-                color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="red" style="margin-left: 15px">
+
+        <button *ngIf="!showBanner && !isIntensional" [disabled]="disableActionButtons" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="red"
+          aria-hidden="false" class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="red" style="margin-left: 15px">
             Remove Members
         </button>
 

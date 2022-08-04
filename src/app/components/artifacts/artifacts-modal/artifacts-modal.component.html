@@ -1,6 +1,5 @@
-<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false"
-    (click)="openArtifactsModal(artifactsDialog)" class="refset-tool-action-button refset-action-button"
-    aria-label="Artifacts" title="Artifacts" ng-reflect-color="primary">
+<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false" (click)="openArtifactsModal(artifactsDialog)"
+  class="refset-tool-action-button refset-action-button" aria-label="Artifacts" title="Artifacts" ng-reflect-color="primary">
     Artifacts
 </button>
 <button mat-menu-item *ngIf="isDetails" (click)="openArtifactsModal(artifactsDialog)" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
@@ -26,9 +25,8 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button color="red" aria-hidden="false"
-            class="refset-tool-action-button refset-action-button mr-3" (click)="modal.dismiss('Cross click');"
-            ng-reflect-color="red">
+        <button mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button refset-action-button mr-3" (click)="modal.dismiss('Cross click');"
+          ng-reflect-color="red">
             Cancel
         </button>
         <!--<button mat-raised-button color="primary" aria-hidden="false"

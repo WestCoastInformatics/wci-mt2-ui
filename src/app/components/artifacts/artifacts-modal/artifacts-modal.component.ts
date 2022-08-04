@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, ComponentRef, Input, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ArtifactsListComponent} from '../artifacts-list/artifacts-list.component';
+import { AfterViewInit, Component, ComponentRef, Input, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ArtifactsListComponent } from '../artifacts-list/artifacts-list.component';
 
 @Component({
     selector: 'artifacts-modal',

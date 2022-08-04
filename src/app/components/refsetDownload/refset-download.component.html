@@ -5,19 +5,19 @@
 <button mat-menu-item *ngIf="isDetailPage" [disabled]="disabled" (click)="openDownload(refset.refsetId)">Download Refset</button>
 
 <button *ngIf="!isDetailPage" mat-icon-button aria-hidden="false" (click)="openDownload(refset.refsetId)" aria-label="Download Refset" title="Download Refset"
-        class="refset-tool-table-action-icon {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">
+  class="refset-tool-table-action-icon {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">
     <span class="mat-button-wrapper">
         <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download</mat-icon>
     </span>
-    <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round" ng-reflect-disabled="false" ng-reflect-centered="true" ng-reflect-trigger="[object HTMLButtonElement]"></span>
+    <span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round" ng-reflect-disabled="false" ng-reflect-centered="true"
+      ng-reflect-trigger="[object HTMLButtonElement]"></span>
     <span class="mat-button-focus-overlay"></span>
 </button>
 
 <ng-template #refsetDownloadDialog let-data>
     <div class="container-fluid download-modal-container">
 
-        <div class="row"
-             id="downloadFormatRow">
+        <div class="row" id="downloadFormatRow">
             <div class="col refset-tool-download-column-label">
                 <label>Format:</label>
             </div>
@@ -32,9 +32,7 @@
             </div>
         </div>
 
-        <div class="row"
-             id="downloadContentRow"
-             *ngIf="showContent">
+        <div class="row" id="downloadContentRow" *ngIf="showContent">
             <div class="col refset-tool-download-column-label">
                 <label>Content:</label>
             </div>
@@ -50,8 +48,7 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="row" id="downloadContentRow"
-             *ngIf="showVersions && !shouldShowDeltaContentLabel() && showDeltaOption(data)">
+        <div class="row" id="downloadContentRow" *ngIf="showVersions && !shouldShowDeltaContentLabel() && showDeltaOption(data)">
             <div class="col refset-tool-download-column-label"></div>
             <div class="col refset-tool-download-column-field">
                 *Delta option not available as this is the initial version of the refset

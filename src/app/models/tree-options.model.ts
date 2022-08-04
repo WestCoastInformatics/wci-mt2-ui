@@ -26,7 +26,7 @@ export const TreeOptionDefaults: TreeOptions = {
     useFsn: false,
     expandFirstNode: true,
     hasMultipleRootNodes: false,
-    onSelect: function(event){},
+    onSelect: function (event) { },
     useVirtualScroll: false,
     nodeHeight: 22
 }

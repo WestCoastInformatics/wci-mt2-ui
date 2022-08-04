@@ -1,14 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {UiUtility} from 'src/app/utilities/ui.utility';
-import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
-import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
-import {PaginationComponent} from 'src/app/components/pagination/pagination.component';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {User} from 'src/app/models/user';
-import {DateTextFilterComponent} from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { User } from 'src/app/models/user';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 
 @Component({
     selector: 'app-refset-discussion-list',
@@ -125,7 +125,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.showTable = true;
 
         this.gridOptions = {
-            context: {componentParent: this},
+            context: { componentParent: this },
             pagination: false,
             suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
@@ -153,7 +153,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 flex: 1,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
             },
             enableBrowserTooltips: true,
             rowClassRules: {
@@ -177,7 +177,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 minWidth: 120,
                 tooltipField: 'Author',
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: {template: this.authorSection}
+                cellRendererParams: { template: this.authorSection }
             },
             {
                 field: 'subject',
@@ -186,7 +186,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 flex: 2,
                 minWidth: 300,
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: {template: this.subjectSection}
+                cellRendererParams: { template: this.subjectSection }
             },
             {
                 field: 'status',
@@ -196,8 +196,8 @@ export class RefsetFeedbackListComponent implements OnInit {
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     names: [
-                        {type: 'status', name: this.OPEN, value: this.OPEN},
-                        {type: 'status', name: this.RESOLVED, value: this.RESOLVED}
+                        { type: 'status', name: this.OPEN, value: this.OPEN },
+                        { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
                     ]
                 }
             },
@@ -211,7 +211,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 valueGetter: UiUtility.gridDateValueGetter,
                 floatingFilterComponent: 'dateTextFilterComponent'
             },
-            {field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies'}
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
         ];
 
         // set placeholders on the grid floating filter fields
@@ -353,7 +353,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         let post: any;
 
         if (this.selectedPost == null) {
-            post = {message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE};
+            post = { message: this.postMessageField, privatePost: this.postPrivateField, visibility: this.VISIBLE };
         } else {
 
             post = CodeUtility.clone(this.selectedPost);
@@ -481,7 +481,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     confirmThreadDelete() {
-        this.openedConfirmModal = this.modalService.open(this.confirmDeleteThreadModal, {centered: true});
+        this.openedConfirmModal = this.modalService.open(this.confirmDeleteThreadModal, { centered: true });
     }
 
     deleteThread() {
@@ -505,7 +505,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     confirmPostDelete(post: any) {
 
         this.selectedPost = post;
-        this.openedConfirmModal = this.modalService.open(this.confirmDeletePostModal, {centered: true});
+        this.openedConfirmModal = this.modalService.open(this.confirmDeletePostModal, { centered: true });
     }
 
     deletePost() {

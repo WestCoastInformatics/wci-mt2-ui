@@ -24,22 +24,22 @@ export class CreateNewOrganizationModalComponent {
     editionsList: any = [];
     selectedEdition: any;
     emailError = '';
-  
+
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
         private organizationsService: OrganizationsService,
         private editionsService: EditionsService,
-        private notificationService: NotificationService, 
+        private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
         private readonly router: Router,
         private authenticationService: AuthenticationService
-    ) {}
+    ) { }
 
-    ngOnInit() {    
+    ngOnInit() {
     }
 
     openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
@@ -65,7 +65,7 @@ export class CreateNewOrganizationModalComponent {
         });
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -86,7 +86,7 @@ export class CreateNewOrganizationModalComponent {
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any){
+    onKeyDownEvent(event: any) {
         console.log(event.target.value);
         this.isValidEmail();
     }
@@ -105,7 +105,7 @@ export class CreateNewOrganizationModalComponent {
 
         this.organizationsService.createOrganization(params).subscribe(
             (data) => {
-                this.notificationService.show("The organization is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The organization is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();

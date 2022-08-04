@@ -27,9 +27,9 @@ export class ImportFromFileModalComponent implements OnInit {
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     @Output() onMembersGridReady = new EventEmitter<any>();
 
-    constructor(private modalService: NgbModal, private readonly refsetDetails: RefsetDetails, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) {}
+    constructor(private modalService: NgbModal, private readonly refsetDetails: RefsetDetails, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     openImportFromFileModal(importFromFileDialog: NgbModal) {
 
@@ -42,7 +42,7 @@ export class ImportFromFileModalComponent implements OnInit {
     }
 
     callMemberOperation(operation: string): void {
-        
+
         const listOfIds = [];
         const fileReader = new FileReader();
 
@@ -77,11 +77,11 @@ export class ImportFromFileModalComponent implements OnInit {
         }
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
-            this.refsetDetails.ngOnInit();
+        this.refsetDetails.ngOnInit();
 
         this.files = [];
         this.disableActionButtons = true;

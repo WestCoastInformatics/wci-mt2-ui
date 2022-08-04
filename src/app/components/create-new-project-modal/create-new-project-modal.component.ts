@@ -21,7 +21,7 @@ export class CreateNewProjectModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	@Input() organizations: any[] = [];
+    @Input() organizations: any[] = [];
     privateProject: any;
     emailError = '';
 
@@ -50,7 +50,7 @@ export class CreateNewProjectModalComponent {
         this.description = '';
         this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
 
-        if(!this.organizations.length){
+        if (!this.organizations.length) {
             // get list of organizations
             this.refsetService.getOrganizations().subscribe((organizationResults) => {
                 this.organizations = organizationResults.items;
@@ -118,7 +118,7 @@ export class CreateNewProjectModalComponent {
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
-                this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The project is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();
@@ -130,11 +130,11 @@ export class CreateNewProjectModalComponent {
     }
 
 
-    get selectedOrganization(): any{
+    get selectedOrganization(): any {
 
-        if(this.organizations && this.organizationId){
+        if (this.organizations && this.organizationId) {
             let org = this.organizations.filter(o => o.id == this.organizationId)
-            if(org.length > 0){
+            if (org.length > 0) {
                 return org[0];
             }
         }
