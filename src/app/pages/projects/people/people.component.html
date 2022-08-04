@@ -42,8 +42,10 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" *ngIf="showTable" (gridReady)="onGridReady($event)"
-                              (cellClicked)="onMemberCellClick($event)" [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data"
+                                (gridReady)="onGridReady($event)"
+                                (cellClicked)="onMemberCellClick($event)"
+                                [gridOptions]="gridOptions" style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
