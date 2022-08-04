@@ -1111,7 +1111,8 @@ export class RefsetDetails {
                 if (results) {
 
                     if (action.includes('UNASSIGN')) {
-                        this.router.navigateByUrl('projects');
+                        // this.router.navigateByUrl('organizations/projects');
+                        this.loadRefset();
 
                     } else if (this.refsetData.id != results.id) {
                         this.loadNewRefsetVersion(results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results));
