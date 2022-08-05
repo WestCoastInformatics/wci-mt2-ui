@@ -719,7 +719,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     const dialogId = "pauseUpdateDialog";
 
     const dialogData = {
-      headerText: `Pause Update`,
+      headerText: `Pause Upgrade`,
       template: this.pauseUpdateDialog,
       data: this.refsetData,
       showCloseIcon: false
