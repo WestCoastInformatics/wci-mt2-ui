@@ -73,7 +73,7 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === ''  || !selectedEdition || email === '' || !isValidEmail()" (click)="createOrganizationObject()" mat-raised-button
+        <button ngbAutofocus type="button" [disabled]="name === ''  || !selectedEdition || email === '' || !isValidEmail()" (click)="createOrganizationObject()" mat-raised-button
           color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Create Organization" title="Create Organization" ng-reflect-color="green">
             Create Organization
         </button>

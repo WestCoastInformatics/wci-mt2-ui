@@ -26,6 +26,7 @@
 
             <div class="text-right">
                 <a class="btn btn-main mb-3" (click)="openThreadModal(true)">Start New Discussion</a>
+                <input type="hidden" ngbAutofocus />
             </div>
 
             <div id="discussionThreadListGridSection" class='dashboard-section pr-1 pl-1'>
@@ -202,7 +203,7 @@
                     </div>
 
                     <div class="mt-2">
-                        <editor [(ngModel)]="postMessageField" [init]="tinyMceConfig"></editor>
+                        <editor [(ngModel)]="postMessageField" [init]="tinyMceConfig" ngbAutofocus></editor>
                     </div>
 
                 </div>

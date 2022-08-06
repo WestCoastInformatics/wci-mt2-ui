@@ -144,7 +144,9 @@ export class RefsetDownloadComponent {
                 const dialogOptions = {
                     id: dialogId,
                     disableClose: true,
-                    width: '1000px'
+                    width: '1000px',
+                    autoFocus: false,
+                    restoreFocus: false
                 };
 
                 this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
@@ -164,7 +166,7 @@ export class RefsetDownloadComponent {
                         console.log('Download Form Data: ', data);
 
                         const description = 'Refset ' + this.refset.refsetId + ' download';
-                        const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+                        const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, 'info`', { timeOut: 0, extendedTimeOut: 0 });
                         let fileNameDate: any = this.selectedVersionDate;
 
                         if (fileNameDate == '' || fileNameDate == RefsetUtility.IN_DEVELOPMENT) {

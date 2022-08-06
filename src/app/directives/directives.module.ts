@@ -7,11 +7,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { DragAndDropDirective } from './drag-and-drop.directive';
+import {FocusRemover} from './focus-remover.directive';
 
 
 @NgModule({
     declarations: [
-        DragAndDropDirective
+        DragAndDropDirective,
+        FocusRemover
     ],
     imports: [
         CommonModule,
@@ -22,7 +24,7 @@ import { DragAndDropDirective } from './drag-and-drop.directive';
         MatMenuModule,
         NgbModule,
     ],
-    exports: [DragAndDropDirective]
+    exports: [DragAndDropDirective, FocusRemover]
 })
 export class DirectivesModule {
 }
