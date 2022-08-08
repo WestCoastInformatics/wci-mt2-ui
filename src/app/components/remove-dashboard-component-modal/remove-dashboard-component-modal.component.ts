@@ -75,7 +75,7 @@ export class RemoveDashboardComponentModalComponent {
 
     @HostListener('window:keyup', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        if (event.key == 'Enter') {
+        if (event.key == 'Enter' && !this.isDisabled()) {
             this.callMemberOperation();
         }
     }
