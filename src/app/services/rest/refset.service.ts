@@ -122,6 +122,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + `refset/${refsetId}/workflowHistory${params}`);
     }
 
+    convertRefsetToExtensional(refsetId: string) {
+        return this.get(this.contextPath + `refset/${refsetId}/convert`); 
+    }
+
     setWorkflowStatus(refsetId: string, action: string, user: string, status: string, notes: string): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetId}/workflowStatus?action=${action}&user=${user}&status=${status}&notes=${notes}`, '');
     }

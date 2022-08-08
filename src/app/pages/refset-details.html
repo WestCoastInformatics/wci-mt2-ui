@@ -116,7 +116,7 @@
                       [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
                     </app-refset-discussion-list>
                     <br *ngIf="editMode">
-
+                    
                     <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
                         Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span>
                     </button>
@@ -132,7 +132,7 @@
                           [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
 
-                        <button mat-menu-item *ngIf="false">Convert Refset Type</button>
+                        <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'"  (click)="openConvertRefset()">Make Extensional</button>
                         <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
 
                     </mat-menu>
@@ -545,8 +545,12 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #deleteRefsetDialog let-data>
+                <ng-template #deleteRefsetDialog let-data>  
                     This functionality will be implemented in subsequent phases.
+                </ng-template>
+
+                <ng-template #convertRefsetDialog let-data>
+                    This intensional refset will be converted into an extensional refset.
                 </ng-template>
 
                 <ng-template #refsetAuditDialog let-data>
