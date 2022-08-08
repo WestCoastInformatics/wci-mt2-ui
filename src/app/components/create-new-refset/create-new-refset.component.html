@@ -172,11 +172,12 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <editor [(ngModel)]="selectedNarrative" [init]="{
+                        <editor [(ngModel)]="selectedNarrative" id="newNarrativeField" [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
                                 height: 200,
                                 menubar: false,
+                                auto_focus: 'newNarrativeField',
                                 plugins: ['lists advlist'],
                                 toolbar:
                                     'undo redo | bold italic | bullist numlist outdent indent'
@@ -198,11 +199,12 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <editor [(ngModel)]="narrative" [init]="{
+                        <editor [(ngModel)]="narrative" id="updateNarrativeField" [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
                                 height: 200,
                                 menubar: false,
+                                auto_focus: 'updateNarrativeField',
                                 plugins: ['lists advlist'],
                                 toolbar:
                                     'undo redo | bold italic | bullist numlist outdent indent'
@@ -366,10 +368,11 @@
                     </div>
 
                     <div class="col create-new-refset-field create-new-refset-flex-weight">
-                        <editor [(ngModel)]="versionNotes" [init]="{
+                        <editor [(ngModel)]="versionNotes" id="versionNotes" [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
                                 height: 150,
+                                auto_focus: 'versionNotes',
                                 menubar: false,
                                 plugins: ['lists advlist'],
                                 toolbar:

@@ -16,10 +16,11 @@
     <div class="container-fluid ready-for-publication-container-fluid">
         <div class="modal-body ready-for-publication-modal-body">
             <div class="notes-title">Notes:</div>
-            <editor [(ngModel)]="requestForPublicationNotes" [init]="{
+            <editor [(ngModel)]="requestForPublicationNotes" id="notesTitles" [init]="{
                     base_url: '/tinymce',
                     suffix: '.min',
                     height: 200,
+                    auto_focus: 'notesTitles',
                     menubar: false,
                     placeholder: 'Notes for consideration.',
                     plugins: ['lists advlist'],
