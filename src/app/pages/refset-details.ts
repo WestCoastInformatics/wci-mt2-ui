@@ -184,6 +184,7 @@ export class RefsetDetails {
     @ViewChild("detailsMembersPaging") membersPaginationComponent: PaginationComponent;
     @ViewChild("cloneRefsetDialog") cloneRefsetDialog: TemplateRef<any>;
     @ViewChild("deleteRefsetDialog") deleteRefsetDialog: TemplateRef<any>;
+    @ViewChild("convertRefsetDialog") convertRefsetDialog: TemplateRef<any>;
     @ViewChild("refsetVersionNotes") refsetVersionNotes: TemplateRef<any>;
     @ViewChild("refsetAuditDialog") refsetAuditDialog: TemplateRef<any>;
     @ViewChild("refsetArtifactsDialog") refsetArtifactsDialog: TemplateRef<any>;
@@ -1454,6 +1455,29 @@ export class RefsetDetails {
         this.dialog = this.dialogFactoryService.open(dialogData);
 
         this.dialog.confirmed().subscribe((data) => { });
+    }
+
+    openConvertRefset() {
+        const dialogId = "convertRefsetDialog";
+
+        const dialogData = {
+            headerText: `Make Extensional`,
+            template: this.convertRefsetDialog,
+            data: this.refsetData,
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => {
+            this.refsetService.convertRefsetToExtensional(this.id).subscribe((result) => {
+            });
+
+         });
+        
     }
 
     openRefsetVersionNotes() {
