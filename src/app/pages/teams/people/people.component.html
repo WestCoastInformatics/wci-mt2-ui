@@ -61,7 +61,7 @@
 
                             <ng-template #inactivateUserSection let-params>
 
-                                <img *ngIf="selectedTeam?.userRoles?.includes('ADMIN')" src="assets/subtract-symbol-icon.svg" (click)="removeUser(params?.data)" width="30px"
+                                <img *ngIf="selectedTeam?.userRoles?.includes('ADMIN')" src="assets/subtract-symbol-icon.svg" (click)="confirmRemoveUser(params?.data)" width="30px"
                                   height="30px" title="Inactivate User" aria-label="Subtract" class="subtract-symbol-icon"
                                   alt="Subtract symbol shown when you're able to remove a user" />
                             </ng-template>
@@ -79,3 +79,29 @@
     </div>
 
 </div>
+
+<ng-template #confirmInactiveMemberModal let-modal>
+
+    <div class="modal-header rt2-modal-header">
+        <button ngbAutofocus class="unfocus-btn" ></button>
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Remove User Confirmation</h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="container-fluid ">
+        <div class="modal-body">
+            <div class="notes-title">Are you sure you want to remove "{{selectedUser.name}}" from the team?
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer rt2-modal-footer">
+        <button type="button" (click)="removeUser();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Remove User
+        </button>
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel
+        </button>
+    </div>
+
+</ng-template>
