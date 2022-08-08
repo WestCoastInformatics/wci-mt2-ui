@@ -45,7 +45,7 @@
                                             add-remove-concept-hierarchy-modal-cancel-search
                                         " (click)="clearSearch()">&#10005;</span>
                                     <button (click)="openEclBuilder('addRemoveByConceptHierarchySearchInput')" #addRemoveByConceptHierarchySearchEclButton
-                                      class="btn btn-primary i18n ml-3 ecl-button rounded">ECL Builder
+                                      class="btn btn-primary i18n ml-3 ecl-button rounded" unfocus>ECL Builder
                                     </button>
                                     <div *ngIf="!showResults && showNoResultsLabel">No matching results.</div>
                                     <section *ngIf="showResults" class="
