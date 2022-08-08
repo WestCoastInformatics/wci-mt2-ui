@@ -12,6 +12,8 @@ import { TeamsService } from 'src/app/services/rest/teams.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Location } from '@angular/common';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {User} from '../../../models/user';
 
 @Component({
     selector: 'teams-people',
@@ -27,7 +29,7 @@ export class TeamsPeopleComponent implements OnInit {
     teamList = [];
     currentUser: any;
     gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
     gridParams: any;
     gridApi: any;
     gridColumnDefs = [];
@@ -38,10 +40,13 @@ export class TeamsPeopleComponent implements OnInit {
     selectedOrganization: any;
     showLoadingSpinner = true;
     uiUtility = UiUtility;
+    openedConfirmModal: any;
+    selectedUser: any;
 
     @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
     @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
+    @ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
@@ -50,6 +55,7 @@ export class TeamsPeopleComponent implements OnInit {
         private readonly router: Router,
         private readonly authService: AuthenticationService,
         private readonly teamsService: TeamsService,
+        private readonly modalService: NgbModal,
         private location: Location) {
         document.body.scrollTop = 0;
     }
@@ -227,15 +233,17 @@ export class TeamsPeopleComponent implements OnInit {
         }
     }
 
-    removeUser(user) {
-        if (confirm('Are you sure you want to remove ' + user.name + ' from the team?')) {
-            this.teamsService.removeUser(this.teamId, user.id).subscribe({
-                next: (data) => {
-                    console.log(data);
-                },
-                complete: () => window.location.reload()
-            });
-        }
+    confirmRemoveUser(user) {
+        this.selectedUser = user;
+        this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
+    }
+    removeUser() {
+        this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
+            next: (data) => {
+                console.log(data);
+            },
+            complete: () => window.location.reload()
+        });
     }
 
     getTeamCount(data: any): number {

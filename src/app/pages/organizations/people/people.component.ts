@@ -13,6 +13,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'organization-people',
@@ -35,10 +36,13 @@ export class OrganizationPeopleComponent implements OnInit {
     gridColumnDefs = [];
     showLoadingSpinner = true;
     uiUtility = UiUtility;
+    openedConfirmModal: any;
+    selectedUser: any;
 
     @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
     @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
+    @ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
@@ -48,6 +52,7 @@ export class OrganizationPeopleComponent implements OnInit {
         private readonly router: Router,
         private readonly teamService: TeamsService,
         private authenticationService: AuthenticationService,
+        private readonly modalService: NgbModal,
         private location: Location) {
         document.body.scrollTop = 0;
     }
@@ -211,16 +216,19 @@ export class OrganizationPeopleComponent implements OnInit {
         }
     }
 
-    removeUser(user) {
-        if (confirm('Are you sure you want to remove ' + user.name + ' from the organization?')) {
-            this.organizationsService.removeUser(this.organizationId, user.id).subscribe({
+    confirmRemoveUser(user) {
+        this.selectedUser = user;
+        this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
+    }
+
+    removeUser() {
+            this.organizationsService.removeUser(this.organizationId, this.selectedUser.id).subscribe({
                 next: (data) => {
                     const datum = data;
                     console.log(datum);
                 },
                 complete: () => window.location.reload()
             });
-        }
     }
 
     getTeamCount(teams: any): number {
