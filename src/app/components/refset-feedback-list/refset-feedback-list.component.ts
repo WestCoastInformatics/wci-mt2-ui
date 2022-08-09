@@ -9,7 +9,6 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { User } from 'src/app/models/user';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import tinymce, { TinyMCE } from 'dist/angular-template/tinymce/tinymce';
 
 @Component({
     selector: 'app-refset-discussion-list',
