@@ -272,12 +272,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     showProjectData(): void {
 
-        this.setNavigation();
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
+
+        this.setNavigation();
         this.showRefsets();
     }
 
