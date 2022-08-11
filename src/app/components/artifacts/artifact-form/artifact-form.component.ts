@@ -1,5 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ArtifactsService } from '../../../services/rest/artifacts.service';
 import { Artifact } from '../../../models/artifact';
@@ -8,7 +7,7 @@ import { Artifact } from '../../../models/artifact';
     selector: 'artifact-form',
     templateUrl: './artifact-form.component.html'
 })
-export class ArtifactFormComponent implements OnInit, AfterViewInit {
+export class ArtifactFormComponent implements OnInit {
     file: File;
     model: any;
     deleteModel: any;
@@ -19,8 +18,7 @@ export class ArtifactFormComponent implements OnInit, AfterViewInit {
     @ViewChild('confirmDeleteModal') confirmDeleteModal: NgbModal;
     loaded = false;
 
-    constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private artifactsService: ArtifactsService,
-        private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private readonly modalService: NgbModal, private artifactsService: ArtifactsService) {
     }
 
     get modalTitle(): string {
@@ -38,9 +36,6 @@ export class ArtifactFormComponent implements OnInit, AfterViewInit {
             this.artifact.entityType = 'REFSET';
         }
         this.loaded = true;
-    }
-
-    ngAfterViewInit(): void {
     }
 
     openArtifactsModal(artifactsDialog: NgbModal) {

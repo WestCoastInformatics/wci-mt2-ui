@@ -1,26 +1,20 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
 
 @Component({
 	selector: 'audit-trail-modal',
 	templateUrl: './audit-trail-modal.component.html'
 })
-export class AuditTrailModalComponent implements AfterViewInit {
+export class AuditTrailModalComponent {
 
 
 	@Input() refsetInternalId: string;
-	@Input() isDetails: boolean = true;
+	@Input() isDetails = true;
 
-	constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private refsetService: RefsetService) { }
+	constructor(private readonly modalService: NgbModal) { }
 
-	ngAfterViewInit(): void {
-	}
 	openTrailModal(trailDialog: NgbModal) {
 		this.modalService.open(trailDialog, {
-			//backdrop : 'static',
-			//keyboard : false,
 			modalDialogClass: 'full-modal',
 			centered: true,
 			windowClass: 'audit-trail-modal'

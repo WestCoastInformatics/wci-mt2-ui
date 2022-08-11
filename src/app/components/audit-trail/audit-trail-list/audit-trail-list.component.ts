@@ -46,7 +46,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             { field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true },
             { field: 'message', headerName: 'Message', unSortIcon: true, sortable: true },
             { field: 'details', headerName: 'Details', minWidth: 550, sortable: false }];
-        // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
             context: { componentParent: this },
@@ -59,9 +58,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             rowModelType: 'infinite',
             enableCellTextSelection: true,
             // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-            // suppressPaginationPanel: true,
             paginationPageSize: this.gridPaging.pageSize,
-            // onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
             onFilterChanged: function () {
                 if (this.api.getDisplayedRowCount() === 0) {
@@ -123,7 +120,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             getRows: (rowParams) => {
 
                 this.gridApi.showLoadingOverlay();
-                // this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.gridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
@@ -161,12 +157,8 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 } else {
                     query = refsetFilter;
                 }
-                query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
                 restParams.query = query;
-                // if (CodeUtility.hasValue(query)) {
-                //     query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
-                //     restParams.query = query;
-                // }
                 this.auditService.getAuditTrial({ ...restParams, ...sort }).subscribe({
                     next: (results) => {
                         this.showPaging = results.total > 0;
@@ -175,7 +167,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                             this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
                             this.gridPaging.totalKnown = true;
                             this.paginationComponent.goToPage(pageNumber - 1);
-                            // this.showLoadingSpinner = false;
 
                             return;
                         }
@@ -247,11 +238,6 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             obj.setAttribute('placeholder', value);
         });
     }
-
-    onGridCellClick = (event) => {
-
-    }
-
 
     onResize(event) {
         const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;

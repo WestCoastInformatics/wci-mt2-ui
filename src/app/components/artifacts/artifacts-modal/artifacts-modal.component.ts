@@ -1,13 +1,12 @@
-import { AfterViewInit, Component, ComponentRef, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ArtifactsListComponent } from '../artifacts-list/artifacts-list.component';
 
 @Component({
     selector: 'artifacts-modal',
     templateUrl: './artifacts-modal.component.html'
 })
-export class ArtifactsModalComponent implements AfterViewInit {
+export class ArtifactsModalComponent {
 
 
     @Input() refsetInternalId: string;
@@ -15,10 +14,6 @@ export class ArtifactsModalComponent implements AfterViewInit {
     @ViewChild('artifactsList') artifactsList: TemplateRef<any>;
 
     constructor(private route: ActivatedRoute, private readonly modalService: NgbModal) {
-    }
-
-    ngAfterViewInit(): void {
-
     }
 
     openArtifactsModal(artifactsDialog: NgbModal) {

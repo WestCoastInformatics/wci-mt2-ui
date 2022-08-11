@@ -34,8 +34,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
     @ViewChild('actionsSection') actionsSection: TemplateRef<any>;
 
-    constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private artifactsService: ArtifactsService,
-        private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private readonly modalService: NgbModal, private artifactsService: ArtifactsService) {
     }
 
     get serviceUrl(): string {
@@ -48,9 +47,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 field: 'fileName',
                 headerName: 'Name',
                 unSortIcon: true,
-                sortable: true,
-                // checkboxSelection: true,
-                // headerCheckboxSelection: true
+                sortable: true
             },
             { field: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true },
             { field: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, sortable: true },
@@ -187,7 +184,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 } else {
                     query = refsetFilter;
                 }
-                query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
                 restParams.query = query;
                 this.artifactsService.getArtifacts({ ...restParams, ...sort }).subscribe({
                     next: (results) => {

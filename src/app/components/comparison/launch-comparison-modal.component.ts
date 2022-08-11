@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -11,8 +11,6 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
-import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
 import { environment } from 'src/environments/environment';
 
@@ -20,7 +18,7 @@ import { environment } from 'src/environments/environment';
     selector: 'app-launch-comparison-modal',
     templateUrl: './launch-comparison-modal.component.html'
 })
-export class LaunchComparisonModalComponent implements OnInit {
+export class LaunchComparisonModalComponent {
 
     comparisonRefsetInternalId: string;
     activeRefsetVersionOptions: any[];
@@ -37,30 +35,29 @@ export class LaunchComparisonModalComponent implements OnInit {
     gridColumnDefs = [];
     gridOptions: any;
     gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
-    showTable: boolean = false;
+    showTable = false;
     activeRefsetName: string;
     comparisonData: any;
     comparisonRefsetVersionDate: string;
     comparisonRefsetName: string;
     comparisonRefsetStatus: string;
-    allowedToEdit: boolean = false;
-    showLoadingSpinner: boolean = false;
-    isLocked: boolean = false;
+    allowedToEdit = false;
+    showLoadingSpinner = false;
+    isLocked = false;
     conceptForAddRemove: any;
-    isConceptBeingAdded: Boolean;
+    isConceptBeingAdded: boolean;
     addRemoveDefinitionExceptionType: string;
     changeReportData: any[];
 
     selectedConcept: any;
     conceptDetail: any;
-    isConceptDetailsLoading: boolean = false;
+    isConceptDetailsLoading = false;
     conceptDetailParents: any;
     conceptDetailsOptions: TreeOptions = {
-        onSelect: () => { },
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
     };
-    taxonomyManualStateRefresh: Boolean = new Boolean(false);
+    taxonomyManualStateRefresh = new Boolean(false);
     taxonomyNumberOfChildren: number;
 
     @Input() activeRefset: any;
@@ -76,12 +73,8 @@ export class LaunchComparisonModalComponent implements OnInit {
     constructor(private readonly modalService: NgbModal,
         readonly refsetService: RefsetService,
         private readonly router: Router,
-        private readonly route: ActivatedRoute,
         private readonly notificationService: NotificationService,
         readonly refsetDetails: RefsetDetails) {
-    }
-
-    ngOnInit(): void {
     }
 
     openLaunchModal(comparisonLaunchDialog: NgbModal) {
@@ -150,10 +143,10 @@ export class LaunchComparisonModalComponent implements OnInit {
         this.comparisonRefsetInternalId = null;
         this.comparisonRefsetVersionOptions = [];
 
-        const results = this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
+        this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
             this.refsetOptions = results.items.filter((item) => item.refsetId !== this.activeRefset.refsetId);
 
-            for (let option of this.refsetOptions) {
+            for (const option of this.refsetOptions) {
                 option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
             }
 
@@ -163,7 +156,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     comparisonRefsetSelected(event) {
 
-        let comparisonRefset = event.value;
+        const comparisonRefset = event.value;
         this.comparisonRefsetVersionOptions = RefsetUtility.getVersionOptions(comparisonRefset);
         this.comparisonRefsetName = comparisonRefset.name;
     }
@@ -216,7 +209,7 @@ export class LaunchComparisonModalComponent implements OnInit {
             rowClassRules: {
                 refset_tool_grid_inactive_row: function (params) {
 
-                    var inactivatedRow = false;
+                    let inactivatedRow = false;
 
                     if (params.data) {
                         inactivatedRow = params.data.active == false;
@@ -251,13 +244,13 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         if (this.comparisonTypeSelected == 'same_refset') {
 
-            let comparisonVersionInfo = this.activeRefset.versionList.find((element) => { return element.refsetInternalId == this.comparisonRefsetInternalId; });
+            const comparisonVersionInfo = this.activeRefset.versionList.find((element) => { return element.refsetInternalId == this.comparisonRefsetInternalId; });
             this.comparisonRefsetName = this.activeRefsetName;
             this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
             this.comparisonRefsetStatus = comparisonVersionInfo.status;
         } else {
 
-            let comparisonVersionInfo = this.comparisonRefsetVersionOptions.find((element) => { return element.value == this.comparisonRefsetInternalId; });
+            const comparisonVersionInfo = this.comparisonRefsetVersionOptions.find((element) => { return element.value == this.comparisonRefsetInternalId; });
             this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
             this.comparisonRefsetStatus = comparisonVersionInfo.status;
         }
@@ -288,7 +281,7 @@ export class LaunchComparisonModalComponent implements OnInit {
                 results.totalKnown = true;
                 this.comparisonData = results;
                 console.log(results);
-                let pageNumber = 1;
+                const pageNumber = 1;
 
                 if (results.items.length == 0) {
 
@@ -318,17 +311,17 @@ export class LaunchComparisonModalComponent implements OnInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'code') {
-
+            return;
         } else {
 
-            let selectedRows = this.gridApi.getSelectedRows();
+            const selectedRows = this.gridApi.getSelectedRows();
             let selectedId: string;
 
             selectedRows.forEach(function (selectedRow, index) {
                 selectedId = selectedRow.code;
             });
 
-            let selectedConcept = this.getGridRow(selectedId);
+            const selectedConcept = this.getGridRow(selectedId);
             this.loadConceptDetail(selectedConcept);
         }
     };
@@ -400,7 +393,7 @@ export class LaunchComparisonModalComponent implements OnInit {
             return;
         }
 
-        let restParams = {
+        const restParams = {
             displayType: 'taxonomy',
             returnChildren: false,
             language: language,
@@ -440,7 +433,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
     addRemoveConcept(params: any): void {
 
-        this.isConceptBeingAdded = new Boolean(params.addConcept);
+        this.isConceptBeingAdded = new Boolean(params.addConcept) as boolean;
 
         // if this is coming from the parents section than the concept has children
         if (params.isParentConcept) {
@@ -463,7 +456,7 @@ export class LaunchComparisonModalComponent implements OnInit {
             operation = 'remove';
         }
 
-        let concepts = params.concepts.join(',');
+        const concepts = params.concepts.join(',');
 
         RefsetUtility.addRemoveMembersByList(this.activeRefset.id, this.activeRefset.refsetId, concepts, operation, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
     }
@@ -471,14 +464,14 @@ export class LaunchComparisonModalComponent implements OnInit {
     public processChangedMemberEffects = (conceptStatusArray) => {
 
         console.timeEnd('comparison processChangedMemberEffects');
-        let thatConceptDetail = this.conceptDetail;
-        let filterModel = this.gridApi.getFilterModel();
+        const thatConceptDetail = this.conceptDetail;
+        const filterModel = this.gridApi.getFilterModel();
 
         // re-cache the members for the taxonomy
         this.refsetService.cacheMemberAncestors(this.activeRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.activeRefset)).subscribe({
             next: results => {
 
-                let success = results?.success;
+                const success = results?.success;
 
                 if (!CodeUtility.testBoolean(success)) {
                     console.log('Error caching refset member details.');
@@ -509,7 +502,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         }
 
         // process the comparison data with the changed members 
-        for (let conceptStatus of conceptStatusArray) {
+        for (const conceptStatus of conceptStatusArray) {
 
             if (conceptStatus.failed) {
                 continue;
@@ -517,7 +510,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
             this.changeReportData.push({ 'Concept ID': conceptStatus.code, 'Concept Name': conceptStatus.name, Operation: conceptStatus.operation });
 
-            let comparisonRowIndex = this.comparisonData.items.findIndex((element) => { return element.code == conceptStatus.code; });
+            const comparisonRowIndex = this.comparisonData.items.findIndex((element) => { return element.code == conceptStatus.code; });
 
             if (conceptStatus.added) {
 
@@ -529,12 +522,12 @@ export class LaunchComparisonModalComponent implements OnInit {
                     this.comparisonData.items[comparisonRowIndex].membership = 'Both';
                     this.comparisonData.comparisonRefsetDistinctMembersCount -= 1;
 
-                    let distinctIndex = this.comparisonData.comparisonRefsetDistinctMembers.indexOf(conceptStatus.code);
+                    const distinctIndex = this.comparisonData.comparisonRefsetDistinctMembers.indexOf(conceptStatus.code);
                     this.comparisonData.comparisonRefsetDistinctMembers.splice(distinctIndex, 1);
 
                 } else {
 
-                    let concept = {
+                    const concept = {
                         code: conceptStatus.code,
                         definitionExceptionType: null,
                         hasChildren: 'false',
@@ -565,7 +558,7 @@ export class LaunchComparisonModalComponent implements OnInit {
                     this.comparisonData.items.splice(comparisonRowIndex, 1);
                     this.comparisonData.activeRefsetDistinctMembersCount -= 1;
 
-                    let distinctIndex = this.comparisonData.activeRefsetDistinctMembers.indexOf(conceptStatus.code);
+                    const distinctIndex = this.comparisonData.activeRefsetDistinctMembers.indexOf(conceptStatus.code);
                     this.comparisonData.activeRefsetDistinctMembers.splice(distinctIndex, 1);
                 }
             }
@@ -591,13 +584,13 @@ export class LaunchComparisonModalComponent implements OnInit {
             comparisonRefsetDate = '(In Development)';
         }
 
-        let members: any[] = [];
-        let activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
-        let comparisonRefset = this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
-        let bothRefsets = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ') ; ' +
+        const members: any[] = [];
+        const activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
+        const comparisonRefset = this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
+        const bothRefsets = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ') ; ' +
             this.comparisonData.comparisonRefsetName + ' ' + comparisonRefsetDate + ' (' + this.comparisonData.comparisonRefsetId + ')';
 
-        for (let row of this.comparisonData.items) {
+        for (const row of this.comparisonData.items) {
 
             let refset = '';
 
@@ -614,8 +607,8 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         members.sort(function (a, b) {
 
-            let sortTermA = a['Refset Membership'].toUpperCase() + a['Concept Name'].toUpperCase();
-            let sortTermB = b['Refset Membership'].toUpperCase() + b['Concept Name'].toUpperCase();
+            const sortTermA = a['Refset Membership'].toUpperCase() + a['Concept Name'].toUpperCase();
+            const sortTermB = b['Refset Membership'].toUpperCase() + b['Concept Name'].toUpperCase();
 
             if (sortTermA < sortTermB) {
                 return -1;
@@ -631,7 +624,7 @@ export class LaunchComparisonModalComponent implements OnInit {
         activeRefsetDate = activeRefsetDate.replace(' ', '_');
         comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
 
-        let fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
+        const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
             this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
 
         UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership', 'Refset Name'], fileName);
@@ -647,12 +640,10 @@ export class LaunchComparisonModalComponent implements OnInit {
             activeRefsetDate = '(In_Development)';
         }
 
-        let activeRefset = this.comparisonData.activeRefsetName + ' ' + activeRefsetDate + ' (' + this.comparisonData.activeRefsetId + ')';
-
         this.changeReportData.sort(function (a, b) {
 
-            let sortTermA = a['Operation'].toUpperCase() + a['Concept Name'].toUpperCase();
-            let sortTermB = b['Operation'].toUpperCase() + b['Concept Name'].toUpperCase();
+            const sortTermA = a['Operation'].toUpperCase() + a['Concept Name'].toUpperCase();
+            const sortTermB = b['Operation'].toUpperCase() + b['Concept Name'].toUpperCase();
 
             if (sortTermA < sortTermB) {
                 return -1;
@@ -667,7 +658,7 @@ export class LaunchComparisonModalComponent implements OnInit {
 
         activeRefsetDate = activeRefsetDate.replace(' ', '_');
 
-        let fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + new Date().toLocaleDateString();
+        const fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + new Date().toLocaleDateString();
 
         UiUtility.downloadFile(this.changeReportData, ['Concept ID', 'Concept Name', 'Operation'], fileName);
     }
@@ -682,7 +673,7 @@ export class LaunchComparisonModalComponent implements OnInit {
     }
 
     openInNewWindow(conceptId: string): void {
-        let snomedBrowserUrl =
+        const snomedBrowserUrl =
             environment["snomedBrowserUrl"] +
             "&conceptId1=" +
             conceptId +
