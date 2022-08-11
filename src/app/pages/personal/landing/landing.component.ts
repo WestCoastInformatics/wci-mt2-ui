@@ -42,12 +42,7 @@ export class PersonalLandingComponent implements OnInit {
             this.menu.push({ name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs' });
         }
         this.getUser();
-        //this.setNavigation();
     }
-
-    /* setNavigation() {
-
-    } */
 
     getUser(): void {
         this.userService.getUser(this.userId).subscribe((x) => {
@@ -73,8 +68,6 @@ export class PersonalLandingComponent implements OnInit {
     }
 
     goToTeam(teamId: string, organizationId: string): void {
-        //this.zone.run(() => {
         this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
-        //});
     }
 }

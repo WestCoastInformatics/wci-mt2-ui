@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'organization-people',
@@ -51,7 +51,6 @@ export class OrganizationPeopleComponent implements OnInit {
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private readonly teamService: TeamsService,
-        private authenticationService: AuthenticationService,
         private readonly modalService: NgbModal,
         private location: Location) {
         document.body.scrollTop = 0;
@@ -111,7 +110,6 @@ export class OrganizationPeopleComponent implements OnInit {
         };
 
         this.data = [];
-        this.getPeople();
     }
 
     setNavigation() {
@@ -132,8 +130,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
         this.gridParams = params;
         this.gridApi = params.api;
-        this.gridApi.setRowData([]);
-        this.getPeople();
+        this.gridApi.setRowData(this.data);
     }
 
     onGridCellClick = (event) => {
@@ -157,7 +154,7 @@ export class OrganizationPeopleComponent implements OnInit {
     }
 
     getPeople(): void {
-
+        console.log('hit')
         this.showLoadingSpinner = true;
         this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 
@@ -186,7 +183,6 @@ export class OrganizationPeopleComponent implements OnInit {
 
         this.setOrganizationData(this.selectedOrganization);
         this.location.replaceState('/organizations/people/' + this.selectedOrganization.id);
-        this.getPeople();
         this.organizationId = this.selectedOrganization.id;
     }
 
@@ -201,6 +197,8 @@ export class OrganizationPeopleComponent implements OnInit {
             this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
 
         }
+
+        this.getPeople();
     }
 
     async getTeams(teams: any): Promise<any> {
@@ -222,13 +220,13 @@ export class OrganizationPeopleComponent implements OnInit {
     }
 
     removeUser() {
-            this.organizationsService.removeUser(this.organizationId, this.selectedUser.id).subscribe({
-                next: (data) => {
-                    const datum = data;
-                    console.log(datum);
-                },
-                complete: () => window.location.reload()
-            });
+        this.organizationsService.removeUser(this.organizationId, this.selectedUser.id).subscribe({
+            next: (data) => {
+                const datum = data;
+                console.log(datum);
+            },
+            complete: () => window.location.reload()
+        });
     }
 
     getTeamCount(teams: any): number {

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IServerSideDatasource } from 'ag-grid-community';
+import { Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -34,19 +33,18 @@ export class DashboardComponent implements OnInit {
     api: any;
     columnApi: any;
     searchInput: string;
-    selectedView: string = 'all';
+    selectedView = 'all';
     refsetGridApi: any;
     refsetGridColumnApi: any;
     refsetGridOptions: any;
-    refsetGridLastFilter: string = '';
-    refsetGridLastSort: string = '';
+    refsetGridLastFilter = '';
+    refsetGridLastSort = '';
     numOfResults: any;
     numOfMembers: any;
     showLoadingSpinner = false;
 
     constructor(
         private router: Router,
-        private readonly route: ActivatedRoute,
         private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
         private readonly refsetService: RefsetService,
@@ -125,7 +123,7 @@ export class DashboardComponent implements OnInit {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
         const sortModel = [
-            {colId: 'modified', sort: 'desc'}
+            { colId: 'modified', sort: 'desc' }
         ];
         this.refsetGridApi.setSortModel(sortModel);
         const dataSource = {
@@ -137,10 +135,10 @@ export class DashboardComponent implements OnInit {
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
-                let sort = UiUtility.formatSortData(rowParams.sortModel);
+                const sort = UiUtility.formatSortData(rowParams.sortModel);
 
-                let newFilterString = query;
-                let newSortString = JSON.stringify(sort);
+                const newFilterString = query;
+                const newSortString = JSON.stringify(sort);
 
                 // if the filters or sort have changed then move to the first page
                 if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
@@ -153,7 +151,7 @@ export class DashboardComponent implements OnInit {
                 this.refsetGridLastFilter = newFilterString;
                 this.refsetGridLastSort = newSortString;
 
-                let restParams: any = {
+                const restParams: any = {
                     limit: 10,
                     offset: 0,
                     searchConcepts: true,
@@ -164,14 +162,14 @@ export class DashboardComponent implements OnInit {
 
                 if (CodeUtility.hasValue(query)) {
 
-                    query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                    query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
                     restParams.query = query;
                 }
                 this.data = [];
                 this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
                     next: (results) => {
 
-                        for (let refset of results.items) {
+                        for (const refset of results.items) {
                             this.data.push({
                                 name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
                                 , refsetId: refset.refsetId
@@ -183,7 +181,7 @@ export class DashboardComponent implements OnInit {
 
                         }
 
-                        let data = this.data;
+                        const data = this.data;
 
                         if (data?.length > 0) {
 
@@ -218,8 +216,8 @@ export class DashboardComponent implements OnInit {
                 return;
             }
 
-            let label = obj.getAttribute('aria-label');
-            let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            const label = obj.getAttribute('aria-label');
+            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
     };

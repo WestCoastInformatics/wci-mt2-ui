@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {NotificationService} from 'src/app/services/notification.service';
-import {ProjectsService} from 'src/app/services/rest/projects.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {Location} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { ProjectsService } from 'src/app/services/rest/projects.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'projects-configuration',
@@ -36,14 +36,13 @@ export class ProjectsConfigurationComponent implements OnInit {
     showLoadingSpinner = false;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
-                private readonly titleService: Title,
-                private readonly refsetService: RefsetService,
-                private readonly projectsService: ProjectsService,
-                private readonly route: ActivatedRoute,
-                private readonly router: Router,
-                private readonly authService: AuthenticationService,
-                private readonly notificationService: NotificationService,
-                private location: Location) {
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly projectsService: ProjectsService,
+        private readonly route: ActivatedRoute,
+        private readonly authService: AuthenticationService,
+        private readonly notificationService: NotificationService,
+        private location: Location) {
         document.body.scrollTop = 0;
     }
 
@@ -66,18 +65,18 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     setNavigation() {
 
-        let breadcrumbs: any = [{path: '/dashboard', label: 'Dashboard'}];
+        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects'});
+            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
         }
 
-        breadcrumbs.push({label: 'Configuration'});
+        breadcrumbs.push({ label: 'Configuration' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            {name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy'},
-            {name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user'},
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy' },
+            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user' },
             {
                 name: 'Configuration',
                 link: '/organization/' + this.organizationId + '/projects/configuration',
@@ -95,7 +94,7 @@ export class ProjectsConfigurationComponent implements OnInit {
             this.showLoadingSpinner = false;
             this.organizations = organizationResults?.items;
 
-            for (let organization of this.organizations) {
+            for (const organization of this.organizations) {
 
                 if (this.organizationId == organization.id) {
 
@@ -125,7 +124,7 @@ export class ProjectsConfigurationComponent implements OnInit {
             this.showLoadingSpinner = false;
             this.projectList = results.items;
 
-            for (let project of this.projectList) {
+            for (const project of this.projectList) {
 
                 if (this.projectId == project.id) {
 
@@ -172,8 +171,8 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     isValidEmail(): boolean {
 
-        var lower = this.profileEmailValue.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        const lower = this.profileEmailValue.toLowerCase();
+        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
         if (flag == null) {
             this.emailError = 'Email is invalid.';
@@ -192,23 +191,22 @@ export class ProjectsConfigurationComponent implements OnInit {
     updateProject(): void {
 
         this.selectedProject.name = this.profileNameValue;
-        // this.selectedProject.primaryContactEmail = this.profileEmailValue;
         this.selectedProject.description = this.profileDescriptionValue;
         this.selectedProject.privateProject = this.isPrivate;
         this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe(() => {
-            this.notificationService.show('Update process complete.', null, 'success', {timeOut: 0, extendedTimeOut: 0});
+            this.notificationService.show('Update process complete.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
         });
     }
 
     updateProjectTeams(): void {
 
-        this.selectedProject = {...this.selectedProject, teams: this.selectedTeamIds};
+        this.selectedProject = { ...this.selectedProject, teams: this.selectedTeamIds };
         this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe();
     }
 
     getTeams(): void {
 
-        let query = 'organizationId:' + this.organizationId;
+        const query = 'organizationId:' + this.organizationId;
 
         this.refsetService.getTeams('hideOrganizationTeams=true&limit=500&offset=0&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
             this.teamList = results.items;
@@ -258,7 +256,7 @@ export class ProjectsConfigurationComponent implements OnInit {
         let hasAuthor = false;
         let hasReviewer = false;
 
-        for (let team of this.selectedTeams) {
+        for (const team of this.selectedTeams) {
 
             if (team['roles']?.includes('ADMIN')) {
                 hasAdmin = true;

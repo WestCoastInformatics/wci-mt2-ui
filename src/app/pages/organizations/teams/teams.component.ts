@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
     selector: 'organization-teams',
     templateUrl: './teams.component.html'
 })
-export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
+export class OrganizationTeamsComponent implements OnInit {
     menu: SidebarMenuItem[] = [];
     data = [];
     defaultColDef = {};
@@ -134,9 +134,6 @@ export class OrganizationTeamsComponent implements OnInit, AfterViewInit {
         };
 
         this.data = [];
-    }
-
-    ngAfterViewInit() {
     }
 
     setNavigation() {

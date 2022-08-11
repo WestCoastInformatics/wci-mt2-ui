@@ -1,6 +1,6 @@
 // FRAMEWORK IMPORTS
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -61,7 +61,6 @@ import { CreateNewProjectModalComponent } from 'src/app/components/create-new-pr
 import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
 import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
-import { ProjectsBaseComponent } from './pages/projects/base/projects.base.component';
 import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
@@ -215,8 +214,7 @@ const appRoutes: Routes = [
         RefsetFeedbackListComponent,
         CustomTooltipComponent,
         ComposeModalComponent,
-        WorkflowStatusBadgeComponent,
-        ProjectsBaseComponent
+        WorkflowStatusBadgeComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -298,7 +296,7 @@ const appRoutes: Routes = [
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
     ],
     bootstrap: [AppComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AppModule {
 }

@@ -2,8 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewC
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Context, Logger } from 'ag-grid-community';
-import { forkJoin } from 'rxjs';
+import { Context } from 'ag-grid-community';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
@@ -21,7 +20,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { User } from 'src/app/models/user';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { ProjectsBaseComponent } from '../base/projects.base.component';
 
 @Component({
     selector: 'projects-refset',
@@ -61,7 +59,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     showFullNarrativeText = false;
     showFullNotesText = false;
     showLoadingSpinner = false;
-    createRefsetProperties: any = {};
+    createRefsetProperties = {};
     metadataAndConcepts = true;
     dummydata = ['Your Usual Project', 'Project 2', 'Project 3'];
     selectedValue = this.dummydata[0];
@@ -507,8 +505,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'information' || event.column.colId === 'actions') {
-
-
+            return;
         } else {
 
             const selectedRows = this.refsetGridApi.getSelectedRows();
@@ -578,8 +575,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     openWorkflowDiagramModal(workflowDiagramModal: NgbModal) {
         this.modalService.open(workflowDiagramModal, {
-            // backdrop : 'static',
-            // keyboard : false,
             windowClass: 'workflow-diagram-modal'
         });
     }

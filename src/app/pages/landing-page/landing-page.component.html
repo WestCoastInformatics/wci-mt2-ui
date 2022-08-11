@@ -25,14 +25,6 @@
     </div>
     <div class="landing-page-login-section">
         <div *ngIf="isGuestMode">
-            <!-- Disabled for now as per ticket RT2-946 -->
-            <!-- <div class="landing-page-guest-access">
-                <button class="landing-page-guest-access-button" [routerLink]="['/directory']"
-                    [routerLinkActive]="['active']">
-                    Access as Guest
-                </button>
-            </div>
-            <br> -->
             <p class="landing-page-guest-has-account">Already have an account? <a class="landing-page-log-in-link" (click)="login()">Log In</a></p>
         </div>
         <div *ngIf="!isGuestMode">

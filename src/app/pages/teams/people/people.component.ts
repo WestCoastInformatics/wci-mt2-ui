@@ -12,8 +12,7 @@ import { TeamsService } from 'src/app/services/rest/teams.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Location } from '@angular/common';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {User} from '../../../models/user';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'teams-people',
@@ -123,7 +122,7 @@ export class TeamsPeopleComponent implements OnInit {
 
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
-        if (CodeUtility.hasValue(this.organizationId), true, true) {
+        if (CodeUtility.hasValue(this.organizationId, true, true)) {
             breadcrumbs.push({ path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams' });
         }
 
@@ -184,7 +183,7 @@ export class TeamsPeopleComponent implements OnInit {
         });
     }
 
-    selectTeam($event): void {
+    selectTeam(_$event: any): void {
 
         this.teamId = this.selectedTeam.id;
         this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.selectedTeam.id);

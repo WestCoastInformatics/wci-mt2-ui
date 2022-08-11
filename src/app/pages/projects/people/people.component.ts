@@ -1,16 +1,16 @@
-import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Location} from '@angular/common';
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
-import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
-import {CustomTooltipComponent} from 'src/app/components/custom-tooltip/custom-tooltip.component';
-import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {ProjectsService} from 'src/app/services/rest/projects.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {UiUtility} from 'src/app/utilities/ui.utility';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { ProjectsService } from 'src/app/services/rest/projects.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'projects-people',
@@ -40,13 +40,12 @@ export class ProjectsPeopleComponent implements OnInit {
     @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
-                private readonly titleService: Title,
-                private readonly refsetService: RefsetService,
-                private readonly projectsService: ProjectsService,
-                private readonly route: ActivatedRoute,
-                private changeDetectorRef: ChangeDetectorRef,
-                private readonly router: Router,
-                private location: Location) {
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly route: ActivatedRoute,
+        private changeDetectorRef: ChangeDetectorRef,
+        private readonly router: Router,
+        private location: Location) {
         document.body.scrollTop = 0;
     }
 
@@ -79,26 +78,26 @@ export class ProjectsPeopleComponent implements OnInit {
                 minWidth: 300,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: {template: this.peopleNameSection}
+                cellRendererParams: { template: this.peopleNameSection }
             },
-            {field: 'company', flex: 1, headerName: 'Company Name'},
-            {field: 'email', flex: 1, headerName: 'Email'},
+            { field: 'company', flex: 1, headerName: 'Company Name' },
+            { field: 'email', flex: 1, headerName: 'Email' },
             {
                 field: 'teams',
                 tooltipComponentFramework: CustomTooltipComponent,
                 tooltipField: 'teams',
-                tooltipComponentParams: {color: '#ececec'},
+                tooltipComponentParams: { color: '#ececec' },
                 flex: 1,
                 headerName: 'Teams',
                 filter: false,
                 sortable: false,
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: {template: this.peopleTeamsSection}
+                cellRendererParams: { template: this.peopleTeamsSection }
             }
         ];
 
         this.gridOptions = {
-            context: {componentParent: this},
+            context: { componentParent: this },
             pagination: false,
             suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
             suppressPaginationPanel: true,
@@ -117,7 +116,7 @@ export class ProjectsPeopleComponent implements OnInit {
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                 unSortIcon: true
             },
             enableBrowserTooltips: true,
@@ -143,15 +142,15 @@ export class ProjectsPeopleComponent implements OnInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects'});
+            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
         }
 
-        breadcrumbs.push({label: 'People'});
+        breadcrumbs.push({ label: 'People' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            {name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy'},
-            {name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true},
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy' },
+            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
         ];
     }
 

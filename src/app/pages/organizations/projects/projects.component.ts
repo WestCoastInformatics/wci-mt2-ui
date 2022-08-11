@@ -8,7 +8,6 @@ import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -36,11 +35,9 @@ export class OrganizationProjectsComponent implements OnInit {
     constructor(private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
         private readonly refsetService: RefsetService,
-        private readonly organizationsService: OrganizationsService,
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private readonly teamService: TeamsService,
-        private authenticationService: AuthenticationService,
         private location: Location) {
         document.body.scrollTop = 0;
     }

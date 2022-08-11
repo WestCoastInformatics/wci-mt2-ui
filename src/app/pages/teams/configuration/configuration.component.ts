@@ -1,14 +1,14 @@
-import {Location} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {NotificationService} from 'src/app/services/notification.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {TeamsService} from 'src/app/services/rest/teams.service';
-import {CodeUtility} from 'src/app/utilities/code.utility';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { TeamsService } from 'src/app/services/rest/teams.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
     selector: 'teams-configuration',
@@ -34,14 +34,13 @@ export class TeamsConfigurationComponent implements OnInit {
     emailError = '';
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
-                private readonly titleService: Title,
-                private readonly refsetService: RefsetService,
-                private readonly route: ActivatedRoute,
-                private readonly router: Router,
-                private readonly authService: AuthenticationService,
-                private readonly teamsService: TeamsService,
-                private readonly notificationService: NotificationService,
-                private location: Location) {
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly route: ActivatedRoute,
+        private readonly authService: AuthenticationService,
+        private readonly teamsService: TeamsService,
+        private readonly notificationService: NotificationService,
+        private location: Location) {
         document.body.scrollTop = 0;
     }
 
@@ -49,8 +48,8 @@ export class TeamsConfigurationComponent implements OnInit {
 
         this.titleService.setTitle('Refset Tool - Teams');
 
-        this.roleOptions = [{value: 'AUTHOR', display: 'Author'}, {value: 'REVIEWER', display: 'Reviewer'},
-            {value: 'ADMIN', display: 'Admin'}, {value: 'VIEWER', display: 'Viewer'}];
+        this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
+        { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
 
         this.route.params.subscribe(params => {
 
@@ -65,17 +64,17 @@ export class TeamsConfigurationComponent implements OnInit {
 
     setNavigation() {
 
-        let breadcrumbs: any = [{path: '/dashboard', label: 'Dashboard'}];
+        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams'});
+            breadcrumbs.push({ path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams' });
         }
 
-        breadcrumbs.push({label: 'Configuration'});
+        breadcrumbs.push({ label: 'Configuration' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            {name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user'},
+            { name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user' },
             {
                 name: 'Configuration',
                 link: '/organization/' + this.organizationId + '/teams/configuration',
@@ -91,7 +90,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
             this.organizationList = results.items;
 
-            for (let organization of this.organizationList) {
+            for (const organization of this.organizationList) {
 
                 if (this.organizationId == organization.id) {
 
@@ -118,7 +117,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
             this.teamList = results.items;
 
-            for (let team of this.teamList) {
+            for (const team of this.teamList) {
 
                 if (this.teamId == team.id) {
                     this.setTeamData(team);
@@ -148,7 +147,7 @@ export class TeamsConfigurationComponent implements OnInit {
         this.profileDescriptionValue = null;
     }
 
-    selectTeam($event): void {
+    selectTeam(_$event: any): void {
 
         this.setTeamData(this.selectedTeam);
         this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/' + this.selectedTeam.id);
@@ -156,8 +155,8 @@ export class TeamsConfigurationComponent implements OnInit {
 
     isValidEmail(): boolean {
 
-        var lower = this.profileEmailValue.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+        const lower = this.profileEmailValue.toLowerCase();
+        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
         if (flag == null) {
             this.emailError = 'Email is invalid.';
@@ -168,7 +167,7 @@ export class TeamsConfigurationComponent implements OnInit {
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any) {
+    onKeyDownEvent(event: any): void {
 
         console.log(event.target.value);
         this.isValidEmail();
@@ -183,7 +182,7 @@ export class TeamsConfigurationComponent implements OnInit {
         this.teamsService.updateTeam(this.teamId, this.selectedTeam).subscribe((team) => {
 
             if (team) {
-                this.notificationService.show('Team was successfully updated', 'Success', 'success', {timeOut: 3000, extendedTimeOut: 0});
+                this.notificationService.show('Team was successfully updated', 'Success', 'success', { timeOut: 3000, extendedTimeOut: 0 });
             }
         });
     }
@@ -191,7 +190,7 @@ export class TeamsConfigurationComponent implements OnInit {
     updateTeamRoles(): void {
 
         if (this.selectedTeam['roles']) {
-            for (let role of this.selectedTeam['roles']) {
+            for (const role of this.selectedTeam['roles']) {
                 if (!this.selectedRoles.includes(role)) {
                     this.selectedForRemove.push(role);
                 }
@@ -202,17 +201,12 @@ export class TeamsConfigurationComponent implements OnInit {
             });
         }
 
-        for (let role of this.selectedRoles) {
+        for (const role of this.selectedRoles) {
             if (!this.selectedTeam['roles'].includes(role)) {
                 this.teamsService.addRole(this.selectedTeam.id, role).subscribe();
             }
         }
 
-        console.log(this.selectedTeam.roles);
-    }
-
-    setRoles(): void {
-        console.log(this.selectedRoles);
     }
 
     getSelectedTeamName(): string {

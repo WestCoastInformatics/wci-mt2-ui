@@ -23,13 +23,13 @@ export class LandingPageComponent implements OnInit {
         });
     }
 
-    login(): any {
+    login(): void {
         this.authService.imsLogin();
     }
 
     onSubmit() {
 
-        let formControls = this.loginForm.controls;
+        const formControls = this.loginForm.controls;
         console.log(formControls.username.value);
         console.log(formControls.password.value);
 
