@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from "@angular/core";
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute, ParamMap, RoutesRecognized } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { DialogService } from "src/app/dialog/services/dialog.service";
 import { DialogFactoryService } from "src/app/dialog/services/dialog-factory.service";
 import { TemplateRenderer } from "src/app/components/cellRenderers/template.renderer";
@@ -14,16 +14,15 @@ import { BreadcrumbService } from "src/app/services/breadcrumb.service";
 import { PaginationComponent } from "src/app/components/pagination/pagination.component";
 import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
-import { Subject, forkJoin, Subscription, BehaviorSubject } from "rxjs";
+import { Subject, forkJoin, Subscription } from "rxjs";
 import { TaxonomyTreeComponent } from "src/app/components/taxonomy-tree/taxonomy-tree.component";
 import { environment } from "src/environments/environment";
 import { WorkflowService } from "../services/workflow/workflow.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
-import { Refset } from "../models/refset";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { catchError, filter, pairwise, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 
 /**
@@ -39,13 +38,13 @@ export class RefsetDetails {
     id: string;
     refsetId = "";
     versionDate = "";
-    isIntensional: boolean = false;
+    isIntensional = false;
     refsetBranchPath: string;
     refsetLoaded = new Subject<boolean>();
     refsetLoaded$ = this.refsetLoaded.asObservable();
     memberCacheLoaded = new Subject<boolean>();
     memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
-    membersReady: boolean = false;
+    membersReady = false;
     inEditButtonPrefix = '';
     tableSearchInput: string;
     versionOptions: any;
@@ -103,14 +102,12 @@ export class RefsetDetails {
     conceptDescriptions: any = [];
     isConceptDetailsLoading = false;
     membersTaxonomyRoot: any[] = [];
-    taxonomyManualStateRefresh: Boolean = new Boolean(false);
+    taxonomyManualStateRefresh = new Boolean(false);
     taxonomyOptions: TreeOptions = {
-        onSelect: this.onTaxonomySelected.bind(this),
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
     };
     conceptDetailsOptions: TreeOptions = {
-        onSelect: this.onTaxonomySelected.bind(this),
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
     };
@@ -156,7 +153,7 @@ export class RefsetDetails {
     workflowHistoryDataSource: any;
     workflowHistoryNotes: string;
     displayedColumns: string[] = ['modified', 'userName', 'workflowStatus', 'notes'];
-    isConceptBeingAdded: Boolean;
+    isConceptBeingAdded: boolean;
     addRemoveDefinitionExceptionType: string;
     conceptForAddRemove: any;
     reviewNotesAdded = false;
@@ -251,7 +248,7 @@ export class RefsetDetails {
         if (prevUrl && prevUrl != this.router.url) {
             localStorage.setItem(parentRouteKey, prevUrl);
         }
-        let parent = localStorage.getItem(parentRouteKey);
+        const parent = localStorage.getItem(parentRouteKey);
         if (parent && parent.includes('projects')) {
             isProjects = true;
         }
@@ -268,7 +265,7 @@ export class RefsetDetails {
             ]);
         }
 
-        var allObservables = {
+        const allObservables = {
             refsetLoaded: this.refsetLoaded$,
             memberCacheLoaded: this.memberCacheLoaded
         };
@@ -302,7 +299,7 @@ export class RefsetDetails {
                 enableBrowserTooltips: true,
                 rowClassRules: {
                     refset_tool_grid_inactive_row: function (params) {
-                        var inactivatedRow = false;
+                        let inactivatedRow = false;
 
                         if (params.data) {
                             inactivatedRow = params.data.active == false;
@@ -394,7 +391,7 @@ export class RefsetDetails {
                 enableBrowserTooltips: true,
                 rowClassRules: {
                     refset_tool_grid_inactive_row: function (params) {
-                        var inactivatedRow = false;
+                        let inactivatedRow = false;
 
                         if (params.data) {
                             inactivatedRow = params.data.active == false;
@@ -455,7 +452,7 @@ export class RefsetDetails {
                 this.refsetService.getDiscussionThreads("REFSET", this.id, null).subscribe({
                     next: (results) => {
                         this.unresolvedDiscussionCount = 0;
-                        for (let discussion of results.items) {
+                        for (const discussion of results.items) {
 
                             if (discussion.status == 'Open') {
                                 this.unresolvedDiscussionCount++;
@@ -464,7 +461,7 @@ export class RefsetDetails {
                     }
                 });
 
-                for (let description of this.refsetData.descriptions) {
+                for (const description of this.refsetData.descriptions) {
 
                     if (description) {
                         description.flagIcon = RefsetUtility.getLanguageRefsetFlagIcon(description.languageCode);
@@ -474,8 +471,8 @@ export class RefsetDetails {
                 this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
                 this.titleService.setTitle("Refset Tool - Refset Details: " + this.refsetId);
 
-                let languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
-                let languageRefsetOptions = [];
+                const languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
+                const languageRefsetOptions = [];
 
                 this.refsetData.versionDate = CodeUtility.formatJsonDate(this.refsetData?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
                 this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData, 'date');
@@ -488,7 +485,7 @@ export class RefsetDetails {
                 }
                 this.showLoadingSpinner = false;
 
-                for (let language of languages) {
+                for (const language of languages) {
 
                     let type = "PT";
 
@@ -496,7 +493,7 @@ export class RefsetDetails {
                         type = "FSN";
                     }
 
-                    let languageValue = language.languageCode + "-X-" + language.languageRefset + ":" + type;
+                    const languageValue = language.languageCode + "-X-" + language.languageRefset + ":" + type;
 
                     if (CodeUtility.testBoolean(language.default) && !this.selectedTaxonomyLanguage) {
                         this.selectedTaxonomyLanguage = languageValue;
@@ -538,7 +535,7 @@ export class RefsetDetails {
         if (this.editMode) {
 
             this.stepperInfo = CodeUtility.clone(this.stepperStartInfo);
-            let stepperClass = 'details-page-stepper-started-step';
+            const stepperClass = 'details-page-stepper-started-step';
 
             if (this.refsetStatus?.includes('READY_FOR_EDIT')) {
 
@@ -623,10 +620,10 @@ export class RefsetDetails {
         this.refsetService.cacheMemberAncestors(this.refsetId, this.versionDate).subscribe({
             next: results => {
 
-                let success = results?.success;
+                const success = results?.success;
 
                 if (CodeUtility.testBoolean(success)) {
-
+                    return;
                 } else {
                     console.log('Error caching refset member details.');
                 }
@@ -642,7 +639,7 @@ export class RefsetDetails {
 
     loadTaxonomyRoot() {
 
-        let restParams = {
+        const restParams = {
             displayType: "taxonomy",
             returnStartingConcept: true,
             language: this.getTaxonomyLanguageWithoutType(),
@@ -664,11 +661,6 @@ export class RefsetDetails {
                 this.toggleLoadingSpinner(false);
             }
         });
-    }
-
-    onTaxonomySelected(event) {
-        let selectedConcept = CodeUtility.clone(event.node.data);
-        // this.loadConceptDetail(selectedConcept);
     }
 
     changeTaxonomyLanguage() {
@@ -728,82 +720,83 @@ export class RefsetDetails {
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
+        if (this.taxonomySearchGridApi) {
+            this.taxonomySearchGridApi = gridReadyParams.api;
+            this.taxonomySearchGridColumnApi = gridReadyParams.columnApi;
+            this.taxonomyGridParams = gridReadyParams;
 
-        this.taxonomySearchGridApi = gridReadyParams.api;
-        this.taxonomySearchGridColumnApi = gridReadyParams.columnApi;
-        this.taxonomyGridParams = gridReadyParams;
+            if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
 
-        if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
-
-            this.taxonomySearchGridApi.showNoRowsOverlay();
-            this.taxonomySearchGridApi.setRowData([]);
-            return;
-        }
-
-        this.taxonomySearchGridApi.showLoadingOverlay();
-
-        let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
-        let query = "";
-
-        if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
-            query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
-            query = query.replace(/\//g, ' ');
-        }
-
-        let newFilterString = query;
-
-        // if the filters or sort have changed then move to the first page
-        if (newFilterString !== this.taxonomySearchGridLastFilter) {
-
-            pageNumber = 1;
-            this.taxonomySearchGridPaging.totalRows = null;
-            this.taxonomySearchGridPaging.totalKnown = false;
-            this.taxonomySearchGridApi.api?.paginationGoToPage(0);
-        }
-
-        this.taxonomySearchGridLastFilter = newFilterString;
-
-        let restParams: any = {
-            limit: this.taxonomySearchGridApi.paginationGetPageSize(),
-            offset: pageNumber - 1,
-        };
-
-        if (CodeUtility.hasValue(query)) {
-            restParams.query = query;
-        }
-
-        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
-            next: (results) => {
-
-                this.taxonomySearchNumberOfResults = results.total;
-                this.taxonomySearchResults = results.items;
-
-                if (results.items.length == 0) {
-
-                    this.taxonomySearchGridApi.showNoRowsOverlay();
-                    this.taxonomySearchGridApi.setRowData([]);
-
-                    if (pageNumber > 1) {
-
-                        this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
-                        this.taxonomySearchGridPaging.totalKnown = true;
-                        this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
-                    }
-                    this.showLoadingSpinner = false;
-
-                    return;
-                }
-
-                UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
-            },
-            error: (error) => {
-
-                this.taxonomySearchResults = [];
                 this.taxonomySearchGridApi.showNoRowsOverlay();
                 this.taxonomySearchGridApi.setRowData([]);
-                this.toggleLoadingSpinner(false);
+                return;
             }
-        });
+
+            this.taxonomySearchGridApi.showLoadingOverlay();
+
+            let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
+            let query = "";
+
+            if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
+                query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
+                query = query.replace(/\//g, ' ');
+            }
+
+            const newFilterString = query;
+
+            // if the filters or sort have changed then move to the first page
+            if (newFilterString !== this.taxonomySearchGridLastFilter) {
+
+                pageNumber = 1;
+                this.taxonomySearchGridPaging.totalRows = null;
+                this.taxonomySearchGridPaging.totalKnown = false;
+                this.taxonomySearchGridApi.api?.paginationGoToPage(0);
+            }
+
+            this.taxonomySearchGridLastFilter = newFilterString;
+
+            const restParams: any = {
+                limit: this.taxonomySearchGridApi.paginationGetPageSize(),
+                offset: pageNumber - 1,
+            };
+
+            if (CodeUtility.hasValue(query)) {
+                restParams.query = query;
+            }
+
+            this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
+                next: (results) => {
+
+                    this.taxonomySearchNumberOfResults = results.total;
+                    this.taxonomySearchResults = results.items;
+
+                    if (results.items.length == 0) {
+
+                        this.taxonomySearchGridApi.showNoRowsOverlay();
+                        this.taxonomySearchGridApi.setRowData([]);
+
+                        if (pageNumber > 1) {
+
+                            this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
+                            this.taxonomySearchGridPaging.totalKnown = true;
+                            this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                        }
+                        this.showLoadingSpinner = false;
+
+                        return;
+                    }
+
+                    UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
+                },
+                error: (error) => {
+
+                    this.taxonomySearchResults = [];
+                    this.taxonomySearchGridApi.showNoRowsOverlay();
+                    this.taxonomySearchGridApi.setRowData([]);
+                    this.toggleLoadingSpinner(false);
+                }
+            });
+        }
     };
 
     taxonomyPathValueGetter = function (params) {
@@ -814,9 +807,9 @@ export class RefsetDetails {
 
         let pathString = "";
 
-        for (let pathConcept of params.data.parents) {
+        for (const pathConcept of params.data.parents) {
 
-            let parentText = this.getTaxonomySearchDescription(pathConcept);
+            const parentText = this.getTaxonomySearchDescription(pathConcept);
             pathString = CodeUtility.addIfNotEmpty(pathString, " > ") + parentText;
         }
 
@@ -834,7 +827,7 @@ export class RefsetDetails {
     getTaxonomySearchDescription(concept) {
 
         let text = "";
-        let choosenDescription = concept.descriptions[this.selectedTaxonomyLanguageIndex];
+        const choosenDescription = concept.descriptions[this.selectedTaxonomyLanguageIndex];
 
         if (choosenDescription != null) {
             text = choosenDescription.term;
@@ -849,9 +842,8 @@ export class RefsetDetails {
 
     onTaxonomySearchGridCellClick = (event) => {
 
-        let selectedRows = this.taxonomySearchGridApi.getSelectedRows();
+        const selectedRows = this.taxonomySearchGridApi.getSelectedRows();
         let selectedConcept;
-        let selectedPath: any;
 
         selectedRows.forEach(function (selectedRow, index) {
             selectedConcept = selectedRow;
@@ -867,7 +859,7 @@ export class RefsetDetails {
     @Debounce()
     onTaxonomySearchChange() {
 
-        let showSearch = CodeUtility.hasValue(this.taxonomySearchInput) && (this.taxonomySearchResults.length > 0 || this.taxonomySearchInput.length > 2);
+        const showSearch = CodeUtility.hasValue(this.taxonomySearchInput) && (this.taxonomySearchResults.length > 0 || this.taxonomySearchInput.length > 2);
 
         if (showSearch) {
 
@@ -899,14 +891,12 @@ export class RefsetDetails {
         this.originalGridParams = gridReadyParams;
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
-        let membersData = [];
-        //let refsetLanguages = [{languageId: 'EN (PT)', languageName: 'EN (PT)'}, {languageId: 'EN (FSN)', languageName: 'EN (FSN)'}];
 
         this.membersGridApi.showLoadingOverlay();
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = "";
-        let filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
+        const filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
 
         if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2) {
             query = this.tableSearchInput;
@@ -920,8 +910,8 @@ export class RefsetDetails {
             return;
         }
 
-        let newQueryString = query;
-        let newFilterString = filter;
+        const newQueryString = query;
+        const newFilterString = filter;
 
         // if the query has changed then move to the first page
         if (newQueryString !== this.membersGridLastQuery) {
@@ -935,7 +925,7 @@ export class RefsetDetails {
         this.membersGridLastQuery = newQueryString;
         this.membersGridLastFilter = newFilterString;
 
-        let restParams: any = {
+        const restParams: any = {
             displayType: "list",
             limit: this.membersGridApi.paginationGetPageSize(),
             offset: pageNumber - 1,
@@ -955,7 +945,7 @@ export class RefsetDetails {
         this.refsetService.getConceptList(this.id, restParams).subscribe({
             next: (results) => {
 
-                let data = results.items;
+                const data = results.items;
                 this.membersGridData = data;
                 this.membersGridNumberOfMembers = this.membersGridNumberOfMembers && !this.resetRefsetTotal ? this.membersGridNumberOfMembers : results.total;
                 this.membersGridNumberOfResults = results.total;
@@ -985,8 +975,8 @@ export class RefsetDetails {
 
                 for (let i = 0; i < this.languageOptions.length; i++) {
 
-                    let language = this.languageOptions[i];
-                    let minWidth =
+                    const language = this.languageOptions[i];
+                    const minWidth =
                         language.value === "101FSN" ? 250 : 190;
 
                     this.membersColumnDefs.push({
@@ -1066,15 +1056,16 @@ export class RefsetDetails {
 
     onMembersGridCellClick = (event) => {
         if (event.column.colId === "actions" || event.column.colId === "code") {
+            return;
         } else {
-            let selectedRows = this.membersGridApi.getSelectedRows();
+            const selectedRows = this.membersGridApi.getSelectedRows();
             let selectedId: string;
 
             selectedRows.forEach(function (selectedRow, index) {
                 selectedId = selectedRow.code;
             });
 
-            let selectedConcept = this.getMemberRow(selectedId);
+            const selectedConcept = this.getMemberRow(selectedId);
             this.loadConceptDetail(selectedConcept);
         }
     };
@@ -1112,7 +1103,6 @@ export class RefsetDetails {
                 if (results) {
 
                     if (action.includes('UNASSIGN')) {
-                        // this.router.navigateByUrl('organizations/projects');
                         this.loadRefset();
 
                     } else if (this.refsetData.id != results.id) {
@@ -1133,11 +1123,6 @@ export class RefsetDetails {
                     this.loadRefset();
                 }
                 this.loadWorkflowHistoryData();
-                // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-                //     this.router.navigate(['/details', this.id]);
-                // });
-
-                // this.changeDetectorRef.detectChanges();
             },
             error: (error) => {
                 this.toggleLoadingSpinner(false);
@@ -1153,7 +1138,6 @@ export class RefsetDetails {
         this.changeLockedStatus(false);
         this.location.replaceState("/details/" + refsetId + '/' + versionDate);
         this.initializeDetailsPage();
-        //this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     loadWorkflowHistoryData(): void {
@@ -1163,19 +1147,17 @@ export class RefsetDetails {
             this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
             this.workflowHistoryDataSource.sort = this.sort;
             this.workflowHistoryNotes = null;
-            // Commented based on ticket 417 (needs this to add each time instead of editing existing note)
-            //this.workflowHistoryNotes = this.workflowHistoryDataSource.data[0]?.notes;
 
             const source = this.workflowHistoryDataSource?.data[0];
             if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
                 this.reviewNotesAdded = true;
             }
         });
-    };
+    }
 
     addRemoveConcept(params: any): void {
 
-        this.isConceptBeingAdded = new Boolean(params.addConcept);
+        this.isConceptBeingAdded = new Boolean(params.addConcept) as boolean;
 
         // if this is coming from the parents section than the concept has children
         if (params.isParentConcept) {
@@ -1194,7 +1176,7 @@ export class RefsetDetails {
         console.timeEnd('refset detail changeLockedStatus');
     }
 
-    processChangedMemberEffects = (conceptStatusArray) => {
+    processChangedMemberEffects = (conceptStatusArray?: any) => {
 
         this.changeLockedStatus(false);
         this.showLoadingSpinner = true;
@@ -1220,7 +1202,7 @@ export class RefsetDetails {
         this.onTaxonomySearchGridReady(this.taxonomyGridParams);
         this.memberCacheLoaded = new Subject<boolean>();
 
-        var allObservables = {
+        const allObservables = {
             memberCacheLoaded: this.memberCacheLoaded
         };
 
@@ -1309,7 +1291,7 @@ export class RefsetDetails {
             return;
         }
 
-        let restParams = {
+        const restParams = {
             displayType: "taxonomy",
             returnChildren: false,
             language: language,
@@ -1325,7 +1307,7 @@ export class RefsetDetails {
         });
     }
 
-    toggleLoadingSpinner = (showSpinner: boolean = true) => {
+    toggleLoadingSpinner = (showSpinner = true) => {
         this.showLoadingSpinner = showSpinner;
     }
 
@@ -1334,8 +1316,6 @@ export class RefsetDetails {
         this.conceptDetail = null;
         this.selectedConcept = null;
     }
-
-    onTmcChange($event) { }
 
     openRichTextEditor(fieldName, displayName = fieldName) {
         const dialogId = "detailsRichTextDialog";
@@ -1368,137 +1348,55 @@ export class RefsetDetails {
     }
 
     openAuditTrail() {
-        const dialogId = "refsetAuditDialog";
-
         const dialogData = {
             headerText: `Refset Audit Trail`,
             template: this.refsetAuditDialog,
             data: this.refsetData,
         };
 
-        const dialogOptions = {
-            id: dialogId,
-        };
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => { });
+        this.dialog.confirmed().subscribe();
     }
 
     openArtifacts() {
-        const dialogId = "refsetArtifactsDialog";
-
         const dialogData = {
             headerText: `Refset Artifacts`,
             template: this.refsetArtifactsDialog,
             data: this.refsetData,
         };
 
-        const dialogOptions = {
-            id: dialogId,
-        };
-
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => { });
-    }
-
-    openCreateNewOrganizationDialog() {
-        const dialogId = "createNewOrganizationDialog";
-
-        const dialogData = {
-            headerText: `Create New Organization`,
-            template: this.refsetArtifactsDialog,
-            data: this.refsetData,
-        };
-
-        const dialogOptions = {
-            id: dialogId,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe((data) => { });
-    }
-
-    openCloneRefset() {
-        const dialogId = "cloneRefsetDialog";
-
-        const dialogData = {
-            headerText: `Clone Refset`,
-            template: this.cloneRefsetDialog,
-            data: this.refsetData,
-        };
-
-        const dialogOptions = {
-            id: dialogId,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe((data) => { });
+        this.dialog.confirmed().subscribe();
     }
 
     openDeleteRefset() {
-        const dialogId = "deleteRefsetDialog";
-
         const dialogData = {
             headerText: `Delete Refset`,
             template: this.deleteRefsetDialog,
             data: this.refsetData,
         };
 
-        const dialogOptions = {
-            id: dialogId,
-        };
-
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => { });
+        this.dialog.confirmed().subscribe();
     }
 
     openConvertRefset() {
-        const dialogId = "convertRefsetDialog";
-
         const dialogData = {
             headerText: `Make Extensional`,
             template: this.convertRefsetDialog,
             data: this.refsetData,
         };
 
-        const dialogOptions = {
-            id: dialogId,
-        };
-
         this.dialog = this.dialogFactoryService.open(dialogData);
 
         this.dialog.confirmed().subscribe((data) => {
-            this.refsetService.convertRefsetToExtensional(this.id).subscribe((result) => {
-            });
-
-         });
-        
+            this.refsetService.convertRefsetToExtensional(this.id).subscribe();
+        });
     }
-
-    openRefsetVersionNotes() {
-        const dialogId = "refsetVersionNotes";
-
-        const dialogData = {
-            headerText: `Version Notes`,
-            template: this.refsetVersionNotes,
-            data: this.refsetData,
-        };
-
-        const dialogOptions = {
-            id: dialogId,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe((data) => { });
-    }
-
-    changeLanguage() { }
 
     onChangeMembersListMode() {
         if (this.selectedMembersListMode == "table") {
@@ -1512,11 +1410,11 @@ export class RefsetDetails {
     }
 
     openMemberHistory(conceptId) {
-        let concept = this.getMemberRow(conceptId);
+        const concept = this.getMemberRow(conceptId);
         this.refsetService
             .getMemberHistory(this.refsetData?.id, conceptId, null)
             .subscribe((results) => {
-                let historyData: any = {};
+                const historyData: any = {};
                 historyData.name = `${concept?.name} (${concept?.code})`;
 
                 historyData.columnDefs = [
@@ -1550,8 +1448,6 @@ export class RefsetDetails {
                     enableBrowserTooltips: true,
                 };
 
-                const dialogId = "memberHistoryDialog";
-
                 const dialogData = {
                     headerText: `History By Reference Set Member`,
                     showCancel: false,
@@ -1560,16 +1456,12 @@ export class RefsetDetails {
                     data: historyData,
                 };
 
-                const dialogOptions = {
-                    id: dialogId,
-                };
-
                 this.dialog = this.dialogFactoryService.open(dialogData);
             });
     }
 
     openInNewWindow(conceptId: string): void {
-        let snomedBrowserUrl =
+        const snomedBrowserUrl =
             environment["snomedBrowserUrl"] +
             "&conceptId1=" +
             conceptId +
@@ -1630,7 +1522,7 @@ export class RefsetDetails {
     }
 
     modifyStatusSyntax(value: string): string {
-        return this.capitalizeFirstLetterOfString(value?.replace(/\_/g, ' ').toLowerCase());
+        return this.capitalizeFirstLetterOfString(value?.replace(/_/g, ' ').toLowerCase());
     }
 
     setTimeFormat(dateTime: string): string {
@@ -1639,7 +1531,7 @@ export class RefsetDetails {
 
 
     getFsn(descriptions: any): string {
-        for (let description of descriptions) {
+        for (const description of descriptions) {
             if (description.languageName.toLowerCase().indexOf("fsn") > 0) {
                 return description.term;
             }
@@ -1701,8 +1593,6 @@ export class RefsetDetails {
 
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
-            //backdrop : 'static',
-            //keyboard : false,
             windowClass: 'alert-modal'
         });
     }
@@ -1711,8 +1601,6 @@ export class RefsetDetails {
         this.modalService.open(dialog, {
             modalDialogClass: 'full-modal',
             centered: true
-            //backdrop : 'static',
-            //keyboard : false,
         });
     }
 
@@ -1748,8 +1636,7 @@ export class RefsetDetails {
         });
     }
 
-    unfocus(target: any, obj: any): void{
-        debugger;
+    unfocus(target: any, obj: any): void {
         target.focus();
     }
 }

@@ -14,7 +14,6 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
-import { stringify } from 'querystring';
 
 
 /**
@@ -29,7 +28,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
-    selectedView: string = 'all';
+    selectedView = 'all';
     refsetGridApi: any;
     refsetGridColumnApi: any;
     columnDefs = [];
@@ -42,9 +41,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         totalRows: null,
         manualStateRefresh: new Boolean(true)
     };
-    refsetGridLastFilter: string = '';
-    refsetGridLastSort: string = '';
-    showTable: boolean = false;
+    refsetGridLastFilter = '';
+    refsetGridLastSort = '';
+    showTable = false;
     refsetData: any;
     dialog: DialogService;
     versionStatuses: any;
@@ -70,7 +69,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     @ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-    //@ViewChild('directorySearchInput') searchInput: PaginationComponent;
 
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -102,12 +100,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 next: ([results, versionResults, editionResults, organizationResults]) => {
 
                     this.versionStatuses = results;
-                    let versionStatusArray = this.versionStatuses?.items;
+                    const versionStatusArray = this.versionStatuses?.items;
                     this.versions = versionResults;
-                    let versionsArray = this.versions?.items;
-                    let editionsArray = editionResults.items;
+                    const versionsArray = this.versions?.items;
+                    const editionsArray = editionResults.items;
                     this.organizations = organizationResults;
-                    let organizationsArray = this.organizations?.items;
+                    const organizationsArray = this.organizations?.items;
 
                     for (let i = 0; i < versionStatusArray.length; i++) {
                         versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();
@@ -171,7 +169,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         rowClassRules: {
                             'refset_tool_grid_inactive_row': function (params) {
 
-                                var inactivatedRow = false;
+                                let inactivatedRow = false;
 
                                 if (params.data) {
                                     inactivatedRow = params.data.active == false;
@@ -184,7 +182,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                     this.showTable = true;
                     this.changeDetectorRef.detectChanges();
-                    // this.overrideHeaderScroll();
                 },
                 error: (error) => {
                     this.showLoadingSpinner = true;
@@ -206,16 +203,15 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
         this.onResize(undefined);
-        let dataSource = {
+        const dataSource = {
             rowCount: null,
             getRows: (rowParams) => {
 
                 this.refsetGridApi.showLoadingOverlay();
-                // this.showLoadingSpinner = true;
 
                 let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
                 let query = UiUtility.formatFilterData(rowParams.filterModel);
-                let sort = UiUtility.formatSortData(rowParams.sortModel);
+                const sort = UiUtility.formatSortData(rowParams.sortModel);
 
                 if (this.selectedView === 'public') {
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
@@ -227,8 +223,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
                 }
 
-                let newFilterString = query;
-                let newSortString = JSON.stringify(sort);
+                const newFilterString = query;
+                const newSortString = JSON.stringify(sort);
 
                 // if the filters or sort have changed then move to the first page
                 if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
@@ -247,7 +243,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 this.refsetGridLastFilter = newFilterString;
                 this.refsetGridLastSort = newSortString;
 
-                let restParams: any = {
+                const restParams: any = {
                     limit: this.refsetGridApi.paginationGetPageSize(),
                     offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
                     searchConcepts: true,
@@ -259,7 +255,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                 if (CodeUtility.hasValue(query)) {
 
-                    query = query.replace(/\//g, '%2F').replace(/\%/g, '%25');
+                    query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
                     restParams.query = query;
                 }
 
@@ -279,7 +275,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             return;
                         }
 
-                        let data = results.items;
+                        const data = results.items;
                         this.refsetData = data;
 
                         if (data?.length > 0) {
@@ -313,7 +309,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                                 this.refsetService.getDiscussionThreads("REFSET", data[i].id, null).subscribe({
                                     next: (results) => {
                                         data[i].unresolvedDiscussionCount = 0;
-                                        for (let discussion of results.items) {
+                                        for (const discussion of results.items) {
 
                                             if (discussion.status == 'Open') {
                                                 data[i].unresolvedDiscussionCount++;
@@ -353,8 +349,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 return;
             }
 
-            let label = obj.getAttribute('aria-label');
-            let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            const label = obj.getAttribute('aria-label');
+            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
     };
@@ -365,7 +361,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             return '';
         }
 
-        let flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
+        const flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
         params.data.flagIcon = flagIcon;
         return params?.data?.edition?.name;
     };
@@ -382,10 +378,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'information' || event.column.colId === 'actions') {
-
+            return;
         } else {
 
-            let selectedRows = this.refsetGridApi.getSelectedRows();
+            const selectedRows = this.refsetGridApi.getSelectedRows();
             let selectedId: string;
             let selectedVersionDate: string;
 
@@ -442,7 +438,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             return;
         }
 
-        let refset = this.getRefsetRow(refsetId);
+        const refset = this.getRefsetRow(refsetId);
 
         this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
 
@@ -466,19 +462,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
             }
 
-            let tags = '';
-
-            for (const tag of refset.tags) {
-                tags += tag + "; ";
-            }
-
-            //refset.tags = CodeUtility.removeFinal(tags, ';');
             const dialogData = {
                 dialogId: dialogId,
                 showCancel: false,
                 cancelText: 'Close',
                 actionText: 'View Complete Refset',
-                //showTitle: false,
                 showConfirm: false,
                 template: this.infoDialog,
                 headerText: 'Refset Metadata',
@@ -511,7 +499,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     openFeedback(refsetId: string) {
 
-        let refset = this.getRefsetRow(refsetId);
+        const refset = this.getRefsetRow(refsetId);
         const dialogId = 'directoryFeedbackDialog';
 
         const dialogData = {
@@ -572,9 +560,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     }
 
     onResize(event) {
-        let gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
+        const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
         document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
-        //document.getElementsByClassName('ag-floating-filter-full-body')[0].setAttribute('style', `text-transform: lowercase;`);
     }
 
     setDescriptions(refsetData: any): Array<string> {
