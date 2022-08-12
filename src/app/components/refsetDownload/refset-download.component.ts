@@ -67,7 +67,7 @@ export class RefsetDownloadComponent {
 
                 this.hideSections();
 
-                this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'sctids', display: 'List Of Sct IDs' }];
+                this.formatOptions = [{ value: 'rf2', display: 'RF2' }, { value: 'sctids', display: 'List Of SCTIDs' }];
 
                 if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
 
