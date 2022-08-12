@@ -16,7 +16,7 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 	params: SelectFloatingFilterParams;
 	currentValue;
-	optionNum: number = 0;
+	optionNum = 0;
 	names: Array<any>;
 	options: Array<SelectEntry> = [];
 	selectedOption = this.options[0];
@@ -25,30 +25,26 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 		this.params = params;
 		this.names = this.params.names;
-		this.options.push(new SelectEntry(this.optionNum++, ""));
+		this.options.push(new SelectEntry(this.optionNum++, ''));
 
 		for (let i = 0; i < this.names?.length; i++) {
 
-			let entry = this.names[i];
-
+			const entry = this.names[i];
 			// If this is a Type Key Value property
-			if (entry.hasOwnProperty("type") && entry.hasOwnProperty("key") && entry.hasOwnProperty("value")) {
+			if (entry.hasOwnProperty('type') && (entry.hasOwnProperty('key') || entry.hasOwnProperty('name')) && entry.hasOwnProperty('value')) {
 
-				if (entry.type === "status") {
+				if (entry.type === 'status') {
 
-					let option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
+					const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
 					this.options.push(option);
 				} else {
 
-					let option: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
+					const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
 					this.options.push(option);
 				}
-			}
+			} else {
 
-			// If this is a full object
-			else {
-
-				let option: SelectEntry = new SelectEntry(this.optionNum++, entry.name.charAt(0) + entry.name.slice(1).toLowerCase());
+				const option: SelectEntry = new SelectEntry(this.optionNum++, entry.name.charAt(0) + entry.name.slice(1).toLowerCase());
 				this.options.push(option);
 			}
 		}
@@ -56,7 +52,7 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 	valueChanged() {
 
-		let valueToUse = this.selectedOption.value != null ? this.selectedOption.value : "";
+		const valueToUse = this.selectedOption.value != null ? this.selectedOption.value : '';
 		const filterType = this.params.filterParams['defaultOption'] ?? 'equals';
 		this.params.parentFilterInstance((instance: TextFilter) => instance.onFloatingFilterChanged(filterType, valueToUse === '' ? null : valueToUse));
 	}
@@ -64,7 +60,7 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 	onParentModelChanged(parentModel: TextFilterModel): void {
 
 		if (!parentModel) {
-			this.selectedOption.value = "";
+			this.selectedOption.value = '';
 		} else {
 			this.selectedOption.value = parentModel.filter;
 		}
