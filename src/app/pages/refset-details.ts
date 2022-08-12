@@ -415,7 +415,7 @@ export class RefsetDetails {
                 this.refsetStatus = results?.workflowStatus;
                 this.id = results?.id;
                 this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
-                this.refsetBranchPath = RefsetUtility.getBranchPath(results)
+                this.refsetBranchPath = RefsetUtility.getBranchPath(results);
                 this.refsetData = results;
                 console.log(this.refsetData);
                 this.refsetService.setRefsetInformation(this.refsetData);
