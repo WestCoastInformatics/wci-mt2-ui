@@ -1,7 +1,3 @@
-<!-- <button *ngIf="isDetailPage" (click)="openDownload(refset.refsetId)" [ngClass]="{inactive: disabled}" [disabled]="disabled" class="refset-tool-standard-icon-button refset-tool-icon-button-download">
-    <img src="assets/download-icon.svg" alt="download icon" title="Download Refset" aria-label="download button" />
-</button> -->
-
 <button mat-menu-item *ngIf="isDetailPage" [disabled]="disabled" (click)="openDownload(refset.refsetId)">Download Refset</button>
 
 <button *ngIf="!isDetailPage" mat-icon-button aria-hidden="false" (click)="openDownload(refset.refsetId)" aria-label="Download Refset" title="Download Refset"
@@ -21,7 +17,7 @@
             </div>
             <div class="col refset-tool-download-column-field">
                 <mat-form-field appearance="fill">
-                    <mat-select #downloadFormatField [(value)]="data.selectedFormat" (selectionChange)="changeFormat(data)" >
+                    <mat-select #downloadFormatField [(value)]="data.selectedFormat" (selectionChange)="changeFormat(data)">
                         <mat-option *ngFor="let option of data.formatOptions" [value]="option.value">
                             {{ option.display }}
                         </mat-option>

@@ -40,25 +40,25 @@ export class TaxonomyTreeComponent {
     staticOptions: any = { nodeClass: this.styleNodeClass };
     nodes: any[] = [];
     parentConcept: any;
-    loadNodeChildrenProcess: Function = (event) => { };
+    loadNodeChildrenProcess: any;
     refsetUtility = RefsetUtility;
-    isLoading: boolean = false;
-    noData: boolean = false;
+    isLoading = false;
+    noData = false;
     showLoadingSpinner = false;
     loadedChildren: any;
-    isAdd: Boolean;
+    isAdd: boolean;
     conceptForAddRemove: any;
     addRemoveDefinitionExceptionType: string;
 
     @Input() editMode = false;
     @Input() isOnDetailsPage = true;
     @Input() isParentConcept = false;
-    @Input() treeId: string = "taxonomyTree";
+    @Input() treeId = "taxonomyTree";
     @Input() refset: any;
     @Input() rootNode: any;
     @Input() options: TreeOptions = {};
     @Input() manualStateRefresh = false;
-    @Input() hasMultipleRootNodes: boolean = false;
+    @Input() hasMultipleRootNodes = false;
     @Input() selectedConcept: any;
     @Input() processChangedMemberFunction: () => void;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
@@ -99,7 +99,7 @@ export class TaxonomyTreeComponent {
 
                 if (CodeUtility.hasValue(this.nodes)) {
 
-                    let treeModel: TreeModel = this.treeComponent?.treeModel;
+                    const treeModel = this.treeComponent?.treeModel;
 
                     if (CodeUtility.hasValue(treeModel)) {
                         this.sortTree(treeModel.nodes);
@@ -144,7 +144,7 @@ export class TaxonomyTreeComponent {
 
         this.isLoading = true;
         this.showLoadingSpinner = true;
-        let restParams = {
+        const restParams = {
             displayType: "taxonomy",
             depth: 1,
             startingConceptId: this.rootNode.code,
@@ -202,15 +202,15 @@ export class TaxonomyTreeComponent {
         }
 
         if (this.configOptions.expandFirstNode) {
-            let treeModel: TreeModel = this.treeComponent.treeModel;
-            let firstNode: TreeNode = treeModel.getFirstRoot();
+            const treeModel = this.treeComponent.treeModel;
+            const firstNode = treeModel.getFirstRoot();
             firstNode.expand();
         }
     }
 
     async getChildren(node: any) {
 
-        let restParams = {
+        const restParams = {
             displayType: "taxonomy",
             depth: 1,
             startingConceptId: node.data?.code ? node.data?.code : node?.code,
@@ -220,9 +220,9 @@ export class TaxonomyTreeComponent {
         };
 
         // need to return a promise or the data to the tree, not an observable
-        let results$: Observable<any> = this.refsetService.getConceptList(this.refset.id, restParams);
-        let resultData: any = await lastValueFrom(results$);
-        let data = resultData.items;
+        const results$: Observable<any> = this.refsetService.getConceptList(this.refset.id, restParams);
+        const resultData: any = await lastValueFrom(results$);
+        const data = resultData.items;
         RefsetUtility.setEmptyChildrenNull(data);
         this.sortTree([{ children: data }]);
         return data;
@@ -268,7 +268,7 @@ export class TaxonomyTreeComponent {
             data = node;
         }
 
-        let useFsn = this.options?.useFsn;
+        const useFsn = this.options?.useFsn;
 
         if (useFsn && CodeUtility.hasValue(data.fsn)) {
             text = data.fsn;
@@ -291,10 +291,10 @@ export class TaxonomyTreeComponent {
 
     sortNodes(nodes) {
         return nodes.sort((node1, node2) => {
-            let name1 = this.getNodeText(node1);
-            let name2 = this.getNodeText(node2);
+            const name1 = this.getNodeText(node1);
+            const name2 = this.getNodeText(node2);
 
-            let compareValue = name1.localeCompare(name2);
+            const compareValue = name1.localeCompare(name2);
             return compareValue;
         });
     }
@@ -323,19 +323,19 @@ export class TaxonomyTreeComponent {
      * @param selectTheNode - should the target node be selected once it is found (default true)
      * @param suppressChangeEvent - should the tree onchange event be fired if the target node is selected (default true)
      */
-    findNodeInTree(conceptID, parentPath: any[] = [], returnFunction: Function = function () { }, selectTheNode = true, suppressChangeEvent = true) {
+    findNodeInTree(conceptID, parentPath: any[] = [], returnFunction: any, selectTheNode = true, suppressChangeEvent = true) {
 
         let deferred;
 
-        let startFind = () => {
+        const startFind = () => {
             // create a deferred object so that we can make sure only one query gets processed at a time
             deferred = $.Deferred();
 
             // create a deferred object so that when the node is found we can return the node ID to the calling function
-            let deferredReturn = $.Deferred();
+            const deferredReturn = $.Deferred();
 
             // an array of callback functions to handle cleanup of each node we touch once we find the target node
-            let cleanUpNodes = [];
+            const cleanUpNodes = [];
 
             // get the ID of the node in the tree from the concept ID
             let node = this.getNodeIDByConceptID(conceptID);
@@ -343,22 +343,22 @@ export class TaxonomyTreeComponent {
             // if the node exists in the tree continue on
             if (node == undefined) {
 
-                let processNodeParents = (parentArray) => {
+                const processNodeParents = (parentArray) => {
 
                     if (parentArray.length > 0) {
 
                         // this is a recursive function that will process each of the returned nodes, starting with the root, and walk down to the target node
-                        let walkTree = (index) => {
+                        const walkTree = (index) => {
 
                             // find this node in the tree
-                            let nodeInTree = this.getNodeIDByConceptID(
+                            const nodeInTree = this.getNodeIDByConceptID(
                                 parentArray[index].code
                             );
 
                             if (nodeInTree) {
 
                                 // store the open/close state of the node in the tree
-                                let isAlreadyOpen = nodeInTree.isExpanded;
+                                const isAlreadyOpen = nodeInTree.isExpanded;
 
                                 // add a function to our callback array to handle cleanup of this node once the target node is found
                                 cleanUpNodes.push(function () {
@@ -369,7 +369,7 @@ export class TaxonomyTreeComponent {
                                     }
                                 });
 
-                                let processNodeChildren = () => {
+                                const processNodeChildren = () => {
 
                                     // if we are not at the last element of the parent array
                                     if (index < parentArray.length - 1) {
@@ -467,15 +467,9 @@ export class TaxonomyTreeComponent {
         this.numOfChildren.emit(value);
     }
 
-    // setParentNode(concept): void {
-    //     if (!this.selectedConcept) {
-    //         this.selectedConcept = concept;
-    //     }
-    // }
-
     addRemoveConcept(params: any): void {
 
-        this.isAdd = new Boolean(params.addConcept);
+        this.isAdd = new Boolean(params.addConcept) as boolean;
         this.conceptForAddRemove = params.concept;
         this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
     }
@@ -489,7 +483,7 @@ export class TaxonomyTreeComponent {
             node.setIsActive(true);
         }
 
-        let element: any = $(
+        const element: any = $(
             "#" + node.parent.data.code + "-" + node.data.code
         );
         element[0].scrollIntoView({ behavior: "smooth" });

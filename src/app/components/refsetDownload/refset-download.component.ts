@@ -36,7 +36,7 @@ export class RefsetDownloadComponent {
     disableChannel = new BroadcastChannel('disable-button-channel');
 
     @Input() refset;
-    @Input() buttonClasses: String = '';
+    @Input() buttonClasses = '';
     @Input() isDetailPage: boolean;
     @Input() disabled = false;
 
@@ -91,7 +91,7 @@ export class RefsetDownloadComponent {
                 this.selectedVersionDate = CodeUtility.formatJsonDate(versionDate, CodeUtility.DATE_FORMAT_REVERSE);
                 const selectedVersionDateIndex = this.versionOptions.findIndex((element) => element.value == this.selectedVersionDate);
 
-                for (const language of this.refset?.edition?.fullyQualifiedLanguageRefsets) {
+                for (const language of (this.refset.edition.fullyQualifiedLanguageRefsets || [])) {
 
                     const optionDetails: any = { value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode };
 
@@ -180,7 +180,6 @@ export class RefsetDownloadComponent {
                             exportType: data.selectedContent.toUpperCase(),
                             languageId: data.selectedLanguage,
                             fileNameDate: fileNameDate,
-                            // startEffectiveTime: null,
                             transientEffectiveTime: fileNameDate,
                             exportMetadata: data.exportMetadata
                         };
@@ -201,7 +200,6 @@ export class RefsetDownloadComponent {
                                 } else {
 
                                     this.notificationService.close(notification);
-                                    // UiUtility.startFileDownload(this.notificationService, this.refsetService.restUrl + this.refsetService.contextPath + results.url, null, description);
                                     window.open(this.refsetService.restUrl + this.refsetService.contextPath + results.url);
                                 }
                             }
@@ -212,6 +210,7 @@ export class RefsetDownloadComponent {
 
             },
             error: (error) => {
+                console.log(error);
             }
         });
     }
@@ -317,7 +316,7 @@ export class RefsetDownloadComponent {
 
     checkContentValues(data, option) {
 
-        let show = option.value != 'delta' || (this.shouldShowDeltaContentLabel() && this.showDeltaOption(data) && option.value == 'delta');
+        const show = option.value != 'delta' || (this.shouldShowDeltaContentLabel() && this.showDeltaOption(data) && option.value == 'delta');
         return show;
     }
 
@@ -350,7 +349,7 @@ export class RefsetDownloadComponent {
     private checkRefsetDates(): boolean {
 
         const jeComparisonToDate = new Date(this.selectedVersionDate);
-        const keysToDelete = new Array();
+        const keysToDelete = [];
 
         for (const entry of this.comparisonFromOptions.entries()) {
             let date;
@@ -373,7 +372,6 @@ export class RefsetDownloadComponent {
 
         const mappedComparisonFromOptionsArray = this.comparisonFromOptions.map((version) => {
             if (version.display?.includes('(')) {
-                // tslint:disable-next-line: no-shadowed-variable
                 const comparisonFromDate = new Date(version.display?.split('(')[0]);
                 return comparisonFromDate?.getTime();
             } else {

@@ -554,7 +554,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         // this.onGridReady({api: this.gridApi});
     }
 
-    getPostText(message: string, truncate: boolean = true) {
+    getPostText(message: string, truncate = true) {
 
         const strippedMessage = CodeUtility.stripHtml(message);
 
