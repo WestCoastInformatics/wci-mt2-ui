@@ -96,6 +96,7 @@ export class AppComponent implements OnInit {
                 console.log('logged out');
             } else {
                 console.log('not logged in');
+                this.authenticationService.notAuthenticated();
             }
         }, 900000);
     }
