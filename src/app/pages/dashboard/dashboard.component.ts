@@ -1,14 +1,14 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
+import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {Router} from '@angular/router';
+import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
+import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {RefsetUtility} from 'src/app/utilities/refset.utility';
+import {UiUtility} from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'app-dashboard',
@@ -57,11 +57,14 @@ export class DashboardComponent implements OnInit {
 
         this.titleService.setTitle('Refset Tool - Dashboard');
         this.breadcrumbService.setBreadcrumbs([
-            { path: '/dashboard', label: 'Dashboard' }
+            {path: '/dashboard', label: 'Dashboard'}
         ]);
+        if (!this.authService.isUserLoggedIn) {
+            this.authService.notAuthenticated();
+        }
         this.currentUser = this.authService.getUser();
         this.refsetGridOptions = {
-            context: { componentParent: this },
+            context: {componentParent: this},
             rowModelType: 'infinite',
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
@@ -73,7 +76,7 @@ export class DashboardComponent implements OnInit {
                 sortable: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
                 suppressMenu: true,
                 menuTabs: ['columnsMenuTab'],
                 resizable: true
@@ -88,31 +91,49 @@ export class DashboardComponent implements OnInit {
 
         this.columnDefs = [
             {
-                field: 'name', headerName: 'Reference Set', flex: 1, minWidth: 550, unSortIcon: true, sortable: true, cellRenderer: params => {
+                field: 'name',
+                headerName: 'Reference Set',
+                flex: 1,
+                minWidth: 550,
+                unSortIcon: true,
+                sortable: true,
+                cellRenderer: params => {
                     return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
-                }, cellClass: 'pointer'
+                },
+                cellClass: 'pointer'
             },
             {
-                field: 'workflowStatus', headerName: 'Workflow Status', unSortIcon: true, cellClass: 'refset-tool-dashboard-column-workflow-status',
-                cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
-                sortable: true, floatingFilterComponent: 'categoryFilterComponent',
+                field: 'workflowStatus',
+                headerName: 'Workflow Status',
+                unSortIcon: true,
+                cellClass: 'refset-tool-dashboard-column-workflow-status',
+                cellRenderer: 'templateRenderer',
+                cellRendererParams: {template: this.workflowStatus},
+                sortable: true,
+                floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     suppressFilterButton: true, names: [
-                        { type: 'status', name: "In Development", value: "IN_DEVELOPMENT" },
-                        { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
-                        { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
-                        { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-                        { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
-                        { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
-                        { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
-                        { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
-                        { type: 'status', name: 'Published', value: 'PUBLISHED' }
+                        {type: 'status', name: 'In Development', value: 'IN_DEVELOPMENT'},
+                        {type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT'},
+                        {type: 'status', name: 'In Edit', value: 'IN_EDIT'},
+                        {type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE'},
+                        {type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW'},
+                        {type: 'status', name: 'In Review', value: 'IN_REVIEW'},
+                        {type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED'},
+                        {type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION'},
+                        {type: 'status', name: 'Published', value: 'PUBLISHED'}
                     ]
                 }
             },
             {
-                field: 'modified', tooltipField: 'modified', headerName: 'Last Modified', filter: false, unSortIcon: true, sortable: true, valueGetter:
-                    UiUtility.gridDateValueGetter,
+                field: 'modified',
+                tooltipField: 'modified',
+                headerName: 'Last Modified',
+                filter: false,
+                unSortIcon: true,
+                sortable: true,
+                valueGetter:
+                UiUtility.gridDateValueGetter,
             }
         ];
 
@@ -123,7 +144,7 @@ export class DashboardComponent implements OnInit {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
         const sortModel = [
-            { colId: 'modified', sort: 'desc' }
+            {colId: 'modified', sort: 'desc'}
         ];
         this.refsetGridApi.setSortModel(sortModel);
         const dataSource = {
@@ -166,7 +187,7 @@ export class DashboardComponent implements OnInit {
                     restParams.query = query;
                 }
                 this.data = [];
-                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
+                this.refsetService.getRefsets({...restParams, ...sort}).subscribe({
                     next: (results) => {
 
                         for (const refset of results.items) {
