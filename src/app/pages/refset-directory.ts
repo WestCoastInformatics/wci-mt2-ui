@@ -461,6 +461,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
                 refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
             }
+            refset.versionList = results.versionList;
 
             const dialogData = {
                 dialogId: dialogId,
@@ -506,7 +507,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             headerText: `Refset Feedback for ${refset.name} (${refset.refsetId})`,
             template: this.feedbackDialog,
             data: refset
-        }
+        };
 
         const dialogOptions = {
             id: dialogId,
@@ -575,5 +576,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         } else {
             event.target.style.display = 'none';
         }
+    }
+
+    latestDate(versionList: any[]): string {
+        return versionList && versionList[0] ? `${versionList[0].date}` : '';
     }
 }
