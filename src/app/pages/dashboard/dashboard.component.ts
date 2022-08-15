@@ -113,7 +113,6 @@ export class DashboardComponent implements OnInit {
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     suppressFilterButton: true, names: [
-                        {type: 'status', name: 'In Development', value: 'IN_DEVELOPMENT'},
                         {type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT'},
                         {type: 'status', name: 'In Edit', value: 'IN_EDIT'},
                         {type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE'},
