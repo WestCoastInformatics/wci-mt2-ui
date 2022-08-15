@@ -116,7 +116,7 @@
                       [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
                     </app-refset-discussion-list>
                     <br *ngIf="editMode">
-                    
+
                     <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
                         Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span>
                     </button>
@@ -155,19 +155,20 @@
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <button *ngIf="editMode" mat-button [matMenuTriggerFor]="documentationMenu" [matMenuTriggerRestoreFocus]="false" class="documentation-menu">Documentation
+                    <button mat-button [matMenuTriggerFor]="documentationMenu" [matMenuTriggerRestoreFocus]="false" class="documentation-menu">Documentation
                         <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #documentationMenu="matMenu">
-                        <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id">
+                        <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
-                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id"></audit-trail-modal>
-                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open Snomed Browser"><a (click)="snomedBrowserLink()">Snomed
+                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
+                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser"
+                                title="Open Snomed Browser"><a (click)="openInNewWindow(refsetId)">Snomed
                                 Browser</a>
                         </button>
                     </mat-menu>
 
-                    <span *ngIf="editMode" class="menu-spacer">&nbsp;</span>
+                    <span class="menu-spacer">&nbsp;</span>
 
                     <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
@@ -545,7 +546,7 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #deleteRefsetDialog let-data>  
+                <ng-template #deleteRefsetDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 

@@ -1,6 +1,6 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'artifacts-modal',
@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ArtifactsModalComponent {
 
-
+    @Input() refset: any;
     @Input() refsetInternalId: string;
     @Input() isDetails = true;
     @ViewChild('artifactsList') artifactsList: TemplateRef<any>;
@@ -32,5 +32,9 @@ export class ArtifactsModalComponent {
 
     onRefresh(list: any) {
         list.onReload();
+    }
+
+    get canAdd(): boolean {
+        return this.refset?.roles.includes('AUTHOR');
     }
 }

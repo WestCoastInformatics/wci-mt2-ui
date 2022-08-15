@@ -18,7 +18,7 @@
     <div class="container-fluid ready-for-review-container-fluid">
         <div class="modal-body pr-0 pl-0 pb-0">
 
-            <div class="text-right">
+            <div class="text-right" *ngIf="canAdd">
                 <artifact-form [refsetInternalId]="refsetInternalId" (refresh)="onRefresh(artifactsList)"></artifact-form>
             </div>
 
