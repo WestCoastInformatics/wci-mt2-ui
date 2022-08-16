@@ -263,8 +263,46 @@ export class UiUtility {
         // set a small delay so the original call has some time to process
         CodeUtility.delay(1500);
 
-        let message = 'Members are being ' + description + ' refset ' + refsetId + '. The refset is locked until the operation completes. '
-            + 'You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+        let message = 'Members are being ' + description + ' refset ' + refsetId + '.';
+        let messagePrefix = '';
+
+        if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
+
+            if (description.includes(RefsetUtility.EXCLUSION)) {
+
+                if (description.includes('added')) {
+
+                    description = 'removed from';
+                    message = 'An exclusion is being added and members are being removed from';
+                    messagePrefix = 'An exclusion was added. ';
+                } else {
+
+                    description = 'added to';
+                    message = 'An exclusion is being removed and members are being added to';
+                    messagePrefix = 'An exclusion was removed. ';
+                }
+
+            } else {
+
+                if (description.includes('added')) {
+
+                    description = 'added to';
+                    message = 'An inclusion is being added and members are being added to';
+                    messagePrefix = 'An inclusion was added. ';
+
+                } else {
+
+                    description = 'removed from';
+                    message = 'An inclusion is being removed and members are being removed from';
+                    messagePrefix = 'An inclusion was removed. ';
+                }
+            }
+
+            message += ' refset ' + refsetId + '.';
+        }
+
+        message += ' The refset is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
         let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
@@ -335,16 +373,16 @@ export class UiUtility {
                         let someSucceeded = dataString.includes('Success');
 
                         if (!someFailed && someSucceeded) {
-                            message = 'All members were successfully ' + messageEnd;
+                            message = messagePrefix + 'All members were successfully ' + messageEnd;
 
                         } else if (someFailed && !someSucceeded) {
 
                             notificationType = 'error';
-                            message = 'No members were able to be ' + messageEnd;
+                            message = messagePrefix + 'No members were able to be ' + messageEnd;
                         } else {
 
                             notificationType = 'warning';
-                            message = 'Some members were not able to be ' + messageEnd;
+                            message = messagePrefix + 'Some members were not able to be ' + messageEnd;
                         }
                     } else {
 

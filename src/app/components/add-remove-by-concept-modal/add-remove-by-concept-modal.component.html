@@ -283,11 +283,11 @@
           title="Search Concepts" ng-reflect-color="green">
             Search
         </button>
-        <button type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('add')" mat-raised-button color="green" aria-hidden="false"
+        <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('add')" mat-raised-button color="green" aria-hidden="false"
           class="refset-tool-action-button" aria-label="Add All" title="Add All" ng-reflect-color="green">
             Add All
         </button>
-        <button type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('remove')" mat-raised-button color="red" aria-hidden="false"
+        <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('remove')" mat-raised-button color="red" aria-hidden="false"
           class="refset-tool-action-button" aria-label="Remove All" title="Remove All" ng-reflect-color="red">
             Remove All
         </button>

@@ -144,13 +144,13 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 				let encodedPipe = '%7C';
 				ecl = this.conceptCode + ' ' + encodedPipe + ' ' + this.conceptName + ' ' + encodedPipe;
-				description = 'added to';
+				description = this.definitionExceptionType + ' added to';
 
 				this.refsetService.addRefsetDefinitionExceptions(this.refsetInternalId, null, this.definitionExceptionType, '', ecl).subscribe();
 
 			} else {
 
-				description = 'removed from';
+				description = this.definitionExceptionType + ' removed from';
 				this.refsetService.removeRefsetDefinitionException(this.refsetInternalId, this.definitionExceptionId).subscribe();
 			}
 		}
