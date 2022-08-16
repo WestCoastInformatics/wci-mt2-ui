@@ -623,7 +623,7 @@ export class RefsetDetails {
                 const success = results?.success;
 
                 if (CodeUtility.testBoolean(success)) {
-                    return;
+                    console.log(success);
                 } else {
                     console.log('Error caching refset member details.');
                 }
@@ -669,7 +669,7 @@ export class RefsetDetails {
         );
 
         this.selectedConceptDetailLanguage = this.selectedTaxonomyLanguage;
-        this.taxonomySearchGridApi.refreshCells();
+        this.taxonomySearchGridApi?.refreshCells();
         this.taxonomyOptions.useFsn = this.conceptDetailsOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
         this.taxonomyOptions.language = this.conceptDetailsOptions.language = this.getTaxonomyLanguageWithoutType();
 
@@ -1056,7 +1056,7 @@ export class RefsetDetails {
 
     onMembersGridCellClick = (event) => {
         if (event.column.colId === "actions" || event.column.colId === "code") {
-            return;
+            console.log(event)
         } else {
             const selectedRows = this.membersGridApi.getSelectedRows();
             let selectedId: string;
@@ -1617,6 +1617,9 @@ export class RefsetDetails {
     }
 
     latestDate(versionList: any[]): string {
+        if (this.refsetData?.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
+            return 'Latest';
+        }
         return versionList && versionList[0] ? `${versionList[0].date}` : '';
     }
 

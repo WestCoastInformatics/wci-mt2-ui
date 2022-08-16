@@ -40,7 +40,7 @@ export class TaxonomyTreeComponent {
     staticOptions: any = { nodeClass: this.styleNodeClass };
     nodes: any[] = [];
     parentConcept: any;
-    loadNodeChildrenProcess: any;
+    loadNodeChildrenProcess = (event) => { };
     refsetUtility = RefsetUtility;
     isLoading = false;
     noData = false;
