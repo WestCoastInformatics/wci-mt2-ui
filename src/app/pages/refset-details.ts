@@ -623,7 +623,7 @@ export class RefsetDetails {
                 const success = results?.success;
 
                 if (CodeUtility.testBoolean(success)) {
-                    return;
+                    console.log(success);
                 } else {
                     console.log('Error caching refset member details.');
                 }
@@ -1056,7 +1056,7 @@ export class RefsetDetails {
 
     onMembersGridCellClick = (event) => {
         if (event.column.colId === "actions" || event.column.colId === "code") {
-            return;
+            console.log(event)
         } else {
             const selectedRows = this.membersGridApi.getSelectedRows();
             let selectedId: string;

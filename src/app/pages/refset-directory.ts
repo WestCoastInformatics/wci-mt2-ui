@@ -378,7 +378,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'information' || event.column.colId === 'actions') {
-            return;
+            console.log(event);
         } else {
 
             const selectedRows = this.refsetGridApi.getSelectedRows();
