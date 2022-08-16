@@ -669,7 +669,7 @@ export class RefsetDetails {
         );
 
         this.selectedConceptDetailLanguage = this.selectedTaxonomyLanguage;
-        this.taxonomySearchGridApi.refreshCells();
+        this.taxonomySearchGridApi?.refreshCells();
         this.taxonomyOptions.useFsn = this.conceptDetailsOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == "fsn";
         this.taxonomyOptions.language = this.conceptDetailsOptions.language = this.getTaxonomyLanguageWithoutType();
 
@@ -1617,7 +1617,7 @@ export class RefsetDetails {
     }
 
     latestDate(versionList: any[]): string {
-        if (this.refsetData.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
+        if (this.refsetData?.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
             return 'Latest';
         }
         return versionList && versionList[0] ? `${versionList[0].date}` : '';
