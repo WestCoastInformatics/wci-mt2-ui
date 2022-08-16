@@ -578,7 +578,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
     }
 
-    latestDate(versionList: any[]): string {
+    latestDate(refset, versionList: any[]): string {
+        if (refset.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
+            return 'Latest';
+        }
         return versionList && versionList[0] ? `${versionList[0].date}` : '';
     }
 }
