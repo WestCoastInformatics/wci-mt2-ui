@@ -271,7 +271,7 @@
                                                     </div>
 
                                                     <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
-                                                      [class.greyed-if-not-member]="!parent?.memberOfRefset">
+                                                      [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
                                                         <span *ngIf="this.taxonomyOptions?.useFsn">{{ parent?.fsn.trim() }}</span>
                                                         <span *ngIf="!this.taxonomyOptions?.useFsn">{{ parent?.name.trim() }}</span>
                                                     </div>
@@ -348,7 +348,7 @@
                                             <!-- Children Taxonomy Tree -->
                                             <div class="container-fluid">
                                                 <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="activeRefset"
-                                                  (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
+                                                  [selectedConcept]="selectedConcept" (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
                                                   hasMultipleRootNodes="false" (changeLockedStatus)="indicateChanges($event)"
                                                   [processChangedMemberFunction]="processChangedMemberEffects" [editMode]="allowedToEdit"
                                                   (numOfChildren)="taxonomyNumberOfChildren = $event">
