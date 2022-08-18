@@ -226,9 +226,7 @@ export class RefsetDetails {
             this.refsetId = routeParams.refsetId;
             this.versionDate = routeParams.versionDate;
             this.initializeDetailsPage();
-            this.changeDetectorRef.detectChanges();
         });
-
     }
 
     initializeDetailsPage() {

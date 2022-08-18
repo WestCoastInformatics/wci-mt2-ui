@@ -132,7 +132,7 @@
                           [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
 
-                        <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'"  (click)="openConvertRefset()">Make Extensional</button>
+                        <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
                         <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
 
                     </mat-menu>
@@ -162,8 +162,7 @@
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
                         <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
-                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser"
-                                title="Open Snomed Browser"><a (click)="openInNewWindow(refsetId)">Snomed
+                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open Snomed Browser"><a (click)="openInNewWindow(refsetId)">Snomed
                                 Browser</a>
                         </button>
                     </mat-menu>
@@ -649,8 +648,8 @@
 
         <!-- Section Title -->
         <div class="refset-tool-refset-details-title-name refset-member-title">
-            Reference Set Members ({{refsetData?.memberCount}})
-            <button *ngIf="showTable && membersReady && refsetData?.memberCount > 0" mat-raised-button color="primary" aria-hidden="false"
+            Reference Set Members ({{membersGridNumberOfResults}})
+            <button *ngIf="showTable && membersReady && membersGridNumberOfResults > 0" mat-raised-button color="primary" aria-hidden="false"
               class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
                 Download Members Table
                 <i class="fa fa-download"></i>
@@ -1064,7 +1063,7 @@
 <!--Undo Edit Modal-->
 <ng-template #undoEditDialog let-modal>
     <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -1089,7 +1088,7 @@
 <!--Cancel Upgrade Modal-->
 <ng-template #cancelUpgradeDialog let-modal>
     <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
