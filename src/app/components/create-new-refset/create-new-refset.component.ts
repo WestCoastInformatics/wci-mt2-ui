@@ -98,11 +98,11 @@ export class CreateNewRefsetComponent implements OnInit {
 
         if (CodeUtility.hasValue(this.inputProperties.project)) {
 
-            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.organization.edition.branch.toString()}&areParentConcepts=false`).subscribe(results => {
+            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.edition.branch.toString()}&areParentConcepts=false`).subscribe(results => {
                 this.existingMetadataConcepts = results.items ? results.items : undefined;
             });
 
-            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.organization.edition.branch.toString()}&areParentConcepts=true`).subscribe(results => {
+            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.edition.branch.toString()}&areParentConcepts=true`).subscribe(results => {
                 this.parentConcepts = results.items ? results.items : undefined;
             });
 
@@ -133,9 +133,9 @@ export class CreateNewRefsetComponent implements OnInit {
 
         let inputs = JSON.parse(JSON.stringify(this.inputProperties));
 
-        this.organizationName = inputs.project.organization.name;
-        this.editionName = inputs.project.organization.edition.name;
-        this.projectName = inputs.project.organization.name;
+        this.organizationName = inputs.project.edition.organization.name;
+        this.editionName = inputs.project.edition.name;
+        this.projectName = inputs.project.edition.organization.name;
         this.selectedMetaDataConcept = inputs.metadataConcept;
         this.versionDate = inputs.versionDate;
         this.createdMetaDataConcept = inputs.metadataConcept;
@@ -176,7 +176,7 @@ export class CreateNewRefsetComponent implements OnInit {
             parentConceptId: parentConceptId,
             moduleId: '',
             refsetId: refsetId,
-            editionId: this.inputProperties.project.organization.edition.id,
+            editionId: this.inputProperties.project.edition.id,
             projectId: this.inputProperties.project.id,
             narrative: this.selectedNarrative,
             type: this.selectedReferenceType,
@@ -374,7 +374,7 @@ export class CreateNewRefsetComponent implements OnInit {
 
     openEclBuilder(fieldId) {
 
-        UiUtility.openEclBuilder(fieldId, this.inputProperties.project.organization.edition.branch);
+        UiUtility.openEclBuilder(fieldId, this.inputProperties.project.edition.branch);
     }
 
     openInfoDialog() {
