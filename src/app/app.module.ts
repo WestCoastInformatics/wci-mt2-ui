@@ -120,6 +120,7 @@ import { PaginationModule } from './components/pagination/pagination.module';
 import { ArtifactsService } from './services/rest/artifacts.service';
 import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
+import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-meta-table.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -214,7 +215,8 @@ const appRoutes: Routes = [
         RefsetFeedbackListComponent,
         CustomTooltipComponent,
         ComposeModalComponent,
-        WorkflowStatusBadgeComponent
+        WorkflowStatusBadgeComponent,
+        RefsetMetaTableComponent
     ],
     imports: [
         RouterModule.forRoot(
