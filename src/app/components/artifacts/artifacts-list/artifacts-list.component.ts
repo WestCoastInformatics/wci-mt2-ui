@@ -29,6 +29,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     showPaging = false;
 
     @Input() refsetInternalId: string;
+    @Input() canAdd: boolean;
     @Output() downloadSelected: EventEmitter<any> = new EventEmitter();
     @ViewChild('pagination') paginationComponent: PaginationComponent;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;

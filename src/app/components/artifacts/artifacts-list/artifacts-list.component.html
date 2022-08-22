@@ -17,7 +17,7 @@
             <a [href]="serviceUrl + params.data?.downloadUrl" target="_blank">
                 <mat-icon>download</mat-icon>
             </a>
-            <artifact-form [refsetInternalId]="refsetInternalId" (refresh)="onReload()" [artifact]="params.data"></artifact-form>
+            <artifact-form *ngIf="canAdd" [refsetInternalId]="refsetInternalId" (refresh)="onReload()" [artifact]="params.data"></artifact-form>
         </ng-template>
     </div>
 </div>
