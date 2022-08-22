@@ -83,7 +83,7 @@ export class ArtifactFormComponent implements OnInit {
             }
             data.append('artifact', JSON.stringify(this.artifact));
             if (this.isEdit) {
-                this.artifactsService.updateArtifact(this.artifact?.id, data).subscribe((result) => {
+                this.artifactsService.updateArtifact(this.artifact?.id, JSON.stringify(this.artifact)).subscribe((result) => {
                     this.refresh.emit();
                     this.model.dismiss();
                 });
