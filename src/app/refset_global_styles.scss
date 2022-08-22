@@ -1322,7 +1322,8 @@ button.refset-tool-table-action-icon {
 .refset-tool-new-refset-info-icon {
     width: 25px !important;
     height: 25px !important;
-    color: #00a9e0;;
+    color: #00a9e0;
+    ;
 }
 
 // //override position
@@ -1825,7 +1826,7 @@ button.refset-tool-table-action-icon {
     margin: auto;
     top: 45%;
     left: 45%;
-    font-size: 40px;
+    font-size: 14px;
     color: white;
     font-weight: 800;
     z-index: 99999;
@@ -3321,7 +3322,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .upgrade-modal-current-terminology {}
 
-.upgrade-modal-message{
+.upgrade-modal-message {
     padding-top: 25px;
 }
 
@@ -5211,11 +5212,13 @@ $sidebar-width: 294px;
 
 app-category-floating-filter {
     width: 100%;
-    padding-bottom:15px;
+    padding-bottom: 15px;
 }
-app-date-text-floating-filter{
-    padding-bottom:15px;
+
+app-date-text-floating-filter {
+    padding-bottom: 15px;
 }
+
 #compare-sumary-table td {
     vertical-align: middle;
 }
@@ -5282,21 +5285,28 @@ app-date-text-floating-filter{
 
 .ag-body-viewport-wrapper.ag-layout-normal {
     overflow-x: scroll;
-  }
-  ::-webkit-scrollbar {
+}
+
+::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 8px;
     height: 8px;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: rgba(0,0,0,.5);
-    box-shadow: 0 0 1px rgba(255,255,255,.5);
-  }
-.default-btn{
-    color: #000;
-    background-color: rgba(0, 0 ,0, 0.2)
 }
-.unfocus-btn{
-    width: 0; height: 0; opacity: 0;padding: 0;
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.default-btn {
+    color: #000;
+    background-color: rgba(0, 0, 0, 0.2)
+}
+
+.unfocus-btn {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    padding: 0;
 }
