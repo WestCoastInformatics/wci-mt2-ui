@@ -4,7 +4,7 @@
 <ng-template #createNewProjectDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Create New Project
         </h4>
@@ -40,7 +40,7 @@
                     <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Project Name" [(ngModel)]="name" />
+                    <input class="modal-input-field" placeholder="Project Name" autofocus [(ngModel)]="name" />
                 </td>
             </tr>
             <!-- <tr>

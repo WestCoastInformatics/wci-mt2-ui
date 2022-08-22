@@ -17,7 +17,7 @@
             <div class="topic-content mb-3">
                 <mat-form-field appearance="fill" class="discussion-topic-field">
                     <mat-label>Description</mat-label>
-                    <input matInput type="text" [(ngModel)]="artifact.description" placeholder="Add a Description for the artifact" />
+                    <input matInput type="text" [(ngModel)]="artifact.description" ngbAutofocus placeholder="Add a Description for the artifact" />
                 </mat-form-field>
             </div>
             <div class="topic-content mb-3" *ngIf="artifact.fileName">

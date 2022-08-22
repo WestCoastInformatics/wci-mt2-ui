@@ -4,7 +4,7 @@
 <ng-template #createNewTeamDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Create New Team
         </h4>
@@ -38,7 +38,7 @@
                     <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Team Name" [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
+                    <input class="modal-input-field" placeholder="Team Name" autofocus [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr>
