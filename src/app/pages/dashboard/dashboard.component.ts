@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
@@ -14,7 +14,7 @@ import {UiUtility} from 'src/app/utilities/ui.utility';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
 
     @ViewChild('dashboardWorkflowStatusSection') workflowStatus: TemplateRef<any>;
 
@@ -197,7 +197,7 @@ export class DashboardComponent implements OnInit {
                                 , workflowStatus: `${refset?.workflowStatus}`
                                 , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
                                 , versionDate: `${refset.versionDate}`
-                            })
+                            });
 
                         }
 
@@ -240,7 +240,7 @@ export class DashboardComponent implements OnInit {
             const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-    };
+    }
 
     toTitleCase(str) {
         return str.replace(
