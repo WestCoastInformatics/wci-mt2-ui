@@ -77,8 +77,8 @@
                             <div class="save-permissions-mid">Choose the permission level or roles for your team.
                                 <br><br>
                                 <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
-                                    <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [ngModel]="roleOptions" [(value)]="selectedRoles"
-                                      multiple class="refset-tool-modal-select" panelClass="refset-tool-modal-panel" (selectionChange)="setRoles()">
+                                    <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [(ngModel)]="selectedRoles"
+                                      multiple class="refset-tool-modal-select" panelClass="refset-tool-modal-panel">
 
                                         <mat-option *ngFor="let role of roleOptions" [value]="role.value">
                                             {{role.display}}
