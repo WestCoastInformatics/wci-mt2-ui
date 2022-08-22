@@ -67,7 +67,11 @@ export class ArtifactFormComponent implements OnInit {
     }
 
     fileChange(fileInputEvent: any) {
-        this.file = fileInputEvent.target.files[0];
+        if (fileInputEvent.target) {
+            this.file = fileInputEvent.target.files[0];
+        } else {
+            this.file = fileInputEvent[0];
+        }
         this.artifact.fileName = this.file?.name;
     }
 
