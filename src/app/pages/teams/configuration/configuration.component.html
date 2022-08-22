@@ -60,7 +60,7 @@
 
                         <div class="update-profile-button">
                             <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                                <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="btn btn-primary btn-lg"
+                                <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font"
                                   [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue || !isValidEmail()" (click)="updateTeam()">
                                     Update Profile
                                 </button>

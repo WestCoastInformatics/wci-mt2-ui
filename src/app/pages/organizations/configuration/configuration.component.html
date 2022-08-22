@@ -42,7 +42,7 @@
                         <div class="section-btn">
                             <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
                               [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()" aria-label="Update Profile"
-                              title="Update Profile" class="btn btn-primary btn-lg" (click)="updateOrganization()">Update Profile</button>
+                              title="Update Profile" class="btn btn-primary btn-lg btn-wide-font" (click)="updateOrganization()">Update Profile</button>
                         </div>
                     </div>
 
@@ -53,7 +53,7 @@
                         </div>
                         <div class="section-btn">
                             <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture"
-                              class="btn btn-primary btn-lg">
+                              class="btn btn-primary btn-lg btn-wide-font">
                                 Edit Picture
                                 <input type="file" class="d-none" (change)="onPhotoChange($event)" />
                             </label>

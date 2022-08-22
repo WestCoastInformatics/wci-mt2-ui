@@ -348,7 +348,7 @@
                                             <!-- Children Taxonomy Tree -->
                                             <div class="container-fluid">
                                                 <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="activeRefset"
-                                                  [selectedConcept]="selectedConcept" (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
+                                                  (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
                                                   hasMultipleRootNodes="false" (changeLockedStatus)="indicateChanges($event)"
                                                   [processChangedMemberFunction]="processChangedMemberEffects" [editMode]="allowedToEdit"
                                                   (numOfChildren)="taxonomyNumberOfChildren = $event">
