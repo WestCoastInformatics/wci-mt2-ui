@@ -172,7 +172,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     closeModal() {
 
         if (!this.isLocked) {
-            this.refsetDetails.ngOnInit();
+            window.location.reload();
         }
 
         this.openedModel.dismiss();
