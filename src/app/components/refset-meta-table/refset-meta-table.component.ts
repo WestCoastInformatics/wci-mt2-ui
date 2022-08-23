@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {RefsetUtility} from '../../utilities/refset.utility';
-import {Router} from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { RefsetUtility } from '../../utilities/refset.utility';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class RefsetMetaTableComponent implements OnInit {
     }
 
     get directUrl(): string {
-        return (window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/'
+        return (window.location.protocol + '//' + window.location.host + '/details/' + this.refset?.refsetId + '/'
             + RefsetUtility.getVersionDateForRefsetApiCall(this.refset));
     }
 

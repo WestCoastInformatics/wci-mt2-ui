@@ -74,10 +74,10 @@ export class RefsetUtility {
 
         let date = '';
 
-        if (refset.versionStatus == this.IN_DEVELOPMENT) {
+        if (refset?.versionStatus == this.IN_DEVELOPMENT) {
             date = this.IN_DEVELOPMENT;
         } else {
-            date = CodeUtility.formatJsonDate(refset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
+            date = CodeUtility.formatJsonDate(refset?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         }
 
         return date;
