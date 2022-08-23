@@ -263,9 +263,9 @@ export class LaunchComparisonModalComponent {
 
     closeShowComparisonModal() {
 
-        if (this.allowedToEdit && !this.isLocked) {
-            this.refsetDetails.ngOnInit();
-        }
+        // if (this.allowedToEdit && !this.isLocked) {
+        //     this.refsetDetails.ngOnInit();
+        // }
 
         this.openedModel.dismiss();
     }
