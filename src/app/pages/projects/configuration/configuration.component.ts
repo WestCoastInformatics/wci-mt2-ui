@@ -18,7 +18,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     menu: SidebarMenuItem[] = [];
     profileNameValue = '';
-    organizations: any;
+    organizationList: any[] = [];
     selectedOrganization: any;
     editionId: any;
     selectedEdition: any;
@@ -28,7 +28,7 @@ export class ProjectsConfigurationComponent implements OnInit {
     isPrivate = false;
     selectedProject: any;
     projectId: any;
-    projectList = [];
+    projectList: any[] = [];
     selectedTeamIds = [];
     selectedTeams = [];
     teamList = [];
@@ -98,11 +98,11 @@ export class ProjectsConfigurationComponent implements OnInit {
 
         // get list of organizations
         this.refsetService.getOrganizations().subscribe({
-            next: (organizationResults) => {
+            next: (results) => {
 
-                this.organizations = organizationResults?.items;
+                this.organizationList = results?.items;
 
-                for (const organization of this.organizations) {
+                for (const organization of this.organizationList) {
 
                     if (this.organizationId == organization.id) {
 
@@ -135,9 +135,9 @@ export class ProjectsConfigurationComponent implements OnInit {
     getEditions(): void {
 
         this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
-            next: (editionResults) => {
+            next: (results) => {
 
-                this.editionList = editionResults?.items;
+                this.editionList = results?.items;
 
                 for (const edition of this.editionList) {
 
@@ -171,7 +171,6 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
-                this.showLoadingSpinner = false;
                 this.projectList = results.items;
 
                 for (const project of this.projectList) {
@@ -194,6 +193,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     selectProject(): void {
 
+        this.showLoadingSpinner = true;
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration/' + this.projectId);
         this.showProjectData();
@@ -205,7 +205,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
             const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
 
-            for (const organization of this.organizations) {
+            for (const organization of this.organizationList) {
 
                 if (organization.id == storedOrganizationId) {
 
@@ -290,6 +290,7 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.profileDescriptionValue = this.selectedProject.description;
         this.isPrivate = this.selectedProject.privateProject;
         this.selectedTeamIds = this.selectedProject?.teams;
+        this.showLoadingSpinner = false;
     }
 
     clearProjectData(): void {

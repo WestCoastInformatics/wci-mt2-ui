@@ -23,10 +23,13 @@ export class OrganizationProjectsComponent implements OnInit {
     gridOptions: any;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
     columnDefs = [];
-    projectList = [];
-    organizationList = [];
+    projectList: any[] = [];
+    organizationList: any[] = [];
     selectedOrganization: any;
     organizationId: string;
+    editionId: any;
+    selectedEdition: any;
+    editionList: any[] = [];
     api: any;
     columnApi: any;
     gridParams: any;
@@ -62,6 +65,7 @@ export class OrganizationProjectsComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['id'];
+            this.editionId = '0';
             this.setNavigation();
         });
 
@@ -92,6 +96,7 @@ export class OrganizationProjectsComponent implements OnInit {
     }
 
     onGridReady = (params) => {
+
         this.gridParams = params;
         this.api = params.api;
         this.columnApi = params.columnApi;
@@ -110,24 +115,109 @@ export class OrganizationProjectsComponent implements OnInit {
         return this.data.length;
     }
 
+    getOrganizations(): void {
+
+        this.refsetService.getOrganizations().subscribe({
+            next: (results) => {
+
+                this.organizationList = results?.items;
+
+                for (const organization of this.organizationList) {
+
+                    if (this.organizationId == organization.id) {
+
+                        this.selectedOrganization = organization;
+                        this.getEditions();
+                        return;
+                    }
+                }
+
+                this.getStoredOrganizationId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
+        });
+    }
+
+    selectOrganization(): void {
+
+        this.showLoadingSpinner = true;
+        this.organizationId = this.selectedOrganization.id;
+        this.selectedEdition = null;
+        this.editionList = [];
+        this.projectList = [];
+        this.setNavigation();
+        this.getEditions();
+    }
+
+    getEditions(): void {
+
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (results) => {
+
+                this.editionList = results?.items;
+
+                for (const edition of this.editionList) {
+
+                    if (this.editionId == edition.id) {
+
+                        this.selectedEdition = edition;
+                        this.showEditionData();
+                        return;
+                    }
+                }
+
+                this.getStoredEditionId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
+        });
+    }
+
+    selectEdition(): void {
+
+        this.showLoadingSpinner = true;
+        this.editionId = this.selectedEdition.id;
+        this.projectList = [];
+        this.setNavigation();
+        this.showEditionData();
+    }
+
+    showEditionData() {
+
+        this.setNavigation();
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
+            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.onGridReady(this.gridParams);
+        this.getProjects();
+    }
+
     getProjects(): void {
 
         this.showLoadingSpinner = true;
-        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe(async (results) => {
+        this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: async (results) => {
 
-            this.data = [];
-            this.projectList = results.items;
+                this.data = [];
+                this.projectList = results.items;
 
-            for (const project of this.projectList) {
-
-                if (project?.organization?.id === this.selectedOrganization?.id) {
+                for (const project of this.projectList) {
                     this.data.push({ name: `${project?.name}`, locked: project?.privateProject, description: `${project?.description}`, teams: `${(await this.getTeams(project?.teams))}`, id: project.id });
                 }
-            }
 
-            this.api.setRowData(this.data.slice(0, 10));
-            this.api.redrawRows();
-            this.showLoadingSpinner = false;
+                this.api.setRowData(this.data);
+                this.api.redrawRows();
+                this.showLoadingSpinner = false;
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
@@ -148,44 +238,56 @@ export class OrganizationProjectsComponent implements OnInit {
         }
     }
 
-    getOrganizations(): void {
+    getStoredOrganizationId(): void {
 
-        this.refsetService.getOrganizations().subscribe((results) => {
+        if (sessionStorage.getItem('selectedOrganizationId')) {
 
-            this.organizationList = results.items;
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
-                if (this.organizationId == organization.id) {
-                    this.setOrganizationData(organization);
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
                 }
             }
 
-            this.getProjects();
-
-        });
-    }
-
-    selectOrg($event): void {
-        this.setOrganizationData(this.selectedOrganization);
-        this.location.replaceState('/organizations/projects/' + this.selectedOrganization.id);
-        this.getProjects();
-        this.organizationId = this.selectedOrganization.id;
-    }
-
-    setOrganizationData(organization: any) {
-
-        this.organizationId = organization.id;
-        this.selectedOrganization = organization;
-
-        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
         }
+    }
 
-        this.onGridReady(this.gridParams);
+    getStoredEditionId(): void {
+
+        if (sessionStorage.getItem('selectedEditionId')) {
+
+            const storedEditionId = JSON.parse(sessionStorage.getItem('selectedEditionId'));
+
+            for (const edition of this.editionList) {
+
+                if (edition.id == storedEditionId) {
+
+                    this.selectedEdition = edition;
+                    this.selectEdition();
+                    return;
+                }
+            }
+
+            // if the stored edition ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedEditionId');
+
+            if (this.editionList && this.editionList.length > 0) {
+
+                this.selectedEdition = this.editionList[0];
+                this.selectEdition();
+            }
+        } else if (this.editionList && this.editionList.length > 0) {
+
+            this.selectedEdition = this.editionList[0];
+            this.selectEdition();
+        }
     }
 
     getTeamCount(data: any): number {

@@ -33,7 +33,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     selectedProject: any;
     organizationId: any;
     selectedOrganization: any;
-    organizations: any;
+    organizationList: any[] = [];
     editionId: any;
     selectedEdition: any;
     editionList: any[] = [];
@@ -224,27 +224,32 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getOrganizations(): void {
 
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+        this.refsetService.getOrganizations().subscribe({
+            next: (results) => {
 
-            this.showLoadingSpinner = false;
-            this.organizations = organizationResults?.items;
+                this.organizationList = results?.items;
 
-            for (const organization of this.organizations) {
+                for (const organization of this.organizationList) {
 
-                if (this.organizationId == organization.id) {
+                    if (this.organizationId == organization.id) {
 
-                    this.selectedOrganization = organization;
-                    this.getEditions();
-                    return;
+                        this.selectedOrganization = organization;
+                        this.getEditions();
+                        return;
+                    }
                 }
-            }
 
-            this.getStoredOrganizationId();
+                this.getStoredOrganizationId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
     selectOrganization(): void {
 
+        this.showLoadingSpinner = true;
         this.organizationId = this.selectedOrganization.id;
         this.selectedEdition = null;
         this.editionList = [];
@@ -256,27 +261,32 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((editionResults) => {
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (results) => {
 
-            this.showLoadingSpinner = false;
-            this.editionList = editionResults?.items;
+                this.editionList = results?.items;
 
-            for (const edition of this.editionList) {
+                for (const edition of this.editionList) {
 
-                if (this.editionId == edition.id) {
+                    if (this.editionId == edition.id) {
 
-                    this.selectedEdition = edition;
-                    this.getProjects();
-                    return;
+                        this.selectedEdition = edition;
+                        this.getProjects();
+                        return;
+                    }
                 }
-            }
 
-            this.getStoredEditionId();
+                this.getStoredEditionId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
     selectEdition(): void {
 
+        this.showLoadingSpinner = true;
         this.editionId = this.selectedEdition.id;
         this.selectedProject = null;
         this.projectList = [];
@@ -286,24 +296,26 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getProjects(): void {
 
-        this.showLoadingSpinner = true;
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (results) => {
 
-        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+                this.projectList = results.items;
 
-            this.showLoadingSpinner = false;
-            this.projectList = results.items;
+                for (const project of this.projectList) {
 
-            for (const project of this.projectList) {
+                    if (this.projectId == project.id) {
 
-                if (this.projectId == project.id) {
-
-                    this.selectedProject = project;
-                    this.showProjectData();
-                    return;
+                        this.selectedProject = project;
+                        this.showProjectData();
+                        return;
+                    }
                 }
-            }
 
-            this.getStoredProjectId();
+                this.getStoredProjectId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
@@ -315,11 +327,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
+        
         this.showRefsets();
     }
 
     selectProject(): void {
 
+        this.showLoadingSpinner = true;
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId);
         this.showProjectData();
@@ -331,7 +345,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
 
-            for (const organization of this.organizations) {
+            for (const organization of this.organizationList) {
 
                 if (organization.id == storedOrganizationId) {
 

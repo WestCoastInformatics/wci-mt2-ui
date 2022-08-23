@@ -20,7 +20,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     menu: SidebarMenuItem[] = [];
     data = [];
-    peopleList = [];
+    peopleList: any[] = [];
     selectedProject: any;
     selectedOrganization: any;
     editionId: any;
@@ -34,7 +34,7 @@ export class ProjectsPeopleComponent implements OnInit {
     gridApi: any;
     gridColumnDefs = [];
     uiUtility = UiUtility;
-    organizations: any;
+    organizationList: any[] = [];
     organizationId: string;
     showLoadingSpinner = false;
     showTable = false;
@@ -165,12 +165,12 @@ export class ProjectsPeopleComponent implements OnInit {
     getOrganizations(): void {
 
         this.refsetService.getOrganizations().subscribe({
-            next: (organizationResults) => {
+            next: (results) => {
 
                 this.showTable = true;
-                this.organizations = organizationResults?.items;
+                this.organizationList = results?.items;
 
-                for (const organization of this.organizations) {
+                for (const organization of this.organizationList) {
 
                     if (this.organizationId == organization.id) {
 
@@ -190,6 +190,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     selectOrganization(): void {
 
+        this.showLoadingSpinner = true;
         this.organizationId = this.selectedOrganization.id;
         this.selectedEdition = null;
         this.editionList = [];
@@ -202,9 +203,9 @@ export class ProjectsPeopleComponent implements OnInit {
     getEditions(): void {
 
         this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
-            next: (editionResults) => {
+            next: (results) => {
 
-                this.editionList = editionResults?.items;
+                this.editionList = results?.items;
 
                 for (const edition of this.editionList) {
 
@@ -226,6 +227,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     selectEdition(): void {
 
+        this.showLoadingSpinner = true;
         this.editionId = this.selectedEdition.id;
         this.selectedProject = null;
         this.projectList = [];
@@ -264,7 +266,6 @@ export class ProjectsPeopleComponent implements OnInit {
         this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
-                this.showLoadingSpinner = false;
                 this.showTable = true;
                 this.projectList = results.items;
 
@@ -296,10 +297,13 @@ export class ProjectsPeopleComponent implements OnInit {
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
+
+        this.showLoadingSpinner = false;
     }
 
     selectProject(): void {
 
+        this.showLoadingSpinner = true;
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people/' + this.projectId);
         this.showProjectData();
@@ -311,7 +315,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
             const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
 
-            for (const organization of this.organizations) {
+            for (const organization of this.organizationList) {
 
                 if (organization.id == storedOrganizationId) {
 
