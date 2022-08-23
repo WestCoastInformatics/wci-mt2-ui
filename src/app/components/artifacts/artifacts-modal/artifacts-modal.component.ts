@@ -35,6 +35,6 @@ export class ArtifactsModalComponent {
     }
 
     get canAdd(): boolean {
-        return this.refset?.roles.includes('AUTHOR');
+        return this.refset?.roles.includes('AUTHOR') || this.refset?.roles.includes('ADMIN');
     }
 }
