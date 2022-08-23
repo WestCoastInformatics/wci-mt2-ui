@@ -2,12 +2,23 @@
 
 <div class="content-header">
     <div class="row header-title">
+
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization($event)">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <span class="title-label">Editions</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
+            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
+                <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                    {{ edition.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -17,12 +28,13 @@
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
             </mat-label>
             <mat-select #detailsVersionSelect [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject"
-              (selectionChange)="selectProject($event)">
+              (selectionChange)="selectProject()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3" [title]="project.name">
                     {{ project.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        
     </div>
 </div>
 

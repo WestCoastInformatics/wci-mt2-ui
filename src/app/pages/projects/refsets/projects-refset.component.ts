@@ -243,7 +243,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
     }
 
-    selectOrganization($event): void {
+    selectOrganization(): void {
 
         this.organizationId = this.selectedOrganization.id;
         this.selectedEdition = null;
@@ -275,7 +275,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
     }
 
-    selectEdition($event): void {
+    selectEdition(): void {
 
         this.editionId = this.selectedEdition.id;
         this.selectedProject = null;
@@ -313,12 +313,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
         this.showRefsets();
     }
 
-    selectProject($event): void {
+    selectProject(): void {
 
         this.projectId = this.selectedProject.id;
         this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId);
@@ -336,7 +336,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 if (organization.id == storedOrganizationId) {
 
                     this.selectedOrganization = organization;
-                    this.selectOrganization(null);
+                    this.selectOrganization();
                     return;
                 }
             }
@@ -357,7 +357,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 if (edition.id == storedEditionId) {
 
                     this.selectedEdition = edition;
-                    this.selectEdition(null);
+                    this.selectEdition();
                     return;
                 }
             }
@@ -368,12 +368,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             if (this.editionList && this.editionList.length > 0) {
 
                 this.selectedEdition = this.editionList[0];
-                this.selectEdition(null);
+                this.selectEdition();
             }
         } else if (this.editionList && this.editionList.length > 0) {
 
             this.selectedEdition = this.editionList[0];
-            this.selectEdition(null);
+            this.selectEdition();
         }
     }
 
@@ -388,7 +388,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 if (project.id == storedProjectId) {
 
                     this.selectedProject = project;
-                    this.selectProject(null);
+                    this.selectProject();
                     return;
                 }
             }
@@ -399,12 +399,12 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             if (this.projectList && this.projectList.length > 0) {
 
                 this.selectedProject = this.projectList[0];
-                this.selectProject(null);
+                this.selectProject();
             }
         } else if (this.projectList && this.projectList.length > 0) {
 
             this.selectedProject = this.projectList[0];
-            this.selectProject(null);
+            this.selectProject();
         }
     }
 
@@ -647,13 +647,5 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.modalService.open(workflowDiagramModal, {
             windowClass: 'workflow-diagram-modal'
         });
-    }
-
-    get routeUrl(): any[] {
-        const url = ['/organization', this.organizationId ? this.organizationId : 0, 'projects'];
-        if (this.selectedProject?.id) {
-            url.push(this.selectedProject.id);
-        }
-        return url;
     }
 }
