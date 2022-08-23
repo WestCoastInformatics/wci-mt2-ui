@@ -164,23 +164,27 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getOrganizations(): void {
 
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+        this.refsetService.getOrganizations().subscribe({
+            next: (organizationResults) => {
 
-            this.showLoadingSpinner = false;
-            this.showTable = true;
-            this.organizations = organizationResults?.items;
+                this.showTable = true;
+                this.organizations = organizationResults?.items;
 
-            for (const organization of this.organizations) {
+                for (const organization of this.organizations) {
 
-                if (this.organizationId == organization.id) {
+                    if (this.organizationId == organization.id) {
 
-                    this.selectedOrganization = organization;
-                    this.getEditions();
-                    break;
+                        this.selectedOrganization = organization;
+                        this.getEditions();
+                        return;
+                    }
                 }
-            }
 
-            this.getStoredOrganizationId();
+                this.getStoredOrganizationId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
@@ -197,22 +201,26 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((editionResults) => {
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (editionResults) => {
 
-            this.showLoadingSpinner = false;
-            this.editionList = editionResults?.items;
+                this.editionList = editionResults?.items;
 
-            for (const edition of this.editionList) {
+                for (const edition of this.editionList) {
 
-                if (this.editionId == edition.id) {
+                    if (this.editionId == edition.id) {
 
-                    this.selectedEdition = edition;
-                    this.getProjects();
-                    return;
+                        this.selectedEdition = edition;
+                        this.getProjects();
+                        return;
+                    }
                 }
-            }
 
-            this.getStoredEditionId();
+                this.getStoredEditionId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
@@ -251,26 +259,30 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getProjects(): void {
 
-        this.showLoadingSpinner = true;
         this.showTable = false;
 
-        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (results) => {
 
-            this.showLoadingSpinner = false;
-            this.showTable = true;
-            this.projectList = results.items;
+                this.showLoadingSpinner = false;
+                this.showTable = true;
+                this.projectList = results.items;
 
-            for (const project of this.projectList) {
+                for (const project of this.projectList) {
 
-                if (this.projectId == project.id) {
+                    if (this.projectId == project.id) {
 
-                    this.selectedProject = project;
-                    this.showProjectData();
-                    return;
+                        this.selectedProject = project;
+                        this.showProjectData();
+                        return;
+                    }
                 }
-            }
 
-            this.getStoredProjectId();
+                this.getStoredProjectId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
         });
     }
 
