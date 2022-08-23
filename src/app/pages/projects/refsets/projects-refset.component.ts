@@ -29,11 +29,14 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     menu: SidebarMenuItem[] = [];
     user: User;
-    projectList = [];
+    projectList: any[] = [];
     selectedProject: any;
     organizationId: any;
     selectedOrganization: any;
     organizations: any;
+    editionId: any;
+    selectedEdition: any;
+    editionList: any[] = [];
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView = 'all';
@@ -76,7 +79,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     @ViewChild('projectPaging') paginationComponent: PaginationComponent;
     @ViewChild('projectActionSection') actionSection: TemplateRef<any>;
 
-
     constructor(
         protected router: Router,
         protected titleService: Title,
@@ -102,6 +104,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
+            this.editionId = params['editionId'];
             this.projectId = params['id'];
             this.setNavigation();
         });
@@ -117,15 +120,19 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+            breadcrumbs.push({ path: 'organizations/editions/' + this.organizationId, label: 'Organization Editions' });
+        }
+
+        if (CodeUtility.hasValue(this.editionId, true, true)) {
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/editions/' + this.editionId, label: 'Edition Projects' });
         }
 
         breadcrumbs.push({ label: 'Reference Sets' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy', isActive: true },
-            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people/', icon: 'fa fa-user' },
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-copy', isActive: true },
+            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people/', icon: 'fa fa-user' },
         ];
     }
 
@@ -227,7 +234,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 if (this.organizationId == organization.id) {
 
                     this.selectedOrganization = organization;
-                    this.getProjects();
+                    this.getEditions();
                     return;
                 }
             }
@@ -239,6 +246,38 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     selectOrganization($event): void {
 
         this.organizationId = this.selectedOrganization.id;
+        this.selectedEdition = null;
+        this.editionList = [];
+        this.selectedProject = null;
+        this.projectList = [];
+        this.setNavigation();
+        this.getEditions();
+    }
+
+    getEditions(): void {
+
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((editionResults) => {
+
+            this.showLoadingSpinner = false;
+            this.editionList = editionResults?.items;
+
+            for (const edition of this.editionList) {
+
+                if (this.editionId == edition.id) {
+
+                    this.selectedEdition = edition;
+                    this.getProjects();
+                    return;
+                }
+            }
+
+            this.getStoredEditionId();
+        });
+    }
+
+    selectEdition($event): void {
+
+        this.editionId = this.selectedEdition.id;
         this.selectedProject = null;
         this.projectList = [];
         this.setNavigation();
@@ -249,7 +288,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         this.showLoadingSpinner = true;
 
-        this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
             this.projectList = results.items;
@@ -282,7 +321,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
     selectProject($event): void {
 
         this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/projects/' + this.projectId);
+        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId);
         this.showProjectData();
     }
 
@@ -304,6 +343,37 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
             // if the stored organization ID doesn't match anything remove it
             sessionStorage.removeItem('selectedOrganizationId');
+        }
+    }
+
+    getStoredEditionId(): void {
+
+        if (sessionStorage.getItem('selectedEditionId')) {
+
+            const storedEditionId = JSON.parse(sessionStorage.getItem('selectedEditionId'));
+
+            for (const edition of this.editionList) {
+
+                if (edition.id == storedEditionId) {
+
+                    this.selectedEdition = edition;
+                    this.selectEdition(null);
+                    return;
+                }
+            }
+
+            // if the stored edition ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedEditionId');
+
+            if (this.editionList && this.editionList.length > 0) {
+
+                this.selectedEdition = this.editionList[0];
+                this.selectEdition(null);
+            }
+        } else if (this.editionList && this.editionList.length > 0) {
+
+            this.selectedEdition = this.editionList[0];
+            this.selectEdition(null);
         }
     }
 

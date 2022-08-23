@@ -2,12 +2,23 @@
 
 <div class="content-header">
     <div class="row header-title">
+
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization($event)">
+            <mat-select [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization($event)">
                 <mat-option *ngFor="let organization of organizations" [value]="organization" style="z-index: 3">
                     {{ organization.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <span class="title-label">Editions</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
+            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition($event)">
+                <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                    {{ edition.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -15,27 +26,30 @@
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-            <mat-select [disabled]="organizationId === '0'" #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedProject"
+            <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject"
               (selectionChange)="showRefsets()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
         <div class="col-md-auto page-title" *ngIf="selectedProject" style="
             margin-right: 20px;
             color: #555555;
             padding-left: 60px;
             font-size: 14px;
         ">
-            <b>Project Name: </b><span>{{selectedProject?.name +
+            <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+
+            <b>Organization Name: </b><span>{{selectedProject?.edition?.organization?.name +
                 &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
 
-            <b>Organization Name: </b><span>{{selectedProject?.organization?.name +
-                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            <span *ngIf="editionList.length > 1">
+                <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            </span>
 
-            <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
-                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
             <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
         </div>
     </div>
