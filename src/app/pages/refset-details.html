@@ -146,7 +146,8 @@
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #collaborationMenu="matMenu">
-                        <button mat-menu-item [hidden]="true">Share Reference Set</button>
+                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+                        <!--<button mat-menu-item [hidden]="true">Share Reference Set</button> -->
                         <button mat-menu-item [hidden]="true">Request Project Access</button>
                     </mat-menu>
 
@@ -177,7 +178,7 @@
                         <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
-                        <share-refset [refset]="refsetData"></share-refset>
+                       <!-- <share-refset [refset]="refsetData"></share-refset> -->
                     </mat-menu>
 
                     <span class="menu-spacer">&nbsp;</span>

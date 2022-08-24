@@ -288,4 +288,9 @@ export class RefsetService extends RestService {
     emailRefset(activeRefsetInternalId: string, params: any): Observable<any> {
         return this.post(this.contextPath + `refset/${activeRefsetInternalId}/share`, params);
     }
+
+    
+    shareRefset(refsetId: string, data): Observable<any> {
+        return this.post(`${this.contextPath}refset/${refsetId}/share/`, data);
+    }
 }   
