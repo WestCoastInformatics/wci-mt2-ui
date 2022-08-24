@@ -12,7 +12,7 @@
 
 <ng-template #addRemoveConceptHierarchyModal let-modal>
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Add/Remove by Search
         </h4>
@@ -39,7 +39,7 @@
                                         <input aria-label="Search by ID or Keyword" matInput #addRemoveByConceptHierarchySearchInput
                                           id="addRemoveByConceptHierarchySearchInput" [(ngModel)]="searchInput" (keyup.enter)="
                                                 onTableSearchChange()
-                                            " />
+                                            " />{{ addRemoveByConceptHierarchySearchInput.focus() }}
                                     </mat-form-field>
                                     <span class="
                                             add-remove-concept-hierarchy-modal-cancel-search
@@ -283,12 +283,12 @@
           title="Search Concepts" ng-reflect-color="green">
             Search
         </button>
-        <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('add')" mat-raised-button color="green" aria-hidden="false"
-          class="refset-tool-action-button" aria-label="Add All" title="Add All" ng-reflect-color="green">
+        <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('add')" mat-raised-button color="green"
+          aria-hidden="false" class="refset-tool-action-button" aria-label="Add All" title="Add All" ng-reflect-color="green">
             Add All
         </button>
-        <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('remove')" mat-raised-button color="red" aria-hidden="false"
-          class="refset-tool-action-button" aria-label="Remove All" title="Remove All" ng-reflect-color="red">
+        <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]='dataSource.length == 0' (click)="addRemoveAllMembers('remove')" mat-raised-button color="red"
+          aria-hidden="false" class="refset-tool-action-button" aria-label="Remove All" title="Remove All" ng-reflect-color="red">
             Remove All
         </button>
     </div>

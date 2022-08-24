@@ -121,6 +121,8 @@ import { ArtifactsService } from './services/rest/artifacts.service';
 import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
 import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-meta-table.component';
+import {ShareRefsetModalComponent} from './components/share-modal/share-refset-modal.component';
+import {RxReactiveFormsModule} from '@rxweb/reactive-form-validators';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -131,8 +133,8 @@ const appRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
     { path: 'organizations', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/projects/:id', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/:organizationId/edition/:editionId/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/:organizationId/edition/:editionId/projects/:id', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/teams', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/teams/:id', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/people', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
@@ -140,12 +142,12 @@ const appRoutes: Routes = [
     { path: 'organizations/configuration', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
     { path: 'organizations/configuration/:id', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
-    { path: 'organization/:organizationId/projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
-    { path: 'organization/:organizationId/projects/:id', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
-    { path: 'organization/:organizationId/projects/people', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'organization/:organizationId/projects/people/:id', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'organization/:organizationId/projects/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
-    { path: 'organization/:organizationId/projects/configuration/:id', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/:id', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/people', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/people/:id', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/configuration/:id', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
     { path: 'organization/:organizationId/teams/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
     { path: 'organization/:organizationId/teams/people/:id', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
@@ -216,7 +218,8 @@ const appRoutes: Routes = [
         CustomTooltipComponent,
         ComposeModalComponent,
         WorkflowStatusBadgeComponent,
-        RefsetMetaTableComponent
+        RefsetMetaTableComponent,
+        ShareRefsetModalComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -263,7 +266,8 @@ const appRoutes: Routes = [
         ArtifactsModule,
         AuditTrailModule,
         PaginationModule,
-        DirectivesModule
+        DirectivesModule,
+        RxReactiveFormsModule
     ],
     entryComponents: [NotificationComponent],
     providers: [

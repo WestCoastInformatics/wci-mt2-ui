@@ -63,10 +63,6 @@ export class NavbarComponent implements OnInit {
 
         if (breadcrumb.selectable) {
 
-            if (breadcrumb.path.includes('/projects')) {
-                breadcrumb.path = '/organization/0/projects'
-            }
-
             this.router.navigate([breadcrumb.path]);
         }
     }

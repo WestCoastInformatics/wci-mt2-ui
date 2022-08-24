@@ -20,9 +20,12 @@ export class ProjectsPeopleComponent implements OnInit {
 
     menu: SidebarMenuItem[] = [];
     data = [];
-    peopleList = [];
+    peopleList: any[] = [];
     selectedProject: any;
     selectedOrganization: any;
+    editionId: any;
+    selectedEdition: any;
+    editionList: any[] = [];
     projectId: any;
     projectList = [];
     gridOptions: any;
@@ -31,7 +34,7 @@ export class ProjectsPeopleComponent implements OnInit {
     gridApi: any;
     gridColumnDefs = [];
     uiUtility = UiUtility;
-    organizations: any;
+    organizationList: any[] = [];
     organizationId: string;
     showLoadingSpinner = false;
     showTable = false;
@@ -60,6 +63,7 @@ export class ProjectsPeopleComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
+            this.editionId = params['editionId'];
             this.projectId = params['id'];
             this.setNavigation();
         });
@@ -142,44 +146,88 @@ export class ProjectsPeopleComponent implements OnInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/projects/' + this.organizationId, label: 'Organization Projects' });
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: 'Organization Edition Projects' });
         }
 
         breadcrumbs.push({ label: 'People' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/projects', icon: 'fa fa-copy' },
-            { name: 'People', link: '/organization/' + this.organizationId + '/projects/people', icon: 'fa fa-user', isActive: true },
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-copy' },
+            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people', icon: 'fa fa-user', isActive: true },
         ];
     }
 
     getOrganizations(): void {
 
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
+        this.refsetService.getOrganizations().subscribe({
+            next: (results) => {
 
-            this.showLoadingSpinner = false;
-            this.showTable = true;
-            this.organizations = organizationResults?.items;
+                this.showTable = true;
+                this.organizationList = results?.items;
 
-            for (const organization of this.organizations) {
+                for (const organization of this.organizationList) {
 
-                if (this.organizationId == organization.id) {
+                    if (this.organizationId == organization.id) {
 
-                    this.selectedOrganization = organization;
-                    this.getProjects();
-                    break;
+                        this.selectedOrganization = organization;
+                        this.getEditions();
+                        return;
+                    }
                 }
+
+                this.getStoredOrganizationId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
             }
         });
     }
 
-    selectOrganization($event): void {
+    selectOrganization(): void {
 
-        this.organizationId = $event.value.id;
+        this.showLoadingSpinner = true;
+        this.organizationId = this.selectedOrganization.id;
+        this.selectedEdition = null;
+        this.editionList = [];
         this.selectedProject = null;
         this.projectList = [];
         this.data = [];
+        this.getEditions();
+    }
+
+    getEditions(): void {
+
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (results) => {
+
+                this.editionList = results?.items;
+
+                for (const edition of this.editionList) {
+
+                    if (this.editionId == edition.id) {
+
+                        this.selectedEdition = edition;
+                        this.getProjects();
+                        return;
+                    }
+                }
+
+                this.getStoredEditionId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
+        });
+    }
+
+    selectEdition(): void {
+
+        this.showLoadingSpinner = true;
+        this.editionId = this.selectedEdition.id;
+        this.selectedProject = null;
+        this.projectList = [];
+        this.setNavigation();
         this.getProjects();
     }
 
@@ -209,48 +257,135 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getProjects(): void {
 
-        this.showLoadingSpinner = true;
         this.showTable = false;
 
-        this.refsetService.getProjects('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+            next: (results) => {
 
-            this.showLoadingSpinner = false;
-            this.showTable = true;
-            this.projectList = results.items;
+                this.showTable = true;
+                this.projectList = results.items;
 
-            for (const project of this.projectList) {
+                for (const project of this.projectList) {
 
-                if (this.projectId == project.id) {
+                    if (this.projectId == project.id) {
 
-                    this.selectedProject = project;
-                    this.showProjectData();
+                        this.selectedProject = project;
+                        this.showProjectData();
+                        return;
+                    }
                 }
-            }
 
-            if (this.projectList && this.projectList.length > 0) {
-
-                this.selectedProject = this.projectList[0];
-                this.selectProject(null);
+                this.getStoredProjectId();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
             }
         });
     }
 
     showProjectData(): void {
 
+        this.setNavigation();
         this.data = this.selectedProject.memberList;
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/projects/configuration', icon: 'fa fa-cogs' });
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.showLoadingSpinner = false;
+    }
+
+    selectProject(): void {
+
+        this.showLoadingSpinner = true;
+        this.projectId = this.selectedProject.id;
+        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people/' + this.projectId);
+        this.showProjectData();
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
         }
     }
 
-    selectProject($event): void {
+    getStoredEditionId(): void {
 
-        this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/projects/people/' + this.projectId);
-        this.showProjectData();
+        if (sessionStorage.getItem('selectedEditionId')) {
+
+            const storedEditionId = JSON.parse(sessionStorage.getItem('selectedEditionId'));
+
+            for (const edition of this.editionList) {
+
+                if (edition.id == storedEditionId) {
+
+                    this.selectedEdition = edition;
+                    this.selectEdition();
+                    return;
+                }
+            }
+
+            // if the stored edition ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedEditionId');
+
+            if (this.editionList && this.editionList.length > 0) {
+
+                this.selectedEdition = this.editionList[0];
+                this.selectEdition();
+            }
+        } else if (this.editionList && this.editionList.length > 0) {
+
+            this.selectedEdition = this.editionList[0];
+            this.selectEdition();
+        }
+    }
+
+    getStoredProjectId(): void {
+
+        if (sessionStorage.getItem('selectedProjectId')) {
+
+            const storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
+
+            for (const project of this.projectList) {
+
+                if (project.id == storedProjectId) {
+
+                    this.selectedProject = project;
+                    this.selectProject();
+                    return;
+                }
+            }
+
+            // if the stored project ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedProjectId');
+
+            if (this.projectList && this.projectList.length > 0) {
+
+                this.selectedProject = this.projectList[0];
+                this.selectProject();
+            }
+        } else if (this.projectList && this.projectList.length > 0) {
+
+            this.selectedProject = this.projectList[0];
+            this.selectProject();
+        }
     }
 
     getTeamCount(teams: any): number {

@@ -128,7 +128,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refset.refsetId)) {
-            this.refsetDetails.ngOnInit();
+            window.location.reload();
         }
 
         // reload the search results
@@ -172,7 +172,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     closeModal() {
 
         if (!this.isLocked) {
-            this.refsetDetails.ngOnInit();
+            window.location.reload();
         }
 
         this.openedModel.dismiss();

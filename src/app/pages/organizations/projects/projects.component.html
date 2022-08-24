@@ -1,14 +1,26 @@
 <div class="content-header">
     <div class="row header-title">
+
         <span class="title-label">Organizations</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.id ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrg($event)">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
+        <span class="title-label">Editions</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
+            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
+                <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                    {{ edition.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        
     </div>
 </div>
 <div class="content-wrapper">
@@ -20,8 +32,8 @@
                 <section class="mb-3">
                     <div class='section-header mb-4'>
                         Projects ({{dataCount}})
-                        <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId"
-                          [organizations]="organizationList"></create-new-project-modal>
+                        <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN') && selectedEdition" [edition]="selectedEdition">
+                        </create-new-project-modal>
                     </div>
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">

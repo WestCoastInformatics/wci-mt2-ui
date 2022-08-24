@@ -16,23 +16,21 @@ import { AuthenticationService } from "src/app/services/authentication/authentic
 })
 export class CreateNewProjectModalComponent {
 
+    // Project artifact Variables for Navigation to resource page after project creation
+    selectedProject: any;
+    isSelectedProject: boolean;
+    projectId: any;
+
     // Create New Project Modal Variables
     name = '';
     email = '';
     description = '';
     openedModel: NgbModalRef;
-    @Input() organizations: any[] = [];
     privateProject: any;
     emailError = '';
 
-    @Input() organizationId = String;
+    @Input() edition: any;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    param: any;
-
-    // Project artifact Variables for Navigation to resource page after project creation
-    selectedProject: any;
-    isSelectedProject: boolean;
-    projectId: any;
 
     constructor(
         private modalService: NgbModal,
@@ -47,33 +45,11 @@ export class CreateNewProjectModalComponent {
 
     openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
 
-        this.description = '';
-        this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
+        if (CodeUtility.hasValue(this.edition)) {
 
-        if (!this.organizations.length) {
-            // get list of organizations
-            this.refsetService.getOrganizations().subscribe((organizationResults) => {
-                this.organizations = organizationResults.items;
-            });
+            this.description = '';
+            this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
         }
-    }
-
-    callMemberOperation(): void {
-
-        this.changeLockedStatus.emit(true);
-
-        this.createProjectObject();
-
-        //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
-    }
-
-    processOperationReturn = (data) => {
-
-        this.changeLockedStatus.emit(false);
-
-        this.refsetDetails.ngOnInit();
-
-        this.description = '';
     }
 
     isValidEmail(): boolean {
@@ -98,14 +74,10 @@ export class CreateNewProjectModalComponent {
         this.isValidEmail();
     }
 
-    isSelectedOrganization(): boolean {
-        if (this.selectedOrganization?.name.length > 0) {
-            return true;
-        }
-        return false;
-    }
-
     createProjectObject(): void {
+
+        this.changeLockedStatus.emit(true);
+
         let params: any = {
             active: true,
             name: this.name,
@@ -113,7 +85,7 @@ export class CreateNewProjectModalComponent {
             //primaryContactEmail: this.email,
             privateProject: this.privateProject,
             teams: [],
-            organization: this.selectedOrganization
+            edition: this.edition
         };
 
         this.projectsService.createProject(params).subscribe(
@@ -127,21 +99,5 @@ export class CreateNewProjectModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
-    }
-
-
-    get selectedOrganization(): any {
-
-        if (this.organizations && this.organizationId) {
-            let org = this.organizations.filter(o => o.id == this.organizationId)
-            if (org.length > 0) {
-                return org[0];
-            }
-        }
-        return null;
-    }
-
-    set selectedOrganization(value) {
-        this.organizationId = value?.id;
     }
 }

@@ -159,10 +159,7 @@ export class AuthenticationService {
         if (userWasLoggedin) {
 
             this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', {
-                timeOut: 5000,
-                extendedTimeOut: 0
-            });
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'error', { timeOut: 5000, extendedTimeOut: 0 });
         }
     }
 

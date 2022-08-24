@@ -14,7 +14,7 @@
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
                                     <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                                    <span [routerLink]="['/organizations/projects', organization.id]"><a>{{
+                                    <span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{
                                             organization.name }}</a></span>
                                 </div>
                             </ng-container>
@@ -31,14 +31,11 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let project of projectList">
                                 <div class='section-list' *ngIf="project.name">
-                                    <span [routerLink]="['/organization/' + project.edition.organization.id + '/projects', project.id]"><a>{{
+                                    <span [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects', project.id]"><a>{{
                                             project.edition.organization.name }}/{{
                                             project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
                             </ng-container>
-                        </div>
-                        <div *ngIf="false" class="section-list text-right" id="dashboard-teams-section">
-                            <create-new-project-modal></create-new-project-modal>
                         </div>
                     </div>
                 </section>
@@ -54,9 +51,6 @@
                                             }}</a></span>
                                 </div>
                             </ng-container>
-                        </div>
-                        <div *ngIf="false" class="section-list text-right" id="dashboard-teams-section">
-                            <create-new-team-modal></create-new-team-modal>
                         </div>
                     </div>
                 </section>

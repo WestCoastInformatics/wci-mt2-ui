@@ -55,12 +55,12 @@ export class OrganizationConfigurationComponent implements OnInit {
     setNavigation() {
 
         this.breadcrumbService.setBreadcrumbs([
-            {path: '/organizations/configuration', label: 'Organizations'},
+            { path: '/dashboard', label: 'Dashboard' },
             {label: 'Configuration'},
         ]);
 
         this.menu = [
-            {name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open'},
+            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open', isActive: true },
             {name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users'},
             {name: 'People', link: '/organizations/people', icon: 'fa fa-user'},
             {name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs', isActive: true}

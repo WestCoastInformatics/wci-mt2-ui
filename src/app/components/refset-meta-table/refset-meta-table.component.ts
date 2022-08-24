@@ -16,8 +16,8 @@ export class RefsetMetaTableComponent implements OnInit {
     }
 
     get directUrl(): string {
-        return (window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/'
-            + RefsetUtility.getVersionDateForRefsetApiCall(this.refset));
+        return this.refset?.refsetId ? (window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/'
+            + RefsetUtility.getVersionDateForRefsetApiCall(this.refset)) : '';
     }
 
     ngOnInit(): void {

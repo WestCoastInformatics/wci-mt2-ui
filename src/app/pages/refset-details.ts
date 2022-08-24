@@ -24,6 +24,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { take } from 'rxjs/operators';
 import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
+import { NotificationService } from "../services/notification.service";
 
 /**
  * @title Tree with nested nodes
@@ -207,6 +208,7 @@ export class RefsetDetails {
         private changeDetectorRef: ChangeDetectorRef,
         private breadcrumbService: BreadcrumbService,
         private readonly workflowService: WorkflowService,
+        private notificationService: NotificationService,
         private readonly modalService: NgbModal,
         private routerExtentionService: RouterExtentionService,
         readonly projectsRefsetComponent: ProjectsRefsetComponent,
@@ -1393,8 +1395,23 @@ export class RefsetDetails {
         this.dialog = this.dialogFactoryService.open(dialogData);
 
         this.dialog.confirmed().subscribe((data) => {
-            this.refsetService.convertRefsetToExtensional(this.id).subscribe();
-        });
+            this.refsetService.convertRefsetToExtensional(this.id).subscribe(
+                (status) => {
+
+                    if (status.status == 'convert') {
+                        this.notificationService.show("The refset has been converted to extensional.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+                        this.loadRefset();
+                        return;
+                    } else if (status.error) {
+                        this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                        return;
+                    }
+                },
+                (error) => {
+                    this.showLoadingSpinner = false;
+                }
+            );
+         });
     }
 
     onChangeMembersListMode() {
@@ -1607,7 +1624,7 @@ export class RefsetDetails {
         this.modalService.open(dialog, {
             modalDialogClass: 'alert-modal',
             centered: true
-        }); ``
+        });
         console.log("Cancel Upgrade in initial screen");
     }
 

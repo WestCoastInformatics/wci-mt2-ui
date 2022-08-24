@@ -29,6 +29,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     showPaging = false;
 
     @Input() refsetInternalId: string;
+    @Input() refset: any;
     @Output() downloadSelected: EventEmitter<any> = new EventEmitter();
     @ViewChild('pagination') paginationComponent: PaginationComponent;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
@@ -39,6 +40,10 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 
     get serviceUrl(): string {
         return this.artifactsService.contextPath.replace(/\/+$/, '');
+    }
+
+    get canAdd(): boolean {
+        return this.refset?.roles.includes('AUTHOR') || this.refset?.roles.includes('ADMIN');
     }
 
     ngOnInit(): void {
