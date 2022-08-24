@@ -156,15 +156,25 @@
                     <span class="menu-spacer">&nbsp;</span>
 
                     <button mat-button [matMenuTriggerFor]="documentationMenu" [matMenuTriggerRestoreFocus]="false" class="documentation-menu">Documentation
-                        <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #documentationMenu="matMenu">
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
                         <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
                         <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open Snomed Browser"><a (click)="openInNewWindow(refsetId)">Snomed
-                                Browser</a>
+                            Browser</a>
                         </button>
+                    </mat-menu>
+
+                    <span class="menu-spacer">&nbsp;</span>
+
+                    <button mat-button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false"
+                            class="communication-menu">Communication
+                        <span class="down-arrow-for-menu">&#x25BC;</span></button>
+
+                    <mat-menu #communicationMenu="matMenu">
+                        <share-refset [refset]="refsetData"></share-refset>
                     </mat-menu>
 
                     <span class="menu-spacer">&nbsp;</span>
