@@ -128,6 +128,8 @@
                           (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
 
+                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+                        
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" [status]="refsetStatus"
                           [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
@@ -135,8 +137,9 @@
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
                         <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
 
+                        
                     </mat-menu>
-
+                    
                     <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span>
 
                     <button *ngIf="editMode && false" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span
