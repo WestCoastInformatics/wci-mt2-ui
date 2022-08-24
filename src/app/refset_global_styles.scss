@@ -3514,6 +3514,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .manage-members-menu,
 .manage-refset-menu,
 .documentation-menu,
+.communication-menu,
 .download-menu,
 .collaboration-menu,
 .compare-menu {
@@ -5309,4 +5310,8 @@ app-date-text-floating-filter {
     height: 0;
     opacity: 0;
     padding: 0;
+}
+
+.text-main, .text-primary {
+    color: $main-color !important;
 }

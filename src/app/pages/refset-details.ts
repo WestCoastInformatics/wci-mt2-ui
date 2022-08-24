@@ -1397,7 +1397,7 @@ export class RefsetDetails {
         this.dialog.confirmed().subscribe((data) => {
             this.refsetService.convertRefsetToExtensional(this.id).subscribe(
                 (status) => {
-    
+
                     if (status.status == 'convert') {
                         this.notificationService.show("The refset has been converted to extensional.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                         this.loadRefset();
@@ -1624,7 +1624,7 @@ export class RefsetDetails {
         this.modalService.open(dialog, {
             modalDialogClass: 'alert-modal',
             centered: true
-        }); ``
+        });
         console.log("Cancel Upgrade in initial screen");
     }
 
