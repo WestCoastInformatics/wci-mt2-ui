@@ -120,11 +120,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/editions/' + this.organizationId, label: 'Organization Editions' });
-        }
-
-        if (CodeUtility.hasValue(this.editionId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/editions/' + this.editionId, label: 'Edition Projects' });
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: 'Organization Edition Projects' });
         }
 
         breadcrumbs.push({ label: 'Reference Sets' });
@@ -327,7 +323,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
         }
-        
+
         this.showRefsets();
     }
 

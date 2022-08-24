@@ -146,11 +146,7 @@ export class ProjectsPeopleComponent implements OnInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/editions/' + this.organizationId, label: 'Organization Editions' });
-        }
-
-        if (CodeUtility.hasValue(this.editionId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/editions/' + this.editionId, label: 'Edition Projects' });
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: 'Organization Edition Projects' });
         }
 
         breadcrumbs.push({ label: 'People' });

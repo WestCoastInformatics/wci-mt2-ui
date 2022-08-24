@@ -32,8 +32,8 @@
                 <section class="mb-3">
                     <div class='section-header mb-4'>
                         Projects ({{dataCount}})
-                        <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organizationId]="organizationId"
-                          [organizations]="organizationList"></create-new-project-modal>
+                        <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN') && selectedEdition" [edition]="selectedEdition">
+                        </create-new-project-modal>
                     </div>
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">

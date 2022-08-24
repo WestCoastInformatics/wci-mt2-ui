@@ -14,7 +14,7 @@
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
                                     <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                                    <span [routerLink]="['/organizations/projects', organization.id]"><a>{{
+                                    <span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{
                                             organization.name }}</a></span>
                                 </div>
                             </ng-container>
@@ -37,9 +37,6 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div *ngIf="false" class="section-list text-right" id="dashboard-teams-section">
-                            <create-new-project-modal></create-new-project-modal>
-                        </div>
                     </div>
                 </section>
 
@@ -54,9 +51,6 @@
                                             }}</a></span>
                                 </div>
                             </ng-container>
-                        </div>
-                        <div *ngIf="false" class="section-list text-right" id="dashboard-teams-section">
-                            <create-new-team-modal></create-new-team-modal>
                         </div>
                     </div>
                 </section>

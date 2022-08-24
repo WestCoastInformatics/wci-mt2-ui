@@ -115,12 +115,12 @@ export class OrganizationPeopleComponent implements OnInit {
     setNavigation() {
 
         this.breadcrumbService.setBreadcrumbs([
-            { path: '/organizations/people', label: 'Organizations' },
+            { path: '/dashboard', label: 'Dashboard' },
             { label: 'People' },
         ]);
 
         this.menu = [
-            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open' },
+            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open', isActive: true },
             { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
             { name: 'People', link: '/organizations/people', icon: 'fa fa-user', isActive: true }
         ];

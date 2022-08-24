@@ -17,22 +17,20 @@
     <div class="modal-body refset-tool-lockable">
 
         <table>
-            <tr *ngIf="!param">
+            <tr>
                 <td>
-                    <label class="modal-label-edition">Parent Organization: <span class="mandatory-field">*</span></label>
+                    <label class="modal-label-edition">Parent Organization:</label>
                 </td>
                 <td>
-                    <div class="row" id="downloadContentRow">
-                        <div>
-                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedOrganization">
-                                    <mat-option *ngFor="let option of organizations" [value]="option">
-                                        {{ option.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+                    {{ edition.organization.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label-edition">Parent Edition:</label>
+                </td>
+                <td>
+                    {{ edition.name }}
                 </td>
             </tr>
             <tr>
@@ -79,11 +77,10 @@
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button type="button" [disabled]="name === '' || !isSelectedOrganization()" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false"
+        <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button color="green" aria-hidden="false"
           class="refset-tool-action-button" aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>
-
 
     </div>
 

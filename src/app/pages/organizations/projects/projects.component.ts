@@ -64,8 +64,8 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.route.params.subscribe(params => {
 
-            this.organizationId = params['id'];
-            this.editionId = '0';
+            this.organizationId = params['organizationId'];
+            this.editionId = params['editionId'];
             this.setNavigation();
         });
 
@@ -84,12 +84,12 @@ export class OrganizationProjectsComponent implements OnInit {
     setNavigation() {
 
         this.breadcrumbService.setBreadcrumbs([
-            { path: '/organizations/people', label: 'Organizations' },
+            { path: '/dashboard', label: 'Dashboard' },
             { label: 'Projects' },
         ]);
 
         this.menu = [
-            { name: 'Projects', link: '/organizations/projects', icon: 'fa fa-folder-open', isActive: true },
+            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-folder-open', isActive: true },
             { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
             { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
         ];
@@ -107,7 +107,7 @@ export class OrganizationProjectsComponent implements OnInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'name') {
-            this.router.navigate(['organization', this.organizationId, 'projects', event.data.id]);
+            this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id]);
         }
     }
 
