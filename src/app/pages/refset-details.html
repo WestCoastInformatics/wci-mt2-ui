@@ -140,16 +140,15 @@
                         
                     </mat-menu>
                     
-                    <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span>
-    <!-- COMPARE -->
+                   <!--    <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span> -->
+                                        <span class="menu-spacer">&nbsp;</span>
+                    
 
                     <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData"
                       (changeLockedStatus)="changeLockedStatus($event)">
                     </app-launch-comparison-modal>
-<!-- END_COMPARE -->
 
                     <span class="menu-spacer">&nbsp;</span>
-<!-- DL -->
                    <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #downloadMenu="matMenu">
@@ -157,11 +156,8 @@
                         <button *ngIf="editMode" mat-menu-item [hidden]="true">Download Workflow
                             History</button>
                     </mat-menu>
-<!-- END_DL -->
 
                     <span class="menu-spacer">&nbsp;</span>
-
-    <!-- INFO -->
 
                     <button mat-button [matMenuTriggerFor]="informationMenu" [matMenuTriggerRestoreFocus]="false" class="information-menu">Information
                     <span class="down-arrow-for-menu">&#x25BC;</span></button>
@@ -170,28 +166,24 @@
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
                         <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
-                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">Snomed
+                        <button #snowmedBroswerButton mat-menu-item aria-label="SNOMED Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">Snomed
                             Browser</a>
                         </button>
                     </mat-menu>
-<!-- END_INFO -->
 
                     <span class="menu-spacer">&nbsp;</span>
 
-
-
-    <!-- Communication - Deb -->
-
-                    <button *ngIf="editMode && false" mat-button [matMenuTriggerFor]="communicationMenu" class="communication-menu">Communication - Deb<span
+                    <button mat-button [matMenuTriggerFor]="communicationMenu" class="communication-menu">Communication<span
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
+                        <audit-trail-modal   [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
+                    
                         <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
                         <!--<button mat-menu-item [hidden]="true">Share Reference Set</button> -->
                         <!-- <share-refset [refset]="refsetData"></share-refset> -->
                           <!-- <button mat-menu-item [hidden]="true">Request Project Access</button> -->
                     </mat-menu>
-<!-- END_Communication - Deb -->
 
                 </div>
 
