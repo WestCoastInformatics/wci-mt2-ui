@@ -136,10 +136,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110
       },
       {
-        field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', filterValueGetter: (params) => {
-          const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
-          return this.transformDescriptions(desc)?.length ? this.transformDescriptions(desc)[0].term : '';
-        }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }
+        field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }
       },
       {
         field: 'reason', valueGetter: (params) => {
@@ -159,14 +156,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }
       },
       {
-        field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', filterValueGetter: (params) => {
-          const desc = params?.data?.replacementConcepts[0]?.descriptions;
-          return (params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT') ? (this.transformManualReplacementDescriptions(desc)?.length
-            ?
-            this.transformManualReplacementDescriptions(desc)[0].term
-            : '') : (this.transformDescriptions(desc)?.length ?
-              this.transformDescriptions(desc)[0].term : ''));
-        }, cellRendererParams: { template: this.replacementEnPtSection }
+        field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementEnPtSection }
       },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
