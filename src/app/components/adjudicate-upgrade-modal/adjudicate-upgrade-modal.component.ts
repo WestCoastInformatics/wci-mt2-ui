@@ -159,10 +159,10 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }
       },
       {
-        field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer',
+        field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', sortable: false, minWidth: 330, width: 330, cellRenderer: 'templateRenderer',
         valueGetter: (params) => {
           const desc = params?.data?.replacementConcepts[0]?.descriptions;
-          return (this.transformManualReplacementDescriptions(desc)?.length ? this.transformManualReplacementDescriptions(desc)[0].term : '');
+          return desc;
         },
         cellRendererParams: { template: this.replacementEnPtSection }
       },
@@ -354,7 +354,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
       return JSON.parse(descriptions).filter((x) => {
-        return x?.language === this.getLanguageAndType()[0] && (x?.type === this.getLanguageAndType()[1] || x?.type === this.getLanguageAndType()[2]);
+        return x.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
       });
     }
   }
