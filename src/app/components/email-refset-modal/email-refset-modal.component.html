@@ -1,5 +1,5 @@
 
-<button mat-menu-item alt="Email Refset" title="Email Refset" aria-label="Email Refset" (click)="openEmailRefsetModal(emailRefsetDialog)">Email Refset</button>
+<button mat-menu-item alt="Share Refset" title="Share Refset" aria-label="Share Refset" (click)="openEmailRefsetModal(emailRefsetDialog)">Share Refset</button>
 
 <ng-template #emailRefsetDialog let-modal>
 
@@ -9,7 +9,7 @@
             Share Reference Set: {{refset?.name}}
         </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click');reset();">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
@@ -23,9 +23,10 @@
                     <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
-                      style="width: 250px; padding-bottom: 9px" />
-
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" #removeText placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                      style="width: 250px; padding-bottom: 9px" />{{ removeText.focus() }}
+                      
+                    
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">
