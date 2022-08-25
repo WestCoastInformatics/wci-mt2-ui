@@ -118,9 +118,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
         valueGetter: (params) => {
           return this.formatReason(params.data.isHidden ? params.data._reaosn : params.data.inactivationReason);
-        },
-        filterValueGetter: (params) => {
-          return this.formatReason(params.data.isHidden ? params.data._reaosn : params.data.inactivationReason);
         }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }
       },
       {
@@ -136,24 +133,16 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       {
         field: 'inactiveId', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', valueGetter: (params) => {
           return params.data.code;
-        }, filterValueGetter: (params) => {
-          return params.data.code;
         }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110
       },
       {
         field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', valueGetter: (params) => {
           const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
           return this.transformDescriptions(desc)?.length ? this.transformDescriptions(desc)[0].term : '';
-        },
-        filterValueGetter: (params) => {
-          const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
-          return this.transformDescriptions(desc)?.length ? this.transformDescriptions(desc)[0].term : '';
         }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }
       },
       {
-        field: 'reason', filterValueGetter: (params) => {
-          return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
-        }, valueGetter: (params) => {
+        field: 'reason', valueGetter: (params) => {
           return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
         }, tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1
       },
@@ -165,20 +154,13 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
       },
       {
-        field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', filterValueGetter: (params) => {
-          return params?.data?.replacementConcepts[0]?.code;
-        }, valueGetter: (params) => {
+        field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', valueGetter: (params) => {
           return params?.data?.replacementConcepts[0]?.code;
         }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }
       },
       {
         field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
-          return (params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT') ? (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length
-            ?
-            this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term
-            : '') : (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length ?
-              this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term : ''));
-        }, filterValueGetter: (params) => {
+
           return (params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT') ? (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length
             ?
             this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term
@@ -357,6 +339,10 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
             x = x + '"}';
           }
+          if (!x.includes(':')) {
+            return '';
+          }
+
           return JSON.parse(x);
         });
         return formattedObjectArray.filter((x) => {

@@ -50,7 +50,7 @@ export class CustomTooltipComponent implements ITooltipAngularComp {
 
   goToTeam(teamId: string, organizationId: string): void {
     this.zone.run(() => {
-      this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
+      this.router.navigate([`/organization/${organizationId}/teams/${teamId}/people`]);
     });
   }
 

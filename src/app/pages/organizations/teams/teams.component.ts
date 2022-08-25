@@ -44,7 +44,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.route.params.subscribe(params => {
 
-            this.organizationId = params['id'];
+            this.organizationId = params['organizationId'];
             console.log(this.organizationId);
             this.setNavigation();
         });
@@ -140,14 +140,22 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: 'Teams' },
+            { label: 'Organization Teams' },
         ]);
 
         this.menu = [
-            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open', isActive: true },
-            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users', isActive: true },
-            { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
+            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
+            { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users', isActive: true },
+            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
         ];
+
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+            this.menu.push({ name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.location.replaceState('/organizations/' + this.organizationId + '/teams');
     }
 
     get dataCount() {
@@ -202,17 +210,24 @@ export class OrganizationTeamsComponent implements OnInit {
 
             for (const organization of this.organizationList) {
 
-                if (this.organizationId == organization.id) {
+                if (this.organizationId === organization.id) {
+                    
                     this.setOrganizationData(organization);
+                    return;
                 }
+            }
+
+            this.getStoredOrganizationId();
+
+            if (!this.selectedOrganization) {
+                this.showLoadingSpinner = false;
             }
         });
     }
 
-    selectOrg($event): void {
+    selectOrganization(): void {
 
         this.setOrganizationData(this.selectedOrganization);
-        this.location.replaceState('/organizations/teams/' + this.selectedOrganization.id);
         this.organizationId = this.selectedOrganization.id;
     }
 
@@ -221,12 +236,9 @@ export class OrganizationTeamsComponent implements OnInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-        }
-
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        
+        this.setNavigation();
         this.onGridReady(this.gridParams);
     }
 
@@ -240,7 +252,28 @@ export class OrganizationTeamsComponent implements OnInit {
                 selectedId = selectedRow.id;
             });
 
-            this.router.navigate(['/organization/' + this.organizationId, 'teams', 'people', selectedId]);
+            this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
+        }
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
         }
     }
 }

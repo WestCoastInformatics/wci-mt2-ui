@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { UsersService } from 'src/app/services/rest/users.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'personal-configuration',
@@ -11,10 +13,8 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class PersonalConfigurationComponent implements OnInit {
 
-	menu: SidebarMenuItem[] = [
-		{ name: 'About', link: '/personal/landing', icon: 'fa fa-user' },
-		{ name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs', isActive: true }
-	];
+	menu: SidebarMenuItem[] = [];
+	userId: any;
 	profileNameValue = '';
 	profileCompanyValue = '';
 	profileEmailValue = '';
@@ -23,14 +23,40 @@ export class PersonalConfigurationComponent implements OnInit {
 	user: any;
 	uiUtility = UiUtility;
 
-	constructor(private authService: AuthenticationService, private notificationService: NotificationService, private userService: UsersService) {
+	constructor(private authService: AuthenticationService, 
+		private notificationService: NotificationService, 
+		private userService: UsersService, 
+		private readonly route: ActivatedRoute,
+		private location: Location) {
 	}
 
 	ngOnInit(): void {
 
 		this.currentUserId = this.authService.getUser().id;
+
+		this.route.params.subscribe(params => {
+
+            if (params['userId']) {
+                this.userId = params['userId'];
+            } else {
+                this.userId = this.authService.getUser().id;
+            }
+
+            this.setNavigation();
+        });
+
 		this.getUser();
 	}
+
+	setNavigation() {
+
+        this.menu = [
+            { name: 'About', link: '/personal/' + this.userId + '/landing', icon: 'fa fa-user' },
+			{ name: 'Configuration', link: '/personal/' + this.userId + '/configuration', icon: 'fa fa-cogs', isActive: true }
+        ];
+
+        this.location.replaceState('personal/' + this.userId + '/configuration');
+    }
 
 	getUser(): void {
 

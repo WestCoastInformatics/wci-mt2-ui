@@ -127,9 +127,17 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-copy', isActive: true },
-            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people/', icon: 'fa fa-user' },
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy', isActive: true },
+            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
         ];
+
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets');
     }
 
     getUser(): void {
@@ -236,6 +244,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 }
 
                 this.getStoredOrganizationId();
+
+                if (!this.selectedOrganization) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -273,6 +285,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 }
 
                 this.getStoredEditionId();
+
+                if (!this.selectedEdition) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -302,12 +318,16 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                     if (this.projectId == project.id) {
 
                         this.selectedProject = project;
-                        this.showProjectData();
+                        this.showRefsetData();
                         return;
                     }
                 }
 
                 this.getStoredProjectId();
+
+                if (!this.selectedProject) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -315,24 +335,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         });
     }
 
-    showProjectData(): void {
-
-        this.setNavigation();
-        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
-        }
-
-        this.showRefsets();
-    }
-
     selectProject(): void {
 
         this.showLoadingSpinner = true;
         this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId);
-        this.showProjectData();
+        this.showRefsetData();
     }
 
     getStoredOrganizationId(): void {
@@ -418,7 +425,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         }
     }
 
-    showRefsets() {
+    showRefsetData() {
 
         if (this.originalGridParams) {
             this.onGridReady(this.originalGridParams);
@@ -427,7 +434,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         }
 
         sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+
+        this.setNavigation();
+
         this.projectIsUat = this.selectedProject.name.includes('UAT');
     }
 

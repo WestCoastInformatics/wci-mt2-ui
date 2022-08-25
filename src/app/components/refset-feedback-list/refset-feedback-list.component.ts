@@ -178,9 +178,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 tooltipField: 'Author',
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.authorSection },
-                filterValueGetter: (params) => {
-                    return params?.data?.posts[0]?.user?.name;
-                },
                 valueGetter: (params) => {
                     return params?.data?.posts[0]?.user?.name;
                 }
@@ -193,9 +190,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 minWidth: 300,
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.subjectSection },
-                filterValueGetter: (params) => {
-                    return params.data.subject;
-                },
                 valueGetter: (params) => {
                     return params.data.subject;
                 }
@@ -221,7 +215,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
-                filterValueGetter: UiUtility.gridDateValueGetter
             },
             { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
         ];

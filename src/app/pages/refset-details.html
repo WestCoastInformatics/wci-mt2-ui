@@ -128,6 +128,8 @@
                           (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
 
+                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" [status]="refsetStatus"
                           [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
@@ -135,58 +137,47 @@
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
                         <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
 
+
                     </mat-menu>
 
-                    <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span>
-
-                    <button *ngIf="editMode && false" mat-button [matMenuTriggerFor]="collaborationMenu" class="collaboration-menu">Collaboration <span
-                          class="down-arrow-for-menu">&#x25BC;</span></button>
-
-                    <mat-menu #collaborationMenu="matMenu">
-                        <button mat-menu-item [hidden]="true">Share Reference Set</button>
-                        <button mat-menu-item [hidden]="true">Request Project Access</button>
-                    </mat-menu>
-
-                    <span class="menu-spacer">&nbsp;</span>
+                	<span  *ngIf="allowedToEdit || allowedToReview"  class="menu-spacer">&nbsp;</span>
 
                     <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData"
                       (changeLockedStatus)="changeLockedStatus($event)">
                     </app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
+                   <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
-                    <button mat-button [matMenuTriggerFor]="documentationMenu" [matMenuTriggerRestoreFocus]="false" class="documentation-menu">Documentation
+                    <mat-menu #downloadMenu="matMenu">
+                        <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
+                        <button *ngIf="editMode" mat-menu-item [hidden]="true">Download Workflow
+                            History</button>
+                    </mat-menu>
+
+                    <span class="menu-spacer">&nbsp;</span>
+
+                    <button mat-button [matMenuTriggerFor]="informationMenu" [matMenuTriggerRestoreFocus]="false" class="information-menu">Information
                     <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
-                    <mat-menu #documentationMenu="matMenu">
+                    <mat-menu #informationMenu="matMenu">
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
                         <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
-                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open Snomed Browser"><a (click)="openInNewWindow(refsetId)">Snomed
+                        <button #snowmedBroswerButton mat-menu-item aria-label="SNOMED Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">Snomed
                             Browser</a>
                         </button>
                     </mat-menu>
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <button mat-button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false"
-                            class="communication-menu">Communication
-                        <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                    <button mat-button [matMenuTriggerFor]="communicationMenu" class="communication-menu">Communication <span
+                          class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
-                        <share-refset [refset]="refsetData"></share-refset>
+                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
                         <invite-people-modal [refset]="refsetData"></invite-people-modal>
                         <request-access-modal [refset]="refsetData"></request-access-modal>
-                    </mat-menu>
-
-                    <span class="menu-spacer">&nbsp;</span>
-
-                    <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
-
-                    <mat-menu #downloadMenu="matMenu">
-                        <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
-                        <button *ngIf="editMode" mat-menu-item [hidden]="true">Download Workflow
-                            History</button>
                     </mat-menu>
 
                 </div>

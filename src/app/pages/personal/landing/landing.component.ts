@@ -1,21 +1,19 @@
-import { Component, NgZone, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UsersService } from 'src/app/services/rest/users.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'personal-landing',
     templateUrl: './landing.component.html'
 })
 export class PersonalLandingComponent implements OnInit {
-    menu: SidebarMenuItem[] = [
-        { name: 'About', link: '/personal/landing', icon: 'fa fa-user', isActive: true }
 
-    ];
-
+    menu: SidebarMenuItem[] = [];
     selectedTeam: any;
     userId: any;
     user: any;
@@ -23,25 +21,45 @@ export class PersonalLandingComponent implements OnInit {
     organizationList = [];
     teamList = [];
     uiUtility = UiUtility;
+    loggedUserId: any;
 
     constructor(private readonly authService: AuthenticationService,
         private readonly userService: UsersService,
         private readonly refsetService: RefsetService,
+        private readonly route: ActivatedRoute,
         private readonly router: Router,
-        private readonly zone: NgZone) {
+        private location: Location) {
     }
 
     ngOnInit(): void {
-        const loggedUserId = this.authService.getUser().id;
-        if (window.location.pathname.split('/').length > 3) {
-            this.userId = window.location.pathname.split('/')[3];
-        } else {
-            this.userId = this.authService.getUser().id;
-        }
-        if (this.userId === loggedUserId) {
-            this.menu.push({ name: 'Configuration', link: '/personal/configuration', icon: 'fa fa-cogs' });
-        }
+
+        this.loggedUserId = this.authService.getUser().id;
+
+        this.route.params.subscribe(params => {
+
+            if (params['userId']) {
+                this.userId = params['userId'];
+            } else {
+                this.userId = this.authService.getUser().id;
+            }
+
+            this.setNavigation();
+        });
+
         this.getUser();
+    }
+
+    setNavigation() {
+
+        this.menu = [
+            { name: 'About', link: '/personal/' + this.userId + '/landing', icon: 'fa fa-user', isActive: true }
+        ];
+
+        if (this.userId === this.loggedUserId) {
+            this.menu.push({ name: 'Configuration', link: '/personal/' + this.userId + '/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.location.replaceState('personal/' + this.userId + '/landing');
     }
 
     getUser(): void {
@@ -68,6 +86,6 @@ export class PersonalLandingComponent implements OnInit {
     }
 
     goToTeam(teamId: string, organizationId: string): void {
-        this.router.navigate([`/organization/${organizationId}/teams/people/${teamId}`]);
+        this.router.navigate([`/organization/${organizationId}/teams/${teamId}/people`]);
     }
 }
