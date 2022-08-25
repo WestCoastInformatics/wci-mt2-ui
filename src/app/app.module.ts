@@ -124,6 +124,7 @@ import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-me
 import {ShareRefsetModalComponent} from './components/share-modal/share-refset-modal.component';
 import {InvitePeopleModalComponent} from './components/invite-people-modal/invite-people-modal.component';
 import {NgxFormErrorModule} from 'ngx-form-error';
+import {RequestAccessModalComponent} from './components/request-access-modal/request-access-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -221,7 +222,8 @@ const appRoutes: Routes = [
         WorkflowStatusBadgeComponent,
         RefsetMetaTableComponent,
         ShareRefsetModalComponent,
-        InvitePeopleModalComponent
+        InvitePeopleModalComponent,
+        RequestAccessModalComponent
     ],
     imports: [
         RouterModule.forRoot(

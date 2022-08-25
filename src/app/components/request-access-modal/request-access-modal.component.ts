@@ -1,34 +1,34 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {Refset} from '../../models/refset';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RefsetService} from '../../services/rest/refset.service';
-import {RefsetUtility} from '../../utilities/refset.utility';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {NotificationService} from '../../services/notification.service';
 import {emailValidator} from '../../validators/emailValidator';
+import {AuthenticationService} from '../../services/authentication/authentication.service';
 
 
 @Component({
-    selector: 'share-refset',
-    templateUrl: './share-refset-modal.component.html'
+    selector: 'request-access-modal',
+    templateUrl: './request-access-modal.component.html'
 })
-export class ShareRefsetModalComponent implements OnInit {
+export class RequestAccessModalComponent implements OnInit {
     model: any;
     form: FormGroup;
-    @Input() refset: Refset;
+    @Input() refset: any;
 
     constructor(private readonly modalService: NgbModal, private dataService: RefsetService, private fb: FormBuilder,
-                private clipboard: Clipboard, private notificationService: NotificationService) {
+                private clipboard: Clipboard, private notificationService: NotificationService, private authService: AuthenticationService) {
     }
 
     get modalTitle(): string {
-        return this.refset?.id ? `Share Refset: ${this.refset.name}` : 'Share Refset';
+        return this.refset?.project ? `Request access to the underlying project for "${this.refset.name}" which is "${this.refset.project.name}"`
+            : '';
     }
 
-    get directUrl(): string {
-        return this.refset?.refsetId ? (window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/'
-            + RefsetUtility.getVersionDateForRefsetApiCall(this.refset)) : '';
+    get canRequest(): boolean {
+        const user = this.authService.getUser();
+        return !this.refset?.project?.memberList?.includes(user.id);
     }
 
     errors(key: string): string[] {
@@ -39,12 +39,11 @@ export class ShareRefsetModalComponent implements OnInit {
         return errors;
     }
 
-
     ngOnInit(): void {
         this.newForm();
     }
 
-    openShareModal(modalDialog: NgbModal) {
+    openModal(modalDialog: NgbModal) {
         this.newForm();
         this.model = this.modalService.open(modalDialog, {
             backdrop: 'static',
@@ -56,28 +55,22 @@ export class ShareRefsetModalComponent implements OnInit {
 
     newForm(): void {
         this.form = this.fb.group({
-            recipient: ['', [Validators.compose([emailValidator(), Validators.required])]],
-            additionalMessage: ['']
+            additionalMessage:  ['', [Validators.compose([Validators.required])]]
         });
     }
 
     onSave(): void {
         this.form.markAllAsTouched();
         if (this.form.valid) {
-            this.dataService.shareRefset(this.refset.id, this.form.value).subscribe(result => {
+            /*this.dataService.shareRefset(this.refset.id, this.form.value).subscribe(result => {
                 if (result) {
                     this.notificationService.show('Profile was successfully updated', 'Success', 'success', {
                         timeOut: 3000,
                         extendedTimeOut: 0
                     });
                 }
-            });
+            });*/
         }
-    }
-
-    getLink(): void {
-        this.clipboard.copy(this.directUrl);
-        this.notificationService.show('URL Copied to clipboard', 'Success', 'success', {timeOut: 2000, extendedTimeOut: 0});
     }
 
 }
