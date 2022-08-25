@@ -140,9 +140,7 @@
                         
                     </mat-menu>
                     
-                   <!--    <span *ngIf="editMode && false" class="menu-spacer">&nbsp;</span> -->
-                                        <span class="menu-spacer">&nbsp;</span>
-                    
+                	<span  *ngIf="allowedToEdit || allowedToReview"  class="menu-spacer">&nbsp;</span> 
 
                     <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData"
                       (changeLockedStatus)="changeLockedStatus($event)">
@@ -177,12 +175,7 @@
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
-                        <audit-trail-modal   [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
-                    
                         <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
-                        <!--<button mat-menu-item [hidden]="true">Share Reference Set</button> -->
-                        <!-- <share-refset [refset]="refsetData"></share-refset> -->
-                          <!-- <button mat-menu-item [hidden]="true">Request Project Access</button> -->
                     </mat-menu>
 
                 </div>
