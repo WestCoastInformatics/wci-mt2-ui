@@ -68,6 +68,11 @@ export class EmailRefsetModalComponent {
         return flag == null ? false : true;
     }
 
+    reset() {
+        this.description = '';
+        this.email = '';
+    }
+
     onKeyDownEvent(event: any) {
         console.log(event.target.value);
         this.isValidEmail();
