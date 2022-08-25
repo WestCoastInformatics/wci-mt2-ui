@@ -24,6 +24,7 @@ export class OrganizationConfigurationComponent implements OnInit {
     organizationId: any;
     organizationList = [];
     emailError = '';
+    showLoadingSpinner = false;
     uiUtility = UiUtility;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
@@ -44,7 +45,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
 
-            this.organizationId = params['id'];
+            this.organizationId = params['organizationId'];
             this.setNavigation();
         });
 
@@ -56,15 +57,17 @@ export class OrganizationConfigurationComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            {label: 'Configuration'},
+            {label: 'Organization Configuration'},
         ]);
 
         this.menu = [
-            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open', isActive: true },
-            {name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users'},
-            {name: 'People', link: '/organizations/people', icon: 'fa fa-user'},
-            {name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs', isActive: true}
+            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
+            {name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users'},
+            {name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user'},
+            {name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true}
         ];
+
+        this.location.replaceState('/organizations/' + this.organizationId + '/configuration');
     }
 
     getOrganizations(): void {
@@ -76,17 +79,25 @@ export class OrganizationConfigurationComponent implements OnInit {
             for (const organization of this.organizationList) {
 
                 if (this.organizationId === organization.id) {
+
                     this.setOrganizationData(organization);
+                    return;
                 }
+            }
+
+            this.getStoredOrganizationId();
+
+            if (!this.selectedOrganization) {
+                this.showLoadingSpinner = false;
             }
         });
     }
 
-    selectOrg($event): void {
+    selectOrganization(): void {
 
         this.setOrganizationData(this.selectedOrganization);
-        this.location.replaceState('/organizations/configuration/' + this.selectedOrganization.id);
         this.organizationId = this.selectedOrganization.id;
+        
     }
 
     setOrganizationData(organization: any) {
@@ -96,6 +107,10 @@ export class OrganizationConfigurationComponent implements OnInit {
         this.profileNameValue = organization.name;
         this.profileEmailValue = organization.primaryContactEmail;
         this.profileDescriptionValue = organization.description;
+
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        
+        this.setNavigation();
     }
 
     updateOrganization(): void {
@@ -158,6 +173,27 @@ export class OrganizationConfigurationComponent implements OnInit {
                 });
                 this.selectedOrganization.iconUri = iconUri;
             });
+        }
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
         }
     }
 }

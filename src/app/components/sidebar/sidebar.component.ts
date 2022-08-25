@@ -23,11 +23,6 @@ export class SidebarComponent implements OnInit {
 	}
 
 	getLink(itemLink) {
-
-		if (CodeUtility.hasValue(this.id, true, true)) {
-			return ([itemLink, this.id]);
-		} else {
-			return ([itemLink]);
-		}
+		return ([itemLink]);
 	}
 }

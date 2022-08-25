@@ -79,15 +79,17 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-copy' },
-            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people', icon: 'fa fa-user' },
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
+            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
             {
                 name: 'Configuration',
-                link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration',
+                link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration',
                 icon: 'fa fa-cogs',
                 isActive: true
             }
         ];
+
+        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration');
     }
 
     getOrganizations(): void {
@@ -110,6 +112,10 @@ export class ProjectsConfigurationComponent implements OnInit {
                 }
 
                 this.getStoredOrganizationId();
+
+                if (!this.selectedOrganization) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -146,6 +152,10 @@ export class ProjectsConfigurationComponent implements OnInit {
                 }
 
                 this.getStoredEditionId();
+
+                if (!this.selectedEdition) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -180,6 +190,10 @@ export class ProjectsConfigurationComponent implements OnInit {
                 }
 
                 this.getStoredProjectId();
+
+                if (!this.selectedProject) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -191,7 +205,6 @@ export class ProjectsConfigurationComponent implements OnInit {
 
         this.showLoadingSpinner = true;
         this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration/' + this.projectId);
         this.showProjectData();
     }
 
@@ -287,6 +300,12 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.isPrivate = this.selectedProject.privateProject;
         this.selectedTeamIds = this.selectedProject?.teams;
         this.showLoadingSpinner = false;
+
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+        sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+
+        this.setNavigation();
     }
 
     clearProjectData(): void {

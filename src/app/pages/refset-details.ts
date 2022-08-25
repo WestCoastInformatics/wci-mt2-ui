@@ -246,25 +246,6 @@ export class RefsetDetails {
         const prevUrl = this.routerExtentionService.getPreviousUrl();
         let isProjects = false;
         const parentRouteKey = 'currentRefsetParentRoute';
-        if (prevUrl && prevUrl != this.router.url) {
-            localStorage.setItem(parentRouteKey, prevUrl);
-        }
-        const parent = localStorage.getItem(parentRouteKey);
-        if (parent && parent.includes('projects')) {
-            isProjects = true;
-        }
-
-        if (isProjects) {
-            this.breadcrumbService.setBreadcrumbs([
-                { path: "/projects", label: "Projects" },
-                { label: "Refset Details" },
-            ]);
-        } else {
-            this.breadcrumbService.setBreadcrumbs([
-                { path: "/library", label: "Refset Library" },
-                { label: "Refset Details" },
-            ]);
-        }
 
         const allObservables = {
             refsetLoaded: this.refsetLoaded$,
@@ -272,6 +253,26 @@ export class RefsetDetails {
         };
 
         this.refsetLoaded$.pipe(take(1)).subscribe((loaded) => {
+
+            if (prevUrl && prevUrl != this.router.url) {
+                localStorage.setItem(parentRouteKey, prevUrl);
+            }
+            const parent = localStorage.getItem(parentRouteKey);
+            if (parent && parent.includes('projects')) {
+                isProjects = true;
+            }
+    
+            if (isProjects) {
+                this.breadcrumbService.setBreadcrumbs([
+                    { path: '/organization/' + this.refsetData.project.edition.organizationId + '/edition/' + this.refsetData.project.edition.id + '/projects/' + this.refsetData.project.id + '/refsets', label: "Projects" },
+                    { label: "Refset Details" },
+                ]);
+            } else {
+                this.breadcrumbService.setBreadcrumbs([
+                    { path: "/library", label: "Refset Library" },
+                    { label: "Refset Details" },
+                ]);
+            }
 
             this.loadWorkflowHistoryData();
             this.membersGridOptions = {

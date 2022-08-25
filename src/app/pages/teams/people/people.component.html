@@ -14,7 +14,7 @@
         <span class="title-label">Teams</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>Choose Team</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam()">
                 <mat-option *ngIf="teamList == null || teamList.length == 0">No Teams</mat-option>
                 <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
                     {{ team.name }}
