@@ -159,10 +159,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }
       },
       {
-        field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+        field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer',
+        valueGetter: (params) => {
           const desc = params?.data?.replacementConcepts[0]?.descriptions;
-          return (this.transformDescriptions(desc)?.length ? this.transformDescriptions(desc)[0].term : '');
-        }, cellRendererParams: { template: this.replacementEnPtSection }
+          return (this.transformManualReplacementDescriptions(desc)?.length ? this.transformManualReplacementDescriptions(desc)[0].term : '');
+        },
+        cellRendererParams: { template: this.replacementEnPtSection }
       },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];

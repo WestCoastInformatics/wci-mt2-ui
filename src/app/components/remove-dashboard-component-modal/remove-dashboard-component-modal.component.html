@@ -1,11 +1,12 @@
-<button class="btn btn-primary btn-lg btn-wide-font" title="Remove {{componentType}}" [disabled]="disabled" (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
+<button class="btn btn-primary btn-lg btn-wide-font" title="Remove {{componentType}}" [disabled]="disabled"
+  (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
     Remove {{componentType | titlecase}}
 </button>
 
 <ng-template #removeDashboardComponentDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Remove {{componentName}}?
         </h4>
@@ -40,7 +41,7 @@
                 <p>Type "remove {{componentType}}" to confirm:</p>
             </tr>
             <tr>
-                <input class="modal-input-field-border-bottom" placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />
+                <input class="modal-input-field-border-bottom" #removeText placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />{{ removeText.focus() }}
             </tr>
         </table>
 

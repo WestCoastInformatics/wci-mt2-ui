@@ -3,7 +3,7 @@
 <ng-template #addMemberModal let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Add a Member to the "{{ name }}" {{ type }}
         </h4>
@@ -21,7 +21,7 @@
                 <td>
                     <mat-form-field appearance="fill" class="email-input-field">
                         <mat-label>Enter the email of the user to add:</mat-label>
-                        <input matInput (keydown.tab)="onKeyDownEvent($event)" placeholder="user-email@orgname.org" [(ngModel)]="email" />
+                        <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ addMember.focus() }}
                     </mat-form-field>
                 </td>
             </tr>

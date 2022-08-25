@@ -26,8 +26,7 @@
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-            <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject"
-              (selectionChange)="selectProject()">
+            <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}
                 </mat-option>
@@ -40,17 +39,20 @@
             padding-left: 60px;
             font-size: 14px;
         ">
-            <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-
-            <b>Organization Name: </b><span>{{selectedProject?.edition?.organization?.name +
-                &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-
-            <span *ngIf="editionList.length > 1">
-                <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-            </span>
-
-            <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
             <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
+
+            <span style="visibility: hidden">
+                <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+
+                <b>Organization Name: </b><span>{{selectedProject?.edition?.organization?.name +
+                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+
+                <span *ngIf="editionList.length > 1">
+                    <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+                </span>
+
+                <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+            </span>
         </div>
     </div>
 
