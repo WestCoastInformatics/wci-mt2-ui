@@ -26,7 +26,7 @@
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
             <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-            <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="showRefsets()">
+            <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}
                 </mat-option>
