@@ -5315,3 +5315,6 @@ app-date-text-floating-filter {
 .text-main, .text-primary {
     color: $main-color !important;
 }
+.mat-form-field-appearance-fill .mat-form-field-subscript-wrapper{
+    padding: 0 !important;
+}

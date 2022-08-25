@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
             });
     }
 
-    //***** Framework Functions *****/
+    // ***** Framework Functions *****/
     ngOnInit() {
         this.titleService.setTitle('Refset Tool');
         this.environment = this.envService.env;
@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
         this.userInactive.subscribe(() => {
             this.authenticationService.logoutUser();
         });
+
     }
 
     assignFavicon() {
@@ -87,7 +88,7 @@ export class AppComponent implements OnInit {
     }
 
     setTimeout() {
-        let date = new Date();
+        const date = new Date();
         // console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
         this.userActivity = setTimeout(() => {
 

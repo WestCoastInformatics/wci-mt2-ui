@@ -122,7 +122,8 @@ import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
 import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-meta-table.component';
 import {ShareRefsetModalComponent} from './components/share-modal/share-refset-modal.component';
-import {RxReactiveFormsModule} from '@rxweb/reactive-form-validators';
+import {InvitePeopleModalComponent} from './components/invite-people-modal/invite-people-modal.component';
+import {NgxFormErrorModule} from 'ngx-form-error';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -219,7 +220,8 @@ const appRoutes: Routes = [
         ComposeModalComponent,
         WorkflowStatusBadgeComponent,
         RefsetMetaTableComponent,
-        ShareRefsetModalComponent
+        ShareRefsetModalComponent,
+        InvitePeopleModalComponent
     ],
     imports: [
         RouterModule.forRoot(
@@ -267,7 +269,7 @@ const appRoutes: Routes = [
         AuditTrailModule,
         PaginationModule,
         DirectivesModule,
-        RxReactiveFormsModule
+        NgxFormErrorModule
     ],
     entryComponents: [NotificationComponent],
     providers: [
