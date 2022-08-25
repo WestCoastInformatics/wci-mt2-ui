@@ -170,23 +170,11 @@
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
                         <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
-                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open Snomed Browser"><a (click)="openInNewWindow(refsetId)">Snomed
+                        <button #snowmedBroswerButton mat-menu-item aria-label="Snomed Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">Snomed
                             Browser</a>
                         </button>
                     </mat-menu>
 <!-- END_INFO -->
-
-                    <span class="menu-spacer">&nbsp;</span>
-    <!-- COMM -->
-
-                    <button mat-button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false"
-                            class="communication-menu">Communication
-                        <span class="down-arrow-for-menu">&#x25BC;</span></button>
-
-                    <mat-menu #communicationMenu="matMenu">
-                       <!-- <share-refset [refset]="refsetData"></share-refset> -->
-                    </mat-menu>
-<!-- END_COMM -->
 
                     <span class="menu-spacer">&nbsp;</span>
 
@@ -200,7 +188,8 @@
                     <mat-menu #communicationMenu="matMenu">
                         <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
                         <!--<button mat-menu-item [hidden]="true">Share Reference Set</button> -->
-                        <button mat-menu-item [hidden]="true">Request Project Access</button>
+                        <!-- <share-refset [refset]="refsetData"></share-refset> -->
+                          <!-- <button mat-menu-item [hidden]="true">Request Project Access</button> -->
                     </mat-menu>
 <!-- END_Communication - Deb -->
 
