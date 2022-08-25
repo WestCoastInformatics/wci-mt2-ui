@@ -66,7 +66,7 @@ export class TeamsPeopleComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-            this.teamId = params['id'];
+            this.teamId = params['teamId'];
             this.setNavigation();
         });
 
@@ -123,53 +123,88 @@ export class TeamsPeopleComponent implements OnInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams' });
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
         }
 
         breadcrumbs.push({ label: 'People' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user', isActive: true }
+            { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
         ];
+
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.location.replaceState('organization/' + this.organizationId + '/teams/' + this.teamId + '/people');
     }
 
-    getOrganizations() {
+    getOrganizations(): void {
 
         this.refsetService.getOrganizations().subscribe((results) => {
 
-            this.showLoadingSpinner = false;
-            this.showTable = true;
             this.organizationList = results.items;
 
             for (const organization of this.organizationList) {
 
-                if (this.organizationId == organization.id) {
-
+                if (this.organizationId === organization.id) {
+                    
                     this.selectedOrganization = organization;
                     this.getTeams();
-                    break;
+                    return;
                 }
+            }
+
+            this.getStoredOrganizationId();
+
+            if (!this.selectedOrganization) {
+                this.showLoadingSpinner = false;
             }
         });
     }
 
     selectOrganization(): void {
 
+        this.showLoadingSpinner = true;
         this.organizationId = this.selectedOrganization.id;
-        this.location.replaceState('organization/' + this.organizationId + '/teams/people/');
         this.teamId = null;
         this.selectedTeam = null;
         this.teamList = [];
         this.data = [];
-
+        this.setNavigation();
         this.getTeams();
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
+        }
     }
 
     getTeams(): void {
 
         this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
+            this.showLoadingSpinner = false;
+            this.showTable = true;
             this.teamList = results.items;
 
             for (const team of this.teamList) {
@@ -178,15 +213,21 @@ export class TeamsPeopleComponent implements OnInit {
 
                     this.selectedTeam = team;
                     this.showTeamMembers();
+                    return;
                 }
+            }
+
+            if (this.teamList && this.teamList.length > 0) {
+
+                this.selectedTeam = this.teamList[0];
+                this.selectTeam();
             }
         });
     }
 
-    selectTeam(_$event: any): void {
+    selectTeam(): void {
 
         this.teamId = this.selectedTeam.id;
-        this.location.replaceState('organization/' + this.organizationId + '/teams/people/' + this.selectedTeam.id);
         this.showTeamMembers();
     }
 
@@ -194,12 +235,9 @@ export class TeamsPeopleComponent implements OnInit {
 
         this.data = this.selectedTeam.memberList;
 
-        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/configuration', icon: 'fa fa-cogs' });
-
-        }
+        this.setNavigation();
     }
 
     onGridReady = (params) => {
@@ -220,7 +258,7 @@ export class TeamsPeopleComponent implements OnInit {
             selectedId = selectedRow.id;
         });
 
-        this.router.navigate(['/personal/landing', selectedId]);
+        this.router.navigate(['/personal/' + selectedId + '/landing']);
     }
 
     get dataCount() {

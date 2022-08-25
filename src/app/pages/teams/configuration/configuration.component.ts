@@ -33,6 +33,7 @@ export class TeamsConfigurationComponent implements OnInit {
     selectedForRemove = [];
     selectedForAdd = [];
     emailError = '';
+    showLoadingSpinner = true;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
                 private readonly titleService: Title,
@@ -68,24 +69,21 @@ export class TeamsConfigurationComponent implements OnInit {
         const breadcrumbs: any = [{path: '/dashboard', label: 'Dashboard'}];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({path: 'organizations/teams/' + this.organizationId, label: 'Organization Teams'});
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
         }
 
         breadcrumbs.push({label: 'Configuration'});
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            {name: 'People', link: '/organization/' + this.organizationId + '/teams/people', icon: 'fa fa-user'},
-            {
-                name: 'Configuration',
-                link: '/organization/' + this.organizationId + '/teams/configuration',
-                icon: 'fa fa-cogs',
-                isActive: true
-            }
+            { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user' },
+            { name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs', isActive: true }
         ];
+
+        this.location.replaceState('organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration');
     }
 
-    getOrganizations() {
+    getOrganizations(): void {
 
         this.refsetService.getOrganizations().subscribe((results) => {
 
@@ -93,36 +91,72 @@ export class TeamsConfigurationComponent implements OnInit {
 
             for (const organization of this.organizationList) {
 
-                if (this.organizationId == organization.id) {
-
+                if (this.organizationId === organization.id) {
+                    
                     this.selectedOrganization = organization;
                     this.getTeams();
-                    break;
+                    return;
                 }
+            }
+
+            this.getStoredOrganizationId();
+
+            if (!this.selectedOrganization) {
+                this.showLoadingSpinner = false;
             }
         });
     }
 
     selectOrganization(): void {
 
+        this.showLoadingSpinner = true;
         this.organizationId = this.selectedOrganization.id;
         this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
 
         this.clearTeamData();
+        this.setNavigation();
         this.getTeams();
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
+        }
     }
 
     getTeams(): void {
 
         this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
+            this.showLoadingSpinner = false;
             this.teamList = results.items;
 
             for (const team of this.teamList) {
 
                 if (this.teamId == team.id) {
+
                     this.setTeamData(team);
+                    return;
                 }
+            }
+
+            if (this.teamList && this.teamList.length > 0) {
+                this.setTeamData(this.teamList[0]);
             }
         });
     }
@@ -135,6 +169,10 @@ export class TeamsConfigurationComponent implements OnInit {
         this.profileNameValue = this.selectedTeam.name;
         this.profileEmailValue = this.selectedTeam.primaryContactEmail;
         this.profileDescriptionValue = this.selectedTeam.description;
+
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+
+        this.setNavigation();
     }
 
     clearTeamData() {
@@ -149,9 +187,7 @@ export class TeamsConfigurationComponent implements OnInit {
     }
 
     selectTeam(_$event: any): void {
-
         this.setTeamData(this.selectedTeam);
-        this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/' + this.selectedTeam.id);
     }
 
     isValidEmail(): boolean {

@@ -85,14 +85,22 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: 'Projects' },
+            { label: 'Organization Projects' },
         ]);
 
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-folder-open', isActive: true },
-            { name: 'Teams', link: '/organizations/teams', icon: 'fa fa-users' },
-            { name: 'People', link: '/organizations/people', icon: 'fa fa-user' }
+            { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
         ];
+
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+            this.menu.push({ name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.location.replaceState('organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects');
     }
 
     onGridReady = (params) => {
@@ -107,7 +115,7 @@ export class OrganizationProjectsComponent implements OnInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'name') {
-            this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id]);
+            this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets']);
         }
     }
 
@@ -133,6 +141,10 @@ export class OrganizationProjectsComponent implements OnInit {
                 }
 
                 this.getStoredOrganizationId();
+
+                if (!this.selectedOrganization) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -169,6 +181,10 @@ export class OrganizationProjectsComponent implements OnInit {
                 }
 
                 this.getStoredEditionId();
+
+                if (!this.selectedEdition) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -181,19 +197,15 @@ export class OrganizationProjectsComponent implements OnInit {
         this.showLoadingSpinner = true;
         this.editionId = this.selectedEdition.id;
         this.projectList = [];
-        this.setNavigation();
         this.showEditionData();
     }
 
     showEditionData() {
 
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+
         this.setNavigation();
-        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-        if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organizations/configuration', icon: 'fa fa-cogs' });
-        }
-
         this.onGridReady(this.gridParams);
         this.getProjects();
     }

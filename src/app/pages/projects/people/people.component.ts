@@ -153,9 +153,17 @@ export class ProjectsPeopleComponent implements OnInit {
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-copy' },
-            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people', icon: 'fa fa-user', isActive: true },
+            { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
+            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user', isActive: true },
         ];
+
+        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+
+        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration', icon: 'fa fa-cogs' });
+        }
+
+        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people');
     }
 
     getOrganizations(): void {
@@ -177,6 +185,10 @@ export class ProjectsPeopleComponent implements OnInit {
                 }
 
                 this.getStoredOrganizationId();
+
+                if (!this.selectedOrganization) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -214,6 +226,10 @@ export class ProjectsPeopleComponent implements OnInit {
                 }
 
                 this.getStoredEditionId();
+
+                if (!this.selectedEdition) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -276,6 +292,10 @@ export class ProjectsPeopleComponent implements OnInit {
                 }
 
                 this.getStoredProjectId();
+
+                if (!this.selectedProject) {
+                    this.showLoadingSpinner = false;
+                }
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -291,17 +311,22 @@ export class ProjectsPeopleComponent implements OnInit {
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
         if (!configShowing && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/configuration', icon: 'fa fa-cogs' });
+            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration', icon: 'fa fa-cogs' });
         }
 
         this.showLoadingSpinner = false;
+
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+        sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+
+        this.setNavigation();
     }
 
     selectProject(): void {
 
         this.showLoadingSpinner = true;
         this.projectId = this.selectedProject.id;
-        this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/people/' + this.projectId);
         this.showProjectData();
     }
 
