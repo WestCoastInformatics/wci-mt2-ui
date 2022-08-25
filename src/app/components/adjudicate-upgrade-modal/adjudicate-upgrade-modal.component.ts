@@ -339,6 +339,10 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
             x = x + '"}';
           }
+          if (!x.includes(':')) {
+            return '';
+          }
+
           return JSON.parse(x);
         });
         return formattedObjectArray.filter((x) => {
