@@ -160,9 +160,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       },
       {
         field: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
-          return (params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT') ?
-            this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0]?.term
-            : this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0]?.term);
+          const desc = params?.data?.replacementConcepts[0]?.descriptions;
+          return (params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT') ? (this.transformManualReplacementDescriptions(desc)?.length
+            ?
+            this.transformManualReplacementDescriptions(desc)[0].term
+            : '') : (this.transformDescriptions(desc)?.length ?
+              this.transformDescriptions(desc)[0].term : ''));
         }, cellRendererParams: { template: this.replacementEnPtSection }
       },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
