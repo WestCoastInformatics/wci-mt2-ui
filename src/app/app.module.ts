@@ -55,6 +55,7 @@ import { ImportFromFileModalComponent } from 'src/app/components/import-from-fil
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
 import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
+import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { AddMemberModalComponent } from 'src/app/components/add-member-modal/add-member-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
@@ -172,6 +173,7 @@ const appRoutes: Routes = [
         ImportFromListModalComponent,
         ImportFromEclModalComponent,
         CreateNewOrganizationModalComponent,
+        EmailRefsetModalComponent,
         CreateNewTeamModalComponent,
         AddMemberModalComponent,
         CreateNewProjectModalComponent,
