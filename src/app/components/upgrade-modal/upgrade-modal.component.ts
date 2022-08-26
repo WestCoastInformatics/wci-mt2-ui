@@ -154,7 +154,7 @@ export class UpgradeModalComponent implements OnInit {
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
         'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-        'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Concept': this.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term?.replaceAll(',', '/')
       });
     }
     UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
@@ -179,6 +179,10 @@ export class UpgradeModalComponent implements OnInit {
             x = x + '"}';
           }
           x = x.replace(/,null"}|,null/g, '');
+
+          if (!x.includes(':')) {
+            return '';
+          }
 
           return JSON.parse(x);
         });

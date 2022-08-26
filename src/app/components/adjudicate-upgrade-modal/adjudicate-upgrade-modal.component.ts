@@ -571,7 +571,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
         'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term.replaceAll(',', '/')
+        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term?.replaceAll(',', '/')
       });
     }
 
@@ -604,7 +604,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       }))) {
         newMembers.push({
           'New Member ID': concept.code,
-          'New Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+          'New Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term?.replaceAll(',', '/')
         });
       }
     }
@@ -612,7 +612,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     // Get new members from inactive concepts
     inactiveConcepts = [];
     memberItems.forEach((item: any) => {
-      if (item.replaced === true) {
+      if (item.replaced === true || item.stillMember === false) {
         inactiveConcepts.push(item);
       }
     });
@@ -623,7 +623,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       }))) {
         oldMembers.push({
           'Old Member ID': concept.code,
-          'Old Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+          'Old Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term?.replaceAll(',', '/')
         });
       }
     }
@@ -647,7 +647,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       }))) {
         manualReplacement.push({
           'Manual Replacement ID': concept.code,
-          'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term.replaceAll(',', '/')
+          'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term?.replaceAll(',', '/')
         });
       }
     }
