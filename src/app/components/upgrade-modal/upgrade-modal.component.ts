@@ -161,7 +161,7 @@ export class UpgradeModalComponent implements OnInit {
 
   }
 
-  transformDescriptions(descriptions: any) {
+  transformDescriptions(descriptions: any, returnAll: boolean = false) {
     if (descriptions) {
       const getStringifiedJSON = descriptions.split('[')[1].split(']')[0];
       if (getStringifiedJSON) {
@@ -186,7 +186,13 @@ export class UpgradeModalComponent implements OnInit {
 
           return JSON.parse(x);
         });
-        return formattedObjectArray[0];
+
+        if (returnAll) {
+          return formattedObjectArray;
+        } else {
+          return formattedObjectArray[0];
+        }
+        
       }
     }
   }

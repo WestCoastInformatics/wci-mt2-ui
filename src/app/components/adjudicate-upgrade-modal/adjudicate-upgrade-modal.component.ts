@@ -12,6 +12,7 @@ import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component'
 import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
   selector: 'adjudicate-upgrade-modal',
@@ -559,19 +560,46 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   }
 
   getInactiveChangeReport(): void {
+
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
       return items?.active == false;
     });
+
     let data = [];
+
     for (let i = 0; i < inactiveConcepts.length; i++) {
+
+      let replacementName: any = '';
+
+      if (inactiveConcepts[i].replacementConcepts) {
+
+        let replacementDescriptions = JSON.parse(inactiveConcepts[i].replacementConcepts[0].descriptions);
+
+        if (CodeUtility.hasValue(replacementDescriptions[0]?.term)) {
+          replacementName = replacementDescriptions[0].term;
+        } else {
+
+          for (let i = 1; i < replacementDescriptions.length; i++) {
+
+            if (replacementDescriptions[i].language == 'en' && replacementDescriptions[i].type == 'PT') {
+
+              replacementName = replacementDescriptions[i].term;
+              break;
+            }
+          }
+        }
+
+        replacementName = replacementName.replaceAll(',', '/');
+      }
+
       data.push({
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
         'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
         'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term?.replaceAll(',', '/')
+        'Suggested Replacement Concept': replacementName
       });
     }
 
