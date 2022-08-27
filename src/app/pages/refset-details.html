@@ -129,7 +129,7 @@
                         </create-new-refset>
 
                         <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
-                        
+
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" [status]="refsetStatus"
                           [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
@@ -137,10 +137,10 @@
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
                         <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Refset</button>
 
-                        
+
                     </mat-menu>
-                    
-                	<span  *ngIf="allowedToEdit || allowedToReview"  class="menu-spacer">&nbsp;</span> 
+
+                	<span  *ngIf="allowedToEdit || allowedToReview"  class="menu-spacer">&nbsp;</span>
 
                     <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData"
                       (changeLockedStatus)="changeLockedStatus($event)">
@@ -396,7 +396,7 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Notes
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <td mat-cell *matCellDef="let row" class="pt-3">
                                     <ng-container>
                                         <readonly-text-modal [shortText]="row.notes" [longText]="row.notes" [title]="'Notes'"></readonly-text-modal>
                                     </ng-container>
