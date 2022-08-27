@@ -64,7 +64,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
             this.organizationId = params['organizationId'];
             this.editionId = params['editionId'];
-            this.projectId = params['id'];
+            this.projectId = params['projectId'];
             this.setNavigation();
         });
 
