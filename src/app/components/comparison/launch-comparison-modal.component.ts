@@ -324,7 +324,7 @@ export class LaunchComparisonModalComponent {
             const selectedConcept = this.getGridRow(selectedId);
             this.loadConceptDetail(selectedConcept);
         }
-    };
+    }
 
     getGridRow(conceptId: string) {
 
@@ -413,6 +413,7 @@ export class LaunchComparisonModalComponent {
 
         this.conceptDetail = null;
         this.selectedConcept = null;
+
     }
 
     sendLoadingSpinnerTrigger = (value: any) => {
@@ -501,7 +502,7 @@ export class LaunchComparisonModalComponent {
             return;
         }
 
-        // process the comparison data with the changed members 
+        // process the comparison data with the changed members
         for (const conceptStatus of conceptStatusArray) {
 
             if (conceptStatus.failed) {
