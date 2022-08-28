@@ -261,7 +261,7 @@ export class RefsetDetails {
             if (parent && parent.includes('projects')) {
                 isProjects = true;
             }
-    
+
             if (isProjects) {
                 this.breadcrumbService.setBreadcrumbs([
                     { path: '/organization/' + this.refsetData.project.edition.organizationId + '/edition/' + this.refsetData.project.edition.id + '/projects/' + this.refsetData.project.id + '/refsets', label: "Projects" },
@@ -1395,23 +1395,25 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {
-            this.refsetService.convertRefsetToExtensional(this.id).subscribe(
-                (status) => {
+        this.dialog.confirmed().subscribe(result => {
+            if (result){
+                this.refsetService.convertRefsetToExtensional(this.id).subscribe(
+                    (status) => {
 
-                    if (status.status == 'convert') {
-                        this.notificationService.show("The refset has been converted to extensional.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
-                        this.loadRefset();
-                        return;
-                    } else if (status.error) {
-                        this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                        return;
+                        if (status.status == 'convert') {
+                            this.notificationService.show("The refset has been converted to extensional.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+                            this.loadRefset();
+                            return;
+                        } else if (status.error) {
+                            this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                            return;
+                        }
+                    },
+                    (error) => {
+                        this.showLoadingSpinner = false;
                     }
-                },
-                (error) => {
-                    this.showLoadingSpinner = false;
-                }
-            );
+                );
+            }
          });
     }
 
