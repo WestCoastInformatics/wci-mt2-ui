@@ -337,8 +337,7 @@ export class RefsetDetails {
                     field: "code",
                     colId: "code",
                     headerName: "Concept ID",
-                    minWidth: 120,
-                    flex: 1,
+                    maxWidth: 140,
                     cellClass: "refset-tool-taxonomy-search-column-name",
                     tooltipField: "code",
                 },
@@ -970,7 +969,7 @@ export class RefsetDetails {
                 }
 
                 this.membersColumnDefs = [{
-                    field: "code", colId: "code", headerName: "Concept ID", minWidth: 120, tooltipField: "code", resizable: false,
+                    field: "code", colId: "code", headerName: "Concept ID", maxWidth: 140, tooltipField: "code", resizable: false,
                     cellClass: "refset-tool-details-column-concept-id", cellRenderer: "templateRenderer", cellRendererParams: { template: this.conceptCodeSection }
                 }
                 ];
