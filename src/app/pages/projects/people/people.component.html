@@ -67,7 +67,7 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold">
+                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">
                                     {{ getTeamCount(params.data.teams) }} teams</span>
                             </ng-template>
 

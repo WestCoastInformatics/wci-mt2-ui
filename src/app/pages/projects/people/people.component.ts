@@ -416,4 +416,8 @@ export class ProjectsPeopleComponent implements OnInit {
     getTeamCount(teams: any): number {
         return teams.length;
     }
+
+    getTeamsTitle(data: any): string{
+        return data?.teams.map(t => t.name).join(', ');
+    }
 }

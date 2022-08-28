@@ -181,7 +181,7 @@ export class OrganizationPeopleComponent implements OnInit {
             for (const organization of this.organizationList) {
 
                 if (this.organizationId === organization.id) {
-                    
+
                     this.setOrganizationData(organization);
                     return;
                 }
@@ -242,6 +242,10 @@ export class OrganizationPeopleComponent implements OnInit {
 
     getTeamCount(teams: any): number {
         return teams.length;
+    }
+
+    getTeamsTitle(data: any): string{
+        return data?.teams.map(t => t.name).join(', ');
     }
 
     getStoredOrganizationId(): void {
