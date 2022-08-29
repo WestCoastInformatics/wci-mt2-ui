@@ -210,13 +210,13 @@ export class RefsetFeedbackListComponent implements OnInit {
             {
                 field: 'lastPost',
                 headerName: 'Last Comment',
-                maxWidth: 185,
+                maxWidth: 210,
                 sort: 'desc',
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
             },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies', resizable: false }
         ];
 
         // set placeholders on the grid floating filter fields
