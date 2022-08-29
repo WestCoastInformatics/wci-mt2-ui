@@ -389,7 +389,7 @@ export class LaunchComparisonModalComponent {
 
         this.conceptDetailParents = [];
 
-        if (!CodeUtility.testBoolean(concept?.active)) {
+        if (!CodeUtility.testBoolean(concept?.active) || !CodeUtility.testBoolean(concept?.memberOfRefset)) {
             return;
         }
 
