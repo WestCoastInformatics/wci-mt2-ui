@@ -62,14 +62,14 @@ export class RequestAccessModalComponent implements OnInit {
     onSave(): void {
         this.form.markAllAsTouched();
         if (this.form.valid) {
-            /*this.dataService.shareRefset(this.refset.id, this.form.value).subscribe(result => {
+            this.dataService.requestAccess(this.refset.id, this.form.value).subscribe(result => {
                 if (result) {
-                    this.notificationService.show('Profile was successfully updated', 'Success', 'success', {
+                    this.notificationService.show('Request has been sent successfully', 'Success', 'success', {
                         timeOut: 3000,
                         extendedTimeOut: 0
                     });
                 }
-            });*/
+            });
         }
     }
 
