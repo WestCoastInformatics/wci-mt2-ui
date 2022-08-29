@@ -340,6 +340,7 @@ export class RefsetDetails {
                     maxWidth: 140,
                     cellClass: "refset-tool-taxonomy-search-column-name",
                     tooltipField: "code",
+                    resizable: false,
                 },
                 {
                     field: "name",
