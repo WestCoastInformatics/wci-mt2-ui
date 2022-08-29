@@ -1,18 +1,18 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { RefsetService } from "src/app/services/rest/refset.service";
-import { UiUtility } from "src/app/utilities/ui.utility";
-import { NotificationService } from "src/app/services/notification.service";
-import { Router } from "@angular/router";
-import { CodeUtility } from "src/app/utilities/code.utility";
-import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Router } from '@angular/router';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { RefsetDetails } from 'src/app/pages/refset-details';
-import { OrganizationsService } from "src/app/services/rest/organizations.service";
-import { AuthenticationService } from "src/app/services/authentication/authentication.service";
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
-    selector: "email-refset-modal",
-    templateUrl: "./email-refset-modal.component.html",
+    selector: 'email-refset-modal',
+    templateUrl: './email-refset-modal.component.html',
 })
 export class EmailRefsetModalComponent {
 
@@ -44,7 +44,7 @@ export class EmailRefsetModalComponent {
         this.description = '';
         this.openedModel = this.modalService.open(emailRefsetDialog, { backdrop: 'static', keyboard: false });
 
-        
+
     }
 
     processOperationReturn = (data) => {
@@ -57,15 +57,20 @@ export class EmailRefsetModalComponent {
     }
 
     isValidEmail(): boolean {
-        var lower = this.email.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        const lower = this.email.toLowerCase();
+        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         );
         if (flag == null) {
-            this.emailError = "Email is invalid.";
+            this.emailError = 'Email is invalid.';
         } else {
-            this.emailError = "";
+            this.emailError = '';
         }
-        return flag == null ? false : true;
+        return flag != null;
+    }
+
+    reset() {
+        this.description = '';
+        this.email = '';
     }
 
     onKeyDownEvent(event: any) {
@@ -77,14 +82,14 @@ export class EmailRefsetModalComponent {
 
         this.changeLockedStatus.emit(true);
 
-        let params: any = {
+        const params: any = {
             additionalMessage: this.description,
             recipient: this.email
         };
 
         this.refsetService.emailRefset(this.refsetInternalId, params).subscribe(
             (data) => {
-                this.notificationService.show("The refset was emailed.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show('The refset was emailed.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();
@@ -93,6 +98,6 @@ export class EmailRefsetModalComponent {
                 this.changeLockedStatus.emit(false);
                 console.error(err);
             }
-        )
+        );
     }
 }

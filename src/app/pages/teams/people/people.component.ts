@@ -13,6 +13,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {strings} from '@angular-devkit/core';
 
 @Component({
     selector: 'teams-people',
@@ -103,7 +104,8 @@ export class TeamsPeopleComponent implements OnInit {
             onGridReady: this.onGridReady,
             frameworkComponents: {
                 templateRenderer: TemplateRenderer,
-                'categoryFilterComponent': CategoryFilterComponent
+                'categoryFilterComponent': CategoryFilterComponent,
+                customTooltipComponent: CustomTooltipComponent
             },
             defaultColDef: {
                 sortable: true,
@@ -151,7 +153,7 @@ export class TeamsPeopleComponent implements OnInit {
             for (const organization of this.organizationList) {
 
                 if (this.organizationId === organization.id) {
-                    
+
                     this.selectedOrganization = organization;
                     this.getTeams();
                     return;
@@ -285,6 +287,10 @@ export class TeamsPeopleComponent implements OnInit {
 
     getTeamCount(data: any): number {
         return data.teams.length;
+    }
+
+    getTeamsTitle(data: any): string{
+        return data?.teams.map(t => t.name).join(', ');
     }
 
 }

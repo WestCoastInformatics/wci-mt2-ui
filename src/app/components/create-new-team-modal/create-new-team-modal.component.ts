@@ -20,17 +20,15 @@ export class CreateNewTeamModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-    @Input() organizations: any[] = [];
     privateTeam: any;
     selectedRoles: any;
-    selectedOrganization: any;
     members: any;
     refsetUser: any;
     roleOptions: any;
     emailError = '';
     param: any;
 
-    @Input() organizationId = String;
+    @Input() organization: any;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
 
     constructor(
@@ -59,19 +57,11 @@ export class CreateNewTeamModalComponent {
     }
 
     openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
+
         this.selectedRoles = [];
         this.description = '';
 
         this.openedModel = this.modalService.open(createNewTeamDialog, { backdrop: 'static', keyboard: false });
-
-        if (!this.organizations.length) {
-            // get list of organizations
-            this.refsetService.getOrganizations().subscribe((organizationResults) => {
-                this.organizations = organizationResults.items;
-            });
-        }
-
-
     }
 
     callMemberOperation(): void {
@@ -116,13 +106,6 @@ export class CreateNewTeamModalComponent {
         return flag == null ? false : true;
     }
 
-    isSelectedOrganization(): boolean {
-        if (this.selectedOrganization?.name.length > 0) {
-            return true;
-        }
-        return false;
-    }
-
     onKeyDownEvent(event: any) {
 
         console.log(event.target.value);
@@ -138,7 +121,7 @@ export class CreateNewTeamModalComponent {
             primaryContactEmail: this.email,
             privateTeam: this.privateTeam,
             roles: this.selectedRoles,
-            organization: this.selectedOrganization,
+            organization: this.organization,
             members: this.members
         };
 
@@ -154,20 +137,5 @@ export class CreateNewTeamModalComponent {
                 this.changeLockedStatus.emit(false);
             }
         );
-    }
-
-    getSelectedOrganization(): any {
-
-        if (this.organizations && this.organizationId) {
-            let org = this.organizations.filter(o => o.id == this.organizationId)
-            if (org.length > 0) {
-                return org[0];
-            }
-        }
-        return null;
-    }
-
-    setSelectedOrganization(value) {
-        this.organizationId = value?.id;
     }
 }

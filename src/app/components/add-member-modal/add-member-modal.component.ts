@@ -1,14 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { RefsetService } from "src/app/services/rest/refset.service";
 import { TeamsService } from "src/app/services/rest/teams.service";
-import { UiUtility } from "src/app/utilities/ui.utility";
 import { NotificationService } from "src/app/services/notification.service";
-import { RefsetDetails } from 'src/app/pages/refset-details';
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
-import { ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "add-member-modal",
@@ -27,13 +22,9 @@ export class AddMemberModalComponent {
 
     constructor(
         private modalService: NgbModal,
-        private refsetService: RefsetService,
         private teamsService: TeamsService,
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
-        private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute,
-        private authenticationService: AuthenticationService
     ) { }
 
     openAddMemberModal(addMemberModal: NgbModal) {
@@ -60,7 +51,7 @@ export class AddMemberModalComponent {
         this.isValidEmail();
     }
 
-    addMember(): void {
+    addUserAsMember(): void {
 
         if (!CodeUtility.hasValue(this.email)) {
             return;

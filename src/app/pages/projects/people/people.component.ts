@@ -64,7 +64,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
             this.organizationId = params['organizationId'];
             this.editionId = params['editionId'];
-            this.projectId = params['id'];
+            this.projectId = params['projectId'];
             this.setNavigation();
         });
 
@@ -415,5 +415,9 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getTeamCount(teams: any): number {
         return teams.length;
+    }
+
+    getTeamsTitle(data: any): string{
+        return data?.teams.map(t => t.name).join(', ');
     }
 }

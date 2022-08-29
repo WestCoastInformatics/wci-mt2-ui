@@ -261,7 +261,7 @@ export class RefsetDetails {
             if (parent && parent.includes('projects')) {
                 isProjects = true;
             }
-    
+
             if (isProjects) {
                 this.breadcrumbService.setBreadcrumbs([
                     { path: '/organization/' + this.refsetData.project.edition.organizationId + '/edition/' + this.refsetData.project.edition.id + '/projects/' + this.refsetData.project.id + '/refsets', label: "Projects" },
@@ -337,10 +337,10 @@ export class RefsetDetails {
                     field: "code",
                     colId: "code",
                     headerName: "Concept ID",
-                    minWidth: 120,
-                    flex: 1,
+                    maxWidth: 140,
                     cellClass: "refset-tool-taxonomy-search-column-name",
                     tooltipField: "code",
+                    resizable: false,
                 },
                 {
                     field: "name",
@@ -722,83 +722,81 @@ export class RefsetDetails {
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
-        if (this.taxonomySearchGridApi) {
-            this.taxonomySearchGridApi = gridReadyParams.api;
-            this.taxonomySearchGridColumnApi = gridReadyParams.columnApi;
-            this.taxonomyGridParams = gridReadyParams;
+        this.taxonomySearchGridApi = gridReadyParams?.api;
+        this.taxonomySearchGridColumnApi = gridReadyParams?.columnApi;
+        this.taxonomyGridParams = gridReadyParams;
 
-            if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
+        if (!CodeUtility.hasValue(this.taxonomySearchInput)) {
 
-                this.taxonomySearchGridApi.showNoRowsOverlay();
-                this.taxonomySearchGridApi.setRowData([]);
-                return;
-            }
-
-            this.taxonomySearchGridApi.showLoadingOverlay();
-
-            let pageNumber = this.taxonomySearchGridApi.paginationGetPageSize() + 1;
-            let query = "";
-
-            if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
-                query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
-                query = query.replace(/\//g, ' ');
-            }
-
-            const newFilterString = query;
-
-            // if the filters or sort have changed then move to the first page
-            if (newFilterString !== this.taxonomySearchGridLastFilter) {
-
-                pageNumber = 1;
-                this.taxonomySearchGridPaging.totalRows = null;
-                this.taxonomySearchGridPaging.totalKnown = false;
-                this.taxonomySearchGridApi.api?.paginationGoToPage(0);
-            }
-
-            this.taxonomySearchGridLastFilter = newFilterString;
-
-            const restParams: any = {
-                limit: this.taxonomySearchGridApi.paginationGetPageSize(),
-                offset: pageNumber - 1,
-            };
-
-            if (CodeUtility.hasValue(query)) {
-                restParams.query = query;
-            }
-
-            this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
-                next: (results) => {
-
-                    this.taxonomySearchNumberOfResults = results.total;
-                    this.taxonomySearchResults = results.items;
-
-                    if (results.items.length == 0) {
-
-                        this.taxonomySearchGridApi.showNoRowsOverlay();
-                        this.taxonomySearchGridApi.setRowData([]);
-
-                        if (pageNumber > 1) {
-
-                            this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi.paginationGetPageSize() * (pageNumber - 1);
-                            this.taxonomySearchGridPaging.totalKnown = true;
-                            this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
-                        }
-                        this.showLoadingSpinner = false;
-
-                        return;
-                    }
-
-                    UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
-                },
-                error: (error) => {
-
-                    this.taxonomySearchResults = [];
-                    this.taxonomySearchGridApi.showNoRowsOverlay();
-                    this.taxonomySearchGridApi.setRowData([]);
-                    this.toggleLoadingSpinner(false);
-                }
-            });
+            this.taxonomySearchGridApi?.showNoRowsOverlay();
+            this.taxonomySearchGridApi?.setRowData([]);
+            return;
         }
+
+        this.taxonomySearchGridApi?.showLoadingOverlay();
+
+        let pageNumber = this.taxonomySearchGridApi?.paginationGetPageSize() + 1;
+        let query = "";
+
+        if (CodeUtility.hasValue(this.taxonomySearchInput) && this.taxonomySearchInput.length > 2) {
+            query = CodeUtility.addIfNotEmpty(query, " AND ") + this.taxonomySearchInput;
+            query = query.replace(/\//g, ' ');
+        }
+
+        const newFilterString = query;
+
+        // if the filters or sort have changed then move to the first page
+        if (newFilterString !== this.taxonomySearchGridLastFilter) {
+
+            pageNumber = 1;
+            this.taxonomySearchGridPaging.totalRows = null;
+            this.taxonomySearchGridPaging.totalKnown = false;
+            this.taxonomySearchGridApi.api?.paginationGoToPage(0);
+        }
+
+        this.taxonomySearchGridLastFilter = newFilterString;
+
+        const restParams: any = {
+            limit: this.taxonomySearchGridApi?.paginationGetPageSize(),
+            offset: pageNumber - 1,
+        };
+
+        if (CodeUtility.hasValue(query)) {
+            restParams.query = query;
+        }
+
+        this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
+            next: (results) => {
+
+                this.taxonomySearchNumberOfResults = results.total;
+                this.taxonomySearchResults = results.items;
+
+                if (results.items.length == 0) {
+
+                    this.taxonomySearchGridApi?.showNoRowsOverlay();
+                    this.taxonomySearchGridApi?.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.taxonomySearchGridPaging.totalRows = this.taxonomySearchGridApi?.paginationGetPageSize() * (pageNumber - 1);
+                        this.taxonomySearchGridPaging.totalKnown = true;
+                        this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
+                    }
+                    this.showLoadingSpinner = false;
+
+                    return;
+                }
+
+                UiUtility.applyServerPagedGridResults(results, this.taxonomySearchGridApi, this.taxonomySearchGridPaging, pageNumber, null, false);
+            },
+            error: (error) => {
+
+                this.taxonomySearchResults = [];
+                this.taxonomySearchGridApi?.showNoRowsOverlay();
+                this.taxonomySearchGridApi?.setRowData([]);
+                this.toggleLoadingSpinner(false);
+            }
+        });
     };
 
     taxonomyPathValueGetter = function (params) {
@@ -844,7 +842,7 @@ export class RefsetDetails {
 
     onTaxonomySearchGridCellClick = (event) => {
 
-        const selectedRows = this.taxonomySearchGridApi.getSelectedRows();
+        const selectedRows = this.taxonomySearchGridApi?.getSelectedRows();
         let selectedConcept;
 
         selectedRows.forEach(function (selectedRow, index) {
@@ -970,7 +968,7 @@ export class RefsetDetails {
                 }
 
                 this.membersColumnDefs = [{
-                    field: "code", colId: "code", headerName: "Concept ID", minWidth: 120, tooltipField: "code", resizable: false,
+                    field: "code", colId: "code", headerName: "Concept ID", maxWidth: 140, tooltipField: "code", resizable: false,
                     cellClass: "refset-tool-details-column-concept-id", cellRenderer: "templateRenderer", cellRendererParams: { template: this.conceptCodeSection }
                 }
                 ];
@@ -1395,24 +1393,26 @@ export class RefsetDetails {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => {
-            this.refsetService.convertRefsetToExtensional(this.id).subscribe(
-                (status) => {
+        this.dialog.confirmed().subscribe(result => {
+            if (result) {
+                this.refsetService.convertRefsetToExtensional(this.id).subscribe(
+                    (status) => {
 
-                    if (status.status == 'convert') {
-                        this.notificationService.show("The refset has been converted to extensional.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
-                        this.loadRefset();
-                        return;
-                    } else if (status.error) {
-                        this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                        return;
+                        if (status.status == 'convert') {
+                            this.notificationService.show("The refset has been converted to extensional.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+                            this.loadRefset();
+                            return;
+                        } else if (status.error) {
+                            this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                            return;
+                        }
+                    },
+                    (error) => {
+                        this.showLoadingSpinner = false;
                     }
-                },
-                (error) => {
-                    this.showLoadingSpinner = false;
-                }
-            );
-         });
+                );
+            }
+        });
     }
 
     onChangeMembersListMode() {

@@ -74,12 +74,12 @@ export class OrganizationPeopleComponent implements OnInit {
         this.gridColumnDefs = [
             { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
             { field: 'company', flex: 1, headerName: 'Company Name' },
-            { field: 'email', flex: 1, maxWidth: 400, headerName: 'Email' },
+            { field: 'email', minWidth: 400, headerName: 'Email' },
             { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
             {
                 field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
                     template: this.inactivateUserSection
-                }, flex: 1, maxWidth: 190
+                }, flex: 1, maxWidth: 190, resizable: false
             },
         ];
 
@@ -181,7 +181,7 @@ export class OrganizationPeopleComponent implements OnInit {
             for (const organization of this.organizationList) {
 
                 if (this.organizationId === organization.id) {
-                    
+
                     this.setOrganizationData(organization);
                     return;
                 }
@@ -242,6 +242,10 @@ export class OrganizationPeopleComponent implements OnInit {
 
     getTeamCount(teams: any): number {
         return teams.length;
+    }
+
+    getTeamsTitle(data: any): string{
+        return data?.teams.map(t => t.name).join(', ');
     }
 
     getStoredOrganizationId(): void {

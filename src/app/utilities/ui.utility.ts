@@ -245,6 +245,7 @@ export class UiUtility {
         $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
         const eclBuilder = document.querySelector('ecl-builder');
+        eclBuilder.querySelector('input').focus();
 
         eclBuilder.addEventListener('output', (event: any) => {
 
@@ -630,7 +631,7 @@ export class UiUtility {
             for (const index in headerList) {
 
                 const head = headerList[index];
-                line += ',' + array[i][head].replaceAll(',', ';');
+                line += ',' + array[i][head]?.replaceAll(',', ';');
             }
 
             csvString += line + '\r\n';

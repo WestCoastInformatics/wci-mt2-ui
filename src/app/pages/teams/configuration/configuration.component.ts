@@ -56,7 +56,7 @@ export class TeamsConfigurationComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-            this.teamId = params['id'];
+            this.teamId = params['teamId'];
             this.setNavigation();
         });
 

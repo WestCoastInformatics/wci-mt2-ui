@@ -151,15 +151,9 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     sortModel: rowParams.sortModel, // not needed once we get rid of mocking the backend
                     filterModel: rowParams.filterModel, // not needed once we get rid of mocking the backend
                 };
-                const refsetFilter = `entityId:${this.refsetInternalId} AND entityType:REFSET`;
-                if (CodeUtility.hasValue(query)) {
-                    query += ` AND ${refsetFilter}`;
-                } else {
-                    query = refsetFilter;
-                }
                 query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
                 restParams.query = query;
-                this.auditService.getAuditTrial({ ...restParams, ...sort }).subscribe({
+                this.auditService.getRefsetAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
                     next: (results) => {
                         this.showPaging = results.total > 0;
                         if (results.items.length === 0 && pageNumber > 1) {
