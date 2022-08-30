@@ -6,14 +6,14 @@
             <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
                 Select Replacements for {{refsetData.name}}
             </h4>
-            <button type="button" class="close dialog-close-x" aria-label="Close" (click)="openCancelUpgrade(cancelUpgradeDialog)">
+            <button type="button" class="close dialog-close-x" aria-label="Close" (click)="openPauseUpdate()">
                 <span aria-hidden="true" class="dialog-close-x">&times;</span>
             </button>
         </div>
         <div class="adjudicate-upgrade-container-fluid">
             <div class="modal-body adjudicate-upgrade-modal-body">
                 <div class="adjudicate-upgrade-modal-body-header">
-                    <button ngbAutofocus class="unfocus-btn" ></button>
+                    <button ngbAutofocus class="unfocus-btn"></button>
                     <div class="adjudicate-inactive-concepts">Inactive Concepts
                         ({{inactiveConcepts}})</div>
                     <div class="adjudicate-format-option-drop-down">
