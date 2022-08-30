@@ -76,7 +76,7 @@ export class RefsetDetails implements OnInit {
         ':' +
         RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     selectedConceptDetailLanguageIndex = 0;
-    membersGridChooserManualStateRefresh = Boolean(true);
+    membersGridChooserManualStateRefresh: Boolean = Boolean(true);
     useDialog = false;
     selectedMembersListMode = 'table'; // taxonomy
     membersTableDisplay = 'inline-block';
@@ -106,7 +106,7 @@ export class RefsetDetails implements OnInit {
     conceptDescriptions: any = [];
     isConceptDetailsLoading = false;
     membersTaxonomyRoot: any[] = [];
-    taxonomyManualStateRefresh = Boolean(false);
+    taxonomyManualStateRefresh: Boolean = Boolean(false);
     taxonomyOptions: TreeOptions = {
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
