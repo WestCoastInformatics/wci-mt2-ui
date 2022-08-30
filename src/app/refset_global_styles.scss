@@ -5319,3 +5319,15 @@ app-date-text-floating-filter {
 .text-main, .text-primary {
     color: $main-color !important;
 }
+
+* .ag-header-cell .ag-filter-icon{
+  order: 1;
+    pointer-events: none;
+    cursor: default;
+}
+
+/** .ag-floating-filter-button {
+    margin-bottom: 18px;
+    pointer-events: none;
+    display: inline-block !important;
+}*/
