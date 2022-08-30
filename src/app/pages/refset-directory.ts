@@ -14,6 +14,8 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
+import {User} from '../models/user';
+import {AuthenticationService} from '../services/authentication/authentication.service';
 
 
 /**
@@ -26,6 +28,7 @@ import { forkJoin } from 'rxjs';
 
 export class RefsetDirectory implements OnInit, AfterViewInit {
 
+    user: User;
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView = 'all';
@@ -39,7 +42,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         pageSizeOptions: [10, 25, 50, 100],
         totalKnown: false,
         totalRows: null,
-        manualStateRefresh: new Boolean(true)
+        manualStateRefresh: Boolean(true)
     };
     refsetGridLastFilter = '';
     refsetGridLastSort = '';
@@ -78,7 +81,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
-        private breadcrumbService: BreadcrumbService
+        private breadcrumbService: BreadcrumbService,
+        private authenticationService: AuthenticationService
     ) {
         document.body.scrollTop = 0;
         refsetService.getTaxonomyRoot();
@@ -86,7 +90,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
-
+        this.user = this.authenticationService.getUser();
         this.titleService.setTitle('Refset Tool - Refset Library');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Refset Library' }]);
 
@@ -306,12 +310,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             }
 
                             for (let i = 0; i < data?.length; i++) {
-                                this.refsetService.getDiscussionThreads("REFSET", data[i].id, null).subscribe({
-                                    next: (results) => {
+                                this.refsetService.getDiscussionThreads('REFSET', data[i].id, null).subscribe({
+                                    next: (threads) => {
                                         data[i].unresolvedDiscussionCount = 0;
-                                        for (const discussion of results.items) {
+                                        for (const discussion of threads.items.filter(t => !t.privateThread ||
+                                            t.posts.length > 0 && t.posts[0].user.userName === this.user.userName)) {
 
-                                            if (discussion.status == 'Open') {
+                                            if (discussion.status === 'Open') {
                                                 data[i].unresolvedDiscussionCount++;
                                             }
                                         }
@@ -327,7 +332,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             rowParams.successCallback([], 0);
                         }
 
-                        this.refsetGridPaging.manualStateRefresh = new Boolean(true);
+                        this.refsetGridPaging.manualStateRefresh = Boolean(true);
                         this.showLoadingSpinner = false;
                     },
                     error: (error) => {
