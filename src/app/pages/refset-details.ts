@@ -1010,6 +1010,7 @@ export class RefsetDetails implements OnInit {
                             valueGetter:
                                 UiUtility.gridDateValueGetter,
                             tooltipField: 'memberEffectiveTime',
+                            sortingOrder: ['desc', 'asc', null],
                             sort: 'desc',
                             floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true },
