@@ -133,7 +133,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+        if (!configShowing && this.selectedProject && this.selectedProject.roles.includes('ADMIN')) {
             this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration', icon: 'fa fa-cogs' });
         }
 
