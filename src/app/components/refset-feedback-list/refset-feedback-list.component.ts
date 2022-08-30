@@ -39,7 +39,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         pageSizeOptions: [10, 25, 50, 100],
         totalKnown: false,
         totalRows: null,
-        manualStateRefresh: new Boolean(true)
+        manualStateRefresh: Boolean(true)
     };
     showTable = false;
     postTruncationLength = 500;
