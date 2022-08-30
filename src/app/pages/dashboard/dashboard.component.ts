@@ -126,7 +126,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             {
                 field: 'modified',
-                tooltipField: 'modified',
+                tooltipValueGetter: UiUtility.gridDateValueGetter,
                 headerName: 'Last Modified',
                 filter: false,
                 unSortIcon: true,
