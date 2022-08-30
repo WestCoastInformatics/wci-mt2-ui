@@ -131,6 +131,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 filter: false,
                 unSortIcon: true,
                 sortable: true,
+                sortingOrder: ['desc', 'asc', null],
                 valueGetter:
                 UiUtility.gridDateValueGetter,
             }

@@ -212,6 +212,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 headerName: 'Last Comment',
                 maxWidth: 210,
                 sort: 'desc',
+                sortingOrder: ['desc', 'asc', null],
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
