@@ -271,19 +271,10 @@
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')"
-      [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
-        {{
-        transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length
-        ?
-        transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term
-        : '' }}
+    <span [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{params?.value }}
     </span>
-    <span *ngIf="!params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')"
-      [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
-        {{ transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length ?
-        transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term : '' }}
-    </span>
+
 </ng-template>
 
 <!-- Reason Section Templates -->
