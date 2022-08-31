@@ -115,7 +115,7 @@ export class OrganizationTeamsComponent implements OnInit {
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                 unSortIcon: true
             },
             enableBrowserTooltips: true,
