@@ -204,7 +204,8 @@ export class RefsetFeedbackListComponent implements OnInit {
                     names: [
                         { type: 'status', name: this.OPEN, value: this.OPEN },
                         { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
-                    ]
+                    ],
+                    suppressFilterButton: true
                 }
             },
             {
@@ -216,8 +217,9 @@ export class RefsetFeedbackListComponent implements OnInit {
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
+                floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }
             },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies', resizable: false }
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies', resizable: false, filter: false }
         ];
 
         // set placeholders on the grid floating filter fields
