@@ -139,7 +139,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       {
         field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', valueGetter: (params) => {
           const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
-          return this.getConceptName(desc);
+          if (desc) {
+            return this.getConceptName(desc)
+          }
+
+          return '';
         }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }
       },
       {
@@ -597,11 +601,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
     let replacementName: any = '';
 
-      if (inactiveConcept.replacementConcepts) {
-        replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
-      }
+    if (inactiveConcept.replacementConcepts) {
+      replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
+    }
 
-      return replacementName;
+    return replacementName;
   }
 
   getInactiveChangeReport(): void {
