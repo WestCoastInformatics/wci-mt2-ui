@@ -5321,13 +5321,8 @@ app-date-text-floating-filter {
 }
 
 * .ag-header-cell .ag-filter-icon{
-  order: 1;
+    order: 1;
     pointer-events: none;
     cursor: default;
+    display: none;
 }
-
-/** .ag-floating-filter-button {
-    margin-bottom: 18px;
-    pointer-events: none;
-    display: inline-block !important;
-}*/

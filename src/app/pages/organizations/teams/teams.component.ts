@@ -115,7 +115,7 @@ export class OrganizationTeamsComponent implements OnInit {
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
                 unSortIcon: true
             },
             enableBrowserTooltips: true,
@@ -211,7 +211,7 @@ export class OrganizationTeamsComponent implements OnInit {
             for (const organization of this.organizationList) {
 
                 if (this.organizationId === organization.id) {
-                    
+
                     this.setOrganizationData(organization);
                     return;
                 }
@@ -237,7 +237,7 @@ export class OrganizationTeamsComponent implements OnInit {
         this.selectedOrganization = organization;
 
         sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-        
+
         this.setNavigation();
         this.onGridReady(this.gridParams);
     }
