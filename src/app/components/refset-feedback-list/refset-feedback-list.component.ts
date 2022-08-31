@@ -153,7 +153,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 flex: 1,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
             },
             enableBrowserTooltips: true,
             rowClassRules: {
