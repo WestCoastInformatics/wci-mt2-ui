@@ -216,14 +216,16 @@
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img
-      *ngIf="!params?.data?.isHidden && (params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
-      src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
-      class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+    <ng-container *ngIf="!params?.data?.isHidden">
+        <img
+          *ngIf="(params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
+          src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
+          class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
-    <img *ngIf="!params?.data?.isHidden && (params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)"
-      src="assets/subtract-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}"
-      aria-label="Subtract" class="subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+        <img *ngIf="(params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)" src="assets/subtract-symbol-icon.svg"
+          (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract"
+          class="subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+    </ng-container>
 </ng-template>
 
 <!-- Inactive ID Templates -->
@@ -297,8 +299,8 @@
                 <!-- + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId -->
             </mat-select>
         </mat-form-field>
-        <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true" width="18px" height="18px"
-          aria-label="Add" title="Add Manual Replacement" class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+        <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true" width="18px" height="18px" aria-label="Add"
+          title="Add Manual Replacement" class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
     </span>
 </ng-template>
 
