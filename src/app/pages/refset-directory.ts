@@ -166,7 +166,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             sortable: true,
                             filter: true,
                             floatingFilter: true,
-                            floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                            floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                             suppressMenu: true,
                             menuTabs: ['columnsMenuTab'],
                             resizable: true
