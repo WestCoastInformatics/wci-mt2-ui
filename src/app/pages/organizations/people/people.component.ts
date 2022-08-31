@@ -103,7 +103,7 @@ export class OrganizationPeopleComponent implements OnInit {
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                 unSortIcon: true
             },
             enableBrowserTooltips: true,
