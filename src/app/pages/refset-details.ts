@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
@@ -25,8 +25,8 @@ import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-
 import { take } from 'rxjs/operators';
 import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 import { NotificationService } from '../services/notification.service';
-import {User} from '../models/user';
-import {AuthenticationService} from '../services/authentication/authentication.service';
+import { User } from '../models/user';
+import { AuthenticationService } from '../services/authentication/authentication.service';
 
 /**
  * @title Tree with nested nodes
@@ -992,6 +992,10 @@ export class RefsetDetails implements OnInit {
                         cellClass:
                             'refset-tool-details-column-description',
                         valueGetter: this.descriptionValueGetter,
+                        comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+                            if (valueA == valueB) return 0;
+                            return (valueA > valueB) ? 1 : -1;
+                        },
                         tooltipField: i.toString(),
                     });
                 }
