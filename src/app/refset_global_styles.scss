@@ -1026,8 +1026,12 @@ button.refset-tool-table-action-icon {
 
     margin-bottom: 15px;
     display: block;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
+
+    tree-node-content > div > * {
+        margin-top: -2px;
+    }
 
     .tree-node.refset-tool-taxonomy-is-not-member>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
         font-weight: normal;
@@ -1057,6 +1061,7 @@ button.refset-tool-table-action-icon {
     .tree-node.refset-tool-taxonomy-relation-members>tree-node-wrapper>.node-wrapper>.node-content-wrapper>tree-node-content {
         tree-node-expander>.toggle-children-wrapper>.toggle-children {
             background-image: url("/assets/circled_chevron_right_icon.svg");
+            top: 4px;
         }
     }
 
