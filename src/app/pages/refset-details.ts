@@ -992,10 +992,6 @@ export class RefsetDetails implements OnInit {
                         cellClass:
                             'refset-tool-details-column-description',
                         valueGetter: this.descriptionValueGetter,
-                        comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
-                            if (valueA == valueB) return 0;
-                            return (valueA > valueB) ? 1 : -1;
-                        },
                         tooltipField: i.toString(),
                     });
                 }
