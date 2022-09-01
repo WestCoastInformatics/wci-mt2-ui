@@ -972,9 +972,11 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.membersColumnDefs = [{
-                    field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, unSortIcon: true, tooltipField: 'code', resizable: false,
-                    cellClass: 'refset-tool-details-column-concept-id', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }
-                }
+                    headerName: '', maxWidth: 40, resizable: false, filter: false, sort: false, cellClass: 'refset-tool-details-column-remove-icon',
+                    cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }
+                }, {
+                    field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, tooltipField: 'code', unSortIcon: true,
+                    resizable: false, cellClass: 'refset-tool-details-column-concept-id'}
                 ];
 
                 for (let i = 0; i < this.languageOptions.length; i++) {
