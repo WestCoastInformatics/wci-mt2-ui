@@ -57,7 +57,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
             this.organizationId = params['organizationId'];
             this.editionId = params['editionId'];
-            this.projectId = params['id'];
+            this.projectId = params['projectId'];
             this.setNavigation();
         });
 
@@ -299,6 +299,15 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.profileDescriptionValue = this.selectedProject.description;
         this.isPrivate = this.selectedProject.privateProject;
         this.selectedTeamIds = this.selectedProject?.teams;
+
+        // set the selected teams
+        for (let team of this.teamList) {
+
+            if (this.selectedTeamIds.includes(team.id)) {
+                this.selectedTeams.push(team);
+            }
+        }
+
         this.showLoadingSpinner = false;
 
         sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
@@ -317,6 +326,7 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.profileDescriptionValue = null;
         this.isPrivate = null;
         this.selectedTeamIds = [];
+        this.selectedTeams = [];
         this.teamList = [];
     }
 
@@ -344,15 +354,29 @@ export class ProjectsConfigurationComponent implements OnInit {
         this.selectedProject.name = this.profileNameValue;
         this.selectedProject.description = this.profileDescriptionValue;
         this.selectedProject.privateProject = this.isPrivate;
-        this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe(() => {
-            this.notificationService.show('Update process complete.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-        });
+        this.saveProject();
     }
 
     updateProjectTeams(): void {
 
         this.selectedProject = { ...this.selectedProject, teams: this.selectedTeamIds };
-        this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe();
+        this.saveProject();
+    }
+
+    saveProject() {
+
+        this.showLoadingSpinner = true;
+
+        this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe({
+            next: (results) => {
+
+                this.showLoadingSpinner = false;
+                this.notificationService.show('Update process complete.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+            },
+            error: (error) => {
+                this.showLoadingSpinner = false;
+            }
+        });
     }
 
     getTeams(): void {

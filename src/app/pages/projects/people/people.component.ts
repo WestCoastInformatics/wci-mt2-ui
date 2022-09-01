@@ -64,7 +64,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
             this.organizationId = params['organizationId'];
             this.editionId = params['editionId'];
-            this.projectId = params['id'];
+            this.projectId = params['projectId'];
             this.setNavigation();
         });
 
@@ -82,10 +82,10 @@ export class ProjectsPeopleComponent implements OnInit {
                 minWidth: 300,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: { template: this.peopleNameSection }
+                cellRendererParams: { template: this.peopleNameSection, unSortIcon: true }
             },
-            { field: 'company', flex: 1, headerName: 'Company Name' },
-            { field: 'email', flex: 1, headerName: 'Email' },
+            { field: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
+            { field: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
             {
                 field: 'teams',
                 tooltipComponentFramework: CustomTooltipComponent,
@@ -415,5 +415,9 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getTeamCount(teams: any): number {
         return teams.length;
+    }
+
+    getTeamsTitle(data: any): string {
+        return data?.teams.map(t => t.name).join(', ');
     }
 }

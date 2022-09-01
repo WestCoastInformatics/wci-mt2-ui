@@ -76,7 +76,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 sortable: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
+                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true},
                 suppressMenu: true,
                 menuTabs: ['columnsMenuTab'],
                 resizable: true
@@ -126,11 +126,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             {
                 field: 'modified',
-                tooltipField: 'modified',
+                tooltipValueGetter: UiUtility.gridDateValueGetter,
                 headerName: 'Last Modified',
                 filter: false,
                 unSortIcon: true,
                 sortable: true,
+                sortingOrder: ['desc', 'asc', null],
                 valueGetter:
                 UiUtility.gridDateValueGetter,
             }

@@ -39,7 +39,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         pageSizeOptions: [10, 25, 50, 100],
         totalKnown: false,
         totalRows: null,
-        manualStateRefresh: new Boolean(true)
+        manualStateRefresh: Boolean(true)
     };
     showTable = false;
     postTruncationLength = 500;
@@ -153,7 +153,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 flex: 1,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
             },
             enableBrowserTooltips: true,
             rowClassRules: {
@@ -175,6 +175,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'id',
                 headerName: 'Author',
                 minWidth: 120,
+                unSortIcon: true,
                 tooltipField: 'Author',
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.authorSection },
@@ -188,6 +189,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 tooltipField: 'Feedback Topic',
                 flex: 2,
                 minWidth: 300,
+                unSortIcon: true,
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.subjectSection },
                 valueGetter: (params) => {
@@ -198,25 +200,30 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'status',
                 headerName: 'Status',
                 maxWidth: 125,
+                unSortIcon: true,
                 tooltipField: 'Status',
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     names: [
                         { type: 'status', name: this.OPEN, value: this.OPEN },
                         { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
-                    ]
+                    ],
+                    suppressFilterButton: true
                 }
             },
             {
                 field: 'lastPost',
                 headerName: 'Last Comment',
-                maxWidth: 185,
+                maxWidth: 210,
+                unSortIcon: true,
                 sort: 'desc',
+                sortingOrder: ['desc', 'asc', null],
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
+                floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }
             },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, unSortIcon: true, tooltipField: 'Replies', resizable: false, filter: false }
         ];
 
         // set placeholders on the grid floating filter fields
