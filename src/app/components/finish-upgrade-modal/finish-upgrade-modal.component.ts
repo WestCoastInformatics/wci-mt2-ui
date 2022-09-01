@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
 
@@ -42,6 +43,42 @@ export class FinishUpgradeModalComponent implements OnInit {
 
   }
 
+  getConceptName(descriptionsString) {
+
+    let conceptName: any = '';
+
+    let descriptions = JSON.parse(descriptionsString);
+
+    if (CodeUtility.hasValue(descriptions) && CodeUtility.hasValue(descriptions[0]?.term)) {
+      conceptName = descriptions[0].term;
+    } else {
+
+      for (let i = 1; i < descriptions.length; i++) {
+
+        if (descriptions[i].language == 'en' && descriptions[i].type == 'PT') {
+
+          conceptName = descriptions[i].term;
+          break;
+        }
+      }
+    }
+
+    conceptName = conceptName.replaceAll(',', '/');
+
+    return conceptName;
+  }
+
+  getReplacementConceptName(inactiveConcept) {
+
+    let replacementName: any = '';
+
+      if (inactiveConcept.replacementConcepts) {
+        replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
+      }
+
+      return replacementName;
+  }
+
   getInactiveChangeReport(): void {
     const memberItems = this.membersInCommon.items;
     const inactiveConcepts = memberItems.filter((items: any) => {
@@ -52,10 +89,10 @@ export class FinishUpgradeModalComponent implements OnInit {
       data.push({
         'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
         'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
-        'Inactive Concept': inactiveConcepts[i].descriptions ? this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].descriptions).term.replaceAll(',', '/') : '',
+        'Inactive Concept': this.getConceptName(inactiveConcepts[i].descriptions),
         'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-        'Suggested Replacement Concept': this.upgradeModalComponent.transformDescriptions(inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].descriptions : '').term?.replaceAll(',', '/')
+        'Suggested Replacement Concept': this.getReplacementConceptName(inactiveConcepts[i])
       });
     }
 
@@ -84,7 +121,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         newMembers.push({
           'New Member ID': concept.code,
-          'New Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term?.replaceAll(',', '/')
+          'New Member Concept': this.getConceptName(concept.descriptions)
         });
       }
     }
@@ -103,7 +140,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         oldMembers.push({
           'Old Member ID': concept.code,
-          'Old Member Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term?.replaceAll(',', '/')
+          'Old Member Concept': this.getConceptName(concept.descriptions)
         });
       }
     }
@@ -127,7 +164,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         manualReplacement.push({
           'Manual Replacement ID': concept.code,
-          'Manual Replacement Concept': this.upgradeModalComponent.transformDescriptions(concept.descriptions).term?.replaceAll(',', '/')
+          'Manual Replacement Concept': this.getConceptName(concept.descriptions)
         });
       }
     }

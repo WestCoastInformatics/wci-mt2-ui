@@ -221,10 +221,10 @@ export class LaunchComparisonModalComponent {
         };
 
         this.gridColumnDefs = [
-            { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection } },
-            { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc' },
+            { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
             {
-                field: 'membership', colId: 'membership', headerName: 'Refset Membership', minWidth: 120, tooltipField: 'code', resizable: false,
+                field: 'membership', colId: 'membership', headerName: 'Refset Membership', minWidth: 120, tooltipField: 'code', resizable: false, unSortIcon: true,
                 floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
                     suppressMenu: true, suppressFilterButton: true, names: [
                         { type: 'membership', name: 'Active Refset', value: 'Active Refset' },

@@ -14,6 +14,9 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
+import { User } from '../models/user';
+import { AuthenticationService } from '../services/authentication/authentication.service';
+import * as Util from 'util';
 
 
 /**
@@ -26,6 +29,7 @@ import { forkJoin } from 'rxjs';
 
 export class RefsetDirectory implements OnInit, AfterViewInit {
 
+    user: User;
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
     selectedView = 'all';
@@ -39,7 +43,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         pageSizeOptions: [10, 25, 50, 100],
         totalKnown: false,
         totalRows: null,
-        manualStateRefresh: new Boolean(true)
+        manualStateRefresh: Boolean(true)
     };
     refsetGridLastFilter = '';
     refsetGridLastSort = '';
@@ -78,7 +82,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         private dialogFactoryService: DialogFactoryService,
         private refsetService: RefsetService,
         private changeDetectorRef: ChangeDetectorRef,
-        private breadcrumbService: BreadcrumbService
+        private breadcrumbService: BreadcrumbService,
+        private authenticationService: AuthenticationService
     ) {
         document.body.scrollTop = 0;
         refsetService.getTaxonomyRoot();
@@ -86,7 +91,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
-
+        this.user = this.authenticationService.getUser();
         this.titleService.setTitle('Refset Tool - Refset Library');
         this.breadcrumbService.setBreadcrumbs([{ label: 'Refset Library' }]);
 
@@ -113,28 +118,28 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     }
 
                     this.columnDefs = [
-                        { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false },
-                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false },
-                        { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
+                        { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
+                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
                             field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }
+                            floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
                         },
                         {
                             field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }
+                            floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }, unSortIcon: true
                         },
                         {
                             field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false,
-                            valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }
+                            valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }, unSortIcon: true
                         },
                         {
-                            field: 'versionDate', tooltipField: 'versionDate', headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }
+                            field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
+                            floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'modified', tooltipField: 'modified', headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true }
+                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                            floatingFilterComponentParams: { suppressFilterButton: true }, unSortIcon: true
                         },
                         { field: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
                     ];
@@ -161,7 +166,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             sortable: true,
                             filter: true,
                             floatingFilter: true,
-                            floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                            floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                             suppressMenu: true,
                             menuTabs: ['columnsMenuTab'],
                             resizable: true
@@ -306,12 +311,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             }
 
                             for (let i = 0; i < data?.length; i++) {
-                                this.refsetService.getDiscussionThreads("REFSET", data[i].id, null).subscribe({
-                                    next: (results) => {
+                                this.refsetService.getDiscussionThreads('REFSET', data[i].id, null).subscribe({
+                                    next: (threads) => {
                                         data[i].unresolvedDiscussionCount = 0;
-                                        for (const discussion of results.items) {
+                                        for (const discussion of threads.items.filter(t => !t.privateThread ||
+                                            t.posts.length > 0 && t.posts[0].user.userName === this.user.userName)) {
 
-                                            if (discussion.status == 'Open') {
+                                            if (discussion.status === 'Open') {
                                                 data[i].unresolvedDiscussionCount++;
                                             }
                                         }
@@ -327,7 +333,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             rowParams.successCallback([], 0);
                         }
 
-                        this.refsetGridPaging.manualStateRefresh = new Boolean(true);
+                        this.refsetGridPaging.manualStateRefresh = Boolean(true);
                         this.showLoadingSpinner = false;
                     },
                     error: (error) => {

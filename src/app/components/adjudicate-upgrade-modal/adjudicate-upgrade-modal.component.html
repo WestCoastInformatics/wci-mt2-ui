@@ -6,14 +6,14 @@
             <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
                 Select Replacements for {{refsetData.name}}
             </h4>
-            <button type="button" class="close dialog-close-x" aria-label="Close" (click)="openCancelUpgrade(cancelUpgradeDialog)">
+            <button type="button" class="close dialog-close-x" aria-label="Close" (click)="openPauseUpdate()">
                 <span aria-hidden="true" class="dialog-close-x">&times;</span>
             </button>
         </div>
         <div class="adjudicate-upgrade-container-fluid">
             <div class="modal-body adjudicate-upgrade-modal-body">
                 <div class="adjudicate-upgrade-modal-body-header">
-                    <button ngbAutofocus class="unfocus-btn" ></button>
+                    <button ngbAutofocus class="unfocus-btn"></button>
                     <div class="adjudicate-inactive-concepts">Inactive Concepts
                         ({{inactiveConcepts}})</div>
                     <div class="adjudicate-format-option-drop-down">
@@ -216,14 +216,16 @@
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img
-      *ngIf="!params?.data?.isHidden && (params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
-      src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
-      class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+    <ng-container *ngIf="!params?.data?.isHidden">
+        <img
+          *ngIf="(params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
+          src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
+          class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
-    <img *ngIf="!params?.data?.isHidden && (params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)"
-      src="assets/subtract-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}"
-      aria-label="Subtract" class="subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+        <img *ngIf="(params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)" src="assets/subtract-symbol-icon.svg"
+          (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract"
+          class="subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+    </ng-container>
 </ng-template>
 
 <!-- Inactive ID Templates -->
@@ -271,19 +273,10 @@
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')"
-      [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
-        {{
-        transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length
-        ?
-        transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term
-        : '' }}
+    <span [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{params?.value }}
     </span>
-    <span *ngIf="!params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')"
-      [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
-        {{ transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length ?
-        transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term : '' }}
-    </span>
+
 </ng-template>
 
 <!-- Reason Section Templates -->
@@ -306,8 +299,8 @@
                 <!-- + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId -->
             </mat-select>
         </mat-form-field>
-        <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true" width="18px" height="18px" title=""
-          aria-label="Add" class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+        <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true" width="18px" height="18px" aria-label="Add"
+          title="Add Manual Replacement" class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
     </span>
 </ng-template>
 

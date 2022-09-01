@@ -1,10 +1,10 @@
 <a *ngIf="isUserLoggedIn" class="ml-3 pointer" (click)="openThreadListModal()">
-    <img *ngIf="discussionCount == 0" src="/assets/comment-dots-regular.svg" title="Add a Discussion" aria-label="Add a Discussion" class="discussion-icon" />
+    <img *ngIf="discussionCount == 0" src="/assets/comment-dots-regular.svg" title="Start a new discussion" aria-label="Start a new discussion or review any of the existing discussions" class="discussion-icon" />
     <span *ngIf="discussionCount > 0" class="fa-stack">
-        <img class="discussion-icon" src="/assets/comment-solid.svg" aria-label="Add or View {{discussionCount}} Discussions" />
+        <img class="discussion-icon" src="/assets/comment-solid.svg" aria-label="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion" />
         <span class="fa fa-stack-1x">
             <span class="discussion-icon-text"
-              title="Add or View {{discussionCount}} Unresolved Discussions{{privateCount > 0 ? ', '+privateCount+' Private Discussions' : ''}} ">
+              title="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion ">
                 {{discussionCount}}
             </span>
         </span>

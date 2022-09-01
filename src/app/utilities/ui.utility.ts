@@ -29,10 +29,9 @@ export class UiUtility {
      * @param [object] params - The ag-grid valuegetter params object.
      */
     static gridDateValueGetter(params) {
-
         if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
 
-            let format = CodeUtility.DATE_FORMAT_REVERSE
+            let format = CodeUtility.DATE_FORMAT_REVERSE;
 
             if (params.colDef.valueFormat) {
                 format = params.colDef.valueFormat;
