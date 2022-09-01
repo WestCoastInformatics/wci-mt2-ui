@@ -175,6 +175,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'id',
                 headerName: 'Author',
                 minWidth: 120,
+                unSortIcon: true,
                 tooltipField: 'Author',
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.authorSection },
@@ -188,6 +189,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 tooltipField: 'Feedback Topic',
                 flex: 2,
                 minWidth: 300,
+                unSortIcon: true,
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.subjectSection },
                 valueGetter: (params) => {
@@ -198,6 +200,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'status',
                 headerName: 'Status',
                 maxWidth: 125,
+                unSortIcon: true,
                 tooltipField: 'Status',
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
@@ -212,6 +215,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'lastPost',
                 headerName: 'Last Comment',
                 maxWidth: 210,
+                unSortIcon: true,
                 sort: 'desc',
                 sortingOrder: ['desc', 'asc', null],
                 tooltipField: 'Last Comment',
@@ -219,7 +223,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 valueGetter: UiUtility.gridDateValueGetter,
                 floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }
             },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies', resizable: false, filter: false }
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, unSortIcon: true, tooltipField: 'Replies', resizable: false, filter: false }
         ];
 
         // set placeholders on the grid floating filter fields

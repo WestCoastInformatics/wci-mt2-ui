@@ -13,7 +13,6 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {strings} from '@angular-devkit/core';
 
 @Component({
     selector: 'teams-people',
@@ -81,9 +80,9 @@ export class TeamsPeopleComponent implements OnInit {
     ngAfterViewInit() {
 
         this.gridColumnDefs = [
-            { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection } },
-            { field: 'company', flex: 1, headerName: 'Company Name' },
-            { field: 'email', flex: 1, headerName: 'Email' },
+            { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+            { field: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
+            { field: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
             { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
             {
                 field: 'id', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveTeamMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
@@ -289,7 +288,7 @@ export class TeamsPeopleComponent implements OnInit {
         return data.teams.length;
     }
 
-    getTeamsTitle(data: any): string{
+    getTeamsTitle(data: any): string {
         return data?.teams.map(t => t.name).join(', ');
     }
 

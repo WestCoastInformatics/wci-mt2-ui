@@ -119,7 +119,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
         valueGetter: (params) => {
           return this.formatReason(params.data.isHidden ? params.data._reaosn : params.data.inactivationReason);
-        }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }
+        }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
       },
       {
         field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
@@ -134,7 +134,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       {
         field: 'inactiveId', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', valueGetter: (params) => {
           return params.data.code;
-        }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110
+        }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110, unSortIcon: true
       },
       {
         field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', valueGetter: (params) => {
@@ -144,12 +144,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           }
 
           return '';
-        }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }
+        }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
       },
       {
         field: 'reason', valueGetter: (params) => {
           return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
-        }, tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1
+        }, tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
       },
       {
         field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
@@ -161,7 +161,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       {
         field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', valueGetter: (params) => {
           return params?.data?.replacementConcepts[0]?.code;
-        }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }
+        }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
       },
       {
         field: 'created', colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
@@ -180,7 +180,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
           return description;
 
-        }, cellRendererParams: { template: this.replacementEnPtSection }
+        }, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true
       },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];

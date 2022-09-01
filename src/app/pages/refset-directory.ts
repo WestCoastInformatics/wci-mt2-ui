@@ -14,8 +14,8 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from '../decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
-import {User} from '../models/user';
-import {AuthenticationService} from '../services/authentication/authentication.service';
+import { User } from '../models/user';
+import { AuthenticationService } from '../services/authentication/authentication.service';
 import * as Util from 'util';
 
 
@@ -118,28 +118,28 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     }
 
                     this.columnDefs = [
-                        { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false },
-                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false },
-                        { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc' },
+                        { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
+                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
                             field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }
+                            floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
                         },
                         {
                             field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }
+                            floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }, unSortIcon: true
                         },
                         {
                             field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false,
-                            valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }
+                            valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }, unSortIcon: true
                         },
                         {
                             field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }
+                            floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                         },
                         {
                             field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true }
+                            floatingFilterComponentParams: { suppressFilterButton: true }, unSortIcon: true
                         },
                         { field: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
                     ];
