@@ -35,7 +35,7 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button (click)="addUserAsMember()" mat-raised-button class="refset-tool-action-button mat-green">
+        <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()" mat-raised-button class="refset-tool-action-button mat-green">
             Add Member
         </button>
     </div>
