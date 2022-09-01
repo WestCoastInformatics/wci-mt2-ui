@@ -1,76 +1,74 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RefsetService} from '../../services/rest/refset.service';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {NotificationService} from '../../services/notification.service';
 import {emailValidator} from '../../validators/emailValidator';
 import {AuthenticationService} from '../../services/authentication/authentication.service';
+import {OrganizationsService} from '../../services/rest/organizations.service';
+import {RefsetDetails} from '../../pages/refset-details';
+import {Router} from '@angular/router';
 
 
 @Component({
     selector: 'request-access-modal',
     templateUrl: './request-access-modal.component.html'
 })
-export class RequestAccessModalComponent implements OnInit {
-    model: any;
-    form: FormGroup;
+export class RequestAccessModalComponent {
+    email = '';
+    description = '';
+    openedModel: NgbModalRef;
+
     @Input() refset: any;
+    @Output() changeLockedStatus = new EventEmitter<any>(true);
 
-    constructor(private readonly modalService: NgbModal, private dataService: RefsetService, private fb: FormBuilder,
-                private clipboard: Clipboard, private notificationService: NotificationService, private authService: AuthenticationService) {
+    constructor(
+        private modalService: NgbModal,
+        private changeDetectorRef: ChangeDetectorRef,
+        private refsetService: RefsetService,
+        private organizationsService: OrganizationsService,
+        private notificationService: NotificationService,
+        private readonly refsetDetails: RefsetDetails,
+        private readonly router: Router,
+        private authService: AuthenticationService
+    ) {
     }
 
-    get modalTitle(): string {
-        return this.refset?.project ? `Request access to the underlying project for "${this.refset.name}" which is "${this.refset.project.name}"`
-            : '';
-    }
 
     get canRequest(): boolean {
         const user = this.authService.getUser();
         return !this.refset?.project?.memberList?.includes(user.id);
     }
+    openModal(modal: NgbModal) {
 
-    errors(key: string): string[] {
-        const errors = [];
-        Object.keys(this.form.get(key).errors).forEach(e => {
-            errors.push(this.form.get(key).errors[e].message);
-        });
-        return errors;
+        this.description = '';
+        this.openedModel = this.modalService.open(modal, {backdrop: 'static', keyboard: false});
+
+
     }
 
-    ngOnInit(): void {
-        this.newForm();
+    processOperationReturn = (data) => {
+        this.changeLockedStatus.emit(false);
+        this.refsetDetails.ngOnInit();
     }
 
-    openModal(modalDialog: NgbModal) {
-        this.newForm();
-        this.model = this.modalService.open(modalDialog, {
-            backdrop: 'static',
-            keyboard: false,
-            centered: true,
-            windowClass: 'share-modal'
-        });
-    }
+    sendRequest(): void {
+        this.changeLockedStatus.emit(true);
+        const params: any = {
+            additionalMessage: this.description
+        };
 
-    newForm(): void {
-        this.form = this.fb.group({
-            additionalMessage:  ['', [Validators.compose([Validators.required])]]
-        });
+        this.refsetService.requestAccess(this.refset.id, params).subscribe(
+            (data) => {
+                this.notificationService.show('The request has been sent.', null, 'success', {timeOut: 0, extendedTimeOut: 0});
+                this.modalService.dismissAll();
+                this.changeLockedStatus.emit(false);
+            },
+            (err) => {
+                this.changeLockedStatus.emit(false);
+                console.error(err);
+            }
+        );
     }
-
-    onSave(): void {
-        this.form.markAllAsTouched();
-        if (this.form.valid) {
-            this.dataService.requestAccess(this.refset.id, this.form.value).subscribe(result => {
-                if (result) {
-                    this.notificationService.show('Request has been sent successfully', 'Success', 'success', {
-                        timeOut: 3000,
-                        extendedTimeOut: 0
-                    });
-                }
-            });
-        }
-    }
-
 }

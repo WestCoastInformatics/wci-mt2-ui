@@ -1,6 +1,7 @@
 <button mat-menu-item (click)="openModal(formDialog)" title="Request Access" aria-label="Request Access"
-    *ngIf="canRequest">
-    Request Access</button>
+        *ngIf="canRequest">
+    Request Access
+</button>
 
 <ng-template #formDialog let-modal>
     <div class="modal-header rt2-modal-header">
@@ -11,26 +12,32 @@
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid" [formGroup]="form" *ngIf="form">
-        <div class="modal-body pr-0 pl-0 pb-0">
-            <div class="topic-header     mb-3" [innerHTML]="modalTitle"></div>
-            <div class="topic-content mb-3">
-                <mat-form-field appearance="fill" class="discussion-topic-field">
-                    <mat-label>Message</mat-label>
-                    <textarea matInput formControlName="additionalMessage"
-                              placeholder="Please include a short explanation to accompany your request" ></textarea>
-                    <mat-error>
-                        <ngx-form-error [control]="form.get('additionalMessage')"></ngx-form-error>
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
+    <div class="modal-body refset-tool-lockable">
+        <label class="modal-label-description">
+            Request access to the underlying project for "{{this.refset?.name}}" which is
+            "{{this.refset?.project?.name}}"
+        </label>
+        <table>
+
+            <tr>
+                <td>
+                    <label class="modal-label-description">* Message:</label>
+                </td>
+                <td>
+                    <mat-form-field class="import-from-list-field" appearance="outline">
+                            <textarea matInput
+                                      placeholder="Please include a short explanation to accompany your request"
+                                      class="import-from-list-text-area" [(ngModel)]="description"></textarea>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+
     </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button aria-hidden="false" class="refset-tool-action-button refset-action-button default-btn mr-3" (click)="modal.dismiss('Cross click');">
-            Cancel
-        </button>
-        <button mat-raised-button color="primary" aria-hidden="false" [disabled]="!form.valid" class="refset-tool-action-button refset-action-button" (click)="onSave()">
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+        <button type="button" [disabled]="description === ''" (click)="sendRequest()"
+                mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+                aria-label="Send Email" title="Send Email">
             Send Email
         </button>
     </div>
