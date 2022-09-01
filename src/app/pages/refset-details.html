@@ -129,8 +129,6 @@
                           (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
 
-                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
-
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" [status]="refsetStatus"
                           [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
