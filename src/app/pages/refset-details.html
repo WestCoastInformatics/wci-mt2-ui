@@ -118,7 +118,8 @@
 
                     <br>
 
-                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
+                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
+                            class="manage-refset-menu">
                         Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span>
                     </button>
 
@@ -146,7 +147,7 @@
                     </app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
-                   <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                   <button mat-button [matMenuTriggerFor]="downloadMenu" [matMenuTriggerRestoreFocus]="false" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #downloadMenu="matMenu">
                         <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
@@ -170,7 +171,7 @@
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <button mat-button [matMenuTriggerFor]="communicationMenu" class="communication-menu">Communication <span
+                    <button mat-button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false" class="communication-menu">Communication <span
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">

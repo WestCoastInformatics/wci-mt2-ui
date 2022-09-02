@@ -1,9 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Refset} from '../../models/refset';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RefsetService} from '../../services/rest/refset.service';
-import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import {RefsetUtility} from '../../utilities/refset.utility';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {NotificationService} from '../../services/notification.service';
@@ -55,7 +54,7 @@ export class ShareRefsetModalComponent implements OnInit {
 
     newForm(): void {
         this.form = this.fb.group({
-            recipient: ['', [RxwebValidators.compose({validators: [RxwebValidators.email(), RxwebValidators.required()]})]],
+            recipient: ['', [Validators.required]],
             additionalMessage: ['']
         });
     }
