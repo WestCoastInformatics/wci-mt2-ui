@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { TeamsService } from "src/app/services/rest/teams.service";
-import { NotificationService } from "src/app/services/notification.service";
-import { CodeUtility } from "src/app/utilities/code.utility";
-import { OrganizationsService } from "src/app/services/rest/organizations.service";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { TeamsService } from 'src/app/services/rest/teams.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
-    selector: "add-member-modal",
-    templateUrl: "./add-member-modal.component.html",
+    selector: 'add-member-modal',
+    templateUrl: './add-member-modal.component.html',
 })
 export class AddMemberModalComponent {
 
@@ -35,16 +35,16 @@ export class AddMemberModalComponent {
 
     isValidEmail(): boolean {
 
-        var lowercasedEmail = this.email.toLowerCase();
-        var flag = lowercasedEmail.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+        const lowercasedEmail = this.email.toLowerCase();
+        const flag = lowercasedEmail.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
         if (flag == null) {
-            this.emailError = "Email is invalid.";
+            this.emailError = 'Email is invalid.';
         } else {
-            this.emailError = "";
+            this.emailError = '';
         }
 
-        return flag == null ? false : true;
+        return flag != null;
     }
 
     onKeyDownEvent(event: any) {
@@ -68,7 +68,7 @@ export class AddMemberModalComponent {
         operation(this.id, this.email).subscribe(
             (data) => {
 
-                this.notificationService.show("The user has been added.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show('The user has been added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.openedModel.dismiss();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();
