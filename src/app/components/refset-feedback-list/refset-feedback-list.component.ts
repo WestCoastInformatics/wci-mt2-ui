@@ -243,8 +243,8 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.refsetService.getDiscussionThreads(this.type, this.refsetInternalId, this.conceptId).subscribe({
             next: (results) => {
                 this.privateCount = results.items.filter(t => t.privateThread).length;
-                results.items = results.items.filter(t => !t.privateThread ||
-                    t.posts.length > 0 && t.posts[0].user.userName === this.user.userName);
+                results.items = results.items.filter(t => !t.privateThread || (t.privateThread && this.roles?.includes('ADMIN')) ||
+                    t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName));
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
