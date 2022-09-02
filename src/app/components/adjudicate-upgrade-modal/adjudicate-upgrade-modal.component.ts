@@ -140,7 +140,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', valueGetter: (params) => {
           const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
           if (desc) {
-            return this.getConceptName(desc)
+            return this.getConceptName(desc);
           }
 
           return '';
@@ -168,14 +168,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
           let description = '';
 
-          if (params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')) {
-
-            if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length) {
+          if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
               description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
-            }
-
-          } else {
-            description = this.getConceptName(params?.data?.replacementConcepts[0]?.descriptions);
           }
 
           return description;
@@ -374,7 +368,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
       return JSON.parse(descriptions).filter((x) => {
-        return x.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
+        return x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
       });
     }
   }
