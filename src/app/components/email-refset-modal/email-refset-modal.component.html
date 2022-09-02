@@ -24,7 +24,7 @@
                 </td>
                 <td>
                     <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" #removeText placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
-                      style="width: 250px; padding-bottom: 9px" bgbAutofocus />
+                      style="width: 250px; padding-bottom: 9px" ngbAutofocus />
 
 
                 </td>
@@ -47,9 +47,8 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-         <button ngbAutofocus type="button" [disabled]="email === '' || !isValidEmail()" (click)="emailRefsetObject()"
-          mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email"
-          ng-reflect-color="green">
+         <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="emailRefsetObject()"
+          mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
             Send Email
         </button>
     </div>
