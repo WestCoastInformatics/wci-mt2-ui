@@ -1029,7 +1029,7 @@ button.refset-tool-table-action-icon {
     padding-left: 0;
     padding-right: 0;
 
-    tree-node-content > div > * {
+    tree-node-content>div>* {
         margin-top: -2px;
     }
 
@@ -3813,9 +3813,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: flex
 }
 
-.limit-text-50 {
-    white-space: nowrap;
-    width: 50ch;
+.limit-text-30 {
+    width: 30ch;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -5321,25 +5320,27 @@ app-date-text-floating-filter {
     padding: 0;
 }
 
-.text-main, .text-primary {
-    color: $main-color !important;
+.text-main,
+.text-primary {
+    color: $main-color  !important;
 }
 
-* .ag-header-cell .ag-filter-icon{
+* .ag-header-cell .ag-filter-icon {
     order: 1;
     pointer-events: none;
     cursor: default;
     display: none;
 }
 
-.ag-theme-alpine .ag-ltr .ag-floating-filter-button{
+.ag-theme-alpine .ag-ltr .ag-floating-filter-button {
     margin-left: 0;
     pointer-events: none;
 }
-.refset-tool-details-column-remove-icon{
-    padding:0 0 0 17px !important;
+
+.refset-tool-details-column-remove-icon {
+    padding: 0 0 0 17px !important;
 }
 
-.refset-tool-details-column-remove-icon img{
+.refset-tool-details-column-remove-icon img {
     margin-bottom: 3px;
 }
