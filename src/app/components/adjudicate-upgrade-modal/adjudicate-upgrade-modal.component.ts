@@ -169,12 +169,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
           let description = '';
 
           if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-              description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+            description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
           }
 
           return description;
 
-        }, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true
+        }, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true, sort: 'desc',
       },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
@@ -195,6 +195,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       suppressScrollOnNewData: true,
       defaultColDef: {
         sortable: true,
+        sortingOrder: ['desc', 'asc'],
         filter: true,
         floatingFilter: true,
         floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },

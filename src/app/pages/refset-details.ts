@@ -298,6 +298,7 @@ export class RefsetDetails implements OnInit {
                     sortable: true,
                     resizable: true,
                     suppressMenu: true,
+                    sortingOrder: ['desc', 'asc'],
                     filter: true,
                     floatingFilter: true,
                     floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
@@ -972,11 +973,12 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.membersColumnDefs = [{
-                    headerName: '', colId:'add-remove', maxWidth: 40, resizable: false, filter: false, sort: false, cellClass: 'refset-tool-details-column-remove-icon',
+                    headerName: '', colId: 'add-remove', maxWidth: 40, resizable: false, filter: false, sort: false, cellClass: 'refset-tool-details-column-remove-icon',
                     cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }
                 }, {
                     field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, tooltipField: 'code', unSortIcon: true,
-                    resizable: false, cellClass: 'refset-tool-details-column-concept-id'}
+                    resizable: false, cellClass: 'refset-tool-details-column-concept-id'
+                }
                 ];
 
                 for (let i = 0; i < this.languageOptions.length; i++) {
@@ -1013,8 +1015,8 @@ export class RefsetDetails implements OnInit {
                             valueGetter:
                                 UiUtility.gridDateValueGetter,
                             tooltipField: 'memberEffectiveTime',
-                            sortingOrder: ['desc', 'asc', null],
                             sort: 'desc',
+                            unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true },
                         },

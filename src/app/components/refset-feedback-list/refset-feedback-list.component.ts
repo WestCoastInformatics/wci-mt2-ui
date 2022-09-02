@@ -90,7 +90,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.authenticationService.GUEST_USER;
-        if (this.roles.includes('VIEWER')) {
+        if (this.roles.includes('VIEWER') || this.roles.includes('ADMIN')) {
             this.canViewPrivateThreads = true;
         }
     }
@@ -151,6 +151,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 resizable: true,
                 suppressMenu: true,
                 flex: 1,
+                sortingOrder: ['desc', 'asc'],
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
@@ -217,7 +218,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 maxWidth: 210,
                 unSortIcon: true,
                 sort: 'desc',
-                sortingOrder: ['desc', 'asc', null],
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,

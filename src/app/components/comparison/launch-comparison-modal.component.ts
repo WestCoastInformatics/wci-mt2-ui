@@ -200,6 +200,7 @@ export class LaunchComparisonModalComponent {
             defaultColDef: {
                 sortable: true,
                 resizable: true,
+                sortingOrder: ['desc', 'asc'],
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
