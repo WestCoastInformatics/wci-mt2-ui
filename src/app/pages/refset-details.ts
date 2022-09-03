@@ -1061,7 +1061,9 @@ export class RefsetDetails implements OnInit {
     }
 
     descriptionValueGetter = function (params) {
-        return params?.data?.descriptions[params.colDef.field]?.term;
+        const term = params?.data?.descriptions[params.colDef.field]?.term;
+
+        return term[0].toUpperCase() + term.slice(1);
     };
 
     onMembersGridCellClick = (event) => {
