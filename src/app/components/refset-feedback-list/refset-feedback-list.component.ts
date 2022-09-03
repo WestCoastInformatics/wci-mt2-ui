@@ -248,6 +248,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
+                console.log(this.threadsData)
                 const pageNumber = 1;
 
                 if (results.items.length === 0) {
@@ -275,12 +276,10 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
-
         for (const thread of this.threadsData) {
-
             if (thread.id === event.data.id) {
                 this.selectedThread = thread;
-                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName);
+                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user.roles.includes('all-all-admin')));
             }
         }
 
@@ -288,7 +287,6 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     openThreadModal(newThread = false) {
-
         this.resetPostForm();
 
         if (newThread) {

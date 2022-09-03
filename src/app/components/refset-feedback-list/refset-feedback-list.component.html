@@ -1,7 +1,9 @@
 <a *ngIf="isUserLoggedIn" class="ml-3 pointer" (click)="openThreadListModal()">
-    <img *ngIf="discussionCount == 0" src="/assets/comment-dots-regular.svg" title="Start a new discussion" aria-label="Start a new discussion or review any of the existing discussions" class="discussion-icon" />
+    <img *ngIf="discussionCount == 0" src="/assets/comment-dots-regular.svg" title="Start a new discussion"
+      aria-label="Start a new discussion or review any of the existing discussions" class="discussion-icon" />
     <span *ngIf="discussionCount > 0" class="fa-stack">
-        <img class="discussion-icon" src="/assets/comment-solid.svg" aria-label="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion" />
+        <img class="discussion-icon" src="/assets/comment-solid.svg"
+          aria-label="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion" />
         <span class="fa fa-stack-1x">
             <span class="discussion-icon-text"
               title="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion">
@@ -82,13 +84,14 @@
                 <!-- ORIGINAL POST HEADER SECTION -->
                 <div *ngIf="editMode != 'newThread' && !editMode.includes('edit')" class="topic-header">
 
-                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedThread.posts[0].user.iconUri)" class="medium-icon-image" />
+                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedThread.posts[0]?.user.iconUri)" class="medium-icon-image" />
 
                     <div class="topic-author">
-                        <div>{{ selectedThread.posts[0].user.name }}</div>
+                        <div>{{ selectedThread.posts[0]?.user.name }}</div>
                         <div class="topic-time">
-                            {{ formatDateTime(selectedThread.posts[0].created) }}
-                            <span *ngIf="selectedThread.posts[0].created != selectedThread.posts[0].modified"> (Edited: {{ formatDateTime(selectedThread.posts[0].modified) }}
+                            {{ formatDateTime(selectedThread.posts[0]?.created) }}
+                            <span *ngIf="selectedThread.posts[0]?.created != selectedThread.posts[0]?.modified"> (Edited: {{ formatDateTime(selectedThread.posts[0]?.modified)
+                                }}
                                 )</span>
                             <i *ngIf="selectedThread.privateThread" class="refset-tool-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
                         </div>
@@ -126,7 +129,7 @@
                     <div class="topic-title">
                         {{ selectedThread.subject }}
                     </div>
-                    <div [innerHTML]="selectedThread.posts[0].message"></div>
+                    <div [innerHTML]="selectedThread.posts[0]?.message"></div>
                 </div>
 
                 <!-- LIST POSTS SECTION -->
