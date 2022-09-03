@@ -1067,7 +1067,7 @@ export class RefsetDetails implements OnInit {
     };
 
     onMembersGridCellClick = (event) => {
-        if (event.column.colId === 'actions' || event.column.colId === 'code') {
+        if (event.column.colId === 'actions') {
             console.log(event);
         } else {
             const selectedRows = this.membersGridApi.getSelectedRows();

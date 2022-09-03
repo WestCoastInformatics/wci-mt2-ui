@@ -311,20 +311,15 @@ export class LaunchComparisonModalComponent {
 
     onGridCellClick = (event) => {
 
-        if (event.column.colId === 'code') {
-            return;
-        } else {
+        const selectedRows = this.gridApi.getSelectedRows();
+        let selectedId: string;
 
-            const selectedRows = this.gridApi.getSelectedRows();
-            let selectedId: string;
+        selectedRows.forEach(function (selectedRow, index) {
+            selectedId = selectedRow.code;
+        });
 
-            selectedRows.forEach(function (selectedRow, index) {
-                selectedId = selectedRow.code;
-            });
-
-            const selectedConcept = this.getGridRow(selectedId);
-            this.loadConceptDetail(selectedConcept);
-        }
+        const selectedConcept = this.getGridRow(selectedId);
+        this.loadConceptDetail(selectedConcept);
     }
 
     getGridRow(conceptId: string) {
