@@ -385,6 +385,7 @@ export class CreateNewRefsetComponent implements OnInit {
             template: this.infoDialog,
             data: null,
             showCancel: false,
+            confirmText: 'OK',
         };
 
         const dialogOptions = {
