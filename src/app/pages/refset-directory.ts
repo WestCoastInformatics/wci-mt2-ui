@@ -204,11 +204,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
     }
 
-    capitalizeString(value: string) {
-        return value ? value[0].toUpperCase() + value.slice(1) : '';
-
-    }
-
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
         this.refsetGridApi = gridReadyParams.api;
