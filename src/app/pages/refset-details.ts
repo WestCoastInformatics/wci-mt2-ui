@@ -459,7 +459,7 @@ export class RefsetDetails implements OnInit {
                     next: (threads) => {
                         this.unresolvedDiscussionCount = 0;
                         for (const discussion of threads.items.filter(t => !t.privateThread ||
-                            t.posts.length > 0 && t.posts[0].user.userName === this.user.userName)) {
+                            t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName || this.user?.roles?.includes('all-all-admin')))) {
 
                             if (discussion.status === 'Open') {
                                 this.unresolvedDiscussionCount++;
