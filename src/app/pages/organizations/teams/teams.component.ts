@@ -92,7 +92,10 @@ export class OrganizationTeamsComponent implements OnInit {
                 }
             },
             { field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
-            { field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false, cellClass: 'text-primary font-weight-bold' }
+            { field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false,
+                cellClass: 'text-primary font-weight-bold', tooltipValueGetter: (params) => {
+                    return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', ') : '';
+                }}
         ];
 
         this.gridOptions = {
@@ -177,7 +180,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
             this.showLoadingSpinner = true;
 
-            this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+            this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
 
                 this.data = [];
                 this.teamList = results.items;
@@ -187,7 +190,7 @@ export class OrganizationTeamsComponent implements OnInit {
                     if (team?.organization?.id === this.selectedOrganization?.id) {
 
                         roles = roles.concat(team.roles);
-                        this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0' });
+                        this.data.push({ id: team.id, name: team.name, description: team.description, role: team.roles.sort().join(', ').toLowerCase(), email: team.primaryContactEmail, members: team.members ? team.members.length : '0', memberList: team.memberList });
                     }
                 }
 
