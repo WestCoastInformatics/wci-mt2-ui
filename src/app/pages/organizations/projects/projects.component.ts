@@ -53,10 +53,10 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.data = [];
         this.columnDefs = [
-            { field: 'name', headerName: 'Project Name', flex: 1, minWidth: 450, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer' },
-            { field: 'description', headerName: 'Description', minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection } },
+            { field: 'name', headerName: 'Project Name', minWidth: 400, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true },
+            { field: 'description', headerName: 'Description', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
             {
-                field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, sortable: false, cellRenderer: params => {
+                field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', headerName: 'Teams', filter: false, resizable: false, sortable: false, cellRenderer: params => {
                     return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
                 }
             }

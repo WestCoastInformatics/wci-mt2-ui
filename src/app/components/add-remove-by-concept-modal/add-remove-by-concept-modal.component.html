@@ -12,7 +12,6 @@
 
 <ng-template #addRemoveConceptHierarchyModal let-modal>
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Add/Remove by Search
         </h4>
@@ -37,9 +36,8 @@
                                     <mat-form-field id="addRemoveByConceptHierarchySearchInputField" class="add-remove-concept-hierarchy-modal-input-field ">
                                         <mat-label>Search by ID or Keyword</mat-label>
                                         <input aria-label="Search by ID or Keyword" matInput #addRemoveByConceptHierarchySearchInput
-                                          id="addRemoveByConceptHierarchySearchInput" [(ngModel)]="searchInput" (keyup.enter)="
-                                                onTableSearchChange()
-                                            " />{{ addRemoveByConceptHierarchySearchInput.focus() }}
+                                          id="addRemoveByConceptHierarchySearchInput" [(ngModel)]="searchInput"
+                                               (keyup.enter)="onTableSearchChange()" ngbAutofocus />
                                     </mat-form-field>
                                     <span class="
                                             add-remove-concept-hierarchy-modal-cancel-search

@@ -62,6 +62,9 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 		if (!parentModel) {
 			this.selectedOption.value = '';
 		} else {
+            if (!this.selectedOption) {
+                this.selectedOption = this.options.filter(opt => opt.value === parentModel.filter)[0];
+            }
 			this.selectedOption.value = parentModel.filter;
 		}
 	}

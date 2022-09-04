@@ -115,9 +115,11 @@
                     <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
                       [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
                     </app-refset-discussion-list>
-                    <br *ngIf="editMode">
 
-                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
+                    <br>
+
+                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
+                            class="manage-refset-menu">
                         Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span>
                     </button>
 
@@ -127,8 +129,6 @@
                           [refsetInternalId]="id" [projectsRefsetComponent]="projectsRefsetComponent" [inputProperties]="editMetadataProperties"
                           (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
-
-                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
 
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" [status]="refsetStatus"
                           [workflowHistoryNotes]="workflowHistoryNotes">
@@ -147,7 +147,7 @@
                     </app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
-                   <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                   <button mat-button [matMenuTriggerFor]="downloadMenu" [matMenuTriggerRestoreFocus]="false" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #downloadMenu="matMenu">
                         <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
@@ -164,14 +164,14 @@
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
                         <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
-                        <button #snowmedBroswerButton mat-menu-item aria-label="SNOMED Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">Snomed
+                        <button #snowmedBroswerButton mat-menu-item aria-label="SNOMED Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">SNOMED
                             Browser</a>
                         </button>
                     </mat-menu>
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <button mat-button [matMenuTriggerFor]="communicationMenu" class="communication-menu">Communication <span
+                    <button mat-button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false" class="communication-menu">Communication <span
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
@@ -397,7 +397,7 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Notes
                                 </th>
-                                <td mat-cell *matCellDef="let row">
+                                <td mat-cell *matCellDef="let row" class="pt-3">
                                     <ng-container>
                                         <readonly-text-modal [shortText]="row.notes" [longText]="row.notes" [title]="'Notes'"></readonly-text-modal>
                                     </ng-container>
@@ -475,7 +475,7 @@
                                             </mat-form-field>
                                         </div>
 
-                                        <div class="col-lg ml-3" style="padding-right: 90px;" [style.display]="membersTableDisplay">
+                                        <div class="col-lg ml-3" style="padding-right: 115px;" [style.display]="membersTableDisplay">
                                             <mat-form-field class="refset-tool-details-search-field">
                                                 <mat-label>Search (Type at least 3 characters.
                                                     Example: shou fra)</mat-label>
@@ -492,7 +492,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="col-lg ml-3" style="padding-right: 90px;" [style.display]="membersTaxonomyDisplay">
+                                        <div class="col-lg ml-3" style="padding-right: 115px;" [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field class="refset-tool-details-search-field" *ngIf="showMembersSearchBar()">
                                                 <mat-label>Search (Type at least 3 characters.
                                                     Example: shou fra)</mat-label>
@@ -539,12 +539,9 @@
 
                                     <!-- Concept Code Templates -->
                                     <ng-template #conceptCodeSection let-params>
-
-                                        <add-remove-concepts-icons [concept]="params?.data" [hidden]="!allowedToEdit" [isParentConcept]="false" [refsetType]="refsetData?.type"
+                                        <add-remove-concepts-icons class="mb--2" [concept]="params?.data" [hidden]="!allowedToEdit" [isParentConcept]="false" [refsetType]="refsetData?.type"
                                           (processSelection)="addRemoveConcept($event)">
                                         </add-remove-concepts-icons>
-                                        {{ params?.data?.code }}
-
                                     </ng-template>
 
                                     <!-- Action Templates -->

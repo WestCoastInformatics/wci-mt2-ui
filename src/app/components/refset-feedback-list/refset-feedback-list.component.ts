@@ -39,7 +39,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         pageSizeOptions: [10, 25, 50, 100],
         totalKnown: false,
         totalRows: null,
-        manualStateRefresh: new Boolean(true)
+        manualStateRefresh: Boolean(true)
     };
     showTable = false;
     postTruncationLength = 500;
@@ -90,7 +90,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.authenticationService.GUEST_USER;
-        if (this.roles.includes('VIEWER')) {
+        if (this.roles.includes('VIEWER') || this.roles.includes('ADMIN') || this.user.roles.includes('all-all-admin')) {
             this.canViewPrivateThreads = true;
         }
     }
@@ -151,9 +151,10 @@ export class RefsetFeedbackListComponent implements OnInit {
                 resizable: true,
                 suppressMenu: true,
                 flex: 1,
+                sortingOrder: ['asc', 'desc'],
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
             },
             enableBrowserTooltips: true,
             rowClassRules: {
@@ -175,6 +176,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'id',
                 headerName: 'Author',
                 minWidth: 120,
+                unSortIcon: true,
                 tooltipField: 'Author',
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.authorSection },
@@ -188,6 +190,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 tooltipField: 'Feedback Topic',
                 flex: 2,
                 minWidth: 300,
+                unSortIcon: true,
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.subjectSection },
                 valueGetter: (params) => {
@@ -198,25 +201,29 @@ export class RefsetFeedbackListComponent implements OnInit {
                 field: 'status',
                 headerName: 'Status',
                 maxWidth: 125,
+                unSortIcon: true,
                 tooltipField: 'Status',
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     names: [
                         { type: 'status', name: this.OPEN, value: this.OPEN },
                         { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
-                    ]
+                    ],
+                    suppressFilterButton: true
                 }
             },
             {
                 field: 'lastPost',
                 headerName: 'Last Comment',
-                maxWidth: 185,
+                maxWidth: 210,
+                unSortIcon: true,
                 sort: 'desc',
                 tooltipField: 'Last Comment',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
+                floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }
             },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, tooltipField: 'Replies' }
+            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, unSortIcon: true, tooltipField: 'Replies', resizable: false, filter: false }
         ];
 
         // set placeholders on the grid floating filter fields
@@ -236,11 +243,12 @@ export class RefsetFeedbackListComponent implements OnInit {
         this.refsetService.getDiscussionThreads(this.type, this.refsetInternalId, this.conceptId).subscribe({
             next: (results) => {
                 this.privateCount = results.items.filter(t => t.privateThread).length;
-                results.items = results.items.filter(t => !t.privateThread ||
-                    t.posts.length > 0 && t.posts[0].user.userName === this.user.userName);
+                results.items = results.items.filter(t => !t.privateThread || (t.privateThread && (this.roles?.includes('ADMIN') || this.user.roles.includes('all-all-admin'))) ||
+                    t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName));
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
+                console.log(this.threadsData)
                 const pageNumber = 1;
 
                 if (results.items.length === 0) {
@@ -268,12 +276,10 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
-
         for (const thread of this.threadsData) {
-
             if (thread.id === event.data.id) {
                 this.selectedThread = thread;
-                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName);
+                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user.roles.includes('all-all-admin')));
             }
         }
 
@@ -281,7 +287,6 @@ export class RefsetFeedbackListComponent implements OnInit {
     }
 
     openThreadModal(newThread = false) {
-
         this.resetPostForm();
 
         if (newThread) {
@@ -298,7 +303,7 @@ export class RefsetFeedbackListComponent implements OnInit {
             this.isResolved = this.selectedThread.status == this.RESOLVED;
             this.postButtonText = 'Reply';
 
-            if (this.roles.includes('ADMIN') || this.selectedThread.posts[0].user.userName == this.user.userName) {
+            if ((this.roles.includes('ADMIN') || this.user.roles.includes('all-all-admin')) || this.selectedThread.posts[0].user.userName == this.user.userName) {
 
                 this.canEditThread = true;
                 this.canDeleteThread = true;
@@ -319,7 +324,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
     canEditPost(post) {
 
-        return this.roles.includes('ADMIN') || post.user.userName === this.user.userName;
+        return (this.roles.includes('ADMIN') || this.user.roles.includes('all-all-admin')) || post.user.userName === this.user.userName;
     }
 
     updatePost(post: any, editThread: boolean) {

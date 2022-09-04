@@ -200,6 +200,7 @@ export class LaunchComparisonModalComponent {
             defaultColDef: {
                 sortable: true,
                 resizable: true,
+                sortingOrder: ['asc', 'desc'],
                 suppressMenu: true,
                 filter: true,
                 floatingFilter: true,
@@ -221,10 +222,10 @@ export class LaunchComparisonModalComponent {
         };
 
         this.gridColumnDefs = [
-            { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection } },
-            { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc' },
+            { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
             {
-                field: 'membership', colId: 'membership', headerName: 'Refset Membership', minWidth: 120, tooltipField: 'code', resizable: false,
+                field: 'membership', colId: 'membership', headerName: 'Refset Membership', minWidth: 120, tooltipField: 'code', resizable: false, unSortIcon: true,
                 floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
                     suppressMenu: true, suppressFilterButton: true, names: [
                         { type: 'membership', name: 'Active Refset', value: 'Active Refset' },
@@ -310,21 +311,16 @@ export class LaunchComparisonModalComponent {
 
     onGridCellClick = (event) => {
 
-        if (event.column.colId === 'code') {
-            return;
-        } else {
+        const selectedRows = this.gridApi.getSelectedRows();
+        let selectedId: string;
 
-            const selectedRows = this.gridApi.getSelectedRows();
-            let selectedId: string;
+        selectedRows.forEach(function (selectedRow, index) {
+            selectedId = selectedRow.code;
+        });
 
-            selectedRows.forEach(function (selectedRow, index) {
-                selectedId = selectedRow.code;
-            });
-
-            const selectedConcept = this.getGridRow(selectedId);
-            this.loadConceptDetail(selectedConcept);
-        }
-    };
+        const selectedConcept = this.getGridRow(selectedId);
+        this.loadConceptDetail(selectedConcept);
+    }
 
     getGridRow(conceptId: string) {
 
@@ -389,7 +385,7 @@ export class LaunchComparisonModalComponent {
 
         this.conceptDetailParents = [];
 
-        if (!CodeUtility.testBoolean(concept?.active)) {
+        if (!CodeUtility.testBoolean(concept?.active) || !CodeUtility.testBoolean(concept?.memberOfRefset)) {
             return;
         }
 
@@ -413,6 +409,7 @@ export class LaunchComparisonModalComponent {
 
         this.conceptDetail = null;
         this.selectedConcept = null;
+
     }
 
     sendLoadingSpinnerTrigger = (value: any) => {
@@ -501,7 +498,7 @@ export class LaunchComparisonModalComponent {
             return;
         }
 
-        // process the comparison data with the changed members 
+        // process the comparison data with the changed members
         for (const conceptStatus of conceptStatusArray) {
 
             if (conceptStatus.failed) {

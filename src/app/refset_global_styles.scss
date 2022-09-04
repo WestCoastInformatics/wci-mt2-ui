@@ -1026,8 +1026,12 @@ button.refset-tool-table-action-icon {
 
     margin-bottom: 15px;
     display: block;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
+
+    tree-node-content>div>* {
+        margin-top: -2px;
+    }
 
     .tree-node.refset-tool-taxonomy-is-not-member>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
         font-weight: normal;
@@ -1057,6 +1061,7 @@ button.refset-tool-table-action-icon {
     .tree-node.refset-tool-taxonomy-relation-members>tree-node-wrapper>.node-wrapper>.node-content-wrapper>tree-node-content {
         tree-node-expander>.toggle-children-wrapper>.toggle-children {
             background-image: url("/assets/circled_chevron_right_icon.svg");
+            top: 4px;
         }
     }
 
@@ -1714,7 +1719,7 @@ button.refset-tool-table-action-icon {
 
 #downloadDialog label {
     font-weight: bold;
-    padding-top: 40px;
+    padding-top: 25px;
 }
 
 #downloadDialogCancel {
@@ -1733,18 +1738,30 @@ button.refset-tool-table-action-icon {
 
 .refset-tool-download-column-field {
     margin-left: 15px;
-    padding-bottom: 30px;
+    padding-bottom: 0;
+    .mat-form-field .mat-form-field-wrapper{
+        padding-bottom: 0;
+        .mat-form-field-flex{
+            padding-top: 0;
+        }
+        .mat-form-field-underline{
+            bottom: 0;
+        }
+    }
 }
 
 .version-input-placeholder {
     background-color: transparent;
-    padding-top: 37px;
+    padding-top: 25px;
     text-decoration: underline;
 }
 
 .delta-select {
-    padding-top: 10px;
+    padding-top: 0;
     padding-left: 15px;
+    .mat-form-field-wrapper{
+        margin-top: 0.5rem;
+    }
 }
 
 .delta-input-placeholder {
@@ -3808,9 +3825,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     display: flex
 }
 
-.limit-text-50 {
-    white-space: nowrap;
-    width: 50ch;
+.limit-text-30 {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3969,6 +3984,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 // Material Select Field Dropdown Overlays
 .cdk-overlay-connected-position-bounding-box {
     z-index: 2100 !important;
+}
+
+.refset-version-notes {
+    z-index: 2001 !important;
 }
 
 #refsetDirectoryPage {
@@ -5316,8 +5335,29 @@ app-date-text-floating-filter {
     padding: 0;
 }
 
-.text-main, .text-primary {
-    color: $main-color !important;
+.text-main,
+.text-primary {
+    color: $main-color  !important;
+}
+
+* .ag-header-cell .ag-filter-icon {
+    order: 1;
+    pointer-events: none;
+    cursor: default;
+    display: none;
+}
+
+.ag-theme-alpine .ag-ltr .ag-floating-filter-button {
+    margin-left: 0;
+    pointer-events: none;
+}
+
+.refset-tool-details-column-remove-icon {
+    padding: 0 0 0 17px !important;
+}
+
+.refset-tool-details-column-remove-icon img {
+    margin-bottom: 3px;
 }
 .mat-form-field-appearance-fill .mat-form-field-subscript-wrapper{
     padding: 0 !important;

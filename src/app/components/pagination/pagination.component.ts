@@ -109,19 +109,11 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             this.previousPageButton.disabled = false;
         }
 
-        if (this.currentPage === this.paginationPages.totalPages) {
-            this.nextPageButton.disabled = true;
-        } else {
-            this.nextPageButton.disabled = false;
-        }
+        this.nextPageButton.disabled = this.currentPage === this.paginationPages.totalPages;
 
-        if (this.currentPage === this.paginationPages.totalPages || !this.totalKnown) {
-            this.lastPageButton.disabled = true;
-        } else {
-            this.lastPageButton.disabled = false;
-        }
+        this.lastPageButton.disabled = this.currentPage === this.paginationPages.totalPages || !this.totalKnown;
 
-        for (let pageNumberButton of this.pageNumberButtons.toArray()) {
+        for (const pageNumberButton of this.pageNumberButtons.toArray()) {
 
             if (pageNumberButton._getHostElement().innerText == this.currentPage) {
                 pageNumberButton.color = 'primary';
@@ -161,13 +153,12 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
                 this.activeGridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
                 this.activeGridOptions.api.paginationSetPageSize(pageSize);
                 this.activeGridOptions.api.purgeInfiniteCache();
-                this.activeGridOptions.api.paginationGoToPage(0);
             } else {
-
                 this.activeGridOptions.api.paginationSetPageSize(pageSize);
                 this.displayedPages = this.activeGridOptions.api.paginationGetTotalPages();
-                this.activeGridOptions.api.paginationGoToPage(0);
             }
+            this.activeGridOptions.api.paginationGoToPage(0);
+            this.changeState(0);
         }
 
         this.pageSize = pageSize;

@@ -16,9 +16,12 @@ export class ReadonlyTextModalComponent implements OnInit {
   constructor(private readonly modalService: NgbModal) { }
 
   ngOnInit(): void {
+    if (this.shortText?.length > 25) {
+      this.shortText = this.shortText?.slice(0, 24) + '...';
+    }
   }
 
   openCreateRefsetModal(refsetVersionNotes: NgbModal) {
-    this.modalService.open(refsetVersionNotes, { size: 'lg' });
+    this.modalService.open(refsetVersionNotes, { size: 'lg', windowClass: 'refset-version-notes' });
   }
 }
