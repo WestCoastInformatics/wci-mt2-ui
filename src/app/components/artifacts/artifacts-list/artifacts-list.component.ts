@@ -109,7 +109,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 sortable: true,
                 resizable: true,
                 suppressMenu: true,
-                sortingOrder: ['desc', 'asc'],
+                sortingOrder: ['asc', 'desc'],
                 flex: 1,
                 filterParams: {
                     debounceMs: 2000

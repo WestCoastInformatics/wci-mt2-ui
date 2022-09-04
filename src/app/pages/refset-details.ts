@@ -298,7 +298,7 @@ export class RefsetDetails implements OnInit {
                     sortable: true,
                     resizable: true,
                     suppressMenu: true,
-                    sortingOrder: ['desc', 'asc'],
+                    sortingOrder: ['asc', 'desc'],
                     filter: true,
                     floatingFilter: true,
                     floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },

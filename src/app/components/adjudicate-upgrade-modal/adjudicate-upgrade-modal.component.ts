@@ -195,7 +195,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       suppressScrollOnNewData: true,
       defaultColDef: {
         sortable: true,
-        sortingOrder: ['desc', 'asc'],
+        sortingOrder: ['asc', 'desc'],
         filter: true,
         floatingFilter: true,
         floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },

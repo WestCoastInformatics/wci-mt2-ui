@@ -151,7 +151,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 resizable: true,
                 suppressMenu: true,
                 flex: 1,
-                sortingOrder: ['desc', 'asc'],
+                sortingOrder: ['asc', 'desc'],
                 filter: true,
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },

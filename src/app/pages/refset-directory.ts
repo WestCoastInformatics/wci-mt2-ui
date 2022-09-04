@@ -165,7 +165,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         defaultColDef: {
                             sortable: true,
                             filter: true,
-                            sortingOrder: ['desc', 'asc'],
+                            sortingOrder: ['asc', 'desc'],
                             floatingFilter: true,
                             floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                             suppressMenu: true,

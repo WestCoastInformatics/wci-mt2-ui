@@ -75,7 +75,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 sortable: true,
                 resizable: true,
                 suppressMenu: true,
-                sortingOrder: ['desc', 'asc'],
+                sortingOrder: ['asc', 'desc'],
                 flex: 1,
                 filter: true,
                 filterParams: {

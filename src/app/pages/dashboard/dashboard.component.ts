@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 floatingFilter: true,
                 floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                 suppressMenu: true,
-                sortingOrder: ['desc', 'asc'],
+                sortingOrder: ['asc', 'desc'],
                 menuTabs: ['columnsMenuTab'],
                 resizable: true
             }
