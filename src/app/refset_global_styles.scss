@@ -3814,7 +3814,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .limit-text-30 {
-    width: 30ch;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -3973,6 +3972,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 // Material Select Field Dropdown Overlays
 .cdk-overlay-connected-position-bounding-box {
     z-index: 2100 !important;
+}
+
+.refset-version-notes {
+    z-index: 2001 !important;
 }
 
 #refsetDirectoryPage {
