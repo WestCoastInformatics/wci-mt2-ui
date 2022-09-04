@@ -197,11 +197,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     }
 
     showDropdown(): void {
-        if (!this.toggleDropdown) {
-            this.toggleDropdown = true;
-        } else {
-            this.toggleDropdown = false;
-        }
+        this.toggleDropdown = !this.toggleDropdown;
     }
 
     //***** AG Grid Functions *****/
@@ -303,14 +299,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                                     currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
                                     lastRow = currentRowCount;
                                 }
-
                                 this.refsetGridPaging.totalRows = lastRow;
                                 this.refsetGridPaging.totalKnown = true;
 
                             } else {
                                 currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
                             }
-
                             for (let i = 0; i < data?.length; i++) {
                                 this.refsetService.getDiscussionThreads('REFSET', data[i].id, null).subscribe({
                                     next: (threads) => {
@@ -327,6 +321,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             }
 
                             rowParams.successCallback(data, lastRow);
+                            this.paginationComponent.getCurrentPage();
 
                         } else {
 
@@ -360,7 +355,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
-    };
+    }
 
     editionValueGetter = function (params) {
 
@@ -481,7 +476,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 data: refset,
                 showAction: true,
                 showCloseIcon: true
-            }
+            };
 
             const dialogOptions = {
                 id: dialogId,
@@ -519,7 +514,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         const dialogOptions = {
             id: dialogId,
             disableClose: false
-        }
+        };
 
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
@@ -532,11 +527,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     }
 
     clearSearch() {
-
-        if (this.searchInput != '') {
-
+        if (this.searchInput) {
             this.searchInput = '';
-            this.onSearchChange();
             this.paginationComponent.setPageSize(10);
         }
     }

@@ -109,19 +109,11 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
             this.previousPageButton.disabled = false;
         }
 
-        if (this.currentPage === this.paginationPages.totalPages) {
-            this.nextPageButton.disabled = true;
-        } else {
-            this.nextPageButton.disabled = false;
-        }
+        this.nextPageButton.disabled = this.currentPage === this.paginationPages.totalPages;
 
-        if (this.currentPage === this.paginationPages.totalPages || !this.totalKnown) {
-            this.lastPageButton.disabled = true;
-        } else {
-            this.lastPageButton.disabled = false;
-        }
+        this.lastPageButton.disabled = this.currentPage === this.paginationPages.totalPages || !this.totalKnown;
 
-        for (let pageNumberButton of this.pageNumberButtons.toArray()) {
+        for (const pageNumberButton of this.pageNumberButtons.toArray()) {
 
             if (pageNumberButton._getHostElement().innerText == this.currentPage) {
                 pageNumberButton.color = 'primary';
