@@ -1,10 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {RefsetService} from '../../services/rest/refset.service';
-import {Clipboard} from '@angular/cdk/clipboard';
 import {NotificationService} from '../../services/notification.service';
-import {emailValidator} from '../../validators/emailValidator';
+import {RefsetDetails} from '../../pages/refset-details';
 
 
 @Component({
@@ -12,12 +10,17 @@ import {emailValidator} from '../../validators/emailValidator';
     templateUrl: './invite-people-modal.component.html'
 })
 export class InvitePeopleModalComponent implements OnInit {
-    model: any;
-    form: FormGroup;
-    @Input() refset: any;
+    email = '';
+    description = '';
+    openedModel: NgbModalRef;
+    emailError = '';
 
-    constructor(private readonly modalService: NgbModal, private dataService: RefsetService, private fb: FormBuilder,
-                private clipboard: Clipboard, private notificationService: NotificationService) {
+    @Input() refset: any;
+    @Input() refsetInternalId: string;
+    @Output() changeLockedStatus = new EventEmitter<any>(true);
+
+    constructor(private readonly modalService: NgbModal, private dataService: RefsetService,
+                private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {
     }
 
     get modalTitle(): string {
@@ -28,47 +31,65 @@ export class InvitePeopleModalComponent implements OnInit {
         return this.refset?.project?.roles.includes('ADMIN');
     }
 
-    errors(key: string): string[] {
-        const errors = [];
-        Object.keys(this.form.get(key).errors).forEach(e => {
-            errors.push(this.form.get(key).errors[e].message);
-        });
-        return errors;
-    }
-
     ngOnInit(): void {
-        this.newForm();
     }
 
     openModal(modalDialog: NgbModal) {
-        this.newForm();
-        this.model = this.modalService.open(modalDialog, {
-            backdrop: 'static',
-            keyboard: false,
-            centered: true,
-            windowClass: 'share-modal'
-        });
+        this.description = '';
+        this.email = '';
+        this.openedModel = this.modalService.open(modalDialog, { backdrop: 'static', keyboard: false });
     }
 
-    newForm(): void {
-        this.form = this.fb.group({
-            recipient: ['', [Validators.compose([emailValidator(), Validators.required])]],
-            additionalMessage: ['']
-        });
+    processOperationReturn = (data) => {
+
+        this.changeLockedStatus.emit(false);
+
+        this.refsetDetails.ngOnInit();
+
+        this.description = '';
     }
 
-    onSave(): void {
-        this.form.markAllAsTouched();
-        if (this.form.valid) {
-            /*this.dataService.shareRefset(this.refset.id, this.form.value).subscribe(result => {
-                if (result) {
-                    this.notificationService.show('Profile was successfully updated', 'Success', 'success', {
-                        timeOut: 3000,
-                        extendedTimeOut: 0
-                    });
-                }
-            });*/
+    isValidEmail(): boolean {
+        const lower = this.email.toLowerCase();
+        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+        if (flag == null) {
+            this.emailError = 'Email is invalid.';
+        } else {
+            this.emailError = '';
         }
+        return flag != null;
+    }
+
+    reset() {
+        this.description = '';
+        this.email = '';
+    }
+
+    onKeyDownEvent(event: any) {
+        this.isValidEmail();
+    }
+
+    sendInvitation(): void {
+        this.changeLockedStatus.emit(true);
+
+        const params: any = {
+            additionalMessage: this.description,
+            recipient: this.email
+        };
+
+        this.dataService.inviteByEmail(this.refsetInternalId, params).subscribe(
+            (data) => {
+                this.notificationService.show('The invitation were sent successfully', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+                this.modalService.dismissAll();
+                this.changeLockedStatus.emit(false);
+                window.location.reload();
+            },
+            (err) => {
+                this.changeLockedStatus.emit(false);
+                console.error(err);
+            }
+        );
     }
 
 }

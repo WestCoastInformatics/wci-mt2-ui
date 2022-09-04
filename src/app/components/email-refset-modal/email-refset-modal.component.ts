@@ -1,14 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { UiUtility } from 'src/app/utilities/ui.utility';
 import { NotificationService } from 'src/app/services/notification.service';
-import { Router } from '@angular/router';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
     selector: 'email-refset-modal',
@@ -32,12 +27,7 @@ export class EmailRefsetModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly router: Router,
-        private authenticationService: AuthenticationService
     ) { }
-
-    ngOnInit() {
-    }
 
     openEmailRefsetModal(emailRefsetDialog: NgbModal) {
 
