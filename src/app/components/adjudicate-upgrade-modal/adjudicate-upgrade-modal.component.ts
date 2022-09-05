@@ -369,7 +369,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
   transformManualReplacementDescriptions(descriptions: any) {
     if (descriptions) {
       return JSON.parse(descriptions).filter((x) => {
-        return x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
+        if (x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2])) {
+          return x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
+        }
+
+        return x?.language === this.getLanguageAndType(true)[0] && (x.type === this.getLanguageAndType(true)[1] || x.type === this.getLanguageAndType(true)[2]);
       });
     }
   }
