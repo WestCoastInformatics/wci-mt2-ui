@@ -106,7 +106,7 @@ export class RefsetDownloadComponent {
                     this.languageOptions = languageRefsetOptions;
                 }
 
-                if (this.versionOptions.length > 1) {
+                if (this.versionOptions.length > 0) {
                     this.comparisonFromOptions = this.versionOptions.slice(0, selectedVersionDateIndex);
                     this.comparisonToOptions = this.versionOptions;
                 }
