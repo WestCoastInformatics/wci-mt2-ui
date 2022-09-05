@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { AgFrameworkComponent } from 'ag-grid-angular';
 import { IFloatingFilter, IFloatingFilterParams, TextFilter, TextFilterModel } from 'ag-grid-community';
 
@@ -16,7 +16,7 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 	params: SelectFloatingFilterParams;
 	currentValue;
-	optionNum: number = 0;
+	optionNum = 0;
 	names: Array<any>;
 	options: Array<SelectEntry> = [];
 	selectedOption = this.options[0];
@@ -25,36 +25,46 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 
 		this.params = params;
 		this.names = this.params.names;
-		let obj: SelectEntry = new SelectEntry(this.optionNum++, "");
-		this.options.push(obj);
+		this.options.push(new SelectEntry(this.optionNum++, ''));
 
 		for (let i = 0; i < this.names?.length; i++) {
 
-			let entry = this.names[i];
+			const entry = this.names[i];
+			// If this is a Type Key Value property
+			if (entry.hasOwnProperty('type') && (entry.hasOwnProperty('key') || entry.hasOwnProperty('name')) && entry.hasOwnProperty('value')) {
 
-			if (entry.type === "status") {
+				if (entry.type === 'status') {
 
-				let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
-				this.options.push(obj);
+					const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
+					this.options.push(option);
+				} else {
+
+					const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
+					this.options.push(option);
+				}
 			} else {
 
-				let obj: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
-				this.options.push(obj);
+				const option: SelectEntry = new SelectEntry(this.optionNum++, entry.name.charAt(0) + entry.name.slice(1).toLowerCase());
+				this.options.push(option);
 			}
 		}
 	}
 
 	valueChanged() {
 
-		let valueToUse = this.selectedOption.value != null ? this.selectedOption.value : "";
-		this.params.parentFilterInstance((instance: TextFilter) => instance.onFloatingFilterChanged('equals', valueToUse === '' ? null : valueToUse));
+		const valueToUse = this.selectedOption.value != null ? this.selectedOption.value : '';
+		const filterType = this.params.filterParams['defaultOption'] ?? 'equals';
+		this.params.parentFilterInstance((instance: TextFilter) => instance.onFloatingFilterChanged(filterType, valueToUse === '' ? null : valueToUse));
 	}
 
 	onParentModelChanged(parentModel: TextFilterModel): void {
 
 		if (!parentModel) {
-			this.selectedOption.value = "";
+			this.selectedOption.value = '';
 		} else {
+            if (!this.selectedOption) {
+                this.selectedOption = this.options.filter(opt => opt.value === parentModel.filter)[0];
+            }
 			this.selectedOption.value = parentModel.filter;
 		}
 	}

@@ -1,233 +1,352 @@
-
-<button type="button" mat-raised-button color="primary" aria-hidden="false" #adjudicateUpgradeButton class="refset-tool-action-button refset-action-button" (click)="openAdjudicateUpgradeModal(adjudicateUpgradeDialog)" aria-label="Adjudicate Upgrade" title="Adjudicate Upgrade" ng-reflect-color="primary">Continue Upgrade</button>
+<button type="button" mat-raised-button color="primary" aria-hidden="false" #adjudicateUpgradeButton class="refset-tool-action-button refset-action-button"
+  (click)="openAdjudicateUpgradeModal(adjudicateUpgradeDialog)" aria-label="Adjudicate Upgrade" title="Adjudicate Upgrade" ng-reflect-color="primary">Continue Upgrade</button>
 <ng-template #adjudicateUpgradeDialog class="modal-dialog-centered" let-modal>
-<ng-container>
-    <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title"
-            id="modal-basic-title">
-            Upgrade Reference Set
-        </h4>
-        <button type="button"
-                class="close dialog-close-x"
-                aria-label="Close"
-                (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
-    <div class="adjudicate-upgrade-container-fluid">
-        <div class="modal-body adjudicate-upgrade-modal-body">
-            <div class="adjudicate-upgrade-modal-body-header">
-                <div class="adjudicate-inactive-concepts">Inactive Concepts ({{inactiveConcepts}})</div>
-                <div class="adjudicate-format-option-drop-down">
-                    <mat-form-field appearance="fill">
-                    <mat-label>Select Language(s):</mat-label>
-                    <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event); showActionButton = true">
-                        <option
-                            *ngFor="let option of languageOptions"
-                            [value]="option">
-                            {{ option }}
-                        </option>
-                    </select>
-                </mat-form-field>
+    <ng-container>
+        <div class="modal-header rt2-modal-header">
+            <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+                Select Replacements for {{refsetData.name}}
+            </h4>
+            <button type="button" class="close dialog-close-x" aria-label="Close" (click)="openPauseUpdate()">
+                <span aria-hidden="true" class="dialog-close-x">&times;</span>
+            </button>
+        </div>
+        <div class="adjudicate-upgrade-container-fluid">
+            <div class="modal-body adjudicate-upgrade-modal-body">
+                <div class="adjudicate-upgrade-modal-body-header">
+                    <button ngbAutofocus class="unfocus-btn"></button>
+                    <div class="adjudicate-inactive-concepts">Inactive Concepts
+                        ({{inactiveConcepts}})</div>
+                    <div class="adjudicate-format-option-drop-down">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Select Language(s):</mat-label>
+                            <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event); showActionButton = true">
+                                <option *ngFor="let option of languageOptions" [value]="option">
+                                    {{ option }}
+                                </option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                    <div class="adjudicate-toggle">
+                        <mat-slide-toggle color="primary" (change)="hideIncludedReplacements($event); showActionButton = true">
+                            Hide Included Replacements
+                        </mat-slide-toggle>
+                    </div>
                 </div>
-                <div class="adjudicate-toggle">
-                    <mat-slide-toggle
-                    color="primary"
-                    (change)="hideIncludedReplacements($event); showActionButton = true">
-                  Hide Included Replacements
-                </mat-slide-toggle>
-                </div>
-            </div>
-            <div class="adjudicate-upgrade-modal-body-mid">
-                <ag-grid-angular
-                class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                [columnDefs]="columnDefs"
-                [gridOptions]="refsetGridOptions"
-                (cellMouseOver)="onCellMouseOver($event)"
-                style="width: 100%; height: 433px">
-                </ag-grid-angular>
+                <div class="adjudicate-upgrade-modal-body-mid">
+                    <as-split direction="horizontal" gutterSize="4">
+                        <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
+                            <ag-grid-angular class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" id="adjudication-list" [columnDefs]="columnDefs"
+                              [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)" style="width: 100%">
+                            </ag-grid-angular>
+                        </as-split-area>
 
-                <!-- <app-pagination
+                        <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="37">
+
+                            <div class="refset-tool-concept-details-column" *ngIf="isConceptDetailsLoading || conceptSelected">
+
+                                <div class="row" *ngIf="isConceptDetailsLoading">
+                                    <div>Loading...</div>
+                                </div>
+
+                                <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
+
+                                    <div class="row align-items-center no-gutters">
+                                        <div class="col refset-tool-concept-details-title-name">
+                                            Concept Details
+                                        </div>
+                                    </div>
+
+                                    <!-- Parents Section -->
+                                    <div class="container-fluid refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+
+                                        <div class="row">
+                                            <div class="refset-tool-concept-details-section-title">
+                                                Parents</div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class=" refset-tool-concept-details-no-relationships" *ngIf="conceptDetailParents?.length == 0">
+                                                No parents
+                                            </div>
+                                        </div>
+
+                                        <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetailParents">
+
+                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
+
+                                                <add-remove-concepts-icons [concept]="parent" [isParentConcept]="true" [refsetType]="refset?.type"
+                                                  (processSelection)="addRemoveConcept($event)">
+                                                </add-remove-concepts-icons>
+
+                                                <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+                                                <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo p-0"
+                                                  src="/assets/unlinedTaxonomyIcon.png" />
+                                            </div>
+
+                                            <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
+                                              [class.greyed-if-not-member]="!parent?.memberOfRefset">
+                                                <span *ngIf="this.taxonomyOptions?.useFsn">{{
+                                                    parent?.fsn.trim()
+                                                    }}</span>
+                                                <span *ngIf="!this.taxonomyOptions?.useFsn">{{
+                                                    parent?.name.trim()
+                                                    }}</span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Details Section -->
+                                    <div class="container-fluid refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
+                                      style="height: fit-content">
+                                        <div class="row">
+
+                                            <!-- Info Section -->
+                                            <div class="refset-tool-concept-details-concept-info-column"
+                                              [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
+                                                <div class="container-fluid">
+
+                                                    <!-- Name -->
+                                                    <div class="row refset-tool-concept-details-concept-title-row">
+                                                        <div class="refset-tool-concept-details-taxonomy-icon">
+                                                        </div>
+                                                        <div class="col refset-tool-concept-details-concept-name">
+                                                            {{
+                                                            conceptDescriptions?.length ?
+                                                            conceptDescriptions[0]?.term :
+                                                            null }}</div>
+                                                        <div class="col-1 refset-tool-concept-details-concept-link text-right">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- ID -->
+                                                    <div class="row refset-tool-concept-details-concept-row">
+                                                        <div class="refset-tool-concept-details-concept-id-label">
+                                                            SCTID
+                                                        </div>
+                                                        <div class="col refset-tool-concept-details-concept-id-text">
+                                                            {{
+                                                            conceptDetail?.code }}</div>
+                                                    </div>
+
+                                                    <!-- ECL -->
+                                                    <div class="row refset-tool-concept-details-concept-row">
+                                                        <div class="col refset-tool-concept-details-concept-ecl">
+                                                            {{ conceptDetail?.code }} | {{
+                                                            conceptDescriptions?.length ?
+                                                            conceptDescriptions[0]?.term : null }} |
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Descriptions -->
+                                                    <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
+                                                        <div class="refset-tool-concept-details-concept-description-language">
+                                                            {{ description?.language }}</div>
+                                                        <div class="col refset-tool-concept-details-concept-description-text">
+                                                            {{ description?.term }}</div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Children Section -->
+                                    <div
+                                      class="container-fluid refset-tool-concept-details-taxonomy-section children-section add-remove-concept-hierarchy-modal-children-size">
+
+                                        <div class="row">
+                                            <div class="refset-tool-concept-details-section-title">
+                                                Children <span [hidden]="!numOfChildren"> ({{
+                                                    numOfChildren }})</span></div>
+                                        </div>
+
+                                        <!-- Children Taxonomy Tree -->
+                                        <div class="">
+                                            <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="refset" [editMode]="editMode"
+                                              [rootNode]="conceptDetail" [options]="taxonomyOptions" [selectedConcept]="selectedConcept"
+                                              [manualStateRefresh]="taxonomyManualStateRefresh" hasMultipleRootNodes="false"
+                                              [processChangedMemberFunction]="processChangedMemberEffects" (loadConceptDetail)="loadConceptDetail($event)"
+                                              (changeLockedStatus)="sendChangeLockedStatus($event)" (numOfChildren)="numOfChildren = $event">
+                                            </app-taxonomy-tree>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </as-split-area>
+                    </as-split>
+
+
+                    <!-- <app-pagination
                [pageSize]="refsetGridPaging.pageSize"
                [gridOptions]="refsetGridOptions"
-               [numberOfPages]="refsetGridApi?.paginationGetTotalPages()"
                [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
                [totalKnown]="refsetGridPaging.totalKnown"
-               [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
-               [numOfResults]="numOfResults">
+               [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
                 </app-pagination> -->
+                </div>
             </div>
         </div>
-    </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button type="button" mat-raised-button color="red" (click)="refsetDetails?.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Cross click');" aria-hidden="false" class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
-            Cancel Upgrade
-        </button>
-        <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
-            Export Change Report
-        </button>
-        <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false" class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Export" title="Export" ng-reflect-color="green">
-            Export Inactive Concept Report
-        </button>
-        <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon" [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
-    </div>
-</ng-container>
+        <div class="modal-footer rt2-modal-footer">
+            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
+              class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+                Cancel Upgrade
+            </button>
+            <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
+              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+                Download Change Report
+            </button>
+            <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
+              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+                Download Inactive Concept Report
+            </button>
+            <button type="button" mat-raised-button color="green" aria-label="Pause" (click)="openPauseUpdate()" title="Pause">
+                Pause Upgrade
+            </button>
+            <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon"
+              [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
+        </div>
+    </ng-container>
 </ng-template>
 
 <!-- Inactive Concept Code Templates -->
 <ng-template #inactiveConceptCodeSection let-params>
-    <img *ngIf="!params?.data?.isHidden && ((params?.data?.stillMember !== undefined && !params?.data?.stillMember) || params?.data?.replaced)"
-    src="assets/add-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')"
-    width="18px"
-    height="18px"
-    title="Add {{actionText}}"
-    aria-label="Add"
-    class="add-symbol-icon"
-    alt="Add symbol shown when you're able to add a concept" 
-/>
+    <ng-container *ngIf="!params?.data?.isHidden">
+        <img
+          *ngIf="(params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
+          src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
+          class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
-<img *ngIf="!params?.data?.isHidden && params?.data?.stillMember && !params?.data?.replaced"
-    src="assets/subtract-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')"
-    width="18px"
-    height="18px"
-    title="Remove {{actionText}}"
-    aria-label="Subtract"
-    class="subtract-symbol-icon"
-    alt="Subtract symbol shown when you're able to remove a concept" 
-/>
+        <img *ngIf="(params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)" src="assets/subtract-symbol-icon.svg"
+          (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract"
+          class="subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+    </ng-container>
 </ng-template>
 
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
-    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced && params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
+    <span [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
         {{ params?.data?.code }}
     </span>
 </ng-template>
 
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
-    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced && params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
-        {{ transformDescriptions(params?.data?.descriptions)?.length ? transformDescriptions(params?.data?.descriptions)[0].term : '' }}
+    <span [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
+        {{ transformDescriptions(params?.data?.descriptions)?.length ?
+        transformDescriptions(params?.data?.descriptions)[0].term : '' }}
     </span>
 </ng-template>
 
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
-    <span [class.linethrough-inactive]="params?.data?.replaced" [class.add-bold]="!params?.data?.replaced && params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
+    <span [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
         {{ formatReason(params?.data?.inactivationReason) }}
     </span>
 </ng-template>
 
 <!-- Replacement Concept Code Templates -->
 <ng-template #replacementConceptCodeSection let-params>
-<ng-container *ngIf="!params?.data?.replacementConcecpts[0]?.existingMember">
-    <img *ngIf="!params?.data?.replacementConcecpts[0]?.added"
-    src="assets/add-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')"
-    width="18px"
-    height="18px"
-    title="Add {{actionText}}"
-    aria-label="Add"
-    class="add-symbol-icon"
-    alt="Add symbol shown when you're able to add a concept" 
-/>
+    <ng-container *ngIf="!params?.data?.replacementConcepts[0]?.existingMember">
+        <img *ngIf="!params?.data?.replacementConcepts[0]?.added" src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')" width="18px"
+          height="18px" title="Add {{actionText}}" aria-label="Add" class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
-<img *ngIf="params?.data?.replacementConcecpts[0]?.added"
-    src="assets/subtract-symbol-icon.svg"
-    (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
-    width="18px"
-    height="18px"
-    title="Remove {{actionText}}"
-    aria-label="Subtract"
-    class="subtract-symbol-icon"
-    alt="Subtract symbol shown when you're able to remove a concept" 
-/>
-</ng-container>
-    <mat-icon *ngIf="params?.data?.replacementConcecpts[0]?.existingMember" class="adjudicate-information-button" aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
+        <img *ngIf="params?.data?.replacementConcepts[0]?.added" src="assets/subtract-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
+          width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract" class="subtract-symbol-icon"
+          alt="Subtract symbol shown when you're able to remove a concept" />
+    </ng-container>
+    <mat-icon *ngIf="params?.data?.replacementConcepts[0]?.existingMember" class="adjudicate-information-button"
+      aria-label="Replacement concept is already a member of the refset." title="Replacement concept is already a member of the refset.">information</mat-icon>
 </ng-template>
 
 <!-- Replacement ID Templates -->
 <ng-template #adjudicateReplacementId let-params>
-    <span [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
-        {{ params?.data?.replacementConcecpts[0]?.code }}
+    <span [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{ params?.data?.replacementConcepts[0]?.code }}
     </span>
 </ng-template>
 
 <!-- Replacement Section EN PT Templates -->
 <ng-template #adjudicateReplacementEnPtSection let-params>
-    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
-        {{ transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformManualReplacementDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
+    <span [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{params?.value }}
     </span>
-    <span *ngIf="!params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
-        {{ transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)?.length ? transformDescriptions(params?.data?.replacementConcecpts[0]?.descriptions)[0].term : '' }}
-    </span>
+
 </ng-template>
 
 <!-- Reason Section Templates -->
 <ng-template #adjudicateReason let-params>
-    <span *ngIf="!params.data.isSearch" [class.add-bold]="params?.data?.replacementConcecpts[0]?.added">
-        {{ formatReason(params?.data?.replacementConcecpts[0]?.reason) }}
+    <span *ngIf="!params.data.isSearch" [class.add-bold]="params?.data?.replacementConcepts[0]?.added || params?.data?.replacementConcepts[0]?.existingMember">
+        {{ formatReason(params?.data?.replacementConcepts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
         <mat-form-field appearance="fill" style="width: 400px">
             <mat-label>Add Concept by ID or FSN</mat-label>
-            <mat-select (selectionChange)="selectedConceptChanged($event)" >
-                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (keyup)="onKey($event.target.value)" (mouseover)="focus()" id="inputFocus">
-                <mat-option *ngIf="!selectedConcepts">None</mat-option>
-                <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{ transformDescriptions(concept.descriptions, true)?.length ? transformDescriptions(concept.descriptions, true)[0].term + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId : ''}}</mat-option>
+            <mat-select (selectionChange)="selectedConceptChanged($event)">
+                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (input)="onSearchChange($event.target.value)"
+                  (mouseover)="$event.target.focus()">
+                <mat-option *ngIf="!selectedConcepts && !manualReplacementOptionsLoading">None
+                </mat-option>
+                <mat-option *ngIf="manualReplacementOptionsLoading">Loading...</mat-option>
+                <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{
+                    transformDescriptions(concept.descriptions, true)?.length ?
+                    transformDescriptions(concept.descriptions, true)[0].term : ''}}</mat-option>
+                <!-- + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId -->
             </mat-select>
-          </mat-form-field>
-            <img
-            src="assets/grey-add-symbol.svg"
-            (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true"
-            width="18px"
-            height="18px"
-            title=""
-            aria-label="Add"
-            class="grey-add-symbol-icon"
-            alt="Add symbol shown when you're able to add a concept" 
-            />
+        </mat-form-field>
+        <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT'); showActionButton = true" width="18px" height="18px" aria-label="Add"
+          title="Add Manual Replacement" class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
     </span>
 </ng-template>
 
 <!-- Action Section Templates -->
 <ng-template #actionSection let-params>
-    <span *ngIf="params?.data?.replacementConcecpts[0]?.reason.includes('MANUAL_REPLACEMENT')">
-        <img
-        src="assets/grey-trash-bin.svg"
-        (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')"
-        width="18px"
-        height="18px"
-        title="Remove {{actionText}}"
-        aria-label="Subtract"
-        class="grey-trash-bin-icon"
-        alt="Subtract symbol shown when you're able to remove a concept" 
-        />
+    <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')">
+        <img src="assets/grey-trash-bin.svg" (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')" width="18px" height="18px" title="Remove {{actionText}}"
+          aria-label="Subtract" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
     <span *ngIf="!params?.data?.isHidden && showActionButton">
-        <img
-        src="assets/grey-add-symbol.svg"
-        (click)="getSelectedRowData('add'); showActionButton = false;"
-        width="18px"
-        height="18px"
-        title=""
-        aria-label="Add"
-        class="grey-add-symbol-icon"
-        alt="Add symbol shown when you're able to add a concept" 
-    />
+        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add'); showActionButton = false;" width="18px" height="18px" title="" aria-label="Add"
+          class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
     </span>
     <span *ngIf="params?.data?.isSearch && !showActionButton">
-        <img
-        src="assets/grey-close-icon.svg"
-        (click)="getSelectedRowData('remove'); showActionButton = true;"
-        width="18px"
-        height="18px"
-        title="Remove {{actionText}}"
-        aria-label="Subtract"
-        class="grey-close-icon"
-        alt="Subtract symbol shown when you're able to remove a concept" 
-    />
+        <img src="assets/grey-close-icon.svg" (click)="getSelectedRowData('remove'); showActionButton = true;" width="18px" height="18px" title="Remove {{actionText}}"
+          aria-label="Subtract" class="grey-close-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
-    </ng-template>
+</ng-template>
+
+<ng-template #pauseUpdateDialog let-data>
+    You are about to pause the upgrade process. You will be able to retrieve any changes you made by
+    continuing the upgrade at a later time. Would you like to proceed?
+</ng-template>
+
+
+<!--Cancel Upgrade Modal-->
+<ng-template #cancelUpgradeDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <div>You are about to undo your work. Are you sure you want to cancel your changes?
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer ready-for-review-footer">
+        <button type="button" (click)="refsetDetails.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modalService.dismissAll(); " mat-raised-button color="primary"
+          aria-hidden="false" class="refset-tool-action-button" aria-label="Yes" title="Yes" ngbAutofocus ng-reflect-color="primary" style="margin-right: 20px;">
+            Yes
+        </button>
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="No"
+          title="No" ng-reflect-color="red">
+            No
+        </button>
+    </div>
+</ng-template>

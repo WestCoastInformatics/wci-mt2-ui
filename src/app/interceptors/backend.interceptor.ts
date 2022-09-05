@@ -5,7 +5,7 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { EventEmitter, Injectable, Injector } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { Concept } from 'src/app/models/concept';
@@ -21,55 +21,55 @@ const userData: User[] = [
 ];
 
 const taxonomySearchResults: any[] = [
-    { 
+    {
         code: '80631005',
         descriptions: [
-            {descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-            {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+            { descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+            { descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
         ],
         parents: [
             {
                 code: '138875005',
                 descriptions: [
-                    {descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                    {descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                    { descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+                    { descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
                 ]
             },
             {
                 code: '404684003',
                 descriptions: [
-                    {descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                    {descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                    { descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+                    { descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
                 ]
             },
         ]
     },
-    { 
+    {
         code: '13104003',
         descriptions: [
-            {descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-            {descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+            { descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+            { descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
         ],
         parents: [
             {
                 code: '138875005',
                 descriptions: [
-                    {descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                    {descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                    { descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+                    { descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
                 ]
             },
             {
                 code: '404684003',
                 descriptions: [
-                    {descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                    {descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                    { descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+                    { descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
                 ]
             },
             {
                 code: '80631005',
                 descriptions: [
-                    {descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, 
-                    {descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}, 
+                    { descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+                    { descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
                 ]
             },
         ]
@@ -78,25 +78,25 @@ const taxonomySearchResults: any[] = [
 
 const conceptDescriptions = [];
 
-for (let i = 1; i < 5; i++){
+for (let i = 1; i < 5; i++) {
 
     let term;
     let languageId;
     let languageName;
 
-    if (i == 1){
+    if (i == 1) {
 
         languageId = '101PT';
         languageName = 'EN (PT)';
         term = 'Generic Concept';
 
-    } else if (i == 2){
+    } else if (i == 2) {
 
         languageId = '101FSN';
         languageName = 'EN (FSN)';
         term = 'Generic Concept (Finding)';
 
-    } else if (i == 3){
+    } else if (i == 3) {
 
         languageId = '102PT';
         languageName = 'FR (PT)';
@@ -109,13 +109,13 @@ for (let i = 1; i < 5; i++){
     }
 
     conceptDescriptions.push(
-        {descriptionId: i.toString(), term: term, languageId: languageId, languageName: languageName, type: 'PT'}
+        { descriptionId: i.toString(), term: term, languageId: languageId, languageName: languageName, type: 'PT' }
     );
 }
 
 const conceptRoles = {};
 
-for (let i = 1; i < 5; i++){
+for (let i = 1; i < 5; i++) {
     conceptRoles[i + ''] =
         [
             'Occurrence  >  Congenital',
@@ -125,10 +125,10 @@ for (let i = 1; i < 5; i++){
         ];
 }
 
-const taxonomyRootNode = {name: 'SNOMED CT Concept', code: '138875005', roleGroups: conceptRoles, parents: [], children: [], descriptions: [{descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT'}, {descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN'}], root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
+const taxonomyRootNode = { name: 'SNOMED CT Concept', code: '138875005', roleGroups: conceptRoles, parents: [], children: [], descriptions: [{ descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' }, { descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' }], root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
 taxonomyRootNode.children = populateChildren(taxonomyRootNode);
 
-function populateChildren(concept, level = 1){
+function populateChildren(concept, level = 1) {
 
     let children = [];
     let randomNotMember = Math.floor(Math.random() * 5) + 1;
@@ -139,7 +139,7 @@ function populateChildren(concept, level = 1){
 
     } while (randomNotMember == randomNotMemberButChildrenAre);
 
-    for (let i = 1; i < 6; i++){
+    for (let i = 1; i < 6; i++) {
 
         let parentCode = concept.code;
 
@@ -147,9 +147,9 @@ function populateChildren(concept, level = 1){
             parentCode = '';
         }
 
-        let thisConcept: any = {name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roleGroups: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
+        let thisConcept: any = { name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roleGroups: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
 
-        if (level == 1 && (i == 2 || i == 4)) { 
+        if (level == 1 && (i == 2 || i == 4)) {
 
             thisConcept.hasChildrenRefsetMembers = false;
             thisConcept.memberOfRefset = false;
@@ -170,12 +170,12 @@ function populateChildren(concept, level = 1){
             thisConcept.memberOfRefset = false;
         }
 
-        if (level < 3){
+        if (level < 3) {
             thisConcept.children = populateChildren(thisConcept, level + 1);
         }
 
         if (!CodeUtility.hasValue(thisConcept.children)) {
-            
+
             thisConcept.hasChildren = false;
             thisConcept.children = null;
             thisConcept.hasChildrenRefsetMembers = false;
@@ -189,14 +189,14 @@ function populateChildren(concept, level = 1){
     return children;
 }
 
-function getTaxonomyConceptChildren(conceptId, level = 1){
+function getTaxonomyConceptChildren(conceptId, level = 1) {
 
     let children = null;
     let concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
 
     if (concept != null) {
 
-        if (CodeUtility.hasValue(concept.children)){
+        if (CodeUtility.hasValue(concept.children)) {
             children = [];
         }
 
@@ -204,7 +204,7 @@ function getTaxonomyConceptChildren(conceptId, level = 1){
 
             let newChild = CodeUtility.clone(child);
             newChild.children = null;
-            
+
             if (level > 1) {
                 newChild.children = getNestedChildren(child, level - 1);
             }
@@ -213,11 +213,11 @@ function getTaxonomyConceptChildren(conceptId, level = 1){
         }
     }
 
-    function getNestedChildren(node, level){
+    function getNestedChildren(node, level) {
 
         let newTaxonomy = null;
 
-        if (CodeUtility.hasValue(node.children)){
+        if (CodeUtility.hasValue(node.children)) {
             newTaxonomy = [];
         }
 
@@ -232,20 +232,20 @@ function getTaxonomyConceptChildren(conceptId, level = 1){
 
             newTaxonomy.push(newChild);
         }
-        
+
         return newTaxonomy;
     }
 
     return children;
 }
 
-function findTaxonomyConcept(conceptId, nodes) { 
+function findTaxonomyConcept(conceptId, nodes) {
 
     for (let node of nodes) {
 
-        if (node.code === conceptId){
+        if (node.code === conceptId) {
             return node;
-        
+
         } else if (CodeUtility.hasValue(node.children)) {
 
             let foundNode = findTaxonomyConcept(conceptId, node.children);
@@ -269,7 +269,7 @@ function getTaxonomyFlatParentList(concept) {
             parentList = getTaxonomyFlatParentList(parent.parents[0]);
         }
 
-        parentList.push(parent);        
+        parentList.push(parent);
     }
 
     return parentList;
@@ -278,16 +278,16 @@ function getTaxonomyFlatParentList(concept) {
 const conceptParents = [];
 const conceptChildren = [];
 
-for (let i = 1; i < 6; i++){
+for (let i = 1; i < 6; i++) {
     conceptParents.push(
-        {name: 'Parent ' + i, code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
+        { name: 'Parent ' + i, code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
     );
 }
 
 
-for (let i = 1; i < 6; i++){
+for (let i = 1; i < 6; i++) {
     conceptChildren.push(
-        {name: 'Child ' + i, type: ''}
+        { name: 'Child ' + i, type: '' }
     );
 }
 
@@ -296,7 +296,7 @@ const conceptData = [
     { code: '84229001', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' },
 ];
 
-for (let i = 0; i < 300; i++){
+for (let i = 0; i < 300; i++) {
 
     const descriptions = JSON.parse(JSON.stringify(conceptDescriptions));
 
@@ -314,27 +314,27 @@ for (let i = 0; i < 300; i++){
 }
 
 let fullyQualifiedLanguageRefsets = [
-    {default: true, qualifiedLanguageRefset: '101PT', qualifiedLanguageCode: 'EN (PT)'},
-    {default: false, qualifiedLanguageRefset: '101FSN', qualifiedLanguageCode: 'EN (FSN)'},
-    {default: false, qualifiedLanguageRefset: '102PT', qualifiedLanguageCode: 'FR (PT)'},
-    {default: false, qualifiedLanguageRefset: '103PT', qualifiedLanguageCode: 'NL (PT)'},
+    { default: true, qualifiedLanguageRefset: '101PT', qualifiedLanguageCode: 'EN (PT)' },
+    { default: false, qualifiedLanguageRefset: '101FSN', qualifiedLanguageCode: 'EN (FSN)' },
+    { default: false, qualifiedLanguageRefset: '102PT', qualifiedLanguageCode: 'FR (PT)' },
+    { default: false, qualifiedLanguageRefset: '103PT', qualifiedLanguageCode: 'NL (PT)' },
 ]
 
 let versionList = [{ date: '2021-02-21', status: 'In Development' }, { date: '2021-01-31', status: 'Published' }, { date: '2020-07-31', status: 'Beta' }];
 
 const refsetData = [
-    { id: '1001', refsetId: '723264001', name: 'Lateralizable body structure reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'EXTENSIONAL', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '', versionList: versionList },
-    { id: '1002', refsetId: '723563008', name: 'MRCM module scope reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets.slice(0, -2)}, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{value: '< 12345', negated: false}, {clause: '< 98765', negated: true}], versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'INTENSIONAL', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '', versionList: versionList }
+    { id: '1001', refsetId: '723264001', name: 'Lateralizable body structure reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets }, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 1 version', narrative: 'Narrative text on refset 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'EXTENSIONAL', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '', versionList: versionList },
+    { id: '1002', refsetId: '723563008', name: 'MRCM module scope reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets.slice(0, -2) }, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on refset 2 version', narrative: 'Narrative text on refset 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{ value: '< 12345', negated: false }, { clause: '< 98765', negated: true }], versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'INTENSIONAL', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '', versionList: versionList }
 ];
 
-for (let i = 3; i < 306; i++){
+for (let i = 3; i < 306; i++) {
 
-    let newRefset = { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: {branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets}, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'EXTENSIONAL', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '', versionList: versionList };
-    
+    let newRefset = { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Refset ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets }, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on refset ' + (1000 + i) + ' version', narrative: 'Narrative text on refset ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'EXTENSIONAL', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '', versionList: versionList };
+
     if (i == 4 || i == 6) {
         newRefset.active = false;
     }
-    
+
     refsetData.push(newRefset);
 }
 
@@ -346,7 +346,6 @@ export class BackendInterceptor implements HttpInterceptor {
         const { url, method, headers, body } = request;
         let totalResults = 0;
         let params: any = CodeUtility.getParamsAsObject(request.url);
-
         // wrap in delayed observable to simulate server api call
         return of(null)
             .pipe(mergeMap(handleRoute))
@@ -356,7 +355,7 @@ export class BackendInterceptor implements HttpInterceptor {
 
         function handleRoute() {
 
-            if (environment.hasOwnProperty('mockRestData') && environment['mockRestData']){
+            if (environment.hasOwnProperty('mockRestData') && environment['mockRestData']) {
 
                 switch (true) {
                     case url.endsWith('/auth') && method === 'POST':
@@ -379,16 +378,16 @@ export class BackendInterceptor implements HttpInterceptor {
                         return getUserById();
                     default:
                         // pass through any requests not handled above
-                        return next.handle(request); 
+                        return next.handle(request);
                 }
             } else {
-                
+
                 switch (true) {
                     case url.includes('/taxonomyRoot') && method === 'GET':
                         return rootNode();
                     default:
                         // pass through any requests not handled above
-                        return next.handle(request); 
+                        return next.handle(request);
                 }
             }
         }
@@ -453,10 +452,10 @@ export class BackendInterceptor implements HttpInterceptor {
 
             let conceptId = request.url.substring(request.url.indexOf('/concept/') + 9, request.url.indexOf('?refsetInternalId'));
             let concept = null;
-            
-            for (let element of conceptData) { 
 
-                if (element.code === conceptId){
+            for (let element of conceptData) {
+
+                if (element.code === conceptId) {
 
                     concept = element;
                     break;
@@ -466,19 +465,19 @@ export class BackendInterceptor implements HttpInterceptor {
             if (!CodeUtility.hasValue(concept)) {
                 concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
             }
-             
+
             const conceptParents = [];
             const conceptChildren = [];
 
-            for (let i = 1; i < 6; i++){
+            for (let i = 1; i < 6; i++) {
                 conceptParents.push(
-                    {name: 'Parent ' + i, type: ''}
+                    { name: 'Parent ' + i, type: '' }
                 );
             }
 
-            for (let i = 1; i < 6; i++){
+            for (let i = 1; i < 6; i++) {
                 conceptChildren.push(
-                    {name: 'Child ' + i, type: ''}
+                    { name: 'Child ' + i, type: '' }
                 );
             }
 
@@ -498,7 +497,7 @@ export class BackendInterceptor implements HttpInterceptor {
 
                 let rowValid = true;
 
-                if (viewFilter && viewFilter !== 'all' && (viewFilter === 'public' && row.privateRefset == true) || (viewFilter === 'private' && row.privateRefset == false)){
+                if (viewFilter && viewFilter !== 'all' && (viewFilter === 'public' && row.privateRefset == true) || (viewFilter === 'private' && row.privateRefset == false)) {
                     rowValid = false;
                 }
 
@@ -507,7 +506,7 @@ export class BackendInterceptor implements HttpInterceptor {
 
             let rowsThisPage = sortAndFilter(dataAfterViewFilter);
 
-            if (numberToReturn > 0){
+            if (numberToReturn > 0) {
                 rowsThisPage = rowsThisPage[0];
             }
 

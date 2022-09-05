@@ -16,7 +16,7 @@ export class TeamsService extends RestService {
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-        
+
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
@@ -29,7 +29,11 @@ export class TeamsService extends RestService {
     }
 
     getTeam(teamId: string): Observable<any> {
-        return this.get(this.contextPath + 'team/' + teamId);
+        return this.get(this.contextPath + 'team/' + teamId + '?includeMembers=true');
+    }
+
+    getTeamUsers(teamId: string): Observable<any> {
+        return this.get(this.contextPath + 'team/' + teamId + '/users');
     }
 
     updateTeam(teamId: any, params: any): Observable<any> {
@@ -44,8 +48,8 @@ export class TeamsService extends RestService {
         return this.delete(this.contextPath + 'team/' + teamId + '/role/' + role);
     }
 
-    addUser(teamId: any, userId: any): Observable<any> {
-        return this.post(this.contextPath + 'team/' + teamId + '/member/' + userId, '');
+    addUser(teamId: any, email: any): Observable<any> {
+        return this.post(this.contextPath + 'team/' + teamId + '/member?email=' + email, '');
     }
 
     removeUser(teamId: any, userId: any): Observable<any> {

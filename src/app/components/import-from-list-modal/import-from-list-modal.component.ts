@@ -21,14 +21,14 @@ export class ImportFromListModalComponent {
     @Input() refsetId: string;
     @Input() isIntensional: boolean = false;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
-        private notificationService: NotificationService, 
+        private notificationService: NotificationService,
         private router: Router,
         private refsetDetails: RefsetDetails
-    ) {}
+    ) { }
 
     callMemberOperation(operation: string): void {
 
@@ -40,7 +40,7 @@ export class ImportFromListModalComponent {
         RefsetUtility.addRemoveMembersByList(this.refsetInternalId, this.refsetId, this.listOfIds, operation, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
         this.refsetDetails.ngOnInit();
@@ -52,8 +52,8 @@ export class ImportFromListModalComponent {
         this.listOfIds = undefined;
 
         this.openedModel = this.modalService.open(importFromListDialog, {
-            //backdrop: "static",
-            //keyboard: false,
+            backdrop: "static",
+            keyboard: false,
         });
     }
 }

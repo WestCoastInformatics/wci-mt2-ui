@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -11,6 +11,9 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
 
 @Component({
     selector: 'create-new-refset',
@@ -48,6 +51,8 @@ export class CreateNewRefsetComponent implements OnInit {
     INTENSIONAL = RefsetUtility.INTENSIONAL;
     existingMetadataConcepts: any;
     parentConcepts: any;
+    conceptError = '';
+    dialog: DialogService;
 
     @Input() existingBranchVersions: any;
     @Input() isDetailsPage = false;
@@ -67,6 +72,7 @@ export class CreateNewRefsetComponent implements OnInit {
         versionDate?: any;
         definitionClauses?: [];
     };
+    @ViewChild("infoDialog") infoDialog: TemplateRef<any>;
 
     constructor(
         private modalService: NgbModal,
@@ -74,8 +80,10 @@ export class CreateNewRefsetComponent implements OnInit {
         private router: Router,
         private refsetService: RefsetService,
         private readonly refsetDetails: RefsetDetails,
+        private dialogFactoryService: DialogFactoryService,
         private readonly notificationService: NotificationService,
-        private readonly projectsRefsetComponent: ProjectsRefsetComponent
+        private readonly projectsRefsetComponent: ProjectsRefsetComponent,
+        private readonly authenticationService: AuthenticationService
     ) { }
 
     ngOnInit(): void { }
@@ -90,18 +98,18 @@ export class CreateNewRefsetComponent implements OnInit {
 
         if (CodeUtility.hasValue(this.inputProperties.project)) {
 
-            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.organization.edition.branch.toString()}&areParentConcepts=false`).subscribe(results => {
+            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.edition.branch.toString()}&areParentConcepts=false`).subscribe(results => {
                 this.existingMetadataConcepts = results.items ? results.items : undefined;
             });
 
-            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.organization.edition.branch.toString()}&areParentConcepts=true`).subscribe(results => {
+            this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.edition.branch.toString()}&areParentConcepts=true`).subscribe(results => {
                 this.parentConcepts = results.items ? results.items : undefined;
             });
 
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
-                //backdrop: 'static',
-                //keyboard: false,
+                backdrop: 'static',
+                keyboard: false
             });
         }
     }
@@ -118,15 +126,16 @@ export class CreateNewRefsetComponent implements OnInit {
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = '';
         this.privateRefset = false;
+        this.conceptError = '';
     }
 
     setupEditMode(): void {
 
         let inputs = JSON.parse(JSON.stringify(this.inputProperties));
 
-        this.organizationName = inputs.project.organization.name;
-        this.editionName = inputs.project.organization.edition.name;
-        this.projectName = inputs.project.organization.name;
+        this.organizationName = inputs.project.edition.organization.name;
+        this.editionName = inputs.project.edition.name;
+        this.projectName = inputs.project.edition.organization.name;
         this.selectedMetaDataConcept = inputs.metadataConcept;
         this.versionDate = inputs.versionDate;
         this.createdMetaDataConcept = inputs.metadataConcept;
@@ -145,7 +154,6 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     createRefsetObject(): void {
-
         this.showLoadingSpinner = true;
         let name = '';
         let refsetId = null;
@@ -164,11 +172,11 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         let params: any = {
-            name: name,
+            name: this.capitalizeFirstLetterOfString(name),
             parentConceptId: parentConceptId,
             moduleId: '',
             refsetId: refsetId,
-            editionId: this.inputProperties.project.organization.edition.id,
+            editionId: this.inputProperties.project.edition.id,
             projectId: this.inputProperties.project.id,
             narrative: this.selectedNarrative,
             type: this.selectedReferenceType,
@@ -181,7 +189,6 @@ export class CreateNewRefsetComponent implements OnInit {
             this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
-
         this.refsetService.createRefset(params).subscribe(
             (status) => {
 
@@ -200,6 +207,16 @@ export class CreateNewRefsetComponent implements OnInit {
                 this.showLoadingSpinner = false;
             }
         );
+    }
+
+    capitalizeFirstLetterOfString(stringValue: string): string {
+        if (stringValue) {
+            return stringValue.toLowerCase().replace(/(?:^|\s|[-"'([{])+\S/g, (c) =>
+                c.toUpperCase()
+            );
+        }
+
+        return stringValue;
     }
 
     generateDefinitionClausesJson(definitionClauses: []) {
@@ -257,7 +274,6 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     isComplete(): boolean {
-
         let typeCheck = false;
 
         if (this.selectedReferenceType == RefsetUtility.EXTENSIONAL) {
@@ -269,8 +285,24 @@ export class CreateNewRefsetComponent implements OnInit {
             console.log("this.definitionClauses: ", this.definitionClauses);
         }
 
+        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName());
+    }
 
-        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept));
+    isValidConceptName(): boolean {
+        var format = /^(?!.* {2,})[\/-9A-Za-z\\()À-ú\s]+$/;
+        var lower = null;
+        if (this.createdMetaDataConcept)
+            lower = this.createdMetaDataConcept.toLowerCase();
+        else
+            lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
+        console.log(lower);
+        var flag = lower.match(format);
+        if (flag == null) {
+            this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';
+        } else {
+            this.conceptError = '';
+        }
+        return flag == null ? false : true;
     }
 
     isUat(): boolean {
@@ -352,6 +384,32 @@ export class CreateNewRefsetComponent implements OnInit {
 
     openEclBuilder(fieldId) {
 
-        UiUtility.openEclBuilder(fieldId, this.inputProperties.project.organization.edition.branch);
+        UiUtility.openEclBuilder(fieldId, this.inputProperties.project.edition.branch);
     }
+
+    openInfoDialog() {
+        const dialogId = "infoDialog";
+
+        const dialogData = {
+            headerText: `Information`,
+            template: this.infoDialog,
+            data: null,
+            showCancel: false,
+            confirmText: 'OK',
+        };
+
+        const dialogOptions = {
+            id: dialogId,
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData);
+
+        this.dialog.confirmed().subscribe((data) => { });
+    }
+
+    get canAdd(): boolean {
+        let project = this.inputProperties.project;
+        return project?.roles?.includes('AUTHOR');
+    }
+
 }

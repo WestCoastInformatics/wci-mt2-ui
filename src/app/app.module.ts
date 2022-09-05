@@ -1,6 +1,6 @@
 // FRAMEWORK IMPORTS
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { AppComponent } from 'src/app/app.component';
 import { BackendInterceptor } from 'src/app/interceptors/backend.interceptor';
@@ -43,7 +44,6 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { LaunchComparisonModalComponent } from 'src/app/components/comparison/launch-comparison-modal.component';
@@ -55,10 +55,16 @@ import { ImportFromFileModalComponent } from 'src/app/components/import-from-fil
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
 import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
+import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
+import { AddMemberModalComponent } from 'src/app/components/add-member-modal/add-member-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
 import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
+import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge/workflow-status-badge.component';
+import { ArtifactsModule } from './components/artifacts/artifacts.module';
+import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
+
 // import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 
 // PAGE IMPORTS
@@ -91,7 +97,6 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
-import { dragAndDropDirective } from 'src/app/directives/drag-and-drop.directive';
 import { AddRemoveByConceptModalComponent } from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
 import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
 import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
@@ -110,41 +115,37 @@ import { RemoveDashboardComponentModalComponent } from './components/remove-dash
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { CommonModule } from '@angular/common';
 import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
-
+import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
+import { DomService } from './services/dom.service';
+import { PaginationModule } from './components/pagination/pagination.module';
+import { ArtifactsService } from './services/rest/artifacts.service';
+import { AuditService } from './services/rest/audit.service';
+import { DirectivesModule } from './directives/directives.module';
+import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-meta-table.component';
+import {ShareRefsetModalComponent} from './components/share-modal/share-refset-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
     { path: 'login', component: LoginComponent },
     { path: '', component: LandingPageComponent },
-    { path: 'directory', component: RefsetDirectory, data: { breadcrumbLabel: 'Directory' } },
+    { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Refset Library' } },
     { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
     { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
-    { path: 'organizations/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/projects/:id', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/teams', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/teams/:id', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/people', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/people/:id', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/configuration', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
-    { path: 'organizations/configuration/:id', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/:organizationId/edition/:editionId/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/:organizationId/teams', component: OrganizationTeamsComponent, data: { breadcrumbLabel: 'Teams' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/:organizationId/people', component: OrganizationPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organizations/:organizationId/configuration', component: OrganizationConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
-    { path: 'projects', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
-    { path: 'projects/:id', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
-    { path: 'projects/people', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'projects/people/:id', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'projects/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
-    { path: 'projects/configuration/:id', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/:projectId/refsets', component: ProjectsRefsetComponent, data: { breadcrumbLabel: 'Reference Sets' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/:projectId/people', component: ProjectsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/edition/:editionId/projects/:projectId/configuration', component: ProjectsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
-    { path: 'teams/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'teams/people/:id', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
-    { path: 'teams/configuration', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
-    { path: 'teams/configuration/:id', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/teams/:teamId/people', component: TeamsPeopleComponent, data: { breadcrumbLabel: 'People' }, canActivate: [AuthGuardGuard] },
+    { path: 'organization/:organizationId/teams/:teamId/configuration', component: TeamsConfigurationComponent, data: { breadcrumbLabel: 'Configuration' }, canActivate: [AuthGuardGuard] },
 
-    { path: 'personal/landing', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
-    { path: 'personal/landing/:id', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
-    { path: 'personal/configuration', component: PersonalConfigurationComponent, data: { breadcrumbLabel: 'Account Configuration' }, canActivate: [AuthGuardGuard] },
-    { path: 'personal/configuration/:id', component: PersonalConfigurationComponent, data: { breadcrumbLabel: 'Account Configuration' }, canActivate: [AuthGuardGuard] },
+    { path: 'personal/:userId/landing', component: PersonalLandingComponent, data: { breadcrumbLabel: 'About' }, canActivate: [AuthGuardGuard] },
+    { path: 'personal/:userId/configuration', component: PersonalConfigurationComponent, data: { breadcrumbLabel: 'Account Configuration' }, canActivate: [AuthGuardGuard] },
 ];
 
 @NgModule({
@@ -154,7 +155,6 @@ const appRoutes: Routes = [
         FooterComponent,
         TaxonomyTreeComponent,
         TemplateRenderer,
-        PaginationComponent,
         RefsetDownloadComponent,
         ColumnChooserComponent,
         NotificationComponent,
@@ -164,7 +164,7 @@ const appRoutes: Routes = [
         SafeUrlPipe,
         RefsetDirectory,
         RefsetDetails,
-		CategoryFilterComponent,
+        CategoryFilterComponent,
         DateTextFilterComponent,
         CreateNewRefsetComponent,
         ProjectsRefsetComponent,
@@ -172,9 +172,10 @@ const appRoutes: Routes = [
         ImportFromListModalComponent,
         ImportFromEclModalComponent,
         CreateNewOrganizationModalComponent,
+        EmailRefsetModalComponent,
         CreateNewTeamModalComponent,
+        AddMemberModalComponent,
         CreateNewProjectModalComponent,
-        dragAndDropDirective,
         AddRemoveByConceptModalComponent,
         ScrollTopComponent,
         ReadonlyTextModalComponent,
@@ -203,12 +204,19 @@ const appRoutes: Routes = [
         LaunchComparisonModalComponent,
         RemoveDashboardComponentModalComponent,
         RefsetFeedbackListComponent,
-        CustomTooltipComponent
+        CustomTooltipComponent,
+        ComposeModalComponent,
+        WorkflowStatusBadgeComponent,
+        RefsetMetaTableComponent,
+        ShareRefsetModalComponent
     ],
     imports: [
         RouterModule.forRoot(
             appRoutes,
-            {onSameUrlNavigation: 'reload'}
+            {
+                onSameUrlNavigation: 'reload',
+                scrollPositionRestoration: 'top'
+            }
             //{ enableTracing: true } // <-- debugging purposes only
         ),
         BrowserModule,
@@ -231,9 +239,10 @@ const appRoutes: Routes = [
         MatMenuModule,
         MatIconModule,
         MatRadioModule,
+        DragDropModule,
         ToastNoAnimationModule.forRoot({
             toastComponent: NotificationComponent
-          }),
+        }),
         DialogModule,
         TreeModule,
         AgGridModule.withComponents([TemplateRenderer, CustomTooltipComponent]),
@@ -242,17 +251,23 @@ const appRoutes: Routes = [
         NgbModule,
         ReactiveFormsModule,
         MatSlideToggleModule,
-        CommonModule
+        CommonModule,
+        ArtifactsModule,
+        AuditTrailModule,
+        PaginationModule,
+        DirectivesModule
     ],
     entryComponents: [NotificationComponent],
     providers: [
         AuthenticationService,
         AuthoringService,
+        ArtifactsService,
+        AuditService,
         EnvServiceProvider,
         RestService,
         ConceptsService,
         RefsetService,
-		RefsetDetails,
+        RefsetDetails,
         PaginationService,
         BreadcrumbService,
         RouterExtentionService,
@@ -260,6 +275,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsComponent,
         UsersService,
         NotificationService,
+        DomService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {
             provide: HTTP_INTERCEPTORS,
@@ -274,7 +290,7 @@ const appRoutes: Routes = [
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
     ],
     bootstrap: [AppComponent],
-    schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AppModule {
 }

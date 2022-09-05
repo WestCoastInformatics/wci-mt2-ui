@@ -1,127 +1,261 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { TeamsService } from 'src/app/services/rest/teams.service';
+import {Location} from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {Title} from '@angular/platform-browser';
+import {ActivatedRoute} from '@angular/router';
+import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
+import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
+import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
+import {NotificationService} from 'src/app/services/notification.service';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {TeamsService} from 'src/app/services/rest/teams.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {forkJoin} from 'rxjs';
 
 @Component({
-  selector: 'teams-configuration',
-  templateUrl: './configuration.component.html'
+    selector: 'teams-configuration',
+    templateUrl: './configuration.component.html'
 })
 export class TeamsConfigurationComponent implements OnInit {
-  menu:SidebarMenuItem[] = [
-    {name: 'People', link: '/teams/people', icon: 'fa fa-user'},
-    {name: 'Configuration', link: '/teams/configuration', icon: 'fa fa-cogs', isActive: true}
-  ];
 
-  profileNameValue = '';
-  profileEmailValue = '';
-  profileDescriptionValue = '';
-  selectedTeam: any;
-  id: any;
-  teamList = [];
-  currentUser: any;
-  roleOptions: any;
-  selectedRoles: any;
-  selectedForRemove = [];
-  selectedForAdd = [];
+    menu: SidebarMenuItem[] = [];
+    profileNameValue = '';
+    profileEmailValue = '';
+    profileDescriptionValue = '';
+    selectedTeam: any;
+    organizationList = [];
+    organizationId: string;
+    selectedOrganization: any;
+    teamId: string;
+    teamList = [];
+    currentUser: any;
+    roleOptions: any;
+    selectedRoles: any;
+    selectedForRemove = [];
+    selectedForAdd = [];
+    emailError = '';
+    showLoadingSpinner = true;
 
-  constructor(private readonly breadcrumbService: BreadcrumbService,
-    private readonly titleService: Title,
-    private readonly refsetService: RefsetService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly authService: AuthenticationService,
-    private readonly teamsService: TeamsService) { }
-
-  ngOnInit(): void {
-    this.titleService.setTitle('Refset Tool - Teams');
-    this.breadcrumbService.setBreadcrumbs([
-      { path: '/teams/configuration', label: 'Teams' },
-      { label: 'Configuration' },
-    ]);
-
-    this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
-      { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
-
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-    });
-    this.currentUser = this.authService.getUser();
-    this.getTeam();
-    this.getTeams();
-  }
-
-  selectTeam($event): void {
-    this.router.navigate(['/teams/configuration', $event['value'].id]);
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-      this.getTeam();
-    });
-  }
-
-  getTeam(): void {
-    this.teamsService.getTeam(this.id).subscribe((result) => {
-      this.selectedTeam = result;
-      this.selectedRoles = this.selectedTeam?.roles;
-      this.profileNameValue = this.selectedTeam?.name;
-      this.profileEmailValue = this.selectedTeam?.primaryContactEmail;
-      this.profileDescriptionValue = this.selectedTeam?.description;
-    });
-  }
-
-  getTeams(): void {
-    this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-      this.teamList = results.items.filter((x) => {
-        return x.members.some((member) => {
-          return member.includes(this.currentUser.id);
-        });
-      });
-      console.log(this.teamList)
-    });
-  }
-
-  updateTeam(): void {
-    this.selectedTeam.name = this.profileNameValue;
-    this.selectedTeam.primaryContactEmail = this.profileEmailValue;
-    this.selectedTeam.description = this.profileDescriptionValue;
-    this.teamsService.updateTeam(this.id, this.selectedTeam).subscribe();
-  }
-
-  updateTeamRoles(): void {
-
-    if (this.selectedTeam['roles']) {
-      for (let role of this.selectedTeam['roles']) {
-        if (!this.selectedRoles.includes(role)) {
-          this.selectedForRemove.push(role);
-        }
-      }
-
-      this.selectedForRemove.forEach((x) => {
-        this.teamsService.removeRole(this.selectedTeam.id, x).subscribe();
-      });
+    constructor(private readonly breadcrumbService: BreadcrumbService,
+                private readonly titleService: Title,
+                private readonly refsetService: RefsetService,
+                private readonly route: ActivatedRoute,
+                private readonly authService: AuthenticationService,
+                private readonly teamsService: TeamsService,
+                private readonly notificationService: NotificationService,
+                private location: Location) {
+        document.body.scrollTop = 0;
     }
 
-    for (let role of this.selectedRoles) {
-      if (!this.selectedTeam['roles'].includes(role)) {
-        this.teamsService.addRole(this.selectedTeam.id, role).subscribe();
+    ngOnInit(): void {
+
+        this.titleService.setTitle('Refset Tool - Teams');
+
+        this.roleOptions = [{value: 'AUTHOR', display: 'Author'}, {value: 'REVIEWER', display: 'Reviewer'},
+            {value: 'ADMIN', display: 'Admin'}, {value: 'VIEWER', display: 'Viewer'}];
+
+        this.route.params.subscribe(params => {
+
+            this.organizationId = params['organizationId'];
+            this.teamId = params['teamId'];
+            this.setNavigation();
+        });
+
+        this.currentUser = this.authService.getUser();
+        this.getOrganizations();
+    }
+
+    setNavigation() {
+
+        const breadcrumbs: any = [{path: '/dashboard', label: 'Dashboard'}];
+
+        if (CodeUtility.hasValue(this.organizationId, true, true)) {
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
         }
-      }
 
+        breadcrumbs.push({label: 'Configuration'});
+        this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
+        this.menu = [
+            { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user' },
+            { name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs', isActive: true }
+        ];
 
-    console.log(this.selectedTeam.roles);
-  }
+        this.location.replaceState('organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration');
+    }
 
-  setRoles(): void {
-    console.log(this.selectedRoles);
-  }
+    getOrganizations(): void {
 
-  getSelectedTeamName(): string{
-    return this.selectedTeam?.name;
-  }
+        this.refsetService.getOrganizations().subscribe((results) => {
+
+            this.organizationList = results.items;
+
+            for (const organization of this.organizationList) {
+
+                if (this.organizationId === organization.id) {
+                    
+                    this.selectedOrganization = organization;
+                    this.getTeams();
+                    return;
+                }
+            }
+
+            this.getStoredOrganizationId();
+
+            if (!this.selectedOrganization) {
+                this.showLoadingSpinner = false;
+            }
+        });
+    }
+
+    selectOrganization(): void {
+
+        this.showLoadingSpinner = true;
+        this.organizationId = this.selectedOrganization.id;
+        this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
+
+        this.clearTeamData();
+        this.setNavigation();
+        this.getTeams();
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
+        }
+    }
+
+    getTeams(): void {
+
+        this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+
+            this.showLoadingSpinner = false;
+            this.teamList = results.items;
+
+            for (const team of this.teamList) {
+
+                if (this.teamId == team.id) {
+
+                    this.setTeamData(team);
+                    return;
+                }
+            }
+
+            if (this.teamList && this.teamList.length > 0) {
+                this.setTeamData(this.teamList[0]);
+            }
+        });
+    }
+
+    setTeamData(team: any) {
+
+        this.teamId = team.id;
+        this.selectedTeam = team;
+        this.selectedRoles = this.selectedTeam.roles;
+        this.profileNameValue = this.selectedTeam.name;
+        this.profileEmailValue = this.selectedTeam.primaryContactEmail;
+        this.profileDescriptionValue = this.selectedTeam.description;
+
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+
+        this.setNavigation();
+    }
+
+    clearTeamData() {
+
+        this.teamList = [];
+        this.teamId = null;
+        this.selectedTeam = null;
+        this.selectedRoles = [];
+        this.profileNameValue = null;
+        this.profileEmailValue = null;
+        this.profileDescriptionValue = null;
+    }
+
+    selectTeam(_$event: any): void {
+        this.setTeamData(this.selectedTeam);
+    }
+
+    isValidEmail(): boolean {
+
+        const lower = this.profileEmailValue.toLowerCase();
+        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+        if (flag == null) {
+            this.emailError = 'Email is invalid.';
+        } else {
+            this.emailError = '';
+        }
+
+        return flag == null ? false : true;
+    }
+
+    onKeyDownEvent(event: any): void {
+
+        console.log(event.target.value);
+        this.isValidEmail();
+    }
+
+    updateTeam(): void {
+
+        this.selectedTeam.name = this.profileNameValue;
+        this.selectedTeam.primaryContactEmail = this.profileEmailValue;
+        this.selectedTeam.description = this.profileDescriptionValue;
+
+        this.teamsService.updateTeam(this.teamId, this.selectedTeam).subscribe((team) => {
+
+            if (team) {
+                this.notificationService.show('Team was successfully updated', 'Success', 'success', {timeOut: 3000, extendedTimeOut: 0});
+            }
+        });
+    }
+
+    updateTeamRoles(): void {
+        let calls = [];
+        if (this.selectedTeam['roles']) {
+            for (const role of this.selectedTeam['roles']) {
+                if (!this.selectedRoles.includes(role)) {
+                    this.selectedForRemove.push(role);
+                }
+            }
+
+            this.selectedForRemove.forEach((x) => {
+                calls.push(this.teamsService.removeRole(this.selectedTeam.id, x));
+            });
+        }
+
+        for (const role of this.selectedRoles) {
+            if (!this.selectedTeam['roles'].includes(role)) {
+                calls.push(this.teamsService.addRole(this.selectedTeam.id, role));
+            }
+        }
+
+        if (calls.length > 0) {
+            forkJoin(calls).subscribe(result => {
+                this.notificationService.show('Team roles was successfully updated', 'Success', 'success', {
+                    timeOut: 3000,
+                    extendedTimeOut: 0
+                });
+            });
+        }
+
+    }
+
+    getSelectedTeamName(): string {
+        return this.selectedTeam?.name;
+    }
 }

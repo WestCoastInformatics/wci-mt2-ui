@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { UiUtility } from "src/app/utilities/ui.utility";
@@ -9,6 +9,7 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { EditionsService } from "src/app/services/rest/editions.service";
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-organization-modal",
@@ -20,38 +21,51 @@ export class CreateNewOrganizationModalComponent {
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	editions: any;
-    editionsArray: any;
+    editionsList: any = [];
     selectedEdition: any;
-    edition:any;
+    emailError = '';
 
-  
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
+        private changeDetectorRef: ChangeDetectorRef,
         private refsetService: RefsetService,
         private organizationsService: OrganizationsService,
         private editionsService: EditionsService,
-        private notificationService: NotificationService, 
+        private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly router: Router
-    ) {}
+        private readonly router: Router,
+        private authenticationService: AuthenticationService
+    ) { }
 
-    callMemberOperation(): void {
-
-        if (!CodeUtility.hasValue(this.description)) {
-            return;
-        }
-
-        this.changeLockedStatus.emit(true);
-        
-        this.createOrganizationObject();
-
-        //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
+    ngOnInit() {
     }
 
-    processOperationReturn = (data) => { 
+    openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
+
+        this.description = '';
+        this.selectedEdition = null;
+        this.openedModel = this.modalService.open(createNewOrganizationDialog, { backdrop: 'static', keyboard: false });
+
+        // get list of editions
+        this.refsetService.getEditions('limit=500&sort=name').subscribe((editionResults) => {
+
+            this.editionsList = editionResults.items;
+
+            let defaultEditionIndex = this.editionsList.findIndex(edition => {
+                return edition.name == "International Edition";
+            });
+
+            if (defaultEditionIndex != -1) {
+                //this.selectedEdition = this.editionsList[defaultEditionIndex];
+            }
+
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -60,43 +74,38 @@ export class CreateNewOrganizationModalComponent {
         this.description = '';
     }
 
-    openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
-
-        this.description = '';
-
-        this.openedModel = this.modalService.open(createNewOrganizationDialog, {
-        });
+    isValidEmail(): boolean {
+        var lower = this.email.toLowerCase();
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+        if (flag == null) {
+            this.emailError = "Email is invalid.";
+        } else {
+            this.emailError = "";
+        }
+        return flag == null ? false : true;
     }
 
-    ngOnInit() {    
-        // get list of editions
-        this.refsetService.getEditions().subscribe((editionResults) => {
-            this.editions = editionResults;
-            this.editionsArray = this.editions?.items;
-        }) 
-    }
-
-    getEdition(): void {
-        // get details about selected edition
-        this.editionsService.getEdition(this.selectedEdition).subscribe((editionResult) => {
-            this.edition = editionResult;
-        }) 
+    onKeyDownEvent(event: any) {
+        console.log(event.target.value);
+        this.isValidEmail();
     }
 
     createOrganizationObject(): void {
+
+        this.changeLockedStatus.emit(true);
 
         let params: any = {
             active: true,
             name: this.name,
             description: this.description,
             primaryContactEmail: this.email,
-            edition: this.edition
+            edition: this.selectedEdition
         };
-        
 
         this.organizationsService.createOrganization(params).subscribe(
             (data) => {
-                this.notificationService.show("The organization is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The organization is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();

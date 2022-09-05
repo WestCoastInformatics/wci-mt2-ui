@@ -11,10 +11,10 @@ export class ReadyForPublicationModalComponent implements OnInit {
   @Input() refsetData: any;
   @Input() labelPrefix: string;
 
-  @Output() reloadPage = new EventEmitter<boolean>();
-  
+  @Output() setWorkflowStatus = new EventEmitter<boolean>();
+
   requestForPublicationNotes = '';
-  
+
   constructor(private readonly modalService: NgbModal,
     private readonly workflowService: WorkflowService) { }
 
@@ -23,9 +23,9 @@ export class ReadyForPublicationModalComponent implements OnInit {
 
   openreadyForPublicationModal(readyForPublicationDialog: NgbModal) {
     this.modalService.open(readyForPublicationDialog, {
-      //backdrop: 'static',
-      //keyboard: false,
-      windowClass: 'ready-for-publication-modal'
+      windowClass: 'ready-for-publication-modal',
+      backdrop: 'static',
+      keyboard: false
     });
   }
 
@@ -33,19 +33,16 @@ export class ReadyForPublicationModalComponent implements OnInit {
     this.requestForPublicationNotes = '';
   }
 
-  setWorkflowStatusByAction(notes: string, action: string): void {
-    this.workflowService
-        .setWorkflowStatusByAction(
-            this.refsetData.id,
-            this.refsetData.modifiedBy,
-            action,
-            notes
-        )
-        .subscribe((results) => {
-            if (results) {
-                // window.location.reload();
-                this.reloadPage.emit();
-            }
-        });
-}
+  setWorkflowStatusByAction(notes: string): void {
+    if (notes) {
+      this.workflowService.saveNotes(this.refsetData.id, notes).subscribe(response => {
+        if (response) {
+          this.setWorkflowStatus.emit(true);
+        }
+      });
+
+      this.modalService.dismissAll();
+      this.clearModal();
+    }
+  }
 }

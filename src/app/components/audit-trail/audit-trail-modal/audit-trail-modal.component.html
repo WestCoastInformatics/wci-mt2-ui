@@ -1,0 +1,28 @@
+<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false" (click)="openTrailModal(trailDialog)"
+  class="refset-tool-action-button refset-action-button" aria-label="Audit Trail" title="Audit Trail" ng-reflect-color="primary">
+    Audit Trail
+</button>
+<button mat-menu-item *ngIf="isDetails" (click)="openTrailModal(trailDialog)" title="Open Audit Trail List" aria-label="Audit Trail">Audit Trail</button>
+
+<ng-template #trailDialog let-modal>
+    <div class="modal-header rt2-modal-header">
+        <button ngbAutofocus class="unfocus-btn"></button>
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            Audit Trail
+        </h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body pr-0 pl-0 pb-0">
+            <audit-trail-list [refsetInternalId]="refsetInternalId"></audit-trail-list>
+        </div>
+    </div>
+    <div class="modal-footer rt2-modal-footer">
+        <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button mr-3" (click)="modal.dismiss('Cross click');"
+          ng-reflect-color="primary">
+            Close
+        </button>
+    </div>
+</ng-template>

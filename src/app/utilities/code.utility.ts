@@ -69,10 +69,14 @@ export class CodeUtility {
      * hasValue - return a boolean if passed variable has a legitimate value (not undefined, null, or possibly empty string.
      * variable - the variable to test
      * rejectEmpty - a boolean to set if the function should count empty strings or empty objects as non-valid values. Defaults to true
+     * rejectNullStringValues - a boolean to set if the function should count strings that have "null" or "defined" as a string value. Defaults to false
      */
-    static hasValue(variable, rejectEmpty: boolean = true) {
+    static hasValue(variable, rejectEmpty: boolean = true, rejectNullStringValues: boolean = false) {
 
-        if (variable == undefined || variable == null || (rejectEmpty && (variable === '' || (Object.keys(variable).length === 0 && (Array.isArray(variable) || variable.constructor === Object))))) {
+        if (variable == undefined || variable == null
+            || (rejectEmpty && (variable === '' || ((Array.isArray(variable) || variable.constructor === Object) && Object.keys(variable).length === 0)))
+            || (rejectNullStringValues && (typeof variable == 'string' && (variable.toLowerCase() == 'null' || variable.toLowerCase() == 'undefined')))
+        ) {
             return false;
         } else {
             return true;
@@ -177,12 +181,12 @@ export class CodeUtility {
     /*
     * textOverflow - return a string up to a certain number of characters with '...' at the end if it excedes the limit.
     */
-    static textOverflow(text: string, characterLimit: number) {
+    static shortenText(text: string, characterLimit: number) {
 
         if (text.length <= characterLimit) {
             return text;
         } else {
-            return text.substr(0, characterLimit);
+            return text.substr(0, characterLimit) + ' ...';
         }
     }
 

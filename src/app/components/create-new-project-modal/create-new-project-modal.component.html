@@ -1,12 +1,12 @@
-<div *ngIf="!param" class='section-list text-right rounded' title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)"><a class='btn btn-primary rounded btn-lg'>Create a Project</a></div>
-<a *ngIf="param" class="btn btn-primary rounded float-right" title="Create New Project" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<a title="Create New Project" class='btn btn-primary rounded btn-lg float-right btn-wide-font' aria-label="Create New Project"
+  (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-            Create a Project
+            Create New Project
         </h4>
 
         <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -17,43 +17,44 @@
     <div class="modal-body refset-tool-lockable">
 
         <table>
-            <tr *ngIf="!param">
+            <tr>
                 <td>
-                    <label class="modal-label">Parent Organization:</label>
+                    <label class="modal-label-edition">Parent Organization:</label>
                 </td>
                 <td>
-                    <div class="row" id="downloadContentRow" >
-                        <div >
-                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select" [(value)]="selectedOrganization" (selectionChange)="getOrganization()">
-                                    <mat-option *ngFor="let option of organizationsArray" [value]="option.id">
-                                        {{ option.value }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
+                    {{ edition.organization.name }}
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Name:</label>
+                    <label class="modal-label-edition">Parent Edition:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Project Name"  [(ngModel)]="name"/>
+                    {{ edition.name }}
                 </td>
             </tr>
             <tr>
+                <td>
+                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
+                </td>
+                <td>
+                    <input class="modal-input-field" placeholder="Project Name" autofocus [(ngModel)]="name" />
+                </td>
+            </tr>
+            <!-- <tr>
                 <td>
                     <label class="modal-label">Email:</label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="primarycontactemail@orgname.org"  [(ngModel)]="email"/>
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org"  [(ngModel)]="email"/>
                 </td>
             </tr>
+            <tr class="modal-error-message" [hidden]="!emailError">
+                <div>{{emailError}}</div>
+            </tr> -->
             <tr>
                 <td>
-                    <label class="modal-label">Description:</label>
+                    <label class="modal-label-description">Description:</label>
                 </td>
                 <td>
                     <mat-form-field class="import-from-list-field" appearance="outline">
@@ -75,11 +76,11 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || description === '' || email === ''" (click)="callMemberOperation()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
-                aria-label="Create Project" title="Create Project" ng-reflect-color="green">
+
+        <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button color="green" aria-hidden="false"
+          class="refset-tool-action-button" aria-label="Create Project" title="Create Project" ng-reflect-color="green">
             Create Project
         </button>
-
 
     </div>
 

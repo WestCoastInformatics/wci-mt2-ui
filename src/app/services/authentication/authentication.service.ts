@@ -1,26 +1,24 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User } from '../../models/user';
-import { Subject } from 'rxjs';
-import { AuthoringService } from '../authoring/authoring.service';
-import { environment } from '../../../environments/environment';
-import { Router } from '@angular/router';
-import { NotificationService } from 'src/app/services/notification.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RestService } from '../rest/rest.service';
+import {EventEmitter, Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable, Subject} from 'rxjs';
+import {User} from '../../models/user';
+import {environment} from '../../../environments/environment';
+import {Router} from '@angular/router';
+import {NotificationService} from 'src/app/services/notification.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {RestService} from '../rest/rest.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthenticationService {
+    public apiCalled: EventEmitter<null>;
 
     GUEST_USER = 'Guest';
     LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
     IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
-    authCookie = { name: 'rt2-auth', path: '/' }
-    isUserLoggedIn = false;
+    authCookie = {name: 'rt2-auth', path: '/'};
 
     constructor(
         private http: HttpClient,
@@ -28,7 +26,14 @@ export class AuthenticationService {
         private router: Router,
         private readonly notificationService: NotificationService,
         private restService: RestService,
-    ) { }
+    ) {
+        this.apiCalled = new EventEmitter();
+    }
+
+    get isUserLoggedIn(): boolean {
+        return !!localStorage.getItem('auth_token');
+    }
+
 
     imsLogin(successCallback: Function = this.handleImsSuccess) {
 
@@ -51,8 +56,8 @@ export class AuthenticationService {
     generateImsUrl(endpoint: string): string {
 
         let url = window.location.origin + '/login';
-         
-        if (!window.location.origin.includes("local")) {
+
+        if (!window.location.origin.includes('local')) {
             url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
         } else {
             url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
@@ -68,12 +73,11 @@ export class AuthenticationService {
 
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
-                this.router.navigate(['dashboard']);
                 this.userSubject.next(userData);
-                this.isUserLoggedIn = true;
+                this.router.navigate(['/dashboard']);
             },
             (err) => {
-                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
                 console.error(err);
             }
         );
@@ -99,9 +103,18 @@ export class AuthenticationService {
         let loggedInUser = localStorage.getItem('auth_token');
         this.notAuthenticated();
 
+        localStorage.clear();
+        sessionStorage.clear();
+        this.deleteAllCookies();
         this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser, {}).subscribe(
             (data) => {
-                console.log("Back end logged out");
+                console.log('Back end logged out');
+            }
+        );
+
+        this.http.post<any>('/ims-api/account/logout', {}).subscribe(
+            (data) => {
+                console.log('IMS logout');
             }
         );
 
@@ -129,25 +142,24 @@ export class AuthenticationService {
 
     notAuthenticated(): any {
 
+        let userWasLoggedin = this.isUserLoggedIn;
         localStorage.clear();
 
-        let userWasLoggedin = this.isUserLoggedIn;
         let user = new User();
         user.userName = this.GUEST_USER;
-        this.isUserLoggedIn = false;
-
         localStorage.setItem('refset_user', JSON.stringify(user));
         this.userSubject.next(user);
 
         // if the user is on a page that requires being logged in, then send them to the directory
-        if (this.router.url.includes('project')) {
-            this.router.navigateByUrl('directory');
+        if (!this.isUserLoggedIn) {
+            // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
+            this.router.navigateByUrl('login');
         }
 
         if (userWasLoggedin) {
 
             this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'info', { timeOut: 5000, extendedTimeOut: 0 });
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'error', { timeOut: 5000, extendedTimeOut: 0 });
         }
     }
 
@@ -167,9 +179,46 @@ export class AuthenticationService {
         return user;
     }
 
+    updateUser(updatedUser) {
+
+        try {
+
+            let currentUser = JSON.parse(localStorage.getItem('refset_user'));
+
+            if (currentUser.userName != this.GUEST_USER) {
+
+                localStorage.setItem('refset_user', JSON.stringify(updatedUser));
+                this.userSubject.next(updatedUser);
+            }
+
+        } catch (ex) {
+
+            this.noCookieAccess();
+            return null;
+        }
+    }
+
     noCookieAccess() {
 
-        this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+        this.notificationService.show('There was a problem accessing local storage or cookies - make sure they are enabled for this site in your browser.', null, 'error', {
+            timeOut: 0,
+            extendedTimeOut: 0
+        });
         this.router.navigateByUrl('');
+    }
+
+    resetSession() {
+        this.apiCalled.emit(null);
+    }
+
+    private readonly deleteAllCookies = () => {
+        var cookies = document.cookie.split(';');
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf('=');
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
     }
 }

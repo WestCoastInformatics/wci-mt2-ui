@@ -1,8 +1,5 @@
 <div class="limit-text-container">
-    <span *ngIf="shortText"
-          class="limit-text-30"
-          [innerHTML]="shortText"
-          (click)="openCreateRefsetModal(refsetVersionNotes)">
+    <span *ngIf="shortText" class="limit-text-30" [innerHTML]="shortText" (click)="openCreateRefsetModal(refsetVersionNotes)">
     </span>
 </div>
 
@@ -11,29 +8,19 @@
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             {{ title }}
         </h4>
-        <button type="button"
-                class="close dialog-close-x"
-                aria-label="Close"
-                (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
     <div class="container-fluid">
         <div class="modal-body">
-            <div class="row" [innerHTML]="longText"></div>
+            <div class="row text-break" [innerHTML]="longText"></div>
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
         <!-- JESSE -->
-        <button type="button"
-                (click)="modal.close('Read Only Text Modal')"
-                mat-raised-button
-                color="green"
-                aria-hidden="false"
-                class="refset-tool-action-button"
-                aria-label="Read Only Text Modal"
-                title="Read Only Text Modal"
-                ng-reflect-color="green">
+        <button type="button" (click)="modal.close('Read Only Text Modal')" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+          aria-label="Read Only Text Modal" title="Read Only Text Modal" ng-reflect-color="green">
             Close
         </button>
     </div>

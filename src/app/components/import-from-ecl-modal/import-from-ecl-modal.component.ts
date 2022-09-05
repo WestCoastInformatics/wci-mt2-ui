@@ -22,14 +22,14 @@ export class ImportFromEclModalComponent {
     @Input() refsetBranchPath: string;
     @Input() isIntensional: boolean = false;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
-        private notificationService: NotificationService, 
+        private notificationService: NotificationService,
         private router: Router,
         private readonly refsetDetails: RefsetDetails
-    ) {}
+    ) { }
 
     callMemberOperation(operation: string): void {
 
@@ -57,7 +57,7 @@ export class ImportFromEclModalComponent {
         UiUtility.manageMemberNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
 
@@ -71,8 +71,8 @@ export class ImportFromEclModalComponent {
         this.ecl = '';
 
         this.openedModel = this.modalService.open(importFromEclDialog, {
-            //backdrop: "static",
-            //keyboard: false,
+            backdrop: "static",
+            keyboard: false,
             modalDialogClass: 'import-from-ecl-modal'
         });
     }

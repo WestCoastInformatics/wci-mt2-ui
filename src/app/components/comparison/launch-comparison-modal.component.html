@@ -3,7 +3,7 @@
 <ng-template #comparisonLaunchDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Compare Reference Set</h4>
 
         <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -24,8 +24,7 @@
                     </div>
 
                     <div class="col dialog-form-field">
-                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{ activeRefset.versionStatus
-                            }})</label>
+                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{ activeRefset.versionStatus }})</label>
                     </div>
 
                 </div>
@@ -40,25 +39,20 @@
 
                         <mat-radio-group>
 
-                            <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset"
-                                (change)="comparisonSelectionChange($event)"
-                                [checked]="activeRefsetVersionOptions.length > 0"
-                                [disabled]="activeRefsetVersionOptions.length == 0">
+                            <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset" (change)="comparisonSelectionChange($event)"
+                              [checked]="activeRefsetVersionOptions.length > 0" [disabled]="activeRefsetVersionOptions.length == 0">
                                 Another version
                             </mat-radio-button>
 
-                            <mat-radio-button value="different_refset" (change)="comparisonSelectionChange($event)"
-                                [checked]="activeRefsetVersionOptions.length == 0">
+                            <mat-radio-button value="different_refset" (change)="comparisonSelectionChange($event)" [checked]="activeRefsetVersionOptions.length == 0">
                                 Different reference set
                             </mat-radio-button>
 
                             <mat-form-field [hidden]="comparisonTypeSelected == 'different_refset'" appearance="fill">
 
                                 <mat-label>Choose comparison version</mat-label>
-                                <mat-select [(ngModel)]="comparisonRefsetInternalId"
-                                    (selectionChange)="checkComplete()">
-                                    <mat-option *ngFor="let option of activeRefsetVersionOptions"
-                                        [value]="option.value"> {{ option.display }}</mat-option>
+                                <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
+                                    <mat-option *ngFor="let option of activeRefsetVersionOptions" [value]="option.value"> {{ option.display }}</mat-option>
                                 </mat-select>
 
                             </mat-form-field>
@@ -66,32 +60,29 @@
                             <mat-form-field appearance="fill" [hidden]="comparisonTypeSelected == 'same_refset'">
 
                                 <mat-label>Select a refset by ID or FSN</mat-label>
-                                <mat-select (selectionChange)="comparisonRefsetSelected($event)">
-                                    <input class="concept-dropdown-input full-width" placeholder="Type here..."
-                                        (keyup)="onKeyUp($event.target.value)" (mouseover)="$event.target.focus()">
-                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None
-                                    </mat-option>
+                                <mat-select (selectionChange)="comparisonRefsetSelected($event)" [(ngModel)]="comparisonRefsetSelect">
+
+                                    <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="comparisonSearchInput"
+                                      (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
+
+                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None</mat-option>
                                     <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
+
                                     <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
-                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)"
-                                            src="{{ refset?.flagIcon }}" class="refset-tool-edition-flag"
-                                            title="{{ refset?.editionName }} Flag"
-                                            aria-label="{{ refset?.editionName }} Flag" />
+                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}"
+                                          class="refset-tool-edition-flag" title="{{ refset?.editionName }} Flag" aria-label="{{ refset?.editionName }} Flag" />
                                         {{ refset.name }} ({{ refset?.editionName }})
                                     </mat-option>
+
                                 </mat-select>
 
                             </mat-form-field>
 
-                            <mat-form-field
-                                [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefsetVersionOptions.length == 0"
-                                appearance="fill">
+                            <mat-form-field [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefsetVersionOptions.length == 0" appearance="fill">
 
                                 <mat-label>Select version for comparison</mat-label>
-                                <mat-select [(ngModel)]="comparisonRefsetInternalId"
-                                    (selectionChange)="checkComplete()">
-                                    <mat-option *ngFor="let option of comparisonRefsetVersionOptions"
-                                        [value]="option.value"> {{ option.display }}</mat-option>
+                                <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
+                                    <mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value">{{ option.display }}</mat-option>
                                 </mat-select>
 
                             </mat-form-field>
@@ -109,9 +100,7 @@
 
     <div class="modal-footer rt2-modal-footer">
 
-        <button [disabled]="!checkComplete()" type="button" (click)="launchComparison()" mat-raised-button color="green"
-            aria-hidden="false" class="refset-tool-action-button" aria-label="Launch Comparison"
-            ng-reflect-color="green">
+        <button [disabled]="!checkComplete()" type="button" (click)="launchComparison()" mat-raised-button class="refset-tool-action-button mat-green">
             Launch Comparison
         </button>
 
@@ -122,7 +111,7 @@
 <ng-template #showComparisonDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Compare Reference Sets</h4>
 
         <button type="button" class="close dialog-close-x" aria-label="Close" (click)="closeShowComparisonModal()">
@@ -151,8 +140,7 @@
                             <div class="metadata-collapsible-container white">
 
                                 <div class="col">
-                                    <div class="metadata-collapsible-container-title font-weight-bold mb-1">Reference
-                                        Set Members</div>
+                                    <div class="metadata-collapsible-container-title font-weight-bold mb-1">Reference Set Members</div>
                                 </div>
 
                                 <div class="container-fluid">
@@ -165,26 +153,19 @@
 
                                                     <tr>
 
-                                                        <td
-                                                            class="refset-tool-comparison-refset-member-total font-weight-bold">
-                                                            <div>Active Reference Set ({{
-                                                                comparisonData?.activeRefsetMemberTotal }}):</div>
+                                                        <td class="refset-tool-comparison-refset-member-total font-weight-bold">
+                                                            <div>Active Reference Set ({{ comparisonData?.activeRefsetMemberTotal }}):</div>
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name font-weight-bold">
-                                                            {{ activeRefsetName }} {{ activeRefsetVersionDate }} ({{
-                                                            activeRefset.versionStatus }})
+                                                            {{ activeRefsetName }} {{ activeRefsetVersionDate }} ({{ activeRefset.versionStatus }})
                                                         </td>
 
-                                                        <td
-                                                            class="refset-tool-comparison-refset-distinct font-weight-bold">
-                                                            <add-remove-concept-group-icons
-                                                                *ngIf="allowedToEdit && comparisonData?.activeRefsetDistinctMembersCount > 0"
-                                                                [addConcept]="false"
-                                                                [concepts]="comparisonData?.activeRefsetDistinctMembers"
-                                                                [refsetType]="activeRefset.type"
-                                                                [definitionExceptionType]="activeRefset.definitionExceptionType"
-                                                                (processSelection)="addRemoveConceptGroup($event)">
+                                                        <td class="refset-tool-comparison-refset-distinct font-weight-bold">
+                                                            <add-remove-concept-group-icons *ngIf="allowedToEdit && comparisonData?.activeRefsetDistinctMembersCount > 0"
+                                                              [addConcept]="false" [concepts]="comparisonData?.activeRefsetDistinctMembers" [refsetType]="activeRefset.type"
+                                                              [definitionExceptionType]="activeRefset.definitionExceptionType"
+                                                              (processSelection)="addRemoveConceptGroup($event)">
                                                             </add-remove-concept-group-icons>
                                                             {{ comparisonData?.activeRefsetDistinctMembersCount }}
                                                             Distinct Members
@@ -195,26 +176,20 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total">
-                                                            Comparison Reference Set ({{
-                                                            comparisonData?.comparisonRefsetMemberTotal }}):
+                                                            Comparison Reference Set ({{ comparisonData?.comparisonRefsetMemberTotal }}):
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name">
-                                                            {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }}
-                                                            ({{ comparisonRefsetStatus }})
+                                                            {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }} ({{ comparisonRefsetStatus }})
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-distinct">
-                                                            <add-remove-concept-group-icons
-                                                                *ngIf="allowedToEdit && comparisonData?.comparisonRefsetDistinctMembersCount > 0"
-                                                                [addConcept]="true"
-                                                                [concepts]="comparisonData?.comparisonRefsetDistinctMembers"
-                                                                [refsetType]="activeRefset.type"
-                                                                [definitionExceptionType]="activeRefset.definitionExceptionType"
-                                                                (processSelection)="addRemoveConceptGroup($event)">
+                                                            <add-remove-concept-group-icons *ngIf="allowedToEdit && comparisonData?.comparisonRefsetDistinctMembersCount > 0"
+                                                              [addConcept]="true" [concepts]="comparisonData?.comparisonRefsetDistinctMembers" [refsetType]="activeRefset.type"
+                                                              [definitionExceptionType]="activeRefset.definitionExceptionType"
+                                                              (processSelection)="addRemoveConceptGroup($event)">
                                                             </add-remove-concept-group-icons>
-                                                            {{ comparisonData?.comparisonRefsetDistinctMembersCount }}
-                                                            Members Not Common
+                                                            {{ comparisonData?.comparisonRefsetDistinctMembersCount }} Members Not Common
                                                         </td>
 
                                                     </tr>
@@ -228,18 +203,13 @@
                             </div>
 
                             <!-- MEMBERS GRID -->
-                            <ag-grid-angular *ngIf="showTable" style="max-height:622px"
-                                class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                                [ngClass]="getGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'"
-                                [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
+                            <ag-grid-angular *ngIf="showTable" style="max-height:622px" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+                              [ngClass]="getGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'" [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
                             </ag-grid-angular>
 
-                            <app-pagination class="compare-pagination" *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize"
-                                [gridOptions]="gridOptions" [numberOfPages]="gridApi?.paginationGetTotalPages()"
-                                [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown"
-                                [manualStateRefresh]="gridPaging.manualStateRefresh"
-                                [numOfResults]="gridPaging.totalRows" [isDetailPage]="true"
-                                [refsetId]="activeRefset.refsetId">
+                            <app-pagination class="compare-pagination" *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize" [gridOptions]="gridOptions"
+                              [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown" [manualStateRefresh]="gridPaging.manualStateRefresh"
+                              [isDetailPage]="true" [refsetId]="activeRefset.refsetId">
                             </app-pagination>
 
                         </div>
@@ -249,8 +219,7 @@
                     <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 30 : 0" [minSize]="25">
                         <div id="comparisonGridSection" class="container-fluid py-0 px-2">
 
-                            <div *ngIf="isConceptDetailsLoading || conceptDetail"
-                                class="metadata-collapsible-container white refset-tool-flex-column">
+                            <div *ngIf="isConceptDetailsLoading || conceptDetail" class="metadata-collapsible-container white refset-tool-flex-column">
 
                                 <div>
 
@@ -267,110 +236,98 @@
                                             </div>
 
                                             <div class="text-right close-button">
-                                                <button mat-icon-button (click)="closeConceptDetails()"
-                                                    aria-hidden="false" class="refset-tool-table-action-icon">
-                                                    <mat-icon aria-label="Close Concept Details"
-                                                        title="Close Concept Details">close</mat-icon>
+                                                <button mat-icon-button (click)="closeConceptDetails()" aria-hidden="false" class="refset-tool-table-action-icon">
+                                                    <mat-icon aria-label="Close Concept Details" title="Close Concept Details">close</mat-icon>
                                                 </button>
                                             </div>
 
                                         </div>
 
                                         <!-- Parents Section -->
-                                        <div
-                                            class="refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+                                        <div class="refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
 
-                                            <div class="row ml-1 mr-1">
+                                            <div class="row">
                                                 <div class="refset-tool-concept-details-section-title">Parents</div>
                                             </div>
 
                                             <div class="container-fluid">
                                                 <div class="row">
-                                                    <div *ngIf="conceptDetailParents?.length == 0"
-                                                        class=" refset-tool-concept-details-no-relationships">
+                                                    <div *ngIf="conceptDetailParents?.length == 0" class=" refset-tool-concept-details-no-relationships">
                                                         No parents
                                                     </div>
                                                 </div>
-    
-                                                <div *ngFor="let parent of conceptDetailParents"
-                                                    class="row refset-tool-concept-details-taxonomy-item">
-    
-                                                    <div class="refset-tool-concept-details-taxonomy-icon"
-                                                        [class.taxonomy-icon-edit-mode]="allowedToEdit">
-    
-                                                        <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="parent"
-                                                            [isParentConcept]="true" [refsetType]="activeRefset.type"
-                                                            (processSelection)="addRemoveConcept($event)">
+
+                                                <div *ngFor="let parent of conceptDetailParents" class="row refset-tool-concept-details-taxonomy-item">
+
+                                                    <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+
+                                                        <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="parent" [isParentConcept]="true"
+                                                          [refsetType]="activeRefset.type" (processSelection)="addRemoveConcept($event)">
                                                         </add-remove-concepts-icons>
-    
-                                                        <img *ngIf="parent?.defined" title="Fully Defined"
-                                                            aria-label="Fully Defined"
-                                                            src="/assets/linedTaxonomyIcon.png" />
-                                                        <img *ngIf="!parent?.defined" title="Primitive"
-                                                            aria-label="Primitive" class="refset-tool-logo p-0"
-                                                            src="/assets/unlinedTaxonomyIcon.png" />
+
+                                                        <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+                                                        <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo p-0"
+                                                          src="/assets/unlinedTaxonomyIcon.png" />
                                                     </div>
-    
-                                                    <div class="refset-tool-concept-details-taxonomy-description"
-                                                        [class.bold-if-member]="parent?.memberOfRefset"
-                                                        [class.greyed-if-not-member]="!parent?.memberOfRefset">
-                                                        <span *ngIf="this.taxonomyOptions?.useFsn">{{ parent?.fsn.trim()
-                                                            }}</span>
-                                                        <span *ngIf="!this.taxonomyOptions?.useFsn">{{ parent?.name.trim()
-                                                            }}</span>
+
+                                                    <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
+                                                      [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
+                                                        <span *ngIf="this.taxonomyOptions?.useFsn">{{ parent?.fsn.trim() }}</span>
+                                                        <span *ngIf="!this.taxonomyOptions?.useFsn">{{ parent?.name.trim() }}</span>
                                                     </div>
-    
+
                                                 </div>
                                             </div>
 
                                         </div>
 
                                         <!-- Details Section -->
-                                        <div class="refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
-                                            style="height: fit-content">
+                                        <div class="refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size" style="height: fit-content">
                                             <div class="row m-0">
 
                                                 <!-- Info Section -->
                                                 <div class="refset-tool-concept-details-concept-info-column"
-                                                    [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
+                                                  [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
                                                     <div class="container-fluid">
 
                                                         <!-- Name -->
                                                         <div class="row refset-tool-concept-details-concept-title-row">
-                                                            <div class="refset-tool-concept-details-taxonomy-icon">
+                                                            <div style="text-align: left;">
+                                                                <div class="refset-tool-concept-details-taxonomy-icon status-icon-container">
+                                                                    <img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined"
+                                                                      src="/assets/linedTaxonomyIcon.png" />
+                                                                    <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive"
+                                                                      class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
+                                                                </div>
                                                             </div>
-                                                            <div class="col refset-tool-concept-details-concept-name">{{
-                                                                conceptDetail?.name }}</div>
-                                                            <div
-                                                                class="col-1 refset-tool-concept-details-concept-link text-right">
+                                                            <div class="col refset-tool-concept-details-concept-name">{{ conceptDetail?.name }}</div>
+                                                            <div style="text-align: right;">
+                                                                <div class="open-container">
+                                                                    <button mat-icon-button (click)="openInNewWindow(conceptDetail.code)"
+                                                                      class="refset-tool-concept-details-action-icon" aria-hidden="false"
+                                                                      aria-label="Open Concept in New SNOMED Browser Window" title="Open Concept in SNOMED Browser Window">
+                                                                        <mat-icon>open_in_new</mat-icon>
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
 
                                                         <!-- ID -->
                                                         <div class="row refset-tool-concept-details-concept-row">
-                                                            <div class="refset-tool-concept-details-concept-id-label">
-                                                                SCTID</div>
-                                                            <div
-                                                                class="col refset-tool-concept-details-concept-id-text">
-                                                                {{ conceptDetail?.code }}</div>
+                                                            <div class="refset-tool-concept-details-concept-id-label">SCTID</div>
+                                                            <div class="col refset-tool-concept-details-concept-id-text">{{ conceptDetail?.code }}</div>
                                                         </div>
 
                                                         <!-- ECL -->
                                                         <div class="row refset-tool-concept-details-concept-row">
-                                                            <div class="col refset-tool-concept-details-concept-ecl">
-                                                                {{ conceptDetail?.code }} | {{ conceptDetail?.name }} |
+                                                            <div class="col refset-tool-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |
                                                             </div>
                                                         </div>
 
                                                         <!-- Descriptions -->
-                                                        <div *ngFor="let description of conceptDetail?.descriptions"
-                                                            class="row refset-tool-concept-details-concept-row">
-                                                            <div
-                                                                class="refset-tool-concept-details-concept-description-language">
-                                                                {{ description?.language }}</div>
-                                                            <div
-                                                                class="col refset-tool-concept-details-concept-description-text">
-                                                                {{ description?.term }}</div>
+                                                        <div *ngFor="let description of conceptDetail?.descriptions" class="row refset-tool-concept-details-concept-row">
+                                                            <div class="refset-tool-concept-details-concept-description-language">{{ description?.language }}</div>
+                                                            <div class="col refset-tool-concept-details-concept-description-text">{{ description?.term }}</div>
                                                         </div>
 
                                                     </div>
@@ -380,25 +337,21 @@
                                         </div>
 
                                         <!-- Children Section -->
-                                        <div
-                                            class="refset-tool-concept-details-taxonomy-section children-section">
+                                        <div class="refset-tool-concept-details-taxonomy-section children-section">
 
-                                            <div class="row mr-1 ml-1">
-                                                <div class="refset-tool-concept-details-section-title">Children <span
-                                                        [hidden]="!taxonomyNumberOfChildren"> ({{
-                                                        taxonomyNumberOfChildren }})</span></div>
+                                            <div class="row">
+                                                <div class="refset-tool-concept-details-section-title">
+                                                    Children <span [hidden]="!taxonomyNumberOfChildren"> ({{ taxonomyNumberOfChildren }})</span>
+                                                </div>
                                             </div>
 
                                             <!-- Children Taxonomy Tree -->
-                                            <div class="">
-                                                <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree"
-                                                    [refset]="activeRefset" [editMode]="allowedToEdit"
-                                                    [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
-                                                    hasMultipleRootNodes="false"
-                                                    [processChangedMemberFunction]="processChangedMemberEffects"
-                                                    (loadConceptDetail)="loadConceptDetail($event)"
-                                                    (changeLockedStatus)="indicateChanges($event)"
-                                                    (numOfChildren)="taxonomyNumberOfChildren = $event">
+                                            <div class="container-fluid">
+                                                <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="activeRefset"
+                                                  (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
+                                                  hasMultipleRootNodes="false" (changeLockedStatus)="indicateChanges($event)"
+                                                  [processChangedMemberFunction]="processChangedMemberEffects" [editMode]="allowedToEdit"
+                                                  (numOfChildren)="taxonomyNumberOfChildren = $event">
                                                 </app-taxonomy-tree>
                                             </div>
 
@@ -420,20 +373,15 @@
 
     <div class="modal-footer rt2-modal-footer">
 
-        <button *ngIf="changeReportData.length > 0" type="button" (click)="downloadChangeReport()" mat-raised-button
-            color="green" aria-hidden="false" class="refset-tool-action-button not-last-button"
-            aria-label="Download Comparison Report" ng-reflect-color="green">
+        <button *ngIf="changeReportData.length > 0" type="button" (click)="downloadChangeReport()" mat-raised-button class="refset-tool-action-button mat-primary mr-2">
             Download Change Report
         </button>
 
-        <button type="button" (click)="downloadComparisonReport()" mat-raised-button color="green" aria-hidden="false"
-            class="refset-tool-action-button not-last-button" aria-label="Download Comparison Report"
-            ng-reflect-color="green">
+        <button type="button" (click)="downloadComparisonReport()" mat-raised-button class="refset-tool-action-button mat-primary mr-2">
             Download Comparison Report
         </button>
 
-        <button type="button" (click)="closeShowComparisonModal()" mat-raised-button color="green" aria-hidden="false"
-            class="refset-tool-action-button" aria-label="Close" ng-reflect-color="green">
+        <button type="button" (click)="closeShowComparisonModal()" mat-raised-button class="refset-tool-action-button mat-green">
             Close
         </button>
 
@@ -444,17 +392,15 @@
 <!-- Concept Code Templates -->
 <ng-template #comparisonCodeSection let-params>
 
-    <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="params?.data" [isParentConcept]="false"
-        [refsetType]="activeRefset.type" (processSelection)="addRemoveConcept($event)">
+    <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="params?.data" [isParentConcept]="false" [refsetType]="activeRefset.type"
+      (processSelection)="addRemoveConcept($event)">
     </add-remove-concepts-icons>
     {{ params?.value }}
 
 </ng-template>
 
-<add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code"
-    [conceptName]="conceptForAddRemove?.name" [conceptHasChildren]="conceptForAddRemove?.hasChildren"
-    [refset]="activeRefset" [definitionExceptionType]="addRemoveDefinitionExceptionType"
-    [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
-    [processChangedMemberFunction]="processChangedMemberEffects" (changeLockedStatus)="indicateChanges($event)"
-    (processChangedMemberEffects)="processChangedMemberEffects($event)">
+<add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name"
+  [conceptHasChildren]="conceptForAddRemove?.hasChildren" [refset]="activeRefset" [definitionExceptionType]="addRemoveDefinitionExceptionType"
+  [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" [processChangedMemberFunction]="processChangedMemberEffects"
+  (changeLockedStatus)="indicateChanges($event)" (processChangedMemberEffects)="processChangedMemberEffects($event)">
 </add-remove-concepts>

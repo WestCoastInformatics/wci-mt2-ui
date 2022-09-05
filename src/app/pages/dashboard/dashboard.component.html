@@ -8,19 +8,18 @@
         <div class='row'>
             <div class='col-md-4 col-12'>
                 <section>
-                    <div class='section-header'>My Organization</div>
+                    <div class='section-header'>My Organizations</div>
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let organization of organizationList">
-                                <div class='section-list' *ngIf="organization.value">
-                                    <!-- <img src='assets/sampels/u102.svg' /> -->
-                                    <span
-                                        [routerLink]="['/organizations/projects', organization.id]"><a>{{
-                                            organization.value }}</a></span>
+                                <div class='section-list' *ngIf="organization.name">
+                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                                    <span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{
+                                            organization.name }}</a></span>
                                 </div>
                             </ng-container>
                         </div>
-                        <div>
+                        <div *ngIf="false && currentUser?.roles?.includes('all-all-admin')">
                             <create-new-organization-modal></create-new-organization-modal>
                         </div>
                     </div>
@@ -32,15 +31,11 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let project of projectList">
                                 <div class='section-list' *ngIf="project.name">
-                                    <span [routerLink]="['/projects', project.id]"><a>{{
-                                            project.organization.edition.name }}/{{
-                                            project.name }}</a><i *ngIf="project.privateProject"
-                                            class='fa fa-lock ml-2 text-muted'></i></span>
+                                    <span [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id +'/refsets']"><a>{{
+                                            project.edition.organization.name }}/{{
+                                            project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
                             </ng-container>
-                        </div>
-                        <div>
-                            <create-new-project-modal></create-new-project-modal>
                         </div>
                     </div>
                 </section>
@@ -51,14 +46,10 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let team of teamList">
                                 <div class='section-list' *ngIf="team.name">
-                                    <span [routerLink]="['/teams/people', team.id]"><a>{{
-                                            team.organization.edition.name }}/{{ team.name
-                                            }}</a></span>
+                                    <span [routerLink]="['/organization/' + team.organizationId + '/teams/' + team.id +'/people']"><a>{{
+                                            team.organization?.name }}/{{ team?.name}}</a></span>
                                 </div>
                             </ng-container>
-                        </div>
-                        <div class="section-list text-right">
-                            <create-new-team-modal></create-new-team-modal>
                         </div>
                     </div>
                 </section>
@@ -77,9 +68,13 @@
                                     </button>
                                 </mat-form-field> -->
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data"
-                                (gridReady)="onGridReady($event)" (cellClicked)="onGridCellClick($event)" style="width: 100%">
+                            <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
                             </ag-grid-angular>
+
+                            <!-- Workflow Status Templates -->
+                            <ng-template #dashboardWorkflowStatusSection let-params>
+                                <workflow-status-badge [status]="params?.data?.workflowStatus"></workflow-status-badge>
+                            </ng-template>
                         </div>
                     </div>
                 </section>

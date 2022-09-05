@@ -1,43 +1,86 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
 <div class="content-header">
     <div class="row header-title">
+
+        <span class="title-label">Organizations</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                    {{ organization.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <span class="title-label">Editions</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
+            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
+                <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                    {{ edition.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <span class="title-label">Projects</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-            <mat-select #detailsVersionSelect  [disableOptionCentering]="true" [(value)]="selectedProject"  (selectionChange)="selectProject($event)">
-                <mat-option *ngFor="let project of projectList"
-                            [value]="project"
-                            style="z-index: 3">
+            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
+            </mat-label>
+            <mat-select #detailsVersionSelect [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject"
+              (selectionChange)="selectProject()">
+                <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3" [title]="project.name">
                     {{ project.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
     </div>
 </div>
-    <div class="content-wrapper">
-        <app-sidebar [menuItems]="menu"></app-sidebar>
-        <div class='container-fluid mt-3'>
-            <div class='row'>
-                <div class='col-12'>
-                    <section class="mb-3">
-                        <div class='section-header mb-4'>
-                            People ({{dataCount}})
+
+<div class="content-wrapper">
+
+    <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+
+    <div class='container-fluid mt-3'>
+        <div class='row'>
+            <div class='col-12'>
+                <section class="mb-3">
+
+                    <div class='section-header mb-4'>
+                        People ({{dataCount}})
+                    </div>
+
+                    <div class='dashboard-section'>
+                        <div class="ag-theme-alpine">
+
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data"
+                                (gridReady)="onGridReady($event)"
+                                (cellClicked)="onMemberCellClick($event)"
+                                [gridOptions]="gridOptions" style="width: 100%">
+                            </ag-grid-angular>
+
+                            <!-- Name Template -->
+                            <ng-template #peopleNameSection let-params>
+                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                            </ng-template>
+
+                            <!-- Teams Template -->
+                            <ng-template #peopleTeamsSection let-params>
+                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">
+                                    {{ getTeamCount(params.data.teams) }} teams</span>
+                            </ng-template>
+
                         </div>
-                        <div class='dashboard-section'>
-                            <div class="ag-theme-alpine">
-                                <ag-grid-angular
-                                    [columnDefs]="columnDefs"
-                                    [rowData]="data"
-                                    [defaultColDef]="defaultColDef"
-                                    [tooltipShowDelay]="0"
-                                    style="width: 100%">
-                                </ag-grid-angular>
-                            </div>
-                        </div>
-                        <!-- <div class='text-right'>
-                            <a class='text-muted light'>show/hide admin</a>
-                        </div> -->
-                    </section>
-                </div>
+                    </div>
+
+                    <!-- <div class='text-right'>
+                        <a class='text-muted light'>show/hide admin</a>
+                    </div> -->
+
+                </section>
             </div>
         </div>
     </div>
+
+</div>

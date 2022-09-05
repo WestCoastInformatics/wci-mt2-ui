@@ -3,29 +3,29 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 @Component({
-	selector: 'add-remove-concept-group-icons',
-	templateUrl: './add-remove-concepts-icons.component.html'
+    selector: 'add-remove-concept-group-icons',
+    templateUrl: './add-remove-concepts-icons.component.html'
 })
 export class AddRemoveConceptGroupIconsComponent implements OnInit {
 
-	actionText: string;
+    actionText: string;
     showAdd: boolean
 
     @Input() definitionExceptionType: string;
-	@Input() refsetType: string;
-	@Input() additionalClasses: string;
-	@Input() concepts: string[];
-	@Input() addConcept: boolean;
-	@Input() hidden: boolean = false;
+    @Input() refsetType: string;
+    @Input() additionalClasses: string;
+    @Input() concepts: string[];
+    @Input() addConcept: boolean;
+    @Input() hidden: boolean = false;
     @Output() processSelection = new EventEmitter<any>(true);
 
-	constructor() {}
+    constructor() { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
-	ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges) {
 
-		for (const propertyName in changes) {
+        for (const propertyName in changes) {
 
             if (propertyName === "concepts" && CodeUtility.hasValue(this.concepts)) {
 
@@ -51,7 +51,7 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
 
                         if (this.definitionExceptionType == RefsetUtility.EXCLUSION) {
                             this.actionText = "Exclusions";
-            
+
                         } else if (this.definitionExceptionType == RefsetUtility.INCLUSION) {
                             this.actionText = "Inclusions";
                         }
@@ -59,9 +59,9 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
                 }
             }
         }
-	}
+    }
 
     onSelection(addConcept: boolean) {
-        this.processSelection.emit({addConcept: addConcept, concepts: this.concepts, definitionExceptionType: this.definitionExceptionType});
+        this.processSelection.emit({ addConcept: addConcept, concepts: this.concepts, definitionExceptionType: this.definitionExceptionType });
     }
 }

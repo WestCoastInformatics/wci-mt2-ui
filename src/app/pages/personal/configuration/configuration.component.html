@@ -16,7 +16,7 @@
                         <div class="account-profile-head section-header">Profile</div>
                         <div class="account-profile-mid">
                             <mat-form-field class="profile-name-field" appearance="none">
-                                <mat-label>Name</mat-label>
+                                <mat-label>Name <span class="mandatory-field">*</span></mat-label>
                                 <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
@@ -26,22 +26,24 @@
                             </mat-form-field>
 
                             <mat-form-field class="profile-email-field" appearance="none">
-                                <mat-label>Email</mat-label>
+                                <mat-label>Email <span class="mandatory-field">*</span></mat-label>
                                 <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
-                            <button class="btn btn-primary btn-lg" aria-label="Update Profile" title="Update Profile"
-                                [disabled]="!profileNameValue || !profileEmailValue || !profileCompanyValue"
-                                (click)="updateProfile()">Update Profile</button>
+                            <button class="btn btn-primary btn-lg btn-wide-font" aria-label="Update Profile" title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue"
+                              (click)="updateProfile()">Update Profile</button>
                         </div>
                     </div>
 
                     <div class="account-configuration-block main-block profile-pic-block">
                         <div class="account-profile-head section-header">Profile Picture</div>
-                        <div class="account-profile-mid"><img class="account-picture" src="assets/ihtsdo.svg"></div>
+                        <div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
                         <div class="section-btn">
-                            <a aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg">Edit Picture</a>
+                            <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg btn-wide-font">
+                                Edit Picture
+                                <input type="file" class="d-none" (change)="onPhotoChange($event)" />
+                            </label>
                         </div>
                     </div>
                 </div>

@@ -3,29 +3,29 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
 @Component({
-	selector: 'add-remove-concepts-icons',
-	templateUrl: './add-remove-concepts-icons.component.html'
+    selector: 'add-remove-concepts-icons',
+    templateUrl: './add-remove-concepts-icons.component.html'
 })
 export class AddRemoveConceptsIconsComponent implements OnInit {
 
-	actionText: string;
+    actionText: string;
     showAdd: boolean;
     definitionExceptionType: string;
 
-	@Input() refsetType: string;
-	@Input() additionalClasses: string;
-	@Input() concept: any;
-	@Input() hidden: boolean = false;
-	@Input() isParentConcept: boolean;
+    @Input() refsetType: string;
+    @Input() additionalClasses: string;
+    @Input() concept: any;
+    @Input() hidden: boolean = false;
+    @Input() isParentConcept: boolean;
     @Output() processSelection = new EventEmitter<any>(true);
 
-	constructor() {}
+    constructor() { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
-	ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(changes: SimpleChanges) {
 
-		for (const propertyName in changes) {
+        for (const propertyName in changes) {
 
             if (propertyName === "concept" && CodeUtility.hasValue(this.concept)) {
 
@@ -61,9 +61,9 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 
                             this.actionText = "Exclusion";
                             this.showAdd = false;
-            
+
                         } else if (this.definitionExceptionType == RefsetUtility.INCLUSION) {
-            
+
                             this.actionText = "Inclusion";
                             this.showAdd = false;
                         }
@@ -71,10 +71,10 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
                 }
             }
         }
-	}
+    }
 
     onSelection(addConcept: boolean) {
-        
+
         console.time('testing');
         console.time('refset detail changeLockedStatus');
         console.time('comparison processChangedMemberEffects');
@@ -84,6 +84,6 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
         console.time('add-remove addRemoveConcept before manageMemberNotifications');
         console.time('add-remove addRemoveConcept after lock emit');
         console.time('add-remove addRemoveConcept after manageMemberNotifications');
-        this.processSelection.emit({addConcept: addConcept, concept: this.concept, isParentConcept: this.isParentConcept, definitionExceptionType: this.definitionExceptionType});
+        this.processSelection.emit({ addConcept: addConcept, concept: this.concept, isParentConcept: this.isParentConcept, definitionExceptionType: this.definitionExceptionType });
     }
 }

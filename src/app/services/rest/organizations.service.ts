@@ -10,7 +10,6 @@ import { NotificationService } from '../notification.service';
     providedIn: 'root'
 })
 export class OrganizationsService extends RestService {
-
     taxonomyRootNode: any = null;
     contextPath = '/refsetservice/';
     assignedUser: string;
@@ -32,11 +31,34 @@ export class OrganizationsService extends RestService {
         return this.put(this.contextPath + 'organization/' + organizationId, params);
     }
 
+    updateOrganizationPhoto(organizationId: any, params: any): Observable<any> {
+        return this.postWithFile(`${this.contextPath}organization/${organizationId}/icon`, params);
+    }
+
     getOrganization(organizationId: string): Observable<any> {
         return this.get(this.contextPath + 'organization/' + organizationId);
     }
 
+    getOrgUsers(organizationId: string, showTeams?: boolean): Observable<any> {
+        return this.get(this.contextPath + 'organization/' + organizationId + '/users?includeTeams=' + showTeams);
+    }
+
     deleteOrganization(organizationId: string): Observable<any> {
         return this.delete(this.contextPath + 'organization/' + organizationId);
+    }
+
+    addUser(organizationId: any, email: any): Observable<any> {
+        const self = this;
+        return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '', false
+            , function (err) {
+                if (err.status === 404 && err.error?.error === 'Not Found') {
+                    err.error.error = `User with ${email} does not exist.`;
+                }
+                return self.giveErrorNotification(err);
+            });
+    }
+
+    removeUser(organizationId: any, userId: any) {
+        return this.delete(this.contextPath + 'organization/' + organizationId + '/user/' + userId);
     }
 }

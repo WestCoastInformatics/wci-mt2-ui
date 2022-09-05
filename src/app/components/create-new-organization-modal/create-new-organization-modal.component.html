@@ -1,18 +1,16 @@
-<div class='section-list text-right' title="Create New Organization"
-    aria-label="Create New Organization"
-    (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)"><a
-        class='btn btn-primary rounded btn-lg'>Create an Organization</a></div>
+<div class='section-list text-right' title="Create New Organization" aria-label="Create New Organization">
+    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class='btn btn-primary rounded btn-lg btn-wide-font'>Create New Organization</a>
+</div>
 
 <ng-template #createNewOrganizationDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
 
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-            Create an Organization
+            Create New Organization
         </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close"
-            (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
@@ -22,18 +20,16 @@
         <table>
             <tr>
                 <td>
-                    <label class="modal-label">Edition:</label>
+                    <label class="modal-label-edition">Edition: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <div class="row" id="downloadContentRow">
+                    <div class="row">
                         <div>
-                            <mat-form-field appearance="fill"
-                                class="col refset-tool-modal-select-field">
-                                <mat-select #downloadContentField class="refset-tool-modal-select"
-                                    [(value)]="selectedEdition" (selectionChange)="getEdition()">
-                                    <mat-option *ngFor="let option of editionsArray"
-                                        [value]="option.id">
-                                        {{ option.value }}
+                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
+                                <mat-select class="refset-tool-modal-select" [(value)]="selectedEdition">
+                                    <mat-option *ngIf="editionsList.length == 0">No Editions Avaialable</mat-option>
+                                    <mat-option *ngFor="let edition of editionsList" [value]="edition">
+                                        {{ edition.name }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -43,30 +39,32 @@
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Name:</label>
+                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Organization Name"
-                        [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label">Email:</label>
-                </td>
-                <td>
-                    <input class="modal-input-field" placeholder="primarycontactemail@orgname.org"
-                        [(ngModel)]="email" style="width: 250px; padding-bottom: 9px" />
+                    <input class="modal-input-field" placeholder="Organization Name" autofocus [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label class="modal-label">Description:</label>
+                    <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
+                </td>
+                <td>
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                      style="width: 250px; padding-bottom: 9px" />
+
+                </td>
+            </tr>
+            <tr class="modal-error-message" [hidden]="!emailError">
+                <div>{{emailError}}</div>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label-description">Description:</label>
                 </td>
                 <td>
                     <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area"
-                            [(ngModel)]="description">test</textarea>
+                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
                     </mat-form-field>
 
                 </td>
@@ -75,14 +73,11 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || description === '' || email === ''"
-            (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false"
-            class="refset-tool-action-button" aria-label="Create Organization"
-            title="Create Organization" ng-reflect-color="green">
+        <button ngbAutofocus type="button" [disabled]="name === ''  || !selectedEdition || email === '' || !isValidEmail()" (click)="createOrganizationObject()"
+          mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Create Organization" title="Create Organization"
+          ng-reflect-color="green">
             Create Organization
         </button>
-
-
     </div>
 
 </ng-template>

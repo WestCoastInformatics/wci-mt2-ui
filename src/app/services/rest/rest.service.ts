@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { environment } from 'src/environments/environment';
@@ -21,7 +21,7 @@ export class RestService {
 
     restUrl = environment.restUrl;
 
-    constructor(private http: HttpClient, private readonly notificationService: NotificationService) {}
+    constructor(private http: HttpClient, private readonly notificationService: NotificationService) { }
 
     makeCall(url: string, method: string = 'get'): Observable<any> {
         return this.http[method]<any>(url);
@@ -46,74 +46,88 @@ export class RestService {
 
         return this.http.get<any>(this.restUrl + url + queryString).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    let message = 'There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError;
-                    this.notificationService.show(message, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-                    this.notificationService.handleDuplicates('error', message);
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
-          );
+        );
     }
 
-    post(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+    post(url: string, params: any, ignoreErrors: boolean = false, errorHandler: Function = null): Observable<any> {
 
-            return this.http.post<any>(this.restUrl + url, params).pipe(
-                catchError((err) => {
+        return this.http.post<any>(this.restUrl + url, params).pipe(
+            catchError((err) => {
+                if (errorHandler) {
+                    return errorHandler(err);
+                }
+                return this.giveErrorNotification(err, ignoreErrors);
+            })
+        );
+    }
 
-                    if (!ignoreErrors) {
-
-                        const definedError = err.error.error ? err.error.error : err.statusText;
-                        this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-
-                        return err;
-                    } else {
-                        return EMPTY;
-                    }
-                })
-              );
+    postWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+        return this.http.post<any>(this.restUrl + url, params, {
+            'headers': new HttpHeaders({
+                'Accept': 'application/json',
+                'enctype': 'multipart/form-data'
+            })
+        }).pipe(
+            catchError((err) => {
+                return this.giveErrorNotification(err, ignoreErrors);
+            })
+        );
     }
 
     put(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
 
         return this.http.put<any>(this.restUrl + url, params).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
-          );
+        );
+    }
+
+    putWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+
+        return this.http.put<any>(this.restUrl + url, params, {
+            'headers': new HttpHeaders({
+                'Accept': 'application/json',
+                'enctype': 'multipart/form-data'
+            })
+        }).pipe(
+            catchError((err) => {
+                return this.giveErrorNotification(err, ignoreErrors);
+            })
+        );
     }
 
     delete(url: string, ignoreErrors: boolean = false): Observable<any> {
-
+        const self = this;
         return this.http.delete<any>(this.restUrl + url).pipe(
             catchError((err) => {
-
-                if (!ignoreErrors) {
-
-                    const definedError = err.error.error ? err.error.error : err.statusText;
-                    this.notificationService.show('There was a problem with the request, please try again! Error Status: ' + err?.status + ' - ' + definedError, null, 'error', {timeOut: 0, extendedTimeOut: 0});
-
-                    return err;
-                } else {
-                    return EMPTY;
-                }
+                return this.giveErrorNotification(err, ignoreErrors);
             })
-          );
+        );
+    }
+
+    giveErrorNotification(error: any, ignoreErrors: boolean = false) {
+
+        if (!ignoreErrors) {
+
+            let definedError = ' Error Status: ' + error?.status;
+
+            if (error?.error?.error) {
+                definedError = ' ' + error.error.error;
+            } else if (error?.error) {
+                definedError = ' ' + error.error;
+            }
+
+            let message = 'There was a problem with the request, please try again!' + definedError;
+            this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+            this.notificationService.handleDuplicates('error', message);
+
+            return error;
+        } else {
+            return EMPTY;
+        }
     }
 
     getHttpClient(): HttpClient {

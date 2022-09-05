@@ -1,43 +1,107 @@
 <div class="content-header">
     <div class="row header-title">
+
+        <span class="title-label">Organizations</span>
+        <mat-form-field appearance="outline" class="project-drop-down">
+            <mat-label>Choose Organization</mat-label>
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                    {{ organization.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <span class="title-label">Teams</span>
         <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedTeam?.name ? selectedTeam?.name : 'Choose Team'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
-                <mat-option *ngFor="let team of teamList"
-                            [value]="team"
-                            style="z-index: 3">
+            <mat-label>Choose Team</mat-label>
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam()">
+                <mat-option *ngIf="teamList == null || teamList.length == 0">No Teams</mat-option>
+                <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
                     {{ team.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
     </div>
 </div>
-    <div class="content-wrapper">
-        <app-sidebar [menuItems]="menu"></app-sidebar>
-        <div class='container-fluid mt-3'>
-            <div class='row'>
-                <div class='col-12'>
-                    <section class="mb-3">
-                        <div class='section-header mb-4'>
-                            People ({{dataCount}})
-                            <button class="btn btn-primary radius-0 float-right">Add Members</button>
+
+<div class="content-wrapper">
+
+    <app-sidebar [menuItems]="menu" [id]="teamId"></app-sidebar>
+
+    <div class='container-fluid mt-3'>
+        <div class='row'>
+            <div *ngIf="showLoadingSpinner" class="loading"></div>
+            <div class='col-12'>
+                <section class="mb-3">
+
+                    <div class='section-header mb-4'>
+                        People ({{dataCount}})
+                        <add-member-modal *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" type="Team" [id]="selectedTeam?.id" [name]="selectedTeam?.name">
+                        </add-member-modal>
+                    </div>
+
+                    <div class='dashboard-section'>
+                        <div class="ag-theme-alpine">
+
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"
+                              style="width: 100%">
+                            </ag-grid-angular>
+
+                            <!-- Name Template -->
+                            <ng-template #peopleNameSection let-params>
+                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                            </ng-template>
+
+                            <!-- Teams Template -->
+                            <ng-template #peopleTeamsSection let-params>
+                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">{{getTeamCount(params.data)}}
+                                    teams</span>
+                            </ng-template>
+
+                            <ng-template #inactivateUserSection let-params>
+
+                                <img *ngIf="selectedTeam?.userRoles?.includes('ADMIN')" src="assets/subtract-symbol-icon.svg" (click)="confirmRemoveUser(params?.data)" width="30px"
+                                  height="30px" title="Inactivate User" aria-label="Subtract" class="subtract-symbol-icon"
+                                  alt="Subtract symbol shown when you're able to remove a user" />
+                            </ng-template>
+
                         </div>
-                        <div class='dashboard-section'>
-                            <div class="ag-theme-alpine">
-                                <ag-grid-angular
-                                    [columnDefs]="columnDefs"
-                                    [defaultColDef]="defaultColDef"
-                                    [rowData]="data"
-                                    style="width: 100%">
-                                </ag-grid-angular>
-                            </div>
-                        </div>
-                        <!-- <div class='text-right'>
-                            <a class='text-muted light'>show/hide admin</a>
-                        </div> -->
-                    </section>
-                </div>
+                    </div>
+
+                    <!-- <div class='text-right'>
+                        <a class='text-muted light'>show/hide admin</a>
+                    </div> -->
+
+                </section>
             </div>
         </div>
     </div>
+
+</div>
+
+<ng-template #confirmInactiveMemberModal let-modal>
+
+    <div class="modal-header rt2-modal-header">
+        <button ngbAutofocus class="unfocus-btn" ></button>
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Remove User Confirmation</h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="container-fluid ">
+        <div class="modal-body">
+            <div class="notes-title">Are you sure you want to remove "{{selectedUser.name}}" from the team?
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer rt2-modal-footer">
+        <button type="button" (click)="removeUser();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Remove User
+        </button>
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel
+        </button>
+    </div>
+
+</ng-template>

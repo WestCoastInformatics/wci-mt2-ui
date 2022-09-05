@@ -12,7 +12,7 @@ nav {
     div {
         margin-top: -10px;
         div {
-            margin-top: 0;
+            margin-top: 5px;
         }
     }
     a.logo {
@@ -140,6 +140,36 @@ nav {
                         cursor: pointer;
                     }
                 }
+            }
+        }
+    }
+    #userDropdownMenu{
+        .user-img{
+            width: 3rem;
+        }
+
+        .dropdown-menu{
+            background-color: #212529;
+            right: -7px;
+            top: calc(100% - 1px);
+            min-width: 200px;
+
+            .dropdown-item{
+                color: #fff;
+                font-size: 12px;
+            }
+            .dropdown-item:hover{
+                color: $bootstrap-black;
+            }
+            .dropdown-divider{
+                border-top: 1px solid #797979;
+                margin-top: 0.5rem !important;
+            }
+
+            .profile-block{
+                flex-grow: 1;
+                padding: 0 10px;
+                display: inline-block;
             }
         }
     }

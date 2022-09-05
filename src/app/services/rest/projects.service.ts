@@ -16,7 +16,7 @@ export class ProjectsService extends RestService {
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-        
+
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
@@ -34,6 +34,10 @@ export class ProjectsService extends RestService {
 
     getProject(projectId: string): Observable<any> {
         return this.get(this.contextPath + 'project/' + projectId);
+    }
+
+    getProjectUsers(projectId: string): Observable<any> {
+        return this.get(this.contextPath + 'project/' + projectId + '/users');
     }
 
     deleteProject(projectId: string): Observable<any> {

@@ -1,6 +1,7 @@
 <ng-template #addRemoveDescendantsDialog let-modal>
 
     <div class="modal-header add-remove-descendants-modal-header">
+        <button ngbAutofocus class="unfocus-btn" ></button>
         <h4 class="modal-title add-remove-descendants-modal-title" id="modal-basic-title">
             {{ actionText }} Member(s)
         </h4>
@@ -21,7 +22,8 @@
     </div>
 
     <div class="modal-footer add-remove-descendants-footer">
-        <button type="button" (click)="addRemoveConcept()" class="refset-tool-action-button" mat-raised-button color="primary" aria-label="{{ actionText }} Members" ng-reflect-color="primary">
+        <button type="button" (click)="addRemoveConcept()" class="refset-tool-action-button" mat-raised-button color="primary" aria-label="{{ actionText }} Members"
+          ng-reflect-color="primary">
             {{ actionText }} Members
         </button>
     </div>

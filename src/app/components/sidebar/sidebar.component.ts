@@ -1,21 +1,28 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html'
+	selector: 'app-sidebar',
+	templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements OnInit {
 
-  @Input() menuItems;
-  @Input() id;
-  showSideBar = false;
-  constructor(private readonly route: ActivatedRoute) { }
+	showSideBar = false;
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.id = params['id'];
-    });
-  }
+	@Input() menuItems;
+	@Input() id;
 
+	constructor(private readonly route: ActivatedRoute) { }
+
+	ngOnInit() {
+
+		this.route.params.subscribe(params => {
+			this.id = params['id'];
+		});
+	}
+
+	getLink(itemLink) {
+		return ([itemLink]);
+	}
 }

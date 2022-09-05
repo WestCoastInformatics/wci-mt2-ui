@@ -8,6 +8,7 @@ import { RefsetDetails } from 'src/app/pages/refset-details';
 import { ProjectsService } from "src/app/services/rest/projects.service";
 import { OrganizationsService } from "src/app/services/rest/organizations.service";
 import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
     selector: "create-new-project-modal",
@@ -15,18 +16,21 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CreateNewProjectModalComponent {
 
+    // Project artifact Variables for Navigation to resource page after project creation
+    selectedProject: any;
+    isSelectedProject: boolean;
+    projectId: any;
+
+    // Create New Project Modal Variables
     name = '';
     email = '';
     description = '';
     openedModel: NgbModalRef;
-	organizations: any;
-    organizationsArray: any;
-    selectedOrganization: any;
-    organization: any;
     privateProject: any;
+    emailError = '';
 
+    @Input() edition: any;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    param: any;
 
     constructor(
         private modalService: NgbModal,
@@ -35,84 +39,64 @@ export class CreateNewProjectModalComponent {
         private organizationsService: OrganizationsService,
         private notificationService: NotificationService,
         private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute
-    ) {
-        this.route.params.subscribe(params => {
-            this.selectedOrganization = this.param = params['id'];
-            if (this.selectedOrganization) {
-                this.getOrganization();
-            }
-          });
-    }
-
-    callMemberOperation(): void {
-
-        if (!CodeUtility.hasValue(this.description)) {
-            return;
-        }
-
-        this.changeLockedStatus.emit(true);
-        
-        this.createProjectObject();
-
-        //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
-    }
-
-    processOperationReturn = (data) => { 
-
-        this.changeLockedStatus.emit(false);
-
-        this.refsetDetails.ngOnInit();
-
-        this.description = '';
-    }
+        private readonly route: ActivatedRoute,
+        private authenticationService: AuthenticationService
+    ) { }
 
     openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
 
-        this.description = '';
+        if (CodeUtility.hasValue(this.edition)) {
 
-        this.openedModel = this.modalService.open(createNewProjectDialog, {
-        });
+            this.description = '';
+            this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
+        }
     }
 
-    ngOnInit() {
-        // get list of organizations
-        this.refsetService.getOrganizations().subscribe((organizationResults) => {
-            this.organizations = organizationResults;
-            this.organizationsArray = this.organizations?.items;
-        }) 
+    isValidEmail(): boolean {
+        if (this.email.length == 0) {
+            return true;
+        }
+        var lower = this.email.toLowerCase();
+        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+        if (flag == null) {
+            this.emailError = "Email is invalid.";
+        } else {
+            this.emailError = "";
+        }
+
+        return flag == null ? false : true;
     }
 
-    getOrganization(): void {
-        // get details about selected organization
-        this.organizationsService.getOrganization(this.selectedOrganization).subscribe((organizationResult) => {
-            this.organization = organizationResult;
-        }) 
+    onKeyDownEvent(event: any) {
+
+        console.log(event.target.value);
+        this.isValidEmail();
     }
 
     createProjectObject(): void {
+
+        this.changeLockedStatus.emit(true);
 
         let params: any = {
             active: true,
             name: this.name,
             description: this.description,
-            primaryContactEmail: this.email,
+            //primaryContactEmail: this.email,
             privateProject: this.privateProject,
             teams: [],
-            organization: this.organization
+            edition: this.edition
         };
-        
 
         this.projectsService.createProject(params).subscribe(
             (data) => {
-                this.notificationService.show("The project is created.", null, "success", {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show("The project is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();
             },
             (err) => {
                 this.changeLockedStatus.emit(false);
-                console.error(err);
             }
         );
     }

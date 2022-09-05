@@ -20,10 +20,12 @@ import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { environment } from 'src/environments/environment';
 import { RefsetDetails } from 'src/app/pages/refset-details';
+import { NotificationService } from "src/app/services/notification.service";
 
 @Component({
     selector: "add-remove-by-concept-modal",
     templateUrl: "./add-remove-by-concept-modal.component.html",
+    styleUrls: ["./add-remove-by-concept-modal.component.scss"]
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
 
@@ -31,24 +33,25 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     searchResults = [];
     displayedColumns: string[] = ["memberOfRefset", "name", "description"];
     dataSource = [];
+    conceptIdArray = [];
     color: ThemePalette = "primary";
     checked = false;
     showActiveConceptsOnly = true;
     initialResults = [];
     selectedRowIndex = -1;
-    conceptDetailParents: any;
     selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
         useFsn: false,
         language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
     };
-    conceptDetail: any;
     conceptDescriptions: any;
     editMode = true;
     showResults = false;
     conceptSelected: boolean;
     showLoadingSpinner = false;
     isConceptDetailsLoading = false;
+    conceptDetail: any;
+    conceptDetailParents: any;
     selectedConcept: any;
     numOfChildren = undefined;
     isConceptBeingAdded: Boolean;
@@ -67,23 +70,24 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     constructor(
         private readonly modalService: NgbModal,
         private refsetService: RefsetService,
+        private notificationService: NotificationService,
         private router: Router,
         private readonly refsetDetails: RefsetDetails
-    ) {}
+    ) { }
 
     ngOnInit(): void {
     }
 
     ngOnChanges(changes: SimpleChanges) {
 
-		for (const propertyName in changes) {
+        for (const propertyName in changes) {
 
-			if (propertyName === "refset" && CodeUtility.hasValue(this.refset)) {
-				
+            if (propertyName === "refset" && CodeUtility.hasValue(this.refset)) {
+
                 this.refsetInternalId = this.refset.id;
-			}
-		}
-	}
+            }
+        }
+    }
 
     toggleDisplayActiveConcepts($event: any): void {
 
@@ -124,7 +128,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refset.refsetId)) {
-            this.refsetDetails.ngOnInit();
+            window.location.reload();
         }
 
         // reload the search results
@@ -158,9 +162,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 }
                 this.refreshModal();
                 return true;
-            }
-            //backdrop: "static",
-            //keyboard: false,
+            },
+            backdrop: "static",
+            keyboard: false,
         });
 
     }
@@ -168,7 +172,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     closeModal() {
 
         if (!this.isLocked) {
-            this.refsetDetails.ngOnInit();
+            window.location.reload();
         }
 
         this.openedModel.dismiss();
@@ -198,7 +202,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 this.showLoadingSpinner = false;
                 this.conceptDetail = results;
                 this.conceptDescriptions =
-                    this.conceptDetail.descriptions.filter(function(description) {
+                    this.conceptDetail.descriptions.filter(function (description) {
                         return description != null;
                     });
 
@@ -272,7 +276,18 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     openEclBuilder(fieldId) {
         UiUtility.openEclBuilder(fieldId, RefsetUtility.getBranchPath(this.refset));
     }
-    
+
+    addRemoveAllMembers(type) {
+        for (var i = 0; i < this.dataSource.length; i++) {
+            this.conceptIdArray.push(this.dataSource[i].code);
+        }
+
+        RefsetUtility.addRemoveMembersByList(this.refset.id, this.refset.refsetId, this.conceptIdArray.join(), type, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
+
+        this.closeModal();
+
+    }
+
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
 
@@ -282,34 +297,36 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 this.loadingSpinner.emit(true);
             }
 
-            this.refsetService.getConceptSearch(this.refsetInternalId, `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({next: (results) => {
+            this.refsetService.getConceptSearch(this.refsetInternalId, `limit=500&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({
+                next: (results) => {
 
-                this.dataSource = results.items;
-                this.initialResults = this.dataSource;
+                    this.dataSource = results.items;
+                    this.initialResults = this.dataSource;
 
-                // tslint:disable-next-line: no-unused-expression
-                if (results.items.length) {
+                    // tslint:disable-next-line: no-unused-expression
+                    if (results.items.length) {
 
-                    this.changeModalSize();
-                    this.showResults = true;
-                    this.showNoResultsLabel = false;
-                } else {
-                    
+                        this.changeModalSize();
+                        this.showResults = true;
+                        this.showNoResultsLabel = false;
+                    } else {
+
+                        this.showResults = false;
+                        this.showNoResultsLabel = true;
+                    }
+                    this.filterActiveConcepts();
+
+                    if (showLoadingSpinner) {
+                        this.loadingSpinner.emit(false);
+                    }
+                },
+                error: (error) => {
+
+                    this.searchResults = [];
                     this.showResults = false;
-                    this.showNoResultsLabel = true;
-                }
-                this.filterActiveConcepts();
-
-                if (showLoadingSpinner) {
                     this.loadingSpinner.emit(false);
                 }
-            },
-            error: (error) => {
-
-                this.searchResults = [];
-                this.showResults = false;
-                this.loadingSpinner.emit(false);
-            }});
+            });
         }
     }
 }

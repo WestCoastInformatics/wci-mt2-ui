@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, HostListener, Input, Output } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { NotificationService } from "src/app/services/notification.service";
@@ -14,15 +14,16 @@ import { TitleCasePipe } from "@angular/common";
     providers: [TitleCasePipe]
 })
 export class RemoveDashboardComponentModalComponent {
-  
+
     openedModel: NgbModalRef;
     confirmString: string = '';
 
     @Input() componentType: string;  // should be organization, project or team
     @Input() componentId: string;
     @Input() componentName: string;
+    @Input() disabled: boolean = false;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    
+
     constructor(
         private modalService: NgbModal,
         private refsetService: RefsetService,
@@ -32,7 +33,7 @@ export class RemoveDashboardComponentModalComponent {
         private notificationService: NotificationService,
         private readonly router: Router,
         private titleCasePipe: TitleCasePipe
-    ) {}
+    ) { }
 
     callMemberOperation(): void {
         this.changeLockedStatus.emit(true);
@@ -57,7 +58,7 @@ export class RemoveDashboardComponentModalComponent {
         this.modalService.dismissAll();
     }
 
-    processOperationReturn = (data) => { 
+    processOperationReturn = (data) => {
 
         this.changeLockedStatus.emit(false);
     }
@@ -71,4 +72,11 @@ export class RemoveDashboardComponentModalComponent {
         return this.confirmString.trim() != 'remove ' + this.componentType;
     }
 
+
+    @HostListener('window:keyup', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        if (event.key == 'Enter' && !this.isDisabled()) {
+            this.callMemberOperation();
+        }
+    }
 }

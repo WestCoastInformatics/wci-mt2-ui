@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { RestService } from './rest.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
-import { NotificationService } from '../notification.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {RestService} from './rest.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {environment} from 'src/environments/environment';
+import {NotificationService} from '../notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +16,7 @@ export class RefsetService extends RestService {
     assignedUser: string;
 
     constructor(http: HttpClient, notificationService: NotificationService) {
-        
+
         super(http, notificationService);
 
         if (CodeUtility.hasValue(environment.restContextPath)) {
@@ -63,15 +63,19 @@ export class RefsetService extends RestService {
     }
 
     addRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
+        return this.post(this.contextPath + `refset/${refsetInternalId}/members?fileType=${fileType}&ecl=${ecl}`, conceptIds, true);
     }
 
     removeRefsetMembers(refsetInternalId: string, fileType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
+        return this.post(this.contextPath + `refset/${refsetInternalId}/removeMembers?fileType=${fileType}&ecl=${ecl}`, conceptIds, true);
+    }
+
+    addRemoveAllInactiveRefsetMembers(refsetInternalId: string, isAdd: boolean): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetInternalId}/${isAdd ? 'addAllUpgradeReplacementConcepts' : 'removeAllUpgradeInactiveConcepts'}`, {});
     }
 
     addRefsetDefinitionExceptions(refsetInternalId: string, fileType: string, definitionExceptionType: string, conceptIds: string = '', ecl: string = ''): Observable<any> {
-        return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&conceptIds=${conceptIds}&ecl=${ecl}`, '', true);
+        return this.post(this.contextPath + `refset/${refsetInternalId}/definitionExceptions?fileType=${fileType}&definitionExceptionType=${definitionExceptionType}&ecl=${ecl}`, conceptIds, true);
     }
 
     removeRefsetDefinitionException(refsetInternalId: string, definitionExceptionID: string): Observable<any> {
@@ -110,8 +114,16 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'ancestors/' + refsetId + '/versionDate/' + versionDate, params);
     }
 
+    getArtifacts(refsetId: string, params: any) {
+        return this.get(this.contextPath + `refset/${refsetId}/artifacts${params}`);
+    }
+
     getWorkflowHistory(refsetId: string, params: any) {
         return this.get(this.contextPath + `refset/${refsetId}/workflowHistory${params}`);
+    }
+
+    convertRefsetToExtensional(refsetId: string) {
+        return this.get(this.contextPath + `refset/${refsetId}/convert`);
     }
 
     setWorkflowStatus(refsetId: string, action: string, user: string, status: string, notes: string): Observable<any> {
@@ -146,17 +158,88 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/' + refsetId + '/member/' + conceptId, params);
     }
 
+    getDiscussionThreads(type: string, refsetInternalId: string, conceptId: string = null): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + type + '/' + refsetInternalId;
+
+        if (conceptId != null) {
+            url += '?conceptId=' + conceptId;
+        }
+
+        return this.get(url);
+    }
+
+    addDiscussionThread(threadBody: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion';
+        return this.post(url, threadBody);
+    }
+
+    updateDiscussionThread(threadId: string, threadBody: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId;
+        return this.put(url, threadBody);
+    }
+
+    updateDiscussionThreadStatus(threadId: string, status: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/status?status=' + status;
+        return this.put(url, '');
+    }
+
+    updateDiscussionThreadPrivacy(threadId: string, isPrivate: boolean): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/privacy?isPrivate=' + isPrivate;
+        return this.put(url, '');
+    }
+
+    updateDiscussionThreadVisibility(threadId: string, visibility: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/visibility?visibility=' + visibility;
+        return this.put(url, '');
+    }
+
+    deleteDiscussionThread(threadId: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId;
+        return this.delete(url);
+    }
+
+    updateDiscussionPostPrivacy(threadId: string, postId: string, isPrivate: boolean): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/privacy?isPrivate=' + isPrivate;
+        return this.put(url, '');
+    }
+
+    addDiscussionPost(threadId: string, postBody: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post';
+        return this.post(url, postBody);
+    }
+
+    updateDiscussionPost(threadId: string, postId: string, postBody: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        return this.put(url, postBody);
+    }
+
+    deleteDiscussionPost(threadId: string, postId: string): Observable<any> {
+
+        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        return this.delete(url);
+    }
+
     downloadRefset(refsetId: string, params: any): Observable<any> {
         return this.get(this.contextPath + 'export/' + refsetId + '', params);
     }
 
     getTaxonomyRoot() {
 
-        if (this.taxonomyRootNode == null){
+        if (this.taxonomyRootNode == null) {
 
             this.get(this.contextPath + 'terminology/taxonomyRoot').subscribe(results => {
 
-                if (CodeUtility.hasValue(results)){
+                if (CodeUtility.hasValue(results)) {
                     this.taxonomyRootNode = results;
                 }
             });
@@ -169,11 +252,15 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/versionStatuses');
     }
 
-	getEditions(): Observable<any> {
-        return this.get(this.contextPath + 'refset/editions');
+    getEditions(params: any): Observable<any> {
+        return this.get(this.contextPath + 'edition/search', params, false);
     }
-	
-	getOrganizations(): Observable<any> {
+
+    getOrganizations(includeMembers: boolean = false): Observable<any> {
+        return this.get(this.contextPath + 'organization/search?includeMembers=' + includeMembers);
+    }
+
+    getOrganizationsKeyValue(): Observable<any> {
         return this.get(this.contextPath + 'refset/organizations');
     }
 
@@ -196,4 +283,14 @@ export class RefsetService extends RestService {
     getComparisonData(activeRefsetInternalId: string): Observable<any> {
         return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
-}
+
+    
+    emailRefset(activeRefsetInternalId: string, params: any): Observable<any> {
+        return this.post(this.contextPath + `refset/${activeRefsetInternalId}/share`, params);
+    }
+
+    
+    shareRefset(refsetId: string, data): Observable<any> {
+        return this.post(`${this.contextPath}refset/${refsetId}/share/`, data);
+    }
+}   
