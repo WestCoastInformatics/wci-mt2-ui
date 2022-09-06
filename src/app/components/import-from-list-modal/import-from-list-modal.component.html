@@ -8,7 +8,7 @@
 <ng-template #importFromListDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
+        <button class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Add or Remove Members By List
         </h4>
@@ -23,10 +23,10 @@
         <div class="container-fluid import-from-container-fluid">
             <div class="modal-body import-from-modal-body">
 
-                <div class="import-from-label"> Enter a list of SctIds. Use a comma or whitespace delimited Concept Ids.</div>
+                <div class="import-from-label"> Enter a list of SCTIDs. Use a comma or whitespace delimited Concept Ids.</div>
 
                 <mat-form-field class="import-from-list-field" appearance="outline">
-                    <textarea matInput #listTextArea autofocus class="import-from-list-text-area" [(ngModel)]="listOfIds">{{ listTextArea.focus() }}</textarea>
+                    <textarea matInput #listTextArea ngbAutofocus class="import-from-list-text-area" [(ngModel)]="listOfIds"></textarea>
                 </mat-form-field>
 
             </div>
