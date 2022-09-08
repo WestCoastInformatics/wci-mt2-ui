@@ -83,7 +83,12 @@
             title="Display Workflow Diagram"
             aria-label="Display Workflow Diagram" />
         </div> -->
-            <div style="display: inline">
+            <div class="d-inline mr-3">
+                <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
+                               [existingBranchVersions]="existingBranchVersions">
+                </create-refset>
+            </div>
+            <div class="d-inline" >
                 <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
                   [existingBranchVersions]="existingBranchVersions">
                 </create-new-refset>
