@@ -840,6 +840,7 @@ button.refset-tool-table-action-icon {
 .ag-floating-filter-full-body app-category-floating-filter select {
     padding: 0px;
     text-transform: capitalize;
+    appearance: none;
 }
 
 //.ag-floating-filter-full-body::first-letter {
@@ -1739,12 +1740,15 @@ button.refset-tool-table-action-icon {
 .refset-tool-download-column-field {
     margin-left: 15px;
     padding-bottom: 0;
-    .mat-form-field .mat-form-field-wrapper{
+
+    .mat-form-field .mat-form-field-wrapper {
         padding-bottom: 0;
-        .mat-form-field-flex{
+
+        .mat-form-field-flex {
             padding-top: 0;
         }
-        .mat-form-field-underline{
+
+        .mat-form-field-underline {
             bottom: 0;
         }
     }
@@ -1759,7 +1763,8 @@ button.refset-tool-table-action-icon {
 .delta-select {
     padding-top: 0;
     padding-left: 15px;
-    .mat-form-field-wrapper{
+
+    .mat-form-field-wrapper {
         margin-top: 0.5rem;
     }
 }
