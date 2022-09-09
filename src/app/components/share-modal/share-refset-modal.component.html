@@ -1,11 +1,13 @@
-<button mat-menu-item (click)="openShareModal(shareFormDialog)" title="Share Refset" aria-label="Share">Share Refset</button>
+<button mat-menu-item (click)="openShareModal(shareFormDialog)" title="Share Reference Set"
+    aria-label="Share">Share Reference Set</button>
 
 <ng-template #shareFormDialog let-modal>
     <div class="modal-header rt2-modal-header">
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             {{modalTitle}}
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
@@ -15,18 +17,20 @@
                 <mat-form-field appearance="fill" class="discussion-topic-field">
                     <mat-label>Recipient Email</mat-label>
                     <input matInput type="text" formControlName="recipient" ngbAutofocus
-                           placeholder="Enter recipient email address" />
+                        placeholder="Enter recipient email address" />
                 </mat-form-field>
             </div>
             <div class="topic-content mb-3">
                 <mat-form-field appearance="fill" class="discussion-topic-field">
                     <mat-label>Message</mat-label>
                     <textarea matInput formControlName="additionalMessage" ngbAutofocus
-                              placeholder="Add an optional message for your set recipient" ></textarea>
+                        placeholder="Add an optional message for your set recipient"></textarea>
                 </mat-form-field>
             </div>
             <div class="text-right">
-                <button mat-raised-button color="primary" aria-hidden="false" [disabled]="!form.valid" class="refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="onSave()">
+                <button mat-raised-button color="primary" aria-hidden="false"
+                    [disabled]="!form.valid" class="refset-tool-action-button refset-action-button"
+                    ng-reflect-color="primary" (click)="onSave()">
                     Send
                 </button>
             </div>
@@ -35,7 +39,9 @@
             <div>
                 Get a direct link to this Reference set
                 <div class="text-right">
-                    <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button mb-3" (click)="getLink()">
+                    <button mat-raised-button color="primary" aria-hidden="false"
+                        class="refset-tool-action-button refset-action-button mb-3"
+                        (click)="getLink()">
                         Get URL
                     </button>
                 </div>
@@ -44,7 +50,9 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button aria-hidden="false" class="refset-tool-action-button refset-action-button default-btn" (click)="modal.dismiss('Cross click');">
+        <button mat-raised-button aria-hidden="false"
+            class="refset-tool-action-button refset-action-button default-btn"
+            (click)="modal.dismiss('Cross click');">
             Cancel
         </button>
     </div>

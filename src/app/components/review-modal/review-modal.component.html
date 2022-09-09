@@ -1,6 +1,7 @@
-<button #rejectRefsetButton mat-raised-button color="primary" aria-hidden="false" (click)="openReviewModal(reviewDialog)"
-  class="refset-tool-action-button refset-action-button" aria-label="Reject Refset" title="Reject Refset" ng-reflect-color="primary">
-    Reject Refset
+<button #rejectRefsetButton mat-raised-button color="primary" aria-hidden="false"
+    (click)="openReviewModal(reviewDialog)" class="refset-tool-action-button refset-action-button"
+    aria-label="Reject Reference Set" title="Reject Reference Set" ng-reflect-color="primary">
+    Reject Reference Set
 </button>
 
 <ng-template #reviewDialog let-modal>
@@ -8,7 +9,8 @@
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Finish Review
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <button type="button" class="close dialog-close-x" aria-label="Close"
+            (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
@@ -21,7 +23,8 @@
                     </span>
                     <div class="warning-review-body">
                         <strong>Warning!</strong><br /><br />
-                        Review notes have not been made or recorded. A reason must be included if the reference set changes are rejected.
+                        Review notes have not been made or recorded. A reason must be included if
+                        the reference set changes are rejected.
                     </div>
                 </div>
             </ngb-alert>
@@ -31,8 +34,11 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button #rejectRefsetNotesButton mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button refset-action-button" aria-label="Reject Refset"
-          title="Reject Refset" [disabled]="!checkIfNoteAdded()" (click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus();" ng-reflect-color="green">
+        <button #rejectRefsetNotesButton mat-raised-button color="green" aria-hidden="false"
+            class="refset-tool-action-button refset-action-button" aria-label="Reject Reference Set"
+            title="Reject Reference Set" [disabled]="!checkIfNoteAdded()"
+            (click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus();"
+            ng-reflect-color="green">
             Save & Finish
         </button>
     </div>
