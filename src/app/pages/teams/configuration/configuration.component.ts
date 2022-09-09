@@ -1,15 +1,15 @@
-import {Location} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute} from '@angular/router';
-import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {NotificationService} from 'src/app/services/notification.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {TeamsService} from 'src/app/services/rest/teams.service';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {forkJoin} from 'rxjs';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { TeamsService } from 'src/app/services/rest/teams.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'teams-configuration',
@@ -36,22 +36,22 @@ export class TeamsConfigurationComponent implements OnInit {
     showLoadingSpinner = true;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
-                private readonly titleService: Title,
-                private readonly refsetService: RefsetService,
-                private readonly route: ActivatedRoute,
-                private readonly authService: AuthenticationService,
-                private readonly teamsService: TeamsService,
-                private readonly notificationService: NotificationService,
-                private location: Location) {
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly route: ActivatedRoute,
+        private readonly authService: AuthenticationService,
+        private readonly teamsService: TeamsService,
+        private readonly notificationService: NotificationService,
+        private location: Location) {
         document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Teams');
+        this.titleService.setTitle('Reference Set Tool - Teams');
 
-        this.roleOptions = [{value: 'AUTHOR', display: 'Author'}, {value: 'REVIEWER', display: 'Reviewer'},
-            {value: 'ADMIN', display: 'Admin'}, {value: 'VIEWER', display: 'Viewer'}];
+        this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
+        { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
 
         this.route.params.subscribe(params => {
 
@@ -66,13 +66,13 @@ export class TeamsConfigurationComponent implements OnInit {
 
     setNavigation() {
 
-        const breadcrumbs: any = [{path: '/dashboard', label: 'Dashboard'}];
+        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
             breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
         }
 
-        breadcrumbs.push({label: 'Configuration'});
+        breadcrumbs.push({ label: 'Configuration' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
@@ -92,7 +92,7 @@ export class TeamsConfigurationComponent implements OnInit {
             for (const organization of this.organizationList) {
 
                 if (this.organizationId === organization.id) {
-                    
+
                     this.selectedOrganization = organization;
                     this.getTeams();
                     return;
@@ -219,7 +219,7 @@ export class TeamsConfigurationComponent implements OnInit {
         this.teamsService.updateTeam(this.teamId, this.selectedTeam).subscribe((team) => {
 
             if (team) {
-                this.notificationService.show('Team was successfully updated', 'Success', 'success', {timeOut: 3000, extendedTimeOut: 0});
+                this.notificationService.show('Team was successfully updated', 'Success', 'success', { timeOut: 3000, extendedTimeOut: 0 });
             }
         });
     }

@@ -1,11 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {Refset} from '../../models/refset';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {RefsetService} from '../../services/rest/refset.service';
-import {RefsetUtility} from '../../utilities/refset.utility';
-import {Clipboard} from '@angular/cdk/clipboard';
-import {NotificationService} from '../../services/notification.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Refset } from '../../models/refset';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RefsetService } from '../../services/rest/refset.service';
+import { RefsetUtility } from '../../utilities/refset.utility';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NotificationService } from '../../services/notification.service';
 
 
 @Component({
@@ -18,11 +18,11 @@ export class ShareRefsetModalComponent implements OnInit {
     @Input() refset: Refset;
 
     constructor(private readonly modalService: NgbModal, private dataService: RefsetService, private fb: FormBuilder,
-                private clipboard: Clipboard, private notificationService: NotificationService) {
+        private clipboard: Clipboard, private notificationService: NotificationService) {
     }
 
     get modalTitle(): string {
-        return this.refset?.id ? `Share Refset: ${this.refset.name}` : 'Share Refset';
+        return this.refset?.id ? `Share Reference Set: ${this.refset.name}` : 'Share Reference Set';
     }
 
     get directUrl(): string {
@@ -75,7 +75,7 @@ export class ShareRefsetModalComponent implements OnInit {
 
     getLink(): void {
         this.clipboard.copy(this.directUrl);
-        this.notificationService.show('URL Copied to clipboard', 'Success', 'success', {timeOut: 2000, extendedTimeOut: 0});
+        this.notificationService.show('URL Copied to clipboard', 'Success', 'success', { timeOut: 2000, extendedTimeOut: 0 });
     }
 
 }

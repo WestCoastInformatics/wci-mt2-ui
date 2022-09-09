@@ -58,7 +58,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Organizations');
+        this.titleService.setTitle('Reference Set Tool - Organizations');
 
         this.route.params.subscribe(params => {
 

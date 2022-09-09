@@ -102,9 +102,9 @@ export class RefsetFeedbackListComponent implements OnInit {
             if (propertyName === 'refsetName' || propertyName === 'conceptName') {
 
                 if (this.type == 'REFSET') {
-                    this.displayHeader = 'Refset Feedback: ' + this.refsetName;
+                    this.displayHeader = 'Reference Set Feedback: ' + this.refsetName;
                 } else {
-                    this.displayHeader = 'Member Feedback: ' + this.conceptName + ' (' + this.conceptId + ') for Refset: ' + this.refsetName;
+                    this.displayHeader = 'Member Feedback: ' + this.conceptName + ' (' + this.conceptId + ') for Reference Set: ' + this.refsetName;
                 }
             }
         }

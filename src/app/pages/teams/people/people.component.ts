@@ -61,7 +61,7 @@ export class TeamsPeopleComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Teams');
+        this.titleService.setTitle('Reference Set Tool - Teams');
         this.currentUser = this.authService.getUser();
         this.route.params.subscribe(params => {
 

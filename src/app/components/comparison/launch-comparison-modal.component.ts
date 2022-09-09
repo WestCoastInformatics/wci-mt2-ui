@@ -225,11 +225,11 @@ export class LaunchComparisonModalComponent {
             { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
             { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
             {
-                field: 'membership', colId: 'membership', headerName: 'Refset Membership', minWidth: 120, tooltipField: 'code', resizable: false, unSortIcon: true,
+                field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', minWidth: 120, tooltipField: 'code', resizable: false, unSortIcon: true,
                 floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
                     suppressMenu: true, suppressFilterButton: true, names: [
-                        { type: 'membership', name: 'Active Refset', value: 'Active Refset' },
-                        { type: 'membership', name: 'Comparison Refset', value: 'Comparison Refset' },
+                        { type: 'membership', name: 'Active Reference Set', value: 'Active Reference Set' },
+                        { type: 'membership', name: 'Comparison Reference Set', value: 'Comparison Reference Set' },
                         { type: 'membership', name: 'Both', value: 'Both' },
                     ]
                 }
@@ -471,7 +471,7 @@ export class LaunchComparisonModalComponent {
                 const success = results?.success;
 
                 if (!CodeUtility.testBoolean(success)) {
-                    console.log('Error caching refset member details.');
+                    console.log('Error caching reference set member details.');
                 }
 
                 // reload the concept details if it is open
@@ -531,7 +531,7 @@ export class LaunchComparisonModalComponent {
                         memberOfRefset: 'true',
                         name: conceptStatus.name,
                         active: conceptStatus.active,
-                        membership: 'Active Refset'
+                        membership: 'Active Reference Set'
                     };
 
                     this.comparisonData.items.push(concept);
@@ -546,7 +546,7 @@ export class LaunchComparisonModalComponent {
 
                 if (this.comparisonData.items[comparisonRowIndex].membership == 'Both') {
 
-                    this.comparisonData.items[comparisonRowIndex].membership = 'Comparison Refset'
+                    this.comparisonData.items[comparisonRowIndex].membership = 'Comparison Reference Set'
                     this.comparisonData.comparisonRefsetDistinctMembersCount += 1;
                     this.comparisonData.comparisonRefsetDistinctMembers.push(conceptStatus.code);
 
@@ -591,7 +591,7 @@ export class LaunchComparisonModalComponent {
 
             let refset = '';
 
-            if (row.membership == 'Active Refset') {
+            if (row.membership == 'Active Reference Set') {
                 refset = activeRefset;
             } else if (row.membership == 'Both') {
                 refset = bothRefsets;
@@ -599,13 +599,13 @@ export class LaunchComparisonModalComponent {
                 refset = comparisonRefset;
             }
 
-            members.push({ 'Concept ID': row.code, 'Concept Name': row.name, 'Refset Membership': row.membership, 'Refset Name': refset });
+            members.push({ 'Concept ID': row.code, 'Concept Name': row.name, 'Reference Set Membership': row.membership, 'Reference Set Name': refset });
         }
 
         members.sort(function (a, b) {
 
-            const sortTermA = a['Refset Membership'].toUpperCase() + a['Concept Name'].toUpperCase();
-            const sortTermB = b['Refset Membership'].toUpperCase() + b['Concept Name'].toUpperCase();
+            const sortTermA = a['Reference Set Membership'].toUpperCase() + a['Concept Name'].toUpperCase();
+            const sortTermB = b['Reference Set Membership'].toUpperCase() + b['Concept Name'].toUpperCase();
 
             if (sortTermA < sortTermB) {
                 return -1;
@@ -624,7 +624,7 @@ export class LaunchComparisonModalComponent {
         const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
             this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
 
-        UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Refset Membership', 'Refset Name'], fileName);
+        UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Reference Set Membership', 'Reference Set Name'], fileName);
     }
 
     downloadChangeReport() {

@@ -47,7 +47,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Organizations');
+        this.titleService.setTitle('Reference Set Tool - Organizations');
 
         this.getOrganizations();
 

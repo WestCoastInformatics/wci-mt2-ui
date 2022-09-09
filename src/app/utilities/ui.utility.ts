@@ -263,7 +263,7 @@ export class UiUtility {
         // set a small delay so the original call has some time to process
         CodeUtility.delay(1500);
 
-        let message = 'Members are being ' + description + ' refset ' + refsetId + '.';
+        let message = 'Members are being ' + description + ' reference set ' + refsetId + '.';
         let messagePrefix = '';
 
         if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
@@ -298,14 +298,14 @@ export class UiUtility {
                 }
             }
 
-            message += ' refset ' + refsetId + '.';
+            message += ' reference set ' + refsetId + '.';
         }
 
-        message += ' The refset is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+        message += ' The reference set is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the reference set is ready if you do not refresh the page.';
 
         let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
+        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
         let downloadReportButton: IToastButton = { id: 'download', title: 'Download Report', data: {} };
         let buttons = [downloadReportButton];
         let callNumber = 0;
@@ -330,7 +330,7 @@ export class UiUtility {
                 } else {
 
                     let title = 'Member Change Notification';
-                    let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
+                    let messageEnd = description + ' reference set ' + refsetId + '. You may continue editing the reference set.';
                     let notificationType = 'success';
                     let conceptIdArray = Object.keys(data);
                     let conceptStatusArray: any[] = [];
@@ -386,9 +386,9 @@ export class UiUtility {
                         }
                     } else {
 
-                        let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
+                        let noContentMessage = 'There were no concepts in the request for reference set ' + refsetId + '.';
                         let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
-                        let continueEditingMessage = ' You may continue editing the refset.';
+                        let continueEditingMessage = ' You may continue editing the reference set.';
                         notificationType = 'warning';
 
                         if (previousNotifications.length > 0) {
@@ -400,7 +400,7 @@ export class UiUtility {
                             if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
                                 message = previousNotifications[0].message;
                             } else {
-                                message = 'There were no concepts in the last request for refset ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
+                                message = 'There were no concepts in the last request for reference set ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
                             }
 
                         } else {
@@ -434,7 +434,7 @@ export class UiUtility {
                 (error) => {
 
                     console.log(error);
-                    message = 'There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator.';
+                    message = 'There has been a problem  ' + description + ' reference set ' + refsetId + '. View the reference set to determine changes or contact an administrator.';
                     notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                 }
             );
@@ -443,19 +443,19 @@ export class UiUtility {
         checkIfFinished();
     }
 
-    // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
+    // Function for background processesing of lengthy non member reference set tasks, and notification to user of the status of those tasks
     static manageProcessNotifications(refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
         // set a small delay so the original call has some time to process
         CodeUtility.delay();
 
-        let message = 'Refset ' + refsetId + ' has started the ' + processType + ' process. The refset is locked until the operation completes. You can close this message and do other operations on the site, ';
-        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
+        let message = 'Reference Set ' + refsetId + ' has started the ' + processType + ' process. The reference set is locked until the operation completes. You can close this message and do other operations on the site, ';
+        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
         let buttons = [viewRefsetButton];
 
         if (processType == ('upgrade')) {
 
-            message += 'you will be notified when the refset is ready if you do not refresh the page.';
+            message += 'you will be notified when the reference set is ready if you do not refresh the page.';
 
             let downloadInactiveReportButton: IToastButton = { id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {} };
             let downloadChangeReportButton: IToastButton = { id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {} };
@@ -495,7 +495,7 @@ export class UiUtility {
                         setTimeout(checkIfFinished, callDelay);
                     } else {
 
-                        let title = 'Refset Process Complete Notification';
+                        let title = 'Reference Set Process Complete Notification';
                         let notificationType = 'success';
                         let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 
@@ -505,7 +505,7 @@ export class UiUtility {
                             buttons.shift();
                         }
 
-                        message = 'Refset ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
+                        message = 'Reference Set ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
 
                         if (previousNotifications.length > 0) {
                             notificationService.close(previousNotifications[0]);
@@ -538,7 +538,7 @@ export class UiUtility {
                 (error) => {
 
                     console.log(error);
-                    message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
+                    message = 'There has been a problem with reference set ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
                     notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                 }
             );

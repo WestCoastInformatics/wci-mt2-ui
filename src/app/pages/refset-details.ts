@@ -269,12 +269,12 @@ export class RefsetDetails implements OnInit {
             if (isProjects) {
                 this.breadcrumbService.setBreadcrumbs([
                     { path: '/organization/' + this.refsetData.project.edition.organizationId + '/edition/' + this.refsetData.project.edition.id + '/projects/' + this.refsetData.project.id + '/refsets', label: 'Projects' },
-                    { label: 'Refset Details' },
+                    { label: 'Reference Set Details' },
                 ]);
             } else {
                 this.breadcrumbService.setBreadcrumbs([
-                    { path: '/library', label: 'Refset Library' },
-                    { label: 'Refset Details' },
+                    { path: '/library', label: 'Reference Set Library' },
+                    { label: 'Reference Set Details' },
                 ]);
             }
 
@@ -476,7 +476,7 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.refsetData.status = RefsetUtility.getStatus(this.refsetData.active);
-                this.titleService.setTitle('Refset Tool - Refset Details: ' + this.refsetId);
+                this.titleService.setTitle('Reference Set Tool - Reference Set Details: ' + this.refsetId);
 
                 const languages = this.refsetData?.edition?.fullyQualifiedLanguageRefsets;
                 const languageRefsetOptions = [];
@@ -518,7 +518,7 @@ export class RefsetDetails implements OnInit {
                 if (CodeUtility.hasValue(this.refsetData)) {
                     this.shortenNoteFields();
                 } else {
-                    console.log('Error loading refset details data.');
+                    console.log('Error loading reference set details data.');
                 }
 
                 if (this.refsetData.locked) {
@@ -632,7 +632,7 @@ export class RefsetDetails implements OnInit {
                 if (CodeUtility.testBoolean(success)) {
                     console.log(success);
                 } else {
-                    console.log('Error caching refset member details.');
+                    console.log('Error caching reference set member details.');
                 }
 
                 this.memberCacheLoaded.next(true);
@@ -1333,7 +1333,7 @@ export class RefsetDetails implements OnInit {
         const dialogId = 'detailsRichTextDialog';
 
         const dialogData = {
-            headerText: `Refset ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
+            headerText: `Reference Set ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
             template: this.richTextDialog,
             data: { fieldName: fieldName, text: this.refsetData[fieldName] },
         };
@@ -1361,7 +1361,7 @@ export class RefsetDetails implements OnInit {
 
     openAuditTrail() {
         const dialogData = {
-            headerText: `Refset Audit Trail`,
+            headerText: `Reference Set Audit Trail`,
             template: this.refsetAuditDialog,
             data: this.refsetData,
         };
@@ -1374,7 +1374,7 @@ export class RefsetDetails implements OnInit {
 
     openArtifacts() {
         const dialogData = {
-            headerText: `Refset Artifacts`,
+            headerText: `Reference Set Artifacts`,
             template: this.refsetArtifactsDialog,
             data: this.refsetData,
         };
@@ -1386,7 +1386,7 @@ export class RefsetDetails implements OnInit {
 
     openDeleteRefset() {
         const dialogData = {
-            headerText: `Delete Refset`,
+            headerText: `Delete Reference Set`,
             template: this.deleteRefsetDialog,
             data: this.refsetData,
         };
@@ -1411,7 +1411,7 @@ export class RefsetDetails implements OnInit {
                     (status) => {
 
                         if (status.status == 'convert') {
-                            this.notificationService.show('The refset has been converted to extensional.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+                            this.notificationService.show('The reference set has been converted to extensional.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                             this.loadRefset();
                             return;
                         } else if (status.error) {

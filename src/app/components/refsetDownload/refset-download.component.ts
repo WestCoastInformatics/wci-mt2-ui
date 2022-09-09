@@ -118,7 +118,7 @@ export class RefsetDownloadComponent {
                 const dialogId = 'downloadDialog';
                 const dialogData = {
                     dialogId: dialogId,
-                    headerText: `Download Refset ${this.refset.name} (${this.refset.refsetId})`,
+                    headerText: `Download Reference Set ${this.refset.name} (${this.refset.refsetId})`,
                     showCancel: true,
                     confirmText: 'Download',
                     confirmIcon: 'download',
@@ -166,7 +166,7 @@ export class RefsetDownloadComponent {
                         console.log('Download Form Data: ', data);
                         const notificationType = 'success';
 
-                        const description = 'Refset ' + this.refset.refsetId + ' download';
+                        const description = 'Reference Set ' + this.refset.refsetId + ' download';
                         const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, notificationType, { timeOut: 0, extendedTimeOut: 0 });
                         let fileNameDate: any = this.selectedVersionDate;
 

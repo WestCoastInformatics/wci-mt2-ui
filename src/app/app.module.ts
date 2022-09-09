@@ -121,15 +121,15 @@ import { PaginationModule } from './components/pagination/pagination.module';
 import { ArtifactsService } from './services/rest/artifacts.service';
 import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
-import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-meta-table.component';
-import {ShareRefsetModalComponent} from './components/share-modal/share-refset-modal.component';
+import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
+import { ShareRefsetModalComponent } from './components/share-modal/share-refset-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
     { path: 'login', component: LoginComponent },
     { path: '', component: LandingPageComponent },
-    { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Refset Library' } },
-    { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Refset Details', editMode: false } },
+    { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Reference Set Library' } },
+    { path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
     { path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
     { path: 'organizations/:organizationId/edition/:editionId/projects', component: OrganizationProjectsComponent, data: { breadcrumbLabel: 'Projects' }, canActivate: [AuthGuardGuard] },
