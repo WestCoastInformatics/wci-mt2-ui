@@ -119,8 +119,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                     this.columnDefs = [
                         { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
-                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference Set ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
-                        { field: 'name', tooltipField: 'name', headerName: 'Reference Set Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
+                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
                             field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true

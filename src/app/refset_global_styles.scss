@@ -843,6 +843,11 @@ button.refset-tool-table-action-icon {
     appearance: none;
 }
 
+select {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 //.ag-floating-filter-full-body::first-letter {
 //    text-transform: capitalize;
 //}

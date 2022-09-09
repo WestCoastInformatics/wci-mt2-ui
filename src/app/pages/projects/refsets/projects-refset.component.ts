@@ -163,8 +163,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             ];
 
             this.columnDefs = [
-                { field: 'refsetId', headerName: 'Reference Set ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false, unSortIcon: true },
-                { field: 'name', headerName: 'Reference Set Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
+                { field: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false, unSortIcon: true },
+                { field: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
                 { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 150, resizable: false, unSortIcon: true },
                 {
                     field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },

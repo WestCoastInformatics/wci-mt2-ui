@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.columnDefs = [
             {
                 field: 'name',
-                headerName: 'Reference Set Name',
+                headerName: 'Reference Name',
                 flex: 1,
                 minWidth: 550,
                 unSortIcon: true,
