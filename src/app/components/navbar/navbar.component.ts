@@ -92,7 +92,7 @@ export class NavbarComponent implements OnInit {
     }
 
     navigateToRoute(route: string): void {
-        if (this.router.url.includes(route)) {
+        if (this.router.url.includes(route) || (this.router.url.includes('projects') && route.includes('projects'))) {
             window.location.reload();
         } else {
             this.router.navigate([route]);
