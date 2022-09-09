@@ -42,7 +42,9 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.columnDefs = [
-            { field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, sortingOrder: ['desc', 'asc', null], valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
+            { field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, sortingOrder: ['desc', 'asc', null],
+                filterParams: { debounceMs: 2000 }, floatingFilterComponentParams: { debounceMs: 2000 },
+                valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent' },
             { field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true, sort: 'desc' },
             { field: 'message', headerName: 'Message', unSortIcon: true, sortable: true },
             { field: 'details', headerName: 'Details', minWidth: 550, sortable: false }];
@@ -78,11 +80,8 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 sortingOrder: ['asc', 'desc'],
                 flex: 1,
                 filter: true,
-                filterParams: {
-                    debounceMs: 2000
-                },
                 floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true, debounceMs: 2000 },
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true, debounceMs: 100 },
             },
             enableBrowserTooltips: true,
             rowClassRules: {
