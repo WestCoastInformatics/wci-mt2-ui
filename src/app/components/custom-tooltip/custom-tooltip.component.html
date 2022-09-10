@@ -1,1 +1,8 @@
-<p>custom-tooltip works!</p>
+<ng-container *ngIf="params?.column.colId === 'teams'">
+    <div class="custom-tooltip-wrapper">
+        <div class="custom-tooltip">
+            <p (click)="goToTeam(team.id, team.organizationId)" class="text-primary font-weight-bold"
+               *ngFor="let team of this.teamArray">{{ team.name }}</p>
+        </div>
+    </div>
+</ng-container>
