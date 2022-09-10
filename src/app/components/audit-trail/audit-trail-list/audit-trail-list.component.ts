@@ -23,7 +23,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
     gridColumnDefs = [];
     gridOptions: any;
     gridPaging = {
-        pageSize: 6, pageSizeOptions: [6, 10, 25, 50, 100], totalKnown: false, totalRows: null,
+        pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null,
         manualStateRefresh: Boolean(true)
     };
     gridColumnApi: any;
