@@ -1,12 +1,12 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
-import {User} from '../../models/user';
-import {environment} from '../../../environments/environment';
-import {Router} from '@angular/router';
-import {NotificationService} from 'src/app/services/notification.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {RestService} from '../rest/rest.service';
+import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { User } from '../../models/user';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/services/notification.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RestService } from '../rest/rest.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +18,8 @@ export class AuthenticationService {
     LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
     IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
-    authCookie = {name: 'rt2-auth', path: '/'};
+    authCookie = { name: 'rt2-auth', path: '/' };
+    referralUrl = '';
 
     constructor(
         private http: HttpClient,
@@ -28,6 +29,11 @@ export class AuthenticationService {
         private restService: RestService,
     ) {
         this.apiCalled = new EventEmitter();
+        if (window.location.href.includes('details/')) {
+            this.referralUrl = window.location.href;
+        } else if (this.referralUrl) {
+            this.referralUrl = '';
+        }
     }
 
     get isUserLoggedIn(): boolean {
@@ -57,10 +63,14 @@ export class AuthenticationService {
 
         let url = window.location.origin + '/login';
 
+        if (!this.referralUrl) {
+            this.referralUrl = url;
+        }
+
         if (!window.location.origin.includes('local')) {
-            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
+            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + this.referralUrl;
         } else {
-            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
+            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + this.referralUrl;
         }
 
         return url;
@@ -74,10 +84,14 @@ export class AuthenticationService {
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
                 this.userSubject.next(userData);
-                this.router.navigate(['/dashboard']);
+                if (this.referralUrl) {
+                    window.location.href = this.referralUrl;
+                } else {
+                    this.router.navigate(['/dashboard']);
+                }
             },
             (err) => {
-                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                 console.error(err);
             }
         );
