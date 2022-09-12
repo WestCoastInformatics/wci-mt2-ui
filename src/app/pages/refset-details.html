@@ -472,12 +472,18 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                     Notes
                                 </th>
-                                <td mat-cell *matCellDef="let row" class="pt-3">
-                                    <ng-container>
-                                        <readonly-text-modal [shortText]="row.notes"
-                                            [longText]="row.notes" [title]="'Notes'">
-                                        </readonly-text-modal>
+                                <td mat-cell *matCellDef="let row; let i = index;" class="pt-3">
+                                    <ng-container *ngIf="notesEditable(i, row)">
+                                      <workflow-history-notes-modal
+                                                                    [refsetInternalId]="id" [user]="refsetData?.modifiedBy" (saved)="loadWorkflowHistoryData($event)"
+                                                                    [status]="refsetStatus" [workflowHistoryNotes]="row.notes" [edit]="true">
+                                      </workflow-history-notes-modal>
                                     </ng-container>
+                                  <ng-container *ngIf="!notesEditable(i, row)">
+                                    <readonly-text-modal [shortText]="row.notes"
+                                                         [longText]="row.notes" [title]="'Notes'">
+                                    </readonly-text-modal>
+                                  </ng-container>
                                 </td>
                             </ng-container>
 

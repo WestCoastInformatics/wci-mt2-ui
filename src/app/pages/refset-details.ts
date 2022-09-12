@@ -1,32 +1,32 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
-import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { RouterExtentionService } from 'src/app/services/routerExtention.service';
-import { Title } from '@angular/platform-browser';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { UiUtility } from 'src/app/utilities/ui.utility';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
-import { TreeOptions } from 'src/app/models/tree-options.model';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { Subject, forkJoin, Subscription } from 'rxjs';
-import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
-import { environment } from 'src/environments/environment';
-import { WorkflowService } from '../services/workflow/workflow.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { take } from 'rxjs/operators';
-import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
-import { NotificationService } from '../services/notification.service';
-import { User } from '../models/user';
-import { AuthenticationService } from '../services/authentication/authentication.service';
+import {ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Location} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DialogService} from 'src/app/dialog/services/dialog.service';
+import {DialogFactoryService} from 'src/app/dialog/services/dialog-factory.service';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {RouterExtentionService} from 'src/app/services/routerExtention.service';
+import {Title} from '@angular/platform-browser';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {Debounce} from 'src/app/decorators/debounce.decorator';
+import {UiUtility} from 'src/app/utilities/ui.utility';
+import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
+import {PaginationComponent} from 'src/app/components/pagination/pagination.component';
+import {TreeOptions} from 'src/app/models/tree-options.model';
+import {RefsetUtility} from 'src/app/utilities/refset.utility';
+import {forkJoin, Subject, Subscription} from 'rxjs';
+import {TaxonomyTreeComponent} from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
+import {environment} from 'src/environments/environment';
+import {WorkflowService} from '../services/workflow/workflow.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {DateTextFilterComponent} from 'src/app/components/dateTextFilter/date-text-filter.component';
+import {take} from 'rxjs/operators';
+import {ProjectsRefsetComponent} from './projects/refsets/projects-refset.component';
+import {NotificationService} from '../services/notification.service';
+import {User} from '../models/user';
+import {AuthenticationService} from '../services/authentication/authentication.service';
 
 /**
  * @title Tree with nested nodes
@@ -222,6 +222,16 @@ export class RefsetDetails implements OnInit {
         refsetService.getTaxonomyRoot();
     }
 
+    get displayOutdateWarning(): boolean {
+        const data = this.refsetData;
+        return data && data.upgradeWarning && data.availableActions?.includes('CANCEL_EDIT') && !data.availableActions?.includes('EDIT');
+    }
+
+    get conceptDescriptionTerm(): string {
+        const desc = this.conceptDescriptions.filter((desc) => this.getConceptDetailLanguageWithoutType().indexOf('-' + desc.languageCode) > -1 && desc.type == this.getConceptDetailLanguageType());
+        return (desc.length > 0 ? desc[0] : this.conceptDescriptions[0]).term;
+    }
+
     // ***** Framework Functions *****/
     ngOnInit() {
         this.user = this.authenticationService.getUser();
@@ -268,19 +278,22 @@ export class RefsetDetails implements OnInit {
 
             if (isProjects) {
                 this.breadcrumbService.setBreadcrumbs([
-                    { path: '/organization/' + this.refsetData.project.edition.organizationId + '/edition/' + this.refsetData.project.edition.id + '/projects/' + this.refsetData.project.id + '/refsets', label: 'Projects' },
-                    { label: 'Reference Set Details' },
+                    {
+                        path: '/organization/' + this.refsetData.project.edition.organizationId + '/edition/' + this.refsetData.project.edition.id + '/projects/' + this.refsetData.project.id + '/refsets',
+                        label: 'Projects'
+                    },
+                    {label: 'Reference Set Details'},
                 ]);
             } else {
                 this.breadcrumbService.setBreadcrumbs([
-                    { path: '/library', label: 'Reference Set Library' },
-                    { label: 'Reference Set Details' },
+                    {path: '/library', label: 'Reference Set Library'},
+                    {label: 'Reference Set Details'},
                 ]);
             }
 
             this.loadWorkflowHistoryData();
             this.membersGridOptions = {
-                context: { componentParent: this },
+                context: {componentParent: this},
                 pagination: true,
                 suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 suppressPaginationPanel: true,
@@ -301,7 +314,7 @@ export class RefsetDetails implements OnInit {
                     sortingOrder: ['asc', 'desc'],
                     filter: true,
                     floatingFilter: true,
-                    floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+                    floatingFilterComponentParams: {placeholder: '', suppressFilterButton: true},
                 },
                 enableBrowserTooltips: true,
                 rowClassRules: {
@@ -331,7 +344,7 @@ export class RefsetDetails implements OnInit {
         });
 
         // call forkJoin on returned observables
-        forkJoin(allObservables).pipe(take(1)).subscribe(({ refsetLoaded, memberCacheLoaded }) => {
+        forkJoin(allObservables).pipe(take(1)).subscribe(({refsetLoaded, memberCacheLoaded}) => {
 
             console.log('refsetLoaded: ' + refsetLoaded);
             console.log('memberCacheLoaded: ' + memberCacheLoaded);
@@ -376,7 +389,7 @@ export class RefsetDetails implements OnInit {
             ];
 
             this.taxonomySearchGridOptions = {
-                context: { componentParent: this },
+                context: {componentParent: this},
                 pagination: true,
                 suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                 suppressPaginationPanel: true,
@@ -506,7 +519,7 @@ export class RefsetDetails implements OnInit {
                         this.selectedTaxonomyLanguage = languageValue;
                     }
 
-                    languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageCode });
+                    languageRefsetOptions.push({value: languageValue, display: language.qualifiedLanguageCode});
                 }
 
                 if (languageRefsetOptions.length > 0) {
@@ -973,8 +986,15 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.membersColumnDefs = [{
-                    headerName: '', colId: 'add-remove', maxWidth: 40, resizable: false, filter: false, sort: false, cellClass: 'refset-tool-details-column-remove-icon',
-                    cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }
+                    headerName: '',
+                    colId: 'add-remove',
+                    maxWidth: 40,
+                    resizable: false,
+                    filter: false,
+                    sort: false,
+                    cellClass: 'refset-tool-details-column-remove-icon',
+                    cellRenderer: 'templateRenderer',
+                    cellRendererParams: {template: this.conceptCodeSection}
                 }, {
                     field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, tooltipField: 'code', unSortIcon: true,
                     resizable: false, cellClass: 'refset-tool-details-column-concept-id'
@@ -1013,12 +1033,12 @@ export class RefsetDetails implements OnInit {
                             cellClass:
                                 'refset-tool-details-column-modified-date',
                             valueGetter:
-                                UiUtility.gridDateValueGetter,
+                            UiUtility.gridDateValueGetter,
                             tooltipField: 'memberEffectiveTime',
                             sort: 'desc',
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true },
+                            floatingFilterComponentParams: {suppressFilterButton: true},
                         },
                         {
                             field: 'active',
@@ -1154,7 +1174,7 @@ export class RefsetDetails implements OnInit {
 
     loadWorkflowHistoryData(showLoading = false): void {
         if (showLoading) {
-          this.toggleLoadingSpinner(true);
+            this.toggleLoadingSpinner(true);
         }
         this.refsetService.getWorkflowHistory(this.id, '?limit=500&offset=0&sort=modified&sortAscending=false').subscribe((results) => {
 
@@ -1166,9 +1186,9 @@ export class RefsetDetails implements OnInit {
             if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
                 this.reviewNotesAdded = true;
             }
-          if (showLoading) {
-            this.toggleLoadingSpinner(false);
-          }
+            if (showLoading) {
+                this.toggleLoadingSpinner(false);
+            }
         });
     }
 
@@ -1224,7 +1244,7 @@ export class RefsetDetails implements OnInit {
         };
 
         // call forkJoin on returned observables
-        forkJoin(allObservables).subscribe(({ memberCacheLoaded }) => {
+        forkJoin(allObservables).subscribe(({memberCacheLoaded}) => {
             this.reloadTaxonomyTree();
         });
 
@@ -1274,7 +1294,7 @@ export class RefsetDetails implements OnInit {
         this.selectedConcept = concept;
         this.conceptDetail = null;
         this.isConceptDetailsLoading = true;
-        this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.refsetData.id, }).subscribe({
+        this.refsetService.getMembersDetails(concept?.code, {refsetInternalId: this.refsetData.id,}).subscribe({
             next: (results) => {
 
                 this.isConceptDetailsLoading = false;
@@ -1340,7 +1360,7 @@ export class RefsetDetails implements OnInit {
         const dialogData = {
             headerText: `Reference Set ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
             template: this.richTextDialog,
-            data: { fieldName: fieldName, text: this.refsetData[fieldName] },
+            data: {fieldName: fieldName, text: this.refsetData[fieldName]},
         };
 
         const dialogOptions = {
@@ -1416,11 +1436,17 @@ export class RefsetDetails implements OnInit {
                     (status) => {
 
                         if (status.status == 'convert') {
-                            this.notificationService.show('The reference set has been converted to extensional.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+                            this.notificationService.show('The reference set has been converted to extensional.', null, 'success', {
+                                timeOut: 0,
+                                extendedTimeOut: 0
+                            });
                             this.loadRefset();
                             return;
                         } else if (status.error) {
-                            this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                            this.notificationService.show('There was a problem with the conversion, please try again! Error: ' + status.error, null, 'error', {
+                                timeOut: 0,
+                                extendedTimeOut: 0
+                            });
                             return;
                         }
                     },
@@ -1563,7 +1589,6 @@ export class RefsetDetails implements OnInit {
         return new Date(dateTime).toLocaleDateString() + ' ' + new Date(dateTime).toLocaleTimeString();
     }
 
-
     getFsn(descriptions: any): string {
         for (const description of descriptions) {
             if (description.languageName.toLowerCase().indexOf('fsn') > 0) {
@@ -1615,16 +1640,6 @@ export class RefsetDetails implements OnInit {
         return refsetData?.descriptions;
     }
 
-    get displayOutdateWarning(): boolean {
-        const data = this.refsetData;
-        return data && data.upgradeWarning && data.availableActions?.includes('CANCEL_EDIT') && !data.availableActions?.includes('EDIT');
-    }
-
-    get conceptDescriptionTerm(): string {
-        const desc = this.conceptDescriptions.filter((desc) => this.getConceptDetailLanguageWithoutType().indexOf('-' + desc.languageCode) > -1 && desc.type == this.getConceptDetailLanguageType());
-        return (desc.length > 0 ? desc[0] : this.conceptDescriptions[0]).term;
-    }
-
     openUndoEditModal(undoEditDialog: NgbModal) {
         this.modalService.open(undoEditDialog, {
             windowClass: 'alert-modal'
@@ -1674,5 +1689,10 @@ export class RefsetDetails implements OnInit {
 
     unfocus(target: any, obj: any): void {
         target.focus();
+    }
+
+    notesEditable(index: number, data: any): boolean {
+        console.log(`Index: ${index}`);
+        return index === 0 && data.workflowStatus === this.refsetData.workflowStatus && (this.allowedToEdit || this.allowedToReview);
     }
 }

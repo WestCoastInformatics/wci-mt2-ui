@@ -23,6 +23,7 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
   @Input() refsetInternalId: string;
   @Input() user: string;
   @Input() disabled = false;
+  @Input() edit: boolean;
   @Input() status: string;
   @Output() saved: EventEmitter<any> = new EventEmitter<any>();
 

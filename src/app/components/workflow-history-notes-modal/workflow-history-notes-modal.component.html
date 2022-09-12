@@ -1,14 +1,8 @@
-<!-- <button class="refset-tool-standard-icon-button"
-        [ngClass]="{ inactive: disabled }"
-        [disabled]="disabled"
-        (click)="openreadyForReviewModal(workflowHistoryNotesDialog)">
-    <img src="assets/pencil-edit-icon.svg"
-         alt="Edit Notes"
-         title="Edit Notes"
-         aria-label="Edit Workflow History" />
-</button> -->
+<a *ngIf="edit" [innerHTML]="workflowHistoryNotes"
+        (click)="openReadyForReviewModal()">
+</a>
 
-<button mat-menu-item alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
+<button *ngIf="!edit" mat-menu-item alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
 
 <ng-template #modalContent>
     <div class="compose-modal-body">
