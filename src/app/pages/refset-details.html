@@ -145,7 +145,7 @@
                         </create-new-refset>
 
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview"
-                            [refsetInternalId]="id" [user]="refsetData?.modifiedBy"
+                            [refsetInternalId]="id" [user]="refsetData?.modifiedBy" (saved)="loadWorkflowHistoryData($event)"
                             [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
 
