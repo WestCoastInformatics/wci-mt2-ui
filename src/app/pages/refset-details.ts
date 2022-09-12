@@ -1152,8 +1152,10 @@ export class RefsetDetails implements OnInit {
         this.initializeDetailsPage();
     }
 
-    loadWorkflowHistoryData(): void {
-
+    loadWorkflowHistoryData(showLoading = false): void {
+        if (showLoading) {
+          this.toggleLoadingSpinner(true);
+        }
         this.refsetService.getWorkflowHistory(this.id, '?limit=500&offset=0&sort=modified&sortAscending=false').subscribe((results) => {
 
             this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
@@ -1164,6 +1166,9 @@ export class RefsetDetails implements OnInit {
             if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
                 this.reviewNotesAdded = true;
             }
+          if (showLoading) {
+            this.toggleLoadingSpinner(false);
+          }
         });
     }
 
