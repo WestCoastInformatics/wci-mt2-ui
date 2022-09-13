@@ -26,8 +26,7 @@ export class ImportFromListModalComponent {
         private modalService: NgbModal,
         private refsetService: RefsetService,
         private notificationService: NotificationService,
-        private router: Router,
-        private refsetDetails: RefsetDetails
+        private router: Router
     ) { }
 
     callMemberOperation(operation: string): void {
@@ -42,9 +41,9 @@ export class ImportFromListModalComponent {
 
     processOperationReturn = (data) => {
 
-        this.changeLockedStatus.emit(false);
-        this.refsetDetails.ngOnInit();
         this.listOfIds = "";
+        this.changeLockedStatus.emit(false);
+        window.location.reload();
     }
 
     openImportFromListModal(importFromListDialog: NgbModal) {
