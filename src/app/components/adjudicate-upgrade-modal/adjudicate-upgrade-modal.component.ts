@@ -118,7 +118,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
       {
         field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
         valueGetter: (params) => {
-          return this.formatReason(params.data.isHidden ? params.data._reaosn : params.data.inactivationReason);
+          return this.formatReason(params.data.isHidden ? params.data._reason : params.data.inactivationReason);
         }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
       },
       {
@@ -137,7 +137,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110, unSortIcon: true
       },
       {
-        field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', valueGetter: (params) => {
+        field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', sort: 'asc', valueGetter: (params) => {
           const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
           if (desc) {
             return this.getConceptName(desc);
@@ -147,24 +147,24 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
         }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
       },
       {
-        field: 'reason', valueGetter: (params) => {
+        field: 'reason', sortable: false, filter: false, valueGetter: (params) => {
           return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
         }, tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
       },
       {
-        field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
+        field: 'replacementCode', sortable: false, filter: false, tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
           template: ' <a class="add-all mr-auto ml-auto">'
             + '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
             + ' </a>'
         }, cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
       },
       {
-        field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', valueGetter: (params) => {
+        field: 'replacementId', sortable: false, filter: false, tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', valueGetter: (params) => {
           return params?.data?.replacementConcepts[0]?.code;
         }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
       },
       {
-        field: 'created', colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+        field: 'created', sortable: false, filter: false, colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
           let description = '';
 
@@ -174,7 +174,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
           return description;
 
-        }, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true, sort: 'desc',
+        }, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true,
       },
       { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
     ];
@@ -220,8 +220,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
     console.log(this.selectedRow?.rowIndex);
     console.log(this.selectedRow?.data);
     const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
-    newItem.inactivationReason = '';
-    newItem.descriptions = '';
+    newItem.inactivationReason = 'MANUAL REPLACEMENT';
+    // newItem.descriptions = '';
     newItem.replacementConcepts = '';
     if (option.includes('add')) {
       this.chosenConceptCode = this.selectedRow['data'].code;
@@ -482,12 +482,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
             finalResults.push(item);
           } else {
             const newItem = {
-              ...item, isHidden: true, _reaosn: item.inactivationReason,
+              ...item, isHidden: true, _reason: item.inactivationReason,
               _descriptions: item.descriptions
             };
 
-            newItem.inactivationReason = '';
-            newItem.descriptions = '';
+            // newItem.inactivationReason = '';
+            // newItem.descriptions = '';
             newItem.replacementConcepts = [item.replacementConcepts[i]];
             // if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
             if (this.addReplacementFlag && (item.replacementConcepts[i].code == this.concept.code)) {

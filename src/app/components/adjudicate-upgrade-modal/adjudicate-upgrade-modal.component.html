@@ -308,15 +308,15 @@
 <ng-template #actionSection let-params>
     <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')">
         <img src="assets/grey-trash-bin.svg" (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')" width="18px" height="18px" title="Remove {{actionText}}"
-          aria-label="Subtract" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+          aria-label="Remove {{actionText}}" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
     <span *ngIf="!params?.data?.isHidden && showActionButton">
-        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add'); showActionButton = false;" width="18px" height="18px" title="" aria-label="Add"
+        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add'); showActionButton = true;" width="18px" height="18px" title="" aria-label="Add"
           class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
     </span>
-    <span *ngIf="params?.data?.isSearch && !showActionButton">
+    <span *ngIf="params?.data?.isSearch">
         <img src="assets/grey-close-icon.svg" (click)="getSelectedRowData('remove'); showActionButton = true;" width="18px" height="18px" title="Remove {{actionText}}"
-          aria-label="Subtract" class="grey-close-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+          aria-label="Remove {{actionText}}" class="grey-close-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
 </ng-template>
 
