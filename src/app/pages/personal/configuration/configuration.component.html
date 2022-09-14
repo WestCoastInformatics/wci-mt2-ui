@@ -1,54 +1,63 @@
 <div class="content-header">
-    <div class="row header-title">
-        <span class="title-label">{{ this.user?.name }}</span>
-    </div>
+  <div class="row header-title">
+    <span class="title-label">{{ this.user?.name }}</span>
+  </div>
 </div>
 
 <div class="content-wrapper">
-    <app-sidebar [menuItems]="menu"></app-sidebar>
-    <div class='container-fluid mt-3'>
-        <span class="account-configuration">
+  <app-sidebar [menuItems]="menu"></app-sidebar>
+  <div class='container-fluid mt-3'>
+    <span class="account-configuration">
 
-            <div class="section-header mb-3"> Account Configuration </div>
-            <div class="account-configuration-details">
-                <div class="account-configuration-blocks-1">
-                    <div class="account-configuration-block main-block profile-block">
-                        <div class="account-profile-head section-header">Profile</div>
-                        <div class="account-profile-mid">
-                            <mat-form-field class="profile-name-field" appearance="none">
-                                <mat-label>Name <span class="mandatory-field">*</span></mat-label>
-                                <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
-                            </mat-form-field>
+      <div class="section-header mb-3"> Account Configuration </div>
+      <div class="account-configuration-details">
+        <div class="account-configuration-blocks-1">
+          <div class="account-configuration-block main-block profile-block">
+            <div class="account-profile-head section-header">Profile</div>
+            <div class="account-profile-mid">
+              <mat-form-field class="profile-name-field" appearance="none">
+                <mat-label>Name <span class="mandatory-field">*</span></mat-label>
+                <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+              </mat-form-field>
 
-                            <mat-form-field class="profile-company-field" appearance="none">
-                                <mat-label>Company</mat-label>
-                                <input matInput type="text" name="email" [(ngModel)]="profileCompanyValue">
-                            </mat-form-field>
+              <mat-form-field class="profile-company-field" appearance="none">
+                <mat-label>Company</mat-label>
+                <input matInput type="text" name="email" [(ngModel)]="profileCompanyValue">
+              </mat-form-field>
 
-                            <mat-form-field class="profile-email-field" appearance="none">
-                                <mat-label>Email <span class="mandatory-field">*</span></mat-label>
-                                <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
-                            </mat-form-field>
-                        </div>
-                        <div class="section-btn">
-                            <button class="btn btn-primary btn-lg btn-wide-font" aria-label="Update Profile" title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue"
-                              (click)="updateProfile()">Update Profile</button>
-                        </div>
-                    </div>
-
-                    <div class="account-configuration-block main-block profile-pic-block">
-                        <div class="account-profile-head section-header">Profile Picture</div>
-                        <div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
-                        <div class="section-btn">
-                            <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg btn-wide-font">
-                                Edit Picture
-                                <input type="file" class="d-none" (change)="onPhotoChange($event)" />
-                            </label>
-                        </div>
-                    </div>
-                </div>
+              <mat-form-field class="profile-email-field" appearance="none">
+                <mat-label>Email <span class="mandatory-field">*</span></mat-label>
+                <input matInput type="text" name="email" [(ngModel)]="profileEmailValue">
+              </mat-form-field>
             </div>
+            <div class="section-btn">
+              <button class="btn btn-primary btn-lg btn-wide-font" aria-label="Update Profile"
+                title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue"
+                (click)="updateProfile()">Update Profile</button>
+            </div>
+          </div>
 
-        </span>
-    </div>
+          <div class="account-configuration-block main-block profile-pic-block">
+            <div class="account-profile-head section-header">Profile Picture</div>
+            <div class="account-profile-mid"><img #iconImg
+                [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)"
+                class="large-icon-image" /></div>
+            <div class="section-btn">
+              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri"
+                class="btn btn-primary btn-lg btn-wide-font" style="margin-right: 0.25em"
+                (click)="onPhotoDelete()">
+                Delete Picture
+              </label>
+              <label aria-label="Edit Picture" title="Edit Picture"
+                class="btn btn-primary btn-lg btn-wide-font">
+                Edit Picture
+                <input type="file" class="d-none" (change)="onPhotoChange($event)" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </span>
+  </div>
 </div>
