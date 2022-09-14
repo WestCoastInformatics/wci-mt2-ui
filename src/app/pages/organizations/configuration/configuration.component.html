@@ -61,9 +61,9 @@
                 class="large-icon-image" />
             </div>
             <div class="section-btn">
-              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri"
-                class="btn btn-primary btn-lg btn-wide-font" style="margin-right: 0.25em"
-                (click)="onPhotoDelete()">
+              <label aria-label="Delete Picture" title="Delete Picture"
+                *ngIf="selectedOrganization?.iconUri" class="btn btn-primary btn-lg btn-wide-font"
+                style="margin-right: 0.25em" (click)="onPhotoDelete()">
                 Delete Picture
               </label>
               <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
