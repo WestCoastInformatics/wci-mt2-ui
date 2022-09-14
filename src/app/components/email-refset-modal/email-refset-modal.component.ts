@@ -89,7 +89,7 @@ export class EmailRefsetModalComponent {
 
         this.refsetService.emailRefset(this.refsetInternalId, params).subscribe(
             (data) => {
-                this.notificationService.show('The reference set was emailed.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show('The Reference Set was emailed.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
                 this.changeLockedStatus.emit(false);
                 window.location.reload();

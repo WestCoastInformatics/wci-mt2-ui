@@ -1,21 +1,24 @@
+
 <a title="Create New Team" class='btn btn-primary rounded btn-lg btn-wide-font float-right' aria-label="Create New Team"
   (click)="openCreateNewTeamModal(createNewTeamDialog)">Create New
     Team</a>
 
+
 <ng-template #createNewTeamDialog let-modal>
 
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-            Create New Team
-        </h4>
+  <div class="modal-header rt2-modal-header">
+    <button ngbAutofocus class="unfocus-btn"></button>
+    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+      Create New Team
+    </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
+    <button type="button" class="close dialog-close-x" aria-label="Close"
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    </button>
+  </div>
 
-    <div class="modal-body refset-tool-lockable">
+  <div class="modal-body refset-tool-lockable">
 
         <table>
             <tr *ngIf="!param">
@@ -56,33 +59,36 @@
                         <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
                     </mat-form-field>
 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label" style="padding-top: 9px">Role: <span class="mandatory-field">*</span></label>
-                </td>
-                <td>
-                    <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
-                        <mat-select #detailsLanguageSelect placeholder="Choose role(s) to apply to this team" [ngModel]="roleOptions" [(value)]="selectedRoles" multiple
-                          class="refset-tool-modal-select" panelClass="refset-tool-modal-panel" (selectionChange)="setRoles()">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="modal-label" style="padding-top: 9px">Role: <span
+              class="mandatory-field">*</span></label>
+        </td>
+        <td>
+          <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
+            <mat-select #detailsLanguageSelect placeholder="Choose role(s) to apply to this Team"
+              [ngModel]="roleOptions" [(value)]="selectedRoles" multiple
+              class="refset-tool-modal-select" panelClass="refset-tool-modal-panel"
+              (selectionChange)="setRoles()">
 
-                            <mat-option *ngFor="let role of roleOptions" [value]="role.value">
-                                {{role.display}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </td>
-            </tr>
-        </table>
+              <mat-option *ngFor="let role of roleOptions" [value]="role.value">
+                {{role.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
 
-    </div>
+  </div>
 
-    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="name === '' || !isValidEmail() || selectedRoles.length === 0" (click)="createTeamObject()" mat-raised-button color="green"
-          aria-hidden="false" class="refset-tool-action-button" aria-label="Create Team" title="Create Team" ng-reflect-color="green">
-            Create Team
-        </button>
-    </div>
+  <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+      <button type="button" [disabled]="name === '' || !isValidEmail() || selectedRoles.length === 0" (click)="createTeamObject()" mat-raised-button color="green"
+        aria-hidden="false" class="refset-tool-action-button" aria-label="Create Team" title="Create Team" ng-reflect-color="green">
+          Create Team
+      </button>
+  </div>
 
 </ng-template>
