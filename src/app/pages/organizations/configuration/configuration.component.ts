@@ -179,17 +179,17 @@ export class OrganizationConfigurationComponent implements OnInit {
   onPhotoDelete() {
 
     if (confirm("Are you sure you want to delete this profile photo?")) {
-      this.organizationsService.deleteOrganizationPhoto(this.organizationId).subscribe(() => {
-        try {
+      try {
+        this.organizationsService.deleteOrganizationPhoto(this.organizationId).subscribe(() => {
           this.notificationService.show("Profile photo was successfully deleted", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
           this.selectedOrganization.iconUri = null;
-        }
-        catch {
-          this.notificationService.show("Failed to delete Profile photo", "Error", 'error', { timeOut: 3000, extendedTimeOut: 0 });
-          return;
-        }
+        });
+      }
+      catch {
+        this.notificationService.show("Failed to delete Profile photo", "Error", 'error', { timeOut: 3000, extendedTimeOut: 0 });
+        return;
+      }
 
-      });
     }
   }
 
