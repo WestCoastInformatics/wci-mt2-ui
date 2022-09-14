@@ -11,93 +11,93 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from "src/app/services/authentication/authentication.service";
 
 @Component({
-    selector: "create-new-project-modal",
-    templateUrl: "./create-new-project-modal.component.html",
+  selector: "create-new-project-modal",
+  templateUrl: "./create-new-project-modal.component.html",
 })
 export class CreateNewProjectModalComponent {
 
-    // Project artifact Variables for Navigation to resource page after project creation
-    selectedProject: any;
-    isSelectedProject: boolean;
-    projectId: any;
+  // Project artifact Variables for Navigation to resource page after project creation
+  selectedProject: any;
+  isSelectedProject: boolean;
+  projectId: any;
 
-    // Create New Project Modal Variables
-    name = '';
-    email = '';
-    description = '';
-    openedModel: NgbModalRef;
-    privateProject: any;
-    emailError = '';
+  // Create New Project Modal Variables
+  name = '';
+  email = '';
+  description = '';
+  openedModel: NgbModalRef;
+  privateProject: any;
+  emailError = '';
 
-    @Input() edition: any;
-    @Output() changeLockedStatus = new EventEmitter<any>(true);
+  @Input() edition: any;
+  @Output() changeLockedStatus = new EventEmitter<any>(true);
 
-    constructor(
-        private modalService: NgbModal,
-        private refsetService: RefsetService,
-        private projectsService: ProjectsService,
-        private organizationsService: OrganizationsService,
-        private notificationService: NotificationService,
-        private readonly refsetDetails: RefsetDetails,
-        private readonly route: ActivatedRoute,
-        private authenticationService: AuthenticationService
-    ) { }
+  constructor(
+    private modalService: NgbModal,
+    private refsetService: RefsetService,
+    private projectsService: ProjectsService,
+    private organizationsService: OrganizationsService,
+    private notificationService: NotificationService,
+    private readonly refsetDetails: RefsetDetails,
+    private readonly route: ActivatedRoute,
+    private authenticationService: AuthenticationService
+  ) { }
 
-    openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
+  openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
 
-        if (CodeUtility.hasValue(this.edition)) {
+    if (CodeUtility.hasValue(this.edition)) {
 
-            this.description = '';
-            this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
-        }
+      this.description = '';
+      this.openedModel = this.modalService.open(createNewProjectDialog, { backdrop: 'static', keyboard: false });
+    }
+  }
+
+  isValidEmail(): boolean {
+    if (this.email.length == 0) {
+      return true;
+    }
+    var lower = this.email.toLowerCase();
+    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+    if (flag == null) {
+      this.emailError = "Email is invalid.";
+    } else {
+      this.emailError = "";
     }
 
-    isValidEmail(): boolean {
-        if (this.email.length == 0) {
-            return true;
-        }
-        var lower = this.email.toLowerCase();
-        var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    return flag == null ? false : true;
+  }
 
-        if (flag == null) {
-            this.emailError = "Email is invalid.";
-        } else {
-            this.emailError = "";
-        }
+  onKeyDownEvent(event: any) {
 
-        return flag == null ? false : true;
-    }
+    console.log(event.target.value);
+    this.isValidEmail();
+  }
 
-    onKeyDownEvent(event: any) {
+  createProjectObject(): void {
 
-        console.log(event.target.value);
-        this.isValidEmail();
-    }
+    this.changeLockedStatus.emit(true);
 
-    createProjectObject(): void {
+    let params: any = {
+      active: true,
+      name: this.name,
+      description: this.description,
+      //primaryContactEmail: this.email,
+      privateProject: this.privateProject,
+      teams: [],
+      edition: this.edition
+    };
 
-        this.changeLockedStatus.emit(true);
-
-        let params: any = {
-            active: true,
-            name: this.name,
-            description: this.description,
-            //primaryContactEmail: this.email,
-            privateProject: this.privateProject,
-            teams: [],
-            edition: this.edition
-        };
-
-        this.projectsService.createProject(params).subscribe(
-            (data) => {
-                this.notificationService.show("The project is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
-                this.modalService.dismissAll();
-                this.changeLockedStatus.emit(false);
-                window.location.reload();
-            },
-            (err) => {
-                this.changeLockedStatus.emit(false);
-            }
-        );
-    }
+    this.projectsService.createProject(params).subscribe(
+      (data) => {
+        this.notificationService.show("The Project is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
+        this.modalService.dismissAll();
+        this.changeLockedStatus.emit(false);
+        window.location.reload();
+      },
+      (err) => {
+        this.changeLockedStatus.emit(false);
+      }
+    );
+  }
 }
