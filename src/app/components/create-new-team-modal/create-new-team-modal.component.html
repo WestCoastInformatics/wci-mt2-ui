@@ -1,6 +1,8 @@
-<a title="Create New Team" class='btn btn-primary rounded btn-lg btn-wide-font float-right'
-  aria-label="Create New Team" (click)="openCreateNewTeamModal(createNewTeamDialog)">Create New
-  Team</a>
+
+<a title="Create New Team" class='btn btn-primary rounded btn-lg btn-wide-font float-right' aria-label="Create New Team"
+  (click)="openCreateNewTeamModal(createNewTeamDialog)">Create New
+    Team</a>
+
 
 <ng-template #createNewTeamDialog let-modal>
 
@@ -18,46 +20,44 @@
 
   <div class="modal-body refset-tool-lockable">
 
-    <table>
-      <tr *ngIf="!param">
-        <td>
-          <label class="modal-label-edition" style="padding-top: 6px">Parent Organization:</label>
-        </td>
-        <td>
-          {{ organization.name }}
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
-        </td>
-        <td>
-          <input class="modal-input-field" placeholder="Team Name" autofocus [(ngModel)]="name"
-            style="width: 250px; padding-bottom: 7px" />
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label class="modal-label">Email:</label>
-        </td>
-        <td>
-          <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)"
-            placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
-            style="width: 250px; padding-bottom: 7px" />
-        </td>
-      </tr>
-      <tr class="modal-error-message" [hidden]="!emailError">
-        <div>{{emailError}}</div>
-      </tr>
-      <tr>
-        <td>
-          <label class="modal-label-description">Description:</label>
-        </td>
-        <td>
-          <mat-form-field class="import-from-list-field" appearance="outline">
-            <textarea matInput class="import-from-list-text-area"
-              [(ngModel)]="description">test</textarea>
-          </mat-form-field>
+        <table>
+            <tr *ngIf="!param">
+                <td>
+                    <label class="modal-label-edition" style="padding-top: 6px">Parent Organization:</label>
+                </td>
+                <td>
+                    {{ organization.name }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
+                </td>
+                <td>
+                    <input class="modal-input-field" placeholder="Team Name" autofocus #teamName [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />{{
+                    teamName.focus() }}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label">Email:</label>
+                </td>
+                <td>
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                      style="width: 250px; padding-bottom: 7px" />
+                </td>
+            </tr>
+            <tr class="modal-error-message" [hidden]="!emailError">
+                <div>{{emailError}}</div>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label-description">Description:</label>
+                </td>
+                <td>
+                    <mat-form-field class="import-from-list-field" appearance="outline">
+                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
+                    </mat-form-field>
 
         </td>
       </tr>
@@ -85,12 +85,10 @@
   </div>
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    <button type="button" [disabled]="name === '' || !isValidEmail() || selectedRoles.length === 0"
-      (click)="createTeamObject()" mat-raised-button color="green" aria-hidden="false"
-      class="refset-tool-action-button" aria-label="Create Team" title="Create Team"
-      ng-reflect-color="green">
-      Create Team
-    </button>
+      <button type="button" [disabled]="name === '' || !isValidEmail() || selectedRoles.length === 0" (click)="createTeamObject()" mat-raised-button color="green"
+        aria-hidden="false" class="refset-tool-action-button" aria-label="Create Team" title="Create Team" ng-reflect-color="green">
+          Create Team
+      </button>
   </div>
 
 </ng-template>

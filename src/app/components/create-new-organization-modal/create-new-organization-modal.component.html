@@ -42,7 +42,8 @@
                     <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" placeholder="Organization Name" autofocus [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />
+                    <input class="modal-input-field" placeholder="Organization Name" autofocus #orgName [(ngModel)]="name" style="width: 250px; padding-bottom: 7px" />{{
+                    orgName.focus() }}
                 </td>
             </tr>
             <tr>
