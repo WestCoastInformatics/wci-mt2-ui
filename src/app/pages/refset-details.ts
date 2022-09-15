@@ -1029,7 +1029,7 @@ export class RefsetDetails implements OnInit {
                             flex: 1,
                             minWidth: 180,
                             maxWidth: 180,
-                            headerName: 'Modified Date',
+                            headerName: 'Last Modified Date',
                             cellClass:
                                 'refset-tool-details-column-modified-date',
                             valueGetter:
