@@ -25,7 +25,7 @@
                 <td>
                     <div class="row">
                         <div>
-                            <mat-form-field appearance="fill" class="col refset-tool-modal-select-field">
+                            <mat-form-field floatLabel="never" appearance="fill" class="col refset-tool-modal-select-field">
                                 <mat-select class="refset-tool-modal-select" [(value)]="selectedEdition">
                                     <mat-option *ngIf="editionsList.length == 0">No Editions Avaialable</mat-option>
                                     <mat-option *ngFor="let edition of editionsList" [value]="edition">
@@ -64,7 +64,7 @@
                     <label class="modal-label-description">Description:</label>
                 </td>
                 <td>
-                    <mat-form-field class="import-from-list-field" appearance="outline">
+                    <mat-form-field floatLabel="never" class="import-from-list-field" appearance="outline">
                         <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
                     </mat-form-field>
 

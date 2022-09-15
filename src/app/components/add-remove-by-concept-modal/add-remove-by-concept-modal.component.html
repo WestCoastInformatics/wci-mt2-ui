@@ -33,11 +33,11 @@
                                 <div class="
                                         add-remove-concept-hierarchy-modal-search-bar
                                     ">
-                                    <mat-form-field id="addRemoveByConceptHierarchySearchInputField" class="add-remove-concept-hierarchy-modal-input-field ">
+                                    <mat-form-field floatLabel="never" id="addRemoveByConceptHierarchySearchInputField"
+                                      class="add-remove-concept-hierarchy-modal-input-field ">
                                         <mat-label>Search by ID or Keyword</mat-label>
                                         <input aria-label="Search by ID or Keyword" matInput #addRemoveByConceptHierarchySearchInput
-                                          id="addRemoveByConceptHierarchySearchInput" [(ngModel)]="searchInput"
-                                               (keyup.enter)="onTableSearchChange()" ngbAutofocus />
+                                          id="addRemoveByConceptHierarchySearchInput" [(ngModel)]="searchInput" (keyup.enter)="onTableSearchChange()" ngbAutofocus />
                                     </mat-form-field>
                                     <span class="
                                             add-remove-concept-hierarchy-modal-cancel-search

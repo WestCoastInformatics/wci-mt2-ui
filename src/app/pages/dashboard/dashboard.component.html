@@ -13,11 +13,8 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
-                                    <img #iconImg
-                                        [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)"
-                                        class="medium-icon-image" /> {{ params?.value}}
-                                    <span
-                                        [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{
+                                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                                    <span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{
                                             organization.name }}</a></span>
                                 </div>
                             </ng-container>
@@ -35,10 +32,9 @@
                             <ng-container *ngFor="let project of projectList">
                                 <div class='section-list' *ngIf="project.name">
                                     <span
-                                        [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id +'/refsets']"><a>{{
+                                      [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id +'/refsets']"><a>{{
                                             project.edition.organization.name }}/{{
-                                            project.name }}</a><i *ngIf="project.privateProject"
-                                            class='fa fa-lock ml-2 text-muted'></i></span>
+                                            project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
                             </ng-container>
                         </div>
@@ -51,8 +47,7 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let team of teamList">
                                 <div class='section-list' *ngIf="team.name">
-                                    <span
-                                        [routerLink]="['/organization/' + team.organizationId + '/teams/' + team.id +'/people']"><a>{{
+                                    <span [routerLink]="['/organization/' + team.organizationId + '/teams/' + team.id +'/people']"><a>{{
                                             team.organization?.name }}/{{ team?.name}}</a></span>
                                 </div>
                             </ng-container>
@@ -64,7 +59,7 @@
                 <section>
                     <div class='section-header'>My Reference Sets</div>
                     <div class='dashboard-section pr-2 pl-2'>
-                        <!-- <mat-form-field class="example-form-field" appearance="fill">
+                        <!-- <mat-form-field floatLabel="never" class="example-form-field" appearance="fill">
                                     <input matInput type="text"
                                         placeholder="Search"
                                         [(ngModel)]="searchText" />
@@ -74,8 +69,7 @@
                                     </button>
                                 </mat-form-field> -->
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular [columnDefs]="columnDefs"
-                                [gridOptions]="refsetGridOptions" style="width: 100%">
+                            <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Workflow Status Templates -->

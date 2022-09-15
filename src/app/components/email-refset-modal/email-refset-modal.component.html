@@ -1,5 +1,4 @@
-<button mat-menu-item alt="Share Reference Set" title="Share Reference Set"
-    aria-label="Share Reference Set" (click)="openEmailRefsetModal(emailRefsetDialog)">Share
+<button mat-menu-item alt="Share Reference Set" title="Share Reference Set" aria-label="Share Reference Set" (click)="openEmailRefsetModal(emailRefsetDialog)">Share
     Reference Set</button>
 
 <ng-template #emailRefsetDialog let-modal>
@@ -10,8 +9,7 @@
             Share Reference Set: {{refset?.name}}
         </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close"
-            (click)="modal.dismiss('Cross click');reset();">
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click');reset();">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
@@ -26,9 +24,8 @@
                     <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)"
-                        ngbAutofocus placeholder="primarycontactemail@orgname.org"
-                        [(ngModel)]="email" style="width: 250px; padding-bottom: 9px" />
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                      style="width: 250px; padding-bottom: 9px" />
 
 
                 </td>
@@ -41,9 +38,8 @@
                     <label class="modal-label-description">Message:</label>
                 </td>
                 <td>
-                    <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area"
-                            [(ngModel)]="description">test</textarea>
+                    <mat-form-field floatLabel="never" class="import-from-list-field" appearance="outline">
+                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
                     </mat-form-field>
 
                 </td>
@@ -52,9 +48,8 @@
 
     </div>
     <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button type="button" [disabled]="email === '' || !isValidEmail()"
-            (click)="emailRefsetObject()" mat-raised-button color="green" aria-hidden="false"
-            class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
+        <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="emailRefsetObject()" mat-raised-button color="green" aria-hidden="false"
+          class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
             Send Email
         </button>
     </div>

@@ -2,24 +2,20 @@
   <div class="row header-title">
 
     <span class="title-label">Organizations</span>
-    <mat-form-field appearance="outline" class="project-drop-down">
+    <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
       <mat-label>Choose Organization</mat-label>
-      <mat-select #detailsVersionSelect [disableOptionCentering]="true"
-        [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-        <mat-option *ngFor="let organization of organizationList" [value]="organization"
-          style="z-index: 3" [title]="organization.name">
+      <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+        <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
           {{ organization.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
     <span class="title-label">Teams</span>
-    <mat-form-field appearance="outline" class="project-drop-down">
+    <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
       <mat-label>Choose Team</mat-label>
-      <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam"
-        (selectionChange)="selectTeam($event)">
-        <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3"
-          [title]="team.name">
+      <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
+        <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
           {{ team.name }}
         </mat-option>
       </mat-select>
@@ -44,34 +40,29 @@
             <div class="teams-profile-head section-header">Profile</div>
 
             <div class="teams-profile-mid">
-              <mat-form-field class="profile-name-field" appearance="none">
+              <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
                 <mat-label>Name</mat-label>
                 <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
               </mat-form-field>
 
-              <mat-form-field class="profile-email-field" appearance="none">
+              <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
                 <mat-label>Primary Contact Email</mat-label>
-                <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)"
-                  [(ngModel)]="profileEmailValue">
+                <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
                 <div class="modal-error-message" [hidden]="!emailError">
                   {{emailError}}</div>
               </mat-form-field>
 
-              <mat-form-field class="profile-description-field" appearance="none">
+              <mat-form-field floatLabel="never" class="profile-description-field" appearance="none">
                 <mat-label>Description</mat-label>
-                <textarea matInput type="text" name="description"
-                  placeholder="The full description of the purpose of the project"
+                <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project"
                   [(ngModel)]="profileDescriptionValue"></textarea>
               </mat-form-field>
             </div>
 
             <div class="update-profile-button">
-              <div class="section-list text-right" aria-label="Update Profile"
-                title="Update Profile">
-                <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
-                  class="btn btn-primary btn-lg btn-wide-font"
-                  [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()"
-                  (click)="updateTeam()">
+              <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
+                <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font"
+                  [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" (click)="updateTeam()">
                   Update Profile
                 </button>
               </div>
@@ -80,17 +71,15 @@
 
           <div class="secondary-block">
 
-            <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
-              class="teams-configuration-block-row team-permissions-block">
+            <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row team-permissions-block">
 
               <div class="save-permissions-head section-header">Permissions</div>
 
               <div class="save-permissions-mid">Choose the permission level or roles
                 for your team.
                 <br><br>
-                <mat-form-field appearance="fill" class="refset-tool-modal-select-field">
-                  <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team"
-                    [(ngModel)]="selectedRoles" multiple class="refset-tool-modal-select"
+                <mat-form-field floatLabel="never" appearance="fill" class="refset-tool-modal-select-field">
+                  <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [(ngModel)]="selectedRoles" multiple class="refset-tool-modal-select"
                     panelClass="refset-tool-modal-panel">
 
                     <mat-option *ngFor="let role of roleOptions" [value]="role.value">
@@ -101,11 +90,9 @@
               </div>
 
               <div class="save-permissions-button">
-                <div class="section-list text-right" aria-label="Save Permissions"
-                  title="Save Permissions">
-                  <button class="btn btn-primary btn-lg"
-                    [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles"
-                    (click)="updateTeamRoles()">Save Permissions</button>
+                <div class="section-list text-right" aria-label="Save Permissions" title="Save Permissions">
+                  <button class="btn btn-primary btn-lg" [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles" (click)="updateTeamRoles()">Save
+                    Permissions</button>
                 </div>
               </div>
 
@@ -119,17 +106,14 @@
                             </div>
                         </div> -->
 
-            <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
-              class="teams-configuration-block-row remove-teams-block">
+            <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row remove-teams-block">
 
-              <div class="remove-team-head section-header"><img class="red-x"
-                  src="assets/red-x.svg"> Remove this Team</div>
+              <div class="remove-team-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
               <div class="remove-team-mid">Warning! This is a permanent operation and
                 cannot be undone. Please be certain before taking action.</div>
               <div class="remove-teams-button">
                 <div class="section-list text-right" aria-label="Remove Team" title="Remove Team">
-                  <remove-dashboard-component-modal [componentType]="'team'" [componentId]="teamId"
-                    [componentName]=getSelectedTeamName() [disabled]="!teamId">
+                  <remove-dashboard-component-modal [componentType]="'team'" [componentId]="teamId" [componentName]=getSelectedTeamName() [disabled]="!teamId">
                   </remove-dashboard-component-modal>
                 </div>
               </div>

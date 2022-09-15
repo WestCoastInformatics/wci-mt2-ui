@@ -4,7 +4,7 @@
     Choose Columns
 </button>
 <!-- JESSE -->
-<mat-form-field *ngIf="!useDialog" appearance="fill" class="refset-tool-column-chooser-select-field">
+<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="fill" class="refset-tool-column-chooser-select-field">
     <mat-select #detailsLanguageSelect placeholder="Select Columns" [ngModel]="columns" [(value)]="selectedColumns" multiple [compareWith]="valueCompare" [disabled]="disabled"
       (selectionChange)="applyColumns()" class="refset-tool-column-chooser-select" panelClass="refset-tool-column-chooser-select-panel">
 

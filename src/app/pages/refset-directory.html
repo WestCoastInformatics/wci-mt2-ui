@@ -7,28 +7,24 @@
                 numOfMembers + ')'}}</span></div>
         <div class="dropdown-group">
             <div class="col-md-auto refset-tool-directory-chooser-column" *ngIf="showTable">
-                <app-column-chooser title="Select Columns to Display"
-                    [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog">
+                <app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog">
                 </app-column-chooser>
             </div>
 
             <div class="col-md-auto">
                 <div class="dropdown">
-                    <mat-form-field id="directorySearchInputField" title="Enter Search Critera">
+                    <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
                         <mat-label class="search-label">Search metadata and concepts</mat-label>
-                        <input matInput #directorySearchInput id="directorySearchInput"
-                            [(ngModel)]="searchInput" (keyup)="onSearchChange()"
-                            (change)="onSearchChange()" />
+                        <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (keyup)="onSearchChange()" (change)="onSearchChange()" />
                     </mat-form-field>
                     <span class="clear-search" (click)="clearSearch()">&#10005;</span>
 
                 </div>
             </div>
             <div class="col-md-auto" style="padding-left: 5px">
-                <mat-form-field id="directoryViewFilterField" appearance="fill">
+                <mat-form-field floatLabel="never" id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
-                    <mat-select title="Public/Private Refsets" #directoryViewSelect
-                        [(value)]="selectedView" (selectionChange)="changedViewFilter()">
+                    <mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
                         <mat-option *ngFor="let option of viewOptions" [value]="option.value">
                             {{option.display}}
                         </mat-option>
@@ -48,21 +44,17 @@
         <ag-grid-angular #directoryTable *ngIf="showTable" class="
                 ag-theme-alpine
                 refset-tool-ag-grid refset-tool-ag-grid-filter
-            " [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions"
-            style="width: 100%;height:638px">
+            " [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
         </ag-grid-angular>
 
-        <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize"
-            [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-            [totalKnown]="refsetGridPaging.totalKnown"
-            [manualStateRefresh]="refsetGridPaging.manualStateRefresh" [isDirectoryPage]="true">
+        <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+          [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh" [isDirectoryPage]="true">
         </app-pagination>
 
         <!-- Information Templates -->
         <ng-template #directoryInfoSection let-params>
-            <button mat-icon-button aria-hidden="false" #directoryInfoIcon
-                class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
-                title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
+            <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
+              title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
                 <mat-icon>information</mat-icon>
             </button>
 
@@ -73,14 +65,11 @@
         </ng-template>
 
         <ng-template #directoryInfoDialog let-data>
-            <div class="container-fluid" id="directoryInformationSection"
-                style="overflow: auto;min-width: 350px;">
-                <div class="row refset-tool-refset-details-title-name" style="display: block;"
-                    title="{{data.name}}" aria-label="{{data.name}}">
+            <div class="container-fluid" id="directoryInformationSection" style="overflow: auto;min-width: 350px;">
+                <div class="row refset-tool-refset-details-title-name" style="display: block;" title="{{data.name}}" aria-label="{{data.name}}">
                     <p style="font-size:18px; margin-bottom: 0px;">{{data.name}}</p>
-                    <p style="font-size:16px"><span
-                            *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
-                            *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
+                    <p style="font-size:16px"><span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
+                          *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
                 </div>
 
                 <refset-meta [refset]="data"></refset-meta>
@@ -97,19 +86,16 @@
         <ng-template #directoryNameSection let-params>
             {{ params?.value }}
 
-            <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon
-                class="refset-tool-table-action-icon" aria-label="Private Reference Set"
-                title="Private Reference Set">
+            <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon" aria-label="Private Reference Set"
+              title="Private Reference Set">
                 lock
             </mat-icon>
         </ng-template>
 
         <!-- Edition Templates -->
         <ng-template #directoryEditionSection let-params>
-            <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)"
-                src="{{params?.data?.flagIcon}}" class="refset-tool-edition-flag"
-                title="{{params?.data?.editionName}} Flag"
-                aria-label="{{params?.data?.editionName}} Flag" />
+            <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}" class="refset-tool-edition-flag"
+              title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag" />
             {{params?.data?.edition?.name}}
         </ng-template>
 
@@ -119,17 +105,13 @@
                 <div class="row">
 
                     <div class="col-2">
-                        <app-refset-download [isDetailPage]="false"
-                            *ngIf="params?.data?.downloadable"
-                            [disabled]="!params?.data?.downloadable" [refset]="params.data">
+                        <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
                         </app-refset-download>
                     </div>
 
                     <div class="col-2">
-                        <app-refset-discussion-list *ngIf="params && params.data" type="REFSET"
-                            [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                            [refsetName]="params.data.name" [roles]="params.data.roles"
-                            [(discussionCount)]="params.data.unresolvedDiscussionCount">
+                        <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
+                          [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.unresolvedDiscussionCount">
                         </app-refset-discussion-list>
                     </div>
                 </div>
@@ -138,7 +120,7 @@
 
         <ng-template #directoryFeedbackDialog let-data>
             This functionality will be implemented in subsequent phases.
-            <mat-form-field *ngIf="false">
+            <mat-form-field floatLabel="never" *ngIf="false">
                 <mat-label>Feedback</mat-label>
                 <input matInput [(ngModel)]="data.feedback" />
             </mat-form-field>

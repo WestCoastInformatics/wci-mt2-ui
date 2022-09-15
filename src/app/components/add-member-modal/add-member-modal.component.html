@@ -19,7 +19,7 @@
 
             <tr>
                 <td>
-                    <mat-form-field appearance="fill" class="email-input-field">
+                    <mat-form-field floatLabel="never" appearance="fill" class="email-input-field">
                         <mat-label>Enter the email of the user to add:</mat-label>
                         <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ addMember.focus() }}
                     </mat-form-field>

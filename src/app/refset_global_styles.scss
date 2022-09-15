@@ -280,8 +280,10 @@ a.footer-link {
   //font-size: smaller;
 
   .refset-tool-breadcrumb {
-    //margin-left: 10px;
-    font-size: 16px !important;
+    color: #c8cfd6;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    Font-weight: 300;
+    font-size: 1.25em;
 
     &.refset-tool-breadcrumb-selectable {
       cursor: pointer;
@@ -795,6 +797,10 @@ button.refset-tool-table-action-icon {
   // padding-top: 52px;
   .page-title {
     padding-left: 3rem;
+    color: #555555;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 1.25em;
   }
 
   .justify-content-end {
@@ -836,6 +842,8 @@ button.refset-tool-table-action-icon {
     width: 125px;
   }
 }
+
+
 
 .ag-floating-filter-full-body app-category-floating-filter select {
   padding: 0px;
@@ -1579,10 +1587,6 @@ select {
   left: -13px;
   top: 0px;
   cursor: pointer;
-
-  &:hover {
-    color: $delete_color;
-  }
 }
 
 .refset-tool-directory-chooser-column {
@@ -3909,7 +3913,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   padding-top: 4px;
 
   img {
-    padding-bottom: 3px;
+    padding-bottom: 8px;
   }
 }
 
@@ -3919,9 +3923,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .projects-icon-label {
-  font-size: 9px;
-  color: white;
-  padding-left: 16px;
+  padding-left: 15px;
+  color: #ffffff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
 }
 
 .directory-nav {
@@ -3930,6 +3935,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   border-right: 1px solid #797979;
   height: 50px;
   cursor: pointer;
+
+    img {
+        padding-bottom: 2px;
+      }
 }
 
 .directory-icon {
@@ -3939,9 +3948,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .directory-icon-label {
-  font-size: 9px;
-  color: white;
-  padding-left: 16px;
+  padding-left: 15px;
+  color: #ffffff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
 }
 
 .nav-item {
@@ -3953,15 +3963,14 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   text-align: center;
 
   img {
-    max-height: 26px;
+    max-height: 25px;
+    margin-bottom: -5px;
   }
 
   .nav-label {
-    display: block;
-    text-align: center;
-    font-size: 9px;
-    color: white;
-    margin-top: 4px;
+    color: #ffffff;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11px;
   }
 }
 
@@ -4076,11 +4085,10 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .landing-page-text-4 {}
 
 span.title {
-  font-weight: 300;
-  letter-spacing: 1.5px;
-  vertical-align: middle;
-  cursor: pointer;
-  color: #C8CFD6;
+  color: #eeeeee;
+  font-family: museo;
+  Font-weight: 300;
+  font-size: 20px;
 }
 
 .landing-page-guest-access {
@@ -4166,7 +4174,7 @@ span.title {
   width: -webkit-fill-available;
   /* Mozilla-based browsers will ignore this. */
   width: fill-available;
-  min-height: 50px;
+  min-height: 78px;
   height: fit-content;
   position: sticky;
 }
@@ -4205,7 +4213,7 @@ img.refset-tool-edition-flag {
 .content-header {
   position: sticky;
   z-index: 2;
-  top: 62px;
+  top: 78px;
 
   .header-title {
     align-items: baseline;
@@ -4217,8 +4225,9 @@ img.refset-tool-edition-flag {
       margin-right: 20px;
       color: #555555;
       padding-left: 60px;
-      font-size: 20px;
+      font-family: Roboto, Helvetica, Arial, sans-serif;
       font-weight: 400;
+      font-size: 1.25em;
       padding-bottom: 15px;
     }
   }
@@ -4357,7 +4366,7 @@ $sidebar-width: 294px;
 
   .wrapper {
     min-height: 100%;
-    background-color: #212529;
+    background-color: #434955;
     width: 72px;
     overflow: hidden;
     transition: width 0.2s;
