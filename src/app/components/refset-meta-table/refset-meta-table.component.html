@@ -12,10 +12,20 @@
                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                        {{refset?.refsetId}}
-                        <i *ngIf="refset?.privateRefset" class='fa fa-lock ml-2 text-muted'></i>
+
+                    {{refset?.refsetId}}
+                    <mat-icon *ngIf="refset?.privateRefset" aria-hidden="false" #directoryPrivateIcon
+                        class="refset-tool-table-action-icon refset-id-icons text-muted" aria-label="Private Refset" title="Private Refset">
+                        lock
+                    </mat-icon>
+                    <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="refset-tool-table-action-icon refset-id-icons text-muted" aria-label="Local Set"
+                        title="Local Set">
+                        my_location
+                    </mat-icon>
+                    
                     </td>
-                </tr>
+            </tr>
+
 
                 <tr>
                     <td class="
