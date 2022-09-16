@@ -31,7 +31,8 @@
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let project of projectList">
                                 <div class='section-list' *ngIf="project.name">
-                                    <span [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id +'/refsets']"><a>{{
+                                    <span
+                                      [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id +'/refsets']"><a>{{
                                             project.edition.organization.name }}/{{
                                             project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
                                 </div>
@@ -56,9 +57,9 @@
             </div>
             <div class='col-md-8 col-12'>
                 <section>
-                    <div class='section-header'>My Refsets</div>
+                    <div class='section-header'>My Reference Sets</div>
                     <div class='dashboard-section pr-2 pl-2'>
-                        <!-- <mat-form-field class="example-form-field" appearance="fill">
+                        <!-- <mat-form-field floatLabel="never" class="example-form-field" appearance="fill">
                                     <input matInput type="text"
                                         placeholder="Search"
                                         [(ngModel)]="searchText" />
@@ -73,7 +74,8 @@
 
                             <!-- Workflow Status Templates -->
                             <ng-template #dashboardWorkflowStatusSection let-params>
-                                <workflow-status-badge [status]="params?.data?.workflowStatus"></workflow-status-badge>
+                                <workflow-status-badge [status]="params?.data?.workflowStatus">
+                                </workflow-status-badge>
                             </ng-template>
                         </div>
                     </div>

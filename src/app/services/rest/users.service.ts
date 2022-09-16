@@ -8,33 +8,37 @@ import { NotificationService } from '../notification.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class UsersService extends RestService {
 
-    taxonomyRootNode: any = null;
-    contextPath = '/refsetservice/';
-    assignedUser: string;
+  taxonomyRootNode: any = null;
+  contextPath = '/refsetservice/';
+  assignedUser: string;
 
-    constructor(http: HttpClient, notificationService: NotificationService) {
+  constructor(http: HttpClient, notificationService: NotificationService) {
 
-        super(http, notificationService);
+    super(http, notificationService);
 
-        if (CodeUtility.hasValue(environment.restContextPath)) {
-            this.contextPath = environment.restContextPath;
-        }
+    if (CodeUtility.hasValue(environment.restContextPath)) {
+      this.contextPath = environment.restContextPath;
     }
+  }
 
 
-    getUser(userId: string): Observable<any> {
-        return this.get(this.contextPath + 'user/' + userId);
-    }
+  getUser(userId: string): Observable<any> {
+    return this.get(this.contextPath + 'user/' + userId);
+  }
 
-    updateUser(userId: string, user: any): Observable<any> {
-        return this.put(this.contextPath + 'user/' + userId, user);
-    }
+  updateUser(userId: string, user: any): Observable<any> {
+    return this.put(this.contextPath + 'user/' + userId, user);
+  }
 
-    updateUserPhoto(userId: string, form: any): Observable<any> {
-        return this.postWithFile(this.contextPath + `user/${userId}/icon`, form);
-    }
+  updateUserPhoto(userId: string, form: any): Observable<any> {
+    return this.postWithFile(this.contextPath + `user/${userId}/icon`, form);
+  }
+
+  deleteUserPhoto(userId: string): Observable<any> {
+    return this.delete(this.contextPath + `user/${userId}/icon`);
+  }
 }

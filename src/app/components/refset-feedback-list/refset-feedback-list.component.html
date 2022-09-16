@@ -195,7 +195,7 @@
                     </div>
 
                     <div *ngIf="editMode.includes('Thread')" class="topic-content mb-3">
-                        <mat-form-field appearance="fill" class="discussion-topic-field">
+                        <mat-form-field floatLabel="never" appearance="fill" class="discussion-topic-field">
                             <mat-label>Feedback Topic</mat-label>
                             <input matInput type="text" [(ngModel)]="postSubjectField" placeholder="Add a descriptive title for your feedback topic" />
                         </mat-form-field>

@@ -17,7 +17,7 @@
                     <div class="adjudicate-inactive-concepts">Inactive Concepts
                         ({{inactiveConcepts}})</div>
                     <div class="adjudicate-format-option-drop-down">
-                        <mat-form-field appearance="fill">
+                        <mat-form-field floatLabel="never" appearance="fill">
                             <mat-label>Select Language(s):</mat-label>
                             <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event); showActionButton = true">
                                 <option *ngFor="let option of languageOptions" [value]="option">
@@ -231,7 +231,7 @@
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
     <span [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
-        {{ params?.data?.code }}
+        {{ params?.value }}
     </span>
 </ng-template>
 
@@ -285,7 +285,7 @@
         {{ formatReason(params?.data?.replacementConcepts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
-        <mat-form-field appearance="fill" style="width: 400px">
+        <mat-form-field floatLabel="never" appearance="fill" style="width: 400px">
             <mat-label>Add Concept by ID or FSN</mat-label>
             <mat-select (selectionChange)="selectedConceptChanged($event)">
                 <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (input)="onSearchChange($event.target.value)"
@@ -308,15 +308,15 @@
 <ng-template #actionSection let-params>
     <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')">
         <img src="assets/grey-trash-bin.svg" (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')" width="18px" height="18px" title="Remove {{actionText}}"
-          aria-label="Subtract" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+          aria-label="Remove {{actionText}}" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
     <span *ngIf="!params?.data?.isHidden && showActionButton">
-        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add'); showActionButton = false;" width="18px" height="18px" title="" aria-label="Add"
+        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add'); showActionButton = true;" width="18px" height="18px" title="" aria-label="Add"
           class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
     </span>
-    <span *ngIf="params?.data?.isSearch && !showActionButton">
+    <span *ngIf="params?.data?.isSearch">
         <img src="assets/grey-close-icon.svg" (click)="getSelectedRowData('remove'); showActionButton = true;" width="18px" height="18px" title="Remove {{actionText}}"
-          aria-label="Subtract" class="grey-close-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+          aria-label="Remove {{actionText}}" class="grey-close-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
 </ng-template>
 

@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Dashboard');
+        this.titleService.setTitle('Reference Set Tool - Dashboard');
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' }
         ]);
@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.columnDefs = [
             {
                 field: 'name',
-                headerName: 'Reference Set',
+                headerName: 'Reference Name',
                 flex: 1,
                 minWidth: 550,
                 unSortIcon: true,
@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             {
                 field: 'modified',
                 tooltipValueGetter: UiUtility.gridDateValueGetter,
-                headerName: 'Last Modified',
+                headerName: 'Last Modified Date',
                 filter: false,
                 unSortIcon: true,
                 sortable: true,

@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
 
     //***** Framework Functions *****/
     ngOnInit() {
-        this.titleService.setTitle('Refset Tool');
+        this.titleService.setTitle('Reference Set Tool');
         this.environment = this.envService.env;
 
         this.assignFavicon();

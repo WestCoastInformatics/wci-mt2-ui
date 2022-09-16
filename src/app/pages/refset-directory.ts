@@ -92,8 +92,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     //***** Framework Functions *****/
     ngOnInit() {
         this.user = this.authenticationService.getUser();
-        this.titleService.setTitle('Refset Tool - Refset Library');
-        this.breadcrumbService.setBreadcrumbs([{ label: 'Refset Library' }]);
+        this.titleService.setTitle('Reference Set Tool - Reference Set Library');
+        this.breadcrumbService.setBreadcrumbs([{ label: 'Reference Set Library' }]);
 
         this.disableChannel.postMessage(false);
     }
@@ -119,8 +119,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                     this.columnDefs = [
                         { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
-                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
-                        { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
+                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
                             field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
@@ -469,10 +469,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 dialogId: dialogId,
                 showCancel: false,
                 cancelText: 'Close',
-                actionText: 'View Complete Refset',
+                actionText: 'View Complete Reference Set',
                 showConfirm: false,
                 template: this.infoDialog,
-                headerText: 'Refset Metadata',
+                headerText: 'Reference Set Metadata',
                 data: refset,
                 showAction: true,
                 showCloseIcon: true
@@ -506,7 +506,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         const dialogId = 'directoryFeedbackDialog';
 
         const dialogData = {
-            headerText: `Refset Feedback for ${refset.name} (${refset.refsetId})`,
+            headerText: `Reference Set Feedback for ${refset.name} (${refset.refsetId})`,
             template: this.feedbackDialog,
             data: refset
         };

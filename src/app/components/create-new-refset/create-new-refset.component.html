@@ -1,6 +1,8 @@
-<button *ngIf="!isDetailsPage && canAdd" mat-raised-button color="primary" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
-  class="refset-tool-action-button" [ngClass]="{ inactive: disabled }" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
-    Create New Refset
+<button *ngIf="!isDetailsPage && canAdd" mat-raised-button color="primary"
+  (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
+  class="refset-tool-action-button" [ngClass]="{ inactive: disabled }"
+  aria-label="Create New Reference Set" title="Create New Reference Set" ng-reflect-color="primary">
+  Create New Reference Set
 </button>
 
 <!-- <button class="refset-tool-standard-icon-button details-edit-refset-modal"
@@ -10,169 +12,185 @@
     <img src="assets/notes-icon.svg" alt="notes icon" title="Edit Metadata"
         aria-label="Edit metadata" />
 </button> -->
-<button mat-menu-item *ngIf="isDetailsPage || editMode" (click)="openCreateRefsetModal(createNewRefsetDialog);" [disabled]="disabled" alt="notes icon" title="Edit Metadata"
-  aria-label="Edit metadata">Edit Metadata</button>
+<button mat-menu-item *ngIf="isDetailsPage || editMode"
+  (click)="openCreateRefsetModal(createNewRefsetDialog);" [disabled]="disabled" alt="notes icon"
+  title="Edit Metadata" aria-label="Edit metadata">Edit Metadata</button>
 
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <ng-template #createNewRefsetDialog let-modal>
-    <div class="modal-header rt2-modal-header">
-        <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
-            Create New Refset
-        </h4>
-        <h4 *ngIf="editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
-            Edit Reference Set Metadata
-        </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
-    <div class="container-fluid create-new-refset-container-fluid">
-        <div class="modal-body create-new-refset-modal-body">
-            <div class="row create-new-refset-row">
-                <div class="create-new-refset-project-name">
-                    <div class="
+  <div class="modal-header rt2-modal-header">
+    <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
+      Create New Reference Set
+    </h4>
+    <h4 *ngIf="editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
+      Edit Reference Set Metadata
+    </h4>
+    <button type="button" class="close dialog-close-x" aria-label="Close"
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    </button>
+  </div>
+  <div class="container-fluid create-new-refset-container-fluid">
+    <div class="modal-body create-new-refset-modal-body">
+      <div class="row create-new-refset-row">
+        <div class="create-new-refset-project-name">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.7rem;">Project Name:</label>
-                    </div>
-                    <div class="
+            <label style="margin-bottom: 0.7rem;">Project Name:</label>
+          </div>
+          <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.name" disabled />
-                        </mat-form-field>
-                    </div>
-                </div>
+            <mat-form-field floatLabel="never" appearance="none">
+              <input style="cursor: default" matInput type="text"
+                [(ngModel)]="inputProperties.project.name" disabled />
+            </mat-form-field>
+          </div>
+        </div>
 
-                <div class="create-new-refset-form-field">
+        <div class="create-new-refset-form-field">
 
-                    <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0.7rem;">Owner/Organization:</label>
-                    </div>
+          <div class="col create-new-refset-label create-new-refset-flex-weight">
+            <label style="margin-bottom: 0.7rem;">Owner/Organization:</label>
+          </div>
 
-                    <div class="col create-new-refset-field create-new-refset-flex-weight" style="">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" disabled [(ngModel)]="inputProperties.project.edition.organization.name" />
-                        </mat-form-field>
-                    </div>
-                </div>
+          <div class="col create-new-refset-field create-new-refset-flex-weight" style="">
+            <mat-form-field floatLabel="never" appearance="none">
+              <input style="cursor: default" matInput type="text" disabled
+                [(ngModel)]="inputProperties.project.edition.organization.name" />
+            </mat-form-field>
+          </div>
+        </div>
 
-                <div class="create-new-refset-form-field" style="border-bottom: 1px solid;">
-                    <div class="
+        <div class="create-new-refset-form-field" style="border-bottom: 1px solid;">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.7rem;">Edition/Extension:</label>
-                    </div>
-                    <div class="
+            <label style="margin-bottom: 0.7rem;">Edition/Extension:</label>
+          </div>
+          <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="create-new-refset-form-field" id="create-new-refset-assign-refset-field"
-                  style="border-bottom: 1px solid; margin-bottom: 10px; padding-top: 10px; border-left: 1px solid; border-right: 1px solid">
-                    <div *ngIf="editMode" class="
+            <mat-form-field floatLabel="never" appearance="none">
+              <input style="cursor: default" matInput type="text"
+                [(ngModel)]="inputProperties.project.edition.name" disabled />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="create-new-refset-form-field" id="create-new-refset-assign-refset-field"
+          style="border-bottom: 1px solid; margin-bottom: 10px; padding-top: 10px; border-left: 1px solid; border-right: 1px solid">
+          <div *ngIf="editMode" class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         " style="margin-top: 5px">
-                        <label>Assigned Refset Concept:</label>
-                    </div>
-                    <div *ngIf="editMode" class="
+            <label>Assigned Reference Set Concept:</label>
+          </div>
+          <div *ngIf="editMode" class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="refsetConcept" disabled />
-                        </mat-form-field>
-                    </div>
-                    <div *ngIf="!editMode" class="
+            <mat-form-field floatLabel="never" appearance="none">
+              <input style="cursor: default" matInput type="text" [(ngModel)]="refsetConcept"
+                disabled />
+            </mat-form-field>
+          </div>
+          <div *ngIf="!editMode" class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Assign Refset
-                            Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
-                            <span><button mat-icon-button (click)="openInfoDialog()" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
-                                  title="Open  Assign Refset Concept Information Dialog" ng-reflect-color="primary">
-                                    <mat-icon class="refset-tool-new-refset-info-icon">info_icon
-                                    </mat-icon>
-                                </button></span>
-                        </label>
-                    </div>
+            <label>Assign Reference Set
+              Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
+              <span><button mat-icon-button (click)="openInfoDialog()" aria-hidden="false"
+                  aria-label="Open Assign Reference Set Concept Information Dialog"
+                  title="Open  Assign Reference Set Concept Information Dialog"
+                  ng-reflect-color="primary">
+                  <mat-icon class="refset-tool-new-refset-info-icon">info_icon
+                  </mat-icon>
+                </button></span>
+            </label>
+          </div>
 
-                    <div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
+          <div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
 
-                        <mat-radio-group>
+            <mat-radio-group>
 
-                            <mat-radio-button style="padding-right: 30px" value="1" (change)="checkRadioButtonValue($event)">Choose an existing
-                                metadata
-                                concept</mat-radio-button>
+              <mat-radio-button style="padding-right: 30px" value="1"
+                (change)="checkRadioButtonValue($event)">Choose an existing
+                metadata
+                concept</mat-radio-button>
 
-                            <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
-                                Create a new concept</mat-radio-button>
+              <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
+                Create a new concept</mat-radio-button>
 
-                            <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
-                                <mat-label>Choose existing metadata concept</mat-label>
-                                <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
-                                    <option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
-                                        {{ existingMetadataConcept?.name }}
-                                    </option>
-                                </select>
-                            </mat-form-field>
+              <mat-form-field floatLabel="never" appearance="fill"
+                [hidden]="isSelected == 2 || isSelected == 0">
+                <mat-label>Choose existing metadata concept</mat-label>
+                <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
+                  <option
+                    *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index"
+                    [value]="i">
+                    {{ existingMetadataConcept?.name }}
+                  </option>
+                </select>
+              </mat-form-field>
 
 
-                            <mat-form-field appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
-                                <mat-label>Choose parent concept</mat-label>
-                                <select matNativeControl [(ngModel)]="selectedParentConcept">
-                                    <option *ngFor="let parentConcept of parentConcepts" [value]="parentConcept?.code">
-                                        {{ parentConcept?.name }}
-                                    </option>
-                                </select>
-                            </mat-form-field>
+              <mat-form-field floatLabel="never" appearance="fill"
+                [hidden]="isSelected == 1 || isSelected == 0">
+                <mat-label>Choose parent concept</mat-label>
+                <select matNativeControl [(ngModel)]="selectedParentConcept">
+                  <option *ngFor="let parentConcept of parentConcepts"
+                    [value]="parentConcept?.code">
+                    {{ parentConcept?.name }}
+                  </option>
+                </select>
+              </mat-form-field>
 
-                            <mat-form-field class="example-form-field" appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
-                                <input matInput type="text" placeholder="Enter the name of the new concept" [(ngModel)]="createdMetaDataConcept"
-                                  (keyup)="this.isValidConceptName()" />
-                                <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear" (click)="value2a = ''">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            </mat-form-field>
-                            <div class="modal-error-message" [hidden]="!conceptError">{{
-                                conceptError }}</div>
+              <mat-form-field floatLabel="never" class="example-form-field" appearance="fill"
+                [hidden]="isSelected == 1 || isSelected == 0">
+                <input matInput type="text" placeholder="Enter the name of the new concept"
+                  [(ngModel)]="createdMetaDataConcept" (keyup)="this.isValidConceptName()" />
+                <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear"
+                  (click)="value2a = ''">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+              <div class="modal-error-message" [hidden]="!conceptError">{{
+                conceptError }}</div>
 
-                        </mat-radio-group>
-                    </div>
+            </mat-radio-group>
+          </div>
 
-                </div>
+        </div>
 
-                <!-- NARRATIVE for new refset-->
-                <div *ngIf="!editMode" class="create-new-refset-form-field">
-                    <div class="
+        <!-- NARRATIVE for new refset-->
+        <div *ngIf="!editMode" class="create-new-refset-form-field">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Narrative:</label>
-                    </div>
-                    <div class="
+            <label>Narrative:</label>
+          </div>
+          <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <editor [(ngModel)]="selectedNarrative" id="newNarrativeField" [init]="{
+            <editor [(ngModel)]="selectedNarrative" id="newNarrativeField" [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
                                 height: 200,
@@ -182,24 +200,24 @@
                                 toolbar:
                                     'undo redo | bold italic | bullist numlist outdent indent'
                             }"></editor>
-                    </div>
-                </div>
+          </div>
+        </div>
 
-                <!-- NARRATIVE for update metadata-->
-                <div *ngIf="editMode" class="create-new-refset-form-field">
-                    <div class="
+        <!-- NARRATIVE for update metadata-->
+        <div *ngIf="editMode" class="create-new-refset-form-field">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Narrative:</label>
-                    </div>
-                    <div class="
+            <label>Narrative:</label>
+          </div>
+          <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <editor [(ngModel)]="narrative" id="updateNarrativeField" [init]="{
+            <editor [(ngModel)]="narrative" id="updateNarrativeField" [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
                                 height: 200,
@@ -209,166 +227,177 @@
                                 toolbar:
                                     'undo redo | bold italic | bullist numlist outdent indent'
                             }"></editor>
-                    </div>
-                </div>
-                <!-- End both NARRATIVEs-->
+          </div>
+        </div>
+        <!-- End both NARRATIVEs-->
 
-                <!-- Tags -->
-                <div class="create-new-refset-form-field" style="align-items: normal">
-                    <div class="
+        <!-- Tags -->
+        <div class="create-new-refset-form-field" style="align-items: normal">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-top: 1.7rem">Reference Set Tags:</label>
-                    </div>
+            <label style="margin-top: 1.7rem">Reference Set Tags:</label>
+          </div>
 
-                    <!-- Tags for new refset-->
-                    <div *ngIf="!editMode" class="
+          <!-- Tags for new refset-->
+          <div *ngIf="!editMode" class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <mat-form-field class="example-chip-list">
-                            <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="
+            <mat-form-field floatLabel="never" class="example-chip-list">
+              <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
-                                " [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
-                            <mat-chip-list #chipList> </mat-chip-list>
-                        </mat-form-field>
-                        <mat-chip *ngFor="let selectedTag of selectedTags" [selectable]="selectable" [removable]="removable" (removed)="remove(selectedTag)"
-                          class="mat-elevation-z5">
-                            {{ selectedTag }}
-                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                        </mat-chip>
-                    </div>
+                                " [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)" />
+              <mat-chip-list #chipList> </mat-chip-list>
+            </mat-form-field>
+            <mat-chip *ngFor="let selectedTag of selectedTags" [selectable]="selectable"
+              [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
+              {{ selectedTag }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+          </div>
 
-                    <!-- Tags for update metadata-->
-                    <div *ngIf="editMode" class="
+          <!-- Tags for update metadata-->
+          <div *ngIf="editMode" class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <mat-form-field class="example-chip-list">
-                            <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="
+            <mat-form-field floatLabel="never" class="example-chip-list">
+              <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
-                                " [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
-                            <mat-chip-list #chipList> </mat-chip-list>
-                        </mat-form-field>
-                        <mat-chip *ngFor="let selectedTag of tags" [selectable]="selectable" [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
-                            {{ selectedTag }}
-                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                        </mat-chip>
-                    </div>
-                </div>
-                <!-- End Tags -->
+                                " [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)" />
+              <mat-chip-list #chipList> </mat-chip-list>
+            </mat-form-field>
+            <mat-chip *ngFor="let selectedTag of tags" [selectable]="selectable"
+              [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
+              {{ selectedTag }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+          </div>
+        </div>
+        <!-- End Tags -->
 
-                <!-- Refset Type for new refset-->
-                <div *ngIf="!editMode" class="create-new-refset-form-field">
-                    <div class="
+        <!-- Reference Set Type for new refset-->
+        <div *ngIf="!editMode" class="create-new-refset-form-field">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label>Reference Set
-                            Type:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
-                    </div>
-                    <div class="
+            <label>Reference Set
+              Type:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
+          </div>
+          <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-                        <mat-form-field appearance="fill">
-                            <mat-label style="margin-top: 0">Select Reference Set Type
-                            </mat-label>
-                            <select matNativeControl [(ngModel)]="selectedReferenceType">
-                                <option *ngFor="let referenceType of referenceTypes" [value]="referenceType">
-                                    {{ referenceType }}
-                                </option>
-                            </select>
-                        </mat-form-field>
-                    </div>
-                </div>
+            <mat-form-field floatLabel="never" appearance="fill">
+              <mat-label style="margin-top: 0">Select Reference Set Type
+              </mat-label>
+              <select matNativeControl [(ngModel)]="selectedReferenceType">
+                <option *ngFor="let referenceType of referenceTypes" [value]="referenceType">
+                  {{ referenceType }}
+                </option>
+              </select>
+            </mat-form-field>
+          </div>
+        </div>
 
-                <!-- Refset Type for update metadata-->
-                <div *ngIf="editMode" class="create-new-refset-form-field">
-                    <div class="
+        <!-- Reference Set Type for update metadata-->
+        <div *ngIf="editMode" class="create-new-refset-form-field">
+          <div class="
                             col
                             create-new-refset-label
                             create-new-refset-flex-weight
                         ">
-                        <label style="margin-bottom: 0.2rem;">Reference Set Type:</label>
-                    </div>
-                    <div class="
+            <label style="margin-bottom: 0.2rem;">Reference Set Type:</label>
+          </div>
+          <div class="
                             col
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="referenceType" disabled />
-                        </mat-form-field>
-                    </div>
-                </div>
+            <mat-form-field floatLabel="never" appearance="none">
+              <input style="cursor: default" matInput type="text" [(ngModel)]="referenceType"
+                disabled />
+            </mat-form-field>
+          </div>
+        </div>
 
-                <!-- ECL Definintion Declaration -->
+        <!-- ECL Definintion Declaration -->
 
-                <div class="create-new-refset-form-field" *ngIf="selectedReferenceType === INTENSIONAL">
+        <div class="create-new-refset-form-field" *ngIf="selectedReferenceType === INTENSIONAL">
 
-                    <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0">ECL Definition:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
-                    </div>
+          <div class="col create-new-refset-label create-new-refset-flex-weight">
+            <label style="margin-bottom: 0">ECL Definition:<span *ngIf="!editMode"
+                class="mandatory-field">*</span></label>
+          </div>
 
-                    <div class="col create-new-refset-field create-new-refset-flex-weight">
+          <div class="col create-new-refset-field create-new-refset-flex-weight">
 
-                        <div *ngFor="let clause of definitionClauses; index as i">
+            <div *ngFor="let clause of definitionClauses; index as i">
 
-                            <span *ngIf="i == 0">
+              <span *ngIf="i == 0">
 
-                                <mat-form-field class="refset_tool_ecl_definition_field">
-                                    <input style="cursor: default" matInput [(ngModel)]="clause.value" id="createRefsetDefinitionClausesInput"
-                                      #createRefsetDefinitionClausesInput />
-                                </mat-form-field>
-                                <input type="hidden" [(ngModel)]="clause.negated" value="false">
+                <mat-form-field floatLabel="never" class="refset_tool_ecl_definition_field">
+                  <input style="cursor: default" matInput [(ngModel)]="clause.value"
+                    id="createRefsetDefinitionClausesInput" #createRefsetDefinitionClausesInput />
+                </mat-form-field>
+                <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
-                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="btn btn-primary i18 ecl-buttonn rounded">ECL Builder
-                                    <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
+                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')"
+                  class="btn btn-primary i18 ecl-buttonn rounded">ECL Builder
+                  <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                     aria-label="ECL Builder" title="Open ECL Builder" /> -->
-                                </button>
-                            </span>
+                </button>
+              </span>
 
-                            <span *ngIf="i > 0" class="refset-tool-flex-row">
+              <span *ngIf="i > 0" class="refset-tool-flex-row">
 
-                                <div class="refset_tool_ecl_definition_field">
-                                    <span *ngIf="clause.negated">MINUS </span>
-                                    {{clause.value}}
-                                </div>
-
-                                <button (click)="definitionClauses.splice(i, 1)" class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
-                                    <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove Definition Clause"
-                                      aria-label="Remove Definition Clause" class="subtract-symbol-icon" alt="Subtract symbol to Remove Definition Clause" />
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- ECL -->
-
-                <div class="create-new-refset-form-field">
-                    <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label>Availability:</label>
-                    </div>
-                    <div class="col create-new-refset-field create-new-refset-flex-weight">
-                        <mat-checkbox [(ngModel)]="privateRefset">Private</mat-checkbox>
-                    </div>
+                <div class="refset_tool_ecl_definition_field">
+                  <span *ngIf="clause.negated">MINUS </span>
+                  {{clause.value}}
                 </div>
 
-                <div *ngIf="editMode" class="create-new-refset-form-field">
-                    <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label>Version Notes:</label>
-                    </div>
+                <button (click)="definitionClauses.splice(i, 1)"
+                  class="refset-tool-standard-icon-button refset-tool-search-ecl-button">
+                  <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px"
+                    title="Remove Definition Clause" aria-label="Remove Definition Clause"
+                    class="subtract-symbol-icon"
+                    alt="Subtract symbol to Remove Definition Clause" />
+                </button>
+              </span>
+            </div>
+          </div>
 
-                    <div class="col create-new-refset-field create-new-refset-flex-weight">
-                        <editor [(ngModel)]="versionNotes" id="versionNotes" [init]="{
+        </div>
+        <!-- ECL -->
+
+        <div class="create-new-refset-form-field">
+          <div class="col create-new-refset-label create-new-refset-flex-weight">
+            <label>Availability:</label>
+          </div>
+          <div class="col create-new-refset-field create-new-refset-flex-weight">
+            <mat-checkbox [(ngModel)]="privateRefset">Private</mat-checkbox>
+          </div>
+        </div>
+
+        <div *ngIf="editMode" class="create-new-refset-form-field">
+          <div class="col create-new-refset-label create-new-refset-flex-weight">
+            <label>Version Notes:</label>
+          </div>
+
+          <div class="col create-new-refset-field create-new-refset-flex-weight">
+            <editor [(ngModel)]="versionNotes" id="versionNotes" [init]="{
                                 base_url: '/tinymce',
                                 suffix: '.min',
                                 height: 150,
@@ -377,35 +406,47 @@
                                 toolbar:
                                     'undo redo | bold italic | bullist numlist outdent indent'
                             }"></editor>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button *ngIf="!isDetailsPage" [disabled]="!isComplete()" type="button" (click)="createRefsetObject()" mat-raised-button color="green" aria-hidden="false"
-          class="refset-tool-action-button" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="green">
-            Create New Refset
-        </button>
-        <button *ngIf="isDetailsPage || editMode" type="button" (click)="editRefsetObject()" mat-raised-button color="green" aria-hidden="false"
-          class="refset-tool-action-button" aria-label="Update Refset Metadata" title="Update Refset Metadata" ng-reflect-color="green">
-            Update Metadata
-        </button>
-    </div>
+  </div>
+  <div class="modal-footer rt2-modal-footer">
+    <button *ngIf="!isDetailsPage" [disabled]="!isComplete()" type="button"
+      (click)="createRefsetObject()" mat-raised-button color="green" aria-hidden="false"
+      class="refset-tool-action-button" aria-label="Create New Reference Set"
+      title="Create New Reference Set" ng-reflect-color="green">
+      Create New Reference Set
+    </button>
+    <button *ngIf="isDetailsPage || editMode" type="button" (click)="editRefsetObject()"
+      mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+      aria-label="Update Reference Set Metadata" title="Update Reference Set Metadata"
+      ng-reflect-color="green">
+      Update Metadata
+    </button>
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
+      aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel"
+      ng-reflect-color="primary">
+      Cancel
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #infoDialog let-data>
-    Requirements when creating a new refset:
-    <ol>
-        <li>Every reference set has an associated SNOMED concept.</li>
-        <li>Each SNOMED concept must have a parent SNOMED concept specified.</li>
-    </ol>
+  Requirements when creating a new refset:
+  <ol>
+    <li>Every Reference Set has an associated SNOMED concept.</li>
+    <li>Each SNOMED concept must have a parent SNOMED concept specified.</li>
+  </ol>
 
-    <br><br>
-    So...
-    <ul>
-        <li>If you are creating a new reference set using an existing SNOMED concept, you must select the existing SNOMED concept to use.</li>
-        <li>If you are creating a new reference set and wish to create a new SNOMED concept, you must select a SNOMED concept parent.</li>
-    </ul>
+  <br><br>
+  So...
+  <ul>
+    <li>If you are creating a new Reference Set using an existing SNOMED concept, you must
+      select the existing SNOMED concept to use.</li>
+    <li>If you are creating a new Reference Set and wish to create a new SNOMED concept, you
+      must select a SNOMED concept parent.</li>
+  </ul>
 
 </ng-template>

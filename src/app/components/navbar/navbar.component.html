@@ -36,12 +36,12 @@
             <span class="directory-icon-label">Library</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="project-nav" routerLink="/organization/0/edition/0/projects/0/refsets">
+        <div *ngIf="isUserLoggedIn" class="project-nav" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
             <img class="projects-icon" src="/assets/projects-icon.svg">
             <span class="projects-icon-label">Projects</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="nav-item" routerLink="/dashboard">
+        <div *ngIf="isUserLoggedIn" class="nav-item" (click)="navigateToRoute('/dashboard')">
             <img class="nav-icon dashboard-icon" src="/assets/dashboard-icon.svg">
             <span class="nav-label dashboard-icon-label">Dashboard</span>
         </div>

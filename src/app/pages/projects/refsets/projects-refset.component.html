@@ -4,8 +4,9 @@
     <div class="row header-title">
 
         <span class="title-label">Organizations</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
+        <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose
+                Organization'}}</mat-label>
             <mat-select [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
                     {{ organization.name }}
@@ -14,8 +15,9 @@
         </mat-form-field>
 
         <span class="title-label">Editions</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
+        <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}
+            </mat-label>
             <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
                 <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
                     {{ edition.name }}
@@ -24,8 +26,9 @@
         </mat-form-field>
 
         <span class="title-label">Projects</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
+        <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
+            </mat-label>
             <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}
@@ -42,16 +45,19 @@
             <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
 
             <span style="visibility: hidden">
-                <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+                <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" |
+                    "&nbsp;&nbsp;}}</span>
 
                 <b>Organization Name: </b><span>{{selectedProject?.edition?.organization?.name +
                     &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
 
                 <span *ngIf="editionList.length > 1">
-                    <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+                    <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" |
+                        "&nbsp;&nbsp;}}</span>
                 </span>
 
-                <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') + &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+                <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
+                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
             </span>
         </div>
     </div>
@@ -101,7 +107,7 @@
             </div>
         </div>
 
-        <!-- Refset Table -->
+        <!-- Reference Set Table -->
         <div class="container-fluid" [class.container-toggled]="toggleService.isToggled">
             <ag-grid-angular *ngIf="showTable" #projectTable class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" [columnDefs]="columnDefs"
               [gridOptions]="refsetGridOptions" style="width: 100%">
@@ -116,8 +122,8 @@
             <ng-template #projectNameSection let-params>
                 {{ params?.value }}
 
-                <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon" aria-label="Private Refset"
-                  title="Private Refset">
+                <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon"
+                  aria-label="Private Reference Set" title="Private Reference Set">
                     lock
                 </mat-icon>
                 <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false"  class="refset-tool-table-action-icon" aria-label="Local Set"
@@ -129,7 +135,8 @@
 
             <!-- Workflow Status Templates -->
             <ng-template #projectWorkflowStatusSection let-params>
-                <workflow-status-badge [status]="params?.data?.workflowStatus"></workflow-status-badge>
+                <workflow-status-badge [status]="params?.data?.workflowStatus">
+                </workflow-status-badge>
             </ng-template>
 
             <!-- Action Templates -->

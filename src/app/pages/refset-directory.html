@@ -13,7 +13,7 @@
 
             <div class="col-md-auto">
                 <div class="dropdown">
-                    <mat-form-field id="directorySearchInputField" title="Enter Search Critera">
+                    <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
                         <mat-label class="search-label">Search metadata and concepts</mat-label>
                         <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (keyup)="onSearchChange()" (change)="onSearchChange()" />
                     </mat-form-field>
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-md-auto" style="padding-left: 5px">
-                <mat-form-field id="directoryViewFilterField" appearance="fill">
+                <mat-form-field floatLabel="never" id="directoryViewFilterField" appearance="fill">
                     <mat-label></mat-label>
                     <mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
                         <mat-option *ngFor="let option of viewOptions" [value]="option.value">
@@ -39,7 +39,7 @@
     <!-- Page Title -->
     <!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
-    <!-- Refset Table -->
+    <!-- Reference Set Table -->
     <div class="container-fluid" style="margin-top: 19px">
         <ag-grid-angular #directoryTable *ngIf="showTable" class="
                 ag-theme-alpine
@@ -53,8 +53,8 @@
 
         <!-- Information Templates -->
         <ng-template #directoryInfoSection let-params>
-            <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Refset Metadata"
-              title="View Refset Metadata" (click)="openInformation(params.data.refsetId)">
+            <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
+              title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
                 <mat-icon>information</mat-icon>
             </button>
 
@@ -78,15 +78,16 @@
 
         <!-- Workflow Status Templates -->
         <ng-template #directoryWorkflowStatusSection let-params>
-            <object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{ params?.value}}</object>
+            <object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{
+                params?.value}}</object>
         </ng-template>
 
         <!-- Name Templates -->
         <ng-template #directoryNameSection let-params>
             {{ params?.value }}
 
-            <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon" aria-label="Private Refset"
-              title="Private Refset">
+            <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon" aria-label="Private Reference Set"
+              title="Private Reference Set">
                 lock
             </mat-icon>
             <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false"  class="refset-tool-table-action-icon" aria-label="Local Set"
@@ -124,7 +125,7 @@
 
         <ng-template #directoryFeedbackDialog let-data>
             This functionality will be implemented in subsequent phases.
-            <mat-form-field *ngIf="false">
+            <mat-form-field floatLabel="never" *ngIf="false">
                 <mat-label>Feedback</mat-label>
                 <input matInput [(ngModel)]="data.feedback" />
             </mat-form-field>

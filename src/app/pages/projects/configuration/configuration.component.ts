@@ -51,7 +51,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Projects');
+        this.titleService.setTitle('Reference Set Tool - Projects');
 
         this.route.params.subscribe(params => {
 

@@ -82,7 +82,7 @@ export class NavbarComponent implements OnInit {
     breadcrumbsHasDir(): boolean {
         if (this.breadcrumbs.length == 0)
             return false;
-        return this.breadcrumbs.find(bc => bc.label == "Refset Library") != undefined;
+        return this.breadcrumbs.find(bc => bc.label == "Reference Set Library") != undefined;
     }
 
     breadcrumbsHasProjects(): boolean {
@@ -92,7 +92,7 @@ export class NavbarComponent implements OnInit {
     }
 
     navigateToRoute(route: string): void {
-        if (this.router.url.includes(route)) {
+        if (this.router.url.includes(route) || (this.router.url.includes('projects') && route.includes('projects'))) {
             window.location.reload();
         } else {
             this.router.navigate([route]);

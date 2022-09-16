@@ -9,931 +9,931 @@ import { RefsetUtility } from "./refset.utility";
 
 export class UiUtility {
 
-    static router: Router;
-    static memberChangeData = {};
+  static router: Router;
+  static memberChangeData = {};
 
-    /*
-     * resizeGridColumns - return a element object having been passed either a element object or element selector string
-     * @param [object] event - The ag-grid event object.
-     */
-    static resizeGridColumns(event) {
+  /*
+   * resizeGridColumns - return a element object having been passed either a element object or element selector string
+   * @param [object] event - The ag-grid event object.
+   */
+  static resizeGridColumns(event) {
 
-        // check to see if any parent of the grid is hidden, if so don't resize the columns because the grid will error
-        if (event.api.gridCore.eGridDiv.offsetParent != null) {
-            event.api.sizeColumnsToFit();
-        }
+    // check to see if any parent of the grid is hidden, if so don't resize the columns because the grid will error
+    if (event.api.gridCore.eGridDiv.offsetParent != null) {
+      event.api.sizeColumnsToFit();
+    }
+  }
+
+  /*
+   * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined. Can also specify valueFormat on the colDef
+   * @param [object] params - The ag-grid valuegetter params object.
+   */
+  static gridDateValueGetter(params) {
+    if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
+
+      let format = CodeUtility.DATE_FORMAT_REVERSE;
+
+      if (params.colDef.valueFormat) {
+        format = params.colDef.valueFormat;
+      }
+      return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
+
+    } else {
+      return '';
+    }
+  }
+
+  /*
+   * getByElementOrSelector - return a element object having been passed either a element object or element selector string
+   * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).
+   * @return - the element object
+   */
+  static getByElementOrSelector(formElementOrSelector) {
+
+    let element;
+
+    // If the type of the first parameter is a string, then use it as a jquery selector, otherwise use as is
+    if (typeof formElementOrSelector === "string") {
+      element = $(formElementOrSelector);
+    } else {
+      element = formElementOrSelector;
     }
 
-    /*
-     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined. Can also specify valueFormat on the colDef
-     * @param [object] params - The ag-grid valuegetter params object.
-     */
-    static gridDateValueGetter(params) {
-        if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
+    return element;
+  }
 
-            let format = CodeUtility.DATE_FORMAT_REVERSE;
+  /*
+   * focusNextFormElement - set focus on the next form element that isn't disabled
+   */
+  static focusNextFormElement() {
 
-            if (params.colDef.valueFormat) {
-                format = params.colDef.valueFormat;
-            }
-            return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
+    //add all elements we want to include in our selection
+    let focusableElements = 'a:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+    let activeElement: any = document.activeElement;
 
-        } else {
-            return '';
-        }
+    if (activeElement && activeElement.form) {
+
+      var focusable = Array.prototype.filter.call(activeElement.form.querySelectorAll(focusableElements),
+        function (element) {
+          //check for visibility while always include the current activeElement
+          return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
+        });
+
+      let index = focusable.indexOf(document.activeElement);
+      focusable[index + 1].focus();
+    }
+  }
+
+
+  // function to switch a field between enabled and disabled
+  static toggleFieldAvailability(elementOrSelector, enable) {
+
+    let element = this.getByElementOrSelector(elementOrSelector);
+
+    if (enable == undefined || enable == null) {
+
+      if (element.hasClass("ui-state-disabled")) {
+        enable = true;
+      } else {
+        enable = false;
+      }
     }
 
-    /*
-     * getByElementOrSelector - return a element object having been passed either a element object or element selector string
-     * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).
-     * @return - the element object
-     */
-    static getByElementOrSelector(formElementOrSelector) {
+    if (enable) {
 
-        let element;
+      element.removeClass("ui-state-disabled");
+      element.prop("disabled", false);
+    } else {
 
-        // If the type of the first parameter is a string, then use it as a jquery selector, otherwise use as is
-        if (typeof formElementOrSelector === "string") {
-            element = $(formElementOrSelector);
-        } else {
-            element = formElementOrSelector;
-        }
+      element.addClass("ui-state-disabled");
+      element.prop("disabled", true);
+    }
+  }
 
-        return element;
+  // function to download a file through a REST request
+  static startFileDownload(notificationService: NotificationService, url, fileName = null, description = null) {
+
+    // This will hold the the file as a local object URL
+    let downloadUrl;
+    let downloadNotification: any = null;
+
+    if (!CodeUtility.hasValue(description)) {
+      description = 'download';
     }
 
-    /*
-     * focusNextFormElement - set focus on the next form element that isn't disabled
-     */
-    static focusNextFormElement() {
+    let notifyOfError = () => {
 
-        //add all elements we want to include in our selection
-        let focusableElements = 'a:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-        let activeElement: any = document.activeElement;
+      if (CodeUtility.hasValue(downloadUrl)) {
+        window.URL.revokeObjectURL(downloadUrl);
+      }
 
-        if (activeElement && activeElement.form) {
+      if (notificationService.isOpen(downloadNotification)) {
+        notificationService.close(downloadNotification);
+      }
 
-            var focusable = Array.prototype.filter.call(activeElement.form.querySelectorAll(focusableElements),
-                function (element) {
-                    //check for visibility while always include the current activeElement
-                    return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
+      downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+      downloadNotification;
+    };
+
+    $.ajax({
+      type: "GET",
+      url: url,
+      xhrFields: {
+        responseType: 'blob' // to avoid binary data being mangled on charset conversion
+      },
+      xhr: function () {
+
+        let request = $.ajaxSettings.xhr();
+
+        request.addEventListener('readystatechange', function (event) {
+
+          try {
+
+            if (request.status != 500 && request.readyState == 4) {
+
+              // Downloaing has finished
+              downloadUrl = URL.createObjectURL(request.response);
+              let id = 'file_download_' + CodeUtility.getUniqueID();
+
+              if (!CodeUtility.hasValue(fileName)) {
+
+                let disposition = request.getResponseHeader('Content-Disposition');
+
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+
+                  let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                  let matches = regex.exec(disposition);
+
+                  if (matches != null && matches[1]) {
+                    fileName = matches[1].replace(/['"]/g, '');
+                  } else {
+                    fileName = '';
+                  }
+                }
+              }
+
+              let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
+
+              let message = 'Your ' + description + ' is complete. Click this message to download your file';
+
+              notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id }, 100);
+
+              setTimeout(function () {
+
+                $('#' + id).click(function () {
+                  notificationService.close(downloadNotification);
                 });
+              }, 600);
 
-            let index = focusable.indexOf(document.activeElement);
-            focusable[index + 1].focus();
-        }
-    }
+              // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
+              setTimeout(function () {
 
-
-    // function to switch a field between enabled and disabled
-    static toggleFieldAvailability(elementOrSelector, enable) {
-
-        let element = this.getByElementOrSelector(elementOrSelector);
-
-        if (enable == undefined || enable == null) {
-
-            if (element.hasClass("ui-state-disabled")) {
-                enable = true;
-            } else {
-                enable = false;
-            }
-        }
-
-        if (enable) {
-
-            element.removeClass("ui-state-disabled");
-            element.prop("disabled", false);
-        } else {
-
-            element.addClass("ui-state-disabled");
-            element.prop("disabled", true);
-        }
-    }
-
-    // function to download a file through a REST request
-    static startFileDownload(notificationService: NotificationService, url, fileName = null, description = null) {
-
-        // This will hold the the file as a local object URL
-        let downloadUrl;
-        let downloadNotification: any = null;
-
-        if (!CodeUtility.hasValue(description)) {
-            description = 'download';
-        }
-
-        let notifyOfError = () => {
-
-            if (CodeUtility.hasValue(downloadUrl)) {
                 window.URL.revokeObjectURL(downloadUrl);
-            }
 
-            if (notificationService.isOpen(downloadNotification)) {
-                notificationService.close(downloadNotification);
-            }
+                if (notificationService.isOpen(downloadNotification)) {
 
-            downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
-            downloadNotification;
-        };
-
-        $.ajax({
-            type: "GET",
-            url: url,
-            xhrFields: {
-                responseType: 'blob' // to avoid binary data being mangled on charset conversion
-            },
-            xhr: function () {
-
-                let request = $.ajaxSettings.xhr();
-
-                request.addEventListener('readystatechange', function (event) {
-
-                    try {
-
-                        if (request.status != 500 && request.readyState == 4) {
-
-                            // Downloaing has finished
-                            downloadUrl = URL.createObjectURL(request.response);
-                            let id = 'file_download_' + CodeUtility.getUniqueID();
-
-                            if (!CodeUtility.hasValue(fileName)) {
-
-                                let disposition = request.getResponseHeader('Content-Disposition');
-
-                                if (disposition && disposition.indexOf('attachment') !== -1) {
-
-                                    let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                                    let matches = regex.exec(disposition);
-
-                                    if (matches != null && matches[1]) {
-                                        fileName = matches[1].replace(/['"]/g, '');
-                                    } else {
-                                        fileName = '';
-                                    }
-                                }
-                            }
-
-                            let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
-
-                            let message = 'Your ' + description + ' is complete. Click this message to download your file';
-
-                            notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id }, 100);
-
-                            setTimeout(function () {
-
-                                $('#' + id).click(function () {
-                                    notificationService.close(downloadNotification);
-                                });
-                            }, 600);
-
-                            // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
-                            setTimeout(function () {
-
-                                window.URL.revokeObjectURL(downloadUrl);
-
-                                if (notificationService.isOpen(downloadNotification)) {
-
-                                    notificationService.close(downloadNotification);
-                                    notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
-                                }
-                            }, 300000);
-                        }
-
-                    } catch (error) {
-                        notifyOfError();
-                    }
-                });
-
-                request.addEventListener('progress', function (event) {
-
-                    var percent_complete = (event.loaded / event.total) * 100;
-
-                    if (downloadNotification == null) {
-                        downloadNotification = notificationService.showProgress('Your ' + description + ' file is now being saved.', '', null, null);
-                    } else {
-                        notificationService.update(downloadNotification, 'Your ' + description + ' file is now being saved.', null, null, null, percent_complete);
-                    }
-                });
-
-                request.responseType = 'blob';
-                return request;
-            },
-            success: function (data) {
-
-                if (data.error) {
-                    notifyOfError();
+                  notificationService.close(downloadNotification);
+                  notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
                 }
-            },
-            error: function (data) {
-                notifyOfError();
+              }, 300000);
             }
+
+          } catch (error) {
+            notifyOfError();
+          }
         });
+
+        request.addEventListener('progress', function (event) {
+
+          var percent_complete = (event.loaded / event.total) * 100;
+
+          if (downloadNotification == null) {
+            downloadNotification = notificationService.showProgress('Your ' + description + ' file is now being saved.', '', null, null);
+          } else {
+            notificationService.update(downloadNotification, 'Your ' + description + ' file is now being saved.', null, null, null, percent_complete);
+          }
+        });
+
+        request.responseType = 'blob';
+        return request;
+      },
+      success: function (data) {
+
+        if (data.error) {
+          notifyOfError();
+        }
+      },
+      error: function (data) {
+        notifyOfError();
+      }
+    });
+  }
+
+  // Function to open SNOMED ECL Builder
+  static openEclBuilder(fieldId, branch) {
+
+    let field = $('#' + fieldId);
+    let eclString: any = field.val();
+    let snowstormApiUrl = environment['snowstormApiUrl'];
+    const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
+
+    if (!regex.test(eclString)) {
+      eclString = '';
     }
 
-    // Function to open SNOMED ECL Builder
-    static openEclBuilder(fieldId, branch) {
+    $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
-        let field = $('#' + fieldId);
-        let eclString: any = field.val();
-        let snowstormApiUrl = environment['snowstormApiUrl'];
-        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
+    const eclBuilder = document.querySelector('ecl-builder');
+    eclBuilder.querySelector('input').focus();
 
-        if (!regex.test(eclString)) {
-            eclString = '';
+    eclBuilder.addEventListener('output', (event: any) => {
+
+      field.val(event.detail);
+
+      // need to create a custom event to allow jquery to trigger an Angular event
+      const customEvent = document.createEvent('Event');
+      customEvent.initEvent('input', true, true);
+      field[0].dispatchEvent(customEvent);
+    });
+  }
+
+  // Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
+  static manageMemberNotifications(refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+
+    // set a small delay so the original call has some time to process
+    CodeUtility.delay(1500);
+
+    let message = 'Members are being ' + description + ' Reference Set ' + refsetId + '.';
+    let messagePrefix = '';
+
+    if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
+
+      if (description.includes(RefsetUtility.EXCLUSION)) {
+
+        if (description.includes('added')) {
+
+          description = 'removed from';
+          message = 'An exclusion is being added and members are being removed from';
+          messagePrefix = 'An exclusion was added. ';
+        } else {
+
+          description = 'added to';
+          message = 'An exclusion is being removed and members are being added to';
+          messagePrefix = 'An exclusion was removed. ';
         }
 
-        $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+      } else {
 
-        const eclBuilder = document.querySelector('ecl-builder');
-        eclBuilder.querySelector('input').focus();
+        if (description.includes('added')) {
 
-        eclBuilder.addEventListener('output', (event: any) => {
+          description = 'added to';
+          message = 'An inclusion is being added and members are being added to';
+          messagePrefix = 'An inclusion was added. ';
 
-            field.val(event.detail);
+        } else {
 
-            // need to create a custom event to allow jquery to trigger an Angular event
-            const customEvent = document.createEvent('Event');
-            customEvent.initEvent('input', true, true);
-            field[0].dispatchEvent(customEvent);
-        });
+          description = 'removed from';
+          message = 'An inclusion is being removed and members are being removed from';
+          messagePrefix = 'An inclusion was removed. ';
+        }
+      }
+
+      message += ' Reference Set ' + refsetId + '.';
     }
 
-    // Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
-    static manageMemberNotifications(refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+    message += ' The Reference Set is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the Reference Set is ready if you do not refresh the page.';
 
-        // set a small delay so the original call has some time to process
-        CodeUtility.delay(1500);
+    let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-        let message = 'Members are being ' + description + ' refset ' + refsetId + '.';
-        let messagePrefix = '';
+    let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
+    let downloadReportButton: IToastButton = { id: 'download', title: 'Download Report', data: {} };
+    let buttons = [downloadReportButton];
+    let callNumber = 0;
+    let callDelay = 1000;
+    let successMessageTimeout = 0;
+    this.router = router;
 
-        if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
+    let checkIfFinished = () => {
 
-            if (description.includes(RefsetUtility.EXCLUSION)) {
+      callNumber++;
 
-                if (description.includes('added')) {
+      if (callNumber == 20) {
+        callDelay = 4000;
 
-                    description = 'removed from';
-                    message = 'An exclusion is being added and members are being removed from';
-                    messagePrefix = 'An exclusion was added. ';
-                } else {
+      } else if (callNumber == 30) {
+        callDelay = 15000;
+      }
+      refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
 
-                    description = 'added to';
-                    message = 'An exclusion is being removed and members are being added to';
-                    messagePrefix = 'An exclusion was removed. ';
-                }
+        if (CodeUtility.testBoolean(data)) {
+          setTimeout(checkIfFinished, callDelay);
+        } else {
+
+          let title = 'Member Change Notification';
+          let messageEnd = description + ' Reference Set ' + refsetId + '. You may continue editing the Reference Set.';
+          let notificationType = 'success';
+          let conceptIdArray = Object.keys(data);
+          let conceptStatusArray: any[] = [];
+          let emptydata = { refset: refsetId, statuses: [] };
+          let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
+          if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
+            this.memberChangeData[refsetId] = emptydata;
+          }
+
+          notificationService.close(notification);
+
+          for (let conceptId of conceptIdArray) {
+
+            let conceptStatus: any = data[conceptId];
+            this.memberChangeData[refsetId].statuses.push({ Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status });
+            conceptStatusArray.push({
+              code: conceptId,
+              added: conceptStatus.operation == 'Added',
+              failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member',
+              operation: conceptStatus.operation,
+              status: conceptStatus.status,
+              name: conceptStatus.name,
+              active: conceptStatus.active
+            });
+          }
+
+          if (router.url.includes('/details/' + refsetId)) {
+
+            successMessageTimeout = 5000;
+            callbackFunction(conceptStatusArray);
+          } else {
+            buttons.unshift(viewRefsetButton);
+          }
+
+          if (conceptIdArray.length > 0) {
+
+            let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
+            let someFailed = dataString.includes('Failed');
+            let someSucceeded = dataString.includes('Success');
+
+            if (!someFailed && someSucceeded) {
+              message = messagePrefix + 'All members were successfully ' + messageEnd;
+
+            } else if (someFailed && !someSucceeded) {
+
+              notificationType = 'error';
+              message = messagePrefix + 'No members were able to be ' + messageEnd;
+            } else {
+
+              notificationType = 'warning';
+              message = messagePrefix + 'Some members were not able to be ' + messageEnd;
+            }
+          } else {
+
+            let noContentMessage = 'There were no concepts in the request for Reference Set ' + refsetId + '.';
+            let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
+            let continueEditingMessage = ' You may continue editing the Reference Set.';
+            notificationType = 'warning';
+
+            if (previousNotifications.length > 0) {
+
+              if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
+                notificationType = 'error';
+              }
+
+              if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
+                message = previousNotifications[0].message;
+              } else {
+                message = 'There were no concepts in the last request for Reference Set ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
+              }
 
             } else {
 
-                if (description.includes('added')) {
-
-                    description = 'added to';
-                    message = 'An inclusion is being added and members are being added to';
-                    messagePrefix = 'An inclusion was added. ';
-
-                } else {
-
-                    description = 'removed from';
-                    message = 'An inclusion is being removed and members are being removed from';
-                    messagePrefix = 'An inclusion was removed. ';
-                }
+              message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
+              buttons.pop();
             }
+          }
 
-            message += ' refset ' + refsetId + '.';
+          if (previousNotifications.length > 0) {
+            notificationService.close(previousNotifications[0]);
+          }
+
+          notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+
+          notification.onAction.subscribe(button => {
+
+            if (button.id == 'download') {
+              this.createMemberChangeReport(refsetId, notification, notificationService);
+
+            } else if (button.id == 'view') {
+              this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
+            }
+          });
+
+          // notification.onHidden.subscribe(() => {
+          //     this.memberChangeData[refsetId] = emptydata;
+          // });
         }
+      },
+        (error) => {
 
-        message += ' The refset is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
-
-        let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
-
-        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
-        let downloadReportButton: IToastButton = { id: 'download', title: 'Download Report', data: {} };
-        let buttons = [downloadReportButton];
-        let callNumber = 0;
-        let callDelay = 1000;
-        let successMessageTimeout = 0;
-        this.router = router;
-
-        let checkIfFinished = () => {
-
-            callNumber++;
-
-            if (callNumber == 20) {
-                callDelay = 4000;
-
-            } else if (callNumber == 30) {
-                callDelay = 15000;
-            }
-            refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
-
-                if (CodeUtility.testBoolean(data)) {
-                    setTimeout(checkIfFinished, callDelay);
-                } else {
-
-                    let title = 'Member Change Notification';
-                    let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
-                    let notificationType = 'success';
-                    let conceptIdArray = Object.keys(data);
-                    let conceptStatusArray: any[] = [];
-                    let emptydata = { refset: refsetId, statuses: [] };
-                    let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
-
-                    if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
-                        this.memberChangeData[refsetId] = emptydata;
-                    }
-
-                    notificationService.close(notification);
-
-                    for (let conceptId of conceptIdArray) {
-
-                        let conceptStatus: any = data[conceptId];
-                        this.memberChangeData[refsetId].statuses.push({ Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status });
-                        conceptStatusArray.push({
-                            code: conceptId,
-                            added: conceptStatus.operation == 'Added',
-                            failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member',
-                            operation: conceptStatus.operation,
-                            status: conceptStatus.status,
-                            name: conceptStatus.name,
-                            active: conceptStatus.active
-                        });
-                    }
-
-                    if (router.url.includes('/details/' + refsetId)) {
-
-                        successMessageTimeout = 5000;
-                        callbackFunction(conceptStatusArray);
-                    } else {
-                        buttons.unshift(viewRefsetButton);
-                    }
-
-                    if (conceptIdArray.length > 0) {
-
-                        let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
-                        let someFailed = dataString.includes('Failed');
-                        let someSucceeded = dataString.includes('Success');
-
-                        if (!someFailed && someSucceeded) {
-                            message = messagePrefix + 'All members were successfully ' + messageEnd;
-
-                        } else if (someFailed && !someSucceeded) {
-
-                            notificationType = 'error';
-                            message = messagePrefix + 'No members were able to be ' + messageEnd;
-                        } else {
-
-                            notificationType = 'warning';
-                            message = messagePrefix + 'Some members were not able to be ' + messageEnd;
-                        }
-                    } else {
-
-                        let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
-                        let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
-                        let continueEditingMessage = ' You may continue editing the refset.';
-                        notificationType = 'warning';
-
-                        if (previousNotifications.length > 0) {
-
-                            if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
-                                notificationType = 'error';
-                            }
-
-                            if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
-                                message = previousNotifications[0].message;
-                            } else {
-                                message = 'There were no concepts in the last request for refset ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
-                            }
-
-                        } else {
-
-                            message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
-                            buttons.pop();
-                        }
-                    }
-
-                    if (previousNotifications.length > 0) {
-                        notificationService.close(previousNotifications[0]);
-                    }
-
-                    notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
-
-                    notification.onAction.subscribe(button => {
-
-                        if (button.id == 'download') {
-                            this.createMemberChangeReport(refsetId, notification, notificationService);
-
-                        } else if (button.id == 'view') {
-                            this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
-                        }
-                    });
-
-                    // notification.onHidden.subscribe(() => {
-                    //     this.memberChangeData[refsetId] = emptydata;
-                    // });
-                }
-            },
-                (error) => {
-
-                    console.log(error);
-                    message = 'There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator.';
-                    notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                }
-            );
-        };
-
-        checkIfFinished();
-    }
-
-    // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
-    static manageProcessNotifications(refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
-
-        // set a small delay so the original call has some time to process
-        CodeUtility.delay();
-
-        let message = 'Refset ' + refsetId + ' has started the ' + processType + ' process. The refset is locked until the operation completes. You can close this message and do other operations on the site, ';
-        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
-        let buttons = [viewRefsetButton];
-
-        if (processType == ('upgrade')) {
-
-            message += 'you will be notified when the refset is ready if you do not refresh the page.';
-
-            let downloadInactiveReportButton: IToastButton = { id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {} };
-            let downloadChangeReportButton: IToastButton = { id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {} };
-            // buttons.push(downloadInactiveReportButton);
-
-
-        } else if (processType == ('comparison')) {
-
-            message += 'but do not refresh the page or you will need to repeat the process.';
-            let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
-            buttons.push(showComparisonButton);
+          console.log(error);
+          message = 'There has been a problem  ' + description + ' Reference Set ' + refsetId + '. View the Reference Set to determine changes or contact an administrator.';
+          notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
         }
+      );
+    };
 
-        let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+    checkIfFinished();
+  }
 
-        let callNumber = 0;
-        let callDelay = 1000;
-        let successMessageTimeout = 0;
-        this.router = router;
+  // Function for background processesing of lengthy non member Reference Set tasks, and notification to user of the status of those tasks
+  static manageProcessNotifications(refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
-        let checkIfFinished = () => {
+    // set a small delay so the original call has some time to process
+    CodeUtility.delay();
 
-            callNumber++;
+    let message = 'Reference Set ' + refsetId + ' has started the ' + processType + ' process. The Reference Set is locked until the operation completes. You can close this message and do other operations on the site, ';
+    let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
+    let buttons = [viewRefsetButton];
 
-            if (callNumber == 20) {
-                callDelay = 4000;
+    if (processType == ('upgrade')) {
 
-            } else if (callNumber == 30) {
-                callDelay = 15000;
+      message += 'you will be notified when the Reference Set is ready if you do not refresh the page.';
+
+      let downloadInactiveReportButton: IToastButton = { id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {} };
+      let downloadChangeReportButton: IToastButton = { id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {} };
+      // buttons.push(downloadInactiveReportButton);
+
+
+    } else if (processType == ('comparison')) {
+
+      message += 'but do not refresh the page or you will need to repeat the process.';
+      let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
+      buttons.push(showComparisonButton);
+    }
+
+    let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+
+    let callNumber = 0;
+    let callDelay = 1000;
+    let successMessageTimeout = 0;
+    this.router = router;
+
+    let checkIfFinished = () => {
+
+      callNumber++;
+
+      if (callNumber == 20) {
+        callDelay = 4000;
+
+      } else if (callNumber == 30) {
+        callDelay = 15000;
+      }
+
+      refsetService.isRefsetLocked(refsetInternalId).subscribe(
+
+        (data) => {
+
+          if (CodeUtility.testBoolean(data)) {
+            setTimeout(checkIfFinished, callDelay);
+          } else {
+
+            let title = 'Reference Set Process Complete Notification';
+            let notificationType = 'success';
+            let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+
+            notificationService.close(notification);
+
+            if (router.url.includes('/' + refsetId)) {
+              buttons.shift();
             }
 
-            refsetService.isRefsetLocked(refsetInternalId).subscribe(
+            message = 'Reference Set ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
 
-                (data) => {
+            if (previousNotifications.length > 0) {
+              notificationService.close(previousNotifications[0]);
+            }
 
-                    if (CodeUtility.testBoolean(data)) {
-                        setTimeout(checkIfFinished, callDelay);
-                    } else {
+            notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
 
-                        let title = 'Refset Process Complete Notification';
-                        let notificationType = 'success';
-                        let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+            notification.onAction.subscribe(button => {
 
-                        notificationService.close(notification);
+              if (button.id == 'view') {
+                this.viewRefset(refsetId, versionDate);
 
-                        if (router.url.includes('/' + refsetId)) {
-                            buttons.shift();
-                        }
+              } else if (button.id == 'inactiveChangeReport') {
+                this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
 
-                        message = 'Refset ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
+              } else if (button.id == 'comparison') {
 
-                        if (previousNotifications.length > 0) {
-                            notificationService.close(previousNotifications[0]);
-                        }
+                callbackFunction();
+                notificationService.close(notification);
+              } else if (button.id == 'finishedChangeReport') {
+                this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
+              }
+            });
 
-                        notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+            if (processType == 'upgrade') {
+              callbackFunction();
+            }
+          }
+        },
+        (error) => {
 
-                        notification.onAction.subscribe(button => {
+          console.log(error);
+          message = 'There has been a problem with Reference Set ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
+          notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+        }
+      );
+    };
 
-                            if (button.id == 'view') {
-                                this.viewRefset(refsetId, versionDate);
+    checkIfFinished();
+  }
 
-                            } else if (button.id == 'inactiveChangeReport') {
-                                this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
+  static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
 
-                            } else if (button.id == 'comparison') {
+    let memberStatuses = this.memberChangeData[refsetId].statuses;
+    let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
 
-                                callbackFunction();
-                                notificationService.close(notification);
-                            } else if (button.id == 'finishedChangeReport') {
-                                this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
-                            }
-                        });
+    this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
+    notificationService.close(notification);
+    delete this.memberChangeData[refsetId];
+  }
 
-                        if (processType == 'upgrade') {
-                            callbackFunction();
-                        }
-                    }
-                },
-                (error) => {
+  static createInactiveChangeReport(refsetId: string, data): void {
+    console.log(data);
+    let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-                    console.log(error);
-                    message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
-                    notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                }
-            );
-        };
+    this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
+  }
 
-        checkIfFinished();
+  static createFinishedChangeReport(refsetId: string, data): void {
+
+    let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
+
+    const headerObject = {
+      'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
+      'newMemberHeader': ['New Member ID', 'New Member Concept'],
+      'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
+      'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
+    };
+
+    this.downloadFile(data, headerObject, fileName, true);
+  }
+
+  static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false) {
+
+    let csvData;
+
+    if (!merge) {
+      csvData = this.convertToCsv(data, headerlist);
+    } else {
+
+      csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+        + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+        + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
+        + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
     }
 
-    static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
+    const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+    const downloadLink = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
 
-        let memberStatuses = this.memberChangeData[refsetId].statuses;
-        let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
-
-        this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
-        notificationService.close(notification);
-        delete this.memberChangeData[refsetId];
+    if (isSafariBrowser) {
+      downloadLink.setAttribute('target', '_blank');
     }
 
-    static createInactiveChangeReport(refsetId: string, data): void {
-        console.log(data);
-        let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+    downloadLink.setAttribute('href', url);
+    downloadLink.setAttribute('download', fileName + '.csv');
+    downloadLink.style.visibility = 'hidden';
 
-        this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
+  static convertToCsv(objectArray, headerList) {
+
+    const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
+    let csvString = '';
+    let row = '#,';
+
+    for (const index in headerList) {
+      row += headerList[index] + ',';
     }
 
-    static createFinishedChangeReport(refsetId: string, data): void {
+    row = row.slice(0, -1);
+    csvString += row + '\r\n';
 
-        let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
+    for (let i = 0; i < array?.length; i++) {
 
-        const headerObject = {
-            'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
-            'newMemberHeader': ['New Member ID', 'New Member Concept'],
-            'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
-            'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
-        };
+      let line = (i + 1) + '';
 
-        this.downloadFile(data, headerObject, fileName, true);
+      for (const index in headerList) {
+
+        const head = headerList[index];
+        line += ',' + array[i][head]?.replaceAll(',', ';');
+      }
+
+      csvString += line + '\r\n';
     }
 
-    static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false) {
+    return csvString;
+  }
 
-        let csvData;
+  static viewRefset(refsetId, versionDate) {
+    if (!versionDate) {
+      versionDate = RefsetUtility.IN_DEVELOPMENT;
+    }
+    this.router.navigate(['/details', refsetId, versionDate]);
+  }
 
-        if (!merge) {
-            csvData = this.convertToCsv(data, headerlist);
+  static toggleLockedSections(lock: boolean) {
+
+    let containingDiv = $('.refset-tool-lockable');
+
+    if (lock) {
+      containingDiv.addClass('refset-tool-disable-section');
+    } else {
+      containingDiv.removeClass('refset-tool-disable-section');
+    }
+
+    containingDiv.find('input, select, button').each(function () {
+      $(this).prop('disabled', lock);
+    });
+  }
+
+  static getRoleString(roles = []): string {
+
+    const rolesToShow = [];
+
+    for (const role of roles) {
+
+      if (role == 'VIEWER') {
+        continue;
+      }
+
+      rolesToShow.push(role);
+    }
+
+    rolesToShow.sort();
+
+    return rolesToShow.join(', ');
+  }
+
+  static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
+
+    let genericIconFunction = this.getGenericUserIcon;
+    let labelTag = 'User Icon';
+
+    if (iconType == 'organization') {
+
+      genericIconFunction = this.getGenericOrganizationIcon;
+      labelTag = 'Organization Icon';
+    }
+
+    image.alt = labelTag;
+    image.ariaLabel = labelTag;
+
+    if (CodeUtility.hasValue(iconUri)) {
+
+      image.scr = this.getIconImageUrl(iconUri);
+
+      image.onerror = ($event) => {
+        $event.target.src = genericIconFunction();
+      };
+
+    } else {
+      image.scr = genericIconFunction();
+    }
+
+    return image.scr;
+  }
+
+  static getIconImageUrl(iconUri) {
+    return environment.restUrl + environment.restContextPath + iconUri;
+  }
+
+  static getGenericUserIcon() {
+    return '/assets/user_logo.png';
+  }
+
+  static getGenericOrganizationIcon() {
+    return '/assets/user_logo.png';
+  }
+
+  //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
+  static applyGridPlaceholders(classSelector) {
+
+    Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
+
+      // skip columns with disabled filter
+      if (field.attributes["disabled"]) {
+        return;
+      }
+
+      let label = field.getAttribute("aria-label");
+      let value = label.substring(0, label.indexOf("Filter Input")) + "...";
+      field.setAttribute("placeholder", value);
+    });
+  }
+
+
+  //***** AG Grid Function to apply data and paging to table *****/
+  static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
+
+    if (results.items.length > 0) {
+
+      gridApi.hideOverlay();
+      let lastRow = -1;
+
+      if (results.totalKnown || results.items.length < gridApi.paginationGetPageSize() || pagingParams.totalKnown) {
+
+        if (results.totalKnown) {
+
+          lastRow = results.total;
+
+        } else if (pagingParams.totalKnown) {
+
+          lastRow = pagingParams.totalRows;
         } else {
 
-            csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
-                + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
-                + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
-                + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+          lastRow = results.items.length + ((pageNumber - 1) * gridApi.paginationGetPageSize());
         }
 
-        const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
-        const downloadLink = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
+        pagingParams.totalRows = lastRow;
+        pagingParams.totalKnown = true;
 
-        if (isSafariBrowser) {
-            downloadLink.setAttribute('target', '_blank');
-        }
+      }
 
-        downloadLink.setAttribute('href', url);
-        downloadLink.setAttribute('download', fileName + '.csv');
-        downloadLink.style.visibility = 'hidden';
+      if (serverPaging) {
+        rowParams.successCallback(results.items, lastRow);
+      } else {
+        gridApi.setRowData(results.items);
+      }
 
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+    } else {
+
+      gridApi.showNoRowsOverlay();
+
+      if (serverPaging) {
+        rowParams.successCallback(results.items, 0);
+      }
     }
 
-    static convertToCsv(objectArray, headerList) {
+    pagingParams.manualStateRefresh = new Boolean(true);
+  }
 
-        const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
-        let csvString = '';
-        let row = '#,';
+  //***** AG Grid Filter query string formatter Function *****/
+  // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+  static formatFilterData(filterModel) {
 
-        for (const index in headerList) {
-            row += headerList[index] + ',';
-        }
+    let filterPresent = filterModel && Object.keys(filterModel).length > 0;
 
-        row = row.slice(0, -1);
-        csvString += row + '\r\n';
-
-        for (let i = 0; i < array?.length; i++) {
-
-            let line = (i + 1) + '';
-
-            for (const index in headerList) {
-
-                const head = headerList[index];
-                line += ',' + array[i][head]?.replaceAll(',', ';');
-            }
-
-            csvString += line + '\r\n';
-        }
-
-        return csvString;
+    if (!filterPresent) {
+      return '';
     }
 
-    static viewRefset(refsetId, versionDate) {
-        if (!versionDate) {
-            versionDate = RefsetUtility.IN_DEVELOPMENT;
-        }
-        this.router.navigate(['/details', refsetId, versionDate]);
+    let filterString = '';
+
+    // loop thru each column with a search term
+    for (const column in filterModel) {
+      filterString += column + ':' + filterModel[column].filter.trim() + ' AND ';
     }
 
-    static toggleLockedSections(lock: boolean) {
+    filterString = CodeUtility.removeFinal(filterString, ' AND ');
+    return filterString;
+  }
 
-        let containingDiv = $('.refset-tool-lockable');
+  // ***** AG Grid Radio button search selector query string formatter Function *****/
+  static formatSelectedData(columnDefs: any[], searchInput: string): string {
 
-        if (lock) {
-            containingDiv.addClass('refset-tool-disable-section');
+    const selectedDataPresent = columnDefs && columnDefs?.length;
+
+    if (!selectedDataPresent) {
+      return '';
+    }
+
+    let selectedDataString = '';
+    // loop thru each column with a search term
+    for (const column of columnDefs) {
+      selectedDataString += column.field + ':' + searchInput?.trim() + ' OR ';
+    }
+    selectedDataString = CodeUtility.removeFinal(selectedDataString, ' OR ');
+
+    return selectedDataString;
+  }
+
+  //***** AG Grid Sort query string formatter Function *****/
+  // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+  static formatSortData(sortModel, returnAsObject: boolean = true, numberOfSortsAllowed: number = 1) {
+
+    let sort: any = {};
+
+    // loop thru each column with a search term
+    for (let i = 0; i < sortModel?.length && i < numberOfSortsAllowed; i++) {
+
+      const column = sortModel[i];
+      let ascending = true;
+
+      if (column.sort != 'asc') {
+        ascending = false;
+      }
+
+      sort.sort = column.colId;
+      sort.sortAscending = ascending;
+    }
+
+    if (returnAsObject) {
+      return sort;
+    } else {
+      return CodeUtility.serialize(sort);
+    }
+  }
+
+  //***** AG Grid Sort Function *****/
+  // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+  static sortData(sortModel, data) {
+
+    let sortPresent = sortModel && sortModel.length > 0;
+
+    if (!sortPresent) {
+      return data;
+    }
+
+    let resultOfSort = data.slice();
+
+    resultOfSort.sort(function (a, b) {
+
+      for (let k = 0; k < sortModel.length; k++) {
+
+        let sortColModel = sortModel[k];
+        let valueA = a[sortColModel.colId];
+        let valueB = b[sortColModel.colId];
+
+        if (valueA == valueB) {
+          continue;
+        }
+
+        let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
+
+        if (valueA > valueB) {
+          return sortDirection;
         } else {
-            containingDiv.removeClass('refset-tool-disable-section');
+          return sortDirection * -1;
         }
+      }
 
-        containingDiv.find('input, select, button').each(function () {
-            $(this).prop('disabled', lock);
+      return 0;
+    });
+
+    return resultOfSort;
+  }
+
+  //***** AG Grid Filter Function *****/
+  // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+  static filterData(filterModel, data) {
+
+    let filterPresent = filterModel && Object.keys(filterModel).length > 0;
+
+    if (!filterPresent) {
+      return data;
+    }
+
+    let resultOfFilter = [];
+
+    for (let i = 0; i < data.length; i++) {
+
+      let item = data[i];
+      let rowValid = true;
+
+      // loop thru each column with a search term
+      for (const column in filterModel) {
+
+        // test each word in the term
+        filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
+
+          // the search word must be present in the data and the row must still be valid
+          if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
+            rowValid = true;
+          } else {
+            rowValid = false;
+          }
         });
+      }
+
+      if (rowValid) {
+        resultOfFilter.push(item);
+      }
     }
 
-    static getRoleString(roles = []): string {
-
-        const rolesToShow = [];
-
-        for (const role of roles) {
-
-            if (role == 'VIEWER') {
-                continue;
-            }
-
-            rolesToShow.push(role);
-        }
-
-        rolesToShow.sort();
-
-        return rolesToShow.join(', ');
-    }
-
-    static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
-
-        let genericIconFunction = this.getGenericUserIcon;
-        let labelTag = 'User Icon';
-
-        if (iconType == 'organization') {
-
-            genericIconFunction = this.getGenericOrganizationIcon;
-            labelTag = 'Organization Icon';
-        }
-
-        image.alt = labelTag;
-        image.ariaLabel = labelTag;
-
-        if (CodeUtility.hasValue(iconUri)) {
-
-            image.scr = this.getIconImageUrl(iconUri);
-
-            image.onerror = ($event) => {
-                $event.target.src = genericIconFunction();
-            };
-
-        } else {
-            image.scr = genericIconFunction();
-        }
-
-        return image.scr;
-    }
-
-    static getIconImageUrl(iconUri) {
-        return environment.restUrl + environment.restContextPath + iconUri;
-    }
-
-    static getGenericUserIcon() {
-        return '/assets/user_logo.png';
-    }
-
-    static getGenericOrganizationIcon() {
-        return '/assets/user_logo.png';
-    }
-
-    //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
-    static applyGridPlaceholders(classSelector) {
-
-        Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
-
-            // skip columns with disabled filter
-            if (field.attributes["disabled"]) {
-                return;
-            }
-
-            let label = field.getAttribute("aria-label");
-            let value = label.substring(0, label.indexOf("Filter Input")) + "...";
-            field.setAttribute("placeholder", value);
-        });
-    }
-
-
-    //***** AG Grid Function to apply data and paging to table *****/
-    static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
-
-        if (results.items.length > 0) {
-
-            gridApi.hideOverlay();
-            let lastRow = -1;
-
-            if (results.totalKnown || results.items.length < gridApi.paginationGetPageSize() || pagingParams.totalKnown) {
-
-                if (results.totalKnown) {
-
-                    lastRow = results.total;
-
-                } else if (pagingParams.totalKnown) {
-
-                    lastRow = pagingParams.totalRows;
-                } else {
-
-                    lastRow = results.items.length + ((pageNumber - 1) * gridApi.paginationGetPageSize());
-                }
-
-                pagingParams.totalRows = lastRow;
-                pagingParams.totalKnown = true;
-
-            }
-
-            if (serverPaging) {
-                rowParams.successCallback(results.items, lastRow);
-            } else {
-                gridApi.setRowData(results.items);
-            }
-
-        } else {
-
-            gridApi.showNoRowsOverlay();
-
-            if (serverPaging) {
-                rowParams.successCallback(results.items, 0);
-            }
-        }
-
-        pagingParams.manualStateRefresh = new Boolean(true);
-    }
-
-    //***** AG Grid Filter query string formatter Function *****/
-    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
-    static formatFilterData(filterModel) {
-
-        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
-
-        if (!filterPresent) {
-            return '';
-        }
-
-        let filterString = '';
-
-        // loop thru each column with a search term
-        for (const column in filterModel) {
-            filterString += column + ':' + filterModel[column].filter.trim() + ' AND ';
-        }
-
-        filterString = CodeUtility.removeFinal(filterString, ' AND ');
-        return filterString;
-    }
-
-    // ***** AG Grid Radio button search selector query string formatter Function *****/
-    static formatSelectedData(columnDefs: any[], searchInput: string): string {
-
-        const selectedDataPresent = columnDefs && columnDefs?.length;
-
-        if (!selectedDataPresent) {
-            return '';
-        }
-
-        let selectedDataString = '';
-        // loop thru each column with a search term
-        for (const column of columnDefs) {
-            selectedDataString += column.field + ':' + searchInput?.trim() + ' OR ';
-        }
-        selectedDataString = CodeUtility.removeFinal(selectedDataString, ' OR ');
-
-        return selectedDataString;
-    }
-
-    //***** AG Grid Sort query string formatter Function *****/
-    // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
-    static formatSortData(sortModel, returnAsObject: boolean = true, numberOfSortsAllowed: number = 1) {
-
-        let sort: any = {};
-
-        // loop thru each column with a search term
-        for (let i = 0; i < sortModel?.length && i < numberOfSortsAllowed; i++) {
-
-            const column = sortModel[i];
-            let ascending = true;
-
-            if (column.sort != 'asc') {
-                ascending = false;
-            }
-
-            sort.sort = column.colId;
-            sort.sortAscending = ascending;
-        }
-
-        if (returnAsObject) {
-            return sort;
-        } else {
-            return CodeUtility.serialize(sort);
-        }
-    }
-
-    //***** AG Grid Sort Function *****/
-    // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
-    static sortData(sortModel, data) {
-
-        let sortPresent = sortModel && sortModel.length > 0;
-
-        if (!sortPresent) {
-            return data;
-        }
-
-        let resultOfSort = data.slice();
-
-        resultOfSort.sort(function (a, b) {
-
-            for (let k = 0; k < sortModel.length; k++) {
-
-                let sortColModel = sortModel[k];
-                let valueA = a[sortColModel.colId];
-                let valueB = b[sortColModel.colId];
-
-                if (valueA == valueB) {
-                    continue;
-                }
-
-                let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
-
-                if (valueA > valueB) {
-                    return sortDirection;
-                } else {
-                    return sortDirection * -1;
-                }
-            }
-
-            return 0;
-        });
-
-        return resultOfSort;
-    }
-
-    //***** AG Grid Filter Function *****/
-    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
-    static filterData(filterModel, data) {
-
-        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
-
-        if (!filterPresent) {
-            return data;
-        }
-
-        let resultOfFilter = [];
-
-        for (let i = 0; i < data.length; i++) {
-
-            let item = data[i];
-            let rowValid = true;
-
-            // loop thru each column with a search term
-            for (const column in filterModel) {
-
-                // test each word in the term
-                filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
-
-                    // the search word must be present in the data and the row must still be valid
-                    if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
-                        rowValid = true;
-                    } else {
-                        rowValid = false;
-                    }
-                });
-            }
-
-            if (rowValid) {
-                resultOfFilter.push(item);
-            }
-        }
-
-        return resultOfFilter;
-    }
-
-    static toTitleCase(str) {
-        return str?.replace(
-            /\w\S*/g,
-            function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            }
-        );
-    }
+    return resultOfFilter;
+  }
+
+  static toTitleCase(str) {
+    return str?.replace(
+      /\w\S*/g,
+      function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
 }
