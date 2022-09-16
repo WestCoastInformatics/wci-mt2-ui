@@ -15,803 +15,841 @@ import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.ser
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
-  selector: 'adjudicate-upgrade-modal',
-  templateUrl: './adjudicate-upgrade-modal.component.html'
+	selector: 'adjudicate-upgrade-modal',
+	templateUrl: './adjudicate-upgrade-modal.component.html'
 })
 export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, OnChanges {
 
-  @Input()
-  refsetData: any;
-  @Input()
-  membersOfRefset: any;
-  @Input()
-  inactiveConcepts: any;
-  @Input()
-  membersInCommon: any;
-  numOfResults: any;
-  numOfMembers: any;
-  selectedLanguage = '';
-  languageOptions = [];
-  hideReplacements = false;
-  refsetGridLastFilter: string = '';
-  refsetGridLastSort: string = '';
-  selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
-  @ViewChild('adjudicatePaging') paginationComponent: PaginationComponent;
-  @ViewChild('inactiveConceptCodeSection') inactiveCodeSection: TemplateRef<any>;
-  @ViewChild('adjudicateInactiveId') inactiveIdSection: TemplateRef<any>;
-  @ViewChild('adjudicateInactiveEnPtSection') inactiveEnPtSection: TemplateRef<any>;
-  @ViewChild('adjudicateInactiveEnFsnSection') inactiveEnFsnSection: TemplateRef<any>;
-  @ViewChild('adjudicateInactiveFrPtSection') inactiveFrPtSection: TemplateRef<any>;
-  @ViewChild('adjudicateInactiveNlPtSection') inactiveNlPtSection: TemplateRef<any>;
-  @ViewChild('adjudicateInactivationReason') inactivationReason: TemplateRef<any>;
-  @ViewChild('replacementConceptCodeSection') replacementCodeSection: TemplateRef<any>;
-  @ViewChild('adjudicateReplacementId') replacementIdSection: TemplateRef<any>;
-  @ViewChild('adjudicateReplacementEnPtSection') replacementEnPtSection: TemplateRef<any>;
-  @ViewChild('adjudicateReplacementEnFsnSection') replacementEnFsnSection: TemplateRef<any>;
-  @ViewChild('adjudicateReplacementFrPtSection') replacementFrPtSection: TemplateRef<any>;
-  @ViewChild('adjudicateReplacementNlPtSection') replacementNlPtSection: TemplateRef<any>;
-  @ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
-  @ViewChild('actionSection') actionSection: TemplateRef<any>;
-  @ViewChild("pauseUpdateDialog") pauseUpdateDialog: TemplateRef<any>;
-  @ViewChild("cancelUpgradeDialog") cancelUpgradeDialog: TemplateRef<any>;
-
-  gridOptions: any;
-  columnDefs: any;
-  refsetGridOptions: any;
-  refsetGridPaging = {
-    pageSize: 100,
-    pageSizeOptions: [5, 10, 25, 50],
-    totalKnown: false,
-    totalRows: null,
-  };
-  originalGridParams: any;
-  refsetGridApi: any;
-  refsetGridColumnApi: any;
-  isConceptBeingAdded: Boolean;
-  conceptForAddRemove: any;
-  addRemoveDefinitionExceptionType: any;
-  isLocked = false;
-  isInactive: boolean;
-  isReplacement: boolean;
-  resetRefsetTotal = false;
-  changeMethod = '';
-  selectedRow: any;
-  selectedConcepts: any;
-  isConceptDetailsLoading = false;
-  conceptDetail: any;
-  conceptDetailParents: any;
-  conceptDescriptions: any;
-  conceptSelected: boolean;
-  refsetInternalId: string;
-  selectedConcept: any;
-  numOfChildren = undefined;
-  chosenConceptCode: any;
-  replacementCode: string;
-  concept: any;
-  showActionButton = true;
-  disableAddRemove = false;
-  membersInCommonForChangeReport = { items: [] };
-  manualReplacementOptionsLoading = false;
-  addReplacementFlag = false;
-  dialog: DialogService;
-
-  constructor(private readonly modalService: NgbModal,
-    private readonly refsetService: RefsetService,
-    readonly refsetDetails: RefsetDetails,
-    private readonly changeDetection: ChangeDetectorRef,
-    private readonly route: ActivatedRoute,
-    readonly upgradeModalComponent: UpgradeModalComponent,
-    private dialogFactoryService: DialogFactoryService,
-    private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
-
-  ngOnInit(): void {
-    this.languageOptions = this.refsetData?.edition?.fullyQualifiedLanguageRefsets.map((x) => {
-      return x.qualifiedLanguageCode;
-    });
-    this.selectedLanguage = this.languageOptions[0];
-  }
-
-  ngAfterViewInit() {
-
-    this.columnDefs = [
-
-      {
-        field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
-        valueGetter: (params) => {
-          return this.formatReason(params.data.isHidden ? params.data._reason : params.data.inactivationReason);
-        }, cellClass: 'adjudicate-column-inactivationReason', flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
-      },
-      {
-        field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
-          template:
-            ''
-            + ' <a class="remove-all mr-auto ml-auto">'
-            + '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
-            + ' </a>'
-            + ''
-        }, cellClass: 'adjudicate-column-inactiveCode', cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60
-      },
-      {
-        field: 'inactiveId', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', valueGetter: (params) => {
-          return params.data.code;
-        }, headerName: 'Inactive ID', cellClass: 'adjudicate-column-inactiveId', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110, unSortIcon: true
-      },
-      {
-        field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', sort: 'asc', valueGetter: (params) => {
-          const desc = params.data.isHidden ? params.data._descriptions : params.data.descriptions;
-          if (desc) {
-            return this.getConceptName(desc);
-          }
-
-          return '';
-        }, headerName: 'Inactive ' + this.selectedLanguage, cellClass: 'adjudicate-column-inactiveEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
-      },
-      {
-        field: 'reason', sortable: false, filter: false, valueGetter: (params) => {
-          return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
-        }, tooltipField: 'reason', headerName: 'Association', cellClass: 'adjudicate-column-reason', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
-      },
-      {
-        field: 'replacementCode', sortable: false, filter: false, tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
-          template: ' <a class="add-all mr-auto ml-auto">'
-            + '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
-            + ' </a>'
-        }, cellClass: 'adjudicate-column-replacementCode', flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
-      },
-      {
-        field: 'replacementId', sortable: false, filter: false, tooltipField: 'replacementId', headerName: 'Replacement ID', cellClass: 'adjudicate-column-replacementId', valueGetter: (params) => {
-          return params?.data?.replacementConcepts[0]?.code;
-        }, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
-      },
-      {
-        field: 'created', sortable: false, filter: false, colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, cellClass: 'adjudicate-column-replacementEnPtSection', minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
-
-          let description = '';
-
-          if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-            description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
-          }
-
-          return description;
-
-        }, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true,
-      },
-      { field: 'actionSection', tooltipField: 'actionSection', headerName: '', cellClass: 'adjudicate-column-actionSection', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
-    ];
-
-    this.refsetGridOptions = {
-      context: { componentParent: this },
-      pagination: true,
-      suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-      suppressPaginationPanel: true,
-      paginationPageSize: this.refsetGridPaging.pageSize,
-      enableCellTextSelection: true,
-      rowSelection: 'single',
-      onGridReady: this.onGridReady,
-      onCellClicked: this.onGridCellClick,
-      frameworkComponents: {
-        'templateRenderer': TemplateRenderer,
-      },
-      suppressScrollOnNewData: true,
-      defaultColDef: {
-        sortable: true,
-        sortingOrder: ['asc', 'desc'],
-        filter: true,
-        floatingFilter: true,
-        floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-        suppressMenu: true,
-        menuTabs: ['columnsMenuTab'],
-        resizable: true,
-      },
-
-    };
-
-  }
-
-  onCellMouseOver(params) {
-    this.selectedRow = params;
-  }
-
-  onGridCellClick = (event) => {
-    this.selectConcept(event.data);
-  }
-
-  getSelectedRowData(option: string) {
-    console.log(this.selectedRow?.rowIndex);
-    console.log(this.selectedRow?.data);
-    const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
-    newItem.inactivationReason = 'MANUAL REPLACEMENT';
-    // newItem.descriptions = '';
-    newItem.replacementConcepts = '';
-    if (option.includes('add')) {
-      this.chosenConceptCode = this.selectedRow['data'].code;
-      this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow?.rowIndex + 1 });
-    } else if (option.includes('remove')) {
-      this.refsetGridApi.applyTransaction({ remove: [this.selectedRow?.data] });
-    }
-    this.selectedConcepts = undefined;
-  }
-
-  addRemoveConcept(params: any, changeMethod: string): void {
-    if (!this.disableAddRemove) {
-      this.addRemoveConceptsComponent.changeMethod = changeMethod;
-      this.addRemoveConceptsComponent.refset = this.refsetData;
-      this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
-      this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-      this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcepts[0]);
-      this.disableAddRemove = true;
-
-      if (changeMethod == 'INACTIVE_ADDED') {
-        this.inactiveConcepts++;
-      } else if (changeMethod == 'INACTIVE_REMOVED') {
-        this.inactiveConcepts--;
-      }
-    }
-  }
-
-  async onSearchChange(value): Promise<void> {
-    await this.search(value);
-  }
-
-  handleInput(event: KeyboardEvent): void {
-    event.stopPropagation();
-  }
-
-  @Debounce()
-  search(value: string): void {
-
-    this.manualReplacementOptionsLoading = true;
-    this.selectedConcepts = undefined;
-
-    const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
-
-      this.selectedConcepts = results.items.filter((x) => {
-        return x.active === true;
-      });
-
-      this.manualReplacementOptionsLoading = false;
-    });
-  }
-
-  selectedConceptChanged(concept: any): void {
-    this.concept = concept['value'];
-  }
-
-  removeManualReplacement(changeMethod: string): void {
-    this.refsetDetails.toggleLoadingSpinner(true);
-    this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode ? this.chosenConceptCode : this.selectedRow['data'].code, changeMethod, this.concept ? this.concept.code : this.selectedRow['data'].replacementConcepts[0].code).subscribe((x) => {
-      this.onGridReady(this.originalGridParams);
-      this.refsetDetails.toggleLoadingSpinner(false);
-    });
-    this.selectedConcepts = undefined;
-    this.concept = '';
-  }
-
-  addManualReplacement(changeMethod: string): void {
-    if (this.concept) {
-      this.refsetDetails.toggleLoadingSpinner(true);
-      const body = { ...this.concept };
-      this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
-        // force auto-add of the replacement concept to the refset
-        this.addReplacementFlag = true;
-        this.onGridReady(this.originalGridParams);
-        this.refsetDetails.toggleLoadingSpinner(false);
-      });
-    }
-    this.selectedConcepts = undefined;
-  }
-
-  changeLockedStatus(lock: boolean) {
-
-    this.isLocked = lock;
-    this.refsetDetails.toggleLoadingSpinner(false);
-    UiUtility.toggleLockedSections(lock);
-  }
-
-  processChangedMemberEffects = (conceptStatusArray) => {
-
-    this.changeLockedStatus(false);
-    this.refsetDetails.showLoadingSpinner = true;
-
-    this.onGridReady(this.originalGridParams);
-    this.refsetDetails.showLoadingSpinner = false;
-    this.disableAddRemove = false;
-  }
-
-  hideIncludedReplacements(toggle: any): void {
-    this.hideReplacements = toggle.checked;
-    this.onGridReady(this.originalGridParams);
-  }
-
-  formatReason(reason: string): string {
-    return reason?.split('_').join(' ');
-  }
-
-  transformDescriptions(descriptions: any, isOption = false) {
-    if (descriptions) {
-
-      const getStringifiedJSON = descriptions.substring(1, descriptions.length - 1);
-      if (getStringifiedJSON) {
-        const formattedObjectArray = getStringifiedJSON.slice(1).split('{"descriptionId"').map((x) => {
-          if (x[x.length - 1] === ',') {
-            const modifiedString = x.slice(0, -1);
-            x = modifiedString;
-          }
-          if (!x.includes('"descriptionId"')) {
-            x = '{"descriptionId"' + x;
-          } else if (!x.includes('{"descriptionId"') && x.includes('"descriptionId"')) {
-            x = '{' + x;
-          }
-          if (x.includes(',null')) {
-            x = x.replaceAll(',null', '');
-          }
-          if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
-            x = x + '"}';
-          }
-          if (!x.includes(':')) {
-            return '';
-          }
-
-          return JSON.parse(x);
-        });
-        return formattedObjectArray.filter((x) => {
-          if (isOption) {
-            return x.language === this.getLanguageAndType(isOption)[0] && x.type === this.getLanguageAndType(isOption)[1];
-          } else {
-            return x.languageName === this.selectedLanguage;
-          }
-        });
-      }
-    }
-  }
-
-
-  transformManualReplacementDescriptions(descriptions: any) {
-    if (descriptions) {
-      return JSON.parse(descriptions).filter((x) => {
-        if (x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2])) {
-          return x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
-        }
-
-        return x?.language === this.getLanguageAndType(true)[0] && (x.type === this.getLanguageAndType(true)[1] || x.type === this.getLanguageAndType(true)[2]);
-      });
-    }
-  }
-
-  getLanguageAndType(isOption = false): string[] {
-    let language = '';
-    let type = '';
-    if (isOption) {
-      language = 'en';
-      type = 'FSN';
-    } else {
-      language = this.selectedLanguage.split(' ')[0].toLowerCase();
-      type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
-    }
-    let type2 = '';
-    if (type === 'PT') {
-      type2 = 'SYNONYM';
-    }
-
-    return [language, type, type2];
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-  }
-
-  openAdjudicateUpgradeModal(adjudicateUpgradeDialog: NgbModal) {
-    this.modalService.dismissAll();
-    this.modalService.open(adjudicateUpgradeDialog, {
-      backdrop: 'static',
-      keyboard: false,
-      windowClass: 'adjudicate-upgrade-modal',
-      centered: true
-    });
-  }
-
-  changeLanguage($event: any) {
-    this.onGridReady(this.originalGridParams);
-  }
-
-  onGridReady = (gridReadyParams) => {
-    this.showActionButton = true;
-    this.originalGridParams = gridReadyParams;
-    this.refsetGridApi = gridReadyParams.api;
-    this.refsetGridColumnApi = gridReadyParams.columnApi;
-
-    // this.refsetGridApi.showLoadingOverlay();
-    this.refsetDetails.showLoadingSpinner = true;
-
-    let pageNumber = this.refsetGridApi.paginationGetPageSize();
-    let filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
-
-    let newFilterString = filter;
-
-    this.refsetGridLastFilter = newFilterString;
-
-
-    let restParams: any = {
-      displayType: "list",
-      limit: this.refsetGridApi.paginationGetPageSize(),
-      offset: pageNumber - 1
-    };
-
-    this.refsetService.getUpgradeData(this.refsetData?.id, restParams).subscribe(results => {
-      results.items = results.items.filter((x) => {
-        if (this.hideReplacements) {
-          return !x.replaced && x.replacementConcepts.filter(r => r.existingMember).length == 0;
-        }
-        return x.active === false;
-      });
-
-      results.items.sort(function (a, b) {
-        let nameA = a.replacementConcepts[0].reason.toUpperCase();
-        let nameB = b.replacementConcepts[0].reason.toUpperCase();
-        if (nameA > nameB) {
-          return -1;
-        }
-        if (nameA < nameB) {
-          return 1;
-        }
-
-        return 0;
-      });
-
-      let finalResults = [];
-      let changeReportResults = [];
-
-      this.inactiveConcepts = 0;
-
-      results.items.forEach((item) => {
-        for (let i = 0; i < item.replacementConcepts.length; i++) {
-          changeReportResults.push(item);
-        }
-        if (item.stillMember) {
-          this.inactiveConcepts++;
-        }
-      });
-
-      this.numOfResults = results.items.length;
-      this.membersInCommonForChangeReport.items = changeReportResults;
-      console.log(this.membersInCommonForChangeReport);
-
-      results.items.forEach((item) => {
-        item.inactiveId = item.code.toString();
-        for (let i = 0; i < item.replacementConcepts.length; i++) {
-          if (i === 0) {
-            finalResults.push(item);
-          } else {
-            const newItem = {
-              ...item, isHidden: true, _reason: item.inactivationReason,
-              _descriptions: item.descriptions
-            };
-
-            // newItem.inactivationReason = '';
-            // newItem.descriptions = '';
-            newItem.replacementConcepts = [item.replacementConcepts[i]];
-            // if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
-            if (this.addReplacementFlag && (item.replacementConcepts[i].code == this.concept.code)) {
-              this.addRemoveConceptsComponent.changeMethod = "REPLACEMENT_ADDED";
-              this.addRemoveConceptsComponent.refset = this.refsetData;
-              this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
-              this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
-              this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(newItem, newItem.replacementConcepts[0]);
-              this.addReplacementFlag = false;
-            }
-            finalResults.push(newItem);
-          }
-        }
-      });
-
-      results.items = finalResults;
-      this.membersInCommon = results;
-      // console.log(results.items)
-      let addRemoveAllBtns = document.querySelectorAll('.add-all, .remove-all');
-      if (results.items.length == 0) {
-        addRemoveAllBtns.forEach((element: HTMLElement) => {
-          element.classList.add("disabled");
-        });
-        this.refsetGridApi.showNoRowsOverlay();
-        this.refsetGridApi.setRowData([]);
-
-        if (pageNumber > 1) {
-
-          this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-          this.refsetGridPaging.totalKnown = true;
-          this.paginationComponent?.goToPage(pageNumber - 1);
-        }
-
-        this.refsetDetails.showLoadingSpinner = false;
-
-        return;
-      } else {
-        addRemoveAllBtns.forEach((element: HTMLElement) => {
-          element.classList.remove("disabled");
-        });
-      }
-
-      UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
-      this.refsetDetails.showLoadingSpinner = false;
-
-    },
-      error => {
-
-        this.refsetGridApi.showNoRowsOverlay();
-        this.refsetGridApi.setRowData([]);
-        this.refsetDetails.toggleLoadingSpinner(false);
-      });
-
-
-    // set placeholders on the grid floating filter fields
-    document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
-
-      let label = obj.getAttribute('aria-label');
-      let value = label.substring(0, label.indexOf('Filter Input')) + '...';
-      obj.setAttribute('placeholder', value);
-    });
-
-    let self = this;
-    document.querySelectorAll('.add-all, .remove-all').forEach((obj: HTMLElement) => {
-      obj.addEventListener('click', function (e) {
-        if (!obj.classList.contains('disabled')) {
-          const memberItems = self.membersInCommon.items;
-          const isAdd = obj.classList.contains('add-all');
-          const inactiveConcepts = memberItems.filter((items: any) => {
-            return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
-          });
-          if (inactiveConcepts.length > 0) {
-            self.refsetDetails.showLoadingSpinner = true;
-            self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
-              self.processChangedMemberEffects(null);
-            });
-          }
-        }
-      });
-    });
-    this.changeDetection.detectChanges();
-  }
-
-  getConceptName(descriptionsString) {
-
-    let conceptName: any = '';
-
-    let descriptions = JSON.parse(descriptionsString);
-
-    if (CodeUtility.hasValue(descriptions) && CodeUtility.hasValue(descriptions[0]?.term)) {
-      conceptName = descriptions[0].term;
-    } else {
-
-      for (let i = 1; i < descriptions.length; i++) {
-
-        if (descriptions[i].language == 'en' && descriptions[i].type == 'PT') {
-
-          conceptName = descriptions[i].term;
-          break;
-        }
-      }
-    }
-
-    conceptName = conceptName.replaceAll(',', '/');
-
-    return conceptName;
-  }
-
-  getReplacementConceptName(inactiveConcept) {
-
-    let replacementName: any = '';
-
-    if (inactiveConcept.replacementConcepts) {
-      replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
-    }
-
-    return replacementName;
-  }
-
-  getInactiveChangeReport(): void {
-
-    const memberItems = this.membersInCommon.items;
-    const inactiveConcepts = memberItems.filter((items: any) => {
-      return items?.active == false;
-    });
-
-    let data = [];
-
-    for (let i = 0; i < inactiveConcepts.length; i++) {
-
-      data.push({
-        'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
-        'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
-        'Inactive Concept': this.getConceptName(inactiveConcepts[i].descriptions),
-        'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
-        'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-        'Suggested Replacement Concept': this.getReplacementConceptName(inactiveConcepts[i])
-      });
-    }
-
-    UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
-
-  }
-
-  getFinishedChangeReport(): void {
-
-    // this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
-    // this.membersInCommon = members;
-    // console.log(this.membersInCommon);
-    // Get old members from inactive concepts
-    let memberItems = this.membersInCommonForChangeReport?.items;
-    let inactiveConcepts = [];
-    memberItems.forEach((items: any) => {
-      if (items.replacementConcepts) {
-        for (let item of items.replacementConcepts) {
-          if (item.added === true) {
-            inactiveConcepts.push(item);
-          }
-        }
-      }
-    });
-
-    let newMembers = [];
-    for (let concept of inactiveConcepts) {
-      if (!Boolean(newMembers.some((x) => {
-        return x['New Member ID'] === concept.code;
-      }))) {
-        newMembers.push({
-          'New Member ID': concept.code,
-          'New Member Concept': this.getConceptName(concept.descriptions)
-        });
-      }
-    }
-
-    // Get new members from inactive concepts
-    inactiveConcepts = [];
-    memberItems.forEach((item: any) => {
-      if (item.replaced === true || item.stillMember === false) {
-        inactiveConcepts.push(item);
-      }
-    });
-    let oldMembers = [];
-    for (let concept of inactiveConcepts) {
-      if (!Boolean(oldMembers.some((x) => {
-        return x['Old Member ID'] === concept.code;
-      }))) {
-        oldMembers.push({
-          'Old Member ID': concept.code,
-          'Old Member Concept': this.getConceptName(concept.descriptions)
-        });
-      }
-    }
-
-    // Get manual replacements from inactive concepts
-    inactiveConcepts = [];
-    memberItems.forEach((items: any) => {
-      if (items.replacementConcepts) {
-        for (let item of items.replacementConcepts) {
-          if (item.reason === 'MANUAL_REPLACEMENT') {
-            inactiveConcepts.push(item);
-          }
-        }
-      }
-    });
-
-    let manualReplacement = [];
-    for (let concept of inactiveConcepts) {
-      if (!Boolean(manualReplacement.some((x) => {
-        return x['Manual Replacement ID'] === concept.code;
-      }))) {
-        manualReplacement.push({
-          'Manual Replacement ID': concept.code,
-          'Manual Replacement Concept': this.getConceptName(concept.descriptions)
-        });
-      }
-    }
-
-    // Get members in common
-    const membersInCommonItems = this.membersOfRefset;
-    const commonConcepts = membersInCommonItems?.filter((x) => {
-      return !memberItems?.includes(x.id);
-    });
-    console.log(commonConcepts)
-    let membersInCommon = [];
-    for (let i = 0; i < commonConcepts?.length; i++) {
-      membersInCommon.push({
-        'Members In Common ID': commonConcepts[i].code,
-        'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
-      });
-    }
-
-    const changeReportObject = {
-      'oldMember': oldMembers,
-      'newMember': newMembers,
-      'manualReplacement': manualReplacement,
-      'membersInCommon': membersInCommon
-    };
-    UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
-    // });
-  }
-  selectConcept(concept: any): void {
-
-    this.conceptSelected = true;
-    this.selectedConcept = concept;
-    this.loadConceptDetail(concept);
-  }
-  getTaxonomyLanguageWithoutType() {
-    return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
-  }
-
-  loadConceptDetail(concept) {
-
-    this.conceptDetail = null;
-    this.isConceptDetailsLoading = true;
-    this.loadConceptDetailParents(concept);
-
-    // this.refsetService
-    //   .getMembersDetails(concept.code, {
-    //     refsetInternalId: this.refsetInternalId,
-    //   })
-    //   .subscribe((results) => {
-
-    //     this.isConceptDetailsLoading = false;
-    //     this.conceptDetail = results;
-    //     this.conceptDescriptions =
-    //       this.conceptDetail.descriptions.filter(function (description) {
-    //         return description != null;
-    //       });
-
-    //     RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
-    //   });
-  }
-
-  loadConceptDetailParents(concept) {
-
-    this.conceptDetailParents = [];
-
-    // const restParams = {
-    //   displayType: "taxonomy",
-    //   returnChildren: false,
-    //   language: this.getTaxonomyLanguageWithoutType(),
-    //   depth: 1,
-    //   startingConceptId: concept.code,
-    //   offset: 0,
-    //   limit: 1000,
-    // };
-
-    // load the parents
-    // this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
-    //   this.conceptDetailParents = results.items;
-    // });
-  }
-
-  openCancelUpgrade(dialog: NgbModal) {
-    this.modalService.open(dialog, {
-      modalDialogClass: 'alert-modal',
-      centered: true
-    });
-    console.log("Cancel Upgrade in initial screen");
-  }
-  openPauseUpdate() {
-    const dialogId = "pauseUpdateDialog";
-
-    const dialogData = {
-      headerText: `Pause Upgrade`,
-      template: this.pauseUpdateDialog,
-      data: this.refsetData,
-      showCloseIcon: false
-    };
-
-    const dialogOptions = {
-      id: dialogId,
-    };
-
-    this.dialog = this.dialogFactoryService.open(dialogData);
-
-    this.dialog.confirmed().subscribe((data) => {
-      // if 'ok', close pause modal and update modal
-      if (data) {
-        console.log("workflow status: ", data.workflowStatus);
-        this.modalService.dismissAll();
-      }
-      // else close only pause modal
-    });
-  }
+	@Input()
+	refsetData: any;
+	@Input()
+	membersOfRefset: any;
+	@Input()
+	inactiveConcepts: any;
+	@Input()
+	membersInCommon: any;
+	numOfResults: any;
+	numOfMembers: any;
+	selectedLanguage = '';
+	languageOptions = [];
+	hideReplacements = false;
+	refsetGridLastFilter: string = '';
+	refsetGridLastSort: string = '';
+	selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+	@ViewChild('adjudicatePaging') paginationComponent: PaginationComponent;
+	@ViewChild('inactiveConceptCodeSection') inactiveCodeSection: TemplateRef<any>;
+	@ViewChild('adjudicateInactiveId') inactiveIdSection: TemplateRef<any>;
+	@ViewChild('adjudicateInactiveEnPtSection') inactiveEnPtSection: TemplateRef<any>;
+	@ViewChild('adjudicateInactiveEnFsnSection') inactiveEnFsnSection: TemplateRef<any>;
+	@ViewChild('adjudicateInactiveFrPtSection') inactiveFrPtSection: TemplateRef<any>;
+	@ViewChild('adjudicateInactiveNlPtSection') inactiveNlPtSection: TemplateRef<any>;
+	@ViewChild('adjudicateInactivationReason') inactivationReason: TemplateRef<any>;
+	@ViewChild('replacementConceptCodeSection') replacementCodeSection: TemplateRef<any>;
+	@ViewChild('adjudicateReplacementId') replacementIdSection: TemplateRef<any>;
+	@ViewChild('adjudicateReplacementEnPtSection') replacementEnPtSection: TemplateRef<any>;
+	@ViewChild('adjudicateReplacementEnFsnSection') replacementEnFsnSection: TemplateRef<any>;
+	@ViewChild('adjudicateReplacementFrPtSection') replacementFrPtSection: TemplateRef<any>;
+	@ViewChild('adjudicateReplacementNlPtSection') replacementNlPtSection: TemplateRef<any>;
+	@ViewChild('adjudicateReason') reasonSection: TemplateRef<any>;
+	@ViewChild('actionSection') actionSection: TemplateRef<any>;
+	@ViewChild("pauseUpdateDialog") pauseUpdateDialog: TemplateRef<any>;
+	@ViewChild("cancelUpgradeDialog") cancelUpgradeDialog: TemplateRef<any>;
+
+	gridOptions: any;
+	columnDefs: any;
+	refsetGridOptions: any;
+	refsetGridPaging = {
+		pageSize: 100,
+		pageSizeOptions: [5, 10, 25, 50],
+		totalKnown: false,
+		totalRows: null,
+	};
+	originalGridParams: any;
+	refsetGridApi: any;
+	refsetGridColumnApi: any;
+	isConceptBeingAdded: Boolean;
+	conceptForAddRemove: any;
+	addRemoveDefinitionExceptionType: any;
+	isLocked = false;
+	isInactive: boolean;
+	isReplacement: boolean;
+	resetRefsetTotal = false;
+	changeMethod = '';
+	selectedRow: any;
+	selectedConcepts: any;
+	isConceptDetailsLoading = false;
+	conceptDetail: any;
+	conceptDetailParents: any;
+	conceptDescriptions: any;
+	conceptSelected: boolean;
+	refsetInternalId: string;
+	selectedConcept: any;
+	numOfChildren = undefined;
+	chosenConceptCode: any;
+	replacementCode: string;
+	concept: any;
+	showActionButton = true;
+	disableAddRemove = false;
+	membersInCommonForChangeReport = { items: [] };
+	manualReplacementOptionsLoading = false;
+	addReplacementFlag = false;
+	dialog: DialogService;
+
+	constructor(private readonly modalService: NgbModal,
+		private readonly refsetService: RefsetService,
+		readonly refsetDetails: RefsetDetails,
+		private readonly changeDetection: ChangeDetectorRef,
+		private readonly route: ActivatedRoute,
+		readonly upgradeModalComponent: UpgradeModalComponent,
+		private dialogFactoryService: DialogFactoryService,
+		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
+
+	ngOnInit(): void {
+		this.languageOptions = this.refsetData?.edition?.fullyQualifiedLanguageRefsets.map((x) => {
+			return x.qualifiedLanguageCode;
+		});
+		this.selectedLanguage = this.languageOptions[0];
+	}
+
+	ngAfterViewInit() {
+
+		this.columnDefs = [
+
+			{
+				field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
+				flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
+			},
+			{
+				field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
+					template:
+						''
+						+ ' <a class="remove-all mr-auto ml-auto">'
+						+ '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
+						+ ' </a>'
+						+ ''
+				}, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60
+			},
+			{
+				field: 'code', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', headerName: 'Inactive ID', cellRenderer: 'templateRenderer', 
+				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110, unSortIcon: true
+			},
+			{
+				field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', sort: 'asc', valueGetter: (params) => {
+					if (params.data.descriptions) {
+						return this.getConceptName(params.data.descriptions);
+					}
+
+					return '';
+				}, headerName: 'Inactive ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
+			},
+			{
+				field: 'reason', sortable: false, filter: false, valueGetter: (params) => {
+					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
+				}, tooltipField: 'reason', headerName: 'Association', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
+			},
+			{
+				field: 'replacementCode', sortable: false, filter: false, tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
+					template: ' <a class="add-all mr-auto ml-auto">'
+						+ '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
+						+ ' </a>'
+				}, flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
+			},
+			{
+				field: 'replacementId', sortable: false, filter: false, tooltipField: 'replacementId', headerName: 'Replacement ID', valueGetter: (params) => {
+					return params?.data?.replacementConcepts[0]?.code;
+				}, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
+			},
+			{
+				field: 'created', sortable: false, filter: false, colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+
+					let description = '';
+
+					if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
+						description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+					}
+
+					return description;
+
+				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true,
+			},
+			{ field: 'actionSection', tooltipField: 'actionSection', headerName: '', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
+		];
+
+		this.refsetGridOptions = {
+			context: { componentParent: this },
+			pagination: true,
+			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressPaginationPanel: true,
+			paginationPageSize: this.refsetGridPaging.pageSize,
+			enableCellTextSelection: true,
+			rowSelection: 'single',
+			onGridReady: this.onGridReady,
+			onCellClicked: this.onGridCellClick,
+			frameworkComponents: {
+				'templateRenderer': TemplateRenderer,
+			},
+			suppressScrollOnNewData: true,
+			defaultColDef: {
+				sortable: true,
+				sortingOrder: ['asc', 'desc'],
+				filter: true,
+				floatingFilter: true,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+				suppressMenu: true,
+				menuTabs: ['columnsMenuTab'],
+				resizable: true,
+			},
+			rowClassRules: {
+				'alternate-row-color-odd': (params) => {
+					let odd = !this.isRowClassEven(params);
+					return odd;
+				},
+				'alternate-row-color-even': (params)  => {
+					let even = this.isRowClassEven(params);
+					return even;
+				}
+			},
+		};
+
+	}
+
+	onCellMouseOver(params) {
+		this.selectedRow = params;
+	}
+
+	onGridCellClick = (event) => {
+		this.selectConcept(event.data);
+	}
+
+	isRowClassEven = (params) => {
+
+		if (!params.data) {
+			return true;
+		}
+
+		let evenRow = true;
+
+		if (params.node.rowIndex != 0) {
+			
+			let previousInactiveCode = params.node.gridApi.rowModel.rowsToDisplay[params.node.rowIndex - 1].data.code;
+			let previousRowEven = params.node.gridApi.rowModel.rowsToDisplay[params.node.rowIndex - 1].data.rowEvenColorFlag;
+
+			if (params.data.code == previousInactiveCode) {
+				evenRow = previousRowEven;
+			} else {
+				evenRow = !previousRowEven;
+			}
+
+			evenRow;
+		}
+
+		params.data.rowEvenColorFlag = evenRow;
+		return evenRow;
+	};
+
+	getSelectedRowData(option: string) {
+
+		const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
+		newItem.inactivationReason = 'MANUAL REPLACEMENT';
+		newItem.replacementConcepts = '';
+
+		if (option.includes('add')) {
+
+			this.chosenConceptCode = this.selectedRow['data'].code;
+			this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow?.rowIndex + 1 });
+
+		} else if (option.includes('remove')) {
+			this.refsetGridApi.applyTransaction({ remove: [this.selectedRow?.data] });
+		}
+
+		this.selectedConcepts = undefined;
+	}
+
+	addRemoveConcept(params: any, changeMethod: string): void {
+		if (!this.disableAddRemove) {
+			this.addRemoveConceptsComponent.changeMethod = changeMethod;
+			this.addRemoveConceptsComponent.refset = this.refsetData;
+			this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+			this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+			this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcepts[0]);
+			this.disableAddRemove = true;
+
+			if (changeMethod == 'INACTIVE_ADDED') {
+				this.inactiveConcepts++;
+			} else if (changeMethod == 'INACTIVE_REMOVED') {
+				this.inactiveConcepts--;
+			}
+		}
+	}
+
+	async onSearchChange(value): Promise<void> {
+		await this.search(value);
+	}
+
+	handleInput(event: KeyboardEvent): void {
+		event.stopPropagation();
+	}
+
+	@Debounce()
+	search(value: string): void {
+
+		this.manualReplacementOptionsLoading = true;
+		this.selectedConcepts = undefined;
+
+		const results = this.refsetService.getReplacementConcepts(this.refsetData.id, value).subscribe((results) => {
+
+			this.selectedConcepts = results.items.filter((x) => {
+				return x.active === true;
+			});
+
+			this.manualReplacementOptionsLoading = false;
+		});
+	}
+
+	selectedConceptChanged(concept: any): void {
+		this.concept = concept['value'];
+	}
+
+	removeManualReplacement(changeMethod: string): void {
+		this.refsetDetails.toggleLoadingSpinner(true);
+		this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode ? this.chosenConceptCode : this.selectedRow['data'].code, changeMethod, this.concept ? this.concept.code : this.selectedRow['data'].replacementConcepts[0].code).subscribe((x) => {
+			this.onGridReady(this.originalGridParams);
+			this.refsetDetails.toggleLoadingSpinner(false);
+		});
+		this.selectedConcepts = undefined;
+		this.concept = '';
+	}
+
+	addManualReplacement(changeMethod: string): void {
+		if (this.concept) {
+			this.refsetDetails.toggleLoadingSpinner(true);
+			const body = { ...this.concept };
+			this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
+				// force auto-add of the replacement concept to the refset
+				this.addReplacementFlag = true;
+				this.onGridReady(this.originalGridParams);
+				this.refsetDetails.toggleLoadingSpinner(false);
+			});
+		}
+		this.selectedConcepts = undefined;
+	}
+
+	changeLockedStatus(lock: boolean) {
+
+		this.isLocked = lock;
+		this.refsetDetails.toggleLoadingSpinner(false);
+		UiUtility.toggleLockedSections(lock);
+	}
+
+	processChangedMemberEffects = (conceptStatusArray) => {
+
+		this.changeLockedStatus(false);
+		this.refsetDetails.showLoadingSpinner = true;
+
+		this.onGridReady(this.originalGridParams);
+		this.refsetDetails.showLoadingSpinner = false;
+		this.disableAddRemove = false;
+	}
+
+	hideIncludedReplacements(toggle: any): void {
+		this.hideReplacements = toggle.checked;
+		this.onGridReady(this.originalGridParams);
+	}
+
+	formatReason(reason: string): string {
+		return reason?.split('_').join(' ');
+	}
+
+	transformDescriptions(descriptions: any, isOption = false) {
+		if (descriptions) {
+
+			const getStringifiedJSON = descriptions.substring(1, descriptions.length - 1);
+			if (getStringifiedJSON) {
+				const formattedObjectArray = getStringifiedJSON.slice(1).split('{"descriptionId"').map((x) => {
+					if (x[x.length - 1] === ',') {
+						const modifiedString = x.slice(0, -1);
+						x = modifiedString;
+					}
+					if (!x.includes('"descriptionId"')) {
+						x = '{"descriptionId"' + x;
+					} else if (!x.includes('{"descriptionId"') && x.includes('"descriptionId"')) {
+						x = '{' + x;
+					}
+					if (x.includes(',null')) {
+						x = x.replaceAll(',null', '');
+					}
+					if (x[x.length - 1] !== '}' && x[x.length - 2] !== '"') {
+						x = x + '"}';
+					}
+					if (!x.includes(':')) {
+						return '';
+					}
+
+					return JSON.parse(x);
+				});
+				return formattedObjectArray.filter((x) => {
+					if (isOption) {
+						return x.language === this.getLanguageAndType(isOption)[0] && x.type === this.getLanguageAndType(isOption)[1];
+					} else {
+						return x.languageName === this.selectedLanguage;
+					}
+				});
+			}
+		}
+	}
+
+
+	transformManualReplacementDescriptions(descriptions: any) {
+		if (descriptions) {
+			return JSON.parse(descriptions).filter((x) => {
+				if (x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2])) {
+					return x?.language === this.getLanguageAndType()[0] && (x.type === this.getLanguageAndType()[1] || x.type === this.getLanguageAndType()[2]);
+				}
+
+				return x?.language === this.getLanguageAndType(true)[0] && (x.type === this.getLanguageAndType(true)[1] || x.type === this.getLanguageAndType(true)[2]);
+			});
+		}
+	}
+
+	getLanguageAndType(isOption = false): string[] {
+		let language = '';
+		let type = '';
+		if (isOption) {
+			language = 'en';
+			type = 'FSN';
+		} else {
+			language = this.selectedLanguage.split(' ')[0].toLowerCase();
+			type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
+		}
+		let type2 = '';
+		if (type === 'PT') {
+			type2 = 'SYNONYM';
+		}
+
+		return [language, type, type2];
+	}
+
+	ngOnChanges(changes: SimpleChanges): void {
+	}
+
+	openAdjudicateUpgradeModal(adjudicateUpgradeDialog: NgbModal) {
+		this.modalService.dismissAll();
+		this.modalService.open(adjudicateUpgradeDialog, {
+			backdrop: 'static',
+			keyboard: false,
+			windowClass: 'adjudicate-upgrade-modal',
+			centered: true
+		});
+	}
+
+	changeLanguage($event: any) {
+		this.onGridReady(this.originalGridParams);
+	}
+
+	onGridReady = (gridReadyParams) => {
+		this.showActionButton = true;
+		this.originalGridParams = gridReadyParams;
+		this.refsetGridApi = gridReadyParams.api;
+		this.refsetGridColumnApi = gridReadyParams.columnApi;
+
+		// this.refsetGridApi.showLoadingOverlay();
+		this.refsetDetails.showLoadingSpinner = true;
+
+		let pageNumber = this.refsetGridApi.paginationGetPageSize();
+		let filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
+		let newFilterString = filter;
+		this.refsetGridLastFilter = newFilterString;
+
+
+		let restParams: any = {
+			displayType: "list",
+			limit: this.refsetGridApi.paginationGetPageSize(),
+			offset: pageNumber - 1
+		};
+
+		this.refsetService.getUpgradeData(this.refsetData?.id, restParams).subscribe(results => {
+			results.items = results.items.filter((x) => {
+
+				if (this.hideReplacements) {
+					return !x.replaced && x.replacementConcepts.filter(r => r.existingMember).length == 0;
+				}
+
+				return x.active === false;
+			});
+
+			// pre sort items by 
+			results.items.sort((a, b) =>  {
+
+				let nameA = this.getConceptName(a.descriptions) + a.replacementConcepts[0].reason.toUpperCase();
+				let nameB = this.getConceptName(b.descriptions) + b.replacementConcepts[0].reason.toUpperCase();
+				if (nameA > nameB) {
+					return -1;
+				}
+				if (nameA < nameB) {
+					return 1;
+				}
+
+				return 0;
+			});
+
+			let finalResults = [];
+			let changeReportResults = [];
+			this.inactiveConcepts = 0;
+
+			for (let i = 0; i < results.items.length; i++) {
+			
+				let inactiveConcept = results.items[i];
+
+				if (inactiveConcept.stillMember) {
+					this.inactiveConcepts++;
+				}
+
+				for (let j = 0; j < inactiveConcept.replacementConcepts.length; j++) {
+
+					changeReportResults.push(inactiveConcept);
+
+					if (j === 0) {
+						finalResults.push(inactiveConcept);
+					} else {
+
+						const newItem = { ...inactiveConcept, isHidden: true };
+
+						// newItem.inactivationReason = '';
+						// newItem.descriptions = '';
+						newItem.replacementConcepts = [inactiveConcept.replacementConcepts[j]];
+
+						// if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
+						if (this.addReplacementFlag && (inactiveConcept.replacementConcepts[j].code == this.concept.code)) {
+
+							this.addRemoveConceptsComponent.changeMethod = "REPLACEMENT_ADDED";
+							this.addRemoveConceptsComponent.refset = this.refsetData;
+							this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+							this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+							this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(newItem, newItem.replacementConcepts[0]);
+							this.addReplacementFlag = false;
+						}
+
+						finalResults.push(newItem);
+					}
+				}
+			}
+
+			this.numOfResults = results.items.length;
+			this.membersInCommonForChangeReport.items = changeReportResults;
+
+			results.items = finalResults;
+			this.membersInCommon = results;
+			// console.log(results.items)
+			let addRemoveAllBtns = document.querySelectorAll('.add-all, .remove-all');
+
+			if (results.items.length == 0) {
+
+				addRemoveAllBtns.forEach((element: HTMLElement) => {
+					element.classList.add("disabled");
+				});
+
+				this.refsetGridApi.showNoRowsOverlay();
+				this.refsetGridApi.setRowData([]);
+
+				if (pageNumber > 1) {
+
+					this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
+					this.refsetGridPaging.totalKnown = true;
+					this.paginationComponent?.goToPage(pageNumber - 1);
+				}
+
+				this.refsetDetails.showLoadingSpinner = false;
+
+				return;
+
+			} else {
+
+				addRemoveAllBtns.forEach((element: HTMLElement) => {
+					element.classList.remove("disabled");
+				});
+			}
+
+			UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+			this.refsetDetails.showLoadingSpinner = false;
+		},
+			error => {
+
+				this.refsetGridApi.showNoRowsOverlay();
+				this.refsetGridApi.setRowData([]);
+				this.refsetDetails.toggleLoadingSpinner(false);
+			});
+
+
+		// set placeholders on the grid floating filter fields
+		document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
+
+			let label = obj.getAttribute('aria-label');
+			let value = label.substring(0, label.indexOf('Filter Input')) + '...';
+			obj.setAttribute('placeholder', value);
+		});
+
+		let self = this;
+		document.querySelectorAll('.add-all, .remove-all').forEach((obj: HTMLElement) => {
+			obj.addEventListener('click', function (e) {
+				if (!obj.classList.contains('disabled')) {
+					const memberItems = self.membersInCommon.items;
+					const isAdd = obj.classList.contains('add-all');
+					const inactiveConcepts = memberItems.filter((items: any) => {
+						return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
+					});
+					if (inactiveConcepts.length > 0) {
+						self.refsetDetails.showLoadingSpinner = true;
+						self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
+							self.processChangedMemberEffects(null);
+						});
+					}
+				}
+			});
+		});
+		this.changeDetection.detectChanges();
+	}
+
+	getConceptName(descriptionsString) {
+
+		let conceptName: any = '';
+
+		let descriptions = JSON.parse(descriptionsString);
+
+		if (CodeUtility.hasValue(descriptions) && CodeUtility.hasValue(descriptions[0]?.term)) {
+			conceptName = descriptions[0].term;
+		} else {
+
+			for (let i = 1; i < descriptions.length; i++) {
+
+				if (descriptions[i].language == 'en' && descriptions[i].type == 'PT') {
+
+					conceptName = descriptions[i].term;
+					break;
+				}
+			}
+		}
+
+		conceptName = conceptName.replaceAll(',', '/');
+
+		return conceptName;
+	}
+
+	getReplacementConceptName(inactiveConcept) {
+
+		let replacementName: any = '';
+
+		if (inactiveConcept.replacementConcepts) {
+			replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
+		}
+
+		return replacementName;
+	}
+
+	getInactiveChangeReport(): void {
+
+		const memberItems = this.membersInCommon.items;
+		const inactiveConcepts = memberItems.filter((items: any) => {
+			return items?.active == false;
+		});
+
+		let data = [];
+
+		for (let i = 0; i < inactiveConcepts.length; i++) {
+
+			data.push({
+				'Inactivation Reason': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].inactivationReason : '',
+				'Inactive ID': inactiveConcepts[i].inactivationReason ? inactiveConcepts[i].code : '',
+				'Inactive Concept': this.getConceptName(inactiveConcepts[i].descriptions),
+				'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+				'Suggested Replacement ID': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+				'Suggested Replacement Concept': this.getReplacementConceptName(inactiveConcepts[i])
+			});
+		}
+
+		UiUtility.createInactiveChangeReport(this.refsetData.refsetId, data);
+
+	}
+
+	getFinishedChangeReport(): void {
+
+		// this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
+		// this.membersInCommon = members;
+		// console.log(this.membersInCommon);
+		// Get old members from inactive concepts
+		let memberItems = this.membersInCommonForChangeReport?.items;
+		let inactiveConcepts = [];
+		memberItems.forEach((items: any) => {
+			if (items.replacementConcepts) {
+				for (let item of items.replacementConcepts) {
+					if (item.added === true) {
+						inactiveConcepts.push(item);
+					}
+				}
+			}
+		});
+
+		let newMembers = [];
+		for (let concept of inactiveConcepts) {
+			if (!Boolean(newMembers.some((x) => {
+				return x['New Member ID'] === concept.code;
+			}))) {
+				newMembers.push({
+					'New Member ID': concept.code,
+					'New Member Concept': this.getConceptName(concept.descriptions)
+				});
+			}
+		}
+
+		// Get new members from inactive concepts
+		inactiveConcepts = [];
+		memberItems.forEach((item: any) => {
+			if (item.replaced === true || item.stillMember === false) {
+				inactiveConcepts.push(item);
+			}
+		});
+		let oldMembers = [];
+		for (let concept of inactiveConcepts) {
+			if (!Boolean(oldMembers.some((x) => {
+				return x['Old Member ID'] === concept.code;
+			}))) {
+				oldMembers.push({
+					'Old Member ID': concept.code,
+					'Old Member Concept': this.getConceptName(concept.descriptions)
+				});
+			}
+		}
+
+		// Get manual replacements from inactive concepts
+		inactiveConcepts = [];
+		memberItems.forEach((items: any) => {
+			if (items.replacementConcepts) {
+				for (let item of items.replacementConcepts) {
+					if (item.reason === 'MANUAL_REPLACEMENT') {
+						inactiveConcepts.push(item);
+					}
+				}
+			}
+		});
+
+		let manualReplacement = [];
+		for (let concept of inactiveConcepts) {
+			if (!Boolean(manualReplacement.some((x) => {
+				return x['Manual Replacement ID'] === concept.code;
+			}))) {
+				manualReplacement.push({
+					'Manual Replacement ID': concept.code,
+					'Manual Replacement Concept': this.getConceptName(concept.descriptions)
+				});
+			}
+		}
+
+		// Get members in common
+		const membersInCommonItems = this.membersOfRefset;
+		const commonConcepts = membersInCommonItems?.filter((x) => {
+			return !memberItems?.includes(x.id);
+		});
+		console.log(commonConcepts)
+		let membersInCommon = [];
+		for (let i = 0; i < commonConcepts?.length; i++) {
+			membersInCommon.push({
+				'Members In Common ID': commonConcepts[i].code,
+				'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
+			});
+		}
+
+		const changeReportObject = {
+			'oldMember': oldMembers,
+			'newMember': newMembers,
+			'manualReplacement': manualReplacement,
+			'membersInCommon': membersInCommon
+		};
+		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
+		// });
+	}
+	selectConcept(concept: any): void {
+
+		this.conceptSelected = true;
+		this.selectedConcept = concept;
+		this.loadConceptDetail(concept);
+	}
+	getTaxonomyLanguageWithoutType() {
+		return this.selectedTaxonomyLanguage.replace(/:.*$/, "");
+	}
+
+	loadConceptDetail(concept) {
+
+		this.conceptDetail = null;
+		this.isConceptDetailsLoading = true;
+		this.loadConceptDetailParents(concept);
+
+		// this.refsetService
+		//   .getMembersDetails(concept.code, {
+		//     refsetInternalId: this.refsetInternalId,
+		//   })
+		//   .subscribe((results) => {
+
+		//     this.isConceptDetailsLoading = false;
+		//     this.conceptDetail = results;
+		//     this.conceptDescriptions =
+		//       this.conceptDetail.descriptions.filter(function (description) {
+		//         return description != null;
+		//       });
+
+		//     RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
+		//   });
+	}
+
+	loadConceptDetailParents(concept) {
+
+		this.conceptDetailParents = [];
+
+		// const restParams = {
+		//   displayType: "taxonomy",
+		//   returnChildren: false,
+		//   language: this.getTaxonomyLanguageWithoutType(),
+		//   depth: 1,
+		//   startingConceptId: concept.code,
+		//   offset: 0,
+		//   limit: 1000,
+		// };
+
+		// load the parents
+		// this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
+		//   this.conceptDetailParents = results.items;
+		// });
+	}
+
+	openCancelUpgrade(dialog: NgbModal) {
+		this.modalService.open(dialog, {
+			modalDialogClass: 'alert-modal',
+			centered: true
+		});
+		console.log("Cancel Upgrade in initial screen");
+	}
+	openPauseUpdate() {
+		const dialogId = "pauseUpdateDialog";
+
+		const dialogData = {
+			headerText: `Pause Upgrade`,
+			template: this.pauseUpdateDialog,
+			data: this.refsetData,
+			showCloseIcon: false
+		};
+
+		const dialogOptions = {
+			id: dialogId,
+		};
+
+		this.dialog = this.dialogFactoryService.open(dialogData);
+
+		this.dialog.confirmed().subscribe((data) => {
+			// if 'ok', close pause modal and update modal
+			if (data) {
+				console.log("workflow status: ", data.workflowStatus);
+				this.modalService.dismissAll();
+			}
+			// else close only pause modal
+		});
+	}
 
 }

@@ -231,7 +231,7 @@
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
     <span [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember" [class.hide-data]="params?.data?.isHidden">
-        {{ params?.data?.code }}
+        {{ params?.value }}
     </span>
 </ng-template>
 

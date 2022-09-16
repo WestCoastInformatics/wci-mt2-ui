@@ -5369,3 +5369,11 @@ app-date-text-floating-filter {
 .refset-tool-details-column-remove-icon img {
   margin-bottom: 3px;
 }
+
+.ag-theme-alpine.refset-tool-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-even {
+  background-color: white;
+}
+
+.ag-theme-alpine.refset-tool-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
+  background-color: #efefef;
+}
