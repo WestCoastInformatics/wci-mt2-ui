@@ -16,7 +16,7 @@
                 <label>Format:</label>
             </div>
             <div class="col refset-tool-download-column-field">
-                <mat-form-field floatLabel="never" appearance="fill">
+                <mat-form-field floatLabel="never" appearance="legacy">
                     <mat-select #downloadFormatField [(value)]="data.selectedFormat" (selectionChange)="changeFormat(data)">
                         <mat-option *ngFor="let option of data.formatOptions" [value]="option.value">
                             {{ option.display }}
@@ -31,7 +31,7 @@
                 <label>Content:</label>
             </div>
             <div class="col refset-tool-download-column-field">
-                <mat-form-field floatLabel="never" appearance="fill">
+                <mat-form-field floatLabel="never" appearance="legacy">
                     <mat-select #downloadContentField [(value)]="data.selectedContent" (selectionChange)="changeContent(data)">
                         <ng-container *ngFor="let option of data.contentOptions">
                             <mat-option *ngIf="checkContentValues(data, option)" [value]="option.value">
@@ -54,7 +54,7 @@
                 <label>Language Reference Set:</label>
             </div>
             <div class="col refset-tool-download-column-field">
-                <mat-form-field floatLabel="never" appearance="fill">
+                <mat-form-field floatLabel="never" appearance="legacy">
                     <mat-select #downloadLanguageField [(value)]="data.selectedLanguage">
                         <mat-option *ngFor="let option of data.languageOptions" [value]="option.value">
                             {{ option.display }}
@@ -83,7 +83,7 @@
                 <div class="row delta-row">
                     <div class="ml-3"><label class="in-form-label">From:</label></div>
 
-                    <mat-form-field floatLabel="never" appearance="fill" class="delta-select">
+                    <mat-form-field floatLabel="never" appearance="legacy" class="delta-select">
                         <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom" (selectionChange)="changeComparisonFrom(data)">
                             <mat-option *ngFor="let option of data.comparisonFromOptions" [value]="option.value">
                                 {{ addSpaceAfterVersionDate(option.display) }}

@@ -12,13 +12,13 @@
     <div class="container-fluid ready-for-review-container-fluid" [formGroup]="form" *ngIf="form">
         <div class="modal-body pr-0 pl-0 pb-0">
             <div class="topic-content mb-3">
-                <mat-form-field floatLabel="never" appearance="fill" class="discussion-topic-field">
+                <mat-form-field floatLabel="never" appearance="legacy" class="discussion-topic-field">
                     <mat-label>Recipient Email</mat-label>
                     <input matInput type="text" formControlName="recipient" ngbAutofocus placeholder="Enter recipient email address" />
                 </mat-form-field>
             </div>
             <div class="topic-content mb-3">
-                <mat-form-field floatLabel="never" appearance="fill" class="discussion-topic-field">
+                <mat-form-field floatLabel="never" appearance="legacy" class="discussion-topic-field">
                     <mat-label>Message</mat-label>
                     <textarea matInput formControlName="additionalMessage" ngbAutofocus placeholder="Add an optional message for your set recipient"></textarea>
                 </mat-form-field>

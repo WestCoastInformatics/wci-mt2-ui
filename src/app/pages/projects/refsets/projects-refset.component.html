@@ -5,8 +5,6 @@
 
         <span class="title-label">Organizations</span>
         <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose
-                Organization'}}</mat-label>
             <mat-select [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
                     {{ organization.name }}
@@ -16,8 +14,6 @@
 
         <span class="title-label">Editions</span>
         <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}
-            </mat-label>
             <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
                 <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
                     {{ edition.name }}
@@ -27,8 +23,6 @@
 
         <span class="title-label">Projects</span>
         <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
-            </mat-label>
             <mat-select [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
                     {{ project.name }}

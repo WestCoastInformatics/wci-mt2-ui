@@ -226,7 +226,7 @@ nav a span {
 }
 
 .header-title {
-  font-family: Poppins, "Helvetica Neue", Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 300
 }
@@ -4219,6 +4219,13 @@ img.refset-tool-edition-flag {
   margin-bottom: 15px;
 }
 
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
+  border-width: 1px !important;
+  color: rgba(0, 0, 0, 0.12) !important;
+}
+
 .content-header {
   position: sticky;
   z-index: 2;
@@ -5189,7 +5196,7 @@ $sidebar-width: 294px;
 }
 
 .discussion-icon-text {
-  font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 1rem;
   display: flex;
@@ -5401,4 +5408,7 @@ app-date-text-floating-filter {
     display: inline-flex;
     align-items: center;
     margin-bottom: 0;
+}
+.atlwdg-trigger.atlwdg-RIGHT {
+  top: 45% !important;
 }
