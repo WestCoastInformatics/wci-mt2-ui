@@ -1,22 +1,21 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { Title } from '@angular/platform-browser';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
-import { Debounce } from '../decorators/debounce.decorator';
-import { forkJoin } from 'rxjs';
-import { User } from '../models/user';
-import { AuthenticationService } from '../services/authentication/authentication.service';
-import * as Util from 'util';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {DialogService} from 'src/app/dialog/services/dialog.service';
+import {DialogFactoryService} from 'src/app/dialog/services/dialog-factory.service';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
+import {DateTextFilterComponent} from 'src/app/components/dateTextFilter/date-text-filter.component';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {Title} from '@angular/platform-browser';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {UiUtility} from 'src/app/utilities/ui.utility';
+import {RefsetUtility} from 'src/app/utilities/refset.utility';
+import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
+import {PaginationComponent} from 'src/app/components/pagination/pagination.component';
+import {Debounce} from '../decorators/debounce.decorator';
+import {forkJoin} from 'rxjs';
+import {User} from '../models/user';
+import {AuthenticationService} from '../services/authentication/authentication.service';
 
 
 /**
@@ -363,8 +362,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             return '';
         }
 
-        const flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
-        params.data.flagIcon = flagIcon;
+        params.data.flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
         return params?.data?.edition?.name;
     };
 
