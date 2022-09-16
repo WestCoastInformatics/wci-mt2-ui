@@ -1,47 +1,50 @@
-<a title="Create New Project" class='btn btn-primary rounded btn-lg float-right btn-wide-font' aria-label="Create New Project"
-  (click)="openCreateNewProjectModal(createNewProjectDialog)">Create New Project</a>
+<a title="Create New Project" class='btn btn-primary rounded btn-lg float-right btn-wide-font'
+  aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create
+  New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
 
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-            Create New Project
-        </h4>
+  <div class="modal-header rt2-modal-header">
+    <button ngbAutofocus class="unfocus-btn"></button>
+    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+      Create New Project
+    </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
+    <button type="button" class="close dialog-close-x" aria-label="Close"
+      (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    </button>
+  </div>
 
-    <div class="modal-body refset-tool-lockable">
+  <div class="modal-body refset-tool-lockable">
 
-        <table>
-            <tr>
-                <td>
-                    <label class="modal-label-edition">Parent Organization:</label>
-                </td>
-                <td>
-                    {{ edition.organization.name }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label-edition">Parent Edition:</label>
-                </td>
-                <td>
-                    {{ edition.name }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
-                </td>
-                <td>
-                    <input class="modal-input-field" placeholder="Project Name" autofocus #projectName [(ngModel)]="name" />{{ projectName.focus() }}
-                </td>
-            </tr>
-            <!-- <tr>
+    <table>
+      <tr>
+        <td>
+          <label class="modal-label-edition">Parent Organization:</label>
+        </td>
+        <td>
+          {{ edition.organization.name }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="modal-label-edition">Parent Edition:</label>
+        </td>
+        <td>
+          {{ edition.name }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
+        </td>
+        <td>
+          <input class="modal-input-field" placeholder="Project Name" autofocus #projectName
+            [(ngModel)]="name" />{{ projectName.focus() }}
+        </td>
+      </tr>
+      <!-- <tr>
                 <td>
                     <label class="modal-label">Email:</label>
                 </td>
@@ -52,36 +55,44 @@
             <tr class="modal-error-message" [hidden]="!emailError">
                 <div>{{emailError}}</div>
             </tr> -->
-            <tr>
-                <td>
-                    <label class="modal-label-description">Description:</label>
-                </td>
-                <td>
-                    <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description"></textarea>
-                    </mat-form-field>
+      <tr>
+        <td>
+          <label class="modal-label-description">Description:</label>
+        </td>
+        <td>
+          <mat-form-field floatLabel="never" class="import-from-list-field" appearance="outline">
+            <textarea matInput class="import-from-list-text-area"
+              [(ngModel)]="description"></textarea>
+          </mat-form-field>
 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label">Project Privacy:</label>
-                </td>
-                <td>
-                    <mat-checkbox [(ngModel)]="privateProject">Private</mat-checkbox>
-                </td>
-            </tr>
-        </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label class="modal-label">Project Privacy:</label>
+        </td>
+        <td>
+          <mat-checkbox [(ngModel)]="privateProject">Private</mat-checkbox>
+        </td>
+      </tr>
+    </table>
 
-    </div>
+  </div>
 
-    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+  <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-        <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
-          aria-label="Create Project" title="Create Project" ng-reflect-color="green">
-            Create Project
-        </button>
+    <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button
+      color="green" aria-hidden="false" class="refset-tool-action-button"
+      aria-label="Create Project" title="Create Project" ng-reflect-color="green">
+      Create Project
+    </button>
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
+      aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel"
+      ng-reflect-color="primary">
+      Cancel
+    </button>
 
-    </div>
+  </div>
 
 </ng-template>

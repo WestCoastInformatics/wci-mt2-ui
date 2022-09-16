@@ -17,7 +17,7 @@
                     <div class="adjudicate-inactive-concepts">Inactive Concepts
                         ({{inactiveConcepts}})</div>
                     <div class="adjudicate-format-option-drop-down">
-                        <mat-form-field appearance="fill">
+                        <mat-form-field floatLabel="never" appearance="fill">
                             <mat-label>Select Language(s):</mat-label>
                             <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event); showActionButton = true">
                                 <option *ngFor="let option of languageOptions" [value]="option">
@@ -285,7 +285,7 @@
         {{ formatReason(params?.data?.replacementConcepts[0]?.reason) }}
     </span>
     <span [hidden]="!params.data.isSearch">
-        <mat-form-field appearance="fill" style="width: 400px">
+        <mat-form-field floatLabel="never" appearance="fill" style="width: 400px">
             <mat-label>Add Concept by ID or FSN</mat-label>
             <mat-select (selectionChange)="selectedConceptChanged($event)">
                 <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (input)="onSearchChange($event.target.value)"

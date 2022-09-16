@@ -1,7 +1,7 @@
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">Organizations</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
+        <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
             <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
@@ -70,7 +70,7 @@
 <ng-template #confirmInactiveMemberModal let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Remove User Confirmation</h4>
         <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x">&times;</span>

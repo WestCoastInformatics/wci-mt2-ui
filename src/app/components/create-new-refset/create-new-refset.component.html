@@ -47,7 +47,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-            <mat-form-field appearance="none">
+            <mat-form-field floatLabel="never" appearance="none">
               <input style="cursor: default" matInput type="text"
                 [(ngModel)]="inputProperties.project.name" disabled />
             </mat-form-field>
@@ -61,7 +61,7 @@
           </div>
 
           <div class="col create-new-refset-field create-new-refset-flex-weight" style="">
-            <mat-form-field appearance="none">
+            <mat-form-field floatLabel="never" appearance="none">
               <input style="cursor: default" matInput type="text" disabled
                 [(ngModel)]="inputProperties.project.edition.organization.name" />
             </mat-form-field>
@@ -81,7 +81,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-            <mat-form-field appearance="none">
+            <mat-form-field floatLabel="never" appearance="none">
               <input style="cursor: default" matInput type="text"
                 [(ngModel)]="inputProperties.project.edition.name" disabled />
             </mat-form-field>
@@ -101,7 +101,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-            <mat-form-field appearance="none">
+            <mat-form-field floatLabel="never" appearance="none">
               <input style="cursor: default" matInput type="text" [(ngModel)]="refsetConcept"
                 disabled />
             </mat-form-field>
@@ -135,7 +135,8 @@
               <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
                 Create a new concept</mat-radio-button>
 
-              <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
+              <mat-form-field floatLabel="never" appearance="fill"
+                [hidden]="isSelected == 2 || isSelected == 0">
                 <mat-label>Choose existing metadata concept</mat-label>
                 <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
                   <option
@@ -147,7 +148,8 @@
               </mat-form-field>
 
 
-              <mat-form-field appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
+              <mat-form-field floatLabel="never" appearance="fill"
+                [hidden]="isSelected == 1 || isSelected == 0">
                 <mat-label>Choose parent concept</mat-label>
                 <select matNativeControl [(ngModel)]="selectedParentConcept">
                   <option *ngFor="let parentConcept of parentConcepts"
@@ -157,7 +159,7 @@
                 </select>
               </mat-form-field>
 
-              <mat-form-field class="example-form-field" appearance="fill"
+              <mat-form-field floatLabel="never" class="example-form-field" appearance="fill"
                 [hidden]="isSelected == 1 || isSelected == 0">
                 <input matInput type="text" placeholder="Enter the name of the new concept"
                   [(ngModel)]="createdMetaDataConcept" (keyup)="this.isValidConceptName()" />
@@ -245,7 +247,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-            <mat-form-field class="example-chip-list">
+            <mat-form-field floatLabel="never" class="example-chip-list">
               <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
@@ -266,7 +268,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-            <mat-form-field class="example-chip-list">
+            <mat-form-field floatLabel="never" class="example-chip-list">
               <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
@@ -298,7 +300,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         ">
-            <mat-form-field appearance="fill">
+            <mat-form-field floatLabel="never" appearance="fill">
               <mat-label style="margin-top: 0">Select Reference Set Type
               </mat-label>
               <select matNativeControl [(ngModel)]="selectedReferenceType">
@@ -324,7 +326,7 @@
                             create-new-refset-field
                             create-new-refset-flex-weight
                         " style="">
-            <mat-form-field appearance="none">
+            <mat-form-field floatLabel="never" appearance="none">
               <input style="cursor: default" matInput type="text" [(ngModel)]="referenceType"
                 disabled />
             </mat-form-field>
@@ -346,7 +348,7 @@
 
               <span *ngIf="i == 0">
 
-                <mat-form-field class="refset_tool_ecl_definition_field">
+                <mat-form-field floatLabel="never" class="refset_tool_ecl_definition_field">
                   <input style="cursor: default" matInput [(ngModel)]="clause.value"
                     id="createRefsetDefinitionClausesInput" #createRefsetDefinitionClausesInput />
                 </mat-form-field>
@@ -421,6 +423,12 @@
       aria-label="Update Reference Set Metadata" title="Update Reference Set Metadata"
       ng-reflect-color="green">
       Update Metadata
+    </button>
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
+      aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel"
+      ng-reflect-color="primary">
+      Cancel
     </button>
   </div>
 </ng-template>
