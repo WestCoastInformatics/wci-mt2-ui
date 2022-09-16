@@ -76,7 +76,7 @@
                                                       [value]="referenceType">
                                     {{referenceType}}
                                     </mat-radio-button>
-                                    <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
+                                    <mat-icon class="refset-tool-new-refset-info-icon"  (click)="openInfoDialog(referenceType)">info_icon</mat-icon>
                                 </div>
                             </div>
                         </div>
@@ -128,12 +128,21 @@
                         <!-- External -->
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
-                                <label style="margin-top: 1.7rem">External:<span class="mandatory-field">*</span></label>
+                                <label style="margin-top: 1.7rem">Name:<span class="mandatory-field">*</span></label>
                             </div>
-
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field class="example-form-field" appearance="fill">
-                                    <input placeholder="External" matInput type="text" />
+                                    <input placeholder="Name" matInput type="text" [(ngModel)]="selectedExternalName"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
+                            <div class="col create-new-refset-label create-new-refset-flex-weight">
+                                <label style="margin-top: 1.7rem">External:<span class="mandatory-field">*</span></label>
+                            </div>
+                            <div class="col create-new-refset-field create-new-refset-flex-weight">
+                                <mat-form-field class="example-form-field" appearance="fill">
+                                    <input placeholder="External" matInput type="text" [(ngModel)]="selectedExternalUrl"/>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -145,11 +154,19 @@
                             </div>
 
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
-                                <mat-form-field class="example-form-field" appearance="fill">
-                                    <input placeholder="Copy" matInput type="text" />
+                                
+                                <mat-form-field appearance="fill" >
+                                    <mat-label>Choose refset to copy</mat-label>
+                                    <select matNativeControl [(ngModel)]="selectedCopyRefset">
+                                        <option *ngFor="let refset of data" [ngValue]="refset">
+                                            {{ refset?.name }}
+                                        </option>
+                                    </select>
                                 </mat-form-field>
+
                             </div>
                         </div>
+                        
                         <!-- End Copy -->
                         <!-- Combination -->
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showCombination">
@@ -157,27 +174,47 @@
                                 <label style="margin-top: 1.7rem">Combination:<span class="mandatory-field">*</span></label>
                             </div>
 
-                            <div class="col create-new-refset-field create-new-refset-flex-weight">
-                                <mat-form-field class="example-form-field" appearance="fill">
-                                    <input placeholder="Combination" matInput type="text" />
+                            <div class="col create-new-refset-field create-new-refset-flex-weight">                                
+                                <mat-form-field appearance="fill" >
+                                    <mat-label>Choose contributing refsets (use Ctrl-click to select more than one)</mat-label>
+                                    <select matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets" >
+                                        <option *ngFor="let refset of data" [ngValue]="refset">
+                                            {{ refset?.name }}
+                                        </option>
+                                    </select>
                                 </mat-form-field>
-                            </div>
+                            </div>                            
                         </div>
                         <!-- End Combination -->
                     </div>
+                    
                     <div *ngIf="step == 3">
+                        <!-- Contributing Refsets - for COMBINATION  -->
+                        <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showCombination">
+                            <div class="col create-new-refset-label create-new-refset-flex-weight">
+                                <label style="margin-top: 1.7rem">Contributing Refsets:<span class="mandatory-field">*</span></label>
+                            </div>
+
+                            <div class="col create-new-refset-field create-new-refset-flex-weight">
+
+                                <div class="align-items-center mr-4" *ngFor="let refset of selectedCombinationRefsets">                  
+                                    <label>{{refset?.name}} </label>              
+                                </div>
+
+                            </div>
+                        </div>
                         <!-- Concepts -->
                         <div class="create-new-refset-form-field" id="create-new-refset-assign-refset-field">
-                            <div *ngIf="!editMode" class="col create-new-refset-label create-new-refset-flex-weight">
+                            <div *ngIf="!editMode && !showExternal" class="col create-new-refset-label create-new-refset-flex-weight">
                                 <label>Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
-                                    <span><button mat-icon-button (click)="openInfoDialog()" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
+                                    <span><button mat-icon-button (click)="openInfoDialog('')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
                                                   title="Open  Assign Refset Concept Information Dialog" ng-reflect-color="primary">
                                     <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
                                 </button></span>
                                 </label>
                             </div>
 
-                            <div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
+                            <div *ngIf="!editMode  && !showExternal" class="col create-new-refset-field create-new-refset-flex-weight">
 
                                 <mat-radio-group>
 
@@ -306,6 +343,16 @@
                             </div>
                         </div>
                         <!-- End Availability -->
+                        <!-- Publishability -->
+                        <div class="create-new-refset-form-field">
+                            <div class="col create-new-refset-label create-new-refset-flex-weight">
+                                <label>Publishability:</label>
+                            </div>
+                            <div class="col create-new-refset-field create-new-refset-flex-weight">
+                                <mat-checkbox [(ngModel)]="localSet">Local Set</mat-checkbox>
+                            </div>
+                        </div>
+                        <!-- End Publishability -->
                     </div>
                 </div>
             </div>
@@ -341,4 +388,24 @@
         <li>If you are creating a new reference set and wish to create a new SNOMED concept, you must select a SNOMED concept parent.</li>
     </ul>
 
+</ng-template>
+
+<ng-template #extensionalInfoDialog let-data>
+    Extensional info will be here.
+</ng-template>
+
+<ng-template #intensionalInfoDialog let-data>
+    Intensional info will be here.
+</ng-template>
+
+<ng-template #copyInfoDialog let-data>
+    Copy info will be here.
+</ng-template>
+
+<ng-template #combinationInfoDialog let-data>
+    Combination info will be here.
+</ng-template>
+
+<ng-template #externalInfoDialog let-data>
+    External info will be here.
 </ng-template>
