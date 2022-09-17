@@ -438,6 +438,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
 
+        const channel = new BroadcastChannel('projectChannel');
+        channel.postMessage(UiUtility.getRoleString(this.selectedProject.roles));
         this.setNavigation();
 
         this.projectIsUat = this.selectedProject.name.includes('UAT');

@@ -20,7 +20,8 @@ export class NavbarComponent implements OnInit {
     guestUser: string;
     isUserLoggedIn = false;
     uiUtility = UiUtility;
-
+    projectRole = '';
+    refsetRole = '';
     @Input() breadcrumbs: any;
 
     constructor(private authenticationService: AuthenticationService,
@@ -46,6 +47,14 @@ export class NavbarComponent implements OnInit {
         });
 
         this.setUserInfo();
+        const projectChannel = new BroadcastChannel('projectChannel');
+        projectChannel.onmessage = (e) => {
+            this.projectRole = e.data;
+        };
+        const refsetDataChannel = new BroadcastChannel('refsetDataChannel');
+        refsetDataChannel.onmessage = (e) => {
+            this.refsetRole = e.data;
+        };
     }
 
     setUserInfo() {
@@ -54,7 +63,15 @@ export class NavbarComponent implements OnInit {
     }
 
     showProjectRoleAndAssignee(): boolean {
-        return this.router.url.includes('details');
+        return this.router.url.includes('details') || (this.router.url.includes('edition') && this.router.url.includes('projects'));
+    }
+
+    showProjectRole(): boolean {
+        return (this.router.url.includes('edition') && this.router.url.includes('projects')) && this.projectRole.length > 0;
+    }
+
+    showRefsetRole(): boolean {
+        return this.router.url.includes('details') && this.refsetRole.length > 0;
     }
 
     navigate(breadcrumbId) {

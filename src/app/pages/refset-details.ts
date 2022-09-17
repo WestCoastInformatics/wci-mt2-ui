@@ -436,6 +436,8 @@ export class RefsetDetails implements OnInit {
                 this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
                 this.refsetBranchPath = RefsetUtility.getBranchPath(results);
                 this.refsetData = results;
+                const channel = new BroadcastChannel('refsetDataChannel');
+                channel.postMessage(UiUtility.getRoleString(this.refsetData.roles));
                 console.log(this.refsetData);
                 this.refsetService.setRefsetInformation(this.refsetData);
                 this.allowedToEdit = false;

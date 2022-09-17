@@ -4238,7 +4238,7 @@ img.refset-tool-edition-flag {
   .header-title {
     align-items: baseline;
     background-color: white;
-    padding-top: 10px;
+    height: 73px;
     box-shadow: 0 5px 7px -2px grey;
 
     .title-label {
@@ -4249,6 +4249,10 @@ img.refset-tool-edition-flag {
       font-weight: 400;
       font-size: 1.25em;
       padding-bottom: 15px;
+    }
+
+    .dashboard-title {
+      padding-top: 20px;
     }
   }
 }
