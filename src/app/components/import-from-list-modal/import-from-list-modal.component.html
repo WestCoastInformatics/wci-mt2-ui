@@ -2,8 +2,8 @@
     <img src="assets/import-list-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import List of SctIds" aria-label="Import list" />
 </button> -->
 
-<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import List of SctIds"
-  aria-label="Import list" (click)="openImportFromListModal(importFromListDialog)">Add/Remove by
+<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import List of SctIds" aria-label="Import list"
+  (click)="openImportFromListModal(importFromListDialog)">Add/Remove by
   List</button>
 
 <ng-template #importFromListDialog let-modal>
@@ -14,8 +14,7 @@
       Add or Remove Members By List
     </h4>
 
-    <button type="button" class="close dialog-close-x" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x">&times;</span>
     </button>
   </div>
@@ -28,9 +27,8 @@
         <div class="import-from-label"> Enter a list of SCTIDs. Use a comma or whitespace delimited
           Concept Ids.</div>
 
-        <mat-form-field floatLabel="never" class="import-from-list-field" appearance="outline">
-          <textarea matInput #listTextArea ngbAutofocus class="import-from-list-text-area"
-            [(ngModel)]="listOfIds"></textarea>
+        <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
+          <textarea matInput #listTextArea ngbAutofocus class="import-from-list-text-area" [(ngModel)]="listOfIds"></textarea>
         </mat-form-field>
 
       </div>
@@ -40,23 +38,18 @@
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-    <button type="button" (click)="callMemberOperation('add')" mat-raised-button color="green"
-      aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members"
+    <button type="button" (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members"
       title="Add Members" ng-reflect-color="green">
       Add Members
     </button>
 
-    <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')"
-      mat-raised-button color="red" aria-hidden="false"
-      class="refset-tool-action-button import-from-remove-members-button"
-      aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
+    <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="red" aria-hidden="false"
+      class="refset-tool-action-button import-from-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
       Remove Members
     </button>
 
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
-      aria-hidden="false" class="refset-tool-action-button"
-      style="margin-left: 10px; background-color: red" aria-label="Cancel" title="Cancel"
-      ng-reflect-color="primary">
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 10px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
       Cancel
     </button>
 

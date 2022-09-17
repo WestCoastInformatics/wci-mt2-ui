@@ -99,6 +99,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 flex: 2,
                 width: 550,
                 minWidth: 350,
+                tooltipField: 'name',
                 unSortIcon: true,
                 sortable: true,
                 cellRenderer: params => {
@@ -108,6 +109,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             {
                 field: 'workflowStatus',
+                tooltipField: 'workflowStatus',
                 headerName: 'Workflow Status',
                 unSortIcon: true,
                 cellClass: 'refset-tool-dashboard-column-workflow-status',

@@ -3,7 +3,7 @@
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">Organizations</span>
-        <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
               [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">

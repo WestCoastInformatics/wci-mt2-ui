@@ -2,7 +2,7 @@
   <div class="row header-title">
 
     <span class="title-label">Organizations</span>
-    <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
       <mat-label>Choose Organization</mat-label>
       <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
         <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
@@ -12,7 +12,7 @@
     </mat-form-field>
 
     <span class="title-label">Teams</span>
-    <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
       <mat-label>Choose Team</mat-label>
       <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
         <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">

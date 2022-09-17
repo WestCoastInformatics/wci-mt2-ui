@@ -2404,7 +2404,11 @@ select {
 }
 
 .project-drop-down {
-  width: 275px;
+  width: 320px;
+}
+
+.projects-dropdown-block {
+  display: block;
 }
 
 .project-drop-down .mat-select-arrow-wrapper {
