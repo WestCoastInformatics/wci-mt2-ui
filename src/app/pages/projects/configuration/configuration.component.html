@@ -5,12 +5,9 @@
 
     <span class="title-label">Organizations</span>
     <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
-      <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}
-      </mat-label>
-      <mat-select #detailsVersionSelect [disableOptionCentering]="true"
+      <mat-select #detailsVersionSelect [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" [disableOptionCentering]="true"
         [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-        <mat-option *ngFor="let organization of organizationList" [value]="organization"
-          style="z-index: 3" [title]="organization.name">
+        <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
           {{ organization.name }}
         </mat-option>
       </mat-select>
@@ -18,8 +15,7 @@
 
     <span class="title-label">Editions</span>
     <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
-      <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
-      <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition"
+      <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
         (selectionChange)="selectedEdition()">
         <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
           {{ edition.name }}
@@ -29,13 +25,10 @@
 
     <span class="title-label">Projects</span>
     <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
-      <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}</mat-label>
-      <mat-select [disabled]="organizationId === '0'" #detailsVersionSelect
-        [disableOptionCentering]="true" [(value)]="selectedProject"
-        (selectionChange)="selectProject()">
+      <mat-select [disabled]="organizationId === '0'" [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'" #detailsVersionSelect
+        [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
         <mat-option *ngIf="projectList == null || projectList.length == 0">No Projects</mat-option>
-        <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3"
-          [title]="project.name">
+        <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3" [title]="project.name">
           {{ project.name }}
         </mat-option>
       </mat-select>
@@ -68,11 +61,9 @@
                                 <div class="modal-error-message" [hidden]="!emailError">{{emailError}}</div>
                             </mat-form-field> -->
 
-              <mat-form-field floatLabel="never" class="profile-description-field"
-                appearance="none">
+              <mat-form-field floatLabel="never" class="profile-description-field" appearance="none">
                 <mat-label>Description</mat-label>
-                <textarea matInput type="text" name="description"
-                  placeholder="The full description of the purpose of the Project"
+                <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the Project"
                   [(ngModel)]="profileDescriptionValue"></textarea>
               </mat-form-field>
 
@@ -84,12 +75,9 @@
             </div>
 
             <div class="update-profile-button">
-              <div class="section-list text-right" aria-label="Update Profile"
-                title="Update Profile">
-                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')"
-                  class="btn btn-primary btn-lg btn-wide-font"
-                  [disabled]="!profileNameValue || !profileDescriptionValue "
-                  (click)="updateProject()">Update Profile</button>
+              <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
+                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font"
+                  [disabled]="!profileNameValue || !profileDescriptionValue " (click)="updateProject()">Update Profile</button>
               </div>
             </div>
           </div>
@@ -106,40 +94,29 @@
                 <div class="team-list-box">
                   <ng-container *ngFor="let team of teamList">
                     <div class="team-item">
-                      <img *ngIf="!hideAddButton(team)" src="assets/add-symbol-icon.svg"
-                        (click)="addToTeamList(team)" width="18px" height="18px"
-                        title="Add Team Selection" aria-label="Add" class="add-symbol-icon"
-                        alt="Add symbol" />
-                      <img *ngIf="hideAddButton(team)" src="assets/subtract-symbol-icon.svg"
-                        (click)="removeFromTeamList(team)" width="18px" height="18px"
-                        title="Remove Team Selection" aria-label="Subtract"
-                        class="subtract-symbol-icon" alt="Subtract symbol" />
-                      <div [style.font-weight]="addBold(team) ? '700' : '400'"
-                        class="team-item-name">{{ setTeamName(team) }}</div>
+                      <img *ngIf="!hideAddButton(team)" src="assets/add-symbol-icon.svg" (click)="addToTeamList(team)" width="18px" height="18px" title="Add Team Selection"
+                        aria-label="Add" class="add-symbol-icon" alt="Add symbol" />
+                      <img *ngIf="hideAddButton(team)" src="assets/subtract-symbol-icon.svg" (click)="removeFromTeamList(team)" width="18px" height="18px"
+                        title="Remove Team Selection" aria-label="Subtract" class="subtract-symbol-icon" alt="Subtract symbol" />
+                      <div [style.font-weight]="addBold(team) ? '700' : '400'" class="team-item-name">{{ setTeamName(team) }}</div>
                     </div>
                   </ng-container>
                 </div>
               </div>
-              <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')"
-                class="save-team-button">
+              <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="save-team-button">
                 <div class="section-list text-right" aria-label="Save Teams" title="Save Teams">
-                  <button class="btn btn-primary btn-lg" id="save-teams-btn"
-                    [disabled]="!containsRole" (click)="updateProjectTeams()">Save Teams</button>
+                  <button class="btn btn-primary btn-lg" id="save-teams-btn" [disabled]="!containsRole" (click)="updateProjectTeams()">Save Teams</button>
                 </div>
               </div>
             </div>
-            <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')"
-              class="projects-configuration-block remove-project-block">
-              <div class="projects-profile-head section-header"><img class="red-x"
-                  src="assets/red-x.svg">
+            <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="projects-configuration-block remove-project-block">
+              <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
                 Remove this Project</div>
               <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be
                 undone. Please be certain before taking action.</div>
               <div class="remove-projects-button">
-                <div class="section-list text-right" aria-label="Remove Project"
-                  title="Remove Project">
-                  <remove-dashboard-component-modal [componentType]="'project'"
-                    [componentId]=getSelectedProjectId() [componentName]=getSelectedProjectName()>
+                <div class="section-list text-right" aria-label="Remove Project" title="Remove Project">
+                  <remove-dashboard-component-modal [componentType]="'project'" [componentId]=getSelectedProjectId() [componentName]=getSelectedProjectName()>
                   </remove-dashboard-component-modal>
                 </div>
               </div>
