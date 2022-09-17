@@ -88,12 +88,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 	chosenConceptCode: any;
 	replacementCode: string;
 	concept: any;
-	showActionButton = true;
 	disableAddRemove = false;
 	membersInCommonForChangeReport = { items: [] };
 	manualReplacementOptionsLoading = false;
 	addReplacementFlag = false;
 	dialog: DialogService;
+	replacementColumnSortFilter = false;
 
 	constructor(private readonly modalService: NgbModal,
 		private readonly refsetService: RefsetService,
@@ -143,24 +143,24 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				}, headerName: 'Inactive ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
 			},
 			{
-				field: 'reason', sortable: false, filter: false, valueGetter: (params) => {
+				field: 'reason', valueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
 				}, tooltipField: 'reason', headerName: 'Association', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
 			},
 			{
-				field: 'replacementCode', sortable: false, filter: false, tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
+				field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
 					template: ' <a class="add-all mr-auto ml-auto">'
 						+ '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
 						+ ' </a>'
 				}, flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
 			},
 			{
-				field: 'replacementId', sortable: false, filter: false, tooltipField: 'replacementId', headerName: 'Replacement ID', valueGetter: (params) => {
+				field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', valueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
 				}, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
 			},
 			{
-				field: 'created', sortable: false, filter: false, colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+				field: 'created', colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
 					let description = '';
 
@@ -185,6 +185,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			rowSelection: 'single',
 			onGridReady: this.onGridReady,
 			onCellClicked: this.onGridCellClick,
+			onFilterChanged: this.checkSortFilter,
+			onSortChanged: this.checkSortFilter,
+			postSort: this.replacementSort,
 			frameworkComponents: {
 				'templateRenderer': TemplateRenderer,
 			},
@@ -201,16 +204,23 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			},
 			rowClassRules: {
 				'alternate-row-color-odd': (params) => {
-					let odd = !this.isRowClassEven(params);
-					return odd;
+
+					if (this.replacementColumnSortFilter) {
+						return false;
+					} else {
+						return !this.isRowClassEven(params);
+					}
 				},
 				'alternate-row-color-even': (params)  => {
-					let even = this.isRowClassEven(params);
-					return even;
+					
+					if (this.replacementColumnSortFilter) {
+						return false;
+					} else {
+						return this.isRowClassEven(params);
+					}
 				}
 			},
 		};
-
 	}
 
 	onCellMouseOver(params) {
@@ -219,6 +229,100 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 	onGridCellClick = (event) => {
 		this.selectConcept(event.data);
+	}
+
+	checkSortFilter = (event) => {
+
+		let replacementColumns = ['reason', 'replacementCode', 'replacementId', 'replacementEnPtSection'];
+		let replacementSort = false;
+		let replacementFilter = false;
+		let sorts = this.refsetGridApi.getSortModel();
+		let filters = this.refsetGridApi.getFilterModel();
+
+		for (let sort of sorts) {
+
+			if (replacementColumns.includes(sort.colId)) {
+
+				this.replacementColumnSortFilter = true;
+				replacementSort = true;
+
+				// if (event.type == 'sortChanged') {
+
+				// 	let columnState = this.refsetGridColumnApi.getColumnState()
+				// 	this.refsetGridColumnApi.applyColumnState({
+				// 		state: [
+				// 			{ colId: sort.colId, sort: sort.sort, sortIndex: 0 },
+				// 			{ colId: 'inactiveCode', sort: 'asc', sortIndex: 1 }
+				// 		]
+				// 	});
+				// }
+
+				break;
+			}
+		}
+		
+		for (let filterName in filters) {
+
+			if (replacementColumns.includes(filterName)) {
+
+				this.replacementColumnSortFilter = true;
+				replacementFilter = true;
+				break;
+			}
+		}
+
+		if (!replacementFilter && !replacementSort) {
+			this.replacementColumnSortFilter = false;
+		}
+
+		this.refsetGridApi.redrawRows();
+	}
+
+	replacementSort = (params) => {
+	
+		if (!this.refsetGridApi) {
+			return;
+		}
+
+		let replacementColumns = ['reason', 'replacementCode', 'replacementId', 'replacementEnPtSection'];
+		let sorts = this.refsetGridApi.getSortModel();
+		let rowNodes = params;
+
+		for (let sort of sorts) {
+
+			if (replacementColumns.includes(sort.colId)) {
+
+				rowNodes.sort((a, b) =>  {
+
+					let sortA = a.data.replacementConcepts[0][sort.colId] + a.data.code;
+					let sortB = b.data.replacementConcepts[0][sort.colId] + b.data.code;
+					
+					if (sort.sort == 'asc') {
+
+						if (sortA > sortB) {
+							return 1;
+						}
+						
+						if (sortA < sortB) {
+							return -1;
+						}
+					} else {
+
+						if (sortA > sortB) {
+							return -1;
+						}
+						
+						if (sortA < sortB) {
+							return 1;
+						}
+					}
+					
+					return 0;
+				});
+
+				break;
+			}
+		}
 	}
 
 	isRowClassEven = (params) => {
@@ -249,17 +353,17 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 	getSelectedRowData(option: string) {
 
-		const newItem = { ...this.selectedRow?.data, isHidden: true, isSearch: true };
+		const newItem = { ...this.selectedRow.data, isHidden: true, isSearch: true };
 		newItem.inactivationReason = 'MANUAL REPLACEMENT';
-		newItem.replacementConcepts = '';
+		newItem.replacementConcepts = this.selectedRow.data.replacementConcepts;
 
 		if (option.includes('add')) {
 
 			this.chosenConceptCode = this.selectedRow['data'].code;
-			this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow?.rowIndex + 1 });
+			this.refsetGridApi.applyTransaction({ add: [newItem], addIndex: this.selectedRow.rowIndex + 1 });
 
 		} else if (option.includes('remove')) {
-			this.refsetGridApi.applyTransaction({ remove: [this.selectedRow?.data] });
+			this.refsetGridApi.applyTransaction({ remove: [this.selectedRow.data] });
 		}
 
 		this.selectedConcepts = undefined;
@@ -306,8 +410,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		});
 	}
 
-	selectedConceptChanged(concept: any): void {
-		this.concept = concept['value'];
+	selectedConceptChanged(event: any): void {
+		this.concept = event['value'];
 	}
 
 	removeManualReplacement(changeMethod: string): void {
@@ -447,7 +551,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 	}
 
 	onGridReady = (gridReadyParams) => {
-		this.showActionButton = true;
+
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridColumnApi = gridReadyParams.columnApi;

@@ -1697,7 +1697,6 @@ export class RefsetDetails implements OnInit {
     }
 
     notesEditable(index: number, data: any): boolean {
-        console.log(`Index: ${index}`);
         return index === 0 && data.workflowStatus === this.refsetData.workflowStatus && (this.allowedToEdit || this.allowedToReview);
     }
 }
