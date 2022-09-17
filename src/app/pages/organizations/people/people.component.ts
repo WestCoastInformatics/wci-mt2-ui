@@ -72,7 +72,7 @@ export class OrganizationPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'name', headerName: 'Members', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
       { field: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
       { field: 'email', minWidth: 400, headerName: 'Email', unSortIcon: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },

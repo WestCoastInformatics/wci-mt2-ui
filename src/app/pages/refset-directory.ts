@@ -344,8 +344,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         gridReadyParams.api.setDatasource(dataSource);
 
         // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
-
+        Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
             if (obj.attributes['disabled']) {
                 // skip columns with disabled filter
                 return;

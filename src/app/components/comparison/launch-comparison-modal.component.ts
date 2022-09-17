@@ -238,8 +238,6 @@ export class LaunchComparisonModalComponent {
 
     this.showTable = true;
 
-    // set placeholders on the grid floating filter fields
-    UiUtility.applyGridPlaceholders('#comparisonGridSection .ag-floating-filter-full-body .ag-input-field-input');
 
     this.activeRefsetName = this.activeRefset.name;
 
@@ -300,6 +298,8 @@ export class LaunchComparisonModalComponent {
         }
 
         UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
+        UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
+
       },
       error: (error) => {
 
