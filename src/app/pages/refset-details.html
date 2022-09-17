@@ -75,7 +75,7 @@
         <!-- Version Select -->
         <div class="col-3 details-version-select">
 
-            <mat-form-field floatLabel="never" appearance="fill">
+            <mat-form-field floatLabel="never" appearance="legacy">
                 <mat-label></mat-label>
                 <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion()" disableOptionCentering="true" [disabled]="isLocked">
                     <mat-option *ngFor="let option of versionOptions" [value]="option.value">
@@ -443,7 +443,7 @@
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)">
                 </import-from-file-modal>
 
-                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)">
+                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects" (changeLockedStatus)="changeLockedStatus($event)">
                 </import-from-list-modal>
 
                 <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)">
@@ -473,7 +473,7 @@
                                         </div>
 
                                         <div class="refset-tool-details-chooser-column" [style.display]="membersTaxonomyDisplay">
-                                            <mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down">
+                                            <mat-form-field floatLabel="never" appearance="legacy" class="format-option-drop-down">
                                                 <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
                                                     <mat-option *ngFor="let option of languageOptions" [value]="option.value">
                                                         {{option.display}}
@@ -640,7 +640,7 @@
                                             Concept Details
                                         </div>
                                         <div class="refset-tool-details-chooser-column">
-                                            <mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down concept-details-header">
+                                            <mat-form-field floatLabel="never" appearance="legacy" class="format-option-drop-down concept-details-header">
                                                 <mat-select [(value)]="selectedConceptDetailLanguage" (selectionChange)="changeConceptDetailsLanguage()" [disabled]="isLocked">
                                                     <mat-option *ngFor="let option of languageOptions" [value]="option.value">
                                                         {{option.display}}

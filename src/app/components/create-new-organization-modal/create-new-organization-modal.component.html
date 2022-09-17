@@ -25,7 +25,7 @@
                 <td>
                     <div class="row">
                         <div>
-                            <mat-form-field floatLabel="never" appearance="fill" class="col refset-tool-modal-select-field">
+                            <mat-form-field floatLabel="never" appearance="legacy" class="col refset-tool-modal-select-field">
                                 <mat-select class="refset-tool-modal-select" [(value)]="selectedEdition">
                                     <mat-option *ngIf="editionsList.length == 0">No Editions Avaialable</mat-option>
                                     <mat-option *ngFor="let edition of editionsList" [value]="edition">

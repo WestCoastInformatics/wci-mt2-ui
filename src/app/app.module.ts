@@ -123,6 +123,7 @@ import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
 import { ShareRefsetModalComponent } from './components/share-modal/share-refset-modal.component';
+import { CreateRefsetComponent } from './components/create-refset/create-refset.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -167,6 +168,7 @@ const appRoutes: Routes = [
         CategoryFilterComponent,
         DateTextFilterComponent,
         CreateNewRefsetComponent,
+        CreateRefsetComponent,
         ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,

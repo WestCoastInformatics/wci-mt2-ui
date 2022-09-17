@@ -74,9 +74,7 @@ export class RefsetDownloadComponent {
           this.formatOptions.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
         }
 
-        if (this.refsetsExportableAsFreeset.includes(refsetId)) {
-          this.formatOptions.splice(-1, 0, { value: 'free_set', display: 'Free Set' });
-        }
+        this.formatOptions.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
 
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
         this.languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
@@ -156,12 +154,6 @@ export class RefsetDownloadComponent {
 
           if (data) {
 
-            // if this is a free set just open the link to the GPS site
-            if (data.selectedFormat == 'free_set') {
-
-              window.open(environment.freesetUrl);
-              return;
-            }
 
             console.log('Download Form Data: ', data);
             const notificationType = 'success';
@@ -250,7 +242,7 @@ export class RefsetDownloadComponent {
 
   showLanguageSection(formData) {
 
-    if (CodeUtility.hasValue(formData.selectedFormat) && formData.selectedFormat == 'rf2_with_names') {
+    if (formData.selectedFormat && (formData.selectedFormat == 'rf2_with_names' || formData.selectedFormat == 'freeset')) {
       this.showLanguages = true;
     } else {
       this.showLanguages = false;
@@ -260,10 +252,7 @@ export class RefsetDownloadComponent {
 
   showVersionSection(formData) {
 
-    if (CodeUtility.hasValue(formData.selectedFormat) && formData.selectedFormat == 'free_set') {
-      this.showVersions = false;
-
-    } else if (!CodeUtility.hasValue(formData.selectedContent) || (formData.selectedContent == 'snapshot' || formData.selectedContent == 'snapshot_delta')) {
+    if (!CodeUtility.hasValue(formData.selectedContent) || (formData.selectedContent == 'snapshot' || formData.selectedContent == 'snapshot_delta' || formData.selectedFormat == 'free_set')) {
       this.showVersions = true;
     } else {
       this.showVersions = false;
@@ -285,7 +274,7 @@ export class RefsetDownloadComponent {
 
   showMetadataSection(formData) {
 
-    if (CodeUtility.hasValue(formData.selectedFormat) && formData.selectedFormat == 'free_set') {
+    if (CodeUtility.hasValue(formData.selectedFormat) && formData.selectedFormat == 'freeset') {
       this.showMetadata = false;
     } else {
       this.showMetadata = true;
@@ -310,7 +299,10 @@ export class RefsetDownloadComponent {
       this.disableChannel.postMessage(false);
     } else if (formData.selectedFormat == 'sctids') {
       this.disableChannel.postMessage(false);
-    } else {
+    } else if (formData.selectedFormat == 'freeset' && formData.selectedLanguage) {
+      this.disableChannel.postMessage(false);
+    }
+    else {
       this.disableChannel.postMessage(true);
     }
   }

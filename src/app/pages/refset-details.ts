@@ -1027,8 +1027,8 @@ export class RefsetDetails implements OnInit {
                             field: 'memberEffectiveTime',
                             colId: 'modified',
                             flex: 1,
-                            minWidth: 180,
-                            maxWidth: 180,
+                            minWidth: 190,
+                            maxWidth: 190,
                             headerName: 'Last Modified Date',
                             cellClass:
                                 'refset-tool-details-column-modified-date',
@@ -1070,14 +1070,16 @@ export class RefsetDetails implements OnInit {
                 this.membersGridApi.setRowData([]);
                 this.toggleLoadingSpinner(false);
             }
+
         });
 
-        // set placeholders on the grid floating filter fields
-        UiUtility.applyGridPlaceholders('.ag-floating-filter-full-body .ag-input-field-input');
+
     }
 
     onMembersColumnsLoaded() {
         this.membersGridChooserManualStateRefresh = new Boolean(true);
+        UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
+
     }
 
     descriptionValueGetter = function (params) {

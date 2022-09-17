@@ -226,7 +226,7 @@ nav a span {
 }
 
 .header-title {
-  font-family: Poppins, "Helvetica Neue", Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 300
 }
@@ -426,6 +426,13 @@ button.refset-tool-table-action-icon {
 
 .material-icons {
   font-size: 24px;
+}
+
+.refset-id-icons {
+    font-size: 16px;
+    margin-left: 3px;
+    height: 16px !important;
+    width: 16px !important;
 }
 
 .mat-icon-button i,
@@ -2077,6 +2084,7 @@ select {
       color: #a4a4a4;
       margin: 0;
       margin-bottom: 0.25rem;
+
     }
 
     .info {
@@ -3205,6 +3213,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 75px;
   }
 
+
   .button-group-review {
     background-color: white;
     width: 75px;
@@ -4210,6 +4219,13 @@ img.refset-tool-edition-flag {
   margin-bottom: 15px;
 }
 
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
+  border-width: 1px !important;
+  color: rgba(0, 0, 0, 0.12) !important;
+}
+
 .content-header {
   position: sticky;
   z-index: 2;
@@ -4364,6 +4380,7 @@ $sidebar-width: 294px;
   z-index: 1;
   position: relative;
 
+
   .wrapper {
     min-height: 100%;
     background-color: #434955;
@@ -4402,6 +4419,7 @@ $sidebar-width: 294px;
       li:hover {
         color: $main-color;
       }
+
 
       li.active {
         border-left: 5px solid $main-color;
@@ -4741,6 +4759,7 @@ $sidebar-width: 294px;
     height: 10%;
     width: 100%;
   }
+
 
   .projects-profile-mid {
     height: 80%;
@@ -5177,7 +5196,7 @@ $sidebar-width: 294px;
 }
 
 .discussion-icon-text {
-  font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 1rem;
   display: flex;
@@ -5384,4 +5403,12 @@ app-date-text-floating-filter {
 
 .ag-theme-alpine.refset-tool-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
   background-color: #efefef;
+}
+.refset-radio .mat-radio-label{
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+.atlwdg-trigger.atlwdg-RIGHT {
+  top: 50% !important;
 }

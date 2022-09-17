@@ -106,6 +106,17 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'general/refsetConcepts', params, false);
     }
 
+    getRefsetCopy(refsetInternalId: string, name: string, projectId: string, localSet: boolean, privateRefset: boolean, comboSet: boolean, narrative: string, tags: any, parentConceptId: string, newRefsetConceptId: string): Observable<any> {
+        return this.get(this.contextPath + 'refset/' + refsetInternalId + '/copy?name=' + name + '&projectId=' + projectId
+        + '&localSet=' + localSet
+        + '&privateRefset=' + privateRefset
+        + '&comboSet=' + comboSet
+        + '&narrative=' + narrative
+        + '&tags=' + tags
+        + '&parentConceptId=' + parentConceptId
+        + '&newRefsetConceptId=' + newRefsetConceptId);
+    }
+
     getBranchVersions(params: any): Observable<any> {
         return this.get(this.contextPath + 'general/branchVersions', params, false);
     }

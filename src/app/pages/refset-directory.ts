@@ -120,7 +120,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     this.columnDefs = [
                         { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
                         { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
-                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
                             field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
@@ -344,8 +344,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         gridReadyParams.api.setDatasource(dataSource);
 
         // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
-
+        Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
             if (obj.attributes['disabled']) {
                 // skip columns with disabled filter
                 return;

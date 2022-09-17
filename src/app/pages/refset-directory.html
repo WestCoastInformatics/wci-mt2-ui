@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-md-auto" style="padding-left: 5px">
-                <mat-form-field floatLabel="never" id="directoryViewFilterField" appearance="fill">
+                <mat-form-field floatLabel="never" id="directoryViewFilterField" appearance="legacy">
                     <mat-label></mat-label>
                     <mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
                         <mat-option *ngFor="let option of viewOptions" [value]="option.value">
@@ -90,6 +90,11 @@
               title="Private Reference Set">
                 lock
             </mat-icon>
+            <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false"  class="refset-tool-table-action-icon" aria-label="Local Set"
+              title="Local Set">
+                my_location
+            </mat-icon>
+            
         </ng-template>
 
         <!-- Edition Templates -->

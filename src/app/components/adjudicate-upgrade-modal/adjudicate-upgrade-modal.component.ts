@@ -131,7 +131,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			},
 			{
 				field: 'code', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', headerName: 'Inactive ID', cellRenderer: 'templateRenderer', 
-				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 110, width: 110, unSortIcon: true
+				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 150, maxWidth: 190, unSortIcon: true
 			},
 			{
 				field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', sort: 'asc', valueGetter: (params) => {
@@ -140,7 +140,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 					}
 
 					return '';
-				}, headerName: 'Inactive ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
+				}, headerName: 'Inactive ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
 			},
 			{
 				field: 'reason', valueGetter: (params) => {
@@ -160,7 +160,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				}, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
 			},
 			{
-				field: 'created', colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, minWidth: 330, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+				field: 'created', colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
 					let description = '';
 

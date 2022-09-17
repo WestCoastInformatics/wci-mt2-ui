@@ -724,7 +724,6 @@ export class UiUtility {
   static applyGridPlaceholders(classSelector) {
 
     Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
-
       // skip columns with disabled filter
       if (field.attributes["disabled"]) {
         return;

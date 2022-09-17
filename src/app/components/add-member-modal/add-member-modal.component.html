@@ -1,5 +1,4 @@
-<button class="btn btn-primary btn-wide-font  float-right" mat-raised-button
-  (click)="openAddMemberModal(addMemberModal)">Add Member</button>
+<button class="btn btn-primary btn-wide-font  float-right" mat-raised-button (click)="openAddMemberModal(addMemberModal)">Add Member</button>
 
 <ng-template #addMemberModal let-modal>
 
@@ -9,8 +8,7 @@
       Add a Member to the "{{ name }}" {{ type }}
     </h4>
 
-    <button type="button" class="close dialog-close-x" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x">&times;</span>
     </button>
   </div>
@@ -21,10 +19,9 @@
 
       <tr>
         <td>
-          <mat-form-field floatLabel="never" appearance="fill" class="email-input-field">
+          <mat-form-field floatLabel="never" appearance="legacy" class="email-input-field">
             <mat-label>Enter the email of the user to add:</mat-label>
-            <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember
-              placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ addMember.focus() }}
+            <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ addMember.focus() }}
           </mat-form-field>
         </td>
       </tr>
@@ -38,14 +35,11 @@
   </div>
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()"
-      mat-raised-button class="refset-tool-action-button mat-green">
+    <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()" mat-raised-button class="refset-tool-action-button mat-green">
       Add Member
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
-      aria-hidden="false" class="refset-tool-action-button"
-      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel"
-      ng-reflect-color="primary">
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
       Cancel
     </button>
   </div>
