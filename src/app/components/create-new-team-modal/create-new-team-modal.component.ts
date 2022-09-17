@@ -30,6 +30,7 @@ export class CreateNewTeamModalComponent {
 
   @Input() organization: any;
   @Output() changeLockedStatus = new EventEmitter<any>(true);
+  firstLoad = true;
 
   constructor(
     private modalService: NgbModal,
@@ -43,7 +44,6 @@ export class CreateNewTeamModalComponent {
   ) { }
 
   ngOnInit() {
-
     this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
     { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
 
@@ -56,7 +56,15 @@ export class CreateNewTeamModalComponent {
     }
   }
 
+  setAutoFocus(focusElement: any) {
+    if (this.firstLoad) {
+      focusElement.focus();
+      this.firstLoad = false;
+    }
+  }
+
   openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
+    this.firstLoad = true;
 
     this.selectedRoles = [];
     this.description = '';

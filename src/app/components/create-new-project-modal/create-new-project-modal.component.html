@@ -1,5 +1,5 @@
-<a title="Create New Project" class='btn btn-primary rounded btn-lg float-right btn-wide-font'
-  aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">Create
+<a title="Create New Project" class='btn btn-primary rounded btn-lg float-right btn-wide-font' aria-label="Create New Project"
+  (click)="openCreateNewProjectModal(createNewProjectDialog)">Create
   New Project</a>
 
 <ng-template #createNewProjectDialog let-modal>
@@ -10,8 +10,7 @@
       Create New Project
     </h4>
 
-    <button type="button" class="close dialog-close-x" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x">&times;</span>
     </button>
   </div>
@@ -40,8 +39,7 @@
           <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
         </td>
         <td>
-          <input class="modal-input-field" placeholder="Project Name" autofocus #projectName
-            [(ngModel)]="name" />{{ projectName.focus() }}
+          <input class="modal-input-field" placeholder="Project Name" autofocus #projectName [(ngModel)]="name" />{{ setAutoFocus(projectName) }}
         </td>
       </tr>
       <!-- <tr>
@@ -61,8 +59,7 @@
         </td>
         <td>
           <mat-form-field floatLabel="never" class="import-from-list-field" appearance="outline">
-            <textarea matInput class="import-from-list-text-area"
-              [(ngModel)]="description"></textarea>
+            <textarea matInput class="import-from-list-text-area" [(ngModel)]="description"></textarea>
           </mat-form-field>
 
         </td>
@@ -81,15 +78,12 @@
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-    <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button
-      color="green" aria-hidden="false" class="refset-tool-action-button"
+    <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
       aria-label="Create Project" title="Create Project" ng-reflect-color="green">
       Create Project
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
-      aria-hidden="false" class="refset-tool-action-button"
-      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel"
-      ng-reflect-color="primary">
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
       Cancel
     </button>
 

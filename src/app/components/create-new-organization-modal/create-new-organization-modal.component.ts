@@ -26,6 +26,7 @@ export class CreateNewOrganizationModalComponent {
   emailError = '';
 
   @Output() changeLockedStatus = new EventEmitter<any>(true);
+  firstLoad = true;
 
   constructor(
     private modalService: NgbModal,
@@ -42,7 +43,15 @@ export class CreateNewOrganizationModalComponent {
   ngOnInit() {
   }
 
+  setAutoFocus(focusElement: any) {
+    if (this.firstLoad) {
+      focusElement.focus();
+      this.firstLoad = false;
+    }
+  }
+
   openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
+    this.firstLoad = true;
 
     this.description = '';
     this.selectedEdition = null;

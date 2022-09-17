@@ -21,7 +21,7 @@
         <td>
           <mat-form-field floatLabel="never" appearance="legacy" class="email-input-field">
             <mat-label>Enter the email of the user to add:</mat-label>
-            <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ addMember.focus() }}
+            <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ setAutoFocus(addMember) }}
           </mat-form-field>
         </td>
       </tr>
