@@ -45,6 +45,7 @@ export class CreateNewRefsetComponent implements OnInit {
   versionNotes: string;
   referenceType: string;
   privateRefset: boolean;
+  localSet: boolean;
   versionDate: string;
   refsetConcept: string;
   tags: string[];
@@ -69,6 +70,7 @@ export class CreateNewRefsetComponent implements OnInit {
     tags?: string[];
     referenceType?: string;
     privateRefset?: boolean;
+    localSet?: boolean;
     versionDate?: any;
     definitionClauses?: [];
   };
@@ -126,6 +128,7 @@ export class CreateNewRefsetComponent implements OnInit {
     this.definitionClauses = [{ value: '', negated: false }];
     this.selectedReferenceType = '';
     this.privateRefset = false;
+    this.localSet = false;
     this.conceptError = '';
   }
 
@@ -146,6 +149,7 @@ export class CreateNewRefsetComponent implements OnInit {
       inputs.referenceType.substr(0, 1) +
       inputs.referenceType.substr(1).toLowerCase();
     this.privateRefset = inputs.privateRefset;
+    this.localSet = inputs.localSet;
     this.refsetConcept = inputs.metadataConcept;
     this.versionNotes = inputs.versionNotes;
     this.selectedReferenceType = inputs.referenceType;
@@ -181,6 +185,7 @@ export class CreateNewRefsetComponent implements OnInit {
       narrative: this.selectedNarrative,
       type: this.selectedReferenceType,
       privateRefset: this.privateRefset,
+      localSet: this.localSet,
       tags: this.selectedTags,
       versionNotes: this.selectedVersionNotes,
     };
@@ -245,6 +250,7 @@ export class CreateNewRefsetComponent implements OnInit {
       tags: tagsToPersist,
       versionNotes: this.versionNotes,
       privateRefset: this.privateRefset,
+      localSet: this.localSet,
       type: this.referenceType,
     };
 

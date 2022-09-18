@@ -97,11 +97,11 @@
                   [existingBranchVersions]="existingBranchVersions">
                 </create-refset>
             </div>
-            <div class="d-inline">
+            <!--<div class="d-inline">
                 <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
                   [existingBranchVersions]="existingBranchVersions">
                 </create-new-refset>
-            </div>
+            </div> -->
             <div *ngIf="false" style="display: inline; padding-left: 10px">
                 <button disabled mat-raised-button color="primary" aria-hidden="false" #createRefsetButton class="refset-tool-action-button isDisabled"
                   aria-label="Bulk Publication" title="Bulk Publication" ng-reflect-color="primary">

@@ -163,7 +163,8 @@ export class CreateRefsetComponent implements OnInit {
                 offset: 0,
                 searchConcepts: true,
                 showInDevelopment: true,
-                query: `projectId:${this.inputProperties.project.id}`
+                //query: `projectId:${this.inputProperties.project.id} AND versionStatus:PUBLISHED`
+                query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED`
                 //sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
                 //filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
             };
