@@ -155,7 +155,8 @@ export class CreateRefsetComponent implements OnInit {
             });
 
             this.refsetService.getRefsetConcepts(`branch=${this.inputProperties.project.edition.branch.toString()}&areParentConcepts=true`).subscribe(results => {
-                this.parentConcepts = results.items ? results.items : undefined;
+                this.parentConcepts = results.items ? results.items : undefined;                
+                this.parentConcepts = this.sortParents(this.parentConcepts);
             });
 
             const restParams: any = {
@@ -183,7 +184,7 @@ export class CreateRefsetComponent implements OnInit {
                         });
 
                     }
-
+                    this.data = this.sortRefsets(this.data);
                 },
                 error: (error) => {
 
@@ -199,7 +200,32 @@ export class CreateRefsetComponent implements OnInit {
         }
     }
 
-    
+    sortRefsets(refsets) {
+        return refsets.sort((refset1, refset2) => {
+            const name1 = refset1.name;
+            const name2 = refset2.name;
+
+            const compareValue = name1.localeCompare(name2);
+            return compareValue;
+        });
+    }
+
+    sortParents(concepts) {
+        return concepts.sort((concept1, concept2) => {
+            const name1 = concept1.name;
+            const name2 = concept2.name;
+
+            if (name1.toLowerCase() === 'simple type reference set') {                
+                this.selectedParentConcept = concept1.code;
+                return -1;
+            } else  if (name2.toLowerCase()=== 'simple type reference set') {
+                this.selectedParentConcept = concept2.code;
+                return 1;
+            }
+            const compareValue = name1.localeCompare(name2);
+            return compareValue;
+        }); 
+    }
 
     resetModal(): void {
 
@@ -612,7 +638,7 @@ export class CreateRefsetComponent implements OnInit {
                 this.privateRefset = results?.privateRefset;
                 this.localSet = results?.localSet;
                 this.comboRefset = results?.comboRefset;
-                this.selectedParentConcept = results?.parentConceptId;
+                //this.selectedParentConcept = results?.parentConceptId;
                 this.definitionClauses[0].value = results?.definitionClauses[0]?.value;   
                 this.type = results?.type;       
                 this.selectedUUID = results?.id;
