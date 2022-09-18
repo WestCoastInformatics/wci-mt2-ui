@@ -461,6 +461,7 @@ export class RefsetDetails implements OnInit {
                         tags: this.refsetData.tags,
                         referenceType: this.refsetData.type,
                         privateRefset: this.refsetData.privateRefset,
+                        localSet: this.refsetData.localSet,
                         versionDate: this.refsetData.versionDate,
                         versionNotes: this.refsetData.versionNotes
                     };
