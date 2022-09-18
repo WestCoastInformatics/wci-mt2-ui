@@ -49,7 +49,6 @@ export class RefsetService extends RestService {
     }
 
     createRefset(params: any): Observable<any> {
-        //return this.post(this.contextPath + 'refset/', params);
         const self = this;
         return this.post(this.contextPath + 'refset/', params, false,
             function (err) {
