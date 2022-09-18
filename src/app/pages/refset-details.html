@@ -8,7 +8,7 @@
         <div class="col-4 refset-tool-refset-details-title-name-section">
 
             <div class="refset-tool-refset-details-title-name">
-                {{refsetData?.name}}
+                Reference Set Details
             </div>
 
             <div class="set-of-buttons">
@@ -112,12 +112,14 @@
                     <!-- 
                     <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{
                         getRoleString() }}</span> -->
-
-                    <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
-                      [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
-                    </app-refset-discussion-list>
-
-                    <br>
+                    <div class="refset-tool-refset-details-title-name-section">
+                        <div class="metadata-collapsible-container-title">
+                            {{refsetData?.name}}
+                        </div>
+                        <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
+                          [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
+                        </app-refset-discussion-list>
+                    </div>
 
                     <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
                       class="manage-refset-menu">

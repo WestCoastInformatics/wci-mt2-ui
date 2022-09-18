@@ -1,15 +1,13 @@
-<div class='dashboard-section pr-1 pl-1'>
-    <div class="ag-theme-alpine">
-        <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter w-100">
-        </ag-grid-angular>
-        <app-pagination #pagination [pageSize]="gridPaging.pageSize" *ngIf="showPaging" [gridOptions]="gridOptions" [pageSizeOptions]="gridPaging.pageSizeOptions"
-          [totalKnown]="gridPaging.totalKnown" [manualStateRefresh]="gridPaging.manualStateRefresh">
-        </app-pagination>
+<div class="ag-theme-alpine pr-1 pl-1">
+    <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter w-100">
+    </ag-grid-angular>
+    <app-pagination #pagination [pageSize]="gridPaging.pageSize" *ngIf="showPaging" [gridOptions]="gridOptions" [pageSizeOptions]="gridPaging.pageSizeOptions"
+      [totalKnown]="gridPaging.totalKnown" [manualStateRefresh]="gridPaging.manualStateRefresh">
+    </app-pagination>
 
-        <ng-template #detailsSection let-params>
-            <label class="ellipsed-label" [ngbPopover]="params?.data.details" container="body" placement="top" popoverTitle="Details">
-                {{ params?.data.details }}
-            </label>
-        </ng-template>
-    </div>
+    <ng-template #detailsSection let-params>
+        <label class="ellipsed-label" [ngbPopover]="params?.data.details" container="body" placement="top" popoverTitle="Details">
+            {{ params?.data.details }}
+        </label>
+    </ng-template>
 </div>

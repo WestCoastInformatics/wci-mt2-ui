@@ -917,6 +917,9 @@ select {
   max-width: 700px;
   padding-right: 15px;
   padding-left: 25px;
+  color: #555555;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400;
   align-items: center;
 }
 
@@ -955,7 +958,7 @@ select {
   //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
   padding-right: 0px;
   z-index: 1000;
-  padding-top: 30px;
+  padding-top: 20px;
 }
 
 .refset-tool-details-metadata-footer {
@@ -4022,14 +4025,15 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   z-index: 2001 !important;
 }
 
+.ag-theme-alpine .ag-root-wrapper {
+  border-color: #eeeeee;
+  border-width: 1px;
+}
+
 #refsetDirectoryPage {
   .ag-theme-alpine .ag-header {
     width: auto;
     z-index: 99;
-  }
-
-  .ag-theme-alpine .ag-root-wrapper {
-    border: none !important;
   }
 
   .refset-tool-pagination-container {
@@ -4197,7 +4201,7 @@ img.refset-tool-edition-flag {
 }
 
 .workflow-stepper-bar {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 @media only screen and (max-width: 1120px) {
