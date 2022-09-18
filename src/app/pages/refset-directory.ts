@@ -126,7 +126,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
+                            field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 200, flex: 1, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }, unSortIcon: true
                         },
                         {
@@ -138,7 +138,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: true, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true }, unSortIcon: true
                         },
                         { field: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }

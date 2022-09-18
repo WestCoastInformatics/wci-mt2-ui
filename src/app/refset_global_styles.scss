@@ -649,7 +649,7 @@ button.refset-tool-table-action-icon {
   }
 
   .ag-ltr input[class^="ag-"][type="text"]:focus {
-    border-bottom: 1px solid $cerulean;
+    border-bottom: 2px solid $cerulean;
     box-shadow: none;
   }
 }
@@ -1463,7 +1463,21 @@ select {
 }
 
 .mat-form-field .mat-form-field-wrapper {
-  padding-bottom: 1.4em
+  padding-bottom: 1.4em;
+}
+
+.category-filter-select {
+  padding-top: 10px;
+  width: 100%;
+  text-transform: capitalize;
+
+  .mat-select-arrow-wrapper {
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
+  .mat-form-field-infix {
+    top: 7px;
+  }
 }
 
 .mat-form-field-underline {
