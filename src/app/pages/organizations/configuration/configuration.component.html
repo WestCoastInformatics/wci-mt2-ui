@@ -41,7 +41,7 @@
             </div>
             <div class="section-btn">
               <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
-                [disabled]="!profileNameValue || (profileEmailValue && !isValidEmail())" aria-label="Update Profile" title="Update Profile"
+                [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile"
                 class="btn btn-primary btn-lg btn-wide-font" (click)="updateOrganization()">Update
                 Profile</button>
             </div>

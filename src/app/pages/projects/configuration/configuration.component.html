@@ -68,7 +68,7 @@
               </mat-form-field>
 
               <div class="project-privacy">
-                <span>Project Privacy</span>
+                <label class="modal-label">Project Privacy:</label>
                 <mat-checkbox class="project-private-checkbox" [(ngModel)]="isPrivate">Private
                 </mat-checkbox>
               </div>
@@ -77,7 +77,7 @@
             <div class="update-profile-button">
               <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
                 <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font"
-                  [disabled]="!profileNameValue || !profileDescriptionValue " (click)="updateProject()">Update Profile</button>
+                  [disabled]="!profileNameValue" (click)="updateProject()">Update Profile</button>
               </div>
             </div>
           </div>
