@@ -130,13 +130,23 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				}, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60
 			},
 			{
-				field: 'code', tooltipField: 'inactiveId', filter: 'agTextColumnFilter', headerName: 'Inactive ID', cellRenderer: 'templateRenderer', 
+				field: 'code', tooltipValueGetter: (params) => {
+					return params?.value;
+				}, filter: 'agTextColumnFilter', headerName: 'Inactive ID', cellRenderer: 'templateRenderer',
 				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 150, maxWidth: 190, unSortIcon: true
 			},
 			{
-				field: 'inactiveEnPtSection', tooltipField: 'inactiveEnPtSection', sort: 'asc', valueGetter: (params) => {
+				field: 'inactiveEnPtSection', tooltipValueGetter: (params) => {
 					if (params.data.descriptions) {
-						return this.getConceptName(params.data.descriptions);
+						return this.transformDescriptions(params?.data?.descriptions)?.length ?
+							this.transformDescriptions(params?.data?.descriptions)[0].term : '';
+					}
+
+					return '';
+				}, sort: 'asc', valueGetter: (params) => {
+					if (params.data.descriptions) {
+						return this.transformDescriptions(params?.data?.descriptions)?.length ?
+							this.transformDescriptions(params?.data?.descriptions)[0].term : '';
 					}
 
 					return '';
@@ -145,7 +155,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			{
 				field: 'reason', valueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
-				}, tooltipField: 'reason', headerName: 'Association', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
+				}, tooltipValueGetter: (params) => {
+					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
+				}, headerName: 'Association', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
 			},
 			{
 				field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
@@ -155,12 +167,24 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				}, flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
 			},
 			{
-				field: 'replacementId', tooltipField: 'replacementId', headerName: 'Replacement ID', valueGetter: (params) => {
+				field: 'replacementId', tooltipValueGetter: (params) => {
+					return params?.data?.replacementConcepts[0]?.code;
+				}, headerName: 'Replacement ID', valueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
 				}, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
 			},
 			{
-				field: 'created', colId: 'replacementEnPtSection', tooltipField: 'replacementEnPtSection', headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+				field: 'created', colId: 'replacementEnPtSection', tooltipValueGetter: (params) => {
+
+					let description = '';
+
+					if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
+						description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+					}
+
+					return description;
+
+				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
 					let description = '';
 
@@ -211,8 +235,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 						return !this.isRowClassEven(params);
 					}
 				},
-				'alternate-row-color-even': (params)  => {
-					
+				'alternate-row-color-even': (params) => {
+
 					if (this.replacementColumnSortFilter) {
 						return false;
 					} else {
@@ -260,7 +284,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				break;
 			}
 		}
-		
+
 		for (let filterName in filters) {
 
 			if (replacementColumns.includes(filterName)) {
@@ -279,7 +303,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 	}
 
 	replacementSort = (params) => {
-	
+
 		if (!this.refsetGridApi) {
 			return;
 		}
@@ -292,17 +316,17 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 			if (replacementColumns.includes(sort.colId)) {
 
-				rowNodes.sort((a, b) =>  {
+				rowNodes.sort((a, b) => {
 
 					let sortA = a.data.replacementConcepts[0][sort.colId] + a.data.code;
 					let sortB = b.data.replacementConcepts[0][sort.colId] + b.data.code;
-					
+
 					if (sort.sort == 'asc') {
 
 						if (sortA > sortB) {
 							return 1;
 						}
-						
+
 						if (sortA < sortB) {
 							return -1;
 						}
@@ -311,12 +335,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 						if (sortA > sortB) {
 							return -1;
 						}
-						
+
 						if (sortA < sortB) {
 							return 1;
 						}
 					}
-					
+
 					return 0;
 				});
 
@@ -334,7 +358,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		let evenRow = true;
 
 		if (params.node.rowIndex != 0) {
-			
+
 			let previousInactiveCode = params.node.gridApi.rowModel.rowsToDisplay[params.node.rowIndex - 1].data.code;
 			let previousRowEven = params.node.gridApi.rowModel.rowsToDisplay[params.node.rowIndex - 1].data.rowEvenColorFlag;
 
@@ -582,7 +606,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			});
 
 			// pre sort items by 
-			results.items.sort((a, b) =>  {
+			results.items.sort((a, b) => {
 
 				let nameA = this.getConceptName(a.descriptions) + a.replacementConcepts[0].reason.toUpperCase();
 				let nameB = this.getConceptName(b.descriptions) + b.replacementConcepts[0].reason.toUpperCase();
@@ -601,7 +625,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			this.inactiveConcepts = 0;
 
 			for (let i = 0; i < results.items.length; i++) {
-			
+
 				let inactiveConcept = results.items[i];
 
 				if (inactiveConcept.stillMember) {

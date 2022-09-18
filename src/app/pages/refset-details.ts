@@ -1019,7 +1019,7 @@ export class RefsetDetails implements OnInit {
                             'refset-tool-details-column-description',
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
-                        tooltipField: i.toString(),
+                        tooltipValueGetter: this.descriptionValueGetter
                     });
                 }
 
@@ -1036,7 +1036,7 @@ export class RefsetDetails implements OnInit {
                                 'refset-tool-details-column-modified-date',
                             valueGetter:
                                 UiUtility.gridDateValueGetter,
-                            tooltipField: 'memberEffectiveTime',
+                            tooltipValueGetter: UiUtility.gridDateValueGetter,
                             sort: 'desc',
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',

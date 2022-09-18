@@ -53,8 +53,8 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.data = [];
         this.columnDefs = [
-            { field: 'name', headerName: 'Project Name', minWidth: 400, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true },
-            { field: 'description', headerName: 'Description', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Project Name', minWidth: 400, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
             {
                 field: 'teams', tooltipValueGetter: (params) => {
                     return JSON.parse(params.data.teams).teams.length ? JSON.parse(params.data.teams).teams.map(team => team.name).join(', ') : '';

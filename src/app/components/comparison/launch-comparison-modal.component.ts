@@ -222,10 +222,10 @@ export class LaunchComparisonModalComponent {
     };
 
     this.gridColumnDefs = [
-      { field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
-      { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 1, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
+      { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 2, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
       {
-        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', minWidth: 120, tooltipField: 'code', resizable: false, unSortIcon: true,
+        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 200, tooltipField: 'membership', resizable: false, unSortIcon: true,
         floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
           suppressMenu: true, suppressFilterButton: true, names: [
             { type: 'membership', name: 'Active Reference Set', value: 'Active Reference Set' },

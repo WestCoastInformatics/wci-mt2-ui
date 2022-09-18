@@ -51,16 +51,17 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
             {
                 field: 'fileName',
                 headerName: 'Name',
+                tooltipField: 'fileName',
                 flex: 1,
                 unSortIcon: true,
                 sortable: true,
                 minWidth: 110
             },
-            { field: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true, minWidth: 110, flex: 1 },
-            { field: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, flex: 2, sortable: true },
+            { field: 'fileType', tooltipField: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true, minWidth: 110, flex: 1 },
+            { field: 'modifiedBy', tooltipField: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, flex: 2, sortable: true },
             {
                 field: 'created',
-                tooltipField: 'Uploaded Date',
+                tooltipValueGetter: UiUtility.gridDateValueGetter,
                 headerName: 'Uploaded Date',
                 unSortIcon: true,
                 sortable: true,
@@ -70,7 +71,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 valueGetter: UiUtility.gridDateValueGetter,
                 floatingFilterComponent: 'dateTextFilterComponent'
             },
-            { field: 'description', headerName: 'Description', minWidth: 250, flex: 4, width: 550 },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', minWidth: 250, flex: 4, width: 550 },
             {
                 field: 'id',
                 headerName: '',
@@ -78,6 +79,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 sortable: false,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
+                tooltipField: 'id',
                 resizable: false,
                 cellRendererParams: { template: this.actionsSection }, maxWidth: 110
             }];
@@ -250,6 +252,18 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                         }
 
                         this.gridPaging.manualStateRefresh = Boolean(true);
+                        // set placeholders on the grid floating filter fields
+                        Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+
+                            if (obj.attributes['disabled']) {
+                                // skip columns with disabled filter
+                                return;
+                            }
+
+                            const label = obj.getAttribute('aria-label');
+                            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+                            obj.setAttribute('placeholder', value);
+                        });
                     },
                     error: (error) => {
 
@@ -262,18 +276,6 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 
         gridReadyParams.api.setDatasource(this.datasource);
 
-        // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
-
-            if (obj.attributes['disabled']) {
-                // skip columns with disabled filter
-                return;
-            }
-
-            const label = obj.getAttribute('aria-label');
-            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-            obj.setAttribute('placeholder', value);
-        });
     }
 
     onGridCellClick = (event) => {
