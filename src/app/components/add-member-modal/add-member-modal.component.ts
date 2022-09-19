@@ -19,6 +19,7 @@ export class AddMemberModalComponent {
     @Input() id: string;
     @Input() name: string;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
+    firstLoad = true;
 
     constructor(
         private modalService: NgbModal,
@@ -27,8 +28,15 @@ export class AddMemberModalComponent {
         private notificationService: NotificationService,
     ) { }
 
-    openAddMemberModal(addMemberModal: NgbModal) {
+    setAutoFocus(focusElement: any) {
+        if (this.firstLoad) {
+            focusElement.focus();
+            this.firstLoad = false;
+        }
+    }
 
+    openAddMemberModal(addMemberModal: NgbModal) {
+        this.firstLoad = true;
         this.email = '';
         this.openedModel = this.modalService.open(addMemberModal, { backdrop: 'static', keyboard: false });
     }

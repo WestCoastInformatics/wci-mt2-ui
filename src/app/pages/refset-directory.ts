@@ -1,22 +1,21 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { DialogService } from 'src/app/dialog/services/dialog.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { Title } from '@angular/platform-browser';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { UiUtility } from 'src/app/utilities/ui.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
-import { Debounce } from '../decorators/debounce.decorator';
-import { forkJoin } from 'rxjs';
-import { User } from '../models/user';
-import { AuthenticationService } from '../services/authentication/authentication.service';
-import * as Util from 'util';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {DialogService} from 'src/app/dialog/services/dialog.service';
+import {DialogFactoryService} from 'src/app/dialog/services/dialog-factory.service';
+import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
+import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
+import {DateTextFilterComponent} from 'src/app/components/dateTextFilter/date-text-filter.component';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {Title} from '@angular/platform-browser';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {UiUtility} from 'src/app/utilities/ui.utility';
+import {RefsetUtility} from 'src/app/utilities/refset.utility';
+import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
+import {PaginationComponent} from 'src/app/components/pagination/pagination.component';
+import {Debounce} from '../decorators/debounce.decorator';
+import {forkJoin} from 'rxjs';
+import {User} from '../models/user';
+import {AuthenticationService} from '../services/authentication/authentication.service';
 
 
 /**
@@ -92,8 +91,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     //***** Framework Functions *****/
     ngOnInit() {
         this.user = this.authenticationService.getUser();
-        this.titleService.setTitle('Refset Tool - Refset Library');
-        this.breadcrumbService.setBreadcrumbs([{ label: 'Refset Library' }]);
+        this.titleService.setTitle('Reference Set Tool - Reference Set Library');
+        this.breadcrumbService.setBreadcrumbs([{ label: 'Reference Set Library' }]);
 
         this.disableChannel.postMessage(false);
     }
@@ -119,14 +118,14 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                     this.columnDefs = [
                         { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
-                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Refset ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
-                        { field: 'name', tooltipField: 'name', headerName: 'Refset Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
+                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
                             field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 140, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
+                            field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 200, flex: 1, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }, unSortIcon: true
                         },
                         {
@@ -134,11 +133,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }, unSortIcon: true
                         },
                         {
-                            field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', width: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
+                            field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: true, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true }, unSortIcon: true
                         },
                         { field: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
@@ -344,8 +343,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         gridReadyParams.api.setDatasource(dataSource);
 
         // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
-
+        Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
             if (obj.attributes['disabled']) {
                 // skip columns with disabled filter
                 return;
@@ -363,8 +361,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             return '';
         }
 
-        const flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
-        params.data.flagIcon = flagIcon;
+        params.data.flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
         return params?.data?.edition?.name;
     };
 
@@ -469,10 +466,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 dialogId: dialogId,
                 showCancel: false,
                 cancelText: 'Close',
-                actionText: 'View Complete Refset',
+                actionText: 'View Complete Reference Set',
                 showConfirm: false,
                 template: this.infoDialog,
-                headerText: 'Refset Metadata',
+                headerText: 'Reference Set Metadata',
                 data: refset,
                 showAction: true,
                 showCloseIcon: true
@@ -506,7 +503,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         const dialogId = 'directoryFeedbackDialog';
 
         const dialogData = {
-            headerText: `Refset Feedback for ${refset.name} (${refset.refsetId})`,
+            headerText: `Reference Set Feedback for ${refset.name} (${refset.refsetId})`,
             template: this.feedbackDialog,
             data: refset
         };

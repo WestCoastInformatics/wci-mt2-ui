@@ -2,9 +2,9 @@
     <div class="row header-title">
 
         <span class="title-label">Organizations</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.id ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
+              [placeholder]="selectedOrganization?.id ? selectedOrganization?.name : 'Choose Organization'" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
@@ -12,15 +12,15 @@
         </mat-form-field>
 
         <span class="title-label">Editions</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
-            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'"
+              (selectionChange)="selectedEdition()">
                 <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
                     {{ edition.name }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        
+
     </div>
 </div>
 <div class="content-wrapper">

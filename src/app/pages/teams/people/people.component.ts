@@ -15,281 +15,281 @@ import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'teams-people',
-    templateUrl: './people.component.html'
+  selector: 'teams-people',
+  templateUrl: './people.component.html'
 })
 export class TeamsPeopleComponent implements OnInit {
 
-    menu: SidebarMenuItem[] = [];
-    data = [];
-    defaultColDef = {};
-    selectedTeam: any;
-    teamId: any;
-    teamList = [];
-    currentUser: any;
-    gridOptions: any;
-    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
-    gridParams: any;
-    gridApi: any;
-    gridColumnDefs = [];
-    peopleList = [];
-    showTable = false;
-    organizationList = [];
-    organizationId: string;
-    selectedOrganization: any;
-    showLoadingSpinner = true;
-    uiUtility = UiUtility;
-    openedConfirmModal: any;
-    selectedUser: any;
+  menu: SidebarMenuItem[] = [];
+  data = [];
+  defaultColDef = {};
+  selectedTeam: any;
+  teamId: any;
+  teamList = [];
+  currentUser: any;
+  gridOptions: any;
+  gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
+  gridParams: any;
+  gridApi: any;
+  gridColumnDefs = [];
+  peopleList = [];
+  showTable = false;
+  organizationList = [];
+  organizationId: string;
+  selectedOrganization: any;
+  showLoadingSpinner = true;
+  uiUtility = UiUtility;
+  openedConfirmModal: any;
+  selectedUser: any;
 
-    @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
-    @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
-    @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
-    @ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
+  @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
+  @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
+  @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
+  @ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
 
-    constructor(private readonly breadcrumbService: BreadcrumbService,
-        private readonly titleService: Title,
-        private readonly refsetService: RefsetService,
-        private readonly route: ActivatedRoute,
-        private readonly router: Router,
-        private readonly authService: AuthenticationService,
-        private readonly teamsService: TeamsService,
-        private readonly modalService: NgbModal,
-        private location: Location) {
-        document.body.scrollTop = 0;
+  constructor(private readonly breadcrumbService: BreadcrumbService,
+    private readonly titleService: Title,
+    private readonly refsetService: RefsetService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly authService: AuthenticationService,
+    private readonly teamsService: TeamsService,
+    private readonly modalService: NgbModal,
+    private location: Location) {
+    document.body.scrollTop = 0;
+  }
+
+  ngOnInit(): void {
+
+    this.titleService.setTitle('Reference Set Tool - Teams');
+    this.currentUser = this.authService.getUser();
+    this.route.params.subscribe(params => {
+
+      this.organizationId = params['organizationId'];
+      this.teamId = params['teamId'];
+      this.setNavigation();
+    });
+
+    this.data = [];
+    this.selectedOrganization = null;
+    this.selectedTeam = null;
+
+    this.getOrganizations();
+  }
+
+  ngAfterViewInit() {
+
+    this.gridColumnDefs = [
+      { field: 'name', tooltipField: 'name', headerName: 'Members', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
+      { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
+      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
+      {
+        field: 'id', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveTeamMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+          template: this.inactivateUserSection
+        }, flex: 1, maxWidth: 225
+      }
+    ];
+
+    this.gridOptions = {
+      context: { componentParent: this },
+      pagination: false,
+      suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+      suppressPaginationPanel: true,
+      paginationPageSize: this.gridPaging.pageSize,
+      rowSelection: 'single',
+      enableCellTextSelection: true,
+      onCellClicked: this.onGridCellClick,
+      onGridReady: this.onGridReady,
+      frameworkComponents: {
+        templateRenderer: TemplateRenderer,
+        'categoryFilterComponent': CategoryFilterComponent,
+        customTooltipComponent: CustomTooltipComponent
+      },
+      defaultColDef: {
+        sortable: true,
+        resizable: true,
+        suppressMenu: true,
+        filter: true,
+        floatingFilter: true,
+        floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+        unSortIcon: true
+      },
+      enableBrowserTooltips: true,
+    };
+  }
+
+  setNavigation() {
+
+    const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+
+    if (CodeUtility.hasValue(this.organizationId, true, true)) {
+      breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
     }
 
-    ngOnInit(): void {
+    breadcrumbs.push({ label: 'People' });
+    this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
-        this.titleService.setTitle('Refset Tool - Teams');
-        this.currentUser = this.authService.getUser();
-        this.route.params.subscribe(params => {
+    this.menu = [
+      { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
+    ];
 
-            this.organizationId = params['organizationId'];
-            this.teamId = params['teamId'];
-            this.setNavigation();
-        });
+    const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
 
-        this.data = [];
-        this.selectedOrganization = null;
-        this.selectedTeam = null;
-
-        this.getOrganizations();
+    if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
+      this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs' });
     }
 
-    ngAfterViewInit() {
+    this.location.replaceState('organization/' + this.organizationId + '/teams/' + this.teamId + '/people');
+  }
 
-        this.gridColumnDefs = [
-            { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
-            { field: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-            { field: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
-            { field: 'teams', tooltipComponentFramework: CustomTooltipComponent, tooltipField: 'teams', tooltipComponentParams: { color: '#ececec' }, flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
-            {
-                field: 'id', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveTeamMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
-                    template: this.inactivateUserSection
-                }, flex: 1, maxWidth: 225
-            }
-        ];
+  getOrganizations(): void {
 
-        this.gridOptions = {
-            context: { componentParent: this },
-            pagination: false,
-            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-            suppressPaginationPanel: true,
-            paginationPageSize: this.gridPaging.pageSize,
-            rowSelection: 'single',
-            enableCellTextSelection: true,
-            onCellClicked: this.onGridCellClick,
-            onGridReady: this.onGridReady,
-            frameworkComponents: {
-                templateRenderer: TemplateRenderer,
-                'categoryFilterComponent': CategoryFilterComponent,
-                customTooltipComponent: CustomTooltipComponent
-            },
-            defaultColDef: {
-                sortable: true,
-                resizable: true,
-                suppressMenu: true,
-                filter: true,
-                floatingFilter: true,
-                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
-                unSortIcon: true
-            },
-            enableBrowserTooltips: true,
-        };
-    }
+    this.refsetService.getOrganizations().subscribe((results) => {
 
-    setNavigation() {
+      this.organizationList = results.items;
 
-        const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
+      for (const organization of this.organizationList) {
 
-        if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
+        if (this.organizationId === organization.id) {
+
+          this.selectedOrganization = organization;
+          this.getTeams();
+          return;
         }
+      }
 
-        breadcrumbs.push({ label: 'People' });
-        this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+      this.getStoredOrganizationId();
 
-        this.menu = [
-            { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
-        ];
+      if (!this.selectedOrganization) {
+        this.showLoadingSpinner = false;
+      }
+    });
+  }
 
-        const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
+  selectOrganization(): void {
 
-        if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
-            this.menu.push({ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs' });
+    this.showLoadingSpinner = true;
+    this.organizationId = this.selectedOrganization.id;
+    this.teamId = null;
+    this.selectedTeam = null;
+    this.teamList = [];
+    this.data = [];
+    this.setNavigation();
+    this.getTeams();
+  }
+
+  getStoredOrganizationId(): void {
+
+    if (sessionStorage.getItem('selectedOrganizationId')) {
+
+      const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+      for (const organization of this.organizationList) {
+
+        if (organization.id == storedOrganizationId) {
+
+          this.selectedOrganization = organization;
+          this.selectOrganization();
+          return;
         }
+      }
 
-        this.location.replaceState('organization/' + this.organizationId + '/teams/' + this.teamId + '/people');
+      // if the stored organization ID doesn't match anything remove it
+      sessionStorage.removeItem('selectedOrganizationId');
     }
+  }
 
-    getOrganizations(): void {
+  getTeams(): void {
 
-        this.refsetService.getOrganizations().subscribe((results) => {
+    this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 
-            this.organizationList = results.items;
+      this.showLoadingSpinner = false;
+      this.showTable = true;
+      this.teamList = results.items;
 
-            for (const organization of this.organizationList) {
+      for (const team of this.teamList) {
 
-                if (this.organizationId === organization.id) {
+        if (this.teamId == team.id) {
 
-                    this.selectedOrganization = organization;
-                    this.getTeams();
-                    return;
-                }
-            }
-
-            this.getStoredOrganizationId();
-
-            if (!this.selectedOrganization) {
-                this.showLoadingSpinner = false;
-            }
-        });
-    }
-
-    selectOrganization(): void {
-
-        this.showLoadingSpinner = true;
-        this.organizationId = this.selectedOrganization.id;
-        this.teamId = null;
-        this.selectedTeam = null;
-        this.teamList = [];
-        this.data = [];
-        this.setNavigation();
-        this.getTeams();
-    }
-
-    getStoredOrganizationId(): void {
-
-        if (sessionStorage.getItem('selectedOrganizationId')) {
-
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
-
-            for (const organization of this.organizationList) {
-
-                if (organization.id == storedOrganizationId) {
-
-                    this.selectedOrganization = organization;
-                    this.selectOrganization();
-                    return;
-                }
-            }
-
-            // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+          this.selectedTeam = team;
+          this.showTeamMembers();
+          return;
         }
+      }
+
+      if (this.teamList && this.teamList.length > 0) {
+
+        this.selectedTeam = this.teamList[0];
+        this.selectTeam();
+      }
+    });
+  }
+
+  selectTeam(): void {
+
+    this.teamId = this.selectedTeam.id;
+    this.showTeamMembers();
+  }
+
+  showTeamMembers() {
+
+    this.data = this.selectedTeam.memberList;
+
+    sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+
+    this.setNavigation();
+  }
+
+  onGridReady = (params) => {
+
+    this.gridParams = params;
+    this.gridApi = params.api;
+  }
+
+  onGridCellClick = (event) => {
+    if (event.column.colId == 'id') {
+      return;
     }
 
-    getTeams(): void {
+    const selectedRows = this.gridApi.getSelectedRows();
+    let selectedId: string;
 
-        this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+    selectedRows.forEach(function (selectedRow, index) {
+      selectedId = selectedRow.id;
+    });
 
-            this.showLoadingSpinner = false;
-            this.showTable = true;
-            this.teamList = results.items;
+    this.router.navigate(['/personal/' + selectedId + '/landing']);
+  }
 
-            for (const team of this.teamList) {
+  get dataCount() {
 
-                if (this.teamId == team.id) {
-
-                    this.selectedTeam = team;
-                    this.showTeamMembers();
-                    return;
-                }
-            }
-
-            if (this.teamList && this.teamList.length > 0) {
-
-                this.selectedTeam = this.teamList[0];
-                this.selectTeam();
-            }
-        });
+    if (this.data) {
+      return this.data.length;
+    } else {
+      return 0;
     }
+  }
 
-    selectTeam(): void {
+  confirmRemoveUser(user) {
+    this.selectedUser = user;
+    this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
+  }
+  removeUser() {
+    this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      complete: () => window.location.reload()
+    });
+  }
 
-        this.teamId = this.selectedTeam.id;
-        this.showTeamMembers();
-    }
+  getTeamCount(data: any): number {
+    return data.teams.length;
+  }
 
-    showTeamMembers() {
-
-        this.data = this.selectedTeam.memberList;
-
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-
-        this.setNavigation();
-    }
-
-    onGridReady = (params) => {
-
-        this.gridParams = params;
-        this.gridApi = params.api;
-    }
-
-    onGridCellClick = (event) => {
-        if (event.column.colId == 'id') {
-            return;
-        }
-
-        const selectedRows = this.gridApi.getSelectedRows();
-        let selectedId: string;
-
-        selectedRows.forEach(function (selectedRow, index) {
-            selectedId = selectedRow.id;
-        });
-
-        this.router.navigate(['/personal/' + selectedId + '/landing']);
-    }
-
-    get dataCount() {
-
-        if (this.data) {
-            return this.data.length;
-        } else {
-            return 0;
-        }
-    }
-
-    confirmRemoveUser(user) {
-        this.selectedUser = user;
-        this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
-    }
-    removeUser() {
-        this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
-            next: (data) => {
-                console.log(data);
-            },
-            complete: () => window.location.reload()
-        });
-    }
-
-    getTeamCount(data: any): number {
-        return data.teams.length;
-    }
-
-    getTeamsTitle(data: any): string {
-        return data?.teams.map(t => t.name).join(', ');
-    }
+  getTeamsTitle(data: any): string {
+    return data?.teams.map(t => t.name).join(', ');
+  }
 
 }

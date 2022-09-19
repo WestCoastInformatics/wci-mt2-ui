@@ -1,57 +1,61 @@
-
-<button mat-menu-item alt="Share Refset" title="Share Refset" aria-label="Share Refset" (click)="openEmailRefsetModal(emailRefsetDialog)">Share Refset</button>
+<button mat-menu-item alt="Share Reference Set" title="Share Reference Set" aria-label="Share Reference Set" (click)="openEmailRefsetModal(emailRefsetDialog)">Share
+  Reference Set</button>
 
 <ng-template #emailRefsetDialog let-modal>
 
-    <div class="modal-header rt2-modal-header">
+  <div class="modal-header rt2-modal-header">
 
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-            Share Reference Set: {{refset?.name}}
-        </h4>
+    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+      Share Reference Set: {{refset?.name}}
+    </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click');reset();">
+      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    </button>
+  </div>
 
-    <div class="modal-body refset-tool-lockable">
-        <label class="modal-label-description">Send someone an email with a link to this Reference Set</label>
-        <table>
+  <div class="modal-body refset-tool-lockable">
+    <label class="modal-label-description">Send someone an email with a link to this Reference
+      Set</label>
+    <table>
 
-            <tr>
-                <td>
-                    <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
-                </td>
-                <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" #removeText placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
-                      style="width: 250px; padding-bottom: 9px" ngbAutofocus />
+      <tr>
+        <td>
+          <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
+        </td>
+        <td>
+          <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+            style="width: 250px; padding-bottom: 9px" />
 
 
-                </td>
-            </tr>
-            <tr class="modal-error-message" [hidden]="!emailError">
-                <div>{{emailError}}</div>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label-description">Message:</label>
-                </td>
-                <td>
-                    <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
-                    </mat-form-field>
+        </td>
+      </tr>
+      <tr class="modal-error-message" [hidden]="!emailError">
+        <div>{{emailError}}</div>
+      </tr>
+      <tr>
+        <td>
+          <label class="modal-label-description">Message:</label>
+        </td>
+        <td>
+          <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
+            <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
+          </mat-form-field>
 
-                </td>
-            </tr>
-        </table>
+        </td>
+      </tr>
+    </table>
 
-    </div>
-    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-         <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="emailRefsetObject()"
-          mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email"
-          ng-reflect-color="green">
-            Send Email
-        </button>
-    </div>
+  </div>
+  <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+    <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="emailRefsetObject()" mat-raised-button color="green" aria-hidden="false"
+      class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
+      Send Email
+    </button>
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
+      Cancel
+    </button>
+  </div>
 
 </ng-template>

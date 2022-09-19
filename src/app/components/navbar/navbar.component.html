@@ -27,8 +27,9 @@
 
     <div class="left-title-buttons">
         <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()">
-            <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{
-                assignedUser() }}</span>
+            <span class="project-role" *ngIf="showProjectRole()">Project Role: {{projectRole}}</span>
+            <span class="project-role" *ngIf="showRefsetRole()">Role: {{refsetRole}}</span>
+            <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{ assignedUser() }}</span>
         </div>
 
         <div class="directory-nav" (click)="navigateToRoute('/library')">
@@ -36,12 +37,12 @@
             <span class="directory-icon-label">Library</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="project-nav" routerLink="/organization/0/edition/0/projects/0/refsets">
+        <div *ngIf="isUserLoggedIn" class="project-nav" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
             <img class="projects-icon" src="/assets/projects-icon.svg">
             <span class="projects-icon-label">Projects</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="nav-item" routerLink="/dashboard">
+        <div *ngIf="isUserLoggedIn" class="nav-item" (click)="navigateToRoute('/dashboard')">
             <img class="nav-icon dashboard-icon" src="/assets/dashboard-icon.svg">
             <span class="nav-label dashboard-icon-label">Dashboard</span>
         </div>

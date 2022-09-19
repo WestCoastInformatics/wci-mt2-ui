@@ -19,6 +19,7 @@ export class AuthenticationService {
     IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
     authCookie = {name: 'rt2-auth', path: '/'};
+    referralUrl = '';
 
     constructor(
         private http: HttpClient,
@@ -28,6 +29,11 @@ export class AuthenticationService {
         private restService: RestService,
     ) {
         this.apiCalled = new EventEmitter();
+        if (window.location.href.includes('details/')) {
+            this.referralUrl = window.location.href;
+        } else if (this.referralUrl) {
+            this.referralUrl = '';
+        }
     }
 
     get isUserLoggedIn(): boolean {
@@ -57,10 +63,14 @@ export class AuthenticationService {
 
         let url = window.location.origin + '/login';
 
+        if (!this.referralUrl) {
+            this.referralUrl = url;
+        }
+
         if (!window.location.origin.includes('local')) {
-            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
+            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + this.referralUrl;
         } else {
-            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
+            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + this.referralUrl;
         }
 
         return url;
@@ -74,7 +84,11 @@ export class AuthenticationService {
                 localStorage.setItem('auth_token', data.authToken);
                 localStorage.setItem('refset_user', JSON.stringify(data));
                 this.userSubject.next(userData);
-                this.router.navigate(['/dashboard']);
+                if (this.referralUrl) {
+                    window.location.href = this.referralUrl;
+                } else {
+                    this.router.navigate(['/dashboard']);
+                }
             },
             (err) => {
                 this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
@@ -152,14 +166,21 @@ export class AuthenticationService {
 
         // if the user is on a page that requires being logged in, then send them to the directory
         if (!this.isUserLoggedIn) {
-            // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
-            this.router.navigateByUrl('login');
+            const location = window.location.href.split('/');
+            const url = location.length > 1 ? location[1] : '';
+            if (url && !url.startsWith('#')) {
+                // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
+                this.router.navigateByUrl('login');
+            }
         }
 
         if (userWasLoggedin) {
 
             this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'error', { timeOut: 5000, extendedTimeOut: 0 });
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'error', {
+                timeOut: 5000,
+                extendedTimeOut: 0
+            });
         }
     }
 

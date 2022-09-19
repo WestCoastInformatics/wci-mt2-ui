@@ -58,7 +58,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Projects');
+        this.titleService.setTitle('Reference Set Tool - Projects');
 
         this.route.params.subscribe(params => {
 
@@ -78,14 +78,15 @@ export class ProjectsPeopleComponent implements OnInit {
         this.gridColumnDefs = [
             {
                 field: 'name',
+                tooltipField: 'name',
                 headerName: 'Members',
                 minWidth: 300,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.peopleNameSection, unSortIcon: true }
             },
-            { field: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-            { field: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
+            { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
+            { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
             {
                 field: 'teams',
                 tooltipComponentFramework: CustomTooltipComponent,

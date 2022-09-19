@@ -130,6 +130,28 @@ export class RestService {
         }
     }
 
+    giveWarningNotification(error: any, ignoreErrors: boolean = false) {
+
+        if (!ignoreErrors) {
+
+            let definedWarning = ' Error Status: ' + error?.status;
+
+            if (error?.error?.error) {
+                definedWarning = ' ' + error.error.error;
+            } else if (error?.error) {
+                definedWarning = ' ' + error.error;
+            }
+
+            let message = 'Warning: ' + definedWarning;
+            this.notificationService.show(message, null, 'warning', { timeOut: 0, extendedTimeOut: 0 });
+            this.notificationService.handleDuplicates('warning', message);
+
+            return error;
+        } else {
+            return EMPTY;
+        }
+    }
+
     getHttpClient(): HttpClient {
         return this.http;
     }

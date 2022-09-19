@@ -48,13 +48,13 @@ export class AppComponent implements OnInit {
 
     // ***** Framework Functions *****/
     ngOnInit() {
-        this.titleService.setTitle('Refset Tool');
+        this.titleService.setTitle('Reference Set Tool');
         this.environment = this.envService.env;
 
         this.assignFavicon();
         this.router.events.subscribe((event: any) => {
             if (event instanceof RoutesRecognized) {
-                this.isLanding = event.url.split('/')[1] === '';
+                this.isLanding = event.url.split('/')[1] === '' || event.url.split('/')[1].startsWith('#');
             }
         });
 
