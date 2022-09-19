@@ -54,6 +54,7 @@ export class RefsetService extends RestService {
             function (err) {
                 if (err.status === 504) { 
                     err.error = `Refset creation is taking longer than expected.  Please come back to the project page in the future to see the created refset.`;
+                    return self.giveWarningNotification(err);
                 }
                 return self.giveErrorNotification(err);
             });
