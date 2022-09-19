@@ -17,7 +17,7 @@
             <div class="account-profile-mid">
               <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
                 <mat-label>Name <span class="mandatory-field">*</span></mat-label>
-                <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                <input matInput type="text" [disabled]="true" name="name" [(ngModel)]="profileNameValue">
               </mat-form-field>
 
               <mat-form-field floatLabel="never" class="profile-company-field" appearance="none">
@@ -27,7 +27,7 @@
 
               <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
                 <mat-label>Email <span class="mandatory-field">*</span></mat-label>
-                <input matInput type="text" name="email" [(ngModel)]="profileEmailValue"  (keydown.tab)="onKeyDownEvent($event)">
+                <input matInput type="text" name="email" [disabled]="true" [(ngModel)]="profileEmailValue"  (keydown.tab)="onKeyDownEvent($event)">
                 <div class="modal-error-message" *ngIf="emailError">{{emailError}}</div>
               </mat-form-field>
             </div>
