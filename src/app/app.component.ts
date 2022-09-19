@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
         this.assignFavicon();
         this.router.events.subscribe((event: any) => {
             if (event instanceof RoutesRecognized) {
-                this.isLanding = event.url.split('/')[1] === '';
+                this.isLanding = event.url.split('/')[1] === '' || event.url.split('/')[1].startsWith('#');
             }
         });
 
