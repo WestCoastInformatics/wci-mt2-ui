@@ -236,6 +236,7 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
+        this.data = [];
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = '';
         this.privateRefset = false;
