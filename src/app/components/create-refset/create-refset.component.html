@@ -156,7 +156,8 @@
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 
                                 <mat-form-field appearance="fill" >
-                                    <mat-label>Choose refset to copy</mat-label>
+                                    <mat-label *ngIf="data.length > 0">Choose refset to copy</mat-label>                                    
+                                    <mat-label *ngIf="data.length == 0">There are no published refsets available to copy</mat-label>
                                     <select matNativeControl [(ngModel)]="selectedCopyRefset">
                                         <option *ngFor="let refset of data" [ngValue]="refset">
                                             {{ refset?.name }}
@@ -177,6 +178,7 @@
                             <div class="col create-new-refset-field create-new-refset-flex-weight">                                
                                 <mat-form-field appearance="fill" >
                                     <mat-label>Choose contributing refsets (use Ctrl-click to select more than one)</mat-label>
+                                    <label *ngIf="data.length == 0">There are currently no published contributing refsets available</label>
                                     <select matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets" >
                                         <option *ngFor="let refset of data" [ngValue]="refset">
                                             {{ refset?.name }}
@@ -226,7 +228,8 @@
                                         Create a new concept</mat-radio-button>
 
                                     <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
-                                        <mat-label>Choose existing metadata concept</mat-label>
+                                        <mat-label *ngIf="existingMetadataConcepts.length > 0">Choose existing metadata concept</mat-label>                                    
+                                        <mat-label *ngIf="existingMetadataConcepts.length == 0">There are no existing metadata concepts available</mat-label>
                                         <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
                                             <option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
                                                 {{ existingMetadataConcept?.name }}
