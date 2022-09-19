@@ -80,9 +80,9 @@ export class TeamsPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', headerName: 'Members', minWidth: 300, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
-      { field: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-      { field: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'Members', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
+      { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
       {
         field: 'id', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveTeamMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {

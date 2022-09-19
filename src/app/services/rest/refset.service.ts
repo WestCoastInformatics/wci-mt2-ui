@@ -49,7 +49,15 @@ export class RefsetService extends RestService {
     }
 
     createRefset(params: any): Observable<any> {
-        return this.post(this.contextPath + 'refset/', params);
+        const self = this;
+        return this.post(this.contextPath + 'refset/', params, false,
+            function (err) {
+                if (err.status === 504) { 
+                    err.error = `Refset creation is taking longer than expected.  Please come back to the project page in the future to see the created refset.`;
+                    return self.giveWarningNotification(err);
+                }
+                return self.giveErrorNotification(err);
+            });
     }
 
 
@@ -104,6 +112,17 @@ export class RefsetService extends RestService {
 
     getRefsetConcepts(params: any): Observable<any> {
         return this.get(this.contextPath + 'general/refsetConcepts', params, false);
+    }
+
+    getRefsetCopy(refsetInternalId: string, name: string, projectId: string, localSet: boolean, privateRefset: boolean, comboSet: boolean, narrative: string, tags: any, parentConceptId: string, newRefsetConceptId: string): Observable<any> {
+        return this.get(this.contextPath + 'refset/' + refsetInternalId + '/copy?name=' + name + '&projectId=' + projectId
+        + '&localSet=' + localSet
+        + '&privateRefset=' + privateRefset
+        + '&comboSet=' + comboSet
+        + '&narrative=' + narrative
+        + '&tags=' + tags
+        + '&parentConceptId=' + parentConceptId
+        + '&newRefsetConceptId=' + newRefsetConceptId);
     }
 
     getBranchVersions(params: any): Observable<any> {

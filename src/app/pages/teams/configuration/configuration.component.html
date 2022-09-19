@@ -2,7 +2,7 @@
   <div class="row header-title">
 
     <span class="title-label">Organizations</span>
-    <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
       <mat-label>Choose Organization</mat-label>
       <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
         <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
@@ -12,7 +12,7 @@
     </mat-form-field>
 
     <span class="title-label">Teams</span>
-    <mat-form-field floatLabel="never" appearance="outline" class="project-drop-down">
+    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
       <mat-label>Choose Team</mat-label>
       <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
         <mat-option *ngFor="let team of teamList" [value]="team" style="z-index: 3" [title]="team.name">
@@ -62,7 +62,7 @@
             <div class="update-profile-button">
               <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
                 <button *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font"
-                  [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" (click)="updateTeam()">
+                  [disabled]="!profileNameValue || (profileEmailValue && !isValidEmail())" (click)="updateTeam()">
                   Update Profile
                 </button>
               </div>
@@ -78,7 +78,7 @@
               <div class="save-permissions-mid">Choose the permission level or roles
                 for your team.
                 <br><br>
-                <mat-form-field floatLabel="never" appearance="fill" class="refset-tool-modal-select-field">
+                <mat-form-field floatLabel="never" appearance="legacy" class="refset-tool-modal-select-field">
                   <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [(ngModel)]="selectedRoles" multiple class="refset-tool-modal-select"
                     panelClass="refset-tool-modal-panel">
 

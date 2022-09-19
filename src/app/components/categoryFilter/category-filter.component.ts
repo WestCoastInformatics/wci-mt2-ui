@@ -20,10 +20,11 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 	names: Array<any>;
 	options: Array<SelectEntry> = [];
 	selectedOption = this.options[0];
+	placeholder = '';
 
 	agInit(params: SelectFloatingFilterParams): void {
-
 		this.params = params;
+		this.placeholder = this.params.column.getUserProvidedColDef().headerName + ' ...';
 		this.names = this.params.names;
 		this.options.push(new SelectEntry(this.optionNum++, ''));
 
@@ -62,9 +63,9 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 		if (!parentModel) {
 			this.selectedOption.value = '';
 		} else {
-            if (!this.selectedOption) {
-                this.selectedOption = this.options.filter(opt => opt.value === parentModel.filter)[0];
-            }
+			if (!this.selectedOption) {
+				this.selectedOption = this.options.filter(opt => opt.value === parentModel.filter)[0];
+			}
 			this.selectedOption.value = parentModel.filter;
 		}
 	}

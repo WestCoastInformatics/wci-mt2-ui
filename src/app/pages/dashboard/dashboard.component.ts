@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -70,7 +71,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             onGridReady: this.onGridReady,
             frameworkComponents: {
                 'templateRenderer': TemplateRenderer,
-                'categoryFilterComponent': CategoryFilterComponent
+                'categoryFilterComponent': CategoryFilterComponent,
+                'dateTextFilterComponent': DateTextFilterComponent
             },
             defaultColDef: {
                 sortable: true,
@@ -94,8 +96,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             {
                 field: 'name',
                 headerName: 'Reference Name',
-                flex: 1,
-                minWidth: 550,
+                flex: 2,
+                width: 550,
+                minWidth: 350,
+                tooltipField: 'name',
                 unSortIcon: true,
                 sortable: true,
                 cellRenderer: params => {
@@ -105,12 +109,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             {
                 field: 'workflowStatus',
+                tooltipField: 'workflowStatus',
                 headerName: 'Workflow Status',
                 unSortIcon: true,
                 cellClass: 'refset-tool-dashboard-column-workflow-status',
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.workflowStatus },
                 sortable: true,
+                flex: 1,
+                width: 200,
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     suppressFilterButton: true, names: [
@@ -129,10 +136,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 field: 'modified',
                 tooltipValueGetter: UiUtility.gridDateValueGetter,
                 headerName: 'Last Modified Date',
-                filter: false,
+                flex: 1,
+                width: 220,
+                minWidth: 220,
                 unSortIcon: true,
                 sortable: true,
                 sort: 'desc',
+                floatingFilterComponent: 'dateTextFilterComponent',
+                floatingFilterComponentParams: { suppressFilterButton: true },
                 valueGetter:
                     UiUtility.gridDateValueGetter,
             }
@@ -231,17 +242,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         gridReadyParams.api.setDatasource(dataSource);
 
         // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+        UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
 
-            if (obj.attributes['disabled']) {
-                // skip columns with disabled filter
-                return;
-            }
-
-            const label = obj.getAttribute('aria-label');
-            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-            obj.setAttribute('placeholder', value);
-        });
     }
 
     toTitleCase(str) {

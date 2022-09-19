@@ -96,35 +96,34 @@ import {RouterExtentionService} from 'src/app/services/routerExtention.service';
 import {NotificationService} from 'src/app/services/notification.service';
 
 // PROVIDER IMPORTS
-import {EnvServiceProvider} from 'src/app/providers/env.service.provider';
-import {AddRemoveByConceptModalComponent} from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
-import {ScrollTopComponent} from 'src/app/components/scroll-top/scroll-top.component';
-import {ReadonlyTextModalComponent} from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
-import {ReadyForPublicationModalComponent} from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
-import {WorkflowHistoryNotesModalComponent} from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
-import {AddRemoveConceptsComponent} from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
-import {AuthGuardGuard} from 'src/app/services/authentication/auth-guard.guard';
-import {LoginComponent} from 'src/app/auth/login/login.component';
-import {ReviewModalComponent} from 'src/app/components/review-modal/review-modal.component';
-import {LandingPageComponent} from './pages/landing-page/landing-page.component';
-import {UpgradeModalComponent} from './components/upgrade-modal/upgrade-modal.component';
-import {FinishUpgradeModalComponent} from './components/finish-upgrade-modal/finish-upgrade-modal.component';
-import {AdjudicateUpgradeModalComponent} from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
-import {UsersService} from './services/rest/users.service';
-import {
-    RemoveDashboardComponentModalComponent
-} from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
-import {RefsetFeedbackListComponent} from './components/refset-feedback-list/refset-feedback-list.component';
-import {CommonModule} from '@angular/common';
-import {CustomTooltipComponent} from './components/custom-tooltip/custom-tooltip.component';
-import {ComposeModalComponent} from './components/compose-modal/compose-modal.component';
-import {DomService} from './services/dom.service';
-import {PaginationModule} from './components/pagination/pagination.module';
-import {ArtifactsService} from './services/rest/artifacts.service';
-import {AuditService} from './services/rest/audit.service';
-import {DirectivesModule} from './directives/directives.module';
-import {RefsetMetaTableComponent} from './components/refset-meta-table/refset-meta-table.component';
-import {ShareRefsetModalComponent} from './components/share-modal/share-refset-modal.component';
+import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
+import { AddRemoveByConceptModalComponent } from 'src/app/components/add-remove-by-concept-modal/add-remove-by-concept-modal.component';
+import { ScrollTopComponent } from 'src/app/components/scroll-top/scroll-top.component';
+import { ReadonlyTextModalComponent } from 'src/app/components/readonly-text-modal/readonly-text-modal.component';
+import { ReadyForPublicationModalComponent } from 'src/app/components/ready-for-publication-modal/ready-for-publication-modal.component';
+import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-history-notes-modal/workflow-history-notes-modal.component';
+import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
+import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
+import { LoginComponent } from 'src/app/auth/login/login.component';
+import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
+import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
+import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
+import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
+import { UsersService } from './services/rest/users.service';
+import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
+import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
+import { CommonModule } from '@angular/common';
+import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
+import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
+import { DomService } from './services/dom.service';
+import { PaginationModule } from './components/pagination/pagination.module';
+import { ArtifactsService } from './services/rest/artifacts.service';
+import { AuditService } from './services/rest/audit.service';
+import { DirectivesModule } from './directives/directives.module';
+import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
+import { ShareRefsetModalComponent } from './components/share-modal/share-refset-modal.component';
+import { CreateRefsetComponent } from './components/create-refset/create-refset.component';
 import {LandingComponent} from './pages/landing/landing-page.component';
 
 const appRoutes: Routes = [
@@ -225,6 +224,7 @@ const appRoutes: Routes = [
         CategoryFilterComponent,
         DateTextFilterComponent,
         CreateNewRefsetComponent,
+        CreateRefsetComponent,
         ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,

@@ -436,6 +436,8 @@ export class RefsetDetails implements OnInit {
                 this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
                 this.refsetBranchPath = RefsetUtility.getBranchPath(results);
                 this.refsetData = results;
+                const channel = new BroadcastChannel('refsetDataChannel');
+                channel.postMessage(UiUtility.getRoleString(this.refsetData.roles));
                 console.log(this.refsetData);
                 this.refsetService.setRefsetInformation(this.refsetData);
                 this.allowedToEdit = false;
@@ -459,6 +461,7 @@ export class RefsetDetails implements OnInit {
                         tags: this.refsetData.tags,
                         referenceType: this.refsetData.type,
                         privateRefset: this.refsetData.privateRefset,
+                        localSet: this.refsetData.localSet,
                         versionDate: this.refsetData.versionDate,
                         versionNotes: this.refsetData.versionNotes
                     };
@@ -1017,7 +1020,7 @@ export class RefsetDetails implements OnInit {
                             'refset-tool-details-column-description',
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
-                        tooltipField: i.toString(),
+                        tooltipValueGetter: this.descriptionValueGetter
                     });
                 }
 
@@ -1027,14 +1030,14 @@ export class RefsetDetails implements OnInit {
                             field: 'memberEffectiveTime',
                             colId: 'modified',
                             flex: 1,
-                            minWidth: 180,
-                            maxWidth: 180,
+                            minWidth: 190,
+                            maxWidth: 190,
                             headerName: 'Last Modified Date',
                             cellClass:
                                 'refset-tool-details-column-modified-date',
                             valueGetter:
                                 UiUtility.gridDateValueGetter,
-                            tooltipField: 'memberEffectiveTime',
+                            tooltipValueGetter: UiUtility.gridDateValueGetter,
                             sort: 'desc',
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
@@ -1070,14 +1073,16 @@ export class RefsetDetails implements OnInit {
                 this.membersGridApi.setRowData([]);
                 this.toggleLoadingSpinner(false);
             }
+
         });
 
-        // set placeholders on the grid floating filter fields
-        UiUtility.applyGridPlaceholders('.ag-floating-filter-full-body .ag-input-field-input');
+
     }
 
     onMembersColumnsLoaded() {
         this.membersGridChooserManualStateRefresh = new Boolean(true);
+        UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
+
     }
 
     descriptionValueGetter = function (params) {
@@ -1697,7 +1702,6 @@ export class RefsetDetails implements OnInit {
     }
 
     notesEditable(index: number, data: any): boolean {
-        console.log(`Index: ${index}`);
         return index === 0 && data.workflowStatus === this.refsetData.workflowStatus && (this.allowedToEdit || this.allowedToReview);
     }
 }

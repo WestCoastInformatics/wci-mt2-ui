@@ -1,6 +1,6 @@
 <div class="content-header">
     <div class="row header-title">
-        <span class="title-label">My Dashboard</span>
+        <span class="title-label dashboard-title">My Dashboard</span>
     </div>
 </div>
 <div class="content-wrapper">
@@ -58,26 +58,15 @@
             <div class='col-md-8 col-12'>
                 <section>
                     <div class='section-header'>My Reference Sets</div>
-                    <div class='dashboard-section pr-2 pl-2'>
-                        <!-- <mat-form-field floatLabel="never" class="example-form-field" appearance="fill">
-                                    <input matInput type="text"
-                                        placeholder="Search"
-                                        [(ngModel)]="searchText" />
-                                    <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
-                                        (click)="searchText = ''">
-                                        <mat-icon>close</mat-icon>
-                                    </button>
-                                </mat-form-field> -->
-                        <div class="ag-theme-alpine">
-                            <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
-                            </ag-grid-angular>
+                    <div class="ag-theme-alpine pr-2 pl-2">
+                        <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%">
+                        </ag-grid-angular>
 
-                            <!-- Workflow Status Templates -->
-                            <ng-template #dashboardWorkflowStatusSection let-params>
-                                <workflow-status-badge [status]="params?.data?.workflowStatus">
-                                </workflow-status-badge>
-                            </ng-template>
-                        </div>
+                        <!-- Workflow Status Templates -->
+                        <ng-template #dashboardWorkflowStatusSection let-params>
+                            <workflow-status-badge [status]="params?.data?.workflowStatus">
+                            </workflow-status-badge>
+                        </ng-template>
                     </div>
                 </section>
             </div>

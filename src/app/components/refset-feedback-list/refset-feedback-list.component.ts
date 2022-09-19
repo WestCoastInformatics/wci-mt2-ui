@@ -177,7 +177,9 @@ export class RefsetFeedbackListComponent implements OnInit {
                 headerName: 'Author',
                 minWidth: 120,
                 unSortIcon: true,
-                tooltipField: 'Author',
+                tooltipValueGetter: (params) => {
+                    return params?.data?.posts[0]?.user?.name;
+                },
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.authorSection },
                 valueGetter: (params) => {
@@ -187,7 +189,9 @@ export class RefsetFeedbackListComponent implements OnInit {
             {
                 field: 'subject',
                 headerName: 'Feedback Topic',
-                tooltipField: 'Feedback Topic',
+                tooltipValueGetter: (params) => {
+                    return params.data.subject;
+                },
                 flex: 2,
                 minWidth: 300,
                 unSortIcon: true,
@@ -202,7 +206,9 @@ export class RefsetFeedbackListComponent implements OnInit {
                 headerName: 'Status',
                 maxWidth: 125,
                 unSortIcon: true,
-                tooltipField: 'Status',
+                tooltipValueGetter: (params) => {
+                    return params.data.status;
+                },
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     names: [
@@ -218,16 +224,18 @@ export class RefsetFeedbackListComponent implements OnInit {
                 maxWidth: 210,
                 unSortIcon: true,
                 sort: 'desc',
-                tooltipField: 'Last Comment',
+                tooltipValueGetter: UiUtility.gridDateValueGetter,
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
                 floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }
             },
-            { field: 'numberReplies', headerName: 'Replies', maxWidth: 100, unSortIcon: true, tooltipField: 'Replies', resizable: false, filter: false }
+            {
+                field: 'numberReplies', headerName: 'Replies', minWidth: 120, maxWidth: 150, unSortIcon: true, tooltipValueGetter: (params) => {
+                    return params.data.numberReplies;
+                }, resizable: false, filter: false
+            }
         ];
 
-        // set placeholders on the grid floating filter fields
-        UiUtility.applyGridPlaceholders('#discussionThreadListGridSection .ag-floating-filter-full-body .ag-input-field-input');
     }
 
     onGridReady = (gridReadyParams) => {
@@ -266,6 +274,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 }
 
                 UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
+                UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
             },
             error: (error) => {
 

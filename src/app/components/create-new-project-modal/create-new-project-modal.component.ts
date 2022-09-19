@@ -31,6 +31,7 @@ export class CreateNewProjectModalComponent {
 
   @Input() edition: any;
   @Output() changeLockedStatus = new EventEmitter<any>(true);
+  firstLoad = true;
 
   constructor(
     private modalService: NgbModal,
@@ -43,7 +44,15 @@ export class CreateNewProjectModalComponent {
     private authenticationService: AuthenticationService
   ) { }
 
+  setAutoFocus(focusElement: any) {
+    if (this.firstLoad) {
+      focusElement.focus();
+      this.firstLoad = false;
+    }
+  }
+
   openCreateNewProjectModal(createNewProjectDialog: NgbModal) {
+    this.firstLoad = true;
 
     if (CodeUtility.hasValue(this.edition)) {
 

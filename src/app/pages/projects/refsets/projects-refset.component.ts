@@ -163,11 +163,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             ];
 
             this.columnDefs = [
-                { field: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false, unSortIcon: true },
-                { field: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 550, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
-                { field: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 150, resizable: false, unSortIcon: true },
+                { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false, unSortIcon: true },
+                { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 280, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
+                { field: 'assignedUser', tooltipField: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 150, resizable: false, unSortIcon: true },
                 {
-                    field: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
+                    field: 'workflowStatus', tooltipField: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
                     floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: workflowStatuses }, unSortIcon: true
                 },
                 {
@@ -438,6 +438,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
         sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
 
+        const channel = new BroadcastChannel('projectChannel');
+        channel.postMessage(UiUtility.getRoleString(this.selectedProject.roles));
         this.setNavigation();
 
         this.projectIsUat = this.selectedProject.name.includes('UAT');
@@ -568,6 +570,8 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
                     this.refsetGridPaging.manualStateRefresh = new Boolean(true);
                     this.showLoadingSpinner = false;
+                    UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
+
                 },
                     error => {
 
@@ -579,18 +583,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         };
 
         gridReadyParams.api.setDatasource(dataSource);
-
-        // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
-
-            if (obj.attributes['disabled']) { // skip columns with disabled filter
-                return;
-            }
-
-            const label = obj.getAttribute('aria-label');
-            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-            obj.setAttribute('placeholder', value);
-        });
 
     }
 

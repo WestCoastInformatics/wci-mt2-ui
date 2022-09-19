@@ -15,13 +15,13 @@
     <div class="container-fluid ready-for-review-container-fluid">
         <div class="modal-body pr-0 pl-0 pb-0">
             <div class="topic-content mb-3">
-                <mat-form-field floatLabel="never" appearance="fill" class="discussion-topic-field">
+                <mat-form-field floatLabel="never" appearance="legacy" class="discussion-topic-field">
                     <mat-label>Description</mat-label>
                     <input matInput type="text" [(ngModel)]="artifact.description" ngbAutofocus placeholder="Add a Description for the artifact" />
                 </mat-form-field>
             </div>
             <div class="topic-content mb-3" *ngIf="artifact.fileName">
-                <mat-form-field floatLabel="never" appearance="fill" class="discussion-topic-field">
+                <mat-form-field floatLabel="never" appearance="legacy" class="discussion-topic-field">
                     <mat-label>Artifact Name</mat-label>
                     <input matInput type="text" [(ngModel)]="artifact.fileName" placeholder="Add a name for the artifact" readonly />
                 </mat-form-field>

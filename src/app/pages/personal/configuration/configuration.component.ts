@@ -19,6 +19,7 @@ export class PersonalConfigurationComponent implements OnInit {
   profileCompanyValue = '';
   profileEmailValue = '';
   selectedTeam: any;
+  emailError = '';
   currentUserId: any;
   user: any;
   uiUtility = UiUtility;
@@ -79,7 +80,7 @@ export class PersonalConfigurationComponent implements OnInit {
       if (user) {
 
         this.authService.updateUser(user);
-        this.notificationService.show("Profile was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+        this.notificationService.show('Profile was successfully updated', 'Success', 'success', { timeOut: 3000, extendedTimeOut: 0 });
       }
     });
   }
@@ -91,11 +92,11 @@ export class PersonalConfigurationComponent implements OnInit {
     if (file) {
 
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
       this.userService.updateUserPhoto(this.currentUserId, formData).subscribe((iconUri) => {
 
-        this.notificationService.show("Profile photo was successfully updated", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+        this.notificationService.show('Profile photo was successfully updated', 'Success', 'success', { timeOut: 3000, extendedTimeOut: 0 });
         this.user.iconUri = iconUri;
         this.authService.updateUser(this.user);
       });
@@ -104,19 +105,36 @@ export class PersonalConfigurationComponent implements OnInit {
 
   onPhotoDelete() {
 
-    if (confirm("Are you sure you want to delete this profile photo?")) {
+    if (confirm('Are you sure you want to delete this profile photo?')) {
       this.userService.deleteUserPhoto(this.currentUserId).subscribe(() => {
         try {
-          this.notificationService.show("Profile photo was successfully deleted", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+          this.notificationService.show('Profile photo was successfully deleted', 'Success', 'success', { timeOut: 3000, extendedTimeOut: 0 });
           this.user.iconUri = null;
           this.authService.updateUser(this.user);
-        }
-        catch {
-          this.notificationService.show("Failed to delete Profile photo", "Error", 'error', { timeOut: 3000, extendedTimeOut: 0 });
+        } catch {
+          this.notificationService.show('Failed to delete Profile photo', 'Error', 'error', { timeOut: 3000, extendedTimeOut: 0 });
           return;
         }
 
       });
     }
+  }
+
+  isValidEmail(): boolean {
+
+    const lower = this.profileEmailValue?.toLowerCase() ?? '';
+    const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+    if (flag == null) {
+      this.emailError = 'Email is invalid.';
+    } else {
+      this.emailError = '';
+    }
+
+    return flag != null;
+  }
+
+  onKeyDownEvent(event: any) {
+    this.isValidEmail();
   }
 }

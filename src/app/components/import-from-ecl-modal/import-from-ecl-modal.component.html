@@ -2,8 +2,8 @@
     <img src="assets/wrench-icon.svg" alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL" />
 </button> -->
 
-<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import Concepts from ECL"
-  aria-label="Import Concepts from ECL" (click)="openImportFromEclModal(importFromEclDialog)">ECL
+<button mat-menu-item alt="Document symbol denoting an upload icon" title="Import Concepts from ECL" aria-label="Import Concepts from ECL"
+  (click)="openImportFromEclModal(importFromEclDialog)">ECL
   Builder</button>
 
 <ng-template #importFromEclDialog let-modal>
@@ -14,8 +14,7 @@
       Add or Remove Members By ECL
     </h4>
 
-    <button type="button" class="close dialog-close-x" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x">&times;</span>
     </button>
   </div>
@@ -28,14 +27,12 @@
         <div class="import-from-label import-from-ecl-label"> Enter a valid ECL statement or use the
           ECL Builder.</div>
 
-        <mat-form-field floatLabel="never" class="import-from-ecl-field" appearance="outline">
-          <textarea id="importFromEclInput" matInput class="import-from-ecl-text-area"
-            [(ngModel)]="ecl"></textarea>
+        <mat-form-field floatLabel="never" class="import-from-ecl-field" appearance="legacy">
+          <textarea id="importFromEclInput" matInput class="import-from-ecl-text-area" [(ngModel)]="ecl"></textarea>
         </mat-form-field>
 
-        <button (click)="openEclBuilder('importFromEclInput')" mat-raised-button color="primary"
-          aria-hidden="false" class="refset-tool-action-button ecl-builder-action-button"
-          ng-reflect-color="primary" style="
+        <button (click)="openEclBuilder('importFromEclInput')" mat-raised-button color="primary" aria-hidden="false"
+          class="refset-tool-action-button ecl-builder-action-button" ng-reflect-color="primary" style="
                 font-size: 12px;">ECL Builder
         </button>
 
@@ -46,23 +43,18 @@
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-    <button type="button" (click)="callMemberOperation('add')" mat-raised-button color="green"
-      aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members"
+    <button type="button" (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Add Members"
       title="Add Members" ng-reflect-color="green">
       Add Members
     </button>
 
-    <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')"
-      mat-raised-button color="red" aria-hidden="false"
-      class="refset-tool-action-button import-from-remove-members-button"
-      aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
+    <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')" mat-raised-button color="red" aria-hidden="false"
+      class="refset-tool-action-button import-from-remove-members-button" aria-label="Remove Members" title="Remove Members" ng-reflect-color="red">
       Remove Members
     </button>
 
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
-      aria-hidden="false" class="refset-tool-action-button"
-      style="margin-left: 10px; background-color: red" aria-label="Cancel" title="Cancel"
-      ng-reflect-color="primary">
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 10px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
       Cancel
     </button>
 

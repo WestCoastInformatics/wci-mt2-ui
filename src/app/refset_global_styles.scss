@@ -226,7 +226,7 @@ nav a span {
 }
 
 .header-title {
-  font-family: Poppins, "Helvetica Neue", Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: 16px;
   font-weight: 300
 }
@@ -426,6 +426,13 @@ button.refset-tool-table-action-icon {
 
 .material-icons {
   font-size: 24px;
+}
+
+.refset-id-icons {
+    font-size: 16px;
+    margin-left: 3px;
+    height: 16px !important;
+    width: 16px !important;
 }
 
 .mat-icon-button i,
@@ -642,7 +649,7 @@ button.refset-tool-table-action-icon {
   }
 
   .ag-ltr input[class^="ag-"][type="text"]:focus {
-    border-bottom: 1px solid $cerulean;
+    border-bottom: 2px solid $cerulean;
     box-shadow: none;
   }
 }
@@ -910,6 +917,9 @@ select {
   max-width: 700px;
   padding-right: 15px;
   padding-left: 25px;
+  color: #555555;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400;
   align-items: center;
 }
 
@@ -948,7 +958,7 @@ select {
   //box-shadow: 0 6px 4px -4px rgb(0 0 0 / 40%);
   padding-right: 0px;
   z-index: 1000;
-  padding-top: 30px;
+  padding-top: 20px;
 }
 
 .refset-tool-details-metadata-footer {
@@ -1453,7 +1463,21 @@ select {
 }
 
 .mat-form-field .mat-form-field-wrapper {
-  padding-bottom: 1.4em
+  padding-bottom: 1.4em;
+}
+
+.category-filter-select {
+  padding-top: 10px;
+  width: 100%;
+  text-transform: capitalize;
+
+  .mat-select-arrow-wrapper {
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
+  .mat-form-field-infix {
+    top: 7px;
+  }
 }
 
 .mat-form-field-underline {
@@ -2077,6 +2101,7 @@ select {
       color: #a4a4a4;
       margin: 0;
       margin-bottom: 0.25rem;
+
     }
 
     .info {
@@ -2396,7 +2421,11 @@ select {
 }
 
 .project-drop-down {
-  width: 275px;
+  width: 320px;
+}
+
+.projects-dropdown-block {
+  display: block;
 }
 
 .project-drop-down .mat-select-arrow-wrapper {
@@ -3205,6 +3234,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
     width: 75px;
   }
 
+
   .button-group-review {
     background-color: white;
     width: 75px;
@@ -4009,14 +4039,15 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   z-index: 2001 !important;
 }
 
+.ag-theme-alpine .ag-root-wrapper {
+  border-color: #eeeeee;
+  border-width: 1px;
+}
+
 #refsetDirectoryPage {
   .ag-theme-alpine .ag-header {
     width: auto;
     z-index: 99;
-  }
-
-  .ag-theme-alpine .ag-root-wrapper {
-    border: none !important;
   }
 
   .refset-tool-pagination-container {
@@ -4184,7 +4215,7 @@ img.refset-tool-edition-flag {
 }
 
 .workflow-stepper-bar {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 @media only screen and (max-width: 1120px) {
@@ -4210,6 +4241,13 @@ img.refset-tool-edition-flag {
   margin-bottom: 15px;
 }
 
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
+  border-width: 1px !important;
+  color: rgba(0, 0, 0, 0.12) !important;
+}
+
 .content-header {
   position: sticky;
   z-index: 2;
@@ -4218,7 +4256,7 @@ img.refset-tool-edition-flag {
   .header-title {
     align-items: baseline;
     background-color: white;
-    padding-top: 10px;
+    height: 73px;
     box-shadow: 0 5px 7px -2px grey;
 
     .title-label {
@@ -4229,6 +4267,10 @@ img.refset-tool-edition-flag {
       font-weight: 400;
       font-size: 1.25em;
       padding-bottom: 15px;
+    }
+
+    .dashboard-title {
+      padding-top: 20px;
     }
   }
 }
@@ -4364,6 +4406,7 @@ $sidebar-width: 294px;
   z-index: 1;
   position: relative;
 
+
   .wrapper {
     min-height: 100%;
     background-color: #434955;
@@ -4402,6 +4445,7 @@ $sidebar-width: 294px;
       li:hover {
         color: $main-color;
       }
+
 
       li.active {
         border-left: 5px solid $main-color;
@@ -4741,6 +4785,7 @@ $sidebar-width: 294px;
     height: 10%;
     width: 100%;
   }
+
 
   .projects-profile-mid {
     height: 80%;
@@ -5177,7 +5222,7 @@ $sidebar-width: 294px;
 }
 
 .discussion-icon-text {
-  font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   font-weight: 500;
   font-size: 1rem;
   display: flex;
@@ -5384,4 +5429,12 @@ app-date-text-floating-filter {
 
 .ag-theme-alpine.refset-tool-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
   background-color: #efefef;
+}
+.refset-radio .mat-radio-label{
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+.atlwdg-trigger.atlwdg-RIGHT {
+  top: 50% !important;
 }
