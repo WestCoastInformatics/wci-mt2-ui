@@ -78,7 +78,7 @@ export class InvitePeopleModalComponent implements OnInit {
             recipient: this.email
         };
 
-        this.dataService.inviteByEmail(this.refsetInternalId, params).subscribe(
+        this.dataService.inviteByEmail(this.refset.id, params).subscribe(
             (data) => {
                 this.notificationService.show('The invitation were sent successfully', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();

@@ -21,9 +21,7 @@
                 </td>
                 <td>
                     <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
-                           style="width: 250px; padding-bottom: 9px"  />
-
-
+                           style="width: 250px; padding-bottom: 9px" />
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">
@@ -34,10 +32,9 @@
                     <label class="modal-label-description">Message:</label>
                 </td>
                 <td>
-                    <mat-form-field class="import-from-list-field" appearance="outline">
-                        <textarea matInput class="import-from-list-text-area" placeholder="Add an optional message for your invitation recipient" [(ngModel)]="description">test</textarea>
+                    <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
+                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description" placeholder="Add an optional message for your invitation recipient"></textarea>
                     </mat-form-field>
-
                 </td>
             </tr>
         </table>
