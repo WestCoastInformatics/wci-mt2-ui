@@ -92,6 +92,7 @@ $heading-font: 'museo100',sans-serif;
     align-items: center;
     flex-direction: row-reverse;
     font-size: 14px;
+    justify-content: center;
 }
 .main-nav .search .search-form{
     position: relative;
@@ -184,8 +185,8 @@ $heading-font: 'museo100',sans-serif;
         font-size: small;
     }
     .main-nav .search{
-        justify-content: center;
-        padding-bottom: 15px;
+
+        //padding-bottom: 15px;
 
         .search-form{
             flex-grow: 1;
