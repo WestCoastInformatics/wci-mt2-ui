@@ -25,7 +25,7 @@
             <div class="organization-profile-mid">
               <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
                 <mat-label>Name</mat-label>
-                <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                <input matInput type="text" [disabled]="true" name="name" [(ngModel)]="profileNameValue">
               </mat-form-field>
 
               <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
