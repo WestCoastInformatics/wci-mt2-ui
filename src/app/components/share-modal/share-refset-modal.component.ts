@@ -56,7 +56,7 @@ export class ShareRefsetModalComponent implements OnInit {
 
     newForm(): void {
         this.form = this.fb.group({
-            recipient: ['', [Validators.compose([emailValidator(), Validators.required])]],
+            recipient: ['', [Validators.required]],
             additionalMessage: ['']
         });
     }

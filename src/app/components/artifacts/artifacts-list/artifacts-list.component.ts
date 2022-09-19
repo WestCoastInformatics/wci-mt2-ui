@@ -62,6 +62,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 headerName: 'Uploaded Date',
                 unSortIcon: true,
                 sortable: true,
+                sort: 'desc',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
                 floatingFilterComponent: 'dateTextFilterComponent'
@@ -108,6 +109,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 sortable: true,
                 resizable: true,
                 suppressMenu: true,
+                sortingOrder: ['asc', 'desc'],
                 flex: 1,
                 filterParams: {
                     debounceMs: 2000

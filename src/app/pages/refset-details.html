@@ -118,7 +118,8 @@
 
                     <br>
 
-                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" class="manage-refset-menu">
+                    <button *ngIf="allowedToEdit || allowedToReview" mat-button [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
+                            class="manage-refset-menu">
                         Manage Refset <span class="down-arrow-for-menu">&#x25BC;</span>
                     </button>
 
@@ -128,8 +129,6 @@
                           [refsetInternalId]="id" [projectsRefsetComponent]="projectsRefsetComponent" [inputProperties]="editMetadataProperties"
                           (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
-
-                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
 
                         <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy" [status]="refsetStatus"
                           [workflowHistoryNotes]="workflowHistoryNotes">
@@ -148,7 +147,7 @@
                     </app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
-                   <button mat-button [matMenuTriggerFor]="downloadMenu" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
+                   <button mat-button [matMenuTriggerFor]="downloadMenu" [matMenuTriggerRestoreFocus]="false" class="download-menu">Download <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #downloadMenu="matMenu">
                         <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
@@ -172,7 +171,7 @@
 
                     <span class="menu-spacer">&nbsp;</span>
 
-                    <button mat-button [matMenuTriggerFor]="communicationMenu" class="communication-menu">Communication <span
+                    <button mat-button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false" class="communication-menu">Communication <span
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
@@ -541,12 +540,9 @@
 
                                     <!-- Concept Code Templates -->
                                     <ng-template #conceptCodeSection let-params>
-
-                                        <add-remove-concepts-icons [concept]="params?.data" [hidden]="!allowedToEdit" [isParentConcept]="false" [refsetType]="refsetData?.type"
+                                        <add-remove-concepts-icons class="mb--2" [concept]="params?.data" [hidden]="!allowedToEdit" [isParentConcept]="false" [refsetType]="refsetData?.type"
                                           (processSelection)="addRemoveConcept($event)">
                                         </add-remove-concepts-icons>
-                                        {{ params?.data?.code }}
-
                                     </ng-template>
 
                                     <!-- Action Templates -->

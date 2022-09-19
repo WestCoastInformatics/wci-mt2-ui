@@ -172,7 +172,7 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         let params: any = {
-            name: name,
+            name: this.capitalizeFirstLetterOfString(name),
             parentConceptId: parentConceptId,
             moduleId: '',
             refsetId: refsetId,
@@ -207,6 +207,16 @@ export class CreateNewRefsetComponent implements OnInit {
                 this.showLoadingSpinner = false;
             }
         );
+    }
+
+    capitalizeFirstLetterOfString(stringValue: string): string {
+        if (stringValue) {
+            return stringValue.toLowerCase().replace(/(?:^|\s|[-"'([{])+\S/g, (c) =>
+                c.toUpperCase()
+            );
+        }
+
+        return stringValue;
     }
 
     generateDefinitionClausesJson(definitionClauses: []) {
@@ -385,6 +395,7 @@ export class CreateNewRefsetComponent implements OnInit {
             template: this.infoDialog,
             data: null,
             showCancel: false,
+            confirmText: 'OK',
         };
 
         const dialogOptions = {

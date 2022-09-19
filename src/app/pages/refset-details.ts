@@ -298,6 +298,7 @@ export class RefsetDetails implements OnInit {
                     sortable: true,
                     resizable: true,
                     suppressMenu: true,
+                    sortingOrder: ['asc', 'desc'],
                     filter: true,
                     floatingFilter: true,
                     floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
@@ -458,7 +459,7 @@ export class RefsetDetails implements OnInit {
                     next: (threads) => {
                         this.unresolvedDiscussionCount = 0;
                         for (const discussion of threads.items.filter(t => !t.privateThread ||
-                            t.posts.length > 0 && t.posts[0].user.userName === this.user.userName)) {
+                            t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName || this.user?.roles?.includes('all-all-admin')))) {
 
                             if (discussion.status === 'Open') {
                                 this.unresolvedDiscussionCount++;
@@ -972,8 +973,11 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.membersColumnDefs = [{
-                    field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, unSortIcon: true, tooltipField: 'code', resizable: false,
-                    cellClass: 'refset-tool-details-column-concept-id', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }
+                    headerName: '', colId: 'add-remove', maxWidth: 40, resizable: false, filter: false, sort: false, cellClass: 'refset-tool-details-column-remove-icon',
+                    cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }
+                }, {
+                    field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, tooltipField: 'code', unSortIcon: true,
+                    resizable: false, cellClass: 'refset-tool-details-column-concept-id'
                 }
                 ];
 
@@ -1011,8 +1015,8 @@ export class RefsetDetails implements OnInit {
                             valueGetter:
                                 UiUtility.gridDateValueGetter,
                             tooltipField: 'memberEffectiveTime',
-                            sortingOrder: ['desc', 'asc', null],
                             sort: 'desc',
+                            unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true },
                         },
@@ -1057,11 +1061,13 @@ export class RefsetDetails implements OnInit {
     }
 
     descriptionValueGetter = function (params) {
-        return params?.data?.descriptions[params.colDef.field]?.term;
+        const term = params?.data?.descriptions[params.colDef.field]?.term;
+
+        return term[0].toUpperCase() + term.slice(1);
     };
 
     onMembersGridCellClick = (event) => {
-        if (event.column.colId === 'actions' || event.column.colId === 'code') {
+        if (event.column.colId === 'actions') {
             console.log(event);
         } else {
             const selectedRows = this.membersGridApi.getSelectedRows();

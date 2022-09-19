@@ -176,7 +176,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 },
                 {
                     field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 180, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
-                    floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, sort: 'desc', sortingOrder: ['desc', 'asc', null], unSortIcon: true
+                    floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, sort: 'desc', unSortIcon: true
                 },
                 { field: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
@@ -202,6 +202,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 defaultColDef: {
                     sortable: true,
                     filter: true,
+                    sortingOrder: ['asc', 'desc'],
                     floatingFilter: true,
                     floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
                     suppressMenu: true,

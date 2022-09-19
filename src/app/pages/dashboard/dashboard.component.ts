@@ -1,14 +1,14 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {Router} from '@angular/router';
-import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
-import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {RefsetUtility} from 'src/app/utilities/refset.utility';
-import {UiUtility} from 'src/app/utilities/ui.utility';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'app-dashboard',
@@ -57,14 +57,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
         this.titleService.setTitle('Refset Tool - Dashboard');
         this.breadcrumbService.setBreadcrumbs([
-            {path: '/dashboard', label: 'Dashboard'}
+            { path: '/dashboard', label: 'Dashboard' }
         ]);
         if (!this.authService.isUserLoggedIn) {
             this.authService.notAuthenticated();
         }
         this.currentUser = this.authService.getUser();
         this.refsetGridOptions = {
-            context: {componentParent: this},
+            context: { componentParent: this },
             rowModelType: 'infinite',
             onCellClicked: this.onGridCellClick,
             onGridReady: this.onGridReady,
@@ -76,8 +76,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 sortable: true,
                 filter: true,
                 floatingFilter: true,
-                floatingFilterComponentParams: {placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true},
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
                 suppressMenu: true,
+                sortingOrder: ['asc', 'desc'],
                 menuTabs: ['columnsMenuTab'],
                 resizable: true
             }
@@ -108,19 +109,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 unSortIcon: true,
                 cellClass: 'refset-tool-dashboard-column-workflow-status',
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: {template: this.workflowStatus},
+                cellRendererParams: { template: this.workflowStatus },
                 sortable: true,
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     suppressFilterButton: true, names: [
-                        {type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT'},
-                        {type: 'status', name: 'In Edit', value: 'IN_EDIT'},
-                        {type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE'},
-                        {type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW'},
-                        {type: 'status', name: 'In Review', value: 'IN_REVIEW'},
-                        {type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED'},
-                        {type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION'},
-                        {type: 'status', name: 'Published', value: 'PUBLISHED'}
+                        { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
+                        { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
+                        { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+                        { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
+                        { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
+                        { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+                        { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+                        { type: 'status', name: 'Published', value: 'PUBLISHED' }
                     ]
                 }
             },
@@ -131,9 +132,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 filter: false,
                 unSortIcon: true,
                 sortable: true,
-                sortingOrder: ['desc', 'asc', null],
+                sort: 'desc',
                 valueGetter:
-                UiUtility.gridDateValueGetter,
+                    UiUtility.gridDateValueGetter,
             }
         ];
 
@@ -144,7 +145,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
         const sortModel = [
-            {colId: 'modified', sort: 'desc'}
+            { colId: 'modified', sort: 'desc' }
         ];
         this.refsetGridApi.setSortModel(sortModel);
         const dataSource = {
@@ -187,7 +188,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     restParams.query = query;
                 }
                 this.data = [];
-                this.refsetService.getRefsets({...restParams, ...sort}).subscribe({
+                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
                     next: (results) => {
 
                         for (const refset of results.items) {

@@ -11,35 +11,41 @@
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid" [formGroup]="form" *ngIf="form">
-        <div class="modal-body pr-0 pl-0 pb-0">
-            <div class="topic-header mb-3">
-                Send someone an email invitation to join your organization as a collaborator
-            </div>
-            <div class="topic-content mb-3">
-                <mat-form-field appearance="fill" class="discussion-topic-field">
-                    <mat-label>Recipient Email</mat-label>
-                    <input matInput type="text" formControlName="recipient" ngbAutofocus
-                           placeholder="Enter recipient email address" />
-                    <mat-error>
-                        <ngx-form-error [control]="form.get('recipient')"></ngx-form-error>
-                    </mat-error>
-                </mat-form-field>
-            </div>
-            <div class="topic-content mb-3">
-                <mat-form-field appearance="fill" class="discussion-topic-field">
-                    <mat-label>Message</mat-label>
-                    <textarea matInput formControlName="additionalMessage"
-                              placeholder="Add an optional message for your invitation recipient" ></textarea>
-                </mat-form-field>
-            </div>
-        </div>
+    <div class="modal-body refset-tool-lockable">
+        <label class="modal-label-description">Send someone an email with a link to this Reference Set</label>
+        <table>
+
+            <tr>
+                <td>
+                    <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
+                </td>
+                <td>
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                           style="width: 250px; padding-bottom: 9px"  />
+
+
+                </td>
+            </tr>
+            <tr class="modal-error-message" [hidden]="!emailError">
+                <div>{{emailError}}</div>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label-description">Message:</label>
+                </td>
+                <td>
+                    <mat-form-field class="import-from-list-field" appearance="outline">
+                        <textarea matInput class="import-from-list-text-area" placeholder="Add an optional message for your invitation recipient" [(ngModel)]="description">test</textarea>
+                    </mat-form-field>
+
+                </td>
+            </tr>
+        </table>
+
     </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button aria-hidden="false" class="refset-tool-action-button refset-action-button default-btn mr-3" (click)="modal.dismiss('Cross click');">
-            Cancel
-        </button>
-        <button mat-raised-button color="primary" aria-hidden="false" [disabled]="!form.valid" class="refset-tool-action-button refset-action-button" (click)="onSave()">
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+        <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="sendInvitation()"
+                mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
             Send Email
         </button>
     </div>
