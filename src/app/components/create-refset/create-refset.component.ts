@@ -351,6 +351,7 @@ export class CreateRefsetComponent implements OnInit {
 
                 },
                 (error) => {
+                    this.modalService.dismissAll();  
                     this.showLoadingSpinner = false;
                 }
             );
