@@ -43,13 +43,13 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.columnDefs = [
             {
-                field: 'created', headerName: 'Date', unSortIcon: true, sortable: true, sortingOrder: ['desc', 'asc', null],
+                field: 'created', headerName: 'Date', tooltipValueGetter: UiUtility.gridDateValueGetter, flex: 1, unSortIcon: true, sortable: true, sortingOrder: ['desc', 'asc', null],
                 filterParams: { debounceMs: 2000 }, floatingFilterComponentParams: { debounceMs: 2000 },
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent'
             },
-            { field: 'modifiedBy', headerName: 'Modified By', unSortIcon: true, sortable: true, sort: 'desc' },
-            { field: 'message', headerName: 'Message', unSortIcon: true, sortable: true },
-            { field: 'details', headerName: 'Details', minWidth: 550, sortable: false }];
+            { field: 'modifiedBy', headerName: 'Modified By', tooltipField: 'modifiedBy', flex: 1, unSortIcon: true, sortable: true, sort: 'desc' },
+            { field: 'message', headerName: 'Message', tooltipField: 'message', flex: 1, unSortIcon: true, sortable: true },
+            { field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 550, sortable: false }];
 
         this.gridOptions = {
             context: { componentParent: this },
