@@ -255,7 +255,7 @@
                         Unassign
                     </button>
 
-                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')" [refsetData]="refsetData"
+                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION') && !this.refsetData?.localSet" [refsetData]="refsetData"
                       [labelPrefix]="inEditButtonPrefix" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')" (reloadPage)="initializeDetailsPage()">
                     </ready-for-publication-modal>
 
