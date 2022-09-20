@@ -90,7 +90,7 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.user = this.authenticationService.getUser();
         this.isUserLoggedIn = this.user && this.user.userName != this.authenticationService.GUEST_USER;
-        if (this.roles.includes('VIEWER') || this.roles.includes('ADMIN') || this.user.roles.includes('all-all-admin')) {
+        if (this.roles.includes('VIEWER') || this.roles.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')) {
             this.canViewPrivateThreads = true;
         }
     }
@@ -288,7 +288,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         for (const thread of this.threadsData) {
             if (thread.id === event.data.id) {
                 this.selectedThread = thread;
-                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user.roles.includes('all-all-admin')));
+                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')));
             }
         }
 
