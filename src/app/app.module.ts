@@ -53,12 +53,11 @@ import {CreateNewRefsetComponent} from './components/create-new-refset/create-ne
 import {ImportFromFileModalComponent} from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import {ImportFromListModalComponent} from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
 import {ImportFromEclModalComponent} from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
-import {
-    CreateNewOrganizationModalComponent
-} from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
+import {CreateNewOrganizationModalComponent} from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import {EmailRefsetModalComponent} from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import {CreateNewTeamModalComponent} from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import {AddMemberModalComponent} from 'src/app/components/add-member-modal/add-member-modal.component';
+import {BulkUpgradeModalComponent} from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
 import {CreateNewProjectModalComponent} from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
 import {AddRemoveConceptsIconsComponent} from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import {AddRemoveConceptGroupIconsComponent} from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
@@ -262,6 +261,7 @@ const appRoutes: Routes = [
         TeamsPeopleComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent,
+        BulkUpgradeModalComponent,
         LaunchComparisonModalComponent,
         RemoveDashboardComponentModalComponent,
         RefsetFeedbackListComponent,

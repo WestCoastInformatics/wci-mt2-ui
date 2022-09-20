@@ -1,0 +1,54 @@
+<button *ngIf="project?.roles?.includes('AUTHOR') || project?.roles?.includes('ADMIN')" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+	aria-label="Bulk Upgrade" ng-reflect-color="primary" (click)="openUpgradeModal(bulkUpgradeDialog)">
+	Bulk Upgrade
+</button>
+
+<ng-template #bulkUpgradeDialog let-modal>
+
+	<div class="modal-header rt2-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+			Start Bulk Upgrade for {{project?.edition?.organizationName}} Project {{project?.name}}
+		</h4>
+
+		<button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-body refset-tool-lockable">
+
+		<div class="create-new-refset-form-field" style="align-items: normal">
+
+			<div class="col create-new-refset-field create-new-refset-flex-weight">
+				<mat-form-field appearance="fill">
+					<mat-label>Refsets to Upgrade (use Ctrl-click to select more than one)</mat-label>
+					<label *ngIf="refsetsForUpgrade.length == 0">There are currently no refsets ready to upgrade</label>
+					<select matNativeControl autofocus [multiple]=true [(ngModel)]="selectedRefsets">
+						<option *ngFor="let refset of refsetsForUpgrade" [ngValue]="refset">
+							{{ refset.name }}
+						</option>
+					</select>
+				</mat-form-field>
+			</div>
+
+		</div>
+
+		<div class="modal-footer rt2-modal-footer refset-tool-lockable">
+
+			<button [disabled]="selectedRefsets.length == 0" type="button" (click)="upgradeRefsets()" mat-raised-button
+				color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Upgrade"
+				ng-reflect-color="green">
+				Upgrade
+			</button>
+
+			<button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
+				class="refset-tool-action-button" style="margin-left: 3px; background-color: red" aria-label="Cancel"
+				title="Cancel" ng-reflect-color="primary">
+				Cancel
+			</button>
+
+		</div>
+	</div>
+
+</ng-template>

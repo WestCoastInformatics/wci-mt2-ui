@@ -102,12 +102,7 @@
                   [existingBranchVersions]="existingBranchVersions">
                 </create-new-refset>
             </div> -->
-            <div *ngIf="false" style="display: inline; padding-left: 10px">
-                <button disabled mat-raised-button color="primary" aria-hidden="false" #createRefsetButton class="refset-tool-action-button isDisabled"
-                  aria-label="Bulk Publication" title="Bulk Publication" ng-reflect-color="primary">
-                    Bulk Publication
-                </button>
-            </div>
+            <bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
         </div>
 
         <!-- Reference Set Table -->
