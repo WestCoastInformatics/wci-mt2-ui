@@ -1702,6 +1702,16 @@ select {
   max-width: 200px;
 }
 
+.create-new-refset-row-spacing {
+  height: 30px;
+  margin-top: 10px;
+
+}
+
+.wizard-types {
+  margin-top: 20px !important;
+}
+
 .col.create-new-refset-field {
   width: 900px;
   max-width: 900px;
@@ -1722,6 +1732,10 @@ select {
     width: calc(100% - 120px);
     margin-right: 5px;
   }
+}
+
+.field-text {
+  padding-left: 5px !important;
 }
 
 .tag-container {
@@ -2640,8 +2654,13 @@ div.modal-footer.rt2-modal-footer {
   align-items: center;
 }
 
+.create-new-refset-concept-radio {
+  padding-left: 5px;
+  padding-top: 10px;
+}
+
 #create-new-refset-assign-refset-field {
-  align-items: normal
+  margin-top: -10px;
 }
 
 .create-new-refset-project-name {
@@ -2649,8 +2668,20 @@ div.modal-footer.rt2-modal-footer {
   align-items: normal;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
   align-items: center;
+}
+
+.create-refset-radio-button {
+  text-transform: capitalize;
+  color: rgba(102, 102, 102, 102);
+  font-size: 14px;
+}
+
+.create-refset-selected-type {
+  text-transform: capitalize;
+  color: rgba(102, 102, 102, 102);
+  font-size: 14px;
+  padding-left: 10px !important;
 }
 
 .create-new-refset-flex-weight {
