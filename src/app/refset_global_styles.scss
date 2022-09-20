@@ -1466,11 +1466,24 @@ select {
   padding-bottom: 1.4em;
 }
 
+  .date-selector {
+    margin-top: 25px;
+
+    .category-filter-select {
+      border: solid;
+      width: fit-content;
+      border-width: 1px;
+      border-color: #666;
+    }
+    mat-form-field {
+      visibility: hidden;
+    }
+  }
+
 .category-filter-select {
   padding-top: 10px;
   width: 100%;
   text-transform: capitalize;
-
   .mat-select-arrow-wrapper {
     padding-top: 0px;
     padding-bottom: 10px;

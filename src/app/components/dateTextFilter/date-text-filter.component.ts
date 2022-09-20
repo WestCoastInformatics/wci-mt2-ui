@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AgFrameworkComponent } from 'ag-grid-angular';
 import { IFloatingFilter, IFloatingFilterParams, TextFilter, TextFilterModel } from 'ag-grid-community';
+import * as moment from 'moment';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 export interface DateTextFloatingFilterParams extends IFloatingFilterParams {
@@ -23,8 +24,11 @@ export class DateTextFilterComponent implements IFloatingFilter, AgFrameworkComp
 		this.value = this.params.value;
 	}
 
-	valueChanged() {
-
+	valueChanged(isSelector: boolean, event?: any, picker?: any) {
+		if (isSelector) {
+			picker._model.selection = ''
+			this.value = moment(new Date(event.value)).format('YYYY-MM-DD')
+		}
 		let valueToUse;
 
 		if (this.currentValue != "" && this.value == "") {
