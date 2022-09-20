@@ -121,14 +121,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
                     suppressFilterButton: true, names: [
-                        { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
                         { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
-                        { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-                        { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
                         { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
-                        { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+                        { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+                        { type: 'status', name: 'Published', value: 'PUBLISHED' },
+                        { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
                         { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
-                        { type: 'status', name: 'Published', value: 'PUBLISHED' }
+                        { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
+                        { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' }
                     ]
                 }
             },
