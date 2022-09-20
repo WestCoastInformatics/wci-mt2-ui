@@ -155,67 +155,32 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                 };
                 query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
                 restParams.query = query;
-                this.auditService.getRefsetAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
-                    next: (results) => {
-                        this.showPaging = results.total > 0;
-                        if (results.items.length === 0 && pageNumber > 1) {
+                if (window.location.href.includes("organizations")) {
+                    this.auditService.getOrgAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
+                        next: (results) => {
+                            this.setUpAuditTable(results, pageNumber, rowParams);
 
-                            this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
-                            this.gridPaging.totalKnown = true;
-                            this.paginationComponent.goToPage(pageNumber - 1);
-
-                            return;
-                        }
-
-                        const data = results.items;
-                        this.data = data;
-                        if (results.total) {
-                            results.totalKnown = true;
-                        }
-                        if (data?.length > 0) {
-
-                            this.gridApi.hideOverlay();
-                            let currentRowCount = null;
-                            let lastRow = -1;
-
-                            if (results.totalKnown || data.length < this.gridApi.paginationGetPageSize() || this.gridPaging.totalKnown) {
-
-                                if (results.totalKnown) {
-                                    lastRow = results.total;
-
-                                } else if (this.gridPaging.totalKnown) {
-                                    lastRow = this.gridPaging.totalRows;
-
-                                } else {
-
-                                    currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
-                                    lastRow = currentRowCount;
-                                }
-
-                                this.gridPaging.totalRows = lastRow;
-                                this.gridPaging.totalKnown = true;
-
-                            } else {
-                                currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
-                            }
-
-
-                            rowParams.successCallback(data, lastRow);
-
-                        } else {
+                        },
+                        error: (error) => {
 
                             this.gridApi.showNoRowsOverlay();
                             rowParams.successCallback([], 0);
                         }
+                    });
+                }
+                else if (window.location.href.includes("details")) {
+                    this.auditService.getRefsetAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
+                        next: (results) => {
+                            this.setUpAuditTable(results, pageNumber, rowParams);
 
-                        this.gridPaging.manualStateRefresh = Boolean(true);
-                    },
-                    error: (error) => {
+                        },
+                        error: (error) => {
 
-                        this.gridApi.showNoRowsOverlay();
-                        rowParams.successCallback([], 0);
-                    }
-                });
+                            this.gridApi.showNoRowsOverlay();
+                            rowParams.successCallback([], 0);
+                        }
+                    });
+                }
             }
         };
 
@@ -233,6 +198,61 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             const value = label.substring(0, label.indexOf('Filter Input')) + '...';
             obj.setAttribute('placeholder', value);
         });
+    }
+
+    setUpAuditTable(results, pageNumber, rowParams) {
+        this.showPaging = results.total > 0;
+        if (results.items.length === 0 && pageNumber > 1) {
+
+            this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+            this.gridPaging.totalKnown = true;
+            this.paginationComponent.goToPage(pageNumber - 1);
+
+            return;
+        }
+
+        const data = results.items;
+        this.data = data;
+        if (results.total) {
+            results.totalKnown = true;
+        }
+        if (data?.length > 0) {
+
+            this.gridApi.hideOverlay();
+            let currentRowCount = null;
+            let lastRow = -1;
+
+            if (results.totalKnown || data.length < this.gridApi.paginationGetPageSize() || this.gridPaging.totalKnown) {
+
+                if (results.totalKnown) {
+                    lastRow = results.total;
+
+                } else if (this.gridPaging.totalKnown) {
+                    lastRow = this.gridPaging.totalRows;
+
+                } else {
+
+                    currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+                    lastRow = currentRowCount;
+                }
+
+                this.gridPaging.totalRows = lastRow;
+                this.gridPaging.totalKnown = true;
+
+            } else {
+                currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+            }
+
+
+            rowParams.successCallback(data, lastRow);
+
+        } else {
+
+            this.gridApi.showNoRowsOverlay();
+            rowParams.successCallback([], 0);
+        }
+
+        this.gridPaging.manualStateRefresh = Boolean(true);
     }
 
     onResize(event) {
