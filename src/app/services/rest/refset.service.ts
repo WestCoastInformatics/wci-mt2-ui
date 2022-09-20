@@ -65,7 +65,7 @@ export class RefsetService extends RestService {
 
         let replacementCode = '';
         if (replacementConceptId) {
-            replacementCode = '&replacementConceptId=' + replacementConceptId
+            replacementCode = '&replacementConceptId=' + replacementConceptId;
         }
         return this.post(this.contextPath + `refset/${refsetInternalId}/modifyUpgradeConcept?inactiveConceptId=${inactiveConceptId}&changed=${changeMethod}${replacementCode}`, body, true);
     }
@@ -190,61 +190,61 @@ export class RefsetService extends RestService {
 
     addDiscussionThread(threadBody: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion';
+        const url = this.contextPath + 'discussion';
         return this.post(url, threadBody);
     }
 
     updateDiscussionThread(threadId: string, threadBody: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId;
+        const url = this.contextPath + 'discussion/' + threadId;
         return this.put(url, threadBody);
     }
 
     updateDiscussionThreadStatus(threadId: string, status: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/status?status=' + status;
+        const url = this.contextPath + 'discussion/' + threadId + '/status?status=' + status;
         return this.put(url, '');
     }
 
     updateDiscussionThreadPrivacy(threadId: string, isPrivate: boolean): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/privacy?isPrivate=' + isPrivate;
+        const url = this.contextPath + 'discussion/' + threadId + '/privacy?isPrivate=' + isPrivate;
         return this.put(url, '');
     }
 
     updateDiscussionThreadVisibility(threadId: string, visibility: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/visibility?visibility=' + visibility;
+        const url = this.contextPath + 'discussion/' + threadId + '/visibility?visibility=' + visibility;
         return this.put(url, '');
     }
 
     deleteDiscussionThread(threadId: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId;
+        const url = this.contextPath + 'discussion/' + threadId;
         return this.delete(url);
     }
 
     updateDiscussionPostPrivacy(threadId: string, postId: string, isPrivate: boolean): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/privacy?isPrivate=' + isPrivate;
+        const url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/privacy?isPrivate=' + isPrivate;
         return this.put(url, '');
     }
 
     addDiscussionPost(threadId: string, postBody: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/post';
+        const url = this.contextPath + 'discussion/' + threadId + '/post';
         return this.post(url, postBody);
     }
 
     updateDiscussionPost(threadId: string, postId: string, postBody: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        const url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
         return this.put(url, postBody);
     }
 
     deleteDiscussionPost(threadId: string, postId: string): Observable<any> {
 
-        let url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
+        const url = this.contextPath + 'discussion/' + threadId + '/post/' + postId;
         return this.delete(url);
     }
 
@@ -303,13 +303,21 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + `refset/${activeRefsetInternalId}/comparisonData`, '', false);
     }
 
-    
+
     emailRefset(activeRefsetInternalId: string, params: any): Observable<any> {
         return this.post(this.contextPath + `refset/${activeRefsetInternalId}/share`, params);
     }
 
-    
+
     shareRefset(refsetId: string, data): Observable<any> {
-        return this.post(`${this.contextPath}refset/${refsetId}/share/`, data);
+        return this.post(`${this.contextPath}refset/${refsetId}/share`, data);
     }
-}   
+
+    inviteByEmail(refsetId: string, data): Observable<any> {
+        return this.post(`${this.contextPath}refset/${refsetId}/invite/`, data);
+    }
+
+    requestAccess(refsetId: string, params: any): Observable<any> {
+        return this.post(this.contextPath + `refset/${refsetId}/request`, params);
+    }
+}

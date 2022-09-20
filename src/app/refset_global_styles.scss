@@ -5407,6 +5407,16 @@ app-date-text-floating-filter {
 .text-primary {
   color: $main-color  !important;
 }
+.refset-tool-details-column-remove-icon {
+    padding: 0 0 0 17px !important;
+}
+
+.refset-tool-details-column-remove-icon img {
+    margin-bottom: 3px;
+}
+.mat-form-field-appearance-fill .mat-form-field-subscript-wrapper {
+    padding: 0 !important;
+}
 
 * .ag-header-cell .ag-filter-icon {
   order: 1;

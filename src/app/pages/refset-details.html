@@ -109,7 +109,7 @@
             <div class="container-fluid">
 
                 <div>
-                    <!-- 
+                    <!--
                     <span *ngIf="editMode" class="refset-tool-roles"><b>Role(s): </b>{{
                         getRoleString() }}</span> -->
                     <div class="refset-tool-refset-details-title-name-section">
@@ -179,7 +179,9 @@
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
-                        <email-refset-modal [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+                        <!--<invite-people-modal [refset]="refsetData"></invite-people-modal>-->
+                        <request-access-modal [refset]="refsetData"></request-access-modal>
                     </mat-menu>
 
                 </div>

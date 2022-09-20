@@ -125,6 +125,8 @@ import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-
 import { ShareRefsetModalComponent } from './components/share-modal/share-refset-modal.component';
 import { CreateRefsetComponent } from './components/create-refset/create-refset.component';
 import {LandingComponent} from './pages/landing/landing-page.component';
+import {InvitePeopleModalComponent} from './components/invite-people-modal/invite-people-modal.component';
+import {RequestAccessModalComponent} from './components/request-access-modal/request-access-modal.component';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
@@ -267,7 +269,9 @@ const appRoutes: Routes = [
         ComposeModalComponent,
         WorkflowStatusBadgeComponent,
         RefsetMetaTableComponent,
-        ShareRefsetModalComponent
+        ShareRefsetModalComponent,
+        InvitePeopleModalComponent,
+        RequestAccessModalComponent
     ],
     imports: [
         RouterModule.forRoot(

@@ -1,0 +1,52 @@
+<button mat-menu-item (click)="openModal(formDialog)" title="Invite to Participate" aria-label="Invite to Participate"
+    *ngIf="canInvite">
+    Invite to Participate</button>
+
+<ng-template #formDialog let-modal>
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            {{modalTitle}}
+        </h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body refset-tool-lockable">
+        <label class="modal-label-description">Send someone an email with a link to this Reference Set</label>
+        <table>
+
+            <tr>
+                <td>
+                    <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
+                </td>
+                <td>
+                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
+                           style="width: 250px; padding-bottom: 9px"  />
+
+
+                </td>
+            </tr>
+            <tr class="modal-error-message" [hidden]="!emailError">
+                <div>{{emailError}}</div>
+            </tr>
+            <tr>
+                <td>
+                    <label class="modal-label-description">Message:</label>
+                </td>
+                <td>
+                    <mat-form-field class="import-from-list-field" appearance="outline">
+                        <textarea matInput class="import-from-list-text-area" placeholder="Add an optional message for your invitation recipient" [(ngModel)]="description">test</textarea>
+                    </mat-form-field>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+        <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="sendInvitation()"
+                mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
+            Send Email
+        </button>
+    </div>
+</ng-template>
