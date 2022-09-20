@@ -228,8 +228,8 @@ export class LaunchComparisonModalComponent {
         field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 200, tooltipField: 'membership', resizable: false, unSortIcon: true,
         floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
           suppressMenu: true, suppressFilterButton: true, names: [
-            { type: 'membership', name: 'Active Reference Set', value: 'Active Reference Set' },
-            { type: 'membership', name: 'Comparison Reference Set', value: 'Comparison Reference Set' },
+            { type: 'membership', name: 'Active Refset', value: 'Active Refset' },
+            { type: 'membership', name: 'Comparison Refset', value: 'Comparison Refset' },
             { type: 'membership', name: 'Both', value: 'Both' },
           ]
         }
@@ -531,7 +531,7 @@ export class LaunchComparisonModalComponent {
             memberOfRefset: 'true',
             name: conceptStatus.name,
             active: conceptStatus.active,
-            membership: 'Active Reference Set'
+            membership: 'Active Refset'
           };
 
           this.comparisonData.items.push(concept);
@@ -546,7 +546,7 @@ export class LaunchComparisonModalComponent {
 
         if (this.comparisonData.items[comparisonRowIndex].membership == 'Both') {
 
-          this.comparisonData.items[comparisonRowIndex].membership = 'Comparison Reference Set'
+          this.comparisonData.items[comparisonRowIndex].membership = 'Comparison Refset'
           this.comparisonData.comparisonRefsetDistinctMembersCount += 1;
           this.comparisonData.comparisonRefsetDistinctMembers.push(conceptStatus.code);
 
@@ -591,7 +591,7 @@ export class LaunchComparisonModalComponent {
 
       let refset = '';
 
-      if (row.membership == 'Active Reference Set') {
+      if (row.membership == 'Active Refset') {
         refset = activeRefset;
       } else if (row.membership == 'Both') {
         refset = bothRefsets;
