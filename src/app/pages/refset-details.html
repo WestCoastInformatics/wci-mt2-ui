@@ -430,7 +430,7 @@
         </div>
 
         <!-- Section Title -->
-        <div class="refset-tool-refset-details-title-name refset-member-title">
+        <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title">
             Reference Set Members ({{membersGridNumberOfResults}})
             <button *ngIf="showTable && membersReady && membersGridNumberOfResults > 0" mat-raised-button color="primary" aria-hidden="false"
               class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
@@ -457,7 +457,7 @@
         </span>
         <br>
         <!-- Member Concepts Section -->
-        <div class="container-fluid" id="detailsMemberSection">
+        <div *ngIf="showMembersSection" class="container-fluid" id="detailsMemberSection">
             <div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
 
                 <div class="detailsMemberSection-container">

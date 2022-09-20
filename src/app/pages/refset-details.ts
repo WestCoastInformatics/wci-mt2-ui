@@ -163,6 +163,7 @@ export class RefsetDetails implements OnInit {
     reviewNotesAdded = false;
     allowedToEdit = false;
     allowedToReview = false;
+    showMembersSection = true;
     isLocked = false;
     stepperInfo: any = {};
     stepperStartInfo = {
@@ -442,6 +443,7 @@ export class RefsetDetails implements OnInit {
                 this.refsetService.setRefsetInformation(this.refsetData);
                 this.allowedToEdit = false;
                 this.allowedToReview = false;
+                this.showMembersSection = true;
                 this.changeDetectorRef.detectChanges();
 
                 if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT && this.refsetData?.roles?.includes('VIEWER')) ||
@@ -629,6 +631,12 @@ export class RefsetDetails implements OnInit {
 
             } else if (this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')) {
                 this.allowedToReview = true;
+
+            }
+            
+            // if you aren't the assigned author of an IN_EDIT or IN_UPGRADE refset then you can't see the members
+            if (this.refsetData.assignedUser != this.user.userName && ['IN_EDIT', 'IN_UPGRADE'].includes(this.refsetData?.workflowStatus)) {
+                this.showMembersSection = false;
             }
         }
     }
