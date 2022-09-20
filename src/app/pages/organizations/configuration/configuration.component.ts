@@ -11,206 +11,211 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
-  selector: 'organization-configuration',
-  templateUrl: './configuration.component.html'
+    selector: 'organization-configuration',
+    templateUrl: './configuration.component.html'
 })
 export class OrganizationConfigurationComponent implements OnInit {
 
-  menu: SidebarMenuItem[] = [];
-  profileNameValue = '';
-  profileEmailValue = '';
-  profileDescriptionValue = '';
-  selectedOrganization: any;
-  organizationId: any;
-  organizationList = [];
-  emailError = '';
-  showLoadingSpinner = false;
-  uiUtility = UiUtility;
+    menu: SidebarMenuItem[] = [];
+    profileNameValue = '';
+    profileEmailValue = '';
+    profileDescriptionValue = '';
+    selectedOrganization: any;
+    organizationId: any;
+    organizationList = [];
+    emailError = '';
+    showLoadingSpinner = false;
+    uiUtility = UiUtility;
 
-  constructor(private readonly breadcrumbService: BreadcrumbService,
-    private readonly notificationService: NotificationService,
-    private readonly titleService: Title,
-    private readonly refsetService: RefsetService,
-    private readonly organizationsService: OrganizationsService,
-    private authenticationService: AuthenticationService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private location: Location) {
-    document.body.scrollTop = 0;
-  }
+    constructor(private readonly breadcrumbService: BreadcrumbService,
+        private readonly notificationService: NotificationService,
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly organizationsService: OrganizationsService,
+        private authenticationService: AuthenticationService,
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private location: Location) {
+        document.body.scrollTop = 0;
+    }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Organizations');
+        this.titleService.setTitle('Reference Set Tool - Organizations');
 
-    this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {
 
-      this.organizationId = params['organizationId'];
-      this.setNavigation();
-    });
+            this.organizationId = params['organizationId'];
+            this.setNavigation();
+        });
 
-    // this.getPeople();
-    this.getOrganizations();
-  }
+        // this.getPeople();
+        this.getOrganizations();
+    }
 
-  setNavigation() {
+    ngAfterViewInit(): void {
+        document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
 
-    this.breadcrumbService.setBreadcrumbs([
-      { path: '/dashboard', label: 'Dashboard' },
-      { label: 'Organization Configuration' },
-    ]);
+    }
 
-    this.menu = [
-      { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
-      { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-      { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
-      { name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true }
-    ];
+    setNavigation() {
 
-    this.location.replaceState('/organizations/' + this.organizationId + '/configuration');
-  }
+        this.breadcrumbService.setBreadcrumbs([
+            { path: '/dashboard', label: 'Dashboard' },
+            { label: 'Organization Configuration' },
+        ]);
 
-  getOrganizations(): void {
+        this.menu = [
+            { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
+            { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
+            { name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true }
+        ];
 
-    this.refsetService.getOrganizations().subscribe((results) => {
+        this.location.replaceState('/organizations/' + this.organizationId + '/configuration');
+    }
 
-      this.organizationList = results.items;
+    getOrganizations(): void {
 
-      for (const organization of this.organizationList) {
+        this.refsetService.getOrganizations().subscribe((results) => {
 
-        if (this.organizationId === organization.id) {
+            this.organizationList = results.items;
 
-          this.setOrganizationData(organization);
-          return;
+            for (const organization of this.organizationList) {
+
+                if (this.organizationId === organization.id) {
+
+                    this.setOrganizationData(organization);
+                    return;
+                }
+            }
+
+            this.getStoredOrganizationId();
+
+            if (!this.selectedOrganization) {
+                this.showLoadingSpinner = false;
+            }
+        });
+    }
+
+    selectOrganization(): void {
+
+        this.setOrganizationData(this.selectedOrganization);
+        this.organizationId = this.selectedOrganization.id;
+
+    }
+
+    setOrganizationData(organization: any) {
+
+        this.organizationId = organization.id;
+        this.selectedOrganization = organization;
+        this.profileNameValue = organization.name;
+        this.profileEmailValue = organization.primaryContactEmail;
+        this.profileDescriptionValue = organization.description;
+
+        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+
+        this.setNavigation();
+    }
+
+    updateOrganization(): void {
+
+        this.selectedOrganization.name = this.profileNameValue;
+        this.selectedOrganization.primaryContactEmail = this.profileEmailValue;
+        this.selectedOrganization.description = this.profileDescriptionValue;
+
+        this.organizationsService.updateOrganization(this.organizationId, this.selectedOrganization).subscribe((result) => {
+
+            if (result) {
+                this.notificationService.show('Profile was successfully updated', 'Success', 'success', {
+                    timeOut: 3000,
+                    extendedTimeOut: 0
+                });
+            }
+        });
+    }
+
+    isValidEmail(): boolean {
+
+        const lower = this.profileEmailValue.toLowerCase();
+        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+        if (flag == null) {
+            this.emailError = 'Email is invalid.';
+        } else {
+            this.emailError = '';
         }
-      }
 
-      this.getStoredOrganizationId();
-
-      if (!this.selectedOrganization) {
-        this.showLoadingSpinner = false;
-      }
-    });
-  }
-
-  selectOrganization(): void {
-
-    this.setOrganizationData(this.selectedOrganization);
-    this.organizationId = this.selectedOrganization.id;
-
-  }
-
-  setOrganizationData(organization: any) {
-
-    this.organizationId = organization.id;
-    this.selectedOrganization = organization;
-    this.profileNameValue = organization.name;
-    this.profileEmailValue = organization.primaryContactEmail;
-    this.profileDescriptionValue = organization.description;
-
-    sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-
-    this.setNavigation();
-  }
-
-  updateOrganization(): void {
-
-    this.selectedOrganization.name = this.profileNameValue;
-    this.selectedOrganization.primaryContactEmail = this.profileEmailValue;
-    this.selectedOrganization.description = this.profileDescriptionValue;
-
-    this.organizationsService.updateOrganization(this.organizationId, this.selectedOrganization).subscribe((result) => {
-
-      if (result) {
-        this.notificationService.show('Profile was successfully updated', 'Success', 'success', {
-          timeOut: 3000,
-          extendedTimeOut: 0
-        });
-      }
-    });
-  }
-
-  isValidEmail(): boolean {
-
-    const lower = this.profileEmailValue.toLowerCase();
-    const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
-    if (flag == null) {
-      this.emailError = 'Email is invalid.';
-    } else {
-      this.emailError = '';
+        return flag != null;
     }
 
-    return flag != null;
-  }
-
-  onKeyDownEvent(event: any) {
-    this.isValidEmail();
-  }
-
-  getSelectedOrganizationName(): string {
-    return this.selectedOrganization?.name;
-  }
-
-  getSelectedOrganizationId(): string {
-    return this.selectedOrganization?.id;
-  }
-
-  onPhotoChange(event) {
-
-    const file: File = event.target.files[0];
-
-    if (file) {
-
-      const formData = new FormData();
-      formData.append('file', file);
-
-      this.organizationsService.updateOrganizationPhoto(this.organizationId, formData).subscribe((iconUri) => {
-
-        this.notificationService.show('Profile photo was successfully updated', 'Success', 'success', {
-          timeOut: 3000,
-          extendedTimeOut: 0
-        });
-        this.selectedOrganization.iconUri = iconUri;
-      });
+    onKeyDownEvent(event: any) {
+        this.isValidEmail();
     }
-  }
 
-  onPhotoDelete() {
-
-    if (confirm("Are you sure you want to delete this profile photo?")) {
-      try {
-        this.organizationsService.deleteOrganizationPhoto(this.organizationId).subscribe(() => {
-          this.notificationService.show("Profile photo was successfully deleted", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
-          this.selectedOrganization.iconUri = null;
-        });
-      }
-      catch {
-        this.notificationService.show("Failed to delete Profile photo", "Error", 'error', { timeOut: 3000, extendedTimeOut: 0 });
-        return;
-      }
-
+    getSelectedOrganizationName(): string {
+        return this.selectedOrganization?.name;
     }
-  }
 
-  getStoredOrganizationId(): void {
+    getSelectedOrganizationId(): string {
+        return this.selectedOrganization?.id;
+    }
 
-    if (sessionStorage.getItem('selectedOrganizationId')) {
+    onPhotoChange(event) {
 
-      const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+        const file: File = event.target.files[0];
 
-      for (const organization of this.organizationList) {
+        if (file) {
 
-        if (organization.id == storedOrganizationId) {
+            const formData = new FormData();
+            formData.append('file', file);
 
-          this.selectedOrganization = organization;
-          this.selectOrganization();
-          return;
+            this.organizationsService.updateOrganizationPhoto(this.organizationId, formData).subscribe((iconUri) => {
+
+                this.notificationService.show('Profile photo was successfully updated', 'Success', 'success', {
+                    timeOut: 3000,
+                    extendedTimeOut: 0
+                });
+                this.selectedOrganization.iconUri = iconUri;
+            });
         }
-      }
-
-      // if the stored organization ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedOrganizationId');
     }
-  }
+
+    onPhotoDelete() {
+
+        if (confirm("Are you sure you want to delete this profile photo?")) {
+            try {
+                this.organizationsService.deleteOrganizationPhoto(this.organizationId).subscribe(() => {
+                    this.notificationService.show("Profile photo was successfully deleted", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+                    this.selectedOrganization.iconUri = null;
+                });
+            }
+            catch {
+                this.notificationService.show("Failed to delete Profile photo", "Error", 'error', { timeOut: 3000, extendedTimeOut: 0 });
+                return;
+            }
+
+        }
+    }
+
+    getStoredOrganizationId(): void {
+
+        if (sessionStorage.getItem('selectedOrganizationId')) {
+
+            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+
+            for (const organization of this.organizationList) {
+
+                if (organization.id == storedOrganizationId) {
+
+                    this.selectedOrganization = organization;
+                    this.selectOrganization();
+                    return;
+                }
+            }
+
+            // if the stored organization ID doesn't match anything remove it
+            sessionStorage.removeItem('selectedOrganizationId');
+        }
+    }
 }
