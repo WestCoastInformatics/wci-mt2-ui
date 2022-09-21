@@ -144,6 +144,9 @@
                                 <mat-form-field class="example-form-field" appearance="fill">
                                     <input placeholder="External" matInput type="text" [(ngModel)]="selectedExternalUrl" />
                                 </mat-form-field>
+                                <mat-error *ngIf="selectedExternalUrl && !externalUrlValid" class="text-danger">
+                                    External url must start with https:// and be a valid URL
+                                </mat-error>
                             </div>
                         </div>
                         <!-- End External -->
