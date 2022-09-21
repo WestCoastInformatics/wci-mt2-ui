@@ -37,7 +37,8 @@
                 <div class="search-form">
                     <input type="text" placeholder="Search for reference sets by name, concept or metadata"
                            [(ngModel)]="searchInput" (keyup)="onSearchChange()">
-                    <i class="fa fa-search"></i>
+                    <i class="fa fa-search" *ngIf="!showResults"></i>
+                    <i class="fa fa-times" *ngIf="showResults" (click)="clearSearch()"></i>
                 </div>
             </li>
         </ul>

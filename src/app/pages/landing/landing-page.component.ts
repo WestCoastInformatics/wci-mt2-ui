@@ -383,6 +383,11 @@ export class LandingComponent implements OnInit, AfterViewInit {
         }
     }
 
+    clearSearch(): void {
+        this.searchInput = '';
+        this.onSearchChange();
+    }
+
     showFlagIcon(event, show) {
 
         if (show) {
