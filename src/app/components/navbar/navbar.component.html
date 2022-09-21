@@ -1,16 +1,19 @@
-<nav class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;">
+<nav class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row"
+    style="justify-content: center; padding-bottom: 0 !important;">
 
     <div class="refset-tool-nav-item-row">
 
-        <a class="refset-tool-nav-logo-section" routerLink="/dashboard" title="Reference Set Tool Home" aria-label="Reference set tool home">
+        <a class="refset-tool-nav-logo-section" routerLink="/dashboard"
+            title="Reference Set Tool Home" aria-label="Reference set tool home">
             <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
             <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool
                 <b>(BETA)</b></span>
         </a>
 
         <div class="refset-tool-breadcrumb-bar text-ghost-grey">
-            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
-              (click)="navigate(breadcrumb.id)">
+            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}"
+                aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
+                (click)="navigate(breadcrumb.id)">
                 {{breadcrumb.label}}
             </div>
         </div>
@@ -27,9 +30,11 @@
 
     <div class="left-title-buttons">
         <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()">
-            <span class="project-role" *ngIf="showProjectRole()">Project Role: {{projectRole}}</span>
+            <span class="project-role" *ngIf="showProjectRole()">Project Role:
+                {{projectRole}}</span>
             <span class="project-role" *ngIf="showRefsetRole()">Role: {{refsetRole}}</span>
-            <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{ assignedUser() }}</span>
+            <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{
+                assignedUser() }}</span>
         </div>
 
         <div class="directory-nav" (click)="navigateToRoute('/library')">
@@ -37,7 +42,8 @@
             <span class="directory-icon-label">Library</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="project-nav" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
+        <div *ngIf="isUserLoggedIn" class="project-nav"
+            (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
             <img class="projects-icon" src="/assets/projects-icon.svg">
             <span class="projects-icon-label">Projects</span>
         </div>
@@ -50,14 +56,17 @@
         <div *ngIf="isUserLoggedIn" class="float-right mr-2">
             <div class="dropdown" id="userDropdownMenu">
 
-                <label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+                <label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)"
+                        class="medium-icon-image mr-2" />
                 </label>
 
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                     <div class="dropdown-item pl-3" routerLink="/personal/{{user?.id}}/landing">
                         <div class="d-flex pointer">
-                            <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+                            <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)"
+                                class="medium-icon-image mr-2" />
 
                             <div class="profile-block">
                                 <strong>{{user.userName}}</strong>
@@ -66,7 +75,7 @@
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center" href="#" (click)="resources()">Resources</a>
+                    <a class="dropdown-item text-center" href="/dashboard">Resources</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-center" href="#" (click)="logoutUser()">Logout</a>
                 </div>

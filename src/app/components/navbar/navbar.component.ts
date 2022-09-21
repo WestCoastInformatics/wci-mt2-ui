@@ -89,7 +89,7 @@ export class NavbarComponent implements OnInit {
     }
 
     resources() {
-        this.router.navigate(['']);
+        this.router.navigate(['dashboard']);
     }
 
     login() {
