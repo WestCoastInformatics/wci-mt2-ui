@@ -261,6 +261,7 @@ const appRoutes: Routes = [
         RefsetFeedbackListComponent,
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
+        BulkUpgradeModalComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent,
         LaunchComparisonModalComponent,
