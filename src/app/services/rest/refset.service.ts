@@ -52,7 +52,7 @@ export class RefsetService extends RestService {
         const self = this;
         return this.post(this.contextPath + 'refset/', params, false,
             function (err) {
-                if (err.status === 504) { 
+                if (err.status === 504) {
                     err.error = `Refset creation is taking longer than expected.  Please come back to the project page in the future to see the created refset.`;
                     return self.giveWarningNotification(err);
                 }
@@ -314,7 +314,7 @@ export class RefsetService extends RestService {
     }
 
     inviteByEmail(refsetId: string, data): Observable<any> {
-        return this.post(`${this.contextPath}refset/${refsetId}/invite/`, data);
+        return this.post(`${this.contextPath}refset/${refsetId}/invite`, data);
     }
 
     requestAccess(refsetId: string, params: any): Observable<any> {
