@@ -38,7 +38,7 @@ export class RequestAccessModalComponent {
 
     get canRequest(): boolean {
         const user = this.authService.getUser();
-        return !this.refset?.project?.memberList?.includes(user.id);
+        return !this.refset?.project?.roles || !this.refset?.project?.roles.length;
     }
     openModal(modal: NgbModal) {
 
