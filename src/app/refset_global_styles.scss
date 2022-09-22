@@ -5496,3 +5496,9 @@ app-date-text-floating-filter {
 .atlwdg-trigger.atlwdg-RIGHT {
   top: 60% !important;
 }
+.placeholder-wrap .mat-form-field-label {
+    white-space: normal;
+}
+.placeholder-wrap .mat-input-placeholder {
+    white-space: normal;
+}

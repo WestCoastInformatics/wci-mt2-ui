@@ -17,6 +17,7 @@ export class InvitePeopleModalComponent implements OnInit {
 
     @Input() refset: any;
     @Input() refsetInternalId: string;
+    @Input() organization: any;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
 
     constructor(private readonly modalService: NgbModal, private dataService: RefsetService,
@@ -28,7 +29,7 @@ export class InvitePeopleModalComponent implements OnInit {
     }
 
     get canInvite(): boolean {
-        return this.refset?.project?.roles.includes('ADMIN');
+        return this.refset?.project?.roles.includes('ADMIN') || this.organization?.roles.includes('ADMIN');
     }
 
     ngOnInit(): void {
@@ -78,7 +79,7 @@ export class InvitePeopleModalComponent implements OnInit {
             recipient: this.email
         };
 
-        this.dataService.inviteByEmail(this.refset.id, params).subscribe(
+        this.dataService.inviteByEmail(this.refset?.id ?? this.organization?.id, params).subscribe(
             (data) => {
                 this.notificationService.show('The invitation were sent successfully', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.modalService.dismissAll();
