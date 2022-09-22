@@ -1,68 +1,72 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { RestService } from './rest.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
-import { NotificationService } from '../notification.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {RestService} from './rest.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {environment} from 'src/environments/environment';
+import {NotificationService} from '../notification.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class OrganizationsService extends RestService {
-  taxonomyRootNode: any = null;
-  contextPath = '/refsetservice/';
-  assignedUser: string;
+    taxonomyRootNode: any = null;
+    contextPath = '/refsetservice/';
+    assignedUser: string;
 
-  constructor(http: HttpClient, notificationService: NotificationService) {
+    constructor(http: HttpClient, notificationService: NotificationService) {
 
-    super(http, notificationService);
+        super(http, notificationService);
 
-    if (CodeUtility.hasValue(environment.restContextPath)) {
-      this.contextPath = environment.restContextPath;
-    }
-  }
-
-  createOrganization(params: any): Observable<any> {
-    return this.post(this.contextPath + 'organization/', params);
-  }
-
-  updateOrganization(organizationId: any, params: any): Observable<any> {
-    return this.put(this.contextPath + 'organization/' + organizationId, params);
-  }
-
-  updateOrganizationPhoto(organizationId: any, params: any): Observable<any> {
-    return this.postWithFile(`${this.contextPath}organization/${organizationId}/icon`, params);
-  }
-
-  deleteOrganizationPhoto(organizationId: any): Observable<any> {
-    return this.delete(`${this.contextPath}organization/${organizationId}/icon`);
-  }
-
-  getOrganization(organizationId: string): Observable<any> {
-    return this.get(this.contextPath + 'organization/' + organizationId);
-  }
-
-  getOrgUsers(organizationId: string, showTeams?: boolean): Observable<any> {
-    return this.get(this.contextPath + 'organization/' + organizationId + '/users?includeTeams=' + showTeams);
-  }
-
-  deleteOrganization(organizationId: string): Observable<any> {
-    return this.delete(this.contextPath + 'organization/' + organizationId);
-  }
-
-  addUser(organizationId: any, email: any): Observable<any> {
-    const self = this;
-    return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '', false
-      , function (err) {
-        if (err.status === 404 && err.error?.error === 'Not Found') {
-          err.error.error = `User with ${email} does not exist.`;
+        if (CodeUtility.hasValue(environment.restContextPath)) {
+            this.contextPath = environment.restContextPath;
         }
-        return self.giveErrorNotification(err);
-      });
-  }
+    }
 
-  removeUser(organizationId: any, userId: any) {
-    return this.delete(this.contextPath + 'organization/' + organizationId + '/user/' + userId);
-  }
+    createOrganization(params: any): Observable<any> {
+        return this.post(this.contextPath + 'organization/', params);
+    }
+
+    updateOrganization(organizationId: any, params: any): Observable<any> {
+        return this.put(this.contextPath + 'organization/' + organizationId, params);
+    }
+
+    updateOrganizationPhoto(organizationId: any, params: any): Observable<any> {
+        return this.postWithFile(`${this.contextPath}organization/${organizationId}/icon`, params);
+    }
+
+    deleteOrganizationPhoto(organizationId: any): Observable<any> {
+        return this.delete(`${this.contextPath}organization/${organizationId}/icon`);
+    }
+
+    getOrganization(organizationId: string): Observable<any> {
+        return this.get(this.contextPath + 'organization/' + organizationId);
+    }
+
+    getOrgUsers(organizationId: string, showTeams?: boolean): Observable<any> {
+        return this.get(this.contextPath + 'organization/' + organizationId + '/users?includeTeams=' + showTeams);
+    }
+
+    deleteOrganization(organizationId: string): Observable<any> {
+        return this.delete(this.contextPath + 'organization/' + organizationId);
+    }
+
+    addUser(organizationId: any, email: any): Observable<any> {
+        const self = this;
+        return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '', false
+            , function (err) {
+                if (err.status === 404 && err.error?.error === 'Not Found') {
+                    err.error.error = `User with ${email} does not exist.`;
+                }
+                return self.giveErrorNotification(err);
+            });
+    }
+
+    removeUser(organizationId: any, userId: any) {
+        return this.delete(this.contextPath + 'organization/' + organizationId + '/user/' + userId);
+    }
+
+    inviteByEmail(organizationId: string, data): Observable<any> {
+        return this.post(`${this.contextPath}organization/${organizationId}/invite`, data);
+    }
 }
