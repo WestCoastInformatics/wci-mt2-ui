@@ -24,7 +24,7 @@
 				<mat-form-field appearance="fill">
 					<mat-label>Refsets to Upgrade (use Ctrl-click to select more than one)</mat-label>
 					<label *ngIf="refsetsForUpgrade.length == 0">There are currently no refsets ready to upgrade</label>
-					<select matNativeControl autofocus [multiple]=true [(ngModel)]="selectedRefsets">
+					<select matNativeControl autofocus [multiple]=true [(ngModel)]="selectedRefsets" [size]="refsetsForUpgrade.length" class="refset-tool-refset-multi-select">
 						<option *ngFor="let refset of refsetsForUpgrade" [ngValue]="refset">
 							{{ refset.name }}
 						</option>

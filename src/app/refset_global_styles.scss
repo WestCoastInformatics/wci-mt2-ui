@@ -1191,6 +1191,10 @@ select {
   max-width: 1200px;
 }
 
+.refset-tool-refset-multi-select {
+  max-height: 300px;
+}
+
 .refset-tool-concept-details-taxonomy-section {
   border-color: $concept_details_color;
   @extend .refset-tool-rounded-borders;
