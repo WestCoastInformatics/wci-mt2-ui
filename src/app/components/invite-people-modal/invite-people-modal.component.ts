@@ -3,6 +3,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {RefsetService} from '../../services/rest/refset.service';
 import {NotificationService} from '../../services/notification.service';
 import {RefsetDetails} from '../../pages/refset-details';
+import {OrganizationsService} from '../../services/rest/organizations.service';
 
 
 @Component({
@@ -17,9 +18,10 @@ export class InvitePeopleModalComponent implements OnInit {
 
     @Input() refset: any;
     @Input() refsetInternalId: string;
+    @Input() organization: any;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
 
-    constructor(private readonly modalService: NgbModal, private dataService: RefsetService,
+    constructor(private readonly modalService: NgbModal, private refsetService: RefsetService, private organizationService: OrganizationsService,
                 private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {
     }
 
@@ -28,7 +30,7 @@ export class InvitePeopleModalComponent implements OnInit {
     }
 
     get canInvite(): boolean {
-        return this.refset?.project?.roles.includes('ADMIN');
+        return this.refset?.project?.roles.includes('ADMIN') || this.organization?.roles.includes('ADMIN');
     }
 
     ngOnInit(): void {
@@ -77,19 +79,32 @@ export class InvitePeopleModalComponent implements OnInit {
             additionalMessage: this.description,
             recipient: this.email
         };
-
-        this.dataService.inviteByEmail(this.refset.id, params).subscribe(
-            (data) => {
-                this.notificationService.show('The invitation were sent successfully', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-                this.modalService.dismissAll();
-                this.changeLockedStatus.emit(false);
-                window.location.reload();
-            },
-            (err) => {
-                this.changeLockedStatus.emit(false);
-                console.error(err);
-            }
-        );
+        let id = '';
+        let service = null;
+        if (this.refset) {
+            service = this.refsetService;
+            id = this.refset.id;
+        } else if (this.organization) {
+            id = this.organization.id;
+            service = this.organizationService;
+        }
+        if (service) {
+            service.inviteByEmail(id, params).subscribe(
+                (data) => {
+                    this.notificationService.show('The invitation were sent successfully', null, 'success', {
+                        timeOut: 0,
+                        extendedTimeOut: 0
+                    });
+                    this.modalService.dismissAll();
+                    this.changeLockedStatus.emit(false);
+                    window.location.reload();
+                },
+                (err) => {
+                    this.changeLockedStatus.emit(false);
+                    console.error(err);
+                }
+            );
+        }
     }
 
 }

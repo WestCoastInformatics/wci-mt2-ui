@@ -1,5 +1,7 @@
+<button *ngIf="canInvite && organization" class="btn btn-primary btn-wide-font  float-right mr-3" mat-raised-button
+        (click)="openModal(formDialog)">Invite To Join</button>
 <button mat-menu-item (click)="openModal(formDialog)" title="Invite to Participate" aria-label="Invite to Participate"
-    *ngIf="canInvite">
+    *ngIf="canInvite && refset">
     Invite to Participate</button>
 
 <ng-template #formDialog let-modal>
@@ -12,7 +14,7 @@
         </button>
     </div>
     <div class="modal-body refset-tool-lockable">
-        <label class="modal-label-description">Send someone an email with a link to this Reference Set</label>
+        <label class="modal-label-description">Send someone an email invitation to join your Organization as a collaborator</label>
         <table>
 
             <tr>
@@ -32,8 +34,8 @@
                     <label class="modal-label-description">Message:</label>
                 </td>
                 <td>
-                    <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
-                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description" placeholder="Add an optional message for your invitation recipient"></textarea>
+                    <mat-form-field floatLabel="never" class="import-from-list-field placeholder-wrap" appearance="legacy">
+                        <textarea matInput class="import-from-list-text-area " [(ngModel)]="description" placeholder="Add an optional message for your invitation recipient"></textarea>
                     </mat-form-field>
                 </td>
             </tr>
@@ -45,5 +47,10 @@
                 mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
             Send Email
         </button>
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+                style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
+            Cancel
+        </button>
+
     </div>
 </ng-template>
