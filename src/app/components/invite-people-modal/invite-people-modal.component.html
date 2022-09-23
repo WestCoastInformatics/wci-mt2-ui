@@ -1,5 +1,7 @@
-<button *ngIf="canInvite && organization" class="btn btn-primary btn-wide-font  float-right mr-3" mat-raised-button
-        (click)="openModal(formDialog)">Invite To Join</button>
+<button *ngIf="canInvite && organization" mat-raised-button color="primary" (click)="openModal(formDialog);" aria-hidden="false"
+        class="refset-tool-action-button float-right mr-3" title="Invite To Join">
+    Invite To Join
+</button>
 <button mat-menu-item (click)="openModal(formDialog)" title="Invite to Participate" aria-label="Invite to Participate"
     *ngIf="canInvite && refset">
     Invite to Participate</button>
