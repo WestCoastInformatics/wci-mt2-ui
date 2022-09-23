@@ -380,6 +380,11 @@
           title="Back" color="accent">
             Back
         </button>
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
+                class="refset-tool-action-button"
+                style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
+            Cancel
+        </button>
         <button *ngIf="step < 3" [disabled]="nextDisabled" type="button" (click)="goNext()" mat-raised-button color="green" aria-hidden="false"
           class="refset-tool-action-button" aria-label="Next" title="Next">
             Next
