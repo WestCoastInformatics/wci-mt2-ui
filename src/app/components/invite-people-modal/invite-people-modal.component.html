@@ -1,13 +1,12 @@
-<button *ngIf="canInvite && organization" mat-raised-button color="primary" (click)="openModal(formDialog);" aria-hidden="false"
-        class="refset-tool-action-button float-right mr-3" title="Invite To Join">
-    Invite To Join
-</button>
+<a *ngIf="canInvite && organization" class='btn btn-primary rounded btn-lg float-right btn-wide-font mr-3'
+        (click)="openModal(formDialog)">Invite To Join</a>
 <button mat-menu-item (click)="openModal(formDialog)" title="Invite to Participate" aria-label="Invite to Participate"
     *ngIf="canInvite && refset">
     Invite to Participate</button>
 
 <ng-template #formDialog let-modal>
     <div class="modal-header rt2-modal-header">
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             {{modalTitle}}
         </h4>

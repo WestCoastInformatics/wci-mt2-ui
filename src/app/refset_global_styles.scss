@@ -5488,7 +5488,6 @@ app-date-text-floating-filter {
 .ag-theme-alpine.refset-tool-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-even {
   background-color: white;
 }
-
 .ag-theme-alpine.refset-tool-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
   background-color: #efefef;
 }
@@ -5505,4 +5504,8 @@ app-date-text-floating-filter {
 }
 .placeholder-wrap .mat-input-placeholder {
     white-space: normal;
+}
+.no-outline,.no-outline:focus{
+    outline: none !important;
+    box-shadow: none !important;
 }
