@@ -1,7 +1,7 @@
-<button *ngIf="!isDetailsPage && canAdd" mat-raised-button color="primary" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
-  class="refset-tool-action-button" [ngClass]="{ inactive: disabled }" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
+<a *ngIf="!isDetailsPage && canAdd" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
+   class='btn btn-primary rounded btn-lg float-right btn-wide-font' style="width: 240px;" [ngClass]="{ inactive: disabled }" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
     Create New Reference Set
-</button>
+</a>
 
 
 <div *ngIf="showLoadingSpinner" class="loading"></div>
