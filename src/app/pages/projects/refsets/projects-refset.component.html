@@ -76,7 +76,7 @@
             display: flex;
             padding-right: 20px;
             padding-top: 20px;
-            align-items: baseline;
+            align-items: center;
             padding-left: 15px;
             padding-bottom: 10px;
         " [class.container-toggled]="toggleService.isToggled">
@@ -92,7 +92,7 @@
             title="Display Workflow Diagram"
             aria-label="Display Workflow Diagram" />
         </div> -->
-            <div class="d-inline mr-3">
+            <div class=" mr-3">
                 <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
                   [existingBranchVersions]="existingBranchVersions">
                 </create-refset>
