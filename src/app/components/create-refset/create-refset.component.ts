@@ -236,6 +236,9 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedMetaDataConcept = '';
         this.createdMetaDataConcept = '';
         this.selectedParentConcept = undefined;
+        this.selectedCombinationRefsets = '';
+        this.selectedExternalName = '';
+        this.selectedExternalUrl = '';
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
@@ -246,6 +249,7 @@ export class CreateRefsetComponent implements OnInit {
         this.comboRefset = false;
         this.localSet = false;
         this.conceptError = '';
+        this.step = 1;
 
     }
 

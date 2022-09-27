@@ -1,7 +1,7 @@
-<button *ngIf="!isDetailsPage && canAdd" mat-raised-button color="primary" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
-  class="refset-tool-action-button" [ngClass]="{ inactive: disabled }" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
+<a *ngIf="!isDetailsPage && canAdd" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
+   class='btn btn-primary rounded btn-lg float-right btn-wide-font' style="width: 240px;" [ngClass]="{ inactive: disabled }" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
     Create New Reference Set
-</button>
+</a>
 
 
 <div *ngIf="showLoadingSpinner" class="loading"></div>
@@ -379,6 +379,11 @@
         <button *ngIf="step > 1" type="button" (click)="goBack()" mat-raised-button aria-hidden="false" class="refset-tool-action-button mr-auto" aria-label="Back"
           title="Back" color="accent">
             Back
+        </button>
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
+                class="refset-tool-action-button"
+                style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
+            Cancel
         </button>
         <button *ngIf="step < 3" [disabled]="nextDisabled" type="button" (click)="goNext()" mat-raised-button color="green" aria-hidden="false"
           class="refset-tool-action-button" aria-label="Next" title="Next">

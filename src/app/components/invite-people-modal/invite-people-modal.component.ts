@@ -15,6 +15,7 @@ export class InvitePeopleModalComponent implements OnInit {
     description = '';
     openedModel: NgbModalRef;
     emailError = '';
+    firstLoad = true;
 
     @Input() refset: any;
     @Input() refsetInternalId: string;
@@ -40,6 +41,13 @@ export class InvitePeopleModalComponent implements OnInit {
         this.description = '';
         this.email = '';
         this.openedModel = this.modalService.open(modalDialog, { backdrop: 'static', keyboard: false });
+    }
+
+    setAutoFocus(focusElement: any) {
+        if (this.firstLoad) {
+            focusElement.focus();
+            this.firstLoad = false;
+        }
     }
 
     processOperationReturn = (data) => {
