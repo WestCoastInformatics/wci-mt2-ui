@@ -4,9 +4,9 @@
     <div class="row header-title">
 
         <span class="title-label">Organizations</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
+              [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                 <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
@@ -14,9 +14,9 @@
         </mat-form-field>
 
         <span class="title-label">Editions</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'}}</mat-label>
-            <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" (selectionChange)="selectedEdition()">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+            <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
+              (selectionChange)="selectedEdition()">
                 <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
                     {{ edition.name }}
                 </mat-option>
@@ -24,11 +24,9 @@
         </mat-form-field>
 
         <span class="title-label">Projects</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedProject?.name ? selectedProject?.name : 'Choose Project'}}
-            </mat-label>
-            <mat-select #detailsVersionSelect [disabled]="organizationId === '0'" [disableOptionCentering]="true" [(value)]="selectedProject"
-              (selectionChange)="selectProject()">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+            <mat-select #detailsVersionSelect [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'" [disabled]="organizationId === '0'"
+              [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
                 <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3" [title]="project.name">
                     {{ project.name }}
                 </mat-option>
@@ -54,10 +52,8 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data"
-                                (gridReady)="onGridReady($event)"
-                                (cellClicked)="onMemberCellClick($event)"
-                                [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)"
+                              (cellClicked)="onMemberCellClick($event)" [gridOptions]="gridOptions" style="width: 100%">
                             </ag-grid-angular>
 
                             <!-- Name Template -->

@@ -40,7 +40,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Organizations');
+        this.titleService.setTitle('Reference Set Tool - Organizations');
 
         this.route.params.subscribe(params => {
 
@@ -53,10 +53,10 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.gridColumnDefs = [
             { field: 'id', hide: true },
-            { field: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500, unSortIcon: true },
-            { field: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500, unSortIcon: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
             {
-                field: 'role', headerName: 'Role', resizable: true, cellClass: 'text-camel', unSortIcon: true,
+                field: 'role', tooltipField: 'role', headerName: 'Role', resizable: true, cellClass: 'text-camel', unSortIcon: true,
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {
@@ -91,11 +91,13 @@ export class OrganizationTeamsComponent implements OnInit {
                     ],
                 }
             },
-            { field: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
-            { field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false,
+            { field: 'email', tooltipField: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
+            {
+                field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false,
                 cellClass: 'text-primary font-weight-bold', tooltipValueGetter: (params) => {
                     return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', ') : '';
-                }}
+                }
+            }
         ];
 
         this.gridOptions = {

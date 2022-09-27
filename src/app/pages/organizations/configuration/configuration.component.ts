@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {Location} from '@angular/common';
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SidebarMenuItem} from 'src/app/models/sidebar.menu-item.model';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {NotificationService} from 'src/app/services/notification.service';
-import {OrganizationsService} from 'src/app/services/rest/organizations.service';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {UiUtility} from 'src/app/utilities/ui.utility';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
     selector: 'organization-configuration',
@@ -28,20 +28,20 @@ export class OrganizationConfigurationComponent implements OnInit {
     uiUtility = UiUtility;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
-                private readonly notificationService: NotificationService,
-                private readonly titleService: Title,
-                private readonly refsetService: RefsetService,
-                private readonly organizationsService: OrganizationsService,
-                private authenticationService: AuthenticationService,
-                private readonly route: ActivatedRoute,
-                private readonly router: Router,
-                private location: Location) {
+        private readonly notificationService: NotificationService,
+        private readonly titleService: Title,
+        private readonly refsetService: RefsetService,
+        private readonly organizationsService: OrganizationsService,
+        private authenticationService: AuthenticationService,
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private location: Location) {
         document.body.scrollTop = 0;
     }
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Refset Tool - Organizations');
+        this.titleService.setTitle('Reference Set Tool - Organizations');
 
         this.route.params.subscribe(params => {
 
@@ -53,18 +53,23 @@ export class OrganizationConfigurationComponent implements OnInit {
         this.getOrganizations();
     }
 
+    ngAfterViewInit(): void {
+        document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
+
+    }
+
     setNavigation() {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            {label: 'Organization Configuration'},
+            { label: 'Organization Configuration' },
         ]);
 
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
-            {name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users'},
-            {name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user'},
-            {name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true}
+            { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
+            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
+            { name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true }
         ];
 
         this.location.replaceState('/organizations/' + this.organizationId + '/configuration');
@@ -97,7 +102,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
         this.setOrganizationData(this.selectedOrganization);
         this.organizationId = this.selectedOrganization.id;
-        
+
     }
 
     setOrganizationData(organization: any) {
@@ -109,7 +114,7 @@ export class OrganizationConfigurationComponent implements OnInit {
         this.profileDescriptionValue = organization.description;
 
         sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-        
+
         this.setNavigation();
     }
 
@@ -173,6 +178,23 @@ export class OrganizationConfigurationComponent implements OnInit {
                 });
                 this.selectedOrganization.iconUri = iconUri;
             });
+        }
+    }
+
+    onPhotoDelete() {
+
+        if (confirm("Are you sure you want to delete this profile photo?")) {
+            try {
+                this.organizationsService.deleteOrganizationPhoto(this.organizationId).subscribe(() => {
+                    this.notificationService.show("Profile photo was successfully deleted", "Success", 'success', { timeOut: 3000, extendedTimeOut: 0 });
+                    this.selectedOrganization.iconUri = null;
+                });
+            }
+            catch {
+                this.notificationService.show("Failed to delete Profile photo", "Error", 'error', { timeOut: 3000, extendedTimeOut: 0 });
+                return;
+            }
+
         }
     }
 

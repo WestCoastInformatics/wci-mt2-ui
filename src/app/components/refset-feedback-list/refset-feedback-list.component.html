@@ -31,14 +31,12 @@
                 <input type="hidden" ngbAutofocus />
             </div>
 
-            <div id="discussionThreadListGridSection" class='dashboard-section pr-1 pl-1'>
-                <div class="ag-theme-alpine">
+            <div class="ag-theme-alpine pr-1 pl-1">
 
-                    <ag-grid-angular [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                      style="width: 100%">
-                    </ag-grid-angular>
+                <ag-grid-angular [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+                  style="width: 100%">
+                </ag-grid-angular>
 
-                </div>
             </div>
 
         </div>
@@ -195,7 +193,7 @@
                     </div>
 
                     <div *ngIf="editMode.includes('Thread')" class="topic-content mb-3">
-                        <mat-form-field appearance="fill" class="discussion-topic-field">
+                        <mat-form-field floatLabel="never" appearance="legacy" class="discussion-topic-field">
                             <mat-label>Feedback Topic</mat-label>
                             <input matInput type="text" [(ngModel)]="postSubjectField" placeholder="Add a descriptive title for your feedback topic" />
                         </mat-form-field>

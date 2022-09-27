@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { RestService } from './rest.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { environment } from 'src/environments/environment';
-import { NotificationService } from '../notification.service';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {RestService} from './rest.service';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {environment} from 'src/environments/environment';
+import {NotificationService} from '../notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -35,6 +35,10 @@ export class OrganizationsService extends RestService {
         return this.postWithFile(`${this.contextPath}organization/${organizationId}/icon`, params);
     }
 
+    deleteOrganizationPhoto(organizationId: any): Observable<any> {
+        return this.delete(`${this.contextPath}organization/${organizationId}/icon`);
+    }
+
     getOrganization(organizationId: string): Observable<any> {
         return this.get(this.contextPath + 'organization/' + organizationId);
     }
@@ -60,5 +64,9 @@ export class OrganizationsService extends RestService {
 
     removeUser(organizationId: any, userId: any) {
         return this.delete(this.contextPath + 'organization/' + organizationId + '/user/' + userId);
+    }
+
+    inviteByEmail(organizationId: string, data): Observable<any> {
+        return this.post(`${this.contextPath}organization/${organizationId}/invite`, data);
     }
 }

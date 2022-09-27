@@ -46,15 +46,15 @@ export class AppComponent implements OnInit {
             });
     }
 
-    //***** Framework Functions *****/
+    // ***** Framework Functions *****/
     ngOnInit() {
-        this.titleService.setTitle('Refset Tool');
+        this.titleService.setTitle('Reference Set Tool');
         this.environment = this.envService.env;
 
         this.assignFavicon();
         this.router.events.subscribe((event: any) => {
             if (event instanceof RoutesRecognized) {
-                this.isLanding = event.url.split('/')[1] === '';
+                this.isLanding = event.url.split('/')[1] === '' || event.url.split('/')[1].startsWith('#');
             }
         });
 
@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
         this.userInactive.subscribe(() => {
             this.authenticationService.logoutUser();
         });
+
     }
 
     assignFavicon() {
@@ -87,7 +88,7 @@ export class AppComponent implements OnInit {
     }
 
     setTimeout() {
-        let date = new Date();
+        const date = new Date();
         // console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
         this.userActivity = setTimeout(() => {
 

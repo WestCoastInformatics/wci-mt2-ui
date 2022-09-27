@@ -1,4 +1,4 @@
-<nav class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;">
+<nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;">
 
     <div class="refset-tool-nav-item-row">
 
@@ -27,6 +27,9 @@
 
     <div class="left-title-buttons">
         <div class="project-role-and-assignee-label" *ngIf="showProjectRoleAndAssignee()">
+            <span class="project-role" *ngIf="showProjectRole()">Project Role:
+                {{projectRole}}</span>
+            <span class="project-role" *ngIf="showRefsetRole()">Role: {{refsetRole}}</span>
             <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{
                 assignedUser() }}</span>
         </div>
@@ -36,12 +39,12 @@
             <span class="directory-icon-label">Library</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="project-nav" routerLink="/organization/0/edition/0/projects/0/refsets">
+        <div *ngIf="isUserLoggedIn" class="project-nav" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
             <img class="projects-icon" src="/assets/projects-icon.svg">
             <span class="projects-icon-label">Projects</span>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="nav-item" routerLink="/dashboard">
+        <div *ngIf="isUserLoggedIn" class="nav-item" (click)="navigateToRoute('/dashboard')">
             <img class="nav-icon dashboard-icon" src="/assets/dashboard-icon.svg">
             <span class="nav-label dashboard-icon-label">Dashboard</span>
         </div>
@@ -65,18 +68,27 @@
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-center" (click)="resources()">Resources</a>
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item text-center" href="#" (click)="logoutUser()">Logout</a>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="!isUserLoggedIn" class="float-right mx-3">
-            <!-- <div class="user d-inline-block m-2">
+        <!-- <div *ngIf="!isUserLoggedIn" class="float-right mx-3">
+            <div class="user d-inline-block m-2">
                 <span class="px-2 text-ghost-grey">{{guestUser}}</span>
-            </div> -->
+            </div>
             <div class="logout d-inline-block m-2" (click)="login()">
                 <span class="px-2 text-ghost-grey">Login</span>
             </div>
-        </div>
+        </div> -->
     </div>
+</nav>
+<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark p-2 pr-2" id="bg-landing-header">
+    <a class="logo" routerlink="/">
+        <img class="logo p-0" src="assets/small_logo.png" alt="Logo">
+        <span class="title header-title">SNOMED CT Reference Set Tool 2.0</span>
+    </a>
+    <a class="btn btn-link text-white" (click)="login()">Log In</a>
 </nav>

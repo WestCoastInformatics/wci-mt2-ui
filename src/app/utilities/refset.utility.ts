@@ -12,6 +12,8 @@ export class RefsetUtility {
     static DEFAULT_ACCEPT_LANGUAGE = RefsetUtility.DEFAULT_LANGUAGE_CODE + '-X-' + RefsetUtility.DEFAULT_LANGUAGE_REFSET;
     static INTENSIONAL = 'INTENSIONAL';
     static EXTENSIONAL = 'EXTENSIONAL';
+    static COPY = 'COPY';
+    static COMBINATION = 'COMBINATION';
     static EXTERNAL = 'EXTERNAL';
     static INCLUSION = 'INCLUSION';
     static EXCLUSION = 'EXCLUSION';

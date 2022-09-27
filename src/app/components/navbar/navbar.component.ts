@@ -20,7 +20,8 @@ export class NavbarComponent implements OnInit {
     guestUser: string;
     isUserLoggedIn = false;
     uiUtility = UiUtility;
-
+    projectRole = '';
+    refsetRole = '';
     @Input() breadcrumbs: any;
 
     constructor(private authenticationService: AuthenticationService,
@@ -46,6 +47,14 @@ export class NavbarComponent implements OnInit {
         });
 
         this.setUserInfo();
+        const projectChannel = new BroadcastChannel('projectChannel');
+        projectChannel.onmessage = (e) => {
+            this.projectRole = e.data;
+        };
+        const refsetDataChannel = new BroadcastChannel('refsetDataChannel');
+        refsetDataChannel.onmessage = (e) => {
+            this.refsetRole = e.data;
+        };
     }
 
     setUserInfo() {
@@ -54,7 +63,15 @@ export class NavbarComponent implements OnInit {
     }
 
     showProjectRoleAndAssignee(): boolean {
-        return this.router.url.includes('details');
+        return this.router.url.includes('details') || (this.router.url.includes('edition') && this.router.url.includes('projects'));
+    }
+
+    showProjectRole(): boolean {
+        return (this.router.url.includes('edition') && this.router.url.includes('projects')) && this.projectRole.length > 0;
+    }
+
+    showRefsetRole(): boolean {
+        return this.router.url.includes('details') && this.refsetRole.length > 0;
     }
 
     navigate(breadcrumbId) {
@@ -71,6 +88,10 @@ export class NavbarComponent implements OnInit {
         this.authenticationService.logoutUser();
     }
 
+    resources() {
+        this.router.navigate(['']);
+    }
+
     login() {
         this.router.navigate(['/login']);
     }
@@ -82,7 +103,7 @@ export class NavbarComponent implements OnInit {
     breadcrumbsHasDir(): boolean {
         if (this.breadcrumbs.length == 0)
             return false;
-        return this.breadcrumbs.find(bc => bc.label == "Refset Library") != undefined;
+        return this.breadcrumbs.find(bc => bc.label == "Reference Set Library") != undefined;
     }
 
     breadcrumbsHasProjects(): boolean {
@@ -92,7 +113,7 @@ export class NavbarComponent implements OnInit {
     }
 
     navigateToRoute(route: string): void {
-        if (this.router.url.includes(route)) {
+        if (this.router.url.includes(route) || (this.router.url.includes('projects') && route.includes('projects'))) {
             window.location.reload();
         } else {
             this.router.navigate([route]);

@@ -1,0 +1,48 @@
+<button mat-menu-item (click)="openModal(formDialog)" title="Request Access" aria-label="Request Access"
+        *ngIf="canRequest">
+    Request Access
+</button>
+
+<ng-template #formDialog let-modal>
+    <div class="modal-header rt2-modal-header">
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            Request Project Access
+        </h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body refset-tool-lockable">
+        <label class="modal-label-description">
+            Request access to the underlying project for "{{this.refset?.name}}" which is
+            "{{this.refset?.project?.name}}"
+        </label>
+        <table>
+
+            <tr>
+                <td>
+                    <label class="modal-label-description">* Message:</label>
+                </td>
+                <td>
+                    <mat-form-field floatLabel="never" class="import-from-list-field placeholder-wrap" appearance="legacy">
+                            <textarea matInput
+                                      placeholder="Please include a short explanation to accompany your request"
+                                      class="import-from-list-text-area" [(ngModel)]="description"></textarea>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+        <button type="button" [disabled]="description === ''" (click)="sendRequest()"
+                mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+                aria-label="Send Email" title="Send Email">
+            Send Email
+        </button>
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+                style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
+            Cancel
+        </button>
+    </div>
+</ng-template>

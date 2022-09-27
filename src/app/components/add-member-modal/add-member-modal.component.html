@@ -1,43 +1,48 @@
-<button class="btn btn-primary btn-wide-font  float-right" mat-raised-button (click)="openAddMemberModal(addMemberModal)">Add Member</button>
+<a class='btn btn-primary rounded btn-lg float-right btn-wide-font' (click)="openAddMemberModal(addMemberModal)">Add Member</a>
 
 <ng-template #addMemberModal let-modal>
 
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-            Add a Member to the "{{ name }}" {{ type }}
-        </h4>
+  <div class="modal-header rt2-modal-header">
+    <button ngbAutofocus class="unfocus-btn"></button>
+    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+      Add a Member to the "{{ name }}" {{ type }}
+    </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
-        </button>
-    </div>
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    </button>
+  </div>
 
-    <div class="modal-body refset-tool-lockable">
+  <div class="modal-body refset-tool-lockable">
 
-        <table>
+    <table>
 
-            <tr>
-                <td>
-                    <mat-form-field appearance="fill" class="email-input-field">
-                        <mat-label>Enter the email of the user to add:</mat-label>
-                        <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />{{ addMember.focus() }}
-                    </mat-form-field>
-                </td>
-            </tr>
+      <tr>
+        <td>
+          <mat-form-field floatLabel="never" appearance="legacy" class="email-input-field">
+            <mat-label>Enter the email of the user to add:</mat-label>
+            <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />
+              {{ setAutoFocus(addMember) }}
+          </mat-form-field>
+        </td>
+      </tr>
 
-            <tr class="modal-error-message" [hidden]="!emailError">
-                <div>{{emailError}}</div>
-            </tr>
+      <tr class="modal-error-message" [hidden]="!emailError">
+        <div>{{emailError}}</div>
+      </tr>
 
-        </table>
+    </table>
 
-    </div>
+  </div>
 
-    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-        <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()" mat-raised-button class="refset-tool-action-button mat-green">
-            Add Member
-        </button>
-    </div>
+  <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+    <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()" mat-raised-button class="refset-tool-action-button mat-green">
+      Add Member
+    </button>
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
+      Cancel
+    </button>
+  </div>
 
 </ng-template>

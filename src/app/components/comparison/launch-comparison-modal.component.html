@@ -24,7 +24,8 @@
                     </div>
 
                     <div class="col dialog-form-field">
-                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{ activeRefset.versionStatus }})</label>
+                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{
+                            activeRefset.versionStatus }})</label>
                     </div>
 
                 </div>
@@ -45,10 +46,10 @@
                             </mat-radio-button>
 
                             <mat-radio-button value="different_refset" (change)="comparisonSelectionChange($event)" [checked]="activeRefsetVersionOptions.length == 0">
-                                Different reference set
+                                Different Reference Set
                             </mat-radio-button>
 
-                            <mat-form-field [hidden]="comparisonTypeSelected == 'different_refset'" appearance="fill">
+                            <mat-form-field floatLabel="never" [hidden]="comparisonTypeSelected == 'different_refset'" appearance="legacy">
 
                                 <mat-label>Choose comparison version</mat-label>
                                 <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
@@ -57,15 +58,16 @@
 
                             </mat-form-field>
 
-                            <mat-form-field appearance="fill" [hidden]="comparisonTypeSelected == 'same_refset'">
+                            <mat-form-field floatLabel="never" appearance="legacy" [hidden]="comparisonTypeSelected == 'same_refset'">
 
-                                <mat-label>Select a refset by ID or FSN</mat-label>
+                                <mat-label>Select a Reference Set by ID or FSN</mat-label>
                                 <mat-select (selectionChange)="comparisonRefsetSelected($event)" [(ngModel)]="comparisonRefsetSelect">
 
                                     <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="comparisonSearchInput"
                                       (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
 
-                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">None</mat-option>
+                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
+                                        None</mat-option>
                                     <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
 
                                     <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
@@ -78,7 +80,7 @@
 
                             </mat-form-field>
 
-                            <mat-form-field [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefsetVersionOptions.length == 0" appearance="fill">
+                            <mat-form-field [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefsetVersionOptions.length == 0" appearance="legacy">
 
                                 <mat-label>Select version for comparison</mat-label>
                                 <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
@@ -102,6 +104,10 @@
 
         <button [disabled]="!checkComplete()" type="button" (click)="launchComparison()" mat-raised-button class="refset-tool-action-button mat-green">
             Launch Comparison
+        </button>
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+          style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
+            Cancel
         </button>
 
     </div>
@@ -140,7 +146,8 @@
                             <div class="metadata-collapsible-container white">
 
                                 <div class="col">
-                                    <div class="metadata-collapsible-container-title font-weight-bold mb-1">Reference Set Members</div>
+                                    <div class="metadata-collapsible-container-title font-weight-bold mb-1">
+                                        Reference Set Members</div>
                                 </div>
 
                                 <div class="container-fluid">
@@ -154,11 +161,15 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total font-weight-bold">
-                                                            <div>Active Reference Set ({{ comparisonData?.activeRefsetMemberTotal }}):</div>
+                                                            <div>Active Reference Set ({{
+                                                                comparisonData?.activeRefsetMemberTotal
+                                                                }}):</div>
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name font-weight-bold">
-                                                            {{ activeRefsetName }} {{ activeRefsetVersionDate }} ({{ activeRefset.versionStatus }})
+                                                            {{ activeRefsetName }} {{
+                                                            activeRefsetVersionDate }} ({{
+                                                            activeRefset.versionStatus }})
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-distinct font-weight-bold">
@@ -167,7 +178,9 @@
                                                               [definitionExceptionType]="activeRefset.definitionExceptionType"
                                                               (processSelection)="addRemoveConceptGroup($event)">
                                                             </add-remove-concept-group-icons>
-                                                            {{ comparisonData?.activeRefsetDistinctMembersCount }}
+                                                            {{
+                                                            comparisonData?.activeRefsetDistinctMembersCount
+                                                            }}
                                                             Distinct Members
                                                         </td>
 
@@ -176,11 +189,15 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total">
-                                                            Comparison Reference Set ({{ comparisonData?.comparisonRefsetMemberTotal }}):
+                                                            Comparison Reference Set ({{
+                                                            comparisonData?.comparisonRefsetMemberTotal
+                                                            }}):
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name">
-                                                            {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }} ({{ comparisonRefsetStatus }})
+                                                            {{ comparisonRefsetName }} {{
+                                                            comparisonRefsetVersionDate }} ({{
+                                                            comparisonRefsetStatus }})
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-distinct">
@@ -189,7 +206,9 @@
                                                               [definitionExceptionType]="activeRefset.definitionExceptionType"
                                                               (processSelection)="addRemoveConceptGroup($event)">
                                                             </add-remove-concept-group-icons>
-                                                            {{ comparisonData?.comparisonRefsetDistinctMembersCount }} Members Not Common
+                                                            {{
+                                                            comparisonData?.comparisonRefsetDistinctMembersCount
+                                                            }} Members Not Common
                                                         </td>
 
                                                     </tr>
@@ -237,7 +256,8 @@
 
                                             <div class="text-right close-button">
                                                 <button mat-icon-button (click)="closeConceptDetails()" aria-hidden="false" class="refset-tool-table-action-icon">
-                                                    <mat-icon aria-label="Close Concept Details" title="Close Concept Details">close</mat-icon>
+                                                    <mat-icon aria-label="Close Concept Details" title="Close Concept Details">close
+                                                    </mat-icon>
                                                 </button>
                                             </div>
 
@@ -247,7 +267,8 @@
                                         <div class="refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
 
                                             <div class="row">
-                                                <div class="refset-tool-concept-details-section-title">Parents</div>
+                                                <div class="refset-tool-concept-details-section-title">
+                                                    Parents</div>
                                             </div>
 
                                             <div class="container-fluid">
@@ -272,8 +293,10 @@
 
                                                     <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
                                                       [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
-                                                        <span *ngIf="this.taxonomyOptions?.useFsn">{{ parent?.fsn.trim() }}</span>
-                                                        <span *ngIf="!this.taxonomyOptions?.useFsn">{{ parent?.name.trim() }}</span>
+                                                        <span *ngIf="this.taxonomyOptions?.useFsn">{{
+                                                            parent?.fsn.trim() }}</span>
+                                                        <span *ngIf="!this.taxonomyOptions?.useFsn">{{
+                                                            parent?.name.trim() }}</span>
                                                     </div>
 
                                                 </div>
@@ -300,13 +323,15 @@
                                                                       class="refset-tool-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
                                                                 </div>
                                                             </div>
-                                                            <div class="col refset-tool-concept-details-concept-name">{{ conceptDetail?.name }}</div>
+                                                            <div class="col refset-tool-concept-details-concept-name">
+                                                                {{ conceptDetail?.name }}</div>
                                                             <div style="text-align: right;">
                                                                 <div class="open-container">
                                                                     <button mat-icon-button (click)="openInNewWindow(conceptDetail.code)"
                                                                       class="refset-tool-concept-details-action-icon" aria-hidden="false"
                                                                       aria-label="Open Concept in New SNOMED Browser Window" title="Open Concept in SNOMED Browser Window">
-                                                                        <mat-icon>open_in_new</mat-icon>
+                                                                        <mat-icon>open_in_new
+                                                                        </mat-icon>
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -314,20 +339,26 @@
 
                                                         <!-- ID -->
                                                         <div class="row refset-tool-concept-details-concept-row">
-                                                            <div class="refset-tool-concept-details-concept-id-label">SCTID</div>
-                                                            <div class="col refset-tool-concept-details-concept-id-text">{{ conceptDetail?.code }}</div>
+                                                            <div class="refset-tool-concept-details-concept-id-label">
+                                                                SCTID</div>
+                                                            <div class="col refset-tool-concept-details-concept-id-text">
+                                                                {{ conceptDetail?.code }}</div>
                                                         </div>
 
                                                         <!-- ECL -->
                                                         <div class="row refset-tool-concept-details-concept-row">
-                                                            <div class="col refset-tool-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |
+                                                            <div class="col refset-tool-concept-details-concept-ecl">
+                                                                {{ conceptDetail?.code }} | {{
+                                                                conceptDetail?.name }} |
                                                             </div>
                                                         </div>
 
                                                         <!-- Descriptions -->
                                                         <div *ngFor="let description of conceptDetail?.descriptions" class="row refset-tool-concept-details-concept-row">
-                                                            <div class="refset-tool-concept-details-concept-description-language">{{ description?.language }}</div>
-                                                            <div class="col refset-tool-concept-details-concept-description-text">{{ description?.term }}</div>
+                                                            <div class="refset-tool-concept-details-concept-description-language">
+                                                                {{ description?.language }}</div>
+                                                            <div class="col refset-tool-concept-details-concept-description-text">
+                                                                {{ description?.term }}</div>
                                                         </div>
 
                                                     </div>
@@ -341,7 +372,8 @@
 
                                             <div class="row">
                                                 <div class="refset-tool-concept-details-section-title">
-                                                    Children <span [hidden]="!taxonomyNumberOfChildren"> ({{ taxonomyNumberOfChildren }})</span>
+                                                    Children <span [hidden]="!taxonomyNumberOfChildren"> ({{
+                                                        taxonomyNumberOfChildren }})</span>
                                                 </div>
                                             </div>
 

@@ -1,19 +1,18 @@
-import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { firstValueFrom } from 'rxjs';
-import { Route, Router } from '@angular/router';
-import { RefsetDetails } from 'src/app/pages/refset-details';
-import { UiUtility } from "src/app/utilities/ui.utility";
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { NotificationService } from 'src/app/services/notification.service';
-import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { DialogService } from 'src/app/dialog/services/dialog.service';
+import {ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {RefsetService} from 'src/app/services/rest/refset.service';
+import {Router} from '@angular/router';
+import {RefsetDetails} from 'src/app/pages/refset-details';
+import {UiUtility} from 'src/app/utilities/ui.utility';
+import {RefsetUtility} from 'src/app/utilities/refset.utility';
+import {CodeUtility} from 'src/app/utilities/code.utility';
+import {NotificationService} from 'src/app/services/notification.service';
+import {ProjectsRefsetComponent} from 'src/app/pages/projects/refsets/projects-refset.component';
+import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
+import {DialogFactoryService} from 'src/app/dialog/services/dialog-factory.service';
+import {DialogService} from 'src/app/dialog/services/dialog.service';
 
 @Component({
     selector: 'create-new-refset',
@@ -45,6 +44,7 @@ export class CreateNewRefsetComponent implements OnInit {
     versionNotes: string;
     referenceType: string;
     privateRefset: boolean;
+    localSet: boolean;
     versionDate: string;
     refsetConcept: string;
     tags: string[];
@@ -69,10 +69,11 @@ export class CreateNewRefsetComponent implements OnInit {
         tags?: string[];
         referenceType?: string;
         privateRefset?: boolean;
+        localSet?: boolean;
         versionDate?: any;
         definitionClauses?: [];
     };
-    @ViewChild("infoDialog") infoDialog: TemplateRef<any>;
+    @ViewChild('infoDialog') infoDialog: TemplateRef<any>;
 
     constructor(
         private modalService: NgbModal,
@@ -84,9 +85,20 @@ export class CreateNewRefsetComponent implements OnInit {
         private readonly notificationService: NotificationService,
         private readonly projectsRefsetComponent: ProjectsRefsetComponent,
         private readonly authenticationService: AuthenticationService
-    ) { }
+    ) {
+    }
 
-    ngOnInit(): void { }
+    get canAdd(): boolean {
+        const project = this.inputProperties.project;
+        return project?.roles?.includes('AUTHOR');
+    }
+
+    get canEditName(): boolean {
+        return this.editMode && this.selectedReferenceType === RefsetUtility.EXTERNAL;
+    }
+
+    ngOnInit(): void {
+    }
 
     openCreateRefsetModal(createNewRefsetDialog: NgbModal) {
 
@@ -123,15 +135,16 @@ export class CreateNewRefsetComponent implements OnInit {
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
-        this.definitionClauses = [{ value: '', negated: false }];
+        this.definitionClauses = [{value: '', negated: false}];
         this.selectedReferenceType = '';
         this.privateRefset = false;
+        this.localSet = false;
         this.conceptError = '';
     }
 
     setupEditMode(): void {
 
-        let inputs = JSON.parse(JSON.stringify(this.inputProperties));
+        const inputs = JSON.parse(JSON.stringify(this.inputProperties));
 
         this.organizationName = inputs.project.edition.organization.name;
         this.editionName = inputs.project.edition.name;
@@ -146,11 +159,12 @@ export class CreateNewRefsetComponent implements OnInit {
             inputs.referenceType.substr(0, 1) +
             inputs.referenceType.substr(1).toLowerCase();
         this.privateRefset = inputs.privateRefset;
+        this.localSet = inputs.localSet;
         this.refsetConcept = inputs.metadataConcept;
         this.versionNotes = inputs.versionNotes;
         this.selectedReferenceType = inputs.referenceType;
         this.definitionClauses = inputs.definitionClauses;
-        //this.detectChanges.detectChanges();
+        // this.detectChanges.detectChanges();
     }
 
     createRefsetObject(): void {
@@ -171,7 +185,7 @@ export class CreateNewRefsetComponent implements OnInit {
             name = this.createdMetaDataConcept;
         }
 
-        let params: any = {
+        const params: any = {
             name: this.capitalizeFirstLetterOfString(name),
             parentConceptId: parentConceptId,
             moduleId: '',
@@ -181,11 +195,12 @@ export class CreateNewRefsetComponent implements OnInit {
             narrative: this.selectedNarrative,
             type: this.selectedReferenceType,
             privateRefset: this.privateRefset,
+            localSet: this.localSet,
             tags: this.selectedTags,
             versionNotes: this.selectedVersionNotes,
         };
 
-        if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+        if (this.selectedReferenceType === this.INTENSIONAL && this.definitionClauses.length > 0) {
             this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
@@ -196,7 +211,10 @@ export class CreateNewRefsetComponent implements OnInit {
 
                 if (status.error) {
 
-                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
+                        timeOut: 0,
+                        extendedTimeOut: 0
+                    });
                     return;
                 }
 
@@ -221,8 +239,9 @@ export class CreateNewRefsetComponent implements OnInit {
 
     generateDefinitionClausesJson(definitionClauses: []) {
 
-        for (let definitionClause of definitionClauses)
-            return [{ value: definitionClauses, negated: false }];
+        for (const definitionClause of definitionClauses) {
+            return [{value: definitionClauses, negated: false}];
+        }
     }
 
     parseDefinitionClausesJson(definitionClauses: any) {
@@ -240,33 +259,40 @@ export class CreateNewRefsetComponent implements OnInit {
             tagsToPersist = this.selectedTags;
         }
 
-        let params: any = {
+        const params: any = {
             narrative: this.narrative,
             tags: tagsToPersist,
             versionNotes: this.versionNotes,
             privateRefset: this.privateRefset,
+            localSet: this.localSet,
             type: this.referenceType,
         };
+        if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
+            params.name = this.refsetConcept;
+        }
 
-        if (this.selectedReferenceType == this.INTENSIONAL && this.definitionClauses.length > 0) {
+        if (this.selectedReferenceType === this.INTENSIONAL && this.definitionClauses.length > 0) {
             this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
         this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe((status) => {
 
-            this.showLoadingSpinner = false;
+                this.showLoadingSpinner = false;
 
-            if (status.error) {
+                if (status.error) {
 
-                this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                return;
-            }
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
+                        timeOut: 0,
+                        extendedTimeOut: 0
+                    });
+                    return;
+                }
 
-            this.modalService.dismissAll();
-            this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
-            this.refsetDetails.initializeDetailsPage();
-        },
+                this.modalService.dismissAll();
+                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                this.refsetDetails.initializeDetailsPage();
+            },
             (error) => {
                 this.showLoadingSpinner = false;
             }
@@ -276,33 +302,36 @@ export class CreateNewRefsetComponent implements OnInit {
     isComplete(): boolean {
         let typeCheck = false;
 
-        if (this.selectedReferenceType == RefsetUtility.EXTENSIONAL) {
+        if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
             typeCheck = true;
-            console.log("EXTENSIONAL typeCheck: " + typeCheck);
-        } else if (this.selectedReferenceType == RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
+            console.log('EXTENSIONAL typeCheck: ' + typeCheck);
+        } else if (this.selectedReferenceType === RefsetUtility.INTENSIONAL &&
+            this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
             typeCheck = true;
-            console.log("EXTENSIONAL INTENSIONAL: " + typeCheck);
-            console.log("this.definitionClauses: ", this.definitionClauses);
+            console.log('EXTENSIONAL INTENSIONAL: ' + typeCheck);
+            console.log('this.definitionClauses: ', this.definitionClauses);
         }
 
-        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName());
+        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) ||
+            this.selectedMetaDataConcept) && this.isValidConceptName());
     }
 
     isValidConceptName(): boolean {
-        var format = /^(?!.* {2,})[\/-9A-Za-z\\()À-ú\s]+$/;
-        var lower = null;
-        if (this.createdMetaDataConcept)
+        const format = /^(?!.* {2,})[\/-9A-Za-z\\()À-ú\s]+$/;
+        let lower = null;
+        if (this.createdMetaDataConcept) {
             lower = this.createdMetaDataConcept.toLowerCase();
-        else
+        } else {
             lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
+        }
         console.log(lower);
-        var flag = lower.match(format);
+        const flag = lower.match(format);
         if (flag == null) {
-            this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';
+            this.conceptError = 'The Reference Set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';
         } else {
             this.conceptError = '';
         }
-        return flag == null ? false : true;
+        return flag != null;
     }
 
     isUat(): boolean {
@@ -342,10 +371,7 @@ export class CreateNewRefsetComponent implements OnInit {
             if (input) {
                 input.value = '';
             }
-        }
-
-        // Handling new refset creation
-        else {
+        } else {
 
             // Add our tag
             if ((value || '').trim()) {
@@ -369,10 +395,7 @@ export class CreateNewRefsetComponent implements OnInit {
             if (index >= 0) {
                 this.tags.splice(index, 1);
             }
-        }
-
-        // Handling new refset creation
-        else {
+        } else {
 
             const index = this.selectedTags.indexOf(data);
 
@@ -388,7 +411,7 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     openInfoDialog() {
-        const dialogId = "infoDialog";
+        const dialogId = 'infoDialog';
 
         const dialogData = {
             headerText: `Information`,
@@ -404,12 +427,8 @@ export class CreateNewRefsetComponent implements OnInit {
 
         this.dialog = this.dialogFactoryService.open(dialogData);
 
-        this.dialog.confirmed().subscribe((data) => { });
-    }
-
-    get canAdd(): boolean {
-        let project = this.inputProperties.project;
-        return project?.roles?.includes('AUTHOR');
+        this.dialog.confirmed().subscribe((data) => {
+        });
     }
 
 }

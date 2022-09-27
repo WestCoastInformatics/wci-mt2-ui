@@ -31,4 +31,9 @@ export class AuditService extends RestService {
         return this.get(this.contextPath + `audit/REFSET/${refsetId}`, params, parseParams);
     }
 
+    getOrgAuditTrial(orgId: string, params: any, parseParams = true): Observable<any> {
+        params["expand"] = true;
+        return this.get(this.contextPath + `audit/ORGANIZATION/${orgId}`, params, parseParams);
+    }
+
 }

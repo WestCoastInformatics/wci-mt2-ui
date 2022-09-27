@@ -147,5 +147,16 @@ export class ColumnChooserComponent {
         }
 
         this.gridColumnApi.applyColumnState({ state: state });
+        // set placeholders on the grid floating filter fields
+        Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+            if (obj.attributes['disabled']) {
+                // skip columns with disabled filter
+                return;
+            }
+
+            const label = obj.getAttribute('aria-label');
+            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+            obj.setAttribute('placeholder', value);
+        });
     }
 }

@@ -9,931 +9,939 @@ import { RefsetUtility } from "./refset.utility";
 
 export class UiUtility {
 
-    static router: Router;
-    static memberChangeData = {};
-
-    /*
-     * resizeGridColumns - return a element object having been passed either a element object or element selector string
-     * @param [object] event - The ag-grid event object.
-     */
-    static resizeGridColumns(event) {
-
-        // check to see if any parent of the grid is hidden, if so don't resize the columns because the grid will error
-        if (event.api.gridCore.eGridDiv.offsetParent != null) {
-            event.api.sizeColumnsToFit();
-        }
-    }
-
-    /*
-     * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined. Can also specify valueFormat on the colDef
-     * @param [object] params - The ag-grid valuegetter params object.
-     */
-    static gridDateValueGetter(params) {
-        if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
-
-            let format = CodeUtility.DATE_FORMAT_REVERSE;
-
-            if (params.colDef.valueFormat) {
-                format = params.colDef.valueFormat;
-            }
-            return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
-
-        } else {
-            return '';
-        }
-    }
-
-    /*
-     * getByElementOrSelector - return a element object having been passed either a element object or element selector string
-     * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).
-     * @return - the element object
-     */
-    static getByElementOrSelector(formElementOrSelector) {
+	static router: Router;
+	static memberChangeData = {};
+
+	/*
+	 * resizeGridColumns - return a element object having been passed either a element object or element selector string
+	 * @param [object] event - The ag-grid event object.
+	 */
+	static resizeGridColumns(event) {
+
+		// check to see if any parent of the grid is hidden, if so don't resize the columns because the grid will error
+		if (event.api.gridCore.eGridDiv.offsetParent != null) {
+			event.api.sizeColumnsToFit();
+		}
+	}
+
+	/*
+	 * gridDateValueGetter - return a formated date for a json unix style field value for an AG-Grid. Requires the colDef has the field defined. Can also specify valueFormat on the colDef
+	 * @param [object] params - The ag-grid valuegetter params object.
+	 */
+	static gridDateValueGetter(params) {
+		if (params?.data && CodeUtility.hasValue(params.data[params.colDef.field])) {
+
+			let format = CodeUtility.DATE_FORMAT_REVERSE;
+
+			if (params.colDef.valueFormat) {
+				format = params.colDef.valueFormat;
+			}
+			return CodeUtility.formatJsonDate(params.data[params.colDef.field], format);
+
+		} else {
+			return '';
+		}
+	}
+
+	/*
+	 * getByElementOrSelector - return a element object having been passed either a element object or element selector string
+	 * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).
+	 * @return - the element object
+	 */
+	static getByElementOrSelector(formElementOrSelector) {
 
-        let element;
+		let element;
 
-        // If the type of the first parameter is a string, then use it as a jquery selector, otherwise use as is
-        if (typeof formElementOrSelector === "string") {
-            element = $(formElementOrSelector);
-        } else {
-            element = formElementOrSelector;
-        }
+		// If the type of the first parameter is a string, then use it as a jquery selector, otherwise use as is
+		if (typeof formElementOrSelector === "string") {
+			element = $(formElementOrSelector);
+		} else {
+			element = formElementOrSelector;
+		}
 
-        return element;
-    }
+		return element;
+	}
 
-    /*
-     * focusNextFormElement - set focus on the next form element that isn't disabled
-     */
-    static focusNextFormElement() {
+	/*
+	 * focusNextFormElement - set focus on the next form element that isn't disabled
+	 */
+	static focusNextFormElement() {
 
-        //add all elements we want to include in our selection
-        let focusableElements = 'a:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-        let activeElement: any = document.activeElement;
+		//add all elements we want to include in our selection
+		let focusableElements = 'a:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+		let activeElement: any = document.activeElement;
 
-        if (activeElement && activeElement.form) {
+		if (activeElement && activeElement.form) {
 
-            var focusable = Array.prototype.filter.call(activeElement.form.querySelectorAll(focusableElements),
-                function (element) {
-                    //check for visibility while always include the current activeElement
-                    return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
-                });
+			var focusable = Array.prototype.filter.call(activeElement.form.querySelectorAll(focusableElements),
+				function (element) {
+					//check for visibility while always include the current activeElement
+					return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
+				});
 
-            let index = focusable.indexOf(document.activeElement);
-            focusable[index + 1].focus();
-        }
-    }
+			let index = focusable.indexOf(document.activeElement);
+			focusable[index + 1].focus();
+		}
+	}
 
 
-    // function to switch a field between enabled and disabled
-    static toggleFieldAvailability(elementOrSelector, enable) {
+	// function to switch a field between enabled and disabled
+	static toggleFieldAvailability(elementOrSelector, enable) {
 
-        let element = this.getByElementOrSelector(elementOrSelector);
+		let element = this.getByElementOrSelector(elementOrSelector);
 
-        if (enable == undefined || enable == null) {
+		if (enable == undefined || enable == null) {
 
-            if (element.hasClass("ui-state-disabled")) {
-                enable = true;
-            } else {
-                enable = false;
-            }
-        }
+			if (element.hasClass("ui-state-disabled")) {
+				enable = true;
+			} else {
+				enable = false;
+			}
+		}
 
-        if (enable) {
+		if (enable) {
 
-            element.removeClass("ui-state-disabled");
-            element.prop("disabled", false);
-        } else {
+			element.removeClass("ui-state-disabled");
+			element.prop("disabled", false);
+		} else {
 
-            element.addClass("ui-state-disabled");
-            element.prop("disabled", true);
-        }
-    }
+			element.addClass("ui-state-disabled");
+			element.prop("disabled", true);
+		}
+	}
 
-    // function to download a file through a REST request
-    static startFileDownload(notificationService: NotificationService, url, fileName = null, description = null) {
+	// function to download a file through a REST request
+	static startFileDownload(notificationService: NotificationService, url, fileName = null, description = null) {
 
-        // This will hold the the file as a local object URL
-        let downloadUrl;
-        let downloadNotification: any = null;
+		// This will hold the the file as a local object URL
+		let downloadUrl;
+		let downloadNotification: any = null;
 
-        if (!CodeUtility.hasValue(description)) {
-            description = 'download';
-        }
+		if (!CodeUtility.hasValue(description)) {
+			description = 'download';
+		}
 
-        let notifyOfError = () => {
+		let notifyOfError = () => {
 
-            if (CodeUtility.hasValue(downloadUrl)) {
-                window.URL.revokeObjectURL(downloadUrl);
-            }
+			if (CodeUtility.hasValue(downloadUrl)) {
+				window.URL.revokeObjectURL(downloadUrl);
+			}
 
-            if (notificationService.isOpen(downloadNotification)) {
-                notificationService.close(downloadNotification);
-            }
+			if (notificationService.isOpen(downloadNotification)) {
+				notificationService.close(downloadNotification);
+			}
 
-            downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
-            downloadNotification;
-        };
+			downloadNotification = notificationService.show('Your ' + description + ' has encountered an error. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+			downloadNotification;
+		};
 
-        $.ajax({
-            type: "GET",
-            url: url,
-            xhrFields: {
-                responseType: 'blob' // to avoid binary data being mangled on charset conversion
-            },
-            xhr: function () {
+		$.ajax({
+			type: "GET",
+			url: url,
+			xhrFields: {
+				responseType: 'blob' // to avoid binary data being mangled on charset conversion
+			},
+			xhr: function () {
 
-                let request = $.ajaxSettings.xhr();
+				let request = $.ajaxSettings.xhr();
 
-                request.addEventListener('readystatechange', function (event) {
+				request.addEventListener('readystatechange', function (event) {
 
-                    try {
+					try {
 
-                        if (request.status != 500 && request.readyState == 4) {
+						if (request.status != 500 && request.readyState == 4) {
 
-                            // Downloaing has finished
-                            downloadUrl = URL.createObjectURL(request.response);
-                            let id = 'file_download_' + CodeUtility.getUniqueID();
+							// Downloaing has finished
+							downloadUrl = URL.createObjectURL(request.response);
+							let id = 'file_download_' + CodeUtility.getUniqueID();
 
-                            if (!CodeUtility.hasValue(fileName)) {
+							if (!CodeUtility.hasValue(fileName)) {
 
-                                let disposition = request.getResponseHeader('Content-Disposition');
+								let disposition = request.getResponseHeader('Content-Disposition');
 
-                                if (disposition && disposition.indexOf('attachment') !== -1) {
+								if (disposition && disposition.indexOf('attachment') !== -1) {
 
-                                    let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                                    let matches = regex.exec(disposition);
+									let regex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+									let matches = regex.exec(disposition);
 
-                                    if (matches != null && matches[1]) {
-                                        fileName = matches[1].replace(/['"]/g, '');
-                                    } else {
-                                        fileName = '';
-                                    }
-                                }
-                            }
+									if (matches != null && matches[1]) {
+										fileName = matches[1].replace(/['"]/g, '');
+									} else {
+										fileName = '';
+									}
+								}
+							}
 
-                            let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
+							let sanatizedDownloadUrl = notificationService.sanitizeUrl(downloadUrl);
 
-                            let message = 'Your ' + description + ' is complete. Click this message to download your file';
+							let message = 'Your ' + description + ' is complete. Click this message to download your file';
 
-                            notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id }, 100);
+							notificationService.update(downloadNotification, message, null, null, { url: sanatizedDownloadUrl, download: fileName, urlId: id }, 100);
 
-                            setTimeout(function () {
+							setTimeout(function () {
 
-                                $('#' + id).click(function () {
-                                    notificationService.close(downloadNotification);
-                                });
-                            }, 600);
+								$('#' + id).click(function () {
+									notificationService.close(downloadNotification);
+								});
+							}, 600);
 
-                            // Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
-                            setTimeout(function () {
+							// Recommended : Revoke the object URL after some time to free up resources. There is no way to find out whether user finished downloading
+							setTimeout(function () {
 
-                                window.URL.revokeObjectURL(downloadUrl);
+								window.URL.revokeObjectURL(downloadUrl);
 
-                                if (notificationService.isOpen(downloadNotification)) {
+								if (notificationService.isOpen(downloadNotification)) {
 
-                                    notificationService.close(downloadNotification);
-                                    notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
-                                }
-                            }, 300000);
-                        }
+									notificationService.close(downloadNotification);
+									notificationService.show('Your ' + description + ' expired after 5 minutes. Please try again', null, 'error', { closeButton: true, timeOut: 0, extendedTimeOut: 0 });
+								}
+							}, 300000);
+						}
 
-                    } catch (error) {
-                        notifyOfError();
-                    }
-                });
+					} catch (error) {
+						notifyOfError();
+					}
+				});
 
-                request.addEventListener('progress', function (event) {
+				request.addEventListener('progress', function (event) {
 
-                    var percent_complete = (event.loaded / event.total) * 100;
+					var percent_complete = (event.loaded / event.total) * 100;
 
-                    if (downloadNotification == null) {
-                        downloadNotification = notificationService.showProgress('Your ' + description + ' file is now being saved.', '', null, null);
-                    } else {
-                        notificationService.update(downloadNotification, 'Your ' + description + ' file is now being saved.', null, null, null, percent_complete);
-                    }
-                });
+					if (downloadNotification == null) {
+						downloadNotification = notificationService.showProgress('Your ' + description + ' file is now being saved.', '', null, null);
+					} else {
+						notificationService.update(downloadNotification, 'Your ' + description + ' file is now being saved.', null, null, null, percent_complete);
+					}
+				});
 
-                request.responseType = 'blob';
-                return request;
-            },
-            success: function (data) {
+				request.responseType = 'blob';
+				return request;
+			},
+			success: function (data) {
 
-                if (data.error) {
-                    notifyOfError();
-                }
-            },
-            error: function (data) {
-                notifyOfError();
-            }
-        });
-    }
+				if (data.error) {
+					notifyOfError();
+				}
+			},
+			error: function (data) {
+				notifyOfError();
+			}
+		});
+	}
 
-    // Function to open SNOMED ECL Builder
-    static openEclBuilder(fieldId, branch) {
+	// Function to open SNOMED ECL Builder
+	static openEclBuilder(fieldId, branch) {
 
-        let field = $('#' + fieldId);
-        let eclString: any = field.val();
-        let snowstormApiUrl = environment['snowstormApiUrl'];
-        const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
+		let field = $('#' + fieldId);
+		let eclString: any = field.val();
+		let snowstormApiUrl = environment['snowstormApiUrl'];
+		const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
 
-        if (!regex.test(eclString)) {
-            eclString = '';
-        }
+		if (!regex.test(eclString)) {
+			eclString = '';
+		}
 
-        $('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
+		$('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
-        const eclBuilder = document.querySelector('ecl-builder');
-        eclBuilder.querySelector('input').focus();
+		const eclBuilder = document.querySelector('ecl-builder');
+		eclBuilder.querySelector('input').focus();
 
-        eclBuilder.addEventListener('output', (event: any) => {
+		eclBuilder.addEventListener('output', (event: any) => {
 
-            field.val(event.detail);
+			field.val(event.detail);
 
-            // need to create a custom event to allow jquery to trigger an Angular event
-            const customEvent = document.createEvent('Event');
-            customEvent.initEvent('input', true, true);
-            field[0].dispatchEvent(customEvent);
-        });
-    }
+			// need to create a custom event to allow jquery to trigger an Angular event
+			const customEvent = document.createEvent('Event');
+			customEvent.initEvent('input', true, true);
+			field[0].dispatchEvent(customEvent);
+		});
+	}
 
-    // Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
-    static manageMemberNotifications(refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
+	// Function for background processesing of lengthy add/remove member tasks, and notification to user of the status of those tasks
+	static manageMemberNotifications(refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
-        // set a small delay so the original call has some time to process
-        CodeUtility.delay(1500);
+		// set a small delay so the original call has some time to process
+		CodeUtility.delay(1500);
 
-        let message = 'Members are being ' + description + ' refset ' + refsetId + '.';
-        let messagePrefix = '';
+		let message = 'Members are being ' + description + ' Reference Set ' + refsetId + '.';
+		let messagePrefix = '';
 
-        if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
+		if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
 
-            if (description.includes(RefsetUtility.EXCLUSION)) {
+			if (description.includes(RefsetUtility.EXCLUSION)) {
 
-                if (description.includes('added')) {
+				if (description.includes('added')) {
 
-                    description = 'removed from';
-                    message = 'An exclusion is being added and members are being removed from';
-                    messagePrefix = 'An exclusion was added. ';
-                } else {
+					description = 'removed from';
+					message = 'An exclusion is being added and members are being removed from';
+					messagePrefix = 'An exclusion was added. ';
+				} else {
 
-                    description = 'added to';
-                    message = 'An exclusion is being removed and members are being added to';
-                    messagePrefix = 'An exclusion was removed. ';
-                }
+					description = 'added to';
+					message = 'An exclusion is being removed and members are being added to';
+					messagePrefix = 'An exclusion was removed. ';
+				}
 
-            } else {
+			} else {
 
-                if (description.includes('added')) {
+				if (description.includes('added')) {
 
-                    description = 'added to';
-                    message = 'An inclusion is being added and members are being added to';
-                    messagePrefix = 'An inclusion was added. ';
+					description = 'added to';
+					message = 'An inclusion is being added and members are being added to';
+					messagePrefix = 'An inclusion was added. ';
 
-                } else {
+				} else {
 
-                    description = 'removed from';
-                    message = 'An inclusion is being removed and members are being removed from';
-                    messagePrefix = 'An inclusion was removed. ';
-                }
-            }
+					description = 'removed from';
+					message = 'An inclusion is being removed and members are being removed from';
+					messagePrefix = 'An inclusion was removed. ';
+				}
+			}
 
-            message += ' refset ' + refsetId + '.';
-        }
+			message += ' Reference Set ' + refsetId + '.';
+		}
 
-        message += ' The refset is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the refset is ready if you do not refresh the page.';
+		message += ' The Reference Set is locked until the operation completes. You can close this message and do other operations on the site, you will be notified when the Reference Set is ready if you do not refresh the page.';
 
-        let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+		let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
-        let downloadReportButton: IToastButton = { id: 'download', title: 'Download Report', data: {} };
-        let buttons = [downloadReportButton];
-        let callNumber = 0;
-        let callDelay = 1000;
-        let successMessageTimeout = 0;
-        this.router = router;
+		let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
+		let downloadReportButton: IToastButton = { id: 'download', title: 'Download Report', data: {} };
+		let buttons = [downloadReportButton];
+		let callNumber = 0;
+		let callDelay = 1000;
+		let successMessageTimeout = 0;
+		this.router = router;
 
-        let checkIfFinished = () => {
+		let checkIfFinished = () => {
 
-            callNumber++;
+			callNumber++;
 
-            if (callNumber == 20) {
-                callDelay = 4000;
+			if (callNumber == 20) {
+				callDelay = 4000;
 
-            } else if (callNumber == 30) {
-                callDelay = 15000;
-            }
-            refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
+			} else if (callNumber == 30) {
+				callDelay = 15000;
+			}
+			refsetService.isRefsetLocked(refsetInternalId).subscribe((data) => {
 
-                if (CodeUtility.testBoolean(data)) {
-                    setTimeout(checkIfFinished, callDelay);
-                } else {
+				if (CodeUtility.testBoolean(data)) {
+					setTimeout(checkIfFinished, callDelay);
+				} else {
 
-                    let title = 'Member Change Notification';
-                    let messageEnd = description + ' refset ' + refsetId + '. You may continue editing the refset.';
-                    let notificationType = 'success';
-                    let conceptIdArray = Object.keys(data);
-                    let conceptStatusArray: any[] = [];
-                    let emptydata = { refset: refsetId, statuses: [] };
-                    let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+					let title = 'Member Change Notification';
+					let messageEnd = description + ' Reference Set ' + refsetId + '. You may continue editing the Reference Set.';
+					let notificationType = 'success';
+					let conceptIdArray = Object.keys(data);
+					let conceptStatusArray: any[] = [];
+					let emptydata = { refset: refsetId, statuses: [] };
+					let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 
-                    if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
-                        this.memberChangeData[refsetId] = emptydata;
-                    }
+					if (!this.memberChangeData[refsetId] || previousNotifications.length == 0) {
+						this.memberChangeData[refsetId] = emptydata;
+					}
 
-                    notificationService.close(notification);
+					notificationService.close(notification);
 
-                    for (let conceptId of conceptIdArray) {
+					for (let conceptId of conceptIdArray) {
 
-                        let conceptStatus: any = data[conceptId];
-                        this.memberChangeData[refsetId].statuses.push({ Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status });
-                        conceptStatusArray.push({
-                            code: conceptId,
-                            added: conceptStatus.operation == 'Added',
-                            failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member',
-                            operation: conceptStatus.operation,
-                            status: conceptStatus.status,
-                            name: conceptStatus.name,
-                            active: conceptStatus.active
-                        });
-                    }
+						let conceptStatus: any = data[conceptId];
+						this.memberChangeData[refsetId].statuses.push({ Concept: conceptId, Operation: conceptStatus.operation, Status: conceptStatus.status });
+						conceptStatusArray.push({
+							code: conceptId,
+							added: conceptStatus.operation == 'Added',
+							failed: conceptStatus.status == 'Failed' || conceptStatus.status == 'Already Member',
+							operation: conceptStatus.operation,
+							status: conceptStatus.status,
+							name: conceptStatus.name,
+							active: conceptStatus.active
+						});
+					}
 
-                    if (router.url.includes('/details/' + refsetId)) {
+					if (router.url.includes('/details/' + refsetId)) {
 
-                        successMessageTimeout = 5000;
-                        callbackFunction(conceptStatusArray);
-                    } else {
-                        buttons.unshift(viewRefsetButton);
-                    }
+						successMessageTimeout = 5000;
+						callbackFunction(conceptStatusArray);
+					} else {
+						buttons.unshift(viewRefsetButton);
+					}
 
-                    if (conceptIdArray.length > 0) {
+					if (conceptIdArray.length > 0) {
 
-                        let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
-                        let someFailed = dataString.includes('Failed');
-                        let someSucceeded = dataString.includes('Success');
+						let dataString = JSON.stringify(this.memberChangeData[refsetId].statuses);
+						let someFailed = dataString.includes('Failed');
+						let someSucceeded = dataString.includes('Success');
 
-                        if (!someFailed && someSucceeded) {
-                            message = messagePrefix + 'All members were successfully ' + messageEnd;
+						if (!someFailed && someSucceeded) {
+							message = messagePrefix + 'All members were successfully ' + messageEnd;
 
-                        } else if (someFailed && !someSucceeded) {
+						} else if (someFailed && !someSucceeded) {
 
-                            notificationType = 'error';
-                            message = messagePrefix + 'No members were able to be ' + messageEnd;
-                        } else {
+							notificationType = 'error';
+							message = messagePrefix + 'No members were able to be ' + messageEnd;
+						} else {
 
-                            notificationType = 'warning';
-                            message = messagePrefix + 'Some members were not able to be ' + messageEnd;
-                        }
-                    } else {
+							notificationType = 'warning';
+							message = messagePrefix + 'Some members were not able to be ' + messageEnd;
+						}
+					} else {
 
-                        let noContentMessage = 'There were no concepts in the request for refset ' + refsetId + '.';
-                        let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
-                        let continueEditingMessage = ' You may continue editing the refset.';
-                        notificationType = 'warning';
+						let noContentMessage = 'There were no concepts in the request for Reference Set ' + refsetId + '.';
+						let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
+						let continueEditingMessage = ' You may continue editing the Reference Set.';
+						notificationType = 'warning';
 
-                        if (previousNotifications.length > 0) {
+						if (previousNotifications.length > 0) {
 
-                            if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
-                                notificationType = 'error';
-                            }
+							if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
+								notificationType = 'error';
+							}
 
-                            if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
-                                message = previousNotifications[0].message;
-                            } else {
-                                message = 'There were no concepts in the last request for refset ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
-                            }
+							if (previousNotifications[0].message == noContentMessage + noSpecialCharatersMessage + continueEditingMessage) {
+								message = previousNotifications[0].message;
+							} else {
+								message = 'There were no concepts in the last request for Reference Set ' + refsetId + '.' + noSpecialCharatersMessage + ' Previous requests had: ' + previousNotifications[0].message;
+							}
 
-                        } else {
+						} else {
 
-                            message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
-                            buttons.pop();
-                        }
-                    }
+							message = noContentMessage + noSpecialCharatersMessage + continueEditingMessage;
+							buttons.pop();
+						}
+					}
 
-                    if (previousNotifications.length > 0) {
-                        notificationService.close(previousNotifications[0]);
-                    }
+					if (previousNotifications.length > 0) {
+						notificationService.close(previousNotifications[0]);
+					}
 
-                    notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+					notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
 
-                    notification.onAction.subscribe(button => {
+					notification.onAction.subscribe(button => {
 
-                        if (button.id == 'download') {
-                            this.createMemberChangeReport(refsetId, notification, notificationService);
+						if (button.id == 'download') {
+							this.createMemberChangeReport(refsetId, notification, notificationService);
 
-                        } else if (button.id == 'view') {
-                            this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
-                        }
-                    });
+						} else if (button.id == 'view') {
+							this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
+						}
+					});
 
-                    // notification.onHidden.subscribe(() => {
-                    //     this.memberChangeData[refsetId] = emptydata;
-                    // });
-                }
-            },
-                (error) => {
+					// notification.onHidden.subscribe(() => {
+					//     this.memberChangeData[refsetId] = emptydata;
+					// });
+				}
+			},
+				(error) => {
 
-                    console.log(error);
-                    message = 'There has been a problem  ' + description + ' refset ' + refsetId + '. View the refset to determine changes or contact an administrator.';
-                    notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                }
-            );
-        };
+					console.log(error);
+					message = 'There has been a problem  ' + description + ' Reference Set ' + refsetId + '. View the Reference Set to determine changes or contact an administrator.';
+					notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+				}
+			);
+		};
 
-        checkIfFinished();
-    }
+		checkIfFinished();
+	}
 
-    // Function for background processesing of lengthy non member refset tasks, and notification to user of the status of those tasks
-    static manageProcessNotifications(refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
+	// Function for background processesing of lengthy non member Reference Set tasks, and notification to user of the status of those tasks
+	static manageProcessNotifications(refsetInternalId: string, refsetId: string, versionDate: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router, processType: string) {
 
-        // set a small delay so the original call has some time to process
-        CodeUtility.delay();
+		// set a small delay so the original call has some time to process
+		CodeUtility.delay();
 
-        let message = 'Refset ' + refsetId + ' has started the ' + processType + ' process. The refset is locked until the operation completes. You can close this message and do other operations on the site, ';
-        let viewRefsetButton: IToastButton = { id: 'view', title: 'View Refset', data: {} };
-        let buttons = [viewRefsetButton];
+		let message = 'Reference Set ' + refsetId + ' has started the ' + processType + ' process. The Reference Set is locked until the operation completes. You can close this message and do other operations on the site, ';
+		let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
+		let buttons = [viewRefsetButton];
 
-        if (processType == ('upgrade')) {
+		if (processType == ('upgrade')) {
 
-            message += 'you will be notified when the refset is ready if you do not refresh the page.';
+			message += 'you will be notified when the Reference Set is ready if you do not refresh the page.';
 
-            let downloadInactiveReportButton: IToastButton = { id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {} };
-            let downloadChangeReportButton: IToastButton = { id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {} };
-            // buttons.push(downloadInactiveReportButton);
+			let downloadInactiveReportButton: IToastButton = { id: 'inactiveChangeReport', title: 'Download Inactive Change Report', data: {} };
+			let downloadChangeReportButton: IToastButton = { id: 'finishedChangeReport', title: 'Download Finished Change Report', data: {} };
+			// buttons.push(downloadInactiveReportButton);
 
+		} else if (processType == ('comparison')) {
 
-        } else if (processType == ('comparison')) {
+			message += 'but do not refresh the page or you will need to repeat the process.';
+			let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
+			buttons.push(showComparisonButton);
 
-            message += 'but do not refresh the page or you will need to repeat the process.';
-            let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
-            buttons.push(showComparisonButton);
-        }
+		} else if (processType == ('bulk upgrade')) {
 
-        let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+			buttons = [];
+			message = 'The following Reference Sets have started the ' + processType + ' process. The Reference Sets are locked until the operation completes. '
+				+ 'You can close this message and do other operations on the site, you will be notified when the Reference Sets are ready if you do not refresh the page. <br>' + refsetId;
+		}
 
-        let callNumber = 0;
-        let callDelay = 1000;
-        let successMessageTimeout = 0;
-        this.router = router;
+		let notification = notificationService.show(message, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
 
-        let checkIfFinished = () => {
+		let callNumber = 0;
+		let callDelay = 1000;
+		let successMessageTimeout = 0;
+		this.router = router;
 
-            callNumber++;
+		let checkIfFinished = () => {
 
-            if (callNumber == 20) {
-                callDelay = 4000;
+			callNumber++;
 
-            } else if (callNumber == 30) {
-                callDelay = 15000;
-            }
+			if (callNumber == 20) {
+				callDelay = 4000;
 
-            refsetService.isRefsetLocked(refsetInternalId).subscribe(
+			} else if (callNumber == 30) {
+				callDelay = 15000;
+			}
 
-                (data) => {
+			refsetService.isRefsetLocked(refsetInternalId).subscribe(
 
-                    if (CodeUtility.testBoolean(data)) {
-                        setTimeout(checkIfFinished, callDelay);
-                    } else {
+				(data) => {
 
-                        let title = 'Refset Process Complete Notification';
-                        let notificationType = 'success';
-                        let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
+					if (CodeUtility.testBoolean(data)) {
+						setTimeout(checkIfFinished, callDelay);
+					} else {
 
-                        notificationService.close(notification);
+						let title = 'Reference Set Process Complete Notification';
+						let notificationType = 'success';
+						let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 
-                        if (router.url.includes('/' + refsetId)) {
-                            buttons.shift();
-                        }
+						notificationService.close(notification);
 
-                        message = 'Refset ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
+						if (router.url.includes('/' + refsetId)) {
+							buttons.shift();
+						}
 
-                        if (previousNotifications.length > 0) {
-                            notificationService.close(previousNotifications[0]);
-                        }
+						if (processType != ('bulk upgrade')) {
+							message = 'Reference Set ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
+						} else {
+							message = 'The following Reference Sets have successfully completed the ' + processType + ' process. They are no longer locked. <br>' + refsetId;
+						}
 
-                        notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
+						if (previousNotifications.length > 0) {
+							notificationService.close(previousNotifications[0]);
+						}
 
-                        notification.onAction.subscribe(button => {
+						notification = notificationService.show(message, title, notificationType, { timeOut: 0, extendedTimeOut: 0 }, refsetId, buttons);
 
-                            if (button.id == 'view') {
-                                this.viewRefset(refsetId, versionDate);
+						notification.onAction.subscribe(button => {
 
-                            } else if (button.id == 'inactiveChangeReport') {
-                                this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
+							if (button.id == 'view') {
+								this.viewRefset(refsetId, versionDate);
 
-                            } else if (button.id == 'comparison') {
+							} else if (button.id == 'inactiveChangeReport') {
+								this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
 
-                                callbackFunction();
-                                notificationService.close(notification);
-                            } else if (button.id == 'finishedChangeReport') {
-                                this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
-                            }
-                        });
+							} else if (button.id == 'comparison') {
 
-                        if (processType == 'upgrade') {
-                            callbackFunction();
-                        }
-                    }
-                },
-                (error) => {
+								callbackFunction();
+								notificationService.close(notification);
+							} else if (button.id == 'finishedChangeReport') {
+								this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
+							}
+						});
 
-                    console.log(error);
-                    message = 'There has been a problem with refset ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
-                    notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-                }
-            );
-        };
+						if (processType.includes('upgrade')) {
+							callbackFunction();
+						}
+					}
+				},
+				(error) => {
 
-        checkIfFinished();
-    }
+					console.log(error);
+					message = 'There has been a problem with Reference Set ' + refsetId + ' during the ' + processType + ' process. Please contact an administrator.';
+					notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+				}
+			);
+		};
 
-    static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
+		checkIfFinished();
+	}
 
-        let memberStatuses = this.memberChangeData[refsetId].statuses;
-        let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
+	static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
 
-        this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
-        notificationService.close(notification);
-        delete this.memberChangeData[refsetId];
-    }
+		let memberStatuses = this.memberChangeData[refsetId].statuses;
+		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
 
-    static createInactiveChangeReport(refsetId: string, data): void {
-        console.log(data);
-        let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+		this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
+		notificationService.close(notification);
+		delete this.memberChangeData[refsetId];
+	}
 
-        this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
-    }
+	static createInactiveChangeReport(refsetId: string, data): void {
+		console.log(data);
+		let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-    static createFinishedChangeReport(refsetId: string, data): void {
+		this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
+	}
 
-        let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
+	static createFinishedChangeReport(refsetId: string, data): void {
 
-        const headerObject = {
-            'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
-            'newMemberHeader': ['New Member ID', 'New Member Concept'],
-            'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
-            'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
-        };
+		let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
 
-        this.downloadFile(data, headerObject, fileName, true);
-    }
+		const headerObject = {
+			'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
+			'newMemberHeader': ['New Member ID', 'New Member Concept'],
+			'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
+			'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
+		};
 
-    static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false) {
+		this.downloadFile(data, headerObject, fileName, true);
+	}
 
-        let csvData;
+	static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false) {
 
-        if (!merge) {
-            csvData = this.convertToCsv(data, headerlist);
-        } else {
+		let csvData;
 
-            csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
-                + '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
-                + '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
-                + '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
-        }
+		if (!merge) {
+			csvData = this.convertToCsv(data, headerlist);
+		} else {
 
-        const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
-        const downloadLink = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
+			csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+		}
 
-        if (isSafariBrowser) {
-            downloadLink.setAttribute('target', '_blank');
-        }
+		const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
+		const downloadLink = document.createElement('a');
+		const url = URL.createObjectURL(blob);
+		const isSafariBrowser = navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1;
 
-        downloadLink.setAttribute('href', url);
-        downloadLink.setAttribute('download', fileName + '.csv');
-        downloadLink.style.visibility = 'hidden';
+		if (isSafariBrowser) {
+			downloadLink.setAttribute('target', '_blank');
+		}
 
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    }
+		downloadLink.setAttribute('href', url);
+		downloadLink.setAttribute('download', fileName + '.csv');
+		downloadLink.style.visibility = 'hidden';
 
-    static convertToCsv(objectArray, headerList) {
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+	}
 
-        const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
-        let csvString = '';
-        let row = '#,';
+	static convertToCsv(objectArray, headerList) {
 
-        for (const index in headerList) {
-            row += headerList[index] + ',';
-        }
+		const array = typeof objectArray != 'object' ? JSON.parse(objectArray) : objectArray;
+		let csvString = '';
+		let row = '#,';
 
-        row = row.slice(0, -1);
-        csvString += row + '\r\n';
+		for (const index in headerList) {
+			row += headerList[index] + ',';
+		}
 
-        for (let i = 0; i < array?.length; i++) {
+		row = row.slice(0, -1);
+		csvString += row + '\r\n';
 
-            let line = (i + 1) + '';
+		for (let i = 0; i < array?.length; i++) {
 
-            for (const index in headerList) {
+			let line = (i + 1) + '';
 
-                const head = headerList[index];
-                line += ',' + array[i][head]?.replaceAll(',', ';');
-            }
+			for (const index in headerList) {
 
-            csvString += line + '\r\n';
-        }
+				const head = headerList[index];
+				line += ',' + array[i][head]?.replaceAll(',', ';');
+			}
 
-        return csvString;
-    }
+			csvString += line + '\r\n';
+		}
 
-    static viewRefset(refsetId, versionDate) {
-        if (!versionDate) {
-            versionDate = RefsetUtility.IN_DEVELOPMENT;
-        }
-        this.router.navigate(['/details', refsetId, versionDate]);
-    }
+		return csvString;
+	}
 
-    static toggleLockedSections(lock: boolean) {
+	static viewRefset(refsetId, versionDate) {
+		if (!versionDate) {
+			versionDate = RefsetUtility.IN_DEVELOPMENT;
+		}
+		this.router.navigate(['/details', refsetId, versionDate]);
+	}
 
-        let containingDiv = $('.refset-tool-lockable');
+	static toggleLockedSections(lock: boolean) {
 
-        if (lock) {
-            containingDiv.addClass('refset-tool-disable-section');
-        } else {
-            containingDiv.removeClass('refset-tool-disable-section');
-        }
+		let containingDiv = $('.refset-tool-lockable');
 
-        containingDiv.find('input, select, button').each(function () {
-            $(this).prop('disabled', lock);
-        });
-    }
+		if (lock) {
+			containingDiv.addClass('refset-tool-disable-section');
+		} else {
+			containingDiv.removeClass('refset-tool-disable-section');
+		}
 
-    static getRoleString(roles = []): string {
+		containingDiv.find('input, select, button').each(function () {
+			$(this).prop('disabled', lock);
+		});
+	}
 
-        const rolesToShow = [];
+	static getRoleString(roles = []): string {
 
-        for (const role of roles) {
+		const rolesToShow = [];
 
-            if (role == 'VIEWER') {
-                continue;
-            }
+		for (const role of roles) {
 
-            rolesToShow.push(role);
-        }
+			if (role == 'VIEWER') {
+				continue;
+			}
 
-        rolesToShow.sort();
+			rolesToShow.push(role);
+		}
 
-        return rolesToShow.join(', ');
-    }
+		rolesToShow.sort();
 
-    static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
+		return rolesToShow.join(', ');
+	}
 
-        let genericIconFunction = this.getGenericUserIcon;
-        let labelTag = 'User Icon';
+	static prepareIconImage(image: any, iconUri: string, iconType: string = 'user') {
 
-        if (iconType == 'organization') {
+		let genericIconFunction = this.getGenericUserIcon;
+		let labelTag = 'User Icon';
 
-            genericIconFunction = this.getGenericOrganizationIcon;
-            labelTag = 'Organization Icon';
-        }
+		if (iconType == 'organization') {
 
-        image.alt = labelTag;
-        image.ariaLabel = labelTag;
+			genericIconFunction = this.getGenericOrganizationIcon;
+			labelTag = 'Organization Icon';
+		}
 
-        if (CodeUtility.hasValue(iconUri)) {
+		image.alt = labelTag;
+		image.ariaLabel = labelTag;
 
-            image.scr = this.getIconImageUrl(iconUri);
+		if (CodeUtility.hasValue(iconUri)) {
 
-            image.onerror = ($event) => {
-                $event.target.src = genericIconFunction();
-            };
+			image.scr = this.getIconImageUrl(iconUri);
 
-        } else {
-            image.scr = genericIconFunction();
-        }
+			image.onerror = ($event) => {
+				$event.target.src = genericIconFunction();
+			};
 
-        return image.scr;
-    }
+		} else {
+			image.scr = genericIconFunction();
+		}
 
-    static getIconImageUrl(iconUri) {
-        return environment.restUrl + environment.restContextPath + iconUri;
-    }
+		return image.scr;
+	}
 
-    static getGenericUserIcon() {
-        return '/assets/user_logo.png';
-    }
+	static getIconImageUrl(iconUri) {
+		return environment.restUrl + environment.restContextPath + iconUri;
+	}
 
-    static getGenericOrganizationIcon() {
-        return '/assets/user_logo.png';
-    }
+	static getGenericUserIcon() {
+		return '/assets/user_logo.png';
+	}
 
-    //***** AG Grid Function to set placeholders on the grid floating filter fields *****/
-    static applyGridPlaceholders(classSelector) {
+	static getGenericOrganizationIcon() {
+		return '/assets/user_logo.png';
+	}
 
-        Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
+	//***** AG Grid Function to set placeholders on the grid floating filter fields *****/
+	static applyGridPlaceholders(classSelector) {
 
-            // skip columns with disabled filter
-            if (field.attributes["disabled"]) {
-                return;
-            }
+		Array.from(document.querySelectorAll(classSelector)).forEach((field: any) => {
+			// skip columns with disabled filter
+			if (field.attributes["disabled"]) {
+				return;
+			}
 
-            let label = field.getAttribute("aria-label");
-            let value = label.substring(0, label.indexOf("Filter Input")) + "...";
-            field.setAttribute("placeholder", value);
-        });
-    }
+			let label = field.getAttribute("aria-label");
+			let value = label.substring(0, label.indexOf("Filter Input")) + "...";
+			field.setAttribute("placeholder", value);
+		});
+	}
 
 
-    //***** AG Grid Function to apply data and paging to table *****/
-    static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
+	//***** AG Grid Function to apply data and paging to table *****/
+	static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
 
-        if (results.items.length > 0) {
+		if (results.items.length > 0) {
 
-            gridApi.hideOverlay();
-            let lastRow = -1;
+			gridApi.hideOverlay();
+			let lastRow = -1;
 
-            if (results.totalKnown || results.items.length < gridApi.paginationGetPageSize() || pagingParams.totalKnown) {
+			if (results.totalKnown || results.items.length < gridApi.paginationGetPageSize() || pagingParams.totalKnown) {
 
-                if (results.totalKnown) {
+				if (results.totalKnown) {
 
-                    lastRow = results.total;
+					lastRow = results.total;
 
-                } else if (pagingParams.totalKnown) {
+				} else if (pagingParams.totalKnown) {
 
-                    lastRow = pagingParams.totalRows;
-                } else {
+					lastRow = pagingParams.totalRows;
+				} else {
 
-                    lastRow = results.items.length + ((pageNumber - 1) * gridApi.paginationGetPageSize());
-                }
+					lastRow = results.items.length + ((pageNumber - 1) * gridApi.paginationGetPageSize());
+				}
 
-                pagingParams.totalRows = lastRow;
-                pagingParams.totalKnown = true;
+				pagingParams.totalRows = lastRow;
+				pagingParams.totalKnown = true;
 
-            }
+			}
 
-            if (serverPaging) {
-                rowParams.successCallback(results.items, lastRow);
-            } else {
-                gridApi.setRowData(results.items);
-            }
+			if (serverPaging) {
+				rowParams.successCallback(results.items, lastRow);
+			} else {
+				gridApi.setRowData(results.items);
+			}
 
-        } else {
+		} else {
 
-            gridApi.showNoRowsOverlay();
+			gridApi.showNoRowsOverlay();
 
-            if (serverPaging) {
-                rowParams.successCallback(results.items, 0);
-            }
-        }
+			if (serverPaging) {
+				rowParams.successCallback(results.items, 0);
+			}
+		}
 
-        pagingParams.manualStateRefresh = new Boolean(true);
-    }
+		pagingParams.manualStateRefresh = new Boolean(true);
+	}
 
-    //***** AG Grid Filter query string formatter Function *****/
-    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
-    static formatFilterData(filterModel) {
+	//***** AG Grid Filter query string formatter Function *****/
+	// filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+	static formatFilterData(filterModel) {
 
-        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
+		let filterPresent = filterModel && Object.keys(filterModel).length > 0;
 
-        if (!filterPresent) {
-            return '';
-        }
+		if (!filterPresent) {
+			return '';
+		}
 
-        let filterString = '';
+		let filterString = '';
 
-        // loop thru each column with a search term
-        for (const column in filterModel) {
-            filterString += column + ':' + filterModel[column].filter.trim() + ' AND ';
-        }
+		// loop thru each column with a search term
+		for (const column in filterModel) {
+			filterString += column + ':' + filterModel[column].filter.trim() + ' AND ';
+		}
 
-        filterString = CodeUtility.removeFinal(filterString, ' AND ');
-        return filterString;
-    }
+		filterString = CodeUtility.removeFinal(filterString, ' AND ');
+		return filterString;
+	}
 
-    // ***** AG Grid Radio button search selector query string formatter Function *****/
-    static formatSelectedData(columnDefs: any[], searchInput: string): string {
+	// ***** AG Grid Radio button search selector query string formatter Function *****/
+	static formatSelectedData(columnDefs: any[], searchInput: string): string {
 
-        const selectedDataPresent = columnDefs && columnDefs?.length;
+		const selectedDataPresent = columnDefs && columnDefs?.length;
 
-        if (!selectedDataPresent) {
-            return '';
-        }
+		if (!selectedDataPresent) {
+			return '';
+		}
 
-        let selectedDataString = '';
-        // loop thru each column with a search term
-        for (const column of columnDefs) {
-            selectedDataString += column.field + ':' + searchInput?.trim() + ' OR ';
-        }
-        selectedDataString = CodeUtility.removeFinal(selectedDataString, ' OR ');
+		let selectedDataString = '';
+		// loop thru each column with a search term
+		for (const column of columnDefs) {
+			selectedDataString += column.field + ':' + searchInput?.trim() + ' OR ';
+		}
+		selectedDataString = CodeUtility.removeFinal(selectedDataString, ' OR ');
 
-        return selectedDataString;
-    }
+		return selectedDataString;
+	}
 
-    //***** AG Grid Sort query string formatter Function *****/
-    // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
-    static formatSortData(sortModel, returnAsObject: boolean = true, numberOfSortsAllowed: number = 1) {
+	//***** AG Grid Sort query string formatter Function *****/
+	// sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+	static formatSortData(sortModel, returnAsObject: boolean = true, numberOfSortsAllowed: number = 1) {
 
-        let sort: any = {};
+		let sort: any = {};
 
-        // loop thru each column with a search term
-        for (let i = 0; i < sortModel?.length && i < numberOfSortsAllowed; i++) {
+		// loop thru each column with a search term
+		for (let i = 0; i < sortModel?.length && i < numberOfSortsAllowed; i++) {
 
-            const column = sortModel[i];
-            let ascending = true;
+			const column = sortModel[i];
+			let ascending = true;
 
-            if (column.sort != 'asc') {
-                ascending = false;
-            }
+			if (column.sort != 'asc') {
+				ascending = false;
+			}
 
-            sort.sort = column.colId;
-            sort.sortAscending = ascending;
-        }
+			sort.sort = column.colId;
+			sort.sortAscending = ascending;
+		}
 
-        if (returnAsObject) {
-            return sort;
-        } else {
-            return CodeUtility.serialize(sort);
-        }
-    }
+		if (returnAsObject) {
+			return sort;
+		} else {
+			return CodeUtility.serialize(sort);
+		}
+	}
 
-    //***** AG Grid Sort Function *****/
-    // sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
-    static sortData(sortModel, data) {
+	//***** AG Grid Sort Function *****/
+	// sortModel: [{sort: 'asc', colId: columnName1}, {sort: 'asc', colId: columnName1}]
+	static sortData(sortModel, data) {
 
-        let sortPresent = sortModel && sortModel.length > 0;
+		let sortPresent = sortModel && sortModel.length > 0;
 
-        if (!sortPresent) {
-            return data;
-        }
+		if (!sortPresent) {
+			return data;
+		}
 
-        let resultOfSort = data.slice();
+		let resultOfSort = data.slice();
 
-        resultOfSort.sort(function (a, b) {
+		resultOfSort.sort(function (a, b) {
 
-            for (let k = 0; k < sortModel.length; k++) {
+			for (let k = 0; k < sortModel.length; k++) {
 
-                let sortColModel = sortModel[k];
-                let valueA = a[sortColModel.colId];
-                let valueB = b[sortColModel.colId];
+				let sortColModel = sortModel[k];
+				let valueA = a[sortColModel.colId];
+				let valueB = b[sortColModel.colId];
 
-                if (valueA == valueB) {
-                    continue;
-                }
+				if (valueA == valueB) {
+					continue;
+				}
 
-                let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
+				let sortDirection = sortColModel.sort === 'asc' ? 1 : -1;
 
-                if (valueA > valueB) {
-                    return sortDirection;
-                } else {
-                    return sortDirection * -1;
-                }
-            }
+				if (valueA > valueB) {
+					return sortDirection;
+				} else {
+					return sortDirection * -1;
+				}
+			}
 
-            return 0;
-        });
+			return 0;
+		});
 
-        return resultOfSort;
-    }
+		return resultOfSort;
+	}
 
-    //***** AG Grid Filter Function *****/
-    // filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
-    static filterData(filterModel, data) {
+	//***** AG Grid Filter Function *****/
+	// filterModel: {columnName1:{filterType: 'text', filter: 'filter text'}, columnName2:{filterType: 'text', filter: 'filter text'}}
+	static filterData(filterModel, data) {
 
-        let filterPresent = filterModel && Object.keys(filterModel).length > 0;
+		let filterPresent = filterModel && Object.keys(filterModel).length > 0;
 
-        if (!filterPresent) {
-            return data;
-        }
+		if (!filterPresent) {
+			return data;
+		}
 
-        let resultOfFilter = [];
+		let resultOfFilter = [];
 
-        for (let i = 0; i < data.length; i++) {
+		for (let i = 0; i < data.length; i++) {
 
-            let item = data[i];
-            let rowValid = true;
+			let item = data[i];
+			let rowValid = true;
 
-            // loop thru each column with a search term
-            for (const column in filterModel) {
+			// loop thru each column with a search term
+			for (const column in filterModel) {
 
-                // test each word in the term
-                filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
+				// test each word in the term
+				filterModel[column].filter.trim().toLowerCase().split(' ').forEach(word => {
 
-                    // the search word must be present in the data and the row must still be valid
-                    if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
-                        rowValid = true;
-                    } else {
-                        rowValid = false;
-                    }
-                });
-            }
+					// the search word must be present in the data and the row must still be valid
+					if (item[column].toString().toLowerCase().indexOf(word) != -1 && rowValid) {
+						rowValid = true;
+					} else {
+						rowValid = false;
+					}
+				});
+			}
 
-            if (rowValid) {
-                resultOfFilter.push(item);
-            }
-        }
+			if (rowValid) {
+				resultOfFilter.push(item);
+			}
+		}
 
-        return resultOfFilter;
-    }
+		return resultOfFilter;
+	}
 
-    static toTitleCase(str) {
-        return str?.replace(
-            /\w\S*/g,
-            function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            }
-        );
-    }
+	static toTitleCase(str) {
+		return str?.replace(
+			/\w\S*/g,
+			function (txt) {
+				return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+			}
+		);
+	}
 }

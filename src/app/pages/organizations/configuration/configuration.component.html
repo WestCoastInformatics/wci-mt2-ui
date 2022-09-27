@@ -1,10 +1,12 @@
 <div class="content-header">
     <div class="row header-title">
         <span class="title-label">Organizations</span>
-        <mat-form-field appearance="outline" class="project-drop-down">
-            <mat-label>{{selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'}}</mat-label>
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+            <mat-select #detailsVersionSelect [disableOptionCentering]="true"
+                [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
+                [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization"
+                    style="z-index: 3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -23,57 +25,89 @@
                     <div class="organizations-configuration-block main-block profile-block">
                         <div class="organization-profile-head section-header">Profile</div>
                         <div class="organization-profile-mid">
-                            <mat-form-field class="profile-name-field" appearance="none">
+                            <mat-form-field floatLabel="never" class="profile-name-field"
+                                appearance="none">
                                 <mat-label>Name</mat-label>
-                                <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                                <input matInput type="text" [disabled]="true" name="name"
+                                    [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
-                            <mat-form-field class="profile-email-field" appearance="none">
+                            <mat-form-field floatLabel="never" class="profile-email-field"
+                                appearance="none">
                                 <mat-label>Primary Contact Email</mat-label>
-                                <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
-                                <div class="modal-error-message" [hidden]="!emailError">{{emailError}}</div>
+                                <input matInput type="text" name="email"
+                                    (keydown.tab)="onKeyDownEvent($event)"
+                                    [(ngModel)]="profileEmailValue">
+                                <div class="modal-error-message" [hidden]="!emailError">
+                                    {{emailError}}</div>
                             </mat-form-field>
 
-                            <mat-form-field class="profile-description-field" appearance="none">
+                            <mat-form-field floatLabel="never" class="profile-description-field"
+                                appearance="none">
                                 <mat-label>Description</mat-label>
-                                <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+                                <textarea matInput type="text" name="description"
+                                    [(ngModel)]="profileDescriptionValue"></textarea>
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
-                            <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
-                              [disabled]="!profileNameValue || !profileEmailValue || !profileDescriptionValue  || !isValidEmail()" aria-label="Update Profile"
-                              title="Update Profile" class="btn btn-primary btn-lg btn-wide-font" (click)="updateOrganization()">Update Profile</button>
+                            <button
+                                *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                                [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()"
+                                aria-label="Update Profile" title="Update Profile"
+                                class="btn btn-primary btn-lg btn-wide-font"
+                                (click)="updateOrganization()">Update
+                                Profile</button>
                         </div>
                     </div>
 
                     <div class="organizations-configuration-block main-block profile-pic-block">
                         <div class="organization-profile-head section-header">Profile Picture</div>
                         <div class="organization-profile-mid organization-picture">
-                            <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
+                            <img #iconImg
+                                [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')"
+                                class="large-icon-image" />
                         </div>
                         <div class="section-btn">
-                            <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture"
-                              class="btn btn-primary btn-lg btn-wide-font">
+                            <label aria-label="Delete Picture" title="Delete Picture"
+                                *ngIf="selectedOrganization?.iconUri"
+                                class="btn btn-primary btn-lg btn-wide-font"
+                                style="margin-right: 0.25em" (click)="onPhotoDelete()">
+                                Delete Picture
+                            </label>
+                            <label
+                                *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                                aria-label="Edit Picture" title="Edit Picture"
+                                class="btn btn-primary btn-lg btn-wide-font">
                                 Edit Picture
-                                <input type="file" class="d-none" (change)="onPhotoChange($event)" />
+                                <input type="file" class="d-none"
+                                    (change)="onPhotoChange($event)" />
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="organizations-configuration-blocks-2">
                     <div class="organizations-configuration-block secondary-block teams-block">
+                        <audit-trail-modal [refsetInternalId]="organizationId" class="section-btn"
+                            *ngIf="organizationId">
+                        </audit-trail-modal>
                     </div>
 
-                    <div class="organizations-configuration-block secondary-block teams-block"></div>
+                    <div class="organizations-configuration-block secondary-block teams-block">
+                    </div>
 
-                    <div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="organizations-configuration-block secondary-block teams-block">
-                        <div class="organization-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
+                    <div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                        class="organizations-configuration-block secondary-block teams-block">
+                        <div class="organization-profile-head section-header"><img class="red-x"
+                                src="assets/red-x.svg">
                             Remove this Organization</div>
-                        <div class="organization-profile-mid">Warning! This is a permanent operation and cannot be
+                        <div class="organization-profile-mid">Warning! This is a permanent operation
+                            and cannot
+                            be
                             undone. Please be certain before taking action.</div>
                         <div class="section-btn">
-                            <remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId()
-                              [componentName]=getSelectedOrganizationName()>
+                            <remove-dashboard-component-modal [componentType]="'organization'"
+                                [componentId]=getSelectedOrganizationId()
+                                [componentName]=getSelectedOrganizationName()>
                             </remove-dashboard-component-modal>
                         </div>
                     </div>
