@@ -374,19 +374,6 @@ export class RefsetDetails implements OnInit {
                     },
                     tooltipField: 'name',
                 },
-                // {
-                //     field: "parents",
-                //     colId: "path",
-                //     headerName: "Path",
-                //     minWidth: 200,
-                //     //width: 600,
-                //     flex: 6,
-                //     cellClass: "refset-tool-taxonomy-search-column-path",
-                //     valueGetter: this.taxonomyPathValueGetter.bind(this),
-                //     cellRenderer: "templateRenderer",
-                //     cellRendererParams: { template: this.taxonomyPathSection },
-                //     tooltipField: "parents",
-                // },
             ];
 
             this.taxonomySearchGridOptions = {
@@ -633,7 +620,7 @@ export class RefsetDetails implements OnInit {
                 this.allowedToReview = true;
 
             }
-            
+
             // if you aren't the assigned author of an IN_EDIT or IN_UPGRADE refset then you can't see the members
             if (this.refsetData.assignedUser != this.user.userName && ['IN_EDIT', 'IN_UPGRADE'].includes(this.refsetData?.workflowStatus)) {
                 this.showMembersSection = false;

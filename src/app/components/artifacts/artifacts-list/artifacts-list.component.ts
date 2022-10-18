@@ -83,7 +83,6 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 resizable: false,
                 cellRendererParams: { template: this.actionsSection }, maxWidth: 110
             }];
-        // , cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }
 
         this.gridOptions = {
             context: { componentParent: this },
@@ -286,8 +285,6 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 
     openArtifactsModal(artifactsDialog: NgbModal) {
         this.modalService.open(artifactsDialog, {
-            // backdrop : 'static',
-            // keyboard : false,
             modalDialogClass: 'full-modal',
             centered: true,
             windowClass: 'artifact-modal'

@@ -323,7 +323,6 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.selectedProject = null;
     this.projectList = [];
     this.profileNameValue = null;
-    // this.profileEmailValue = this.selectedProject.primaryContactEmail;
     this.profileDescriptionValue = null;
     this.isPrivate = null;
     this.selectedTeamIds = [];

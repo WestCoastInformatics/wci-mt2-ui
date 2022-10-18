@@ -425,10 +425,6 @@ export class UiUtility {
 							this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
 						}
 					});
-
-					// notification.onHidden.subscribe(() => {
-					//     this.memberChangeData[refsetId] = emptydata;
-					// });
 				}
 			},
 				(error) => {

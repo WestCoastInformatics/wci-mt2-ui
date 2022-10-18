@@ -49,7 +49,6 @@ export class OrganizationConfigurationComponent implements OnInit {
             this.setNavigation();
         });
 
-        // this.getPeople();
         this.getOrganizations();
     }
 

@@ -1,13 +1,10 @@
 import {
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
     OnInit,
     Output,
     SimpleChanges,
-    TemplateRef,
-    ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -18,7 +15,6 @@ import { RefsetService } from "src/app/services/rest/refset.service";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
-import { environment } from 'src/environments/environment';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from "src/app/services/notification.service";
 

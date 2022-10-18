@@ -181,14 +181,6 @@
                         </as-split-area>
                     </as-split>
 
-
-                    <!-- <app-pagination
-               [pageSize]="refsetGridPaging.pageSize"
-               [gridOptions]="refsetGridOptions"
-               [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-               [totalKnown]="refsetGridPaging.totalKnown"
-               [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-                </app-pagination> -->
                 </div>
             </div>
         </div>
@@ -216,7 +208,8 @@
 
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
-    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember">
+    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember"
+      [class.add-bold]="params?.data?.stillMember">
         {{ formatReason(params?.data?.inactivationReason) }}
     </span>
 </ng-template>
@@ -237,14 +230,16 @@
 
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
-    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember">
+    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember"
+      [class.add-bold]="params?.data?.stillMember">
         {{ params?.value }}
     </span>
 </ng-template>
 
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
-    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember">
+    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember"
+      [class.add-bold]="params?.data?.stillMember">
         {{ transformDescriptions(params?.data?.descriptions)?.length ?
         transformDescriptions(params?.data?.descriptions)[0].term : '' }}
     </span>
@@ -312,8 +307,8 @@
           aria-label="Remove {{actionText}}" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
     <span *ngIf="(!params?.data?.isHidden || replacementColumnSortFilter) && !params?.data?.isSearch">
-        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="" aria-label="Add"
-          class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="" aria-label="Add" class="grey-add-symbol-icon"
+          alt="Add symbol shown when you're able to add a concept" />
     </span>
     <span *ngIf="params?.data?.isSearch">
         <img src="assets/grey-close-icon.svg" (click)="getSelectedRowData('remove');" width="18px" height="18px" title="Remove {{actionText}}"
