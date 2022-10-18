@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
 	selector: 'app-sidebar',

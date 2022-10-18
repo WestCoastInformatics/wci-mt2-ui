@@ -1,6 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { AgGridAngular } from 'ag-grid-angular';
 import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
