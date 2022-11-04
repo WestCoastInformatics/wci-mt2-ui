@@ -46,6 +46,11 @@
                 aria-label="Download" title="Download" ng-reflect-color="green">
                 Download Change Report
             </button>
+            <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
+				class="refset-tool-action-button" style="margin-left: 3px; background-color: red" aria-label="Close"
+				ng-reflect-color="primary">
+				Close
+			</button>
         </div>
     </ng-container>
 </ng-template>
