@@ -219,7 +219,7 @@
             <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" mat-raised-button class="refset-tool-action-button mat-red mr-2">Cancel Edit
             </button>
 
-            <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Close
+            <button *ngIf="!editMode.includes('edit')" (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Close
             </button>
         </div>
 
