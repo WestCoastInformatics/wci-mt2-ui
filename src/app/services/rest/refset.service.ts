@@ -106,6 +106,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/' + refsetInternalId + '/member/' + conceptId + '/ancestorConcepts');
     }
 
+    getRefsetMemberCount(refsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + 'refset/' + refsetInternalId + '/memberCount');
+    }
+
     isRefsetLocked(refsetId: string): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId + '/isLocked');
     }

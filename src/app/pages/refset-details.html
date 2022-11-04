@@ -431,8 +431,8 @@
 
         <!-- Section Title -->
         <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title">
-            Reference Set Members ({{membersGridNumberOfResults}})
-            <button *ngIf="showTable && membersReady && membersGridNumberOfResults > 0" mat-raised-button color="primary" aria-hidden="false"
+            Reference Set Members ({{refsetData?.memberCount}})
+            <button *ngIf="showTable && membersReady" mat-raised-button color="primary" aria-hidden="false"
               class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
                 Download Members Table
                 <i class="fa fa-download"></i>
@@ -837,7 +837,7 @@
   [conceptHasChildren]="conceptForAddRemove?.hasChildren" [refset]="refsetData" [definitionExceptionType]="addRemoveDefinitionExceptionType"
   [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" (changeLockedStatus)="changeLockedStatus($event)"
   [processChangedMemberFunction]="processChangedMemberEffects"
-  (onMembersGridReady)="onMembersGridReady(originalGridParams); onTaxonomySearchGridReady(taxonomyGridParams); resetRefsetTotal = true; loadRefset()">
+  (onMembersGridReady)="onMembersGridReady(originalGridParams); onTaxonomySearchGridReady(taxonomyGridParams); loadRefset()">
 </add-remove-concepts>
 <scroll-top></scroll-top>
 

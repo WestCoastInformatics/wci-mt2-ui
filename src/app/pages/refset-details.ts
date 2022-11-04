@@ -199,8 +199,6 @@ export class RefsetDetails implements OnInit {
     @ViewChild('importFromListDialog') importFromListDialog: TemplateRef<any>;
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
-    membersGridNumberOfMembers: string;
-    resetRefsetTotal = false;
     routeParamsSubscription$: Subscription;
 
     constructor(
@@ -882,7 +880,6 @@ export class RefsetDetails implements OnInit {
             this.taxonomySearchDisplay = 'block';
 
             if (this.taxonomySearchInput.length > 2) {
-                this.resetRefsetTotal = false;
                 this.onTaxonomySearchGridReady(this.taxonomyGridParams);
             }
 
@@ -963,9 +960,7 @@ export class RefsetDetails implements OnInit {
 
                 const data = results.items;
                 this.membersGridData = data;
-                this.membersGridNumberOfMembers = this.membersGridNumberOfMembers && !this.resetRefsetTotal ? this.membersGridNumberOfMembers : results.total;
                 this.membersGridNumberOfResults = results.total;
-
 
                 if (results.items.length == 0) {
 
@@ -1114,7 +1109,6 @@ export class RefsetDetails implements OnInit {
             (CodeUtility.hasValue(this.tableSearchInput) &&
                 this.tableSearchInput.length > 2)
         ) {
-            this.resetRefsetTotal = false;
             this.onMembersGridReady(this.originalGridParams);
         }
     }
@@ -1236,7 +1230,6 @@ export class RefsetDetails implements OnInit {
     }
 
     reloadMembersGridAndTaxonomy() {
-        this.resetRefsetTotal = true;
 
         // reload the members grid
         this.loadRefset();
