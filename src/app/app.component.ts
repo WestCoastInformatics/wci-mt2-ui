@@ -20,8 +20,6 @@ export class AppComponent implements OnInit {
     versions: object;
     environment: string;
     isLanding = false;
-    userActivity;
-    userInactive: Subject<any> = new Subject();
 
     constructor(
         private authoringService: AuthoringService,
@@ -30,7 +28,6 @@ export class AppComponent implements OnInit {
         private titleService: Title,
         private router: Router
     ) {
-        authenticationService.apiCalled.subscribe(() => this.refreshUserState());
 
         router.events
             .pipe(
@@ -58,11 +55,7 @@ export class AppComponent implements OnInit {
             }
         });
 
-        this.setTimeout();
-        this.userInactive.subscribe(() => {
-            this.authenticationService.logoutUser();
-        });
-
+        this.authenticationService.prepareUserSession();
     }
 
     assignFavicon() {
@@ -85,25 +78,5 @@ export class AppComponent implements OnInit {
                 favicon.attr('href', 'favicon_red.ico');
                 break;
         }
-    }
-
-    setTimeout() {
-        const date = new Date();
-        // console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
-        this.userActivity = setTimeout(() => {
-
-            if (this.authenticationService.isUserLoggedIn) {
-                this.userInactive.next(undefined);
-                console.log('logged out');
-            } else {
-                console.log('not logged in');
-                this.authenticationService.notAuthenticated();
-            }
-        }, 900000);
-    }
-
-    refreshUserState() {
-        clearTimeout(this.userActivity);
-        this.setTimeout();
     }
 }

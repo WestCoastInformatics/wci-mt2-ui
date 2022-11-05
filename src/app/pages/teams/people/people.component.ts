@@ -181,9 +181,9 @@ export class TeamsPeopleComponent implements OnInit {
 
   getStoredOrganizationId(): void {
 
-    if (sessionStorage.getItem('selectedOrganizationId')) {
+    if (localStorage.getItem('selectedOrganizationId')) {
 
-      const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+      const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
       for (const organization of this.organizationList) {
 
@@ -196,7 +196,7 @@ export class TeamsPeopleComponent implements OnInit {
       }
 
       // if the stored organization ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedOrganizationId');
+      localStorage.removeItem('selectedOrganizationId');
     }
   }
 
@@ -236,7 +236,7 @@ export class TeamsPeopleComponent implements OnInit {
 
     this.data = this.selectedTeam.memberList;
 
-    sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+    localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
     this.setNavigation();
   }

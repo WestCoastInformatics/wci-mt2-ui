@@ -105,7 +105,7 @@ import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concep
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
-import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+//import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
@@ -247,7 +247,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsIconsComponent,
         AddRemoveConceptGroupIconsComponent,
         LoginComponent,
-        LandingPageComponent,
+        //LandingPageComponent,
         LandingComponent,
         DashboardComponent,
         FeedbackCollectorComponent,

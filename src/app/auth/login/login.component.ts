@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
 
         this.authService.authenticateWithBackend(this.userData).subscribe(
             (data) => {
-                localStorage.setItem('auth_token', data.authToken);
-                localStorage.setItem('refset_user', JSON.stringify(data));
+                sessionStorage.setItem('auth_token', data.authToken);
+                sessionStorage.setItem('refset_user', JSON.stringify(data));
                 this.router.navigate(['library']);
             },
             (err) => {
@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
     logout(): any {
 
         console.debug('logout user');
+        localStorage.removeItem('loginReferralUrl');
         this.authService.notAuthenticated();
     }
 

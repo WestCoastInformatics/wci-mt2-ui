@@ -241,7 +241,7 @@ export class OrganizationTeamsComponent implements OnInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
         this.setNavigation();
         this.onGridReady(this.gridParams);
@@ -263,9 +263,9 @@ export class OrganizationTeamsComponent implements OnInit {
 
     getStoredOrganizationId(): void {
 
-        if (sessionStorage.getItem('selectedOrganizationId')) {
+        if (localStorage.getItem('selectedOrganizationId')) {
 
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
@@ -278,7 +278,7 @@ export class OrganizationTeamsComponent implements OnInit {
             }
 
             // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+            localStorage.removeItem('selectedOrganizationId');
         }
     }
 }

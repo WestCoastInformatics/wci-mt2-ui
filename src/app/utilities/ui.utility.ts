@@ -524,14 +524,14 @@ export class UiUtility {
 								this.viewRefset(refsetId, versionDate);
 
 							} else if (button.id == 'inactiveChangeReport') {
-								this.createInactiveChangeReport(refsetId, JSON.parse(localStorage.getItem('inactiveChangeReportData')))
+								this.createInactiveChangeReport(refsetId, JSON.parse(sessionStorage.getItem('inactiveChangeReportData')))
 
 							} else if (button.id == 'comparison') {
 
 								callbackFunction();
 								notificationService.close(notification);
 							} else if (button.id == 'finishedChangeReport') {
-								this.createFinishedChangeReport(refsetId, JSON.parse(localStorage.getItem('finishedChangeReportData')))
+								this.createFinishedChangeReport(refsetId, JSON.parse(sessionStorage.getItem('finishedChangeReportData')))
 							}
 						});
 

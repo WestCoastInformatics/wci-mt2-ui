@@ -268,9 +268,9 @@ export class RefsetDetails implements OnInit {
         this.refsetLoaded$.pipe(take(1)).subscribe((loaded) => {
 
             if (prevUrl && prevUrl != this.router.url) {
-                localStorage.setItem(parentRouteKey, prevUrl);
+                sessionStorage.setItem(parentRouteKey, prevUrl);
             }
-            const parent = localStorage.getItem(parentRouteKey);
+            const parent = sessionStorage.getItem(parentRouteKey);
             if (parent && parent.includes('projects')) {
                 isProjects = true;
             }
