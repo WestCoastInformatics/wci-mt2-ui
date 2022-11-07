@@ -279,7 +279,6 @@ export class LaunchComparisonModalComponent {
         results.total = results.items.length;
         results.totalKnown = true;
         this.comparisonData = results;
-        console.log(results);
         const pageNumber = 1;
 
         if (results.items.length == 0) {

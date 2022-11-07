@@ -162,7 +162,7 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   getPeople(): void {
-    console.log('hit')
+    
     this.showLoadingSpinner = true;
     this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 
@@ -213,7 +213,7 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   async getTeams(teams: any): Promise<any> {
-    console.log(teams);
+    
     const teamObject = { teams: [] };
     if (teams === 'undefined' || teams === undefined) {
       return JSON.stringify(teamObject);
@@ -234,7 +234,6 @@ export class OrganizationPeopleComponent implements OnInit {
     this.organizationsService.removeUser(this.organizationId, this.selectedUser.id).subscribe({
       next: (data) => {
         const datum = data;
-        console.log(datum);
       },
       complete: () => window.location.reload()
     });

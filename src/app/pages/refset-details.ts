@@ -353,7 +353,6 @@ export class RefsetDetails implements OnInit {
                 this.refsetData = results;
                 const channel = new BroadcastChannel('refsetDataChannel');
                 channel.postMessage(UiUtility.getRoleString(this.refsetData.roles));
-                console.log(this.refsetData);
                 this.refsetService.setRefsetInformation(this.refsetData);
                 this.allowedToEdit = false;
                 this.allowedToReview = false;
@@ -634,7 +633,7 @@ export class RefsetDetails implements OnInit {
 
         });
     }
-    
+
     cacheTaxonomyAncestors() {
 
         this.refsetService.cacheMemberAncestors(this.refsetId, this.versionDate).subscribe({
@@ -642,9 +641,7 @@ export class RefsetDetails implements OnInit {
 
                 const success = results?.success;
 
-                if (CodeUtility.testBoolean(success)) {
-                    console.log(success);
-                } else {
+                if (!CodeUtility.testBoolean(success)) {
                     console.log('Error caching Reference Set member details.');
                 }
 
@@ -1092,7 +1089,7 @@ export class RefsetDetails implements OnInit {
 
     onMembersGridCellClick = (event) => {
         if (event.column.colId === 'actions') {
-            console.log(event);
+            
         } else {
             const selectedRows = this.membersGridApi.getSelectedRows();
             let selectedId: string;
@@ -1146,7 +1143,7 @@ export class RefsetDetails implements OnInit {
                     } else {
 
                         if (action.includes('CANCEL_EDIT')) {
-                            console.log('CANCEL EDIT event');
+                            
                             this.processChangedMemberEffects(null);
                             this.loadRefset();
                         } else {
@@ -1671,7 +1668,6 @@ export class RefsetDetails implements OnInit {
             modalDialogClass: 'alert-modal',
             centered: true
         });
-        console.log('Cancel Upgrade in initial screen');
     }
 
     showFlagIcon(showFlag: boolean) {

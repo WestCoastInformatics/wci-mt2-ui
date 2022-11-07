@@ -28,10 +28,7 @@ export class LandingPageComponent implements OnInit {
     }
 
     onSubmit() {
-
         const formControls = this.loginForm.controls;
-        console.log(formControls.username.value);
-        console.log(formControls.password.value);
 
     }
 }

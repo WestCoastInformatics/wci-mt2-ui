@@ -96,7 +96,6 @@ export class CreateNewOrganizationModalComponent {
   }
 
   onKeyDownEvent(event: any) {
-    console.log(event.target.value);
     this.isValidEmail();
   }
 

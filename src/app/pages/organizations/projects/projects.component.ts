@@ -238,7 +238,6 @@ export class OrganizationProjectsComponent implements OnInit {
 
     async getTeams(teams: any): Promise<any> {
 
-        console.log(teams);
         const teamObject = { teams: [] };
 
         if (teams === 'undefined' || teams === undefined) {

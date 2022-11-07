@@ -286,7 +286,7 @@ export class CreateRefsetComponent implements OnInit {
             let existingCpt = this.existingMetadataConcepts[this.selectedMetaDataConcept]?.code;
             this.refsetService.getRefsetCopy(this.selectedUUID, this.createdMetaDataConcept, this.inputProperties.project.id, this.localSet, this.privateRefset, this.comboRefset, this.selectedNarrative, this.selectedTags,
                 this.selectedParentConcept, existingCpt ? existingCpt : '').subscribe(results => {
-                    console.log(results.refsetId);
+                    
                     this.showLoadingSpinner = false;
                     this.modalService.dismissAll();
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.IN_DEVELOPMENT]);
@@ -442,11 +442,8 @@ export class CreateRefsetComponent implements OnInit {
             return true;
         } else if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
             typeCheck = true;
-            console.log('typeCheck: ' + typeCheck);
         } else if (this.selectedReferenceType === RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
             typeCheck = true;
-            console.log('INTENSIONAL: ' + typeCheck);
-            console.log('this.definitionClauses: ', this.definitionClauses);
         } else if (this.selectedReferenceType === RefsetUtility.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
             typeCheck = true;
         } else if (this.selectedReferenceType === RefsetUtility.COPY) {
@@ -464,7 +461,7 @@ export class CreateRefsetComponent implements OnInit {
         } else {
             lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
         }
-        console.log(lower);
+        
         var flag = lower.match(format);
         if (flag == null) {
             this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';

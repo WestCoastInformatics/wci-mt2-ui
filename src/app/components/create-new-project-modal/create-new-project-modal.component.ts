@@ -78,8 +78,6 @@ export class CreateNewProjectModalComponent {
   }
 
   onKeyDownEvent(event: any) {
-
-    console.log(event.target.value);
     this.isValidEmail();
   }
 

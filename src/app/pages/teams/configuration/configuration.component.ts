@@ -205,8 +205,6 @@ export class TeamsConfigurationComponent implements OnInit {
     }
 
     onKeyDownEvent(event: any): void {
-
-        console.log(event.target.value);
         this.isValidEmail();
     }
 

@@ -158,7 +158,6 @@ export class TaxonomyTreeComponent {
 
                 this.prepareData(results.items);
                 this.sendnumOfChildrenTrigger(results?.items?.length);
-                console.log(results.items);
             },
             error: (error) => {
 

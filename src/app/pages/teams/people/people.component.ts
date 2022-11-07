@@ -278,7 +278,7 @@ export class TeamsPeopleComponent implements OnInit {
   removeUser() {
     this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
       next: (data) => {
-        console.log(data);
+        
       },
       complete: () => window.location.reload()
     });

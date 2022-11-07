@@ -45,7 +45,6 @@ export class OrganizationTeamsComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-            console.log(this.organizationId);
             this.setNavigation();
         });
 

@@ -344,8 +344,6 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   onKeyDownEvent(event: any) {
-
-    console.log(event.target.value);
     this.isValidEmail();
   }
 

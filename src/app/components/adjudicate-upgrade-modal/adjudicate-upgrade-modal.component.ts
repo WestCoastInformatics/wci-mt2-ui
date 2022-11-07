@@ -786,7 +786,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 		// this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
 		// this.membersInCommon = members;
-		// console.log(this.membersInCommon);
+		
 		// Get old members from inactive concepts
 		let memberItems = this.membersInCommonForChangeReport?.items;
 		let inactiveConcepts = [];
@@ -860,7 +860,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		const commonConcepts = membersInCommonItems?.filter((x) => {
 			return !memberItems?.includes(x.id);
 		});
-		console.log(commonConcepts)
+		
 		let membersInCommon = [];
 		for (let i = 0; i < commonConcepts?.length; i++) {
 			membersInCommon.push({
@@ -907,7 +907,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			modalDialogClass: 'alert-modal',
 			centered: true
 		});
-		console.log("Cancel Upgrade in initial screen");
+		
 	}
 	openPauseUpdate() {
 		const dialogId = "pauseUpdateDialog";
@@ -928,7 +928,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		this.dialog.confirmed().subscribe((data) => {
 			// if 'ok', close pause modal and update modal
 			if (data) {
-				console.log("workflow status: ", data.workflowStatus);
 				this.modalService.dismissAll();
 			}
 			// else close only pause modal

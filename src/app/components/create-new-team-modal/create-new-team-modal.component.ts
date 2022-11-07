@@ -115,8 +115,6 @@ export class CreateNewTeamModalComponent {
   }
 
   onKeyDownEvent(event: any) {
-
-    console.log(event.target.value);
     this.isValidEmail();
   }
 

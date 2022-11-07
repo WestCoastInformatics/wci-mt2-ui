@@ -304,12 +304,9 @@ export class CreateNewRefsetComponent implements OnInit {
 
         if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
             typeCheck = true;
-            console.log('EXTENSIONAL typeCheck: ' + typeCheck);
         } else if (this.selectedReferenceType === RefsetUtility.INTENSIONAL &&
             this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
             typeCheck = true;
-            console.log('EXTENSIONAL INTENSIONAL: ' + typeCheck);
-            console.log('this.definitionClauses: ', this.definitionClauses);
         }
 
         return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) ||
@@ -324,7 +321,7 @@ export class CreateNewRefsetComponent implements OnInit {
         } else {
             lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
         }
-        console.log(lower);
+        
         const flag = lower.match(format);
         if (flag == null) {
             this.conceptError = 'The Reference Set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';

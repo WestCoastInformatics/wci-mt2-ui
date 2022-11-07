@@ -154,8 +154,6 @@ export class RefsetDownloadComponent {
 
           if (data) {
 
-
-            console.log('Download Form Data: ', data);
             const notificationType = 'success';
 
             const description = 'Reference Set ' + this.refset.refsetId + ' download';
@@ -283,7 +281,7 @@ export class RefsetDownloadComponent {
   }
 
   changeFormat(formData) {
-    console.log(formData);
+    
     this.showSections(formData);
     this.disableDownloadButton(formData);
   }
