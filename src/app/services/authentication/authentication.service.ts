@@ -203,12 +203,7 @@ export class AuthenticationService {
 
                 if (this.isUserLoggedIn) {
 
-                    if (window.location.href.includes('details/')) {
-                        localStorage.setItem('loginReferralUrl', window.location.href);
-                    } else if (this.referralUrl) {
-                        localStorage.removeItem('loginReferralUrl');
-                    }
-
+                    localStorage.setItem('loginReferralUrl', window.location.href);
                     this.logoutUser();
                 }
             }, this.sessionTimeout);
