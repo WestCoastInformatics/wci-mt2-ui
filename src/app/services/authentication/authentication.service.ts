@@ -115,11 +115,12 @@ export class AuthenticationService {
     logoutUser() {
 
         let loggedInUser = sessionStorage.getItem('auth_token');
-        this.notAuthenticated();
+        this.notAuthenticated(true);
 
         //localStorage.clear();
         sessionStorage.clear();
         this.deleteAllCookies();
+
         this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser, {}).subscribe(
             (data) => {
                 console.log('Back end logged out');
@@ -154,33 +155,38 @@ export class AuthenticationService {
         return cookieFound && token != null;
     }
 
-    notAuthenticated(): any {
+    notAuthenticated(fromLogout = false): any {
 
         let userWasLoggedin = this.isUserLoggedIn;
+        sessionStorage.removeItem('auth_token');
         //localStorage.clear();
 
-        let user = new User();
-        user.userName = this.GUEST_USER;
-        sessionStorage.setItem('refset_user', JSON.stringify(user));
-        this.userSubject.next(user);
+        let oldUser = this.getUser();
 
-        // if the user is on a page that requires being logged in, then send them to the directory
-        if (!this.isUserLoggedIn) {
-            const location = window.location.href.split('/');
-            const url = location.length > 1 ? location[1] : '';
-            if (url && !url.startsWith('#')) {
-                // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
-                this.router.navigateByUrl('login');
-            }
+        if (oldUser == null || oldUser.userName != this.GUEST_USER) {
+
+            let user = new User();
+            user.userName = this.GUEST_USER;
+            sessionStorage.setItem('refset_user', JSON.stringify(user));
+            this.userSubject.next(user);
         }
 
+        // if the user is on a page that requires being logged in, then send them to the directory
         if (userWasLoggedin) {
 
             this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'error', {
-                timeOut: 5000,
-                extendedTimeOut: 0
-            });
+            this.notificationService.closeAll();
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'error');
+
+            if (!fromLogout && window.location.href.includes('details/')) {
+                localStorage.setItem('loginReferralUrl', window.location.href);
+            } else if (this.referralUrl) {
+                localStorage.removeItem('loginReferralUrl');
+            }
+
+            if (!fromLogout) {
+                this.logoutUser();
+            }
         }
     }
 

@@ -451,7 +451,8 @@
                   (changeLockedStatus)="changeLockedStatus($event)">
                 </import-from-list-modal>
 
-                <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)">
+                <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)" 
+                    [processChangedMemberFunction]="processChangedMemberEffects">
                 </add-remove-by-concept-modal>
             </mat-menu>
         </span>

@@ -93,6 +93,8 @@ export class NavbarComponent implements OnInit {
     }
 
     login() {
+
+        localStorage.removeItem('loginReferralUrl');
         this.router.navigate(['/login']);
     }
 

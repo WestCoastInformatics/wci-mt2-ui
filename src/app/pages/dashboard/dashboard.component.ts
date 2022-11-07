@@ -60,9 +60,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' }
         ]);
-        if (!this.authService.isUserLoggedIn) {
-            this.authService.notAuthenticated();
-        }
+
         this.currentUser = this.authService.getUser();
         this.refsetGridOptions = {
             context: { componentParent: this },

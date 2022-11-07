@@ -260,11 +260,6 @@ export class RefsetDetails implements OnInit {
         let isProjects = false;
         const parentRouteKey = 'currentRefsetParentRoute';
 
-        const allObservables = {
-            refsetLoaded: this.refsetLoaded$,
-            memberCacheLoaded: this.memberCacheLoaded
-        };
-
         this.refsetLoaded$.pipe(take(1)).subscribe((loaded) => {
 
             if (prevUrl && prevUrl != this.router.url) {
@@ -341,6 +336,18 @@ export class RefsetDetails implements OnInit {
                 this.loadConceptDetail(this.conceptDetail);
             }
         });
+        
+        this.loadTaxonomy();
+        this.loadRefset();
+        this.cacheTaxonomyAncestors();
+    }
+
+    loadTaxonomy() {
+
+        const allObservables = {
+            refsetLoaded: this.refsetLoaded$,
+            memberCacheLoaded: this.memberCacheLoaded
+        };
 
         // call forkJoin on returned observables
         forkJoin(allObservables).pipe(take(1)).subscribe(({ refsetLoaded, memberCacheLoaded }) => {
@@ -408,9 +415,6 @@ export class RefsetDetails implements OnInit {
             };
 
         });
-
-        this.loadRefset();
-        this.cacheTaxonomyAncestors();
     }
 
     loadRefset(): void {
@@ -1171,6 +1175,15 @@ export class RefsetDetails implements OnInit {
         this.initializeDetailsPage();
     }
 
+    getMemberCount() {
+
+        this.refsetData.memberCount = 'Loading...';
+
+        this.refsetService.getRefsetMemberCount(this.id).subscribe((results) => {
+            this.refsetData.memberCount = results;
+        });
+    }
+
     loadWorkflowHistoryData(showLoading = false): void {
         if (showLoading) {
             this.toggleLoadingSpinner(true);
@@ -1232,7 +1245,8 @@ export class RefsetDetails implements OnInit {
     reloadMembersGridAndTaxonomy() {
 
         // reload the members grid
-        this.loadRefset();
+        //this.loadTaxonomy();
+        this.getMemberCount();
         this.onMembersGridReady(this.originalGridParams);
         this.onTaxonomySearchGridReady(this.taxonomyGridParams);
         this.memberCacheLoaded = new Subject<boolean>();
@@ -1243,15 +1257,16 @@ export class RefsetDetails implements OnInit {
 
         // call forkJoin on returned observables
         forkJoin(allObservables).subscribe(({ memberCacheLoaded }) => {
+
             this.reloadTaxonomyTree();
+
+            if (this.conceptDetail != null) {
+                this.loadConceptDetail(this.conceptDetail);
+            }
         });
 
         // reload the members taxonomy tree
         this.cacheTaxonomyAncestors();
-
-        if (this.conceptDetail != null) {
-            this.loadConceptDetail(this.conceptDetail);
-        }
         this.changeDetectorRef.detectChanges();
     }
 
