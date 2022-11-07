@@ -24,10 +24,10 @@ export class ImportFromFileModalComponent implements OnInit {
     @Input() refsetInternalId: string;
     @Input() refsetId: string;
     @Input() isIntensional: boolean = false;
+    @Input() processChangedMemberFunction: Function;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
-    @Output() onMembersGridReady = new EventEmitter<any>();
 
-    constructor(private modalService: NgbModal, private readonly refsetDetails: RefsetDetails, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) { }
+    constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) { }
 
     ngOnInit(): void { }
 
@@ -79,9 +79,7 @@ export class ImportFromFileModalComponent implements OnInit {
 
     processOperationReturn = (data) => {
 
-        this.changeLockedStatus.emit(false);
-
-        this.refsetDetails.ngOnInit();
+        this.processChangedMemberFunction(data);
 
         this.files = [];
         this.disableActionButtons = true;

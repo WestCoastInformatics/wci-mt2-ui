@@ -444,7 +444,8 @@
             <button mat-button [matMenuTriggerFor]="menu" [matMenuTriggerRestoreFocus]="false" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
-                <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)">
+                <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
+                    [processChangedMemberFunction]="processChangedMemberEffects">
                 </import-from-file-modal>
 
                 <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"

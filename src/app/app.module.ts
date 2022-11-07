@@ -52,7 +52,6 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
-import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
@@ -231,7 +230,6 @@ const appRoutes: Routes = [
         ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
-        ImportFromEclModalComponent,
         CreateNewOrganizationModalComponent,
         EmailRefsetModalComponent,
         CreateNewTeamModalComponent,
