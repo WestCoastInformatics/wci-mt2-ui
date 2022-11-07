@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
@@ -13,25 +14,22 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class UpgradeModalComponent implements OnInit {
 
-  @Input()
-  refsetData: any;
-  @Input()
-  refsetId: any;
-  @Input()
-  refsetInternalId: any;
-  @Input()
-  refsetVersionDate: any;
-  @Output()
-  loadingSpinner = new EventEmitter<boolean>(false);
-  @Input()
-  membersOfRefset: any;
   showWarning = false;
   membersInCommon: any;
   inactiveConcepts = 0;
   totalMembers = 0;
   existingBranchVersions: any;
+  versionModel: NgbModalRef;
 
-
+  @Input() refsetData: any;
+  @Input() refsetId: any;
+  @Input() refsetInternalId: any;
+  @Input() refsetVersionDate: any;
+  @Input() membersOfRefset: any;
+  @Output() loadingSpinner = new EventEmitter<boolean>(false);
+  
+  @ViewChild('versionContinueDialog') versionContinueDialog: NgbModal;
+  @ViewChild('upgradeDialog') upgradeDialog: NgbModal;
 
   constructor(private readonly modalService: NgbModal,
     readonly refsetService: RefsetService,
@@ -44,21 +42,45 @@ export class UpgradeModalComponent implements OnInit {
     this.getBranchVersions();
   }
 
-  openUpgradeModal(upgradeDialog: NgbModal) {
+  openVersionChoiceModal() {
+
+    if (this.isInitialUpgrade && this.refsetData.basedOnLatestVersion) {
+      
+      this.versionModel = this.modalService.open(this.versionContinueDialog, {
+        windowClass: 'alert-modal'
+      });
+
+      return;
+    }
+
+    this.openUpgradeModal();
+  }
+
+  setVersionContinueChoice(shouldContinue: boolean) {
+
+    this.versionModel.close();
+
+    if (shouldContinue) {
+      this.openUpgradeModal();
+    }
+  }
+
+  openUpgradeModal() {
+
     this.sendLoadingSpinnerTrigger(true);
 
     this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
 
       if (!x) {
-        await this.getUpgradeData(upgradeDialog);
+        await this.getUpgradeData(this.upgradeDialog);
       }
     });
 
   }
 
   get isInitialUpgrade(): boolean {
+
     if (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) {
-      // console.log("CANCEL & FINISH upgrade code");
       return false;
     } else if (this.refsetData?.availableActions?.includes('EDIT')) {
       return true;

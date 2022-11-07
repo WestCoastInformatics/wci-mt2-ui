@@ -342,81 +342,6 @@ export class RefsetDetails implements OnInit {
         this.cacheTaxonomyAncestors();
     }
 
-    loadTaxonomy() {
-
-        const allObservables = {
-            refsetLoaded: this.refsetLoaded$,
-            memberCacheLoaded: this.memberCacheLoaded
-        };
-
-        // call forkJoin on returned observables
-        forkJoin(allObservables).pipe(take(1)).subscribe(({ refsetLoaded, memberCacheLoaded }) => {
-
-            console.log('refsetLoaded: ' + refsetLoaded);
-            console.log('memberCacheLoaded: ' + memberCacheLoaded);
-
-            this.loadTaxonomyRoot();
-            this.taxonomySearchColumnDefs = [
-                {
-                    field: 'code',
-                    colId: 'code',
-                    headerName: 'Concept ID',
-                    maxWidth: 140,
-                    cellClass: 'refset-tool-taxonomy-search-column-name',
-                    tooltipField: 'code',
-                },
-                {
-                    field: 'name',
-                    colId: 'result',
-                    headerName: 'Result',
-                    minWidth: 120,
-                    flex: 1,
-                    cellClass: 'refset-tool-taxonomy-search-column-name',
-                    valueGetter: this.taxonomyResultValueGetter.bind(this),
-                    cellRenderer: 'templateRenderer',
-                    cellRendererParams: {
-                        template: this.taxonomyResultSection,
-                    },
-                    tooltipField: 'name',
-                },
-            ];
-
-            this.taxonomySearchGridOptions = {
-                context: { componentParent: this },
-                pagination: true,
-                suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-                suppressPaginationPanel: true,
-                paginationPageSize: this.taxonomySearchGridPaging.pageSize,
-                rowSelection: 'single',
-                onCellClicked: this.onTaxonomySearchGridCellClick,
-                onGridReady: this.onTaxonomySearchGridReady,
-                frameworkComponents: {
-                    templateRenderer: TemplateRenderer,
-                },
-                defaultColDef: {
-                    sortable: false,
-                    resizable: true,
-                    suppressMenu: true,
-                    floatingFilter: false,
-                    filter: false,
-                },
-                enableBrowserTooltips: true,
-                rowClassRules: {
-                    refset_tool_grid_inactive_row: function (params) {
-                        let inactivatedRow = false;
-
-                        if (params.data) {
-                            inactivatedRow = params.data.active == false;
-                        }
-
-                        return inactivatedRow;
-                    },
-                },
-            };
-
-        });
-    }
-
     loadRefset(): void {
 
         this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
@@ -635,6 +560,81 @@ export class RefsetDetails implements OnInit {
     }
 
     // ***** Members Taxonomy Functions  *****/
+    loadTaxonomy() {
+
+        const allObservables = {
+            refsetLoaded: this.refsetLoaded$,
+            memberCacheLoaded: this.memberCacheLoaded
+        };
+
+        // call forkJoin on returned observables
+        forkJoin(allObservables).pipe(take(1)).subscribe(({ refsetLoaded, memberCacheLoaded }) => {
+
+            console.log('refsetLoaded: ' + refsetLoaded);
+            console.log('memberCacheLoaded: ' + memberCacheLoaded);
+
+            this.loadTaxonomyRoot();
+            this.taxonomySearchColumnDefs = [
+                {
+                    field: 'code',
+                    colId: 'code',
+                    headerName: 'Concept ID',
+                    maxWidth: 140,
+                    cellClass: 'refset-tool-taxonomy-search-column-name',
+                    tooltipField: 'code',
+                },
+                {
+                    field: 'name',
+                    colId: 'result',
+                    headerName: 'Result',
+                    minWidth: 120,
+                    flex: 1,
+                    cellClass: 'refset-tool-taxonomy-search-column-name',
+                    valueGetter: this.taxonomyResultValueGetter.bind(this),
+                    cellRenderer: 'templateRenderer',
+                    cellRendererParams: {
+                        template: this.taxonomyResultSection,
+                    },
+                    tooltipField: 'name',
+                },
+            ];
+
+            this.taxonomySearchGridOptions = {
+                context: { componentParent: this },
+                pagination: true,
+                suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                suppressPaginationPanel: true,
+                paginationPageSize: this.taxonomySearchGridPaging.pageSize,
+                rowSelection: 'single',
+                onCellClicked: this.onTaxonomySearchGridCellClick,
+                onGridReady: this.onTaxonomySearchGridReady,
+                frameworkComponents: {
+                    templateRenderer: TemplateRenderer,
+                },
+                defaultColDef: {
+                    sortable: false,
+                    resizable: true,
+                    suppressMenu: true,
+                    floatingFilter: false,
+                    filter: false,
+                },
+                enableBrowserTooltips: true,
+                rowClassRules: {
+                    refset_tool_grid_inactive_row: function (params) {
+                        let inactivatedRow = false;
+
+                        if (params.data) {
+                            inactivatedRow = params.data.active == false;
+                        }
+
+                        return inactivatedRow;
+                    },
+                },
+            };
+
+        });
+    }
+    
     cacheTaxonomyAncestors() {
 
         this.refsetService.cacheMemberAncestors(this.refsetId, this.versionDate).subscribe({
