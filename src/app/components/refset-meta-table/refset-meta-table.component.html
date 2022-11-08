@@ -191,8 +191,11 @@
                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                        {{refset?.versionDate || 'Latest'}} of
-                        {{refset?.editionShortName}}
+                        
+                        {{refset?.editionShortName}} 
+                        {{refset?.versionDate ? '' : 'In Development'}} 
+                        ({{refset?.terminologyVersionDate}})
+                        
                     </td>
                 </tr>
 
