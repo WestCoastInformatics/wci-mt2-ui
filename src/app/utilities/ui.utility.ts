@@ -574,10 +574,14 @@ export class UiUtility {
 		let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
 
 		const headerObject = {
-			'oldMemberHeader': ['Old Member ID', 'Old Member Concept'],
-			'newMemberHeader': ['New Member ID', 'New Member Concept'],
-			'manualReplacementHeader': ['Manual Replacement ID', 'Manual Replacement Concept'],
-			'membersInCommonHeader': ['Members In Common ID', 'Members In Common Concept']
+			'newMemberTitle': ['New Members'],
+			'newMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId'],
+			'oldMemberTitle': ['Old Members'],
+			'oldMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId'],
+			'totalInactiveConceptsTitle': ['Inactive Concepts with their suggested Replacement Concepts'],
+			'totalInactiveConceptsHeader': ['Inactive Concept ID', 'Inactive Concept FSN', 'Reason', 'Suggested Replacement ConceptID(s)', 'Suggested Replacement FSN(s)'],
+			'membersInCommonTitle': ['Members in Common'],
+			'membersInCommonHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId']
 		};
 
 		this.downloadFile(data, headerObject, fileName, true);
@@ -591,10 +595,14 @@ export class UiUtility {
 			csvData = this.convertToCsv(data, headerlist);
 		} else {
 
-			csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
-				+ '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
-				+ '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
-				+ '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+			csvData = this.convertToCsv([], headerlist.newMemberTitle)
+				+ this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv([], headerlist.oldMemberTitle)
+				+ this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv([], headerlist.totalInactiveConceptsTitle)
+				+ this.convertToCsv(data.totalInactiveConcepts, headerlist.totalInactiveConceptsHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv([], headerlist.membersInCommonTitle)
+				+ this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
 		}
 
 		const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });
