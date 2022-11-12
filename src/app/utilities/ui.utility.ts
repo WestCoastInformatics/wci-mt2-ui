@@ -557,7 +557,7 @@ export class UiUtility {
 		let memberStatuses = this.memberChangeData[refsetId].statuses;
 		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
 
-		this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName);
+		this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName, false, false, false);
 		notificationService.close(notification);
 		delete this.memberChangeData[refsetId];
 	}
@@ -566,7 +566,7 @@ export class UiUtility {
 		console.log(data);
 		let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
 
-		this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName);
+		this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName, false, false, false);
 	}
 
 	static createFinishedChangeReport(refsetId: string, data): void {
@@ -584,16 +584,27 @@ export class UiUtility {
 			'membersInCommonHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId']
 		};
 
-		this.downloadFile(data, headerObject, fileName, true);
+		this.downloadFile(data, headerObject, fileName, true, true, false);
 	}
 
-	static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false) {
+	static createAuditReport(refsetId: string, data): void {
+
+		let fileName = "Refset_" + refsetId + "__Audit_Report_" + new Date().toLocaleDateString();
+
+		const headerObject = {
+			'auditHeader': ['Date', 'Modified By', 'Message', 'Details'],
+		};
+
+		this.downloadFile(data, headerObject, fileName, true, false, true);
+	}
+
+	static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false, isFinishedChangeReport = false, isAuditReport = false) {
 
 		let csvData;
 
 		if (!merge) {
 			csvData = this.convertToCsv(data, headerlist);
-		} else {
+		} else if (isFinishedChangeReport) {
 
 			csvData = this.convertToCsv([], headerlist.newMemberTitle)
 				+ this.convertToCsv(data.newMember, headerlist.newMemberHeader)
@@ -603,6 +614,17 @@ export class UiUtility {
 				+ this.convertToCsv(data.totalInactiveConcepts, headerlist.totalInactiveConceptsHeader)
 				+ '\r\n\r\n\r\n' + this.convertToCsv([], headerlist.membersInCommonTitle)
 				+ this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
+		} else if (isAuditReport) {
+
+			csvData = this.convertToCsv(data.auditData, headerlist.auditHeader)
+		}
+
+		else {
+
+			csvData = this.convertToCsv(data.oldMember, headerlist.oldMemberHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv(data.newMember, headerlist.newMemberHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv(data.manualReplacement, headerlist.manualReplacementHeader)
+				+ '\r\n\r\n\r\n' + this.convertToCsv(data.membersInCommon, headerlist.membersInCommonHeader);
 		}
 
 		const blob = new Blob(['\ufeff' + csvData], { type: 'text/csv;charset=utf-8;' });

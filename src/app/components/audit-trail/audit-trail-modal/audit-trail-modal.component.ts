@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuditService } from 'src/app/services/rest/audit.service';
+import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
 	selector: 'audit-trail-modal',
@@ -21,4 +23,24 @@ export class AuditTrailModalComponent {
 		});
 	}
 
+	getAuditReport(): void {
+
+		const auditReport = JSON.parse(localStorage.getItem('audit_report'));
+		const auditData = [];
+
+		for (let auditRow of auditReport) {
+			auditData.push({
+				'Date': new Date(auditRow.created)?.toUTCString(),
+				'Modified By': auditRow?.modifiedBy,
+				'Message': auditRow?.message,
+				'Details': auditRow?.details
+			});
+		}
+
+
+		const auditReportObject = {
+			'auditData': auditData,
+		};
+		UiUtility.createAuditReport(this.refsetInternalId, auditReportObject);
+	}
 }
