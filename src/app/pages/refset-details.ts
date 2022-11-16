@@ -421,7 +421,6 @@ export class RefsetDetails implements OnInit {
                 } else {
                     this.selectedVersion = RefsetUtility.IN_DEVELOPMENT;
                 }
-                this.showLoadingSpinner = false;
 
                 for (const language of languages) {
 
@@ -672,7 +671,6 @@ export class RefsetDetails implements OnInit {
                 this.membersTaxonomyRoot = results.items[0];
                 this.taxonomyButtonLabel = 'Taxonomy';
                 this.showTaxonomySearchTable = true;
-                this.showLoadingSpinner = false;
             },
             error: (error) => {
                 this.toggleLoadingSpinner(false);
@@ -797,7 +795,6 @@ export class RefsetDetails implements OnInit {
                         this.taxonomySearchGridPaging.totalKnown = true;
                         this.taxonomySearchPaginationComponent.goToPage(pageNumber - 1);
                     }
-                    this.showLoadingSpinner = false;
 
                     return;
                 }
@@ -920,7 +917,6 @@ export class RefsetDetails implements OnInit {
 
             this.membersGridApi.showNoRowsOverlay();
             this.membersGridApi.setRowData([]);
-            this.showLoadingSpinner = false;
             return;
         }
 
@@ -974,7 +970,6 @@ export class RefsetDetails implements OnInit {
                         this.membersGridPaging.totalKnown = true;
                         this.membersPaginationComponent.goToPage(pageNumber - 1);
                     }
-                    this.showLoadingSpinner = false;
 
                     return;
                 }
@@ -1055,7 +1050,6 @@ export class RefsetDetails implements OnInit {
                 );
 
                 UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
-                this.showLoadingSpinner = false;
                 this.membersReady = true;
             },
             error: (error) => {
@@ -1225,16 +1219,13 @@ export class RefsetDetails implements OnInit {
     processChangedMemberEffects = (conceptStatusArray?: any) => {
 
         this.changeLockedStatus(false);
-        this.showLoadingSpinner = true;
         this.taxonomyManualStateRefresh = new Boolean('true');
 
         if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
             this.initializeDetailsPage();
 
         } else {
-
             this.reloadMembersGridAndTaxonomy();
-            this.showLoadingSpinner = false;
         }
 
     }
@@ -1308,7 +1299,6 @@ export class RefsetDetails implements OnInit {
             next: (results) => {
 
                 this.isConceptDetailsLoading = false;
-                this.showLoadingSpinner = false;
                 this.conceptDetail = results;
                 this.conceptDetail.roleGroups = results.roleGroups;
                 this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
@@ -1460,9 +1450,7 @@ export class RefsetDetails implements OnInit {
                             return;
                         }
                     },
-                    (error) => {
-                        this.showLoadingSpinner = false;
-                    }
+                    (error) => {}
                 );
             }
         });
