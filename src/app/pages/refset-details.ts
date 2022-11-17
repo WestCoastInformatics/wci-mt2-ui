@@ -1679,7 +1679,14 @@ export class RefsetDetails implements OnInit {
 
     downloadMembersTable() {
         this.membersGridApi.exportDataAsCsv({
-            columnKeys: this.membersColumnDefs.filter(value => value.colId !== 'actions').map(value => value.colId),
+            columnKeys: this.membersColumnDefs.filter((value) => {
+
+                if (this.user.userName == this.authenticationService.GUEST_USER) {
+                    return value.colId == 'code' || value.colId == 'modified';
+                } else {
+                    return value.colId !== 'actions' && value.colId !== 'add-remove';
+                }
+            }).map(value => value.colId),
             fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true
         });
     }
