@@ -34,6 +34,7 @@ export class RefsetDownloadComponent {
   refsetsExportableAsFreeset: string[];
   dialog: DialogService;
   disableChannel = new BroadcastChannel('disable-button-channel');
+  guestFreesetRefsets = ['787778008'];
 
   @Input() refset;
   @Input() buttonClasses = '';
@@ -74,7 +75,9 @@ export class RefsetDownloadComponent {
           this.formatOptions.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
         }
 
-        this.formatOptions.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+        if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER || this.guestFreesetRefsets.includes(refsetId)) {
+          this.formatOptions.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+        }
 
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
         this.languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
