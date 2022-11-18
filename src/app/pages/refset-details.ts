@@ -324,8 +324,8 @@ export class RefsetDetails implements OnInit {
                 },
             };
 
-            this.showTable = true;
             this.showLoadingSpinner = false;
+            this.showTable = true;
             // If the member grid data is present manually reload the grid or it won't update
             if (CodeUtility.hasValue(this.originalGridParams)) {
                 this.onMembersGridReady(this.originalGridParams);
@@ -459,7 +459,7 @@ export class RefsetDetails implements OnInit {
                     this.refsetLoaded.complete();
                 }
 
-
+                this.showLoadingSpinner = false;
             },
             error: (error) => {
                 this.toggleLoadingSpinner(false);
