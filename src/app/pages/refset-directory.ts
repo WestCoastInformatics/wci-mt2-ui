@@ -437,11 +437,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             return;
         }
 
-        const refset = this.getRefsetRow(refsetId);
+        const refsetDirectoryData = this.getRefsetRow(refsetId);
 
-        this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
+        this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
 
-            refset.descriptions = results.descriptions;
+            let refset = results;
             const dialogId = 'directoryInfoDialog';
             this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("library", "details/" + refset.refsetId + '/'
                 + RefsetUtility.getVersionDateForRefsetApiCall(refset));
@@ -460,8 +460,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
                 refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
             }
-            refset.versionList = results.versionList;
 
+            refset.versionList = results.versionList;
+            
             const dialogData = {
                 dialogId: dialogId,
                 showCancel: false,
