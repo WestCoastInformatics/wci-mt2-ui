@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
             .pipe(
                 filter(
                     (event) => {
-                        return event instanceof NavigationStart && event.navigationTrigger === 'popstate' && event.restoredState != null;
+                        return event instanceof NavigationStart && event.navigationTrigger === 'popstate';
                     }
                 )
             )
