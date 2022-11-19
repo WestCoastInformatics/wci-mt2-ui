@@ -18,7 +18,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 	selector: 'adjudicate-upgrade-modal',
 	templateUrl: './adjudicate-upgrade-modal.component.html'
 })
-export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, OnChanges {
+export class AdjudicateUpgradeModalComponent {
 
 	@Input()
 	refsetData: any;
@@ -94,6 +94,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 	addReplacementFlag = false;
 	dialog: DialogService;
 	replacementColumnSortFilter = false;
+	showGrid = false;
 
 	constructor(private readonly modalService: NgbModal,
 		private readonly refsetService: RefsetService,
@@ -103,14 +104,31 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		private dialogFactoryService: DialogFactoryService,
 		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
 
-	ngOnInit(): void {
+	openAdjudicateUpgradeModal(adjudicateUpgradeDialog: NgbModal) {
+
+		this.modalService.dismissAll();
+		this.modalService.open(adjudicateUpgradeDialog, {
+			backdrop: 'static',
+			keyboard: false,
+			windowClass: 'adjudicate-upgrade-modal',
+			centered: true
+		});
+
+		this.initializeModal();
+	}
+
+	initializeModal() {
+
+		this.showGrid = false;
+		this.columnDefs = [];
+		this.refsetGridOptions = null;
+		this.refsetGridApi = null;
+		this.refsetGridColumnApi = null;
+
 		this.languageOptions = this.refsetData?.edition?.fullyQualifiedLanguageRefsets.map((x) => {
 			return x.qualifiedLanguageCode;
 		});
 		this.selectedLanguage = this.languageOptions[0];
-	}
-
-	ngAfterViewInit() {
 
 		this.columnDefs = [
 
@@ -244,6 +262,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				}
 			},
 		};
+
+		this.showGrid = true;
 	}
 
 	onCellMouseOver(params) {
@@ -543,19 +563,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		}
 
 		return [language, type, type2];
-	}
-
-	ngOnChanges(changes: SimpleChanges): void {
-	}
-
-	openAdjudicateUpgradeModal(adjudicateUpgradeDialog: NgbModal) {
-		this.modalService.dismissAll();
-		this.modalService.open(adjudicateUpgradeDialog, {
-			backdrop: 'static',
-			keyboard: false,
-			windowClass: 'adjudicate-upgrade-modal',
-			centered: true
-		});
 	}
 
 	changeLanguage($event: any) {
