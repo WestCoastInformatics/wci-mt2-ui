@@ -8,7 +8,7 @@
                 <b>(BETA)</b></span>
         </a>
 
-        <div class="refset-tool-breadcrumb-bar text-ghost-grey">
+        <div class="refset-tool-breadcrumb-bar text-ghost-grey" [class]="breadcrumbs.length > 2 ? 'extended-bread-crumb' : 'display: flex'">
             <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
               (click)="navigate(breadcrumb.id)">
                 {{breadcrumb.label}}
