@@ -815,7 +815,7 @@ export class AdjudicateUpgradeModalComponent {
 				return x['New Member ID'] === concept.code;
 			}))) {
 				newMembers.push({
-					'id': concept.id,
+					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
@@ -838,7 +838,7 @@ export class AdjudicateUpgradeModalComponent {
 				return x['Old Member ID'] === concept.code;
 			}))) {
 				oldMembers.push({
-					'id': concept.id,
+					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
@@ -872,10 +872,11 @@ export class AdjudicateUpgradeModalComponent {
 			return !memberItems?.includes(x.id);
 		});
 
+		console.log(commonConcepts)
 		let membersInCommon = [];
 		for (let i = 0; i < commonConcepts?.length; i++) {
 			membersInCommon.push({
-				'id': commonConcepts[i].id,
+				'id': commonConcepts[i].memberId,
 				'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 				'active': commonConcepts[i].active ? '1' : '0',
 				'moduleId': this.refsetData?.moduleId,
