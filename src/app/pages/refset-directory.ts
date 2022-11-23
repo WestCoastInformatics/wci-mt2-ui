@@ -245,7 +245,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         };
 
         if (CodeUtility.hasValue(this.refsetGridLastQuery)) {
-            console.log(this.refsetGridLastQuery)
             this.refsetGridLastQuery = this.refsetGridLastQuery.replace(/\//g, '%2F').replace(/%/g, '%25');
             restParams.query = this.refsetGridLastQuery;
         }
@@ -253,7 +252,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.refsetService.getRefsets({ ...restParams, }).subscribe({
             next: (results) => {
                 const data = results.items;
-                console.log(data)
                 this.refsetData = data;
                 this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
                 this.numOfResults = results.total;
@@ -331,10 +329,18 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
     };
 
+    @Debounce()
     changedViewFilter() {
         this.onGridReady(this.originalGridParams);
     }
 
+    delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            setTimeout(callback, ms);
+        };
+    })()
     //***** General Functions *****/
 
     openEclBuilder(fieldId) {
@@ -467,10 +473,13 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         }
     }
 
+    @Debounce()
     onSearchChange() {
         this.searchInput = this.searchInput.trim();
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            this.onGridReady(this.originalGridParams);
+            this.delay(() => {
+                this.onGridReady(this.originalGridParams);
+            }, 500)
         }
     }
 
