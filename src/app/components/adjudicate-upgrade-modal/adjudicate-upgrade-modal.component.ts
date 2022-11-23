@@ -811,7 +811,7 @@ export class AdjudicateUpgradeModalComponent {
 			}))) {
 				newMembers.push({
 					'id': concept.id,
-					'effectiveTime': new Date(concept.memberEffectiveTime).toUTCString().includes('Invalid Date') ? '' : new Date(concept.memberEffectiveTime).toUTCString(),
+					'effectiveTime': new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '').includes('Invalid Date') ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
 					'refsetId': this.refsetData?.refsetId
@@ -834,7 +834,7 @@ export class AdjudicateUpgradeModalComponent {
 			}))) {
 				oldMembers.push({
 					'id': concept.id,
-					'effectiveTime': new Date(concept.memberEffectiveTime).toUTCString().includes('Invalid Date') ? '' : new Date(concept.memberEffectiveTime).toUTCString(),
+					'effectiveTime': new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '').includes('Invalid Date') ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
 					'refsetId': this.refsetData?.refsetId
@@ -843,30 +843,23 @@ export class AdjudicateUpgradeModalComponent {
 		}
 
 		// Get all inactive concepts
-		inactiveConcepts = [];
-		memberItems.forEach((item: any) => {
-			if (item.stillMember === true) {
-				inactiveConcepts.push(item);
-			}
+		const items = this.membersInCommon.items;
+		inactiveConcepts = items.filter((items: any) => {
+			return items?.active == false;
 		});
 
 		let totalInactiveConcepts = [];
 
 
-		for (let concept of inactiveConcepts) {
-			if (!Boolean(totalInactiveConcepts.some((x) => {
-				return x['Inactive Concept ID'] === concept.code;
-			}))) {
-				totalInactiveConcepts.push({
-					'Inactive Concept ID': concept.code,
-					'Inactive Concept FSN': this.transformDescriptions(concept.descriptions)[0].term,
-					'Reason': this.formatReason(concept.inactivationReason),
-					'Suggested Replacement ConceptID(s)': this.transformManualReplacementDescriptions(concept.descriptions)[0].descriptionId,
-					'Suggested Replacement FSN(s)': this.transformManualReplacementDescriptions(concept.descriptions)[0].term
-				});
-			}
+		for (let i = 0; i < inactiveConcepts.length; i++) {
+			totalInactiveConcepts.push({
+				'Inactive Concept ID': inactiveConcepts[i].code,
+				'Inactive Concept FSN': this.transformDescriptions(inactiveConcepts[i].descriptions)[0].term,
+				'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
+				'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+				'Suggested Replacement FSN(s)': this.transformManualReplacementDescriptions(inactiveConcepts[i].descriptions)[0].term
+			});
 		}
-
 
 		// Get members in common
 		const membersInCommonItems = this.membersOfRefset;
@@ -878,7 +871,7 @@ export class AdjudicateUpgradeModalComponent {
 		for (let i = 0; i < commonConcepts?.length; i++) {
 			membersInCommon.push({
 				'id': commonConcepts[i].id,
-				'effectiveTime': new Date(commonConcepts[i].memberEffectiveTime).toUTCString(),
+				'effectiveTime': new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
 				'active': commonConcepts[i].active ? '1' : '0',
 				'moduleId': this.refsetData?.moduleId,
 				'refsetId': this.refsetData?.refsetId
