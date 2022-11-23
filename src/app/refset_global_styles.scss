@@ -292,6 +292,24 @@ a.footer-link {
   }
 }
 
+@media (max-width: 1450px) {
+  .extended-bread-crumb {
+    display:inline-block !important
+  }
+}
+
+@media (max-width: 1230px) {
+  .refset-tool-breadcrumb-bar {
+    display: inline-block !important;
+  }
+}
+
+@media (max-width: 1170px) {
+  .project-role-and-assignee-label {
+    display: none !important;
+  }
+}
+
 .refset-tool-nav-item-row a:hover {
   text-decoration: none;
 }
