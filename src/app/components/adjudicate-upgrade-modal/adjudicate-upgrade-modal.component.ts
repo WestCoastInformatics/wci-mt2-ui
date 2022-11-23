@@ -130,6 +130,11 @@ export class AdjudicateUpgradeModalComponent {
 		});
 		this.selectedLanguage = this.languageOptions[0];
 
+		this.setupColumns();
+	}
+
+	setupColumns() {
+
 		this.columnDefs = [
 
 			{

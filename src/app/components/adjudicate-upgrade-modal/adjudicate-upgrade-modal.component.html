@@ -19,7 +19,7 @@
                     <div class="adjudicate-format-option-drop-down">
                         <mat-form-field floatLabel="never" appearance="legacy">
                             <mat-label>Select Language(s):</mat-label>
-                            <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event);">
+                            <select matNativeControl [(ngModel)]="selectedLanguage" (change)="setupColumns(); changeLanguage($event)">
                                 <option *ngFor="let option of languageOptions" [value]="option">
                                     {{ option }}
                                 </option>
@@ -35,8 +35,8 @@
                 <div class="adjudicate-upgrade-modal-body-mid">
                     <as-split direction="horizontal" gutterSize="4">
                         <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
-                            <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" id="adjudication-list" [columnDefs]="columnDefs"
-                              [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)" style="width: 100%">
+                            <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" id="adjudication-list"
+                              [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)" style="width: 100%">
                             </ag-grid-angular>
                         </as-split-area>
 
