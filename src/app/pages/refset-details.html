@@ -194,6 +194,13 @@
                         Edit
                     </button>
 
+                    <button type="button" mat-raised-button color="red"
+                      *ngIf="this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
+                      (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false" class="refset-tool-action-button refset-action-button"
+                      aria-label="Delete In Development Version" ng-reflect-color="red">
+                      Delete In Development Version
+                    </button>
+
                     <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
                       *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
                       [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
@@ -884,6 +891,32 @@
     </div>
     <div class="modal-footer ready-for-review-footer">
         <button type="button" (click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click');" mat-raised-button color="primary" aria-hidden="false"
+          class="refset-tool-action-button" aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
+            Yes
+        </button>
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="No"
+          title="No" ng-reflect-color="red">
+            No
+        </button>
+    </div>
+</ng-template>
+
+<!--Delete In Development Version Modal-->
+<ng-template #deleteDevelopmentVersionDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <button ngbAutofocus class="unfocus-btn"></button>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of the refset?
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer ready-for-review-footer">
+        <button type="button" (click)="deleteDevelopmentVersion(); modal.dismiss('Yes click');" mat-raised-button color="primary" aria-hidden="false"
           class="refset-tool-action-button" aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
             Yes
         </button>

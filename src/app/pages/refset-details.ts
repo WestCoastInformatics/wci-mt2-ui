@@ -1156,6 +1156,27 @@ export class RefsetDetails implements OnInit {
         });
     }
 
+    deleteDevelopmentVersion() {
+
+        this.toggleLoadingSpinner(true);
+
+        this.refsetService.deleteDevelopmentVersion(this.refsetData.id).subscribe({
+            next: (results) => {
+
+                this.notificationService.show('The "In Development" version of reference set "' + this.refsetData.name + '" (' + this.refsetData.refsetId + ') has been deleted. This can not be undone.', null, 'success', {
+                    timeOut: 0,
+                    extendedTimeOut: 0
+                });
+
+                let link = '/organization/' + this.refsetData.project.organizationId + '/edition/' + this.refsetData.editionId + '/projects/' + this.refsetData.projectId + '/refsets';
+                this.router.navigate([link]);
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
+            }
+        });
+    }
+
     loadNewRefsetVersion(refsetId: string, versionDate: string) {
 
         this.refsetId = refsetId;
@@ -1652,6 +1673,13 @@ export class RefsetDetails implements OnInit {
     }
 
     openCancelUpgrade(dialog: NgbModal) {
+        this.modalService.open(dialog, {
+            modalDialogClass: 'alert-modal',
+            centered: true
+        });
+    }
+
+    openDeleteDevelopmentVersion(dialog: NgbModal) {
         this.modalService.open(dialog, {
             modalDialogClass: 'alert-modal',
             centered: true
