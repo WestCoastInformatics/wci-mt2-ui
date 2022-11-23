@@ -126,7 +126,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         newMembers.push({
           'id': concept.id,
-          'effectiveTime': new Date(concept.memberEffectiveTime) ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
+          'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
           'active': concept.active ? '1' : '0',
           'moduleId': this.refsetData?.moduleId,
           'refsetId': this.refsetData?.refsetId
@@ -149,7 +149,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         oldMembers.push({
           'id': concept.id,
-          'effectiveTime': new Date(concept.memberEffectiveTime) ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
+          'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
           'active': concept.active ? '1' : '0',
           'moduleId': this.refsetData?.moduleId,
           'refsetId': this.refsetData?.refsetId
@@ -186,7 +186,7 @@ export class FinishUpgradeModalComponent implements OnInit {
     for (let i = 0; i < commonConcepts?.length; i++) {
       membersInCommon.push({
         'id': commonConcepts[i].id,
-        'effectiveTime': new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
+        'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
         'active': commonConcepts[i].active ? '1' : '0',
         'moduleId': this.refsetData?.moduleId,
         'refsetId': this.refsetData?.refsetId
