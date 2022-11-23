@@ -575,13 +575,13 @@ export class UiUtility {
 
 		const headerObject = {
 			'newMemberTitle': ['New Members'],
-			'newMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId'],
+			'newMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
 			'oldMemberTitle': ['Old Members'],
-			'oldMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId'],
+			'oldMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
 			'totalInactiveConceptsTitle': ['Inactive Concepts with their suggested Replacement Concepts'],
 			'totalInactiveConceptsHeader': ['Inactive Concept ID', 'Inactive Concept FSN', 'Reason', 'Suggested Replacement ConceptID(s)', 'Suggested Replacement FSN(s)'],
 			'membersInCommonTitle': ['Members in Common'],
-			'membersInCommonHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId']
+			'membersInCommonHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId']
 		};
 
 		this.downloadFile(data, headerObject, fileName, true, true, false);
