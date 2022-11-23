@@ -819,7 +819,8 @@ export class AdjudicateUpgradeModalComponent {
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
-					'refsetId': this.refsetData?.refsetId
+					'refsetId': this.refsetData?.refsetId,
+					'referencedComponentId': concept.code
 				});
 			}
 		}
@@ -842,7 +843,8 @@ export class AdjudicateUpgradeModalComponent {
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
-					'refsetId': this.refsetData?.refsetId
+					'refsetId': this.refsetData?.refsetId,
+					'referencedComponentId': concept.code
 				});
 			}
 		}
@@ -880,7 +882,8 @@ export class AdjudicateUpgradeModalComponent {
 				'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 				'active': commonConcepts[i].active ? '1' : '0',
 				'moduleId': this.refsetData?.moduleId,
-				'refsetId': this.refsetData?.refsetId
+				'refsetId': this.refsetData?.refsetId,
+				'referencedComponentId': commonConcepts[i].code
 			});
 		}
 
