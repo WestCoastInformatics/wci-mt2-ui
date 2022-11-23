@@ -126,7 +126,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         newMembers.push({
           'id': concept.id,
-          'effectiveTime': new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '').includes('Invalid Date') ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
+          'effectiveTime': new Date(concept.memberEffectiveTime) ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
           'active': concept.active ? '1' : '0',
           'moduleId': this.refsetData?.moduleId,
           'refsetId': this.refsetData?.refsetId
@@ -149,7 +149,7 @@ export class FinishUpgradeModalComponent implements OnInit {
       }))) {
         oldMembers.push({
           'id': concept.id,
-          'effectiveTime': new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '').includes('Invalid Date') ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
+          'effectiveTime': new Date(concept.memberEffectiveTime) ? '' : new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, ''),
           'active': concept.active ? '1' : '0',
           'moduleId': this.refsetData?.moduleId,
           'refsetId': this.refsetData?.refsetId
