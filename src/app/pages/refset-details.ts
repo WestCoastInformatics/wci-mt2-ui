@@ -336,7 +336,7 @@ export class RefsetDetails implements OnInit {
                 this.loadConceptDetail(this.conceptDetail);
             }
         });
-        
+
         this.loadTaxonomy();
         this.loadRefset();
         this.cacheTaxonomyAncestors();
@@ -1083,7 +1083,7 @@ export class RefsetDetails implements OnInit {
 
     onMembersGridCellClick = (event) => {
         if (event.column.colId === 'actions') {
-            
+
         } else {
             const selectedRows = this.membersGridApi.getSelectedRows();
             let selectedId: string;
@@ -1137,7 +1137,7 @@ export class RefsetDetails implements OnInit {
                     } else {
 
                         if (action.includes('CANCEL_EDIT')) {
-                            
+
                             this.processChangedMemberEffects(null);
                             this.loadRefset();
                         } else {
@@ -1471,7 +1471,7 @@ export class RefsetDetails implements OnInit {
                             return;
                         }
                     },
-                    (error) => {}
+                    (error) => { }
                 );
             }
         });

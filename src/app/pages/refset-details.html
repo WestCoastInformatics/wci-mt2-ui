@@ -179,7 +179,7 @@
                           class="down-arrow-for-menu">&#x25BC;</span></button>
 
                     <mat-menu #communicationMenu="matMenu">
-                        <email-refset-modal  [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+                        <email-refset-modal [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
                         <invite-people-modal [refset]="refsetData"></invite-people-modal>
                         <request-access-modal [refset]="refsetData"></request-access-modal>
                     </mat-menu>
@@ -194,15 +194,14 @@
                         Edit
                     </button>
 
-                    <button type="button" mat-raised-button color="red"
-                      *ngIf="this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
+                    <button type="button" mat-raised-button color="red" *ngIf="this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
                       (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false" class="refset-tool-action-button refset-action-button"
                       aria-label="Delete In Development Version" ng-reflect-color="red">
-                      Delete In Development Version
+                        Delete In Development Version
                     </button>
 
                     <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
-                      *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
+                      *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
                       [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
                       [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
                     <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
@@ -262,8 +261,9 @@
                         Unassign
                     </button>
 
-                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION') && !this.refsetData?.localSet" [refsetData]="refsetData"
-                      [labelPrefix]="inEditButtonPrefix" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')" (reloadPage)="initializeDetailsPage()">
+                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION') && !this.refsetData?.localSet"
+                      [refsetData]="refsetData" [labelPrefix]="inEditButtonPrefix" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')"
+                      (reloadPage)="initializeDetailsPage()">
                     </ready-for-publication-modal>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')" #withdrawPublicationRequest mat-raised-button color="primary" aria-hidden="false"
@@ -439,8 +439,8 @@
         <!-- Section Title -->
         <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title">
             Reference Set Members ({{refsetData?.memberCount}})
-            <button *ngIf="showTable && membersReady" mat-raised-button color="primary" aria-hidden="false"
-              class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
+            <button *ngIf="showTable && membersReady" mat-raised-button color="primary" aria-hidden="false" class="ml-4 refset-tool-action-button refset-action-button"
+              ng-reflect-color="primary" (click)="downloadMembersTable()">
                 Download Members Table
                 <i class="fa fa-download"></i>
             </button>
@@ -452,15 +452,15 @@
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">
                 <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
-                    [processChangedMemberFunction]="processChangedMemberEffects">
+                  [processChangedMemberFunction]="processChangedMemberEffects">
                 </import-from-file-modal>
 
                 <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
                   (changeLockedStatus)="changeLockedStatus($event)">
                 </import-from-list-modal>
 
-                <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)" 
-                    [processChangedMemberFunction]="processChangedMemberEffects">
+                <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
+                  [processChangedMemberFunction]="processChangedMemberEffects">
                 </add-remove-by-concept-modal>
             </mat-menu>
         </span>
@@ -911,7 +911,8 @@
     </div>
     <div class="container-fluid ready-for-review-container-fluid">
         <div class="modal-body review-modal-body">
-            <div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of the refset?
+            <div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of
+                the refset?
             </div>
         </div>
     </div>
