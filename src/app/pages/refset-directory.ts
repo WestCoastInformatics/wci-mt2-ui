@@ -256,12 +256,18 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
                 this.numOfResults = results.total;
 
-                if (pageNumber > 1) {
+                if (results.items.length == 0) {
 
-                    this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-                    this.refsetGridPaging.totalKnown = true;
-                    this.paginationComponent.goToPage(pageNumber - 1);
-                    this.showLoadingSpinner = false;
+                    this.refsetGridApi.showNoRowsOverlay();
+                    this.refsetGridApi.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
+                        this.refsetGridPaging.totalKnown = true;
+                        this.paginationComponent.goToPage(pageNumber - 1);
+                        this.showLoadingSpinner = false;
+                    }
 
                     return;
                 }
