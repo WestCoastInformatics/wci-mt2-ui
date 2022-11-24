@@ -72,12 +72,12 @@ export class OrganizationPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', tooltipField: 'name', headerName: 'Members', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'Accounts', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
       { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
       { field: 'email', tooltipField: 'email', minWidth: 400, headerName: 'Email', unSortIcon: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
       {
-        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate Account', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
           template: this.inactivateUserSection
         }, flex: 1, maxWidth: 190, resizable: false
       },
@@ -162,7 +162,7 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   getPeople(): void {
-    
+
     this.showLoadingSpinner = true;
     this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 
@@ -213,7 +213,7 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   async getTeams(teams: any): Promise<any> {
-    
+
     const teamObject = { teams: [] };
     if (teams === 'undefined' || teams === undefined) {
       return JSON.stringify(teamObject);

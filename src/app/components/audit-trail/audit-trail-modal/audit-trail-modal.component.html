@@ -1,6 +1,6 @@
-<button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false" (click)="openTrailModal(trailDialog)"
-  class="refset-tool-action-button refset-action-button" aria-label="Audit Trail" title="Audit Trail" ng-reflect-color="primary">
-    Audit Trail
+<button *ngIf="!isDetails" #artifactsButton aria-hidden="false" (click)="openTrailModal(trailDialog)" class="btn btn-primary btn-lg btn-wide-font" aria-label="Audit Trail"
+  title="Audit Trail">
+    Organizational Audit Trail
 </button>
 <button mat-menu-item *ngIf="isDetails" (click)="openTrailModal(trailDialog)" title="Open Audit Trail List" aria-label="Audit Trail" id="audit-button">Audit Trail</button>
 
