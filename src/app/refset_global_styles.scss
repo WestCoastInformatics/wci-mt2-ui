@@ -263,6 +263,10 @@ a.footer-link {
   color: #C8CFD6;
 }
 
+.footer-link-float {
+  float: right;
+}
+
 .refset-tool-breadcrumb-bar> :first-child {
   margin-left: 10px;
 }
@@ -5444,4 +5448,8 @@ app-date-text-floating-filter {
 .no-outline,.no-outline:focus{
     outline: none !important;
     box-shadow: none !important;
+}
+
+.landing-page-center {
+  text-align: center;
 }
