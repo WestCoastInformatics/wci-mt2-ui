@@ -1136,7 +1136,7 @@ export class RefsetDetails implements OnInit {
 
                     } else {
 
-                        if (action.includes('CANCEL_EDIT')) {
+                        if (['CANCEL_EDIT', 'FINISH_UPGRADE'].includes(action)) {
 
                             this.processChangedMemberEffects(null);
                             this.loadRefset();

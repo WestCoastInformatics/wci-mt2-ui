@@ -944,6 +944,8 @@ export class AdjudicateUpgradeModalComponent {
 		this.dialog.confirmed().subscribe((data) => {
 			// if 'ok', close pause modal and update modal
 			if (data) {
+				
+				this.refsetDetails?.processChangedMemberEffects(null);
 				this.modalService.dismissAll();
 			}
 			// else close only pause modal
