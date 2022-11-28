@@ -1,5 +1,5 @@
 <a *ngIf="!isDetailsPage && canAdd" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
-   class='btn btn-primary rounded btn-lg float-right btn-wide-font' style="width: 240px;" [ngClass]="{ inactive: disabled }" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="primary">
+   class='btn btn-primary rounded btn-lg float-right btn-wide-font' style="width: 240px;" [ngClass]="{ inactive: disabled }" aria-label="Create New Reference Set" title="Create New Reference Set" ng-reflect-color="primary">
     Create New Reference Set
 </a>
 
@@ -9,7 +9,7 @@
 <ng-template #createNewRefsetDialog let-modal>
     <div class="modal-header rt2-modal-header">
         <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
-            Create New Refset
+            Create New Reference Set
         </h4>
         <h4 *ngIf="editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
             Edit Reference Set Metadata
@@ -390,8 +390,8 @@
             Next
         </button>
         <button *ngIf="step == 3" [disabled]="!isComplete()" type="button" (click)="createRefsetObject()" mat-raised-button color="green" aria-hidden="false"
-          class="refset-tool-action-button" aria-label="Create New Refset" title="Create New Refset" ng-reflect-color="green">
-            Create New Refset
+          class="refset-tool-action-button" aria-label="Create New Reference Set" title="Create New Reference Set" ng-reflect-color="green">
+            Create New Reference Set
         </button>
     </div>
 </ng-template>
@@ -399,15 +399,15 @@
 <ng-template #infoDialog let-data>
     Requirements when creating a new refset:
     <ol>
-        <li>Every reference set has an associated SNOMED concept.</li>
+        <li>Every Reference set has an associated SNOMED concept.</li>
         <li>Each SNOMED concept must have a parent SNOMED concept specified.</li>
     </ol>
 
     <br><br>
     So...
     <ul>
-        <li>If you are creating a new reference set using an existing SNOMED concept, you must select the existing SNOMED concept to use.</li>
-        <li>If you are creating a new reference set and wish to create a new SNOMED concept, you must select a SNOMED concept parent.</li>
+        <li>If you are creating a new Reference set using an existing SNOMED concept, you must select the existing SNOMED concept to use.</li>
+        <li>If you are creating a new Reference set and wish to create a new SNOMED concept, you must select a SNOMED concept parent.</li>
     </ul>
 
 </ng-template>

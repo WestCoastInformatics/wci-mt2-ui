@@ -55,7 +55,7 @@
         <ng-template #directoryInfoSection let-params>
             <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
               title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
-                <mat-icon>information</mat-icon>
+                <mat-icon>information</mat-icon> <span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
             </button>
 
             <!-- <mat-icon aria-hidden="false" #directoryPrivateIcon
@@ -107,7 +107,6 @@
         <ng-template #directoryActionSection let-params>
             <div class="container-fluid">
                 <div class="row">
-
                     <div class="col-2">
                         <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
                         </app-refset-download>

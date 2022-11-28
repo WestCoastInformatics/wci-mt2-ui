@@ -204,6 +204,18 @@ export class TeamsConfigurationComponent implements OnInit {
         return flag == null ? false : true;
     }
 
+    isEmailChanged(): boolean {
+        return this.profileEmailValue.length !== this.selectedTeam.primaryContactEmail.length
+    }
+
+    isNameChanged(): boolean {
+        return this.profileNameValue.length !== this.selectedTeam.name.length
+    }
+
+    isDescriptionChanged(): boolean {
+        return this.profileDescriptionValue.length !== this.selectedTeam.description.length
+    }
+
     onKeyDownEvent(event: any): void {
         this.isValidEmail();
     }
@@ -248,6 +260,7 @@ export class TeamsConfigurationComponent implements OnInit {
                     timeOut: 3000,
                     extendedTimeOut: 0
                 });
+                this.selectedTeam['roles'] = this.selectedRoles
             });
         }
 
