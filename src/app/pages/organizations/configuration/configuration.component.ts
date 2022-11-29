@@ -53,15 +53,16 @@ export class OrganizationConfigurationComponent implements OnInit {
     }
 
     ngAfterViewInit(): void {
-        document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
-
+        if (document.getElementById("audit-button")) {
+            document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
+        }
     }
 
     setNavigation() {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: 'Organization Configuration' },
+            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' Configuration' : 'Organization Configuration' },
         ]);
 
         this.menu = [

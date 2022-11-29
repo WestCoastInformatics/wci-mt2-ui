@@ -116,7 +116,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
     this.breadcrumbService.setBreadcrumbs([
       { path: '/dashboard', label: 'Dashboard' },
-      { label: 'Organization People' },
+      { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' People' : 'Organization People' },
     ]);
 
     this.menu = [
