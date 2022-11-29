@@ -25,7 +25,8 @@
                         People ({{dataCount}})
                         <add-member-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" type="Organization" [id]="selectedOrganization?.id"
                           [name]="selectedOrganization?.name"></add-member-modal>
-                        <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization"></invite-people-modal>
+                        <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization">
+                        </invite-people-modal>
                     </div>
 
                     <div class='dashboard-section'>

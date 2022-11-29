@@ -72,12 +72,12 @@ export class OrganizationPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', tooltipField: 'name', headerName: 'Accounts', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
       { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
       { field: 'email', tooltipField: 'email', minWidth: 400, headerName: 'Email', unSortIcon: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
       {
-        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate Account', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate User', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
           template: this.inactivateUserSection
         }, flex: 1, maxWidth: 190, resizable: false
       },

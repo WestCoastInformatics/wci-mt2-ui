@@ -92,7 +92,7 @@ export class OrganizationTeamsComponent implements OnInit {
             },
             { field: 'email', tooltipField: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
             {
-                field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false,
+                field: 'members', headerName: 'Users', maxWidth: 120, filter: false, resizable: false, sortable: false,
                 cellClass: 'text-primary font-weight-bold', tooltipValueGetter: (params) => {
                     return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', ') : '';
                 }
