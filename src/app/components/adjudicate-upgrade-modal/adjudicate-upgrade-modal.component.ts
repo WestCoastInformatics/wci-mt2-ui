@@ -408,13 +408,12 @@ export class AdjudicateUpgradeModalComponent {
 
 	addRemoveConcept(params: any, changeMethod: string): void {
 		if (!this.disableAddRemove) {
+			this.changeLockedStatus(true);
 			this.addRemoveConceptsComponent.changeMethod = changeMethod;
 			this.addRemoveConceptsComponent.refset = this.refsetData;
 			this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
 			this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
 			this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcepts[0]);
-			this.disableAddRemove = true;
-
 			if (changeMethod == 'INACTIVE_ADDED') {
 				this.inactiveConcepts++;
 			} else if (changeMethod == 'INACTIVE_REMOVED') {
@@ -463,7 +462,9 @@ export class AdjudicateUpgradeModalComponent {
 
 	addManualReplacement(changeMethod: string): void {
 		if (this.concept) {
-			this.refsetDetails.toggleLoadingSpinner(true);
+			this.changeLockedStatus(true);
+			// Not necessary
+			//this.refsetDetails.toggleLoadingSpinner(true);
 			const body = { ...this.concept };
 			this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
 				// force auto-add of the replacement concept to the refset
@@ -484,7 +485,6 @@ export class AdjudicateUpgradeModalComponent {
 
 	processChangedMemberEffects = (conceptStatusArray) => {
 
-		this.changeLockedStatus(false);
 		this.refsetDetails.showLoadingSpinner = true;
 
 		this.onGridReady(this.originalGridParams);
@@ -695,12 +695,16 @@ export class AdjudicateUpgradeModalComponent {
 
 			UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			this.refsetDetails.showLoadingSpinner = false;
+			// finally, set locked back off
+			this.changeLockedStatus(false);
+
 		},
 			error => {
 
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setRowData([]);
 				this.refsetDetails.toggleLoadingSpinner(false);
+				this.changeLockedStatus(false);
 			});
 
 
@@ -722,6 +726,7 @@ export class AdjudicateUpgradeModalComponent {
 						return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
 					});
 					if (inactiveConcepts.length > 0) {
+						self.changeLockedStatus(true);
 						self.refsetDetails.showLoadingSpinner = true;
 						self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
 							self.processChangedMemberEffects(null);

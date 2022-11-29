@@ -261,7 +261,7 @@ export class UiUtility {
 	static manageMemberNotifications(refsetInternalId: string, refsetId: string, description: string, callbackFunction: Function, notificationService: NotificationService, refsetService: RefsetService, router: Router) {
 
 		// set a small delay so the original call has some time to process
-		CodeUtility.delay(1500);
+		CodeUtility.delay(500);
 
 		let message = 'Members are being ' + description + ' Reference Set ' + refsetId + '.';
 		let messagePrefix = '';
