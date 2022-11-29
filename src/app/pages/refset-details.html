@@ -138,8 +138,20 @@
                         </workflow-history-notes-modal>
 
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
-                        <button mat-menu-item *ngIf="allowedToEdit" (click)="openDeleteRefset()">Delete Reference Set</button>
 
+                        <button mat-menu-item *ngIf="this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
+                            (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false"
+                            class="refset-tool-action-button refset-action-button"
+                            aria-label="Delete In Development Version" ng-reflect-color="red"
+                            title="Removes in-development reference set leaving any prior published versions unchanged">
+                            Delete In Development Version
+                        </button>
+
+                        <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionList"
+                            (click)="openInactivateRefset()"
+                            title="Inactivate previously published reference set">
+                            Inactivate Reference Set
+                        </button>
 
                     </mat-menu>
 
@@ -192,12 +204,6 @@
                       class="refset-tool-action-button refset-action-button" aria-label="Edit" title="Edit" ng-reflect-color="primary"
                       (click)="setWorkflowStatusByAction('', 'EDIT')">
                         Edit
-                    </button>
-
-                    <button type="button" mat-raised-button color="red" *ngIf="this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
-                      (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false" class="refset-tool-action-button refset-action-button"
-                      aria-label="Delete In Development Version" ng-reflect-color="red">
-                        Delete In Development Version
                     </button>
 
                     <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
@@ -329,7 +335,7 @@
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
-                <ng-template #deleteRefsetDialog let-data>
+                <ng-template #inactivateRefsetDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
