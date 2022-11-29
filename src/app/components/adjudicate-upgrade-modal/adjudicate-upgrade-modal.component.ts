@@ -870,7 +870,7 @@ export class AdjudicateUpgradeModalComponent {
 				'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
 				'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
 				'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].descriptions)[0].term
+				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].replacementConcepts[0].descriptions)[0].term
 			});
 		}
 
