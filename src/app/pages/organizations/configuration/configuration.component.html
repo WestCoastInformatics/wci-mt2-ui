@@ -72,16 +72,22 @@
                         <div class="organization-profile-mid">Warning! This is a permanent operation
                             and cannot
                             be
-                            undone. Please be certain before taking action.</div>
-                        <div class="section-btn">
-                            <remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId()
-                              [componentName]=getSelectedOrganizationName()>
-                            </remove-dashboard-component-modal>
+                            undone. Please be certain before taking action.
+                            <br>
+                            <div class="org-config-spacing">
+                                <remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId()
+                                  [componentName]=getSelectedOrganizationName()>
+                                </remove-dashboard-component-modal>
+                            </div>
                         </div>
-                        <br>
-                        <div class="section-btn">
-                            <audit-trail-modal [refsetInternalId]="organizationId" [isDetails]="false" *ngIf="organizationId">
-                            </audit-trail-modal>
+                        <div class="organization-profile-head section-header">
+                            Organizational Audit Trail</div>
+                        <div class="organization-profile-mid">View the administrative information associated with this organization (such as adding members or removing teams).
+                            <br>
+                            <div class="org-config-spacing">
+                                <audit-trail-modal [refsetInternalId]="organizationId" [isDetails]="false" *ngIf="organizationId">
+                                </audit-trail-modal>
+                            </div>
                         </div>
                     </div>
                 </div>

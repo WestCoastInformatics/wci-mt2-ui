@@ -79,7 +79,7 @@ export class ProjectsPeopleComponent implements OnInit {
             {
                 field: 'name',
                 tooltipField: 'name',
-                headerName: 'Members',
+                headerName: 'Users',
                 minWidth: 300,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
