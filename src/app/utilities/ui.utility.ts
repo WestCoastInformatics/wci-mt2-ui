@@ -579,7 +579,7 @@ export class UiUtility {
 			'oldMemberTitle': ['Old Members'],
 			'oldMemberHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId'],
 			'totalInactiveConceptsTitle': ['Inactive Concepts with their suggested Replacement Concepts'],
-			'totalInactiveConceptsHeader': ['Inactive Concept ID', 'Inactive Concept FSN', 'Reason', 'Suggested Replacement ConceptID(s)', 'Suggested Replacement FSN(s)'],
+			'totalInactiveConceptsHeader': ['Inactive Concept ID', 'Inactive Concept Name', 'Reason', 'Suggested Replacement Association', 'Suggested Replacement ConceptID(s)', 'Suggested Replacement Name'],
 			'membersInCommonTitle': ['Members in Common'],
 			'membersInCommonHeader': ['id', 'effectiveTime', 'active', 'moduleId', 'refsetId', 'referencedComponentId']
 		};

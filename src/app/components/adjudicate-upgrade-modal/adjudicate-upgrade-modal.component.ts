@@ -866,10 +866,11 @@ export class AdjudicateUpgradeModalComponent {
 		for (let i = 0; i < inactiveConcepts.length; i++) {
 			totalInactiveConcepts.push({
 				'Inactive Concept ID': inactiveConcepts[i].code,
-				'Inactive Concept FSN': this.transformDescriptions(inactiveConcepts[i].descriptions)[0].term,
+				'Inactive Concept Name': this.transformDescriptions(inactiveConcepts[i].descriptions)[0].term,
 				'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
+				'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
 				'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-				'Suggested Replacement FSN(s)': this.transformManualReplacementDescriptions(inactiveConcepts[i].descriptions)[0].term
+				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].descriptions)[0].term
 			});
 		}
 
@@ -949,7 +950,7 @@ export class AdjudicateUpgradeModalComponent {
 		this.dialog.confirmed().subscribe((data) => {
 			// if 'ok', close pause modal and update modal
 			if (data) {
-				
+
 				this.refsetDetails?.processChangedMemberEffects(null);
 				this.modalService.dismissAll();
 			}

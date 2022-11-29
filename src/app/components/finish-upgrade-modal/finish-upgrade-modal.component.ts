@@ -171,10 +171,11 @@ export class FinishUpgradeModalComponent implements OnInit {
     for (let i = 0; i < inactiveConcepts.length; i++) {
       totalInactiveConcepts.push({
         'Inactive Concept ID': inactiveConcepts[i].code,
-        'Inactive Concept FSN': this.getConceptName(inactiveConcepts[i].descriptions)[0].term,
+        'Inactive Concept Name': this.getConceptName(inactiveConcepts[i].descriptions),
         'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
+        'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
-        'Suggested Replacement FSN(s)': this.getReplacementConceptName(inactiveConcepts[i].descriptions)[0].term
+        'Suggested Replacement Name': this.getReplacementConceptName(inactiveConcepts[i])
       });
     }
 
