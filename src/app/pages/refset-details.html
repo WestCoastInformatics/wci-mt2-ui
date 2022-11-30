@@ -139,7 +139,7 @@
 
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
 
-                        <button mat-menu-item *ngIf="this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
+                        <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
                             (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false"
                             class="refset-tool-action-button refset-action-button"
                             aria-label="Delete In Development Version" ng-reflect-color="red"
