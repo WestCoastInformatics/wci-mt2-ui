@@ -185,7 +185,7 @@ export class RefsetDetails implements OnInit {
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
     @ViewChild('cloneRefsetDialog') cloneRefsetDialog: TemplateRef<any>;
-    @ViewChild('deleteRefsetDialog') deleteRefsetDialog: TemplateRef<any>;
+    @ViewChild('inactivateRefsetDialog') inactivateRefsetDialog: TemplateRef<any>;
     @ViewChild('convertRefsetDialog') convertRefsetDialog: TemplateRef<any>;
     @ViewChild('refsetVersionNotes') refsetVersionNotes: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
@@ -1430,10 +1430,10 @@ export class RefsetDetails implements OnInit {
         this.dialog.confirmed().subscribe();
     }
 
-    openDeleteRefset() {
+    openInactivateRefset() {
         const dialogData = {
-            headerText: `Delete Reference Set`,
-            template: this.deleteRefsetDialog,
+            headerText: `Inactivate Reference Set`,
+            template: this.inactivateRefsetDialog,
             data: this.refsetData,
         };
 
