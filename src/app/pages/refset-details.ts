@@ -367,7 +367,6 @@ export class RefsetDetails implements OnInit {
                 if (this.editMode) {
 
                     this.refreshWorkflow();
-
                     this.editMetadataProperties = {
                         project: this.refsetData.project,
                         metadataConcept: this.refsetData.name,
@@ -378,7 +377,8 @@ export class RefsetDetails implements OnInit {
                         privateRefset: this.refsetData.privateRefset,
                         localSet: this.refsetData.localSet,
                         versionDate: this.refsetData.versionDate,
-                        versionNotes: this.refsetData.versionNotes
+                        versionNotes: this.refsetData.versionNotes,
+                        moduleId: this.refsetData.moduleId
                     };
 
                     if (this.refsetData.type === RefsetUtility.INTENSIONAL) {

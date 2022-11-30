@@ -1,18 +1,18 @@
-import {ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {Router} from '@angular/router';
-import {RefsetDetails} from 'src/app/pages/refset-details';
-import {UiUtility} from 'src/app/utilities/ui.utility';
-import {RefsetUtility} from 'src/app/utilities/refset.utility';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {NotificationService} from 'src/app/services/notification.service';
-import {ProjectsRefsetComponent} from 'src/app/pages/projects/refsets/projects-refset.component';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {DialogFactoryService} from 'src/app/dialog/services/dialog-factory.service';
-import {DialogService} from 'src/app/dialog/services/dialog.service';
+import { ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { Router } from '@angular/router';
+import { RefsetDetails } from 'src/app/pages/refset-details';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { NotificationService } from 'src/app/services/notification.service';
+import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
 
 @Component({
     selector: 'create-refset',
@@ -37,6 +37,7 @@ export class CreateRefsetComponent implements OnInit {
     createdMetaDataConcept = '';
     selectedParentConcept = undefined;
     selectedNarrative = '';
+    selectedModuleId = '';
     selectedTags = [];
     definitionClauses = [];
     type = '';
@@ -150,6 +151,10 @@ export class CreateRefsetComponent implements OnInit {
 
         this.resetModal();
 
+        if (this.inputProperties.project.edition.modules.length == 1) {
+            this.selectedModuleId = this.inputProperties.project.edition.modules[0];
+        }
+
         if (this.editMode) {
             this.setupEditMode();
         }
@@ -176,7 +181,7 @@ export class CreateRefsetComponent implements OnInit {
                 //filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
             };
 
-            this.refsetService.getRefsets({...restParams}).subscribe({
+            this.refsetService.getRefsets({ ...restParams }).subscribe({
                 next: (results) => {
 
                     for (const refset of results.items) {
@@ -246,7 +251,7 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedVersionNotes = '';
         this.selectedTags = [];
         this.data = [];
-        this.definitionClauses = [{value: '', negated: false}];
+        this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = 'EXTENSIONAL';
         this.privateRefset = false;
         this.comboRefset = false;
@@ -289,15 +294,15 @@ export class CreateRefsetComponent implements OnInit {
             let existingCpt = this.existingMetadataConcepts[this.selectedMetaDataConcept]?.code;
             this.refsetService.getRefsetCopy(this.selectedUUID, this.createdMetaDataConcept, this.inputProperties.project.id, this.localSet, this.privateRefset, this.comboRefset, this.selectedNarrative, this.selectedTags,
                 this.selectedParentConcept, existingCpt ? existingCpt : '').subscribe(results => {
-                    
+
                     this.showLoadingSpinner = false;
                     this.modalService.dismissAll();
                     this.router.navigate(['/details', results.refsetId, RefsetUtility.IN_DEVELOPMENT]);
                     return;
                 },
-                (error) => {
-                    this.showLoadingSpinner = false;
-                });
+                    (error) => {
+                        this.showLoadingSpinner = false;
+                    });
         } else {
 
             let name = '';
@@ -319,7 +324,7 @@ export class CreateRefsetComponent implements OnInit {
             let params: any = {
                 name: this.capitalizeFirstLetterOfString(name),
                 parentConceptId: parentConceptId,
-                moduleId: '',
+                moduleId: this.selectedModuleId,
                 refsetId: refsetId,
                 editionId: this.inputProperties.project.edition.id,
                 projectId: this.inputProperties.project.id,
@@ -383,7 +388,7 @@ export class CreateRefsetComponent implements OnInit {
     generateDefinitionClausesJson(definitionClauses: []) {
 
         for (let definitionClause of definitionClauses) {
-            return [{value: definitionClauses, negated: false}];
+            return [{ value: definitionClauses, negated: false }];
         }
     }
 
@@ -417,21 +422,21 @@ export class CreateRefsetComponent implements OnInit {
 
         this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe((status) => {
 
-                this.showLoadingSpinner = false;
+            this.showLoadingSpinner = false;
 
-                if (status.error) {
+            if (status.error) {
 
-                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
-                        timeOut: 0,
-                        extendedTimeOut: 0
-                    });
-                    return;
-                }
+                this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
+                    timeOut: 0,
+                    extendedTimeOut: 0
+                });
+                return;
+            }
 
-                this.modalService.dismissAll();
-                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
-                this.refsetDetails.initializeDetailsPage();
-            },
+            this.modalService.dismissAll();
+            this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+            this.refsetDetails.initializeDetailsPage();
+        },
             (error) => {
                 this.showLoadingSpinner = false;
             }
@@ -464,7 +469,7 @@ export class CreateRefsetComponent implements OnInit {
         } else {
             lower = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
         }
-        
+
         var flag = lower.match(format);
         if (flag == null) {
             this.conceptError = 'The reference set concept name must comply with SNOMED International Requirements. Only alpha-numeric text is permitted.';

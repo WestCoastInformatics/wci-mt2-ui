@@ -1,5 +1,6 @@
 <a *ngIf="!isDetailsPage && canAdd" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
-   class='btn btn-primary rounded btn-lg float-right btn-wide-font' style="width: 240px;" [ngClass]="{ inactive: disabled }" aria-label="Create New Reference Set" title="Create New Reference Set" ng-reflect-color="primary">
+  class='btn btn-primary rounded btn-lg float-right btn-wide-font' style="width: 240px;" [ngClass]="{ inactive: disabled }" aria-label="Create New Reference Set"
+  title="Create New Reference Set" ng-reflect-color="primary">
     Create New Reference Set
 </a>
 
@@ -62,6 +63,35 @@
                         </mat-form-field>
                     </div>
                 </div>
+                <div class="create-new-refset-form-field create-new-refset-row-spacing">
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
+                        <label style="margin-bottom: 0.7rem;">Edition:</label>
+                    </div>
+                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text" style="">
+                        <mat-form-field appearance="none">
+                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="create-new-refset-form-field create-new-refset-row-spacing">
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
+                        <label style="margin-bottom: 0.7rem;">Module Id:</label>
+                    </div>
+                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text" style="">
+                        <mat-form-field *ngIf="inputProperties.project.edition.modules.length === 1" appearance="none">
+                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.edition.modules[0]" disabled />
+                        </mat-form-field>
+                        <mat-form-field *ngIf="inputProperties.project.edition.modules.length > 1" floatLabel="never" appearance="legacy">
+                            <mat-label>Module Id</mat-label>
+                            <select matNativeControl [(ngModel)]="selectedModuleId">
+                                <option *ngFor="let moduleId of inputProperties.project.edition.modules">
+                                    {{ moduleId }}
+                                </option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
                 <!-- End Meta Labels -->
                 <div class="wizard">
                     <div *ngIf="step == 1">
@@ -139,10 +169,11 @@
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
                                 <label style="margin-top: 1.7rem">External:<span class="mandatory-field">*</span>
-                                    <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
-                                        title="Open Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                    <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false"
+                                          aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
+                                          ng-reflect-color="primary">
                                             <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                    </button></span>
+                                        </button></span>
                                 </label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
@@ -188,7 +219,7 @@
                                     <mat-label class="fs14">Choose existing reference sets (use Ctrl-click to select more than one)</mat-label>
                                     <div class="mt10">
                                         <label *ngIf="data.length == 0">There are currently no published existing reference sets available</label>
-                                        <select  matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets">
+                                        <select matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets">
                                             <option *ngFor="let refset of data" [ngValue]="refset">
                                                 {{ refset?.name }}
                                             </option>
@@ -235,20 +266,23 @@
 
                                 <mat-radio-group>
 
-                                    <mat-radio-button style="padding-right: 30px" value="1" checked="true" (change)="checkRadioButtonValue($event)">Choose an existing reference 
+                                    <mat-radio-button style="padding-right: 30px" value="1" checked="true" (change)="checkRadioButtonValue($event)">Choose an existing
+                                        reference
                                         set concept
-                                        <span><button mat-icon-button (click)="openInfoDialog('existingConcept')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
-                                            title="Open Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                        <span><button mat-icon-button (click)="openInfoDialog('existingConcept')" aria-hidden="false"
+                                              aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
+                                              ng-reflect-color="primary">
                                                 <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                        </button></span>
+                                            </button></span>
                                     </mat-radio-button>
 
                                     <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
                                         Create a new reference set concept
-                                        <span><button mat-icon-button (click)="openInfoDialog('newConcept')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
-                                            title="Open Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                        <span><button mat-icon-button (click)="openInfoDialog('newConcept')" aria-hidden="false"
+                                              aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
+                                              ng-reflect-color="primary">
                                                 <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                        </button></span>
+                                            </button></span>
                                     </mat-radio-button>
 
                                     <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
@@ -391,9 +425,8 @@
           title="Back" color="accent">
             Back
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
-                class="refset-tool-action-button"
-                style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
+          style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
             Cancel
         </button>
         <button *ngIf="step < 3" [disabled]="nextDisabled" type="button" (click)="goNext()" mat-raised-button color="green" aria-hidden="false"
@@ -436,7 +469,8 @@
 </ng-template>
 
 <ng-template #combinationInfoDialog let-data>
-    A reference set whose contents will be initialized from the contents of two or more existing reference sets. This will create a new extensional reference set that is independent from the sources.
+    A reference set whose contents will be initialized from the contents of two or more existing reference sets. This will create a new extensional reference set that is
+    independent from the sources.
 </ng-template>
 
 <ng-template #externalInfoDialog let-data>
