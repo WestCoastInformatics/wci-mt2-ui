@@ -45,7 +45,7 @@ export class CreateRefsetComponent implements OnInit {
     originalRefsetMembers = [];
     selectedUUID: string;
     referenceTypes = [RefsetUtility.EXTENSIONAL, RefsetUtility.INTENSIONAL, RefsetUtility.COMBINATION, RefsetUtility.EXTERNAL, RefsetUtility.COPY];
-    selectedReferenceType = '';
+    selectedReferenceType = 'EXTENSIONAL';
     showLoadingSpinner = false;
     organizationName: string;
     editionName: string;
@@ -90,6 +90,9 @@ export class CreateRefsetComponent implements OnInit {
     @ViewChild('combinationInfoDialog') combinationInfoDialog: TemplateRef<any>;
     @ViewChild('localsetInfoDialog') localsetInfoDialog: TemplateRef<any>;
     @ViewChild('externalInfoDialog') externalInfoDialog: TemplateRef<any>;
+    @ViewChild('existingConceptDialog') existingConceptDialog: TemplateRef<any>;
+    @ViewChild('newConceptDialog') newConceptDialog: TemplateRef<any>;
+    @ViewChild('externalDialog') externalDialog: TemplateRef<any>;
 
 
     constructor(
@@ -244,7 +247,7 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedTags = [];
         this.data = [];
         this.definitionClauses = [{value: '', negated: false}];
-        this.selectedReferenceType = '';
+        this.selectedReferenceType = 'EXTENSIONAL';
         this.privateRefset = false;
         this.comboRefset = false;
         this.localSet = false;
@@ -564,7 +567,13 @@ export class CreateRefsetComponent implements OnInit {
             confirmText: 'OK',
         };
 
-        if (this.step === 3) {
+        if (referenceType === 'external') {
+            dialogData.template = this.externalDialog;
+        } else if (this.step === 3 && referenceType === 'existingConcept') {
+            dialogData.template = this.existingConceptDialog;
+        } else if (this.step === 3 && referenceType === 'newConcept') {
+            dialogData.template = this.newConceptDialog;
+        } else if (this.step === 3) {
             dialogData.template = this.infoDialog;
         } else if (referenceType === RefsetUtility.EXTENSIONAL) {
             dialogData.template = this.extensionalInfoDialog;
@@ -577,7 +586,6 @@ export class CreateRefsetComponent implements OnInit {
         } else if (referenceType === RefsetUtility.COMBINATION) {
             dialogData.template = this.combinationInfoDialog;
         }
-
 
         const dialogOptions = {
             id: dialogId,

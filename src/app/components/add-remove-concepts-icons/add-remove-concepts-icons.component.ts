@@ -76,7 +76,7 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
     onSelection(addConcept: boolean) {
 
         console.time('testing');
-        console.time('refset detail changeLockedStatus');
+        console.time('reference set detail changeLockedStatus');
         console.time('comparison processChangedMemberEffects');
         console.time('comparison addRemoveConcept');
         console.time('comparison indicateChanges');

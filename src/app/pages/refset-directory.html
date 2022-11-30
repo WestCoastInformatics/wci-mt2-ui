@@ -55,8 +55,8 @@
         <ng-template #directoryInfoSection let-params>
             <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
               title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
-                <mat-icon>information</mat-icon> <span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
-            </button>
+                <mat-icon>information</mat-icon> 
+            </button><span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
 
             <!-- <mat-icon aria-hidden="false" #directoryPrivateIcon
                 class="refset-tool-table-icon" aria-label="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}" title="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}">

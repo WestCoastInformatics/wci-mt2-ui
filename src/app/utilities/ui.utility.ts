@@ -496,7 +496,7 @@ export class UiUtility {
 						setTimeout(checkIfFinished, callDelay);
 					} else {
 
-						let title = 'Reference Set Process Complete Notification';
+						let title = 'Reference Set Upgrade Analysis Launch Notification';
 						let notificationType = 'success';
 						let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 
@@ -507,7 +507,9 @@ export class UiUtility {
 						}
 
 						if (processType != ('bulk upgrade')) {
-							message = 'Reference Set ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
+							// Not sure about the processType thats why commented out the last one
+							// message = 'Reference Set ' + refsetId + ' has successfully completed the ' + processType + ' process. It is no longer locked.';
+							message = `Reference Set ${refsetId} ${processType} analysis successfully completed. The reference set is now ready to continue the ${processType} process.`
 						} else {
 							message = 'The following Reference Sets have successfully completed the ' + processType + ' process. They are no longer locked. <br>' + refsetId;
 						}

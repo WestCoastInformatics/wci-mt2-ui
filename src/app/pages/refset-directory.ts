@@ -119,7 +119,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     }
 
                     this.columnDefs = [
-                        { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
+                        { field: 'id', colId: 'information', headerName: '', maxWidth: 80, minWidth: 80, width: 80, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
                         { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
                         { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
@@ -509,7 +509,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     onResize(event) {
         const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
-        document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
+        document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
     }
 
     setDescriptions(refsetData: any): Array<string> {

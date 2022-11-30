@@ -25,7 +25,7 @@
 
                     <div class="col dialog-form-field">
                         <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{
-                            activeRefset.versionStatus }})</label>
+                            getStatus(activeRefset.versionStatus) }})</label>
                     </div>
 
                 </div>
@@ -161,11 +161,9 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total font-weight-bold">
-                                                            <div>{{ activeRefsetName }} {{
-                                                                activeRefsetVersionDate }}{{
-                                                                activeRefset.versionStatus ? ' (' + activeRefset.versionStatus + ')' : '' }} ({{
-                                                                comparisonData?.activeRefsetMemberTotal
-                                                                }}):</div>
+                                                            <div>{{ activeRefsetName }} {{ activeRefsetVersionDate }}
+                                                                {{ activeRefset.versionStatus ? ' (' + getStatus(activeRefset.versionStatus) + ')' : '' }} 
+                                                                ({{ comparisonData?.activeRefsetMemberTotal }}):</div>
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name font-weight-bold">
@@ -191,9 +189,8 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total">
-                                                            {{ comparisonRefsetName }} {{
-                                                            comparisonRefsetVersionDate }}{{
-                                                            comparisonRefsetStatus ? ' (' + comparisonRefsetStatus + ')' : '' }} ({{
+                                                            {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }}
+                                                            ({{ comparisonRefsetStatus }}) ({{
                                                             comparisonData?.comparisonRefsetMemberTotal
                                                             }}):
                                                         </td>

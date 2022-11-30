@@ -412,6 +412,12 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   removeFromTeamList(team): void {
+
+    if (this.selectedTeamIds?.includes(team.id) && this.selectedTeamIds?.length === 1) {
+      this.notificationService.show('Cannot remove this team as it would remove a required role from the project', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+      return
+    }
+
     const idIndex = this.selectedTeamIds?.indexOf(team.id);
     if (idIndex > -1) {
       this.selectedTeamIds.splice(idIndex, 1);

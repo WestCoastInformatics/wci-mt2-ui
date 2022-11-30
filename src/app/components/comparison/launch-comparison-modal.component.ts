@@ -127,6 +127,10 @@ export class LaunchComparisonModalComponent {
     this.comparisonRefsetSelect = '';
   }
 
+  getStatus(value: string) {
+    return RefsetUtility.REFSET_STATUS_MAP[value]
+  }
+
   async onSearchChange(value): Promise<void> {
     await this.search(value);
   }
