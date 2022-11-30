@@ -34,6 +34,16 @@
                         </mat-form-field>
                     </div>
                 </div>
+                <div class="create-new-refset-form-field create-new-refset-row-spacing">
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
+                        <label style="margin-bottom: 0.7rem;">Edition:</label>
+                    </div>
+                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text" style="">
+                        <mat-form-field appearance="none">
+                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
+                        </mat-form-field>
+                    </div>
+                </div>
                 <div class="create-new-refset-project-name create-new-refset-row-spacing">
                     <div class="
                             col
@@ -49,16 +59,6 @@
                         " style="">
                         <mat-form-field appearance="none">
                             <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.name" disabled />
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="create-new-refset-form-field create-new-refset-row-spacing">
-                    <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0.7rem;">Edition:</label>
-                    </div>
-                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text" style="">
-                        <mat-form-field appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
                         </mat-form-field>
                     </div>
                 </div>
@@ -128,17 +128,22 @@
                         <!-- External -->
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
-                                <label style="margin-top: 1.7rem">Name:<span class="mandatory-field">*</span></label>
+                                <label style="margin-top: 1.7rem">Reference Set Name:<span class="mandatory-field">*</span></label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field class="example-form-field" appearance="fill">
-                                    <input placeholder="Name" matInput type="text" [(ngModel)]="selectedExternalName" />
+                                    <input placeholder="Reference Set Name" matInput type="text" [(ngModel)]="selectedExternalName" />
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
-                                <label style="margin-top: 1.7rem">External:<span class="mandatory-field">*</span></label>
+                                <label style="margin-top: 1.7rem">External:<span class="mandatory-field">*</span>
+                                    <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
+                                        title="Open Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                            <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
+                                    </button></span>
+                                </label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field class="example-form-field" appearance="fill">
@@ -159,7 +164,7 @@
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
 
                                 <mat-form-field appearance="fill">
-                                    <mat-label *ngIf="data.length > 0">Choose refset to copy</mat-label>
+                                    <mat-label *ngIf="data.length > 0">Choose reference set to copy</mat-label>
                                     <mat-label *ngIf="data.length == 0">There are no published refsets available to copy</mat-label>
                                     <select matNativeControl [(ngModel)]="selectedCopyRefset">
                                         <option *ngFor="let refset of data" [ngValue]="refset">
@@ -180,13 +185,15 @@
 
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field appearance="fill">
-                                    <mat-label>Choose contributing refsets (use Ctrl-click to select more than one)</mat-label>
-                                    <label *ngIf="data.length == 0">There are currently no published contributing refsets available</label>
-                                    <select matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets">
-                                        <option *ngFor="let refset of data" [ngValue]="refset">
-                                            {{ refset?.name }}
-                                        </option>
-                                    </select>
+                                    <mat-label class="fs14">Choose existing reference sets (use Ctrl-click to select more than one)</mat-label>
+                                    <div class="mt10">
+                                        <label *ngIf="data.length == 0">There are currently no published existing reference sets available</label>
+                                        <select  matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets">
+                                            <option *ngFor="let refset of data" [ngValue]="refset">
+                                                {{ refset?.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -221,27 +228,31 @@
                         <!-- Concepts -->
                         <div class="create-new-refset-form-field wizard-types" id="create-new-refset-assign-refset-field">
                             <div *ngIf="!editMode && !showExternal" class="col create-new-refset-label create-new-refset-flex-weight">
-                                <label>Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
-                                    <span><button mat-icon-button (click)="openInfoDialog('')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
-                                          title="Open  Assign Refset Concept Information Dialog" ng-reflect-color="primary">
-                                            <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                        </button></span>
-                                </label>
+                                <label>Reference Set Concept:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
                             </div>
 
                             <div *ngIf="!editMode  && !showExternal" class="col create-new-refset-field create-new-refset-flex-weight create-new-refset-concept-radio">
 
                                 <mat-radio-group>
 
-                                    <mat-radio-button style="padding-right: 30px" value="1" (change)="checkRadioButtonValue($event)">Choose an existing
-                                        metadata
-                                        concept</mat-radio-button>
+                                    <mat-radio-button style="padding-right: 30px" value="1" checked="true" (change)="checkRadioButtonValue($event)">Choose an existing reference 
+                                        set concept
+                                        <span><button mat-icon-button (click)="openInfoDialog('existingConcept')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
+                                            title="Open Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                                <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
+                                        </button></span>
+                                    </mat-radio-button>
 
                                     <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
-                                        Create a new concept</mat-radio-button>
+                                        Create a new reference set concept
+                                        <span><button mat-icon-button (click)="openInfoDialog('newConcept')" aria-hidden="false" aria-label="Open Assign Refset Concept Information Dialog"
+                                            title="Open Assign Refset Concept Information Dialog" ng-reflect-color="primary">
+                                                <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
+                                        </button></span>
+                                    </mat-radio-button>
 
                                     <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
-                                        <mat-label *ngIf="existingMetadataConcepts.length > 0">Choose existing metadata concept</mat-label>
+                                        <mat-label *ngIf="existingMetadataConcepts.length > 0">Choose an existing reference set concept</mat-label>
                                         <mat-label *ngIf="existingMetadataConcepts.length == 0">There are no existing metadata concepts available</mat-label>
                                         <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
                                             <option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
@@ -261,7 +272,7 @@
                                     </mat-form-field>
 
                                     <mat-form-field class="example-form-field" appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
-                                        <input matInput type="text" placeholder="Enter the name of the new concept" [(ngModel)]="createdMetaDataConcept"
+                                        <input matInput type="text" placeholder="Enter the name of the new reference set concept" [(ngModel)]="createdMetaDataConcept"
                                           (keyup)="this.isValidConceptName()" />
                                         <button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear" (click)="value2a = ''">
                                             <mat-icon>close</mat-icon>
@@ -413,21 +424,33 @@
 </ng-template>
 
 <ng-template #extensionalInfoDialog let-data>
-    Extensional info will be here.
+    A reference set whose members are defined by an enumerated list of concepts.
 </ng-template>
 
 <ng-template #intensionalInfoDialog let-data>
-    Intensional info will be here.
+    A reference set whose members are defined by a serialised query which is then executed against the content of SNOMED CT to produce a enumerated list of concepts.
 </ng-template>
 
 <ng-template #copyInfoDialog let-data>
-    Copy info will be here.
+    A reference set that is created based on an existing reference set. This will create a new extensional reference set that is independent from the source.
 </ng-template>
 
 <ng-template #combinationInfoDialog let-data>
-    Combination info will be here.
+    A reference set whose contents will be initialized from the contents of two or more existing reference sets. This will create a new extensional reference set that is independent from the sources.
 </ng-template>
 
 <ng-template #externalInfoDialog let-data>
-    External info will be here.
+    A reference set whose contents are stored strictly outside of tool.
+</ng-template>
+
+<ng-template #existingConceptDialog let-data>
+    Select an existing SNOMED concept to represent your reference set.
+</ng-template>
+
+<ng-template #newConceptDialog let-data>
+    Create a new SNOMED concept to represent your reference set. In doing so, you must select the new concept's parent.
+</ng-template>
+
+<ng-template #externalDialog let-data>
+    Define location (e.g. URL) where the reference set resides.
 </ng-template>

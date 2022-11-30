@@ -4460,6 +4460,10 @@ $sidebar-width: 294px;
         color: $main-color;
       }
 
+      li.unactive {
+        color: #fff !important;
+      }
+
 
       li.active {
         border-left: 5px solid $main-color;
@@ -5458,4 +5462,16 @@ app-date-text-floating-filter {
 
 .landing-page-center {
   text-align: center;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.mt20 {
+  margin-top: 20px;
+}
+
+.fs14 {
+  font-size: 14pt;
 }

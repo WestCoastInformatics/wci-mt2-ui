@@ -1234,7 +1234,7 @@ export class RefsetDetails implements OnInit {
         this.isLocked = lock;
         this.toggleLoadingSpinner(false);
         UiUtility.toggleLockedSections(lock);
-        console.timeEnd('refset detail changeLockedStatus');
+        console.timeEnd('reference set detail changeLockedStatus');
     }
 
     processChangedMemberEffects = (conceptStatusArray?: any) => {

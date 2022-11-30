@@ -24,4 +24,20 @@ export class SidebarComponent implements OnInit {
 	getLink(itemLink) {
 		return ([itemLink]);
 	}
+
+	onMouseEnter(e: any) {
+		const activeEl = document.getElementsByClassName('active')[0]
+		// Dont change the color of active element
+		if (e != activeEl) {
+			activeEl.classList.add('unactive')
+		}
+	}
+	
+	onMouseOut(e: any) {
+		const activeEl = document.getElementsByClassName('active')[0]
+		// Dont change the color of active element
+		if (e != activeEl) {
+			activeEl.classList.remove('unactive')
+		}
+	}
 }
