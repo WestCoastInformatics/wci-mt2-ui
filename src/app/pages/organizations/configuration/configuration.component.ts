@@ -62,7 +62,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' Configuration' : 'Organization Configuration' },
+            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Configuration' : '' },
         ]);
 
         this.menu = [

@@ -144,7 +144,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' Teams' : 'Organization Teams' },
+            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' },
         ]);
 
         this.menu = [
