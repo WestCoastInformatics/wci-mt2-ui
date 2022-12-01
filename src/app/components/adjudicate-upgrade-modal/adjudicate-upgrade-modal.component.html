@@ -185,24 +185,25 @@
             </div>
         </div>
         <div class="modal-footer rt2-modal-footer">
-            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
-              class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
-                Cancel Upgrade
-            </button>
             <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
-              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+              class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
                 Download Change Report
             </button>
             <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
-              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+              class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
                 Download Inactive Concept Report
             </button>
-            <button type="button" mat-raised-button color="green" aria-label="Pause" (click)="openPauseUpdate()" title="Pause">
+            <button type="button" mat-raised-button color="green" aria-label="Pause" (click)="openPauseUpdate()"
+              class="mr-15" title="Pause">
                 Pause Upgrade
             </button>
             <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon"
               [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
-        </div>
+            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
+              class="refset-tool-action-button ml-15 " aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+                Cancel Upgrade
+            </button>
+            </div>
     </ng-container>
 </ng-template>
 

@@ -217,7 +217,7 @@
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field appearance="fill">
                                     <mat-label class="fs14">Choose existing reference sets (use Ctrl-click to select more than one)</mat-label>
-                                    <div class="mt10">
+                                    <div class="mt-10">
                                         <label *ngIf="data.length == 0">There are currently no published existing reference sets available</label>
                                         <select matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets">
                                             <option *ngFor="let refset of data" [ngValue]="refset">
@@ -266,9 +266,8 @@
 
                                 <mat-radio-group>
 
-                                    <mat-radio-button style="padding-right: 30px" value="1" checked="true" (change)="checkRadioButtonValue($event)">Choose an existing
-                                        reference
-                                        set concept
+                                    <mat-radio-button style="padding-right: 30px" value="1" checked="true" (change)="checkRadioButtonValue($event)">
+                                        Choose an existing reference set concept
                                         <span><button mat-icon-button (click)="openInfoDialog('existingConcept')" aria-hidden="false"
                                               aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
                                               ng-reflect-color="primary">
@@ -286,8 +285,8 @@
                                     </mat-radio-button>
 
                                     <mat-form-field appearance="fill" [hidden]="isSelected == 2">
-                                        <mat-label *ngIf="existingMetadataConcepts.length > 0">Choose an existing reference set concept</mat-label>
-                                        <mat-label *ngIf="existingMetadataConcepts.length == 0">There are no existing metadata concepts available</mat-label>
+                                        <mat-label *ngIf="existingMetadataConcepts?.length > 0">Choose an existing reference set concept</mat-label>
+                                        <mat-label *ngIf="existingMetadataConcepts?.length == 0">There are no existing metadata concepts available</mat-label>
                                         <select matNativeControl [(ngModel)]="selectedMetaDataConcept">
                                             <option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
                                                 {{ existingMetadataConcept?.name }}
@@ -367,7 +366,7 @@
                             <!-- Tags for new refset-->
                             <div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field class="example-chip-list">
-                                    <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="
+                                    <input placeholder="Add a tag to categorize the reference set" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
                                 " [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
                                     <mat-chip-list #chipList> </mat-chip-list>
@@ -382,7 +381,7 @@
                             <!-- Tags for update metadata-->
                             <div *ngIf="editMode" class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field class="example-chip-list">
-                                    <input placeholder="Add a tag to categorize the refset" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="
+                                    <input placeholder="Add a tag to categorize the reference set" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="
                                     separatorKeysCodes
                                 " [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" />
                                     <mat-chip-list #chipList> </mat-chip-list>
@@ -425,8 +424,8 @@
           title="Back" color="accent">
             Back
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
-          style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel">
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
+          class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
             Cancel
         </button>
         <button *ngIf="step < 3" [disabled]="nextDisabled" type="button" (click)="goNext()" mat-raised-button color="green" aria-hidden="false"

@@ -105,8 +105,8 @@
         <button [disabled]="!checkComplete()" type="button" (click)="launchComparison()" mat-raised-button class="refset-tool-action-button mat-green">
             Launch Comparison
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
-          style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="ml-3 refset-tool-action-button default-btn"
+           aria-label="Cancel" title="Cancel" >
             Cancel
         </button>
 
@@ -414,7 +414,7 @@
             Download Comparison Report
         </button>
 
-        <button type="button" (click)="closeShowComparisonModal()" mat-raised-button class="refset-tool-action-button mat-green">
+        <button type="button" (click)="closeShowComparisonModal()" mat-raised-button color="primary" class="refset-tool-action-button">
             Close
         </button>
 

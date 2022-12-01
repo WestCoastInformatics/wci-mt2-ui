@@ -39,8 +39,8 @@
     <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()" mat-raised-button class="refset-tool-action-button mat-green">
       Add User
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
-      style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 
+      class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
       Cancel
     </button>
   </div>

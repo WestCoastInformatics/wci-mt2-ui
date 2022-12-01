@@ -1781,8 +1781,8 @@ select {
 }
 
 #downloadDialogCancel {
-  background: #e93848;
-  color: white;
+  //background: #e93848;
+  //color: black;
   border-radius: 3px;
 }
 
@@ -3433,10 +3433,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   margin-right: 15px !important;
 }
 
-.adjudicate-export-inactive-concept-modal-button {
-  margin-right: 15px !important;
-}
-
 .upgrade-success-inactive-label {
   font-weight: 500;
   padding-right: 60px;
@@ -3583,14 +3579,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .adjudicate-upgrade-modal-body-mid {}
 
-.adjudicate-export-modal-button {
-  margin-right: 15px !important;
-}
-
-.adjudicate-cancel-modal-button {
-  margin-right: 15px !important;
-  background-color: red !important;
-}
 
 .manage-members-menu,
 .manage-refset-menu,
@@ -3603,6 +3591,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   color: #00a9e0;
   font-weight: 500;
   font-size: 14px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   cursor: pointer;
   letter-spacing: 1px;
 }
@@ -5464,12 +5453,28 @@ app-date-text-floating-filter {
   text-align: center;
 }
 
-.mt10 {
+.mt-10 {
   margin-top: 10px;
 }
 
-.mt20 {
+.mt-20 {
   margin-top: 20px;
+}
+
+.mr-3 {
+  margin-right: 3px;
+}
+
+.ml-3 {
+  margin-left: 3px;
+}
+
+.mr-15 {
+  margin-right: 15px !important;
+}
+
+.ml-15 {
+  margin-left: 15px !important;
 }
 
 .fs14 {

@@ -240,7 +240,7 @@ export class CreateRefsetComponent implements OnInit {
 
     resetModal(): void {
 
-        this.isSelected = 0;
+        this.isSelected = 1;
         this.selectedMetaDataConcept = '';
         this.createdMetaDataConcept = '';
         this.selectedParentConcept = undefined;

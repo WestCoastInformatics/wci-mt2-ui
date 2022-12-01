@@ -26,7 +26,8 @@
         {{ config.confirmText }}
     </button>
 
-    <button mat-raised-button color="red" *ngIf="config.showCancel" id="{{ id }}Cancel" mat-button (click)="cancel()">
+    <button mat-raised-button *ngIf="config.showCancel" id="{{ id }}Cancel" (click)="cancel()"
+      class="refset-tool-action-button default-btn">
         <mat-icon *ngIf="config.cancelIcon" role="img" class="refset-tool-dialog-cancel-icon mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true"
           data-mat-icon-type="font">
             {{ config.cancelIcon }}
