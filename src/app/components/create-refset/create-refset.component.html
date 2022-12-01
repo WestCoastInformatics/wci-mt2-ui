@@ -285,7 +285,7 @@
                                             </button></span>
                                     </mat-radio-button>
 
-                                    <mat-form-field appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
+                                    <mat-form-field appearance="fill" [hidden]="isSelected == 2">
                                         <mat-label *ngIf="existingMetadataConcepts.length > 0">Choose an existing reference set concept</mat-label>
                                         <mat-label *ngIf="existingMetadataConcepts.length == 0">There are no existing metadata concepts available</mat-label>
                                         <select matNativeControl [(ngModel)]="selectedMetaDataConcept">

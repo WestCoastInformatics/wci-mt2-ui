@@ -60,7 +60,7 @@ export class CreateRefsetComponent implements OnInit {
     versionDate: string;
     refsetConcept: string;
     tags: string[];
-    existingMetadataConcepts: any;
+    existingMetadataConcepts = [];
     comboConceptOptions: any;
     parentConcepts: any;
     conceptError = '';
