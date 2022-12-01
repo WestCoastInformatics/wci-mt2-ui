@@ -73,24 +73,6 @@
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="create-new-refset-form-field create-new-refset-row-spacing">
-                    <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0.7rem;">Module Id:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
-                    </div>
-                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text" style="">
-                        <mat-form-field *ngIf="inputProperties.project.edition.modules.length === 1" appearance="none">
-                            <input style="cursor: default" matInput type="text" [(ngModel)]="inputProperties.project.edition.modules[0]" disabled />
-                        </mat-form-field>
-                        <mat-form-field *ngIf="inputProperties.project.edition.modules.length > 1" floatLabel="never" appearance="legacy">
-                            <mat-label>Module Id</mat-label>
-                            <select matNativeControl [(ngModel)]="selectedModuleId">
-                                <option *ngFor="let moduleId of inputProperties.project.edition.modules">
-                                    {{ moduleId }}
-                                </option>
-                            </select>
-                        </mat-form-field>
-                    </div>
-                </div>
 
                 <!-- End Meta Labels -->
                 <div class="wizard">
@@ -110,7 +92,25 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="create-new-refset-form-field create-new-refset-row-spacing">
+                            <div class="col create-new-refset-label create-new-refset-flex-weight">
+                                <label style="margin-bottom: 0.7rem;">Module Id:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
+                            </div>
+                            <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+                                <mat-form-field *ngIf="inputProperties.project.edition.modules.length === 1" appearance="none">
+                                    <input style="cursor: default; padding-left: 5px;" matInput type="text" [(ngModel)]="inputProperties.project.edition.modules[0]"
+                                      disabled />
+                                </mat-form-field>
+                                <mat-form-field *ngIf="inputProperties.project.edition.modules.length > 1" floatLabel="never" appearance="legacy">
+                                    <mat-label>Choose Module Id</mat-label>
+                                    <select matNativeControl [(ngModel)]="selectedModuleId">
+                                        <option *ngFor="let moduleId of inputProperties.project.edition.modules">
+                                            {{ moduleId }}
+                                        </option>
+                                    </select>
+                                </mat-form-field>
+                            </div>
+                        </div>
                     </div>
                     <div *ngIf="step == 2">
                         <!-- ECL Definintion Declaration -->
@@ -254,6 +254,25 @@
 
                             <div class="col create-new-refset-field create-new-refset-flex-weight field-text create-refset-selected-type">
                                 {{ selectedReferenceType.toLowerCase() }}
+                            </div>
+                        </div>
+                        <div class="create-new-refset-form-field create-new-refset-row-spacing">
+                            <div class="col create-new-refset-label create-new-refset-flex-weight">
+                                <label style="margin-bottom: 0.7rem;">Module Id:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
+                            </div>
+                            <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+                                <mat-form-field *ngIf="inputProperties.project.edition.modules.length === 1" appearance="none">
+                                    <input style="cursor: default; padding-left: 5px;" matInput type="text" [(ngModel)]="inputProperties.project.edition.modules[0]"
+                                      disabled />
+                                </mat-form-field>
+                                <mat-form-field *ngIf="inputProperties.project.edition.modules.length > 1" floatLabel="never" appearance="legacy">
+                                    <mat-label>Choose Module Id</mat-label>
+                                    <select matNativeControl [(ngModel)]="selectedModuleId">
+                                        <option *ngFor="let moduleId of inputProperties.project.edition.modules">
+                                            {{ moduleId }}
+                                        </option>
+                                    </select>
+                                </mat-form-field>
                             </div>
                         </div>
                         <!-- Concepts -->
