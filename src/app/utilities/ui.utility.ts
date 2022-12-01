@@ -559,6 +559,13 @@ export class UiUtility {
 		let memberStatuses = this.memberChangeData[refsetId].statuses;
 		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
 
+		for (let memberStatus of memberStatuses) {
+
+			if (memberStatus.Status.includes('Failed')) {
+				memberStatus.Status = "Invalid ID";
+			}
+		}
+
 		this.downloadFile(memberStatuses, ['Concept', 'Operation', 'Status'], fileName, false, false, false);
 		notificationService.close(notification);
 		delete this.memberChangeData[refsetId];
