@@ -75,7 +75,7 @@
                 </div>
                 <div class="create-new-refset-form-field create-new-refset-row-spacing">
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label style="margin-bottom: 0.7rem;">Module Id:</label>
+                        <label style="margin-bottom: 0.7rem;">Module Id:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
                     </div>
                     <div class="col create-new-refset-field create-new-refset-flex-weight field-text" style="">
                         <mat-form-field *ngIf="inputProperties.project.edition.modules.length === 1" appearance="none">

@@ -458,7 +458,7 @@ export class CreateRefsetComponent implements OnInit {
             typeCheck = true;
         }
 
-        return (typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName());
+        return ((typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName()) && this.selectedModuleId.length > 0)
     }
 
     isValidConceptName(): boolean {
