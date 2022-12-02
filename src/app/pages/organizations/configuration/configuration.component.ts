@@ -49,20 +49,20 @@ export class OrganizationConfigurationComponent implements OnInit {
             this.setNavigation();
         });
 
-        // this.getPeople();
         this.getOrganizations();
     }
 
     ngAfterViewInit(): void {
-        document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
-
+        if (document.getElementById("audit-button")) {
+            document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
+        }
     }
 
     setNavigation() {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: 'Organization Configuration' },
+            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Configuration' : '' },
         ]);
 
         this.menu = [
@@ -113,7 +113,7 @@ export class OrganizationConfigurationComponent implements OnInit {
         this.profileEmailValue = organization.primaryContactEmail;
         this.profileDescriptionValue = organization.description;
 
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
         this.setNavigation();
     }
@@ -200,9 +200,9 @@ export class OrganizationConfigurationComponent implements OnInit {
 
     getStoredOrganizationId(): void {
 
-        if (sessionStorage.getItem('selectedOrganizationId')) {
+        if (localStorage.getItem('selectedOrganizationId')) {
 
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
@@ -215,7 +215,7 @@ export class OrganizationConfigurationComponent implements OnInit {
             }
 
             // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+            localStorage.removeItem('selectedOrganizationId');
         }
     }
 }

@@ -45,7 +45,6 @@ export class OrganizationTeamsComponent implements OnInit {
         this.route.params.subscribe(params => {
 
             this.organizationId = params['organizationId'];
-            console.log(this.organizationId);
             this.setNavigation();
         });
 
@@ -93,7 +92,7 @@ export class OrganizationTeamsComponent implements OnInit {
             },
             { field: 'email', tooltipField: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
             {
-                field: 'members', headerName: 'Members', maxWidth: 120, filter: false, resizable: false, sortable: false,
+                field: 'members', headerName: 'Users', maxWidth: 120, filter: false, resizable: false, sortable: false,
                 cellClass: 'text-primary font-weight-bold', tooltipValueGetter: (params) => {
                     return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', ') : '';
                 }
@@ -145,7 +144,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: 'Organization Teams' },
+            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' },
         ]);
 
         this.menu = [
@@ -241,7 +240,7 @@ export class OrganizationTeamsComponent implements OnInit {
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
 
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
         this.setNavigation();
         this.onGridReady(this.gridParams);
@@ -263,9 +262,9 @@ export class OrganizationTeamsComponent implements OnInit {
 
     getStoredOrganizationId(): void {
 
-        if (sessionStorage.getItem('selectedOrganizationId')) {
+        if (localStorage.getItem('selectedOrganizationId')) {
 
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
@@ -278,7 +277,7 @@ export class OrganizationTeamsComponent implements OnInit {
             }
 
             // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+            localStorage.removeItem('selectedOrganizationId');
         }
     }
 }

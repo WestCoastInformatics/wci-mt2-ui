@@ -47,7 +47,6 @@ export class RemoveDashboardComponentModalComponent {
             });
         } else if (this.componentType.toLowerCase() === 'project') {
             this.projectsService.deleteProject(this.componentId).subscribe((x) => {
-                console.log(x)
                 this.router.navigate(['/dashboard']);
             });
         } else if (this.componentType.toLowerCase() === 'team') {

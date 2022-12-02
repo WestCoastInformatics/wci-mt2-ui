@@ -20,6 +20,18 @@ export class RefsetUtility {
     static IN_DEVELOPMENT = 'IN DEVELOPMENT';
     static PUBLISHED = 'PUBLISHED';
 
+    static REFSET_STATUS_MAP = {
+        'IN DEVELOPMENT': 'In Development',
+        PUBLISHED: 'Published',
+        IN_EDIT: 'In Edit',
+        IN_REVIEW: 'In Review',
+        IN_UPGRADE: 'In Upgrade',
+        READY_FOR_EDIT: 'Ready for Edit',
+        READY_FOR_PUBLICATION: 'Ready for Publication',
+        READY_FOR_REVIEW: 'Ready for Review',
+        REVIEW_COMPLETED: 'Review Completed'
+    }
+
     static getVersionOptions(refset, valueField: string = "id") {
 
         let versionOptions = [];

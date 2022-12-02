@@ -76,8 +76,8 @@
 
             <div class="update-profile-button">
               <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font"
-                  [disabled]="!profileNameValue" (click)="updateProject()">Update Profile</button>
+                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font" [disabled]="!profileNameValue"
+                  (click)="updateProject()">Update Profile</button>
               </div>
             </div>
           </div>
@@ -86,7 +86,7 @@
             <div class="projects-configuration-block teams-block">
               <div class="projects-profile-head section-header">Teams</div>
               <div class="projects-profile-mid">
-                Add Teams to your Project to define Project member roles.
+                Add Teams to your Project to define Project user roles.
                 <br>
                 <strong>Note:</strong> In order to model Reference Sets, you need to include teams
                 with

@@ -2,13 +2,14 @@
 
     <div class="refset-tool-nav-item-row">
 
-        <a class="refset-tool-nav-logo-section" routerLink="/dashboard" title="Reference Set Tool Home" aria-label="Reference set tool home">
+        <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
             <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
             <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool
                 <b>(BETA)</b></span>
         </a>
 
-        <div class="refset-tool-breadcrumb-bar text-ghost-grey">
+        <div class="refset-tool-breadcrumb-bar text-ghost-grey"
+          [class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-bread-crumb-and-roles' : breadcrumbs.length > 2 ? 'extended-bread-crumb' : 'display: flex'">
             <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
               (click)="navigate(breadcrumb.id)">
                 {{breadcrumb.label}}
@@ -74,15 +75,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div *ngIf="!isUserLoggedIn" class="float-right mx-3">
-            <div class="user d-inline-block m-2">
-                <span class="px-2 text-ghost-grey">{{guestUser}}</span>
-            </div>
-            <div class="logout d-inline-block m-2" (click)="login()">
-                <span class="px-2 text-ghost-grey">Login</span>
-            </div>
-        </div> -->
     </div>
 </nav>
 <nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark p-2 pr-2" id="bg-landing-header">
@@ -90,5 +82,9 @@
         <img class="logo p-0" src="assets/small_logo.png" alt="Logo">
         <span class="title header-title">SNOMED CT Reference Set Tool 2.0</span>
     </a>
+    <div class="directory-nav" style="margin-left: auto; margin-right: 0;" (click)="navigateToRoute('/library')">
+        <img class="directory-icon" src="/assets/directory-icon.svg">
+        <span class="directory-icon-label">Library</span>
+    </div>
     <a class="btn btn-link text-white" (click)="login()">Log In</a>
 </nav>

@@ -1,6 +1,6 @@
 <button type="button" mat-raised-button color="green"
     (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)"
-    aria-hidden="false" class="refset-tool-action-button adjudicate-finish-modal-button"
+    aria-hidden="false" class="refset-tool-action-button mr-15"
     aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="green">
     Finish Upgrade
 </button>
@@ -42,10 +42,15 @@
             </button>
             <button type="button" mat-raised-button color="green"
                 (click)="getFinishedChangeReport()" aria-hidden="false"
-                class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button"
+                class="refset-tool-action-button mr-15"
                 aria-label="Download" title="Download" ng-reflect-color="green">
                 Download Change Report
             </button>
+            <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button color="primary" aria-hidden="false"
+				class="ml-3 refset-tool-action-button" aria-label="Close"
+				ng-reflect-color="primary">
+				Close
+			</button>
         </div>
     </ng-container>
 </ng-template>

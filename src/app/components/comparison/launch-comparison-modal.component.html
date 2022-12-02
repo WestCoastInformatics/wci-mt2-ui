@@ -25,7 +25,7 @@
 
                     <div class="col dialog-form-field">
                         <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{
-                            activeRefset.versionStatus }})</label>
+                            getStatus(activeRefset.versionStatus) }})</label>
                     </div>
 
                 </div>
@@ -105,8 +105,8 @@
         <button [disabled]="!checkComplete()" type="button" (click)="launchComparison()" mat-raised-button class="refset-tool-action-button mat-green">
             Launch Comparison
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="refset-tool-action-button"
-          style="margin-left: 3px; background-color: red" aria-label="Cancel" title="Cancel" ng-reflect-color="primary">
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" class="ml-3 refset-tool-action-button default-btn"
+           aria-label="Cancel" title="Cancel" >
             Cancel
         </button>
 
@@ -161,15 +161,15 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total font-weight-bold">
-                                                            <div>Active Reference Set ({{
-                                                                comparisonData?.activeRefsetMemberTotal
-                                                                }}):</div>
+                                                            <div>{{ activeRefsetName }} {{ activeRefsetVersionDate }}
+                                                                {{ activeRefset.versionStatus ? ' (' + getStatus(activeRefset.versionStatus) + ')' : '' }} 
+                                                                ({{ comparisonData?.activeRefsetMemberTotal }}):</div>
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name font-weight-bold">
-                                                            {{ activeRefsetName }} {{
+                                                            <!-- {{ activeRefsetName }} {{
                                                             activeRefsetVersionDate }} ({{
-                                                            activeRefset.versionStatus }})
+                                                            activeRefset.versionStatus }}) -->
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-distinct font-weight-bold">
@@ -189,15 +189,16 @@
                                                     <tr>
 
                                                         <td class="refset-tool-comparison-refset-member-total">
-                                                            Comparison Reference Set ({{
+                                                            {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }}
+                                                            ({{ comparisonRefsetStatus }}) ({{
                                                             comparisonData?.comparisonRefsetMemberTotal
                                                             }}):
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-name">
-                                                            {{ comparisonRefsetName }} {{
+                                                            <!-- {{ comparisonRefsetName }} {{
                                                             comparisonRefsetVersionDate }} ({{
-                                                            comparisonRefsetStatus }})
+                                                            comparisonRefsetStatus }}) -->
                                                         </td>
 
                                                         <td class="refset-tool-comparison-refset-distinct">
@@ -413,7 +414,7 @@
             Download Comparison Report
         </button>
 
-        <button type="button" (click)="closeShowComparisonModal()" mat-raised-button class="refset-tool-action-button mat-green">
+        <button type="button" (click)="closeShowComparisonModal()" mat-raised-button color="primary" class="refset-tool-action-button">
             Close
         </button>
 

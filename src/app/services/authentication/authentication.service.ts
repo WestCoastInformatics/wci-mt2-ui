@@ -1,12 +1,13 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
-import {User} from '../../models/user';
-import {environment} from '../../../environments/environment';
-import {Router} from '@angular/router';
-import {NotificationService} from 'src/app/services/notification.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {RestService} from '../rest/rest.service';
+import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { User } from '../../models/user';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/services/notification.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { RestService } from '../rest/rest.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Injectable({
     providedIn: 'root',
@@ -18,8 +19,10 @@ export class AuthenticationService {
     LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
     IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
-    authCookie = {name: 'rt2-auth', path: '/'};
-    referralUrl = '';
+    authCookie = { name: 'rt2-auth', path: '/' };
+    referralUrl = null;
+    sessionTimeoutReference;
+    sessionTimeout = 86400000; // 1 day
 
     constructor(
         private http: HttpClient,
@@ -29,17 +32,11 @@ export class AuthenticationService {
         private restService: RestService,
     ) {
         this.apiCalled = new EventEmitter();
-        if (window.location.href.includes('details/')) {
-            this.referralUrl = window.location.href;
-        } else if (this.referralUrl) {
-            this.referralUrl = '';
-        }
     }
 
     get isUserLoggedIn(): boolean {
-        return !!localStorage.getItem('auth_token');
+        return !!sessionStorage.getItem('auth_token');
     }
-
 
     imsLogin(successCallback: Function = this.handleImsSuccess) {
 
@@ -63,14 +60,10 @@ export class AuthenticationService {
 
         let url = window.location.origin + '/login';
 
-        if (!this.referralUrl) {
-            this.referralUrl = url;
-        }
-
         if (!window.location.origin.includes('local')) {
-            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + this.referralUrl;
+            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
         } else {
-            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + this.referralUrl;
+            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
         }
 
         return url;
@@ -81,17 +74,24 @@ export class AuthenticationService {
         this.authenticateWithBackend(userData).subscribe(
             (data) => {
 
-                localStorage.setItem('auth_token', data.authToken);
-                localStorage.setItem('refset_user', JSON.stringify(data));
+                this.setSessionTimeout();
+                
+                sessionStorage.setItem('auth_token', data.authToken);
+                sessionStorage.setItem('refset_user', JSON.stringify(data));
+
+                let referralUrl = localStorage.getItem('loginReferralUrl');
+                localStorage.removeItem('loginReferralUrl');
+
                 this.userSubject.next(userData);
-                if (this.referralUrl) {
-                    window.location.href = this.referralUrl;
+
+                if (CodeUtility.hasValue(referralUrl)) {
+                    window.location.href = referralUrl;
                 } else {
                     this.router.navigate(['/dashboard']);
                 }
             },
             (err) => {
-                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', {timeOut: 0, extendedTimeOut: 0});
+                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                 console.error(err);
             }
         );
@@ -114,12 +114,13 @@ export class AuthenticationService {
 
     logoutUser() {
 
-        let loggedInUser = localStorage.getItem('auth_token');
-        this.notAuthenticated();
+        let loggedInUser = sessionStorage.getItem('auth_token');
+        this.notAuthenticated(true);
 
-        localStorage.clear();
+        //localStorage.clear();
         sessionStorage.clear();
         this.deleteAllCookies();
+
         this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser, {}).subscribe(
             (data) => {
                 console.log('Back end logged out');
@@ -138,12 +139,12 @@ export class AuthenticationService {
     isAuthenticated(): boolean {
 
         let cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
-        let token = localStorage.getItem('auth_token');
+        let token = sessionStorage.getItem('auth_token');
 
         try {
 
             cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
-            token = localStorage.getItem('auth_token');
+            token = sessionStorage.getItem('auth_token');
 
         } catch (ex) {
 
@@ -154,34 +155,65 @@ export class AuthenticationService {
         return cookieFound && token != null;
     }
 
-    notAuthenticated(): any {
+    notAuthenticated(fromLogout = false): any {
 
         let userWasLoggedin = this.isUserLoggedIn;
-        localStorage.clear();
+        sessionStorage.removeItem('auth_token');
+        //localStorage.clear();
 
-        let user = new User();
-        user.userName = this.GUEST_USER;
-        localStorage.setItem('refset_user', JSON.stringify(user));
-        this.userSubject.next(user);
+        let oldUser = this.getUser();
 
-        // if the user is on a page that requires being logged in, then send them to the directory
-        if (!this.isUserLoggedIn) {
-            const location = window.location.href.split('/');
-            const url = location.length > 1 ? location[1] : '';
-            if (url && !url.startsWith('#')) {
-                // this.router.navigateByUrl('directory'); // disabled for now as per ticket RT2-946
-                this.router.navigateByUrl('login');
-            }
+        if (oldUser == null || oldUser.userName != this.GUEST_USER) {
+
+            let user = new User();
+            user.userName = this.GUEST_USER;
+            sessionStorage.setItem('refset_user', JSON.stringify(user));
+            this.userSubject.next(user);
         }
 
+        // if the user is on a page that requires being logged in, then send them to the directory
         if (userWasLoggedin) {
 
             this.modalService.dismissAll();
-            this.notificationService.show('Your session has expired and you have been logged out', null, 'error', {
-                timeOut: 5000,
-                extendedTimeOut: 0
-            });
+            this.notificationService.closeAll();
+            this.notificationService.show('Your session has expired and you have been logged out', null, 'error');
+
+            if (!fromLogout && window.location.href.includes('details/')) {
+                localStorage.setItem('loginReferralUrl', window.location.href);
+            } else if (this.referralUrl) {
+                localStorage.removeItem('loginReferralUrl');
+            }
+
+            if (!fromLogout) {
+                this.logoutUser();
+            }
         }
+    }
+
+    setSessionTimeout() {
+
+        if (this.isUserLoggedIn) {
+
+            clearTimeout(this.sessionTimeoutReference);
+
+            const date = new Date();
+            // console.log(`Last Activity:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`)
+
+            this.sessionTimeoutReference = setTimeout(() => {
+
+                if (this.isUserLoggedIn) {
+
+                    localStorage.setItem('loginReferralUrl', window.location.href);
+                    this.logoutUser();
+                }
+            }, this.sessionTimeout);
+        }
+    }
+
+    prepareUserSession() {
+
+        this.apiCalled.subscribe(() => this.setSessionTimeout());
+        this.setSessionTimeout();
     }
 
     getUser() {
@@ -189,7 +221,7 @@ export class AuthenticationService {
         let user;
 
         try {
-            user = JSON.parse(localStorage.getItem('refset_user'));
+            user = JSON.parse(sessionStorage.getItem('refset_user'));
 
         } catch (ex) {
 
@@ -204,11 +236,11 @@ export class AuthenticationService {
 
         try {
 
-            let currentUser = JSON.parse(localStorage.getItem('refset_user'));
+            let currentUser = JSON.parse(sessionStorage.getItem('refset_user'));
 
             if (currentUser.userName != this.GUEST_USER) {
 
-                localStorage.setItem('refset_user', JSON.stringify(updatedUser));
+                sessionStorage.setItem('refset_user', JSON.stringify(updatedUser));
                 this.userSubject.next(updatedUser);
             }
 

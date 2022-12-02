@@ -80,12 +80,12 @@ export class TeamsPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', tooltipField: 'name', headerName: 'Members', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'Users', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
       { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
       { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
       {
-        field: 'id', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveTeamMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+        field: 'id', tooltipField: 'inactiveCode', headerName: 'Inactivate Account', cellClass: 'column-inactiveTeamMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
           template: this.inactivateUserSection
         }, flex: 1, maxWidth: 225
       }
@@ -124,7 +124,7 @@ export class TeamsPeopleComponent implements OnInit {
     const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
     if (CodeUtility.hasValue(this.organizationId, true, true)) {
-      breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
+      breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' });
     }
 
     breadcrumbs.push({ label: 'People' });
@@ -181,9 +181,9 @@ export class TeamsPeopleComponent implements OnInit {
 
   getStoredOrganizationId(): void {
 
-    if (sessionStorage.getItem('selectedOrganizationId')) {
+    if (localStorage.getItem('selectedOrganizationId')) {
 
-      const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+      const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
       for (const organization of this.organizationList) {
 
@@ -196,7 +196,7 @@ export class TeamsPeopleComponent implements OnInit {
       }
 
       // if the stored organization ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedOrganizationId');
+      localStorage.removeItem('selectedOrganizationId');
     }
   }
 
@@ -236,7 +236,7 @@ export class TeamsPeopleComponent implements OnInit {
 
     this.data = this.selectedTeam.memberList;
 
-    sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+    localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
     this.setNavigation();
   }
@@ -278,7 +278,7 @@ export class TeamsPeopleComponent implements OnInit {
   removeUser() {
     this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
       next: (data) => {
-        console.log(data);
+
       },
       complete: () => window.location.reload()
     });

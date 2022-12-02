@@ -106,6 +106,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/' + refsetInternalId + '/member/' + conceptId + '/ancestorConcepts');
     }
 
+    getRefsetMemberCount(refsetInternalId: string): Observable<any> {
+        return this.get(this.contextPath + 'refset/' + refsetInternalId + '/memberCount');
+    }
+
     isRefsetLocked(refsetId: string): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId + '/isLocked');
     }
@@ -224,6 +228,12 @@ export class RefsetService extends RestService {
         return this.delete(url);
     }
 
+    deleteDevelopmentVersion(refsetInternalId: string): Observable<any> {
+
+        const url = this.contextPath + 'refset/' + refsetInternalId + '/editVersion';
+        return this.delete(url);
+    }
+
     updateDiscussionPostPrivacy(threadId: string, postId: string, isPrivate: boolean): Observable<any> {
 
         const url = this.contextPath + 'discussion/' + threadId + '/post/' + postId + '/privacy?isPrivate=' + isPrivate;
@@ -250,6 +260,10 @@ export class RefsetService extends RestService {
 
     downloadRefset(refsetId: string, params: any): Observable<any> {
         return this.get(this.contextPath + 'export/' + refsetId + '', params);
+    }
+
+    downloadRefsetsForProject(projectId: string, params: any): Observable<any> {
+        return this.get(this.contextPath + 'export/project/' + projectId + '', params);
     }
 
     getTaxonomyRoot() {

@@ -73,7 +73,7 @@ export class ProjectsConfigurationComponent implements OnInit {
     const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
     if (CodeUtility.hasValue(this.organizationId, true, true)) {
-      breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: 'Organization Edition Projects' });
+      breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '' });
     }
 
     breadcrumbs.push({ label: 'Configuration' });
@@ -211,9 +211,9 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   getStoredOrganizationId(): void {
 
-    if (sessionStorage.getItem('selectedOrganizationId')) {
+    if (localStorage.getItem('selectedOrganizationId')) {
 
-      const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+      const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
       for (const organization of this.organizationList) {
 
@@ -226,15 +226,15 @@ export class ProjectsConfigurationComponent implements OnInit {
       }
 
       // if the stored organization ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedOrganizationId');
+      localStorage.removeItem('selectedOrganizationId');
     }
   }
 
   getStoredEditionId(): void {
 
-    if (sessionStorage.getItem('selectedEditionId')) {
+    if (localStorage.getItem('selectedEditionId')) {
 
-      const storedEditionId = JSON.parse(sessionStorage.getItem('selectedEditionId'));
+      const storedEditionId = JSON.parse(localStorage.getItem('selectedEditionId'));
 
       for (const edition of this.editionList) {
 
@@ -247,7 +247,7 @@ export class ProjectsConfigurationComponent implements OnInit {
       }
 
       // if the stored edition ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedEditionId');
+      localStorage.removeItem('selectedEditionId');
 
       if (this.editionList && this.editionList.length > 0) {
 
@@ -263,9 +263,9 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   getStoredProjectId(): void {
 
-    if (sessionStorage.getItem('selectedProjectId')) {
+    if (localStorage.getItem('selectedProjectId')) {
 
-      const storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
+      const storedProjectId = JSON.parse(localStorage.getItem('selectedProjectId'));
 
       for (const project of this.projectList) {
 
@@ -278,7 +278,7 @@ export class ProjectsConfigurationComponent implements OnInit {
       }
 
       // if the stored project ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedProjectId');
+      localStorage.removeItem('selectedProjectId');
 
       if (this.projectList && this.projectList.length > 0) {
 
@@ -311,9 +311,9 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     this.showLoadingSpinner = false;
 
-    sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-    sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
-    sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+    localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+    localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+    localStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
 
     this.setNavigation();
   }
@@ -323,7 +323,6 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.selectedProject = null;
     this.projectList = [];
     this.profileNameValue = null;
-    // this.profileEmailValue = this.selectedProject.primaryContactEmail;
     this.profileDescriptionValue = null;
     this.isPrivate = null;
     this.selectedTeamIds = [];
@@ -345,8 +344,6 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   onKeyDownEvent(event: any) {
-
-    console.log(event.target.value);
     this.isValidEmail();
   }
 
@@ -415,6 +412,12 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   removeFromTeamList(team): void {
+
+    if (this.selectedTeamIds?.includes(team.id) && this.selectedTeamIds?.length === 1) {
+      this.notificationService.show('Cannot remove this team as it would remove a required role from the project', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+      return
+    }
+
     const idIndex = this.selectedTeamIds?.indexOf(team.id);
     if (idIndex > -1) {
       this.selectedTeamIds.splice(idIndex, 1);

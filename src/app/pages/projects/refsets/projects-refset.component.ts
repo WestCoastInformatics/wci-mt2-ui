@@ -120,7 +120,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: 'Organization Edition Projects' });
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '' });
         }
 
         breadcrumbs.push({ label: 'Reference Sets' });
@@ -345,9 +345,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getStoredOrganizationId(): void {
 
-        if (sessionStorage.getItem('selectedOrganizationId')) {
+        if (localStorage.getItem('selectedOrganizationId')) {
 
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
@@ -360,15 +360,15 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             }
 
             // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+            localStorage.removeItem('selectedOrganizationId');
         }
     }
 
     getStoredEditionId(): void {
 
-        if (sessionStorage.getItem('selectedEditionId')) {
+        if (localStorage.getItem('selectedEditionId')) {
 
-            const storedEditionId = JSON.parse(sessionStorage.getItem('selectedEditionId'));
+            const storedEditionId = JSON.parse(localStorage.getItem('selectedEditionId'));
 
             for (const edition of this.editionList) {
 
@@ -381,7 +381,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             }
 
             // if the stored edition ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedEditionId');
+            localStorage.removeItem('selectedEditionId');
 
             if (this.editionList && this.editionList.length > 0) {
 
@@ -397,9 +397,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getStoredProjectId(): void {
 
-        if (sessionStorage.getItem('selectedProjectId')) {
+        if (localStorage.getItem('selectedProjectId')) {
 
-            const storedProjectId = JSON.parse(sessionStorage.getItem('selectedProjectId'));
+            const storedProjectId = JSON.parse(localStorage.getItem('selectedProjectId'));
 
             for (const project of this.projectList) {
 
@@ -412,7 +412,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             }
 
             // if the stored project ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedProjectId');
+            localStorage.removeItem('selectedProjectId');
 
             if (this.projectList && this.projectList.length > 0) {
 
@@ -434,9 +434,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             this.showTable = true;
         }
 
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-        sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
-        sessionStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+        localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+        localStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
 
         const channel = new BroadcastChannel('projectChannel');
         channel.postMessage(UiUtility.getRoleString(this.selectedProject.roles));

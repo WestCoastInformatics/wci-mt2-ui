@@ -18,7 +18,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 	selector: 'adjudicate-upgrade-modal',
 	templateUrl: './adjudicate-upgrade-modal.component.html'
 })
-export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, OnChanges {
+export class AdjudicateUpgradeModalComponent {
 
 	@Input()
 	refsetData: any;
@@ -94,24 +94,46 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 	addReplacementFlag = false;
 	dialog: DialogService;
 	replacementColumnSortFilter = false;
+	showGrid = false;
 
 	constructor(private readonly modalService: NgbModal,
 		private readonly refsetService: RefsetService,
 		readonly refsetDetails: RefsetDetails,
 		private readonly changeDetection: ChangeDetectorRef,
-		private readonly route: ActivatedRoute,
 		readonly upgradeModalComponent: UpgradeModalComponent,
 		private dialogFactoryService: DialogFactoryService,
 		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) { }
 
-	ngOnInit(): void {
+	openAdjudicateUpgradeModal(adjudicateUpgradeDialog: NgbModal) {
+
+		this.modalService.dismissAll();
+		this.modalService.open(adjudicateUpgradeDialog, {
+			backdrop: 'static',
+			keyboard: false,
+			windowClass: 'adjudicate-upgrade-modal',
+			centered: true
+		});
+
+		this.initializeModal();
+	}
+
+	initializeModal() {
+
+		this.showGrid = false;
+		this.columnDefs = [];
+		this.refsetGridOptions = null;
+		this.refsetGridApi = null;
+		this.refsetGridColumnApi = null;
+
 		this.languageOptions = this.refsetData?.edition?.fullyQualifiedLanguageRefsets.map((x) => {
 			return x.qualifiedLanguageCode;
 		});
 		this.selectedLanguage = this.languageOptions[0];
+
+		this.setupColumns();
 	}
 
-	ngAfterViewInit() {
+	setupColumns() {
 
 		this.columnDefs = [
 
@@ -245,6 +267,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				}
 			},
 		};
+
+		this.showGrid = true;
 	}
 
 	onCellMouseOver(params) {
@@ -269,17 +293,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 				this.replacementColumnSortFilter = true;
 				replacementSort = true;
-
-				// if (event.type == 'sortChanged') {
-
-				// 	let columnState = this.refsetGridColumnApi.getColumnState()
-				// 	this.refsetGridColumnApi.applyColumnState({
-				// 		state: [
-				// 			{ colId: sort.colId, sort: sort.sort, sortIndex: 0 },
-				// 			{ colId: 'inactiveCode', sort: 'asc', sortIndex: 1 }
-				// 		]
-				// 	});
-				// }
 
 				break;
 			}
@@ -395,13 +408,12 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 	addRemoveConcept(params: any, changeMethod: string): void {
 		if (!this.disableAddRemove) {
+			this.changeLockedStatus(true);
 			this.addRemoveConceptsComponent.changeMethod = changeMethod;
 			this.addRemoveConceptsComponent.refset = this.refsetData;
 			this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
 			this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
 			this.addRemoveConceptsComponent.addRemoveConceptsForAdjudication(params, params.replacementConcepts[0]);
-			this.disableAddRemove = true;
-
 			if (changeMethod == 'INACTIVE_ADDED') {
 				this.inactiveConcepts++;
 			} else if (changeMethod == 'INACTIVE_REMOVED') {
@@ -450,7 +462,9 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 	addManualReplacement(changeMethod: string): void {
 		if (this.concept) {
-			this.refsetDetails.toggleLoadingSpinner(true);
+			this.changeLockedStatus(true);
+			// Not necessary
+			//this.refsetDetails.toggleLoadingSpinner(true);
 			const body = { ...this.concept };
 			this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
 				// force auto-add of the replacement concept to the refset
@@ -471,7 +485,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 	processChangedMemberEffects = (conceptStatusArray) => {
 
-		this.changeLockedStatus(false);
 		this.refsetDetails.showLoadingSpinner = true;
 
 		this.onGridReady(this.originalGridParams);
@@ -557,19 +570,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		return [language, type, type2];
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-	}
-
-	openAdjudicateUpgradeModal(adjudicateUpgradeDialog: NgbModal) {
-		this.modalService.dismissAll();
-		this.modalService.open(adjudicateUpgradeDialog, {
-			backdrop: 'static',
-			keyboard: false,
-			windowClass: 'adjudicate-upgrade-modal',
-			centered: true
-		});
-	}
-
 	changeLanguage($event: any) {
 		this.onGridReady(this.originalGridParams);
 	}
@@ -580,7 +580,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridColumnApi = gridReadyParams.columnApi;
 
-		// this.refsetGridApi.showLoadingOverlay();
 		this.refsetDetails.showLoadingSpinner = true;
 
 		let pageNumber = this.refsetGridApi.paginationGetPageSize();
@@ -642,8 +641,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 						const newItem = { ...inactiveConcept, isHidden: true };
 
-						// newItem.inactivationReason = '';
-						// newItem.descriptions = '';
 						newItem.replacementConcepts = [inactiveConcept.replacementConcepts[j]];
 
 						// if auto adding manual replacement to the refset, do it here, when the item's replacements are fully populated
@@ -667,7 +664,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 			results.items = finalResults;
 			this.membersInCommon = results;
-			// console.log(results.items)
 			let addRemoveAllBtns = document.querySelectorAll('.add-all, .remove-all');
 
 			if (results.items.length == 0) {
@@ -699,12 +695,16 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 			UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			this.refsetDetails.showLoadingSpinner = false;
+			// finally, set locked back off
+			this.changeLockedStatus(false);
+
 		},
 			error => {
 
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setRowData([]);
 				this.refsetDetails.toggleLoadingSpinner(false);
+				this.changeLockedStatus(false);
 			});
 
 
@@ -726,6 +726,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 						return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
 					});
 					if (inactiveConcepts.length > 0) {
+						self.changeLockedStatus(true);
 						self.refsetDetails.showLoadingSpinner = true;
 						self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
 							self.processChangedMemberEffects(null);
@@ -800,9 +801,6 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 
 	getFinishedChangeReport(): void {
 
-		// this.refsetService.getUpgradeData(this.refsetData.id, '').subscribe((members) => {
-		// this.membersInCommon = members;
-		// console.log(this.membersInCommon);
 		// Get old members from inactive concepts
 		let memberItems = this.membersInCommonForChangeReport?.items;
 		let inactiveConcepts = [];
@@ -822,11 +820,16 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				return x['New Member ID'] === concept.code;
 			}))) {
 				newMembers.push({
-					'New Member ID': concept.code,
-					'New Member Concept': this.transformDescriptions(concept.descriptions)[0].term
+					'id': concept.memberId,
+					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+					'active': concept.active ? '1' : '0',
+					'moduleId': this.refsetData?.moduleId,
+					'refsetId': this.refsetData?.refsetId,
+					'referencedComponentId': concept.code
 				});
 			}
 		}
+
 
 		// Get new members from inactive concepts
 		inactiveConcepts = [];
@@ -841,34 +844,34 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 				return x['Old Member ID'] === concept.code;
 			}))) {
 				oldMembers.push({
-					'Old Member ID': concept.code,
-					'Old Member Concept': this.transformDescriptions(concept.descriptions)[0].term
+					'id': concept.memberId,
+					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+					'active': concept.active ? '1' : '0',
+					'moduleId': this.refsetData?.moduleId,
+					'refsetId': this.refsetData?.refsetId,
+					'referencedComponentId': concept.code
 				});
 			}
 		}
 
-		// Get manual replacements from inactive concepts
-		inactiveConcepts = [];
-		memberItems.forEach((items: any) => {
-			if (items.replacementConcepts) {
-				for (let item of items.replacementConcepts) {
-					if (item.reason === 'MANUAL_REPLACEMENT') {
-						inactiveConcepts.push(item);
-					}
-				}
-			}
+		// Get all inactive concepts
+		const items = this.membersInCommon.items;
+		inactiveConcepts = items.filter((items: any) => {
+			return items?.active == false;
 		});
 
-		let manualReplacement = [];
-		for (let concept of inactiveConcepts) {
-			if (!Boolean(manualReplacement.some((x) => {
-				return x['Manual Replacement ID'] === concept.code;
-			}))) {
-				manualReplacement.push({
-					'Manual Replacement ID': concept.code,
-					'Manual Replacement Concept': this.transformManualReplacementDescriptions(concept.descriptions)[0].term
-				});
-			}
+		let totalInactiveConcepts = [];
+
+
+		for (let i = 0; i < inactiveConcepts.length; i++) {
+			totalInactiveConcepts.push({
+				'Inactive Concept ID': inactiveConcepts[i].code,
+				'Inactive Concept Name': this.transformDescriptions(inactiveConcepts[i].descriptions)[0].term,
+				'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
+				'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+				'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].replacementConcepts[0].descriptions)[0].term
+			});
 		}
 
 		// Get members in common
@@ -876,25 +879,27 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		const commonConcepts = membersInCommonItems?.filter((x) => {
 			return !memberItems?.includes(x.id);
 		});
+
 		console.log(commonConcepts)
 		let membersInCommon = [];
 		for (let i = 0; i < commonConcepts?.length; i++) {
 			membersInCommon.push({
-				'Members In Common ID': commonConcepts[i].code,
-				'Members In Common Concept': commonConcepts[i].descriptions.filter((description) => {
-					return description?.language === this.getLanguageAndType()[0] && (description.type === this.getLanguageAndType()[1] || description.type === this.getLanguageAndType()[2])
-				})[0]?.term
+				'id': commonConcepts[i].memberId,
+				'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+				'active': commonConcepts[i].active ? '1' : '0',
+				'moduleId': this.refsetData?.moduleId,
+				'refsetId': this.refsetData?.refsetId,
+				'referencedComponentId': commonConcepts[i].code
 			});
 		}
 
 		const changeReportObject = {
-			'oldMember': oldMembers,
 			'newMember': newMembers,
-			'manualReplacement': manualReplacement,
+			'oldMember': oldMembers,
+			'totalInactiveConcepts': totalInactiveConcepts,
 			'membersInCommon': membersInCommon
 		};
 		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
-		// });
 	}
 	selectConcept(concept: any): void {
 
@@ -912,41 +917,11 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		this.isConceptDetailsLoading = true;
 		this.loadConceptDetailParents(concept);
 
-		// this.refsetService
-		//   .getMembersDetails(concept.code, {
-		//     refsetInternalId: this.refsetInternalId,
-		//   })
-		//   .subscribe((results) => {
-
-		//     this.isConceptDetailsLoading = false;
-		//     this.conceptDetail = results;
-		//     this.conceptDescriptions =
-		//       this.conceptDetail.descriptions.filter(function (description) {
-		//         return description != null;
-		//       });
-
-		//     RefsetUtility.sortDescriptions(this.conceptDescriptions, this.refsetData.edition.fullyQualifiedLanguageRefsets);
-		//   });
 	}
 
 	loadConceptDetailParents(concept) {
 
 		this.conceptDetailParents = [];
-
-		// const restParams = {
-		//   displayType: "taxonomy",
-		//   returnChildren: false,
-		//   language: this.getTaxonomyLanguageWithoutType(),
-		//   depth: 1,
-		//   startingConceptId: concept.code,
-		//   offset: 0,
-		//   limit: 1000,
-		// };
-
-		// load the parents
-		// this.refsetService.getConceptList(this.refsetInternalId, restParams).subscribe((results) => {
-		//   this.conceptDetailParents = results.items;
-		// });
 	}
 
 	openCancelUpgrade(dialog: NgbModal) {
@@ -954,7 +929,7 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 			modalDialogClass: 'alert-modal',
 			centered: true
 		});
-		console.log("Cancel Upgrade in initial screen");
+
 	}
 	openPauseUpdate() {
 		const dialogId = "pauseUpdateDialog";
@@ -975,7 +950,8 @@ export class AdjudicateUpgradeModalComponent implements OnInit, AfterViewInit, O
 		this.dialog.confirmed().subscribe((data) => {
 			// if 'ok', close pause modal and update modal
 			if (data) {
-				console.log("workflow status: ", data.workflowStatus);
+
+				this.refsetDetails?.processChangedMemberEffects(null);
 				this.modalService.dismissAll();
 			}
 			// else close only pause modal

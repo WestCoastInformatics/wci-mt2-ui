@@ -87,6 +87,10 @@ export class NotificationService {
         toast.toastRef.componentInstance.remove();
     }
 
+    closeAll() {
+        this.toastr.clear();
+    }
+
     isOpen(toast: ActiveToast<any>) {
         return toast.toastRef.componentInstance.state.value != 'removed';
     }

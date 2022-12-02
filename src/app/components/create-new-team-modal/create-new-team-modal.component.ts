@@ -49,7 +49,7 @@ export class CreateNewTeamModalComponent {
 
     try {
 
-      this.refsetUser = JSON.parse(localStorage.getItem('refset_user'));
+      this.refsetUser = JSON.parse(sessionStorage.getItem('refset_user'));
       this.members = [this.refsetUser.id];
     } catch (ex) {
       return null;
@@ -115,8 +115,6 @@ export class CreateNewTeamModalComponent {
   }
 
   onKeyDownEvent(event: any) {
-
-    console.log(event.target.value);
     this.isValidEmail();
   }
 

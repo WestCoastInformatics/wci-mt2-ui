@@ -1,13 +1,10 @@
 import {
-    ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
     OnInit,
     Output,
     SimpleChanges,
-    TemplateRef,
-    ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -18,7 +15,6 @@ import { RefsetService } from "src/app/services/rest/refset.service";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
-import { environment } from 'src/environments/environment';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from "src/app/services/notification.service";
 
@@ -64,8 +60,10 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     eclString: any;
 
     @Input() refset: any;
+    @Input() processChangedMemberFunction: Function;
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
     @Output() changeLockedStatus = new EventEmitter<boolean>(true);
+    @Output() reloadData = new EventEmitter<boolean>(true);
 
     constructor(
         private readonly modalService: NgbModal,
@@ -107,9 +105,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         }
     }
 
-
     addRemoveConcept(params: any): void {
 
+        //this.showLoadingSpinner = true;
         this.isConceptBeingAdded = new Boolean(params.addConcept);
 
         // if this is coming from the parents section than the concept has children
@@ -123,31 +121,24 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     public processChangedMemberEffects = (conceptStatusArray) => {
 
-        this.isLocked = false;
-        UiUtility.toggleLockedSections(false);
+        this.showLoadingSpinner = false;
+        this.sendChangeLockedStatus(false);
 
         // if this modal is closed and the same refset is still open then refsesh the page
         if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refset.refsetId)) {
-            window.location.reload();
+            this.processChangedMemberFunction(conceptStatusArray);
         }
 
-        // reload the search results
-        this.onTableSearchChange();
-
-        // reload the concept details if it is open
-        if (this.conceptDetail != null) {
-            this.loadConceptDetail(this.conceptDetail);
+        // reload the search results if the window is still open
+        if (this.modalService.hasOpenModals()) {
+            this.onTableSearchChange();
         }
-
-    }
-
-    sendLoadingSpinnerTrigger = (value: any) => {
-        this.loadingSpinner.emit(value);
     }
 
     sendChangeLockedStatus = (value: boolean) => {
 
         this.isLocked = value;
+        UiUtility.toggleLockedSections(value);
         this.changeLockedStatus.emit(value);
     }
 
@@ -157,10 +148,12 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             windowClass: "add-remove-concept-hierarchy-modal-size",
             animation: true,
             beforeDismiss: () => {
+
                 if (!this.isLocked) {
-                    this.refsetDetails.ngOnInit();
+                    this.processChangedMemberFunction();
                 }
-                this.refreshModal();
+
+                this.resetModal();
                 return true;
             },
             backdrop: "static",
@@ -170,11 +163,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     closeModal() {
-
-        if (!this.isLocked) {
-            window.location.reload();
-        }
-
         this.openedModel.dismiss();
     }
 
@@ -251,7 +239,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         }
     }
 
-    refreshModal(): void {
+    resetModal(): void {
 
         this.clearSearch();
         this.isLocked = false;
@@ -278,14 +266,16 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     addRemoveAllMembers(type) {
+
+        this.sendChangeLockedStatus(true);
+        this.showLoadingSpinner = true;
+
         for (var i = 0; i < this.dataSource.length; i++) {
             this.conceptIdArray.push(this.dataSource[i].code);
         }
 
         RefsetUtility.addRemoveMembersByList(this.refset.id, this.refset.refsetId, this.conceptIdArray.join(), type, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
-
-        this.closeModal();
-
+        //this.closeModal();
     }
 
     @Debounce()

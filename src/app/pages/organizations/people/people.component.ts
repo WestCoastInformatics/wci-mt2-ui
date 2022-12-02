@@ -72,12 +72,12 @@ export class OrganizationPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', tooltipField: 'name', headerName: 'Members', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
       { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
       { field: 'email', tooltipField: 'email', minWidth: 400, headerName: 'Email', unSortIcon: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
       {
-        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate Member', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate User', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
           template: this.inactivateUserSection
         }, flex: 1, maxWidth: 190, resizable: false
       },
@@ -116,7 +116,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
     this.breadcrumbService.setBreadcrumbs([
       { path: '/dashboard', label: 'Dashboard' },
-      { label: 'Organization People' },
+      { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / People' : '' },
     ]);
 
     this.menu = [
@@ -162,7 +162,7 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   getPeople(): void {
-    console.log('hit')
+
     this.showLoadingSpinner = true;
     this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 
@@ -206,14 +206,14 @@ export class OrganizationPeopleComponent implements OnInit {
     this.organizationId = organization.id;
     this.selectedOrganization = organization;
 
-    sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+    localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
     this.setNavigation();
     this.getPeople();
   }
 
   async getTeams(teams: any): Promise<any> {
-    console.log(teams);
+
     const teamObject = { teams: [] };
     if (teams === 'undefined' || teams === undefined) {
       return JSON.stringify(teamObject);
@@ -234,7 +234,6 @@ export class OrganizationPeopleComponent implements OnInit {
     this.organizationsService.removeUser(this.organizationId, this.selectedUser.id).subscribe({
       next: (data) => {
         const datum = data;
-        console.log(datum);
       },
       complete: () => window.location.reload()
     });
@@ -250,9 +249,9 @@ export class OrganizationPeopleComponent implements OnInit {
 
   getStoredOrganizationId(): void {
 
-    if (sessionStorage.getItem('selectedOrganizationId')) {
+    if (localStorage.getItem('selectedOrganizationId')) {
 
-      const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+      const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
       for (const organization of this.organizationList) {
 
@@ -265,7 +264,7 @@ export class OrganizationPeopleComponent implements OnInit {
       }
 
       // if the stored organization ID doesn't match anything remove it
-      sessionStorage.removeItem('selectedOrganizationId');
+      localStorage.removeItem('selectedOrganizationId');
     }
   }
 }

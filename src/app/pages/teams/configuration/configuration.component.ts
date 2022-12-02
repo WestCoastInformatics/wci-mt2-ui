@@ -69,7 +69,7 @@ export class TeamsConfigurationComponent implements OnInit {
         const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
 
         if (CodeUtility.hasValue(this.organizationId, true, true)) {
-            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: 'Organization Teams' });
+            breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' });
         }
 
         breadcrumbs.push({ label: 'Configuration' });
@@ -120,9 +120,9 @@ export class TeamsConfigurationComponent implements OnInit {
 
     getStoredOrganizationId(): void {
 
-        if (sessionStorage.getItem('selectedOrganizationId')) {
+        if (localStorage.getItem('selectedOrganizationId')) {
 
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
@@ -135,7 +135,7 @@ export class TeamsConfigurationComponent implements OnInit {
             }
 
             // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+            localStorage.removeItem('selectedOrganizationId');
         }
     }
 
@@ -170,7 +170,7 @@ export class TeamsConfigurationComponent implements OnInit {
         this.profileEmailValue = this.selectedTeam.primaryContactEmail;
         this.profileDescriptionValue = this.selectedTeam.description;
 
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
         this.setNavigation();
     }
@@ -204,9 +204,19 @@ export class TeamsConfigurationComponent implements OnInit {
         return flag == null ? false : true;
     }
 
-    onKeyDownEvent(event: any): void {
+    isEmailChanged(): boolean {
+        return this.profileEmailValue.length !== this.selectedTeam.primaryContactEmail.length
+    }
 
-        console.log(event.target.value);
+    isNameChanged(): boolean {
+        return this.profileNameValue.length !== this.selectedTeam.name.length
+    }
+
+    isDescriptionChanged(): boolean {
+        return this.profileDescriptionValue.length !== this.selectedTeam.description.length
+    }
+
+    onKeyDownEvent(event: any): void {
         this.isValidEmail();
     }
 
@@ -250,6 +260,7 @@ export class TeamsConfigurationComponent implements OnInit {
                     timeOut: 3000,
                     extendedTimeOut: 0
                 });
+                this.selectedTeam['roles'] = this.selectedRoles
             });
         }
 

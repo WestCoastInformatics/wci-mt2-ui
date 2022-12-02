@@ -14,7 +14,7 @@
             <div class="col-md-auto">
                 <div class="dropdown">
                     <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
-                        <mat-label class="search-label">Search metadata and concepts</mat-label>
+                        <mat-label class="search-label">Search concepts and tags</mat-label>
                         <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (keyup)="onSearchChange()" (change)="onSearchChange()" />
                     </mat-form-field>
                     <span class="clear-search" (click)="clearSearch()">&#10005;</span>
@@ -55,8 +55,8 @@
         <ng-template #directoryInfoSection let-params>
             <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
               title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
-                <mat-icon>information</mat-icon>
-            </button>
+                <mat-icon>information</mat-icon> 
+            </button><span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
 
             <!-- <mat-icon aria-hidden="false" #directoryPrivateIcon
                 class="refset-tool-table-icon" aria-label="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}" title="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}">
@@ -90,11 +90,10 @@
               title="Private Reference Set">
                 lock
             </mat-icon>
-            <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false"  class="refset-tool-table-action-icon" aria-label="Local Set"
-              title="Local Set">
+            <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="refset-tool-table-action-icon" aria-label="Local Set" title="Local Set">
                 my_location
             </mat-icon>
-            
+
         </ng-template>
 
         <!-- Edition Templates -->
@@ -108,7 +107,6 @@
         <ng-template #directoryActionSection let-params>
             <div class="container-fluid">
                 <div class="row">
-
                     <div class="col-2">
                         <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
                         </app-refset-download>

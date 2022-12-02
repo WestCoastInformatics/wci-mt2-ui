@@ -34,8 +34,11 @@ export class RefsetDownloadComponent {
   refsetsExportableAsFreeset: string[];
   dialog: DialogService;
   disableChannel = new BroadcastChannel('disable-button-channel');
+  guestFreesetRefsets = ['787778008'];
 
   @Input() refset;
+  @Input() refsets;
+  @Input() project;
   @Input() buttonClasses = '';
   @Input() isDetailPage: boolean;
   @Input() disabled = false;
@@ -74,7 +77,9 @@ export class RefsetDownloadComponent {
           this.formatOptions.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
         }
 
-        this.formatOptions.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+        if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER || this.guestFreesetRefsets.includes(refsetId)) {
+          this.formatOptions.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+        }
 
         this.contentOptions = [{ value: 'snapshot', display: 'Snapshot' }];
         this.languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
@@ -154,8 +159,6 @@ export class RefsetDownloadComponent {
 
           if (data) {
 
-
-            console.log('Download Form Data: ', data);
             const notificationType = 'success';
 
             const description = 'Reference Set ' + this.refset.refsetId + ' download';
@@ -208,12 +211,138 @@ export class RefsetDownloadComponent {
     });
   }
 
+  //**** For downloading all refsets for a project******/
+  openProjectRefsetDownload(projectId: string, refsets: Array<any>) {
+
+    const firstRefset = this.refsets[0];
+    const versionDate = RefsetUtility.getVersionDateForRefsetApiCall(firstRefset);
+
+    this.refsetService.getRefset(firstRefset.refsetId, versionDate).subscribe({
+      next: (results) => {
+        this.refset = results;
+        this.formatOptions = [];
+        this.contentOptions = [];
+        this.languageOptions = [];
+        this.versionOptions = [];
+        this.comparisonFromOptions = [];
+        this.comparisonToOptions = [];
+
+        this.hideSections();
+
+        this.formatOptions = [{ value: 'rf2', display: 'RF2' }];
+
+        if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+          this.formatOptions.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
+        }
+
+        this.languageOptions = [{ value: '900000000000509007PT', display: 'EN (PT)' }];
+        const languageRefsetOptions = [];
+        let selectedLanguage = '';
+
+        for (const language of (this.refset.edition.fullyQualifiedLanguageRefsets || [])) {
+          const optionDetails: any = { value: language.qualifiedLanguageRefset, display: language.qualifiedLanguageCode };
+          if (CodeUtility.testBoolean(language.default)) {
+            selectedLanguage = language.qualifiedLanguageRefset;
+          }
+          languageRefsetOptions.push(optionDetails);
+        }
+
+        if (languageRefsetOptions.length > 0) {
+          this.languageOptions = languageRefsetOptions;
+        }
+
+        const dialogId = 'downloadDialog';
+        const dialogData = {
+          dialogId: dialogId,
+          headerText: `Download Reference Sets for Project: ${this.project.name}`,
+          showCancel: true,
+          confirmText: 'Download',
+          confirmIcon: 'download',
+          cancelText: 'Cancel',
+          template: this.downloadDialog,
+          data: {
+            formatOptions: this.formatOptions,
+            languageOptions: this.languageOptions,
+            selectedContent: 'snapshot',
+            selectedVersion: this.selectedVersionDate,
+            selectedLanguage: selectedLanguage,
+            selectedComparisonTo: this.selectedVersionDate,
+            exportMetadata: false
+          }
+        };
+
+        const dialogOptions = {
+          id: dialogId,
+          disableClose: true,
+          width: '1000px',
+          autoFocus: false,
+          restoreFocus: false
+        };
+
+        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+        this.disableDownloadButton(data);
+
+        this.dialog.confirmed().subscribe(data => {
+
+          if (data) {
+
+            const notificationType = 'success';
+
+            const description = 'Reference Sets for project ' + this.project.name + ' download';
+            const notification = this.notificationService.show('Your ' + description + ' are being generated.', null, notificationType, { timeOut: 0, extendedTimeOut: 0 });
+
+            let fileNameDate: any = this.selectedVersionDate;
+            if (fileNameDate == '' || fileNameDate == RefsetUtility.PUBLISHED) {
+              fileNameDate = CodeUtility.getCurrentDate();
+            }
+            fileNameDate = fileNameDate.replaceAll('-', '');
+
+            const params: any = {
+              format: data.selectedFormat,
+              languageId: data.selectedLanguage,
+              fileNameDate: fileNameDate,
+              exportMetadata: data.exportMetadata
+            };
+
+            if (data.selectedContent == 'delta') {
+              params.startEffectiveTime = data.selectedComparisonFrom.replaceAll('-', '');
+            }
+
+            this.refsetService.downloadRefsetsForProject(this.project.id, params).subscribe(results => {
+              console.log('Export Call Results: ', results);
+
+              if (results?.url) {
+
+                this.notificationService.close(notification);
+
+                if (results.redirect) {
+                  window.open(results.url);
+                } else {
+
+                  this.notificationService.close(notification);
+                  window.open(this.refsetService.restUrl + this.refsetService.contextPath + results.url);
+                }
+              }
+            });
+          }
+        });
+      },
+      error: (error) => {
+        console.log(error);
+      }
+
+    });
+  }
+
   showSections(formData) {
-    this.showContentSection(formData);
+    if (!this.project) {
+      this.showContentSection(formData);
+      this.showVersionSection(formData);
+      this.showComparisonSection(formData);
+    }
     this.showLanguageSection(formData);
-    this.showVersionSection(formData);
-    this.showComparisonSection(formData);
     this.showMetadataSection(formData);
+    this.showMetadata = true;
   }
 
   private hideSections(): void {
@@ -221,6 +350,7 @@ export class RefsetDownloadComponent {
     this.showLanguages = false;
     this.showComparison = false;
     this.showVersions = false;
+    this.showMetadata = false;
   }
 
   showDeltaOption(formData): boolean {
@@ -283,7 +413,7 @@ export class RefsetDownloadComponent {
   }
 
   changeFormat(formData) {
-    console.log(formData);
+
     this.showSections(formData);
     this.disableDownloadButton(formData);
   }

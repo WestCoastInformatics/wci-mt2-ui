@@ -263,6 +263,16 @@ a.footer-link {
   color: #C8CFD6;
 }
 
+.footer-link-float {
+  float: right;
+}
+
+.org-config-spacing {
+  float: right;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
 .refset-tool-breadcrumb-bar> :first-child {
   margin-left: 10px;
 }
@@ -289,6 +299,28 @@ a.footer-link {
       cursor: pointer;
       color: $standard_link_color;
     }
+  }
+}
+
+@media (max-width: 1450px) {
+  .extended-bread-crumb {
+    display:inline-block !important
+  }
+}
+
+  .extended-bread-crumb-and-roles {
+    display: inline-block !important
+  }
+
+@media (max-width: 1230px) {
+  .refset-tool-breadcrumb-bar {
+    display: inline-block !important;
+  }
+}
+
+@media (max-width: 1170px) {
+  .project-role-and-assignee-label {
+    display: none !important;
   }
 }
 
@@ -578,7 +610,6 @@ button.refset-tool-table-action-icon {
 
 .ag-root-wrapper-body {
   height: max-content !important;
-  // max-height: 623px;
 }
 
 .no-row-overlay {
@@ -801,7 +832,6 @@ button.refset-tool-table-action-icon {
   box-shadow: 0 4px 2px -2px grey;
   z-index: 1000 !important;
 
-  // padding-top: 52px;
   .page-title {
     padding-left: 3rem;
     color: #555555;
@@ -862,20 +892,6 @@ select {
   -webkit-appearance: none;
   appearance: none;
 }
-
-//.ag-floating-filter-full-body::first-letter {
-//    text-transform: capitalize;
-//}
-
-// .scroll-override {
-//     width: auto !important;
-//     overflow-x: scroll !important;
-//     overflow-y: hidden !important;
-// }
-
-// .scroll-override::-webkit-scrollbar {
-//     display: none;
-// }
 
 .ag-floating-filter-input {
   padding-bottom: 12px;
@@ -1208,9 +1224,6 @@ select {
   padding-bottom: 20px;
 }
 
-// #detailsMembersTree tree-viewport {
-//     overflow: unset !important;
-// }
 #detailsMembersTree .tree-children {
   overflow: unset;
   padding-left: 0;
@@ -1358,12 +1371,6 @@ select {
   color: #00a9e0;
   ;
 }
-
-// //override position
-// .mat-button .mat-button-wrapper>*, .mat-flat-button .mat-button-wrapper>*, .mat-stroked-button .mat-button-wrapper>*, .mat-raised-button .mat-button-wrapper>*, .mat-icon-button .mat-button-wrapper>*, .mat-fab .mat-button-wrapper>*, .mat-mini-fab .mat-button-wrapper>*
-// {
-//     vertical-align: top !important;
-// }
 
 #refset-block {
   padding: 2px;
@@ -1544,8 +1551,6 @@ select {
   padding-top: 10px;
 }
 
-// Refset Details Modal / Info Popup
-
 .refset-tool-refset-metadata-table {
   margin: 1.5rem 0;
   table-layout: fixed;
@@ -1593,16 +1598,6 @@ select {
   background-color: white !important;
 }
 
-// ------------> look for references to this color and get rid of (theming)
-// .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
-//color: #2196f3;
-//}
-
-// Multi-select list
-// .mat-form-field-appearance-fill .mat-form-field-flex{
-//     width: 420px;
-// }
-
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
   color: $cerulean  !important;
 }
@@ -1624,11 +1619,9 @@ select {
   min-height: 50px !important;
 }
 
-// Search (clear-search)
 .clear-search {
   color: #666666;
   position: relative;
-  //z-index: 100;
   left: -13px;
   top: 0px;
   cursor: pointer;
@@ -1761,12 +1754,8 @@ select {
   vertical-align: top;
 }
 
-// Temp Style
-
 // Make Table in Button Group appear selected on load
 #mat-button-toggle-1-button {
-  //background-color: $cerulean;
-  //color: white;
 }
 
 //title icons
@@ -1792,8 +1781,8 @@ select {
 }
 
 #downloadDialogCancel {
-  background: #e93848;
-  color: white;
+  //background: #e93848;
+  //color: black;
   border-radius: 3px;
 }
 
@@ -1935,14 +1924,6 @@ select {
   background: -webkit-radial-gradient(rgba(20, 20, 20, 0.8),
       rgba(0, 0, 0, 0.8));
 }
-
-// .ag-overlay-loading-wrapper {
-//     display: none !important;
-// }
-
-// tree-loading-component {
-//     display: none !important
-// }
 
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
@@ -2498,7 +2479,7 @@ select {
   td.refset-tool-comparison-refset-member-total {
     word-wrap: break-word;
     vertical-align: top;
-    width: 275px;
+    width: 100%;
   }
 
   td.refset-tool-comparison-refset-name {
@@ -2826,10 +2807,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage>.refset-title {
   align-items: center;
   box-shadow: 0 4px 2px -2px gray;
-  // padding-top: 52px;
   min-height: 65px;
   justify-content: space-between;
-  // top: 40px;
 }
 
 #refsetDetailsPage>.page-title {
@@ -2885,7 +2864,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 #refsetDetailsPage>.refset-title-container>.metadata-container>.container-fluid>.metadata-name>.set-of-buttons {
-  // width: 234px;
   height: 33px;
   background-color: rgba(255, 255, 255, 1);
   box-sizing: border-box;
@@ -2911,7 +2889,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .refset-tool-refset-details-title-name>.set-of-buttons-non-edit-mode {
-  // width: 156px;
   height: 33px;
   background-color: rgba(255, 255, 255, 1);
   box-sizing: border-box;
@@ -3119,15 +3096,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   border-color: rgba(215, 215, 215, 1);
 }
 
-// .add-remove-concept-hierarchy-modal-table::-webkit-scrollbar {
-//     display: none;
-// }
-
-// .add-remove-concept-hierarchy-modal-table {
-//     -ms-overflow-style: none;
-//     overflow: -moz-scrollbars-none;
-// }
-
 .add-remove-concept-hierarchy-modal-results-container {
   padding-left: 0;
   padding-right: 20px;
@@ -3267,10 +3235,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 .active-concept {
   background-color: #a4dbfd;
 }
-
-// .details-page-title {
-//     margin-bottom: 15px;
-// }
 
 .details-page-right-button-group {
   margin-top: 0;
@@ -3469,10 +3433,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   margin-right: 15px !important;
 }
 
-.adjudicate-export-inactive-concept-modal-button {
-  margin-right: 15px !important;
-}
-
 .upgrade-success-inactive-label {
   font-weight: 500;
   padding-right: 60px;
@@ -3619,14 +3579,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 
 .adjudicate-upgrade-modal-body-mid {}
 
-.adjudicate-export-modal-button {
-  margin-right: 15px !important;
-}
-
-.adjudicate-cancel-modal-button {
-  margin-right: 15px !important;
-  background-color: red !important;
-}
 
 .manage-members-menu,
 .manage-refset-menu,
@@ -3639,6 +3591,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   color: #00a9e0;
   font-weight: 500;
   font-size: 14px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   cursor: pointer;
   letter-spacing: 1px;
 }
@@ -3873,8 +3826,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .workflow-history-notes-modal-body {
-  // background-color: #f5f5f6;
-  // padding: 28px !important;
   text-align: center;
   text-align: -webkit-center;
 
@@ -4327,6 +4278,10 @@ img.refset-tool-edition-flag {
   }
 }
 
+.modal-section {
+  margin-bottom: 30px
+}
+
 .dashboard-section {
   box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 20%);
   background-color: #f8f9fa;
@@ -4443,10 +4398,6 @@ img.refset-tool-edition-flag {
   display: flex;
   align-items: stretch;
   min-height: calc(100vh - 158px);
-
-  // .container-fluid {
-  //     z-index: 5;
-  // }
 }
 
 $sidebar-width: 294px;
@@ -4496,6 +4447,10 @@ $sidebar-width: 294px;
 
       li:hover {
         color: $main-color;
+      }
+
+      li.unactive {
+        color: #fff !important;
       }
 
 
@@ -4611,14 +4566,11 @@ $sidebar-width: 294px;
     .organizations-configuration-blocks-1 {
       display: flex;
       width: 100%;
-      // justify-content: space-around;
-      // align-items: flex-start;
       flex-wrap: nowrap;
 
       .main-block {
         min-height: 356px;
         width: 100%;
-        // width: 845px;
       }
 
       .profile-pic-block {
@@ -4635,13 +4587,9 @@ $sidebar-width: 294px;
     .organizations-configuration-blocks-2 {
       display: flex;
       width: 100%;
-      // justify-content: space-around;
-      // align-items: flex-start;
-      // flex-wrap: wrap;
 
       .secondary-block {
         min-height: 190px;
-        // width: 33%;
         width: 100%;
       }
 
@@ -4761,8 +4709,6 @@ $sidebar-width: 294px;
     .projects-configuration-blocks-1 {
       display: flex;
       width: 100%;
-      // justify-content: space-around;
-      // align-items: flex-start;
       flex-wrap: nowrap;
 
       .main-block {
@@ -5115,14 +5061,11 @@ $sidebar-width: 294px;
     .account-configuration-blocks-1 {
       display: flex;
       width: 100%;
-      // justify-content: space-around;
-      // align-items: flex-start;
       flex-wrap: nowrap;
 
       .main-block {
         min-height: 356px;
         width: 100%;
-        // width: 845px;
       }
 
       .profile-pic-block {
@@ -5216,10 +5159,6 @@ $sidebar-width: 294px;
   padding-bottom: 5px;
   text-align: center;
 }
-
-// .mat-form-field-appearance-outline .mat-form-field-infix {
-//     padding: 0;
-// }
 
 .full-form-field {
   width: 100%;
@@ -5508,4 +5447,36 @@ app-date-text-floating-filter {
 .no-outline,.no-outline:focus{
     outline: none !important;
     box-shadow: none !important;
+}
+
+.landing-page-center {
+  text-align: center;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mr-3 {
+  margin-right: 3px;
+}
+
+.ml-3 {
+  margin-left: 3px;
+}
+
+.mr-15 {
+  margin-right: 15px !important;
+}
+
+.ml-15 {
+  margin-left: 15px !important;
+}
+
+.fs14 {
+  font-size: 14pt;
 }

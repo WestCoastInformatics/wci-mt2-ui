@@ -74,7 +74,6 @@ export class EmailRefsetModalComponent {
     }
 
     onKeyDownEvent(event: any) {
-        console.log(event.target.value);
         this.isValidEmail();
     }
 

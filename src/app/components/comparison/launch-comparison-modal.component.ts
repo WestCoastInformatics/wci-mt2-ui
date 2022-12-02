@@ -127,6 +127,10 @@ export class LaunchComparisonModalComponent {
     this.comparisonRefsetSelect = '';
   }
 
+  getStatus(value: string) {
+    return RefsetUtility.REFSET_STATUS_MAP[value]
+  }
+
   async onSearchChange(value): Promise<void> {
     await this.search(value);
   }
@@ -246,11 +250,13 @@ export class LaunchComparisonModalComponent {
       const comparisonVersionInfo = this.activeRefset.versionList.find((element) => { return element.refsetInternalId == this.comparisonRefsetInternalId; });
       this.comparisonRefsetName = this.activeRefsetName;
       this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
-      this.comparisonRefsetStatus = comparisonVersionInfo.status;
+      // If "same refset", then the status value is the actual status value
+      this.comparisonRefsetStatus = this.getStatus(comparisonVersionInfo.status);
     } else {
 
       const comparisonVersionInfo = this.comparisonRefsetVersionOptions.find((element) => { return element.value == this.comparisonRefsetInternalId; });
       this.comparisonRefsetVersionDate = comparisonVersionInfo.date;
+      // If a different refset, then the status value is already massaged
       this.comparisonRefsetStatus = comparisonVersionInfo.status;
     }
 
@@ -279,7 +285,6 @@ export class LaunchComparisonModalComponent {
         results.total = results.items.length;
         results.totalKnown = true;
         this.comparisonData = results;
-        console.log(results);
         const pageNumber = 1;
 
         if (results.items.length == 0) {

@@ -25,7 +25,8 @@
                         People ({{dataCount}})
                         <add-member-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" type="Organization" [id]="selectedOrganization?.id"
                           [name]="selectedOrganization?.name"></add-member-modal>
-                        <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization"></invite-people-modal>
+                        <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization">
+                        </invite-people-modal>
                     </div>
 
                     <div class='dashboard-section'>
@@ -88,7 +89,7 @@
     <div class="modal-footer rt2-modal-footer">
         <button type="button" (click)="removeUser();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Remove User
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel
+        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button default-btn">Cancel
         </button>
     </div>
 

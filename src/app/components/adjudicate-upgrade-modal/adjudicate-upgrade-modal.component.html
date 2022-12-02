@@ -10,7 +10,7 @@
                 <span aria-hidden="true" class="dialog-close-x">&times;</span>
             </button>
         </div>
-        <div class="adjudicate-upgrade-container-fluid">
+        <div class="adjudicate-upgrade-container-fluid refset-tool-lockable">
             <div class="modal-body adjudicate-upgrade-modal-body">
                 <div class="adjudicate-upgrade-modal-body-header">
                     <button ngbAutofocus class="unfocus-btn"></button>
@@ -19,7 +19,7 @@
                     <div class="adjudicate-format-option-drop-down">
                         <mat-form-field floatLabel="never" appearance="legacy">
                             <mat-label>Select Language(s):</mat-label>
-                            <select matNativeControl [(ngModel)]="selectedLanguage" (change)=" ngAfterViewInit(); changeLanguage($event);">
+                            <select matNativeControl [(ngModel)]="selectedLanguage" (change)="setupColumns(); changeLanguage($event)">
                                 <option *ngFor="let option of languageOptions" [value]="option">
                                     {{ option }}
                                 </option>
@@ -35,8 +35,8 @@
                 <div class="adjudicate-upgrade-modal-body-mid">
                     <as-split direction="horizontal" gutterSize="4">
                         <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
-                            <ag-grid-angular class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" id="adjudication-list" [columnDefs]="columnDefs"
-                              [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)" style="width: 100%">
+                            <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" id="adjudication-list"
+                              [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)" style="width: 100%">
                             </ag-grid-angular>
                         </as-split-area>
 
@@ -181,42 +181,36 @@
                         </as-split-area>
                     </as-split>
 
-
-                    <!-- <app-pagination
-               [pageSize]="refsetGridPaging.pageSize"
-               [gridOptions]="refsetGridOptions"
-               [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-               [totalKnown]="refsetGridPaging.totalKnown"
-               [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-                </app-pagination> -->
                 </div>
             </div>
         </div>
         <div class="modal-footer rt2-modal-footer">
-            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
-              class="refset-tool-action-button adjudicate-cancel-modal-button" aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
-                Cancel Upgrade
-            </button>
             <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
-              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+              class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
                 Download Change Report
             </button>
             <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
-              class="refset-tool-action-button adjudicate-export-inactive-concept-modal-button" aria-label="Download" title="Download" ng-reflect-color="green">
+              class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
                 Download Inactive Concept Report
             </button>
-            <button type="button" mat-raised-button color="green" aria-label="Pause" (click)="openPauseUpdate()" title="Pause">
+            <button type="button" mat-raised-button color="green" aria-label="Pause" (click)="openPauseUpdate()"
+              class="mr-15" title="Pause">
                 Pause Upgrade
             </button>
             <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon"
               [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
-        </div>
+            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
+              class="refset-tool-action-button ml-15 " aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+                Cancel Upgrade
+            </button>
+            </div>
     </ng-container>
 </ng-template>
 
 <!-- Inactivation Reason Section Templates -->
 <ng-template #adjudicateInactivationReason let-params>
-    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember">
+    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember"
+      [class.add-bold]="params?.data?.stillMember">
         {{ formatReason(params?.data?.inactivationReason) }}
     </span>
 </ng-template>
@@ -237,14 +231,16 @@
 
 <!-- Inactive ID Templates -->
 <ng-template #adjudicateInactiveId let-params>
-    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember">
+    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember"
+      [class.add-bold]="params?.data?.stillMember">
         {{ params?.value }}
     </span>
 </ng-template>
 
 <!-- Inactive Section EN PT Templates -->
 <ng-template #adjudicateInactiveEnPtSection let-params>
-    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember" [class.add-bold]="params?.data?.stillMember">
+    <span *ngIf="!params?.data?.isHidden || replacementColumnSortFilter" [class.linethrough-inactive]="!params?.data?.stillMember"
+      [class.add-bold]="params?.data?.stillMember">
         {{ transformDescriptions(params?.data?.descriptions)?.length ?
         transformDescriptions(params?.data?.descriptions)[0].term : '' }}
     </span>
@@ -312,8 +308,8 @@
           aria-label="Remove {{actionText}}" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
     <span *ngIf="(!params?.data?.isHidden || replacementColumnSortFilter) && !params?.data?.isSearch">
-        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="" aria-label="Add"
-          class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="" aria-label="Add" class="grey-add-symbol-icon"
+          alt="Add symbol shown when you're able to add a concept" />
     </span>
     <span *ngIf="params?.data?.isSearch">
         <img src="assets/grey-close-icon.svg" (click)="getSelectedRowData('remove');" width="18px" height="18px" title="Remove {{actionText}}"

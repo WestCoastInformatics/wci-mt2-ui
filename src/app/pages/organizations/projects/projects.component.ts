@@ -88,7 +88,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.breadcrumbService.setBreadcrumbs([
             { path: '/dashboard', label: 'Dashboard' },
-            { label: 'Organization Projects' },
+            { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '' },
         ]);
 
         this.menu = [
@@ -205,8 +205,8 @@ export class OrganizationProjectsComponent implements OnInit {
 
     showEditionData() {
 
-        sessionStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-        sessionStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+        localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+        localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
 
         this.setNavigation();
         this.onGridReady(this.gridParams);
@@ -238,7 +238,6 @@ export class OrganizationProjectsComponent implements OnInit {
 
     async getTeams(teams: any): Promise<any> {
 
-        console.log(teams);
         const teamObject = { teams: [] };
 
         if (teams === 'undefined' || teams === undefined) {
@@ -255,9 +254,9 @@ export class OrganizationProjectsComponent implements OnInit {
 
     getStoredOrganizationId(): void {
 
-        if (sessionStorage.getItem('selectedOrganizationId')) {
+        if (localStorage.getItem('selectedOrganizationId')) {
 
-            const storedOrganizationId = JSON.parse(sessionStorage.getItem('selectedOrganizationId'));
+            const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
 
             for (const organization of this.organizationList) {
 
@@ -270,15 +269,15 @@ export class OrganizationProjectsComponent implements OnInit {
             }
 
             // if the stored organization ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedOrganizationId');
+            localStorage.removeItem('selectedOrganizationId');
         }
     }
 
     getStoredEditionId(): void {
 
-        if (sessionStorage.getItem('selectedEditionId')) {
+        if (localStorage.getItem('selectedEditionId')) {
 
-            const storedEditionId = JSON.parse(sessionStorage.getItem('selectedEditionId'));
+            const storedEditionId = JSON.parse(localStorage.getItem('selectedEditionId'));
 
             for (const edition of this.editionList) {
 
@@ -291,7 +290,7 @@ export class OrganizationProjectsComponent implements OnInit {
             }
 
             // if the stored edition ID doesn't match anything remove it
-            sessionStorage.removeItem('selectedEditionId');
+            localStorage.removeItem('selectedEditionId');
 
             if (this.editionList && this.editionList.length > 0) {
 

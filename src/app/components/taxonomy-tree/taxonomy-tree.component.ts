@@ -158,7 +158,6 @@ export class TaxonomyTreeComponent {
 
                 this.prepareData(results.items);
                 this.sendnumOfChildrenTrigger(results?.items?.length);
-                console.log(results.items);
             },
             error: (error) => {
 
@@ -227,13 +226,6 @@ export class TaxonomyTreeComponent {
         this.sortTree([{ children: data }]);
         return data;
     }
-
-    // showSpinner(): void {
-    //     this.showLoadingSpinner = true;
-    //     setTimeout(() => {
-    //         this.showLoadingSpinner = false;
-    //     }, 2000);
-    // }
 
     styleNodeClass(node: TreeNode) {
         let classes = "";

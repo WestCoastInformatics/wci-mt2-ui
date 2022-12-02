@@ -72,11 +72,15 @@ export class FinishUpgradeModalComponent implements OnInit {
 
     let replacementName: any = '';
 
-      if (inactiveConcept.replacementConcepts) {
-        replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
-      }
+    if (inactiveConcept.replacementConcepts) {
+      replacementName = this.getConceptName(inactiveConcept.replacementConcepts[0].descriptions);
+    }
 
-      return replacementName;
+    return replacementName;
+  }
+
+  formatReason(reason: string): string {
+    return reason?.split('_').join(' ');
   }
 
   getInactiveChangeReport(): void {
@@ -102,6 +106,7 @@ export class FinishUpgradeModalComponent implements OnInit {
 
   getFinishedChangeReport(): void {
 
+    // Get old members from inactive concepts
     let memberItems = this.membersInCommonForChangeReport?.items;
     let inactiveConcepts = [];
     memberItems.forEach((items: any) => {
@@ -120,11 +125,16 @@ export class FinishUpgradeModalComponent implements OnInit {
         return x['New Member ID'] === concept.code;
       }))) {
         newMembers.push({
-          'New Member ID': concept.code,
-          'New Member Concept': this.getConceptName(concept.descriptions)
+          'id': concept.memberId,
+          'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+          'active': concept.active ? '1' : '0',
+          'moduleId': this.refsetData?.moduleId,
+          'refsetId': this.refsetData?.refsetId,
+          'referencedComponentId': concept.code
         });
       }
     }
+
 
     // Get new members from inactive concepts
     inactiveConcepts = [];
@@ -139,34 +149,34 @@ export class FinishUpgradeModalComponent implements OnInit {
         return x['Old Member ID'] === concept.code;
       }))) {
         oldMembers.push({
-          'Old Member ID': concept.code,
-          'Old Member Concept': this.getConceptName(concept.descriptions)
+          'id': concept.memberId,
+          'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+          'active': concept.active ? '1' : '0',
+          'moduleId': this.refsetData?.moduleId,
+          'refsetId': this.refsetData?.refsetId,
+          'referencedComponentId': concept.code
         });
       }
     }
 
-    // Get manual replacements from inactive concepts
-    inactiveConcepts = [];
-    memberItems.forEach((items: any) => {
-      if (items.replacementConcepts) {
-        for (let item of items.replacementConcepts) {
-          if (item.reason === 'MANUAL_REPLACEMENT') {
-            inactiveConcepts.push(item);
-          }
-        }
-      }
+    // Get all inactive concepts
+    const items = this.membersInCommon.items;
+    inactiveConcepts = items.filter((items: any) => {
+      return items?.active == false;
     });
 
-    let manualReplacement = [];
-    for (let concept of inactiveConcepts) {
-      if (!Boolean(manualReplacement.some((x) => {
-        return x['Manual Replacement ID'] === concept.code;
-      }))) {
-        manualReplacement.push({
-          'Manual Replacement ID': concept.code,
-          'Manual Replacement Concept': this.getConceptName(concept.descriptions)
-        });
-      }
+    let totalInactiveConcepts = [];
+
+
+    for (let i = 0; i < inactiveConcepts.length; i++) {
+      totalInactiveConcepts.push({
+        'Inactive Concept ID': inactiveConcepts[i].code,
+        'Inactive Concept Name': this.getConceptName(inactiveConcepts[i].descriptions),
+        'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
+        'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
+        'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
+        'Suggested Replacement Name': this.getReplacementConceptName(inactiveConcepts[i])
+      });
     }
 
     // Get members in common
@@ -174,19 +184,23 @@ export class FinishUpgradeModalComponent implements OnInit {
     const commonConcepts = membersInCommonItems?.filter((x) => {
       return !memberItems?.includes(x.id);
     });
-    console.log(commonConcepts)
+
     let membersInCommon = [];
     for (let i = 0; i < commonConcepts?.length; i++) {
       membersInCommon.push({
-        'Members In Common ID': commonConcepts[i].code,
-        'Members In Common Concept': commonConcepts[i].name.replaceAll(',', '/')
+        'id': commonConcepts[i].memberId,
+        'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+        'active': commonConcepts[i].active ? '1' : '0',
+        'moduleId': this.refsetData?.moduleId,
+        'refsetId': this.refsetData?.refsetId,
+        'referencedComponentId': commonConcepts[i].code
       });
     }
 
     const changeReportObject = {
-      'oldMember': oldMembers,
       'newMember': newMembers,
-      'manualReplacement': manualReplacement,
+      'oldMember': oldMembers,
+      'totalInactiveConcepts': totalInactiveConcepts,
       'membersInCommon': membersInCommon
     };
     UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);

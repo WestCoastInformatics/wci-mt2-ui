@@ -46,7 +46,6 @@ export class AddRemoveConceptsComponent implements OnInit {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-
 		for (const propertyName in changes) {
 
 			if (propertyName === "isAdd") {
@@ -86,7 +85,6 @@ export class AddRemoveConceptsComponent implements OnInit {
 	}
 
 	addRemoveConcept(): void {
-
 		let conceptId: string = '';
 		let ecl = '';
 		let description: string;
@@ -174,8 +172,10 @@ export class AddRemoveConceptsComponent implements OnInit {
 		}
 
 		console.timeEnd('add-remove addRemoveConcept before manageMemberNotifications');
-		UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
-		console.timeEnd('add-remove addRemoveConcept after manageMemberNotifications');
+		setTimeout(() => {
+		    UiUtility.manageMemberNotifications(this.refsetInternalId, this.refset.refsetId, description, this.callMemberChangeFunction, this.notificationService, this.refsetService, this.router);
+		    console.timeEnd('add-remove addRemoveConcept after manageMemberNotifications'); 
+	      }, 100);
 	}
 
 	callMemberChangeFunction = (data) => {

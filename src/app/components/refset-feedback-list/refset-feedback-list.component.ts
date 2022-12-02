@@ -256,7 +256,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
-                console.log(this.threadsData)
                 const pageNumber = 1;
 
                 if (results.items.length === 0) {

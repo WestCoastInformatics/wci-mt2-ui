@@ -52,7 +52,6 @@ import { CategoryFilterComponent } from 'src/app/components/categoryFilter/categ
 import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
-import { ImportFromEclModalComponent } from 'src/app/components/import-from-ecl-modal/import-from-ecl-modal.component';
 import { CreateNewOrganizationModalComponent } from 'src/app/components/create-new-organization-modal/create-new-organization-modal.component';
 import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
@@ -105,7 +104,7 @@ import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concep
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
-import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+//import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
@@ -231,7 +230,6 @@ const appRoutes: Routes = [
         ProjectsRefsetComponent,
         ImportFromFileModalComponent,
         ImportFromListModalComponent,
-        ImportFromEclModalComponent,
         CreateNewOrganizationModalComponent,
         EmailRefsetModalComponent,
         CreateNewTeamModalComponent,
@@ -247,7 +245,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsIconsComponent,
         AddRemoveConceptGroupIconsComponent,
         LoginComponent,
-        LandingPageComponent,
+        //LandingPageComponent,
         LandingComponent,
         DashboardComponent,
         FeedbackCollectorComponent,

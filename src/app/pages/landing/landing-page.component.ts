@@ -1,15 +1,17 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {AuthenticationService} from 'src/app/services/authentication/authentication.service';
-import {UiUtility} from '../../utilities/ui.utility';
-import {PaginationComponent} from '../../components/pagination/pagination.component';
-import {Debounce} from '../../decorators/debounce.decorator';
-import {CodeUtility} from '../../utilities/code.utility';
-import {RefsetUtility} from '../../utilities/refset.utility';
-import {RefsetService} from '../../services/rest/refset.service';
-import {TemplateRenderer} from '../../components/cellRenderers/template.renderer';
-import {CategoryFilterComponent} from '../../components/categoryFilter/category-filter.component';
-import {DateTextFilterComponent} from '../../components/dateTextFilter/date-text-filter.component';
-import {forkJoin} from 'rxjs';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { UiUtility } from '../../utilities/ui.utility';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { Debounce } from '../../decorators/debounce.decorator';
+import { CodeUtility } from '../../utilities/code.utility';
+import { RefsetUtility } from '../../utilities/refset.utility';
+import { RefsetService } from '../../services/rest/refset.service';
+import { TemplateRenderer } from '../../components/cellRenderers/template.renderer';
+import { CategoryFilterComponent } from '../../components/categoryFilter/category-filter.component';
+import { DateTextFilterComponent } from '../../components/dateTextFilter/date-text-filter.component';
+import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
+
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -51,7 +53,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     @ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 
     constructor(private authService: AuthenticationService, private refsetService: RefsetService,
-                private changeDetectorRef: ChangeDetectorRef) {
+        private changeDetectorRef: ChangeDetectorRef, private router: Router) {
         document.body.scrollTop = 0;
     }
 
@@ -69,140 +71,141 @@ export class LandingComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
 
         forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('limit=500&sort=name'), this.refsetService.getOrganizationsKeyValue()).subscribe({
-                next: ([results, versionResults, editionResults, organizationResults]) => {
+            next: ([results, versionResults, editionResults, organizationResults]) => {
 
-                    this.versionStatuses = results;
-                    const versionStatusArray = this.versionStatuses?.items;
-                    this.versions = versionResults;
-                    const versionsArray = this.versions?.items;
-                    const editionsArray = editionResults.items;
-                    this.organizations = organizationResults;
-                    const organizationsArray = this.organizations?.items;
+                this.versionStatuses = results;
+                const versionStatusArray = this.versionStatuses?.items;
+                this.versions = versionResults;
+                const versionsArray = this.versions?.items;
+                const editionsArray = editionResults.items;
+                this.organizations = organizationResults;
+                const organizationsArray = this.organizations?.items;
 
-                    for (let i = 0; i < versionStatusArray.length; i++) {
-                        versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();
-                        versionStatusArray[i].value = versionStatusArray[i].value.toLowerCase();
-                    }
-
-                    this.columnDefs = [
-                        {
-                            field: 'refsetId',
-                            tooltipField: 'refsetId',
-                            headerName: 'Reference ID',
-                            cellClass: 'refset-tool-directory-column-id',
-                            minWidth: 140,
-                            resizable: false,
-                            unSortIcon: true
-                        },
-                        {
-                            field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name',
-                            flex: 1, resizable: true, minWidth: 550,
-                            sort: 'asc', unSortIcon: true
-                        },
-                        {
-                            field: 'editionName',
-                            tooltipField: 'editionName',
-                            headerName: 'Edition/Extension',
-                            cellClass: 'refset-tool-directory-column-edition',
-                            minWidth: 140,
-                            resizable: true,
-                            valueGetter: this.editionValueGetter,
-                            floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: {suppressFilterButton: true, names: editionsArray},
-                            unSortIcon: true
-                        },
-                        {
-                            field: 'organizationName',
-                            tooltipField: 'organizationName',
-                            headerName: 'Organization/Owner',
-                            cellClass: 'refset-tool-directory-column-organization',
-                            minWidth: 140,
-                            resizable: true,
-                            floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: {suppressFilterButton: true, names: organizationsArray},
-                            unSortIcon: true
-                        },
-                        {
-                            field: 'versionStatus',
-                            tooltipField: 'versionStatus',
-                            headerName: 'Version Status',
-                            cellClass: 'refset-tool-directory-column-version-status',
-                            minWidth: 140,
-                            resizable: false,
-                            valueGetter: this.versionStatusValueGetter,
-                            floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: {suppressFilterButton: true, names: versionStatusArray},
-                            unSortIcon: true
-                        },
-                        {
-                            field: 'versionDate',
-                            tooltipValueGetter: UiUtility.gridDateValueGetter,
-                            headerName: 'Version Date',
-                            cellClass: 'refset-tool-directory-column-version-date',
-                            width: 140,
-                            resizable: false,
-                            valueGetter: UiUtility.gridDateValueGetter,
-                            floatingFilterComponent: 'categoryFilterComponent',
-                            floatingFilterComponentParams: {suppressFilterButton: true, names: versionsArray},
-                            unSortIcon: true
-                        },
-                        {
-                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date',
-                            cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false,
-                            valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: {suppressFilterButton: true}, unSortIcon: true
-                        },
-                    ];
-                    this.refsetGridOptions = {
-                        context: {componentParent: this},
-                        pagination: true,
-                        // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-                        suppressColumnVirtualisation: true,
-                        suppressPaginationPanel: true,
-                        paginationPageSize: this.refsetGridPaging.pageSize,
-                        cacheBlockSize: this.refsetGridPaging.pageSize,
-                        maxBlocksInCache: 1,
-                        rowModelType: 'infinite',
-                        enableCellTextSelection: true,
-                        rowSelection: 'single',
-                        onGridReady: this.onGridReady,
-                        frameworkComponents: {
-                            'templateRenderer': TemplateRenderer,
-                            'categoryFilterComponent': CategoryFilterComponent,
-                            'dateTextFilterComponent': DateTextFilterComponent
-                        },
-                        enableBrowserTooltips: true,
-                        defaultColDef: {
-                            sortable: true,
-                            filter: true,
-                            sortingOrder: ['asc', 'desc'],
-                            floatingFilter: true,
-                            floatingFilterComponentParams: {placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true},
-                            suppressMenu: true,
-                            menuTabs: ['columnsMenuTab'],
-                            resizable: true
-                        },
-                        rowClassRules: {
-                            'refset_tool_grid_inactive_row': function (params) {
-
-                                let inactivatedRow = false;
-
-                                if (params.data) {
-                                    inactivatedRow = params.data.active === false;
-                                }
-
-                                return inactivatedRow;
-                            }
-                        }
-                    };
-
-                    this.showTable = true;
-                    this.changeDetectorRef.detectChanges();
-                },
-                error: (error) => {
-                    this.showLoadingSpinner = true;
+                for (let i = 0; i < versionStatusArray.length; i++) {
+                    versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();
+                    versionStatusArray[i].value = versionStatusArray[i].value.toLowerCase();
                 }
+
+                this.columnDefs = [
+                    {
+                        field: 'refsetId',
+                        tooltipField: 'refsetId',
+                        headerName: 'Reference ID',
+                        cellClass: 'refset-tool-directory-column-id',
+                        minWidth: 140,
+                        resizable: false,
+                        unSortIcon: true
+                    },
+                    {
+                        field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name',
+                        flex: 1, resizable: true, minWidth: 550,
+                        sort: 'asc', unSortIcon: true
+                    },
+                    {
+                        field: 'editionName',
+                        tooltipField: 'editionName',
+                        headerName: 'Edition/Extension',
+                        cellClass: 'refset-tool-directory-column-edition',
+                        minWidth: 140,
+                        resizable: true,
+                        valueGetter: this.editionValueGetter,
+                        floatingFilterComponent: 'categoryFilterComponent',
+                        floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray },
+                        unSortIcon: true
+                    },
+                    {
+                        field: 'organizationName',
+                        tooltipField: 'organizationName',
+                        headerName: 'Organization/Owner',
+                        cellClass: 'refset-tool-directory-column-organization',
+                        minWidth: 140,
+                        resizable: true,
+                        floatingFilterComponent: 'categoryFilterComponent',
+                        floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray },
+                        unSortIcon: true
+                    },
+                    {
+                        field: 'versionStatus',
+                        tooltipField: 'versionStatus',
+                        headerName: 'Version Status',
+                        cellClass: 'refset-tool-directory-column-version-status',
+                        minWidth: 140,
+                        resizable: false,
+                        valueGetter: this.versionStatusValueGetter,
+                        floatingFilterComponent: 'categoryFilterComponent',
+                        floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray },
+                        unSortIcon: true
+                    },
+                    {
+                        field: 'versionDate',
+                        tooltipValueGetter: UiUtility.gridDateValueGetter,
+                        headerName: 'Version Date',
+                        cellClass: 'refset-tool-directory-column-version-date',
+                        width: 140,
+                        resizable: false,
+                        valueGetter: UiUtility.gridDateValueGetter,
+                        floatingFilterComponent: 'categoryFilterComponent',
+                        floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray },
+                        unSortIcon: true
+                    },
+                    {
+                        field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date',
+                        cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: false,
+                        valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                        floatingFilterComponentParams: { suppressFilterButton: true }, unSortIcon: true
+                    },
+                ];
+                this.refsetGridOptions = {
+                    context: { componentParent: this },
+                    pagination: true,
+                    // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+                    suppressColumnVirtualisation: true,
+                    suppressPaginationPanel: true,
+                    paginationPageSize: this.refsetGridPaging.pageSize,
+                    cacheBlockSize: this.refsetGridPaging.pageSize,
+                    maxBlocksInCache: 1,
+                    rowModelType: 'infinite',
+                    enableCellTextSelection: true,
+                    rowSelection: 'single',
+                    onCellClicked: this.onGridCellClick,
+                    onGridReady: this.onGridReady,
+                    frameworkComponents: {
+                        'templateRenderer': TemplateRenderer,
+                        'categoryFilterComponent': CategoryFilterComponent,
+                        'dateTextFilterComponent': DateTextFilterComponent
+                    },
+                    enableBrowserTooltips: true,
+                    defaultColDef: {
+                        sortable: true,
+                        filter: true,
+                        sortingOrder: ['asc', 'desc'],
+                        floatingFilter: true,
+                        floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
+                        suppressMenu: true,
+                        menuTabs: ['columnsMenuTab'],
+                        resizable: true
+                    },
+                    rowClassRules: {
+                        'refset_tool_grid_inactive_row': function (params) {
+
+                            let inactivatedRow = false;
+
+                            if (params.data) {
+                                inactivatedRow = params.data.active === false;
+                            }
+
+                            return inactivatedRow;
+                        }
+                    }
+                };
+
+                this.showTable = true;
+                this.changeDetectorRef.detectChanges();
+            },
+            error: (error) => {
+                this.showLoadingSpinner = true;
             }
+        }
         );
     }
 
@@ -267,7 +270,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
                     restParams.query = query;
                 }
 
-                this.refsetService.getRefsets({...restParams, ...sort}).subscribe({
+                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
                     next: (results) => {
 
                         this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
@@ -353,6 +356,33 @@ export class LandingComponent implements OnInit, AfterViewInit {
     onResize(event) {
         const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
         document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
+    }
+
+    onGridCellClick = (event) => {
+
+        if (event.column.colId === 'information' || event.column.colId === 'actions') {
+            
+        } else {
+
+            const selectedRows = this.refsetGridApi.getSelectedRows();
+            let selectedId: string;
+            let selectedVersionDate: string;
+
+            selectedRows.forEach(function (selectedRow, index) {
+
+                selectedId = selectedRow.refsetId;
+                selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
+            });
+
+            this.goToDetailsPage(selectedId, selectedVersionDate);
+        }
+    };
+
+    goToDetailsPage(refsetId, versionDate) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('reload', 'true');
+        window.history.pushState({}, '', url.href);
+        this.router.navigate(['/details', refsetId, versionDate]);
     }
 
     editionValueGetter = function (params) {

@@ -172,7 +172,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     this.auditService.getRefsetAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
                         next: (results) => {
                             this.setUpAuditTable(results, pageNumber, rowParams);
-
+                            localStorage.setItem('audit_report', JSON.stringify(this.data));
                         },
                         error: (error) => {
 

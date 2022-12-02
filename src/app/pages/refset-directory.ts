@@ -1,21 +1,21 @@
-import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
-import {DialogService} from 'src/app/dialog/services/dialog.service';
-import {DialogFactoryService} from 'src/app/dialog/services/dialog-factory.service';
-import {TemplateRenderer} from 'src/app/components/cellRenderers/template.renderer';
-import {CategoryFilterComponent} from 'src/app/components/categoryFilter/category-filter.component';
-import {DateTextFilterComponent} from 'src/app/components/dateTextFilter/date-text-filter.component';
-import {RefsetService} from 'src/app/services/rest/refset.service';
-import {Title} from '@angular/platform-browser';
-import {CodeUtility} from 'src/app/utilities/code.utility';
-import {UiUtility} from 'src/app/utilities/ui.utility';
-import {RefsetUtility} from 'src/app/utilities/refset.utility';
-import {BreadcrumbService} from 'src/app/services/breadcrumb.service';
-import {PaginationComponent} from 'src/app/components/pagination/pagination.component';
-import {Debounce} from '../decorators/debounce.decorator';
-import {forkJoin} from 'rxjs';
-import {User} from '../models/user';
-import {AuthenticationService} from '../services/authentication/authentication.service';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { Title } from '@angular/platform-browser';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { Debounce } from '../decorators/debounce.decorator';
+import { forkJoin } from 'rxjs';
+import { User } from '../models/user';
+import { AuthenticationService } from '../services/authentication/authentication.service';
 
 
 /**
@@ -46,6 +46,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     };
     refsetGridLastFilter = '';
     refsetGridLastSort = '';
+    refsetGridLastQuery = '';
     showTable = false;
     refsetData: any;
     dialog: DialogService;
@@ -74,6 +75,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
 
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
+    originalGridParams: any;
 
     constructor(
         private router: Router,
@@ -117,7 +119,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                     }
 
                     this.columnDefs = [
-                        { field: 'id', colId: 'information', headerName: '', maxWidth: 65, minWidth: 65, width: 65, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
+                        { field: 'id', colId: 'information', headerName: '', maxWidth: 80, minWidth: 80, width: 80, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
                         { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
                         { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
@@ -148,9 +150,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                         suppressPaginationPanel: true,
                         paginationPageSize: this.refsetGridPaging.pageSize,
-                        cacheBlockSize: this.refsetGridPaging.pageSize,
-                        maxBlocksInCache: 1,
-                        rowModelType: 'infinite',
                         enableCellTextSelection: true,
                         rowSelection: 'single',
                         onCellClicked: this.onGridCellClick,
@@ -201,146 +200,88 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
+
+        this.originalGridParams = gridReadyParams;
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridColumnApi = gridReadyParams.columnApi;
         this.onResize(undefined);
-        const dataSource = {
-            rowCount: null,
-            getRows: (rowParams) => {
 
-                this.refsetGridApi.showLoadingOverlay();
+        this.refsetGridApi.showLoadingOverlay();
+        let pageNumber = this.refsetGridApi.paginationGetCurrentPage() + 1;
+        let query = '';
+        const filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
 
-                let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
-                let query = UiUtility.formatFilterData(rowParams.filterModel);
-                const sort = UiUtility.formatSortData(rowParams.sortModel);
+        if (this.selectedView === 'public') {
+            query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
+        } else if (this.selectedView === 'private') {
+            query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
+        }
 
-                if (this.selectedView === 'public') {
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
-                } else if (this.selectedView === 'private') {
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
-                }
+        if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
+            query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+        }
 
-                if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
-                    query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
-                }
+        const newQueryString = query;
+        const newFilterString = filter;
 
-                const newFilterString = query;
-                const newSortString = JSON.stringify(sort);
+        // if the filters or sort have changed then move to the first page
+        if (newQueryString !== this.refsetGridLastQuery) {
 
-                // if the filters or sort have changed then move to the first page
-                if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+            pageNumber = 1;
+            this.refsetGridPaging.totalRows = null;
+            this.refsetGridPaging.totalKnown = false;
+            this.refsetGridApi?.api?.paginationGoToPage(0);
+        }
 
-                    pageNumber = 1;
-                    this.refsetGridApi?.api?.paginationGoToPage(0);
-                }
+        this.refsetGridLastFilter = newFilterString;
+        this.refsetGridLastQuery = newQueryString;
 
-                // if the filters have changed then reset the total row variables
-                if (newFilterString !== this.refsetGridLastFilter) {
-
-                    this.refsetGridPaging.totalRows = null;
-                    this.refsetGridPaging.totalKnown = false;
-                }
-
-                this.refsetGridLastFilter = newFilterString;
-                this.refsetGridLastSort = newSortString;
-
-                const restParams: any = {
-                    limit: this.refsetGridApi.paginationGetPageSize(),
-                    offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
-                    searchConcepts: true,
-                    showInDevelopment: false,
-                    countComments: true,
-                    sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
-                    filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
-                };
-
-                if (CodeUtility.hasValue(query)) {
-
-                    query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
-                    restParams.query = query;
-                }
-
-                this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
-                    next: (results) => {
-
-                        this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
-                        this.numOfResults = results.total;
-
-                        if (results.items.length == 0 && pageNumber > 1) {
-
-                            this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
-                            this.refsetGridPaging.totalKnown = true;
-                            this.paginationComponent.goToPage(pageNumber - 1);
-                            this.showLoadingSpinner = false;
-
-                            return;
-                        }
-
-                        const data = results.items;
-                        this.refsetData = data;
-
-                        if (data?.length > 0) {
-
-                            this.refsetGridApi.hideOverlay();
-                            let currentRowCount = null;
-                            let lastRow = -1;
-
-                            if (results.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize() || this.refsetGridPaging.totalKnown) {
-
-                                if (results.totalKnown) {
-                                    lastRow = results.total;
-
-                                } else if (this.refsetGridPaging.totalKnown) {
-                                    lastRow = this.refsetGridPaging.totalRows;
-
-                                } else {
-
-                                    currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
-                                    lastRow = currentRowCount;
-                                }
-                                this.refsetGridPaging.totalRows = lastRow;
-                                this.refsetGridPaging.totalKnown = true;
-
-                            } else {
-                                currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
-                            }
-                            for (let i = 0; i < data?.length; i++) {
-                                this.refsetService.getDiscussionThreads('REFSET', data[i].id, null).subscribe({
-                                    next: (threads) => {
-                                        data[i].unresolvedDiscussionCount = 0;
-                                        for (const discussion of threads.items.filter(t => !t.privateThread ||
-                                            t.posts.length > 0 && t.posts[0].user.userName === this.user.userName)) {
-
-                                            if (discussion.status === 'Open') {
-                                                data[i].unresolvedDiscussionCount++;
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-
-                            rowParams.successCallback(data, lastRow);
-                            this.paginationComponent.getCurrentPage();
-
-                        } else {
-
-                            this.refsetGridApi.showNoRowsOverlay();
-                            rowParams.successCallback([], 0);
-                        }
-
-                        this.refsetGridPaging.manualStateRefresh = Boolean(true);
-                        this.showLoadingSpinner = false;
-                    },
-                    error: (error) => {
-
-                        this.refsetGridApi.showNoRowsOverlay();
-                        rowParams.successCallback([], 0);
-                    }
-                });
-            }
+        const restParams: any = {
+            displayType: 'list',
+            offset: pageNumber - 1,
+            searchConcepts: true,
+            showInDevelopment: false,
+            countComments: true,
         };
 
-        gridReadyParams.api.setDatasource(dataSource);
+        if (CodeUtility.hasValue(this.refsetGridLastQuery)) {
+            this.refsetGridLastQuery = this.refsetGridLastQuery.replace(/\//g, '%2F').replace(/%/g, '%25');
+            restParams.query = this.refsetGridLastQuery;
+        }
+
+        this.refsetService.getRefsets({ ...restParams, }).subscribe({
+            next: (results) => {
+                const data = results.items;
+                this.refsetData = data;
+                this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
+                this.numOfResults = results.total;
+
+                if (results.items.length == 0) {
+
+                    this.refsetGridApi.showNoRowsOverlay();
+                    this.refsetGridApi.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
+                        this.refsetGridPaging.totalKnown = true;
+                        this.paginationComponent.goToPage(pageNumber - 1);
+                        this.showLoadingSpinner = false;
+                    }
+
+                    return;
+                }
+
+                UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+
+                this.showLoadingSpinner = false;
+            },
+            error: (error) => {
+
+                this.refsetGridApi.showNoRowsOverlay();
+                this.refsetGridApi.setRowData([]);
+            }
+        });
 
         // set placeholders on the grid floating filter fields
         Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
@@ -377,7 +318,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onGridCellClick = (event) => {
 
         if (event.column.colId === 'information' || event.column.colId === 'actions') {
-            console.log(event);
+
         } else {
 
             const selectedRows = this.refsetGridApi.getSelectedRows();
@@ -396,9 +337,16 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     @Debounce()
     changedViewFilter() {
-        this.refsetGridApi.purgeInfiniteCache();
+        this.onGridReady(this.originalGridParams);
     }
 
+    delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            setTimeout(callback, ms);
+        };
+    })()
     //***** General Functions *****/
 
     openEclBuilder(fieldId) {
@@ -437,11 +385,11 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             return;
         }
 
-        const refset = this.getRefsetRow(refsetId);
+        const refsetDirectoryData = this.getRefsetRow(refsetId);
 
-        this.refsetService.getRefset(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset)).subscribe((results) => {
+        this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
 
-            refset.descriptions = results.descriptions;
+            let refset = results;
             const dialogId = 'directoryInfoDialog';
             this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace("library", "details/" + refset.refsetId + '/'
                 + RefsetUtility.getVersionDateForRefsetApiCall(refset));
@@ -460,6 +408,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
                 refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
             }
+
             refset.versionList = results.versionList;
 
             const dialogData = {
@@ -534,7 +483,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onSearchChange() {
         this.searchInput = this.searchInput.trim();
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            this.refsetGridApi.purgeInfiniteCache();
+            this.delay(() => {
+                this.onGridReady(this.originalGridParams);
+            }, 500)
         }
     }
 
@@ -558,7 +509,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     onResize(event) {
         const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
-        document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
+        document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
     }
 
     setDescriptions(refsetData: any): Array<string> {
