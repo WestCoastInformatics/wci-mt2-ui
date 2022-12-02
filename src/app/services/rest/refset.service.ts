@@ -262,6 +262,10 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'export/' + refsetId + '', params);
     }
 
+    downloadRefsetsForProject(projectId: string, params: any): Observable<any> {
+        return this.get(this.contextPath + 'export/project/' + projectId + '', params);
+    }
+
     getTaxonomyRoot() {
 
         if (this.taxonomyRootNode == null) {
