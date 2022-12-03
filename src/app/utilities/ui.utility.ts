@@ -557,7 +557,7 @@ export class UiUtility {
 	static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
 
 		let memberStatuses = this.memberChangeData[refsetId].statuses;
-		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + CodeUtility.getReverseDate();
 
 		for (let memberStatus of memberStatuses) {
 
@@ -573,14 +573,14 @@ export class UiUtility {
 
 	static createInactiveChangeReport(refsetId: string, data): void {
 		console.log(data);
-		let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + CodeUtility.getReverseDate();
 
 		this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName, false, false, false);
 	}
 
 	static createFinishedChangeReport(refsetId: string, data): void {
 
-		let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + refsetId + "__Change_Report_" + CodeUtility.getReverseDate();
 
 		const headerObject = {
 			'newMemberTitle': ['New Members'],
@@ -598,7 +598,7 @@ export class UiUtility {
 
 	static createAuditReport(refsetId: string, data): void {
 
-		let fileName = "Refset_" + refsetId + "__Audit_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + refsetId + "__Audit_Report_" + CodeUtility.getReverseDate();
 
 		const headerObject = {
 			'auditHeader': ['Date', 'Modified By', 'Message', 'Details'],

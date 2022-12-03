@@ -627,7 +627,7 @@ export class LaunchComparisonModalComponent {
     comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
 
     const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
-      this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
+      this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + CodeUtility.getReverseDate();
 
     UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Reference Set Membership', 'Reference Set Name'], fileName);
   }
@@ -660,7 +660,7 @@ export class LaunchComparisonModalComponent {
 
     activeRefsetDate = activeRefsetDate.replace(' ', '_');
 
-    const fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + new Date().toLocaleDateString();
+    const fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + CodeUtility.getReverseDate();
 
     UiUtility.downloadFile(this.changeReportData, ['Concept ID', 'Concept Name', 'Operation'], fileName);
   }

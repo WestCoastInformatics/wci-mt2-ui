@@ -342,6 +342,24 @@ export class RefsetDetails implements OnInit {
         this.cacheTaxonomyAncestors();
     }
 
+    isAdminOrAuthor() {
+
+        if (this?.user.roles.includes('all-all-admin') || this?.user.roles.includes('all-all-author')) {
+            return true
+        }
+
+        return false
+    }
+
+    isAdminOrReviewer() {
+
+        if (this?.user.roles.includes('all-all-admin') || this?.user.roles.includes('all-all-reviewer')) {
+            return true
+        }
+
+        return false
+    }
+
     loadRefset(): void {
 
         this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
@@ -594,6 +612,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
+                    comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
                 },
             ];
 
@@ -1006,7 +1025,8 @@ export class RefsetDetails implements OnInit {
                             'refset-tool-details-column-description',
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
-                        tooltipValueGetter: this.descriptionValueGetter
+                        tooltipValueGetter: this.descriptionValueGetter,
+                        comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
                     });
                 }
 
@@ -1715,7 +1735,7 @@ export class RefsetDetails implements OnInit {
                     return value.colId !== 'actions' && value.colId !== 'add-remove';
                 }
             }).map(value => value.colId),
-            fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true
+            fileName: `Refset_${this.refsetId}_Members-Table_${CodeUtility.getReverseDate()}.csv`, suppressQuotes: true
         });
     }
 

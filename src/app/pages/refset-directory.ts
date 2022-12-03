@@ -258,6 +258,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
                 if (results.items.length == 0) {
 
+                    this.refsetGridPaging.totalKnown = true
                     this.refsetGridApi.showNoRowsOverlay();
                     this.refsetGridApi.setRowData([]);
 

@@ -21,6 +21,13 @@ export class CodeUtility {
     }
 
     /*
+     * getReverseDate - return a string representing the current year, month and date
+     */
+    static getReverseDate() {
+        return moment().format(CodeUtility.DATE_FORMAT_REVERSE_ONLY_NUMBERS);
+    }
+
+    /*
      * isConceptID - return a boolean if the passed ID is a concept ID or not.
      */
     static isConceptID(id) {
