@@ -504,8 +504,7 @@
 
                                         <div class="col-lg ml-3" style="padding-right: 115px;" [style.display]="membersTableDisplay">
                                             <mat-form-field floatLabel="never" class="refset-tool-details-search-field">
-                                                <mat-label>Search (Type at least 3 characters.
-                                                    Example: shou fra)</mat-label>
+                                                <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
                                                 <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
                                             </mat-form-field>
                                             <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
@@ -521,8 +520,7 @@
 
                                         <div class="col-lg ml-3" style="padding-right: 115px;" [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field floatLabel="never" class="refset-tool-details-search-field" *ngIf="showMembersSearchBar()">
-                                                <mat-label>Search (Type at least 3 characters.
-                                                    Example: shou fra)</mat-label>
+                                                <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
                                                 <input matInput id="detailsTaxonomySearchInput" [(ngModel)]="taxonomySearchInput" (input)="onTaxonomySearchChange()"
                                                   [disabled]="!showMembersSearchBar()" />
                                             </mat-form-field>
