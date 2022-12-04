@@ -1,4 +1,7 @@
-<button mat-menu-item *ngIf="isDetailPage && refset!=null && project==null" [disabled]="disabled" (click)="openDownload(refset.refsetId)">Download Reference Set</button>
+<button *ngIf="isDetailPage && refset!=null && project==null" mat-button class="manage-refset-menu"
+    title=""Download Referense Set aria-label="Download Reference Set"
+    (click)="openDownload(refset.refsetId)">Download
+</button>
 
 <button *ngIf="!isDetailPage && refset!=null && project==null" mat-icon-button aria-hidden="false" (click)="openDownload(refset.refsetId)" aria-label="Download Reference Set" title="Download Reference Set"
   class="refset-tool-table-action-icon {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">

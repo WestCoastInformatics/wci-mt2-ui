@@ -162,14 +162,8 @@
                     </app-launch-comparison-modal>
 
                     <span class="menu-spacer">&nbsp;</span>
-                    <button mat-button [matMenuTriggerFor]="downloadMenu" [matMenuTriggerRestoreFocus]="false" class="download-menu">Download <span
-                          class="down-arrow-for-menu">&#x25BC;</span></button>
 
-                    <mat-menu #downloadMenu="matMenu">
-                        <app-refset-download [isDetailPage]="true" [refset]="refsetData" [hidden]="!refsetData?.downloadable"></app-refset-download>
-                        <button *ngIf="editMode" mat-menu-item [hidden]="true">Download Workflow
-                            History</button>
-                    </mat-menu>
+                    <app-refset-download [hidden]="!refsetData?.downloadable" [isDetailPage]="true" [refset]="refsetData"></app-refset-download>
 
                     <span class="menu-spacer">&nbsp;</span>
 
