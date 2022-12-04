@@ -151,9 +151,7 @@ export class CreateRefsetComponent implements OnInit {
 
         this.resetModal();
 
-        if (this.inputProperties.project.edition.modules.length == 1) {
-            this.selectedModuleId = this.inputProperties.project.edition.modules[0];
-        }
+        this.selectedModuleId = this.inputProperties.project.edition.modules[0];
 
         if (this.editMode) {
             this.setupEditMode();
