@@ -1276,7 +1276,9 @@ export class RefsetDetails implements OnInit {
         // reload the members grid
         //this.loadTaxonomy();
         this.getMemberCount();
-        this.onMembersGridReady(this.originalGridParams);
+        if (CodeUtility.hasValue(this.originalGridParams)) {
+            this.onMembersGridReady(this.originalGridParams);
+        }
         this.onTaxonomySearchGridReady(this.taxonomyGridParams);
         this.memberCacheLoaded = new Subject<boolean>();
 
