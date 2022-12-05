@@ -620,7 +620,7 @@ export class UiUtility {
 		this.downloadFile(data, headerObject, fileName, true, false, true);
 	}
 
-	static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false, isFinishedChangeReport = false, isAuditReport = false) {
+	static downloadFile(data, headerlist, fileName = 'download' + '_' + CodeUtility.getReverseDate(), merge: boolean = false, isFinishedChangeReport = false, isAuditReport = false) {
 
 		let csvData;
 

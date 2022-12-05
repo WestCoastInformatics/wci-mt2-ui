@@ -254,7 +254,7 @@ export class RefsetDownloadComponent {
         const dialogId = 'downloadDialog';
         const dialogData = {
           dialogId: dialogId,
-          headerText: `Download Reference Sets for Project: ${this.project.name}`,
+          headerText: `Bulk Download of Published Reference Sets for Project: ${this.project.name}`,
           showCancel: true,
           confirmText: 'Download',
           confirmIcon: 'download',
