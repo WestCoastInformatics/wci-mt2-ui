@@ -41,10 +41,8 @@
 
     <!-- Reference Set Table -->
     <div class="container-fluid" style="margin-top: 19px">
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="
-                ag-theme-alpine
-                refset-tool-ag-grid refset-tool-ag-grid-filter
-            " [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
+        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
         </ag-grid-angular>
 
         <app-pagination #directoryPaging *ngIf="showTable" [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"

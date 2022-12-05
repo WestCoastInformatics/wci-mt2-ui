@@ -12,10 +12,10 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
-import { Debounce } from '../decorators/debounce.decorator';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
-import { User } from '../models/user';
-import { AuthenticationService } from '../services/authentication/authentication.service';
+import { User } from 'src/app/models/user';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 
 /**
@@ -61,7 +61,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     directUrl: string;
     numOfMembers: any;
     disableChannel = new BroadcastChannel('disable-button-channel');
+    originalGridParams: any;
     uiUtility = UiUtility;
+
+    @Output() loadingSpinner = new EventEmitter<boolean>(true);
 
     @ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
     @ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -72,10 +75,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     @ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-
-    @Output() loadingSpinner = new EventEmitter<boolean>(true);
-    originalGridParams: any;
-
+    
     constructor(
         private router: Router,
         private titleService: Title,

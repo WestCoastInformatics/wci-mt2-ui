@@ -33,7 +33,7 @@ export class RefsetService extends RestService {
     }
 
     initializeUpgrade(refsetInternalId: string): Observable<any> {
-        return this.get(this.contextPath + `refset/${refsetInternalId}/compileUpgradeData`, '', false);
+        return this.get(this.contextPath + `refset/${refsetInternalId}/compileUpgradeData`, '', true);
     }
 
     getUpgradeData(refsetInternalId: string, params: any): Observable<any> {
