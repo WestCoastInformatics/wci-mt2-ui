@@ -419,7 +419,14 @@ export class UiUtility {
 					notification.onAction.subscribe(button => {
 
 						if (button.id == 'download') {
-							this.createMemberChangeReport(refsetId, notification, notificationService);
+
+							let changeType = "add";
+
+							if (description.includes("remove")) {
+								changeType = "remove";
+							}
+
+							this.createMemberChangeReport(refsetId, notification, notificationService, changeType);
 
 						} else if (button.id == 'view') {
 							this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
@@ -554,7 +561,7 @@ export class UiUtility {
 		checkIfFinished();
 	}
 
-	static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
+	static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService, changeType): void {
 
 		let memberStatuses = this.memberChangeData[refsetId].statuses;
 		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + CodeUtility.getReverseDate();
@@ -562,7 +569,13 @@ export class UiUtility {
 		for (let memberStatus of memberStatuses) {
 
 			if (memberStatus.Status.includes('Failed')) {
-				memberStatus.Status = "Invalid ID";
+
+				if (changeType == 'add') {
+					memberStatus.Status = "Invalid ID";
+				} else {
+					memberStatus.Status = "Unable to remove ID";
+				}
+				
 			}
 		}
 
