@@ -1481,10 +1481,13 @@ export class RefsetDetails implements OnInit {
                     (status) => {
 
                         if (status.status == 'convert') {
+
                             this.notificationService.show('The Reference Set has been converted to extensional.', null, 'success', {
                                 timeOut: 0,
                                 extendedTimeOut: 0
                             });
+
+                            this.processChangedMemberEffects(null);
                             this.loadRefset();
                             return;
                         } else if (status.error) {
