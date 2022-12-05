@@ -350,6 +350,7 @@
 
                                 <mat-form-field floatLabel="never" class="refset_tool_ecl_definition_field">
                                     <input style="cursor: default" matInput [(ngModel)]="clause.value" id="createRefsetDefinitionClausesInput"
+                                      (ngModelChange)="eclDefinitionChanged($event)"
                                       #createRefsetDefinitionClausesInput />
                                 </mat-form-field>
                                 <input type="hidden" [(ngModel)]="clause.negated" value="false">
