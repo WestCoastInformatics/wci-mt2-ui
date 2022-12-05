@@ -1457,6 +1457,8 @@ export class RefsetDetails implements OnInit {
             headerText: `Inactivate Reference Set`,
             template: this.inactivateRefsetDialog,
             data: this.refsetData,
+            showCancel: false,
+            confirmText: 'OK',
         };
 
         this.dialog = this.dialogFactoryService.open(dialogData);

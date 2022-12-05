@@ -121,6 +121,14 @@
                                 aria-label="{{description?.editionName}} Flag" /> <br></span>
                     </td>
                 </tr>
+                <tr *ngIf="refset?.externalUrl">
+                    <td class="refset-tool-refset-metadata-label" aria-label="External URL/URI:">
+                        External URL/URI:
+                    </td>
+                    <td class="refset-tool-refset-metadata-value">
+                        <a href="{{refset.externalUrl}}">{{refset.externalUrl}}</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
 

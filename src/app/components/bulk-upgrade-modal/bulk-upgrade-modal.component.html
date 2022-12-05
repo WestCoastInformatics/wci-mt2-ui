@@ -17,7 +17,7 @@
 		</button>
 	</div>
 
-	<div class="modal-body refset-tool-lockable">
+	<div class="modal-body refset-tool-lockable rt2-modal-body">
 
 		<div class="create-new-refset-form-field" style="align-items: normal">
 
@@ -34,22 +34,22 @@
 			</div>
 
 		</div>
+	</div>
 
-		<div class="modal-footer rt2-modal-footer refset-tool-lockable">
+	<div class="modal-footer rt2-modal-footer refset-tool-lockable">
 
-			<button [disabled]="selectedRefsets.length == 0" type="button" (click)="upgradeRefsets()" mat-raised-button
-				color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Upgrade"
-				ng-reflect-color="green">
-				Upgrade
-			</button>
+		<button [disabled]="selectedRefsets.length == 0" type="button" (click)="upgradeRefsets()" mat-raised-button
+			color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Upgrade"
+			ng-reflect-color="green">
+			Upgrade
+		</button>
 
-			<button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
-				class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel"
-				title="Cancel">
-				Cancel
-			</button>
+		<button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
+			class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel"
+			title="Cancel">
+			Cancel
+		</button>
 
-		</div>
 	</div>
 
 </ng-template>

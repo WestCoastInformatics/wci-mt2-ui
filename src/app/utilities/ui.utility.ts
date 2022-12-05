@@ -244,7 +244,7 @@ export class UiUtility {
 		$('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
 		const eclBuilder = document.querySelector('ecl-builder');
-		eclBuilder.querySelector('input').focus();
+		//eclBuilder.querySelector('input').focus();
 
 		eclBuilder.addEventListener('output', (event: any) => {
 
