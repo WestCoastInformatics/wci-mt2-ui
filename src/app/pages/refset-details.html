@@ -210,15 +210,15 @@
                       aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
                         Cancel Upgrade
                     </button>
-                    <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT') && isAdminOrAuthor()" mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
+                    <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')" mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
                       class="refset-tool-action-button refset-action-button mr-15" aria-label="Undo all changes since last save" title="Undo all changes since last save"
-                      ng-reflect-color="primary" (click)="openUndoEditModal(undoEditDialog)">
-                        Undo Changes
+                      ng-reflect-color="primary" (click)="openUndoEditModal(undoEditDialog)"> 
+                        {{ adminOverrideText }} Undo Changes
                     </button>
-                    <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT') && isAdminOrAuthor()" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
+                    <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
                       class="refset-tool-action-button refset-action-button" aria-label="Save changes and finish edit" title="Save changes and finish edit"
                       ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
-                        Save Changes
+                        {{ adminOverrideText }} Save Changes
                     </button>
 
                     <button *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')" #readyForReviewButton
@@ -255,10 +255,10 @@
                       (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
                     </review-modal>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN') && isAdminOrReviewer()" #unassignButton mat-raised-button color="primary" aria-hidden="false"
+                    <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')" #unassignButton mat-raised-button color="primary" aria-hidden="false"
                       (click)="setWorkflowStatusByAction('', 'UNASSIGN')" class="refset-tool-action-button refset-action-button" aria-label="Unassign" title="Unassign"
                       ng-reflect-color="primary">
-                        Unassign
+                       {{ adminOverrideText }} Unassign
                     </button>
 
                     <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION') && !this.refsetData?.localSet"
@@ -436,6 +436,10 @@
             </div>
         </div>
 
+        <div *ngIf="!showMembersSection" class="container-fluid" id="detailsMemberSection">
+            <b>{{ noMemberSectionText }}</b>
+        </div>
+
         <!-- Section Title -->
         <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title">
             Reference Set Members ({{refsetData?.memberCount}})
@@ -446,8 +450,8 @@
             </button>
         </div>
 
-        <br *ngIf="allowedToEdit" />
-        <span *ngIf="allowedToEdit">
+        <br *ngIf="allowedToEdit && showMembersSection" />
+        <span *ngIf="allowedToEdit && showMembersSection">
             <button mat-button [matMenuTriggerFor]="menu" [matMenuTriggerRestoreFocus]="false" class="manage-members-menu">Edit Members
                 <span class="down-arrow-for-menu">&#x25BC;</span></button>
             <mat-menu #menu="matMenu">

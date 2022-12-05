@@ -163,7 +163,10 @@ export class RefsetDetails implements OnInit {
     reviewNotesAdded = false;
     allowedToEdit = false;
     allowedToReview = false;
+    adminOverride = false;
+    adminOverrideText = '';
     showMembersSection = true;
+    noMemberSectionText = '';
     isLocked = false;
     stepperInfo: any = {};
     stepperStartInfo = {
@@ -249,6 +252,8 @@ export class RefsetDetails implements OnInit {
         this.editMode = false;
         this.isLocked = false;
         this.showFlag = true;
+        this.adminOverride = false;
+        this.adminOverrideText = '';
         this.refsetLoaded = new Subject<boolean>();
         this.refsetLoaded$ = this.refsetLoaded.asObservable();
         this.memberCacheLoaded = new Subject<boolean>();
@@ -342,24 +347,6 @@ export class RefsetDetails implements OnInit {
         this.cacheTaxonomyAncestors();
     }
 
-    isAdminOrAuthor() {
-
-        if (this?.user.roles.includes('all-all-admin') || this?.user.roles.includes('all-all-author')) {
-            return true
-        }
-
-        return false
-    }
-
-    isAdminOrReviewer() {
-
-        if (this?.user.roles.includes('all-all-admin') || this?.user.roles.includes('all-all-reviewer')) {
-            return true
-        }
-
-        return false
-    }
-
     loadRefset(): void {
 
         this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
@@ -374,8 +361,15 @@ export class RefsetDetails implements OnInit {
                 this.refsetService.setRefsetInformation(this.refsetData);
                 this.allowedToEdit = false;
                 this.allowedToReview = false;
-                this.showMembersSection = true;
                 this.changeDetectorRef.detectChanges();
+
+                if (this.refsetData.type === RefsetUtility.EXTERNAL) {
+                    
+                    this.showMembersSection = false;
+                    this.noMemberSectionText = 'The Reference Set members are not available here for external refsets.';
+                } else {
+                    this.showMembersSection = true;
+                }
 
                 if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT && this.refsetData?.roles?.includes('VIEWER')) ||
                     (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
@@ -504,6 +498,12 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
                 this.stepperInfo['IN_EDIT_STARTED'] = true;
 
+                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
+
+                    this.adminOverride = true;
+                    this.adminOverrideText = "Admin ";
+                }
+
             } else if (this.refsetStatus?.includes('READY_FOR_REVIEW')) {
 
                 this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
@@ -523,6 +523,12 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
                 this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
                 this.stepperInfo['IN_REVIEW_STARTED'] = true;
+
+                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
+
+                    this.adminOverride = true;
+                    this.adminOverrideText = "Admin ";
+                }
 
             } else if (this.refsetStatus?.includes('REVIEW_COMPLETED')) {
 
@@ -563,10 +569,12 @@ export class RefsetDetails implements OnInit {
                 this.allowedToReview = true;
 
             }
-
+            
             // if you aren't the assigned author of an IN_EDIT or IN_UPGRADE refset then you can't see the members
             if (this.refsetData.assignedUser != this.user.userName && ['IN_EDIT', 'IN_UPGRADE'].includes(this.refsetData?.workflowStatus)) {
+
                 this.showMembersSection = false;
+                this.noMemberSectionText = 'The Reference Set members are unavailable while another author is making changes.';
             }
         }
     }
