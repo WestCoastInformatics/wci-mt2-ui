@@ -34,18 +34,13 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 			// If this is a Type Key Value property
 			if (entry.hasOwnProperty('type') && (entry.hasOwnProperty('key') || entry.hasOwnProperty('name')) && entry.hasOwnProperty('value')) {
 
-				if (entry.type === 'status') {
 
 					const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
 					this.options.push(option);
-				} else {
 
-					const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value.charAt(0) + entry.value.slice(1).toLowerCase());
-					this.options.push(option);
-				}
 			} else {
 
-				const option: SelectEntry = new SelectEntry(this.optionNum++, entry.name.charAt(0) + entry.name.slice(1).toLowerCase());
+				const option: SelectEntry = new SelectEntry(this.optionNum++, entry.name);
 				this.options.push(option);
 			}
 		}
@@ -61,12 +56,16 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 	onParentModelChanged(parentModel: TextFilterModel): void {
 
 		if (!parentModel) {
-			this.selectedOption.value = '';
+			this.selectedOption = this.options[0];
 		} else {
-			if (!this.selectedOption) {
-				this.selectedOption = this.options.filter(opt => opt.value === parentModel.filter)[0];
+
+			let newFilterSelection = this.options.filter(opt => opt.value === parentModel.filter);
+
+			if (newFilterSelection.length > 0) {
+				this.selectedOption = newFilterSelection[0];
+			} else {
+				this.selectedOption = this.options[0];
 			}
-			this.selectedOption.value = parentModel.filter;
 		}
 	}
 }

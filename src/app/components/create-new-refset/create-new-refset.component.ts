@@ -404,8 +404,15 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     openEclBuilder(fieldId) {
-
         UiUtility.openEclBuilder(fieldId, this.inputProperties.project.edition.branch);
+    }
+
+    // This event handler gets called when the ecl builder dispatches the output event.
+    eclDefinitionChanged(event) {
+        // Fix for ecl builder returning ", " as a clause separator instead of " AND "
+        if (event != this.definitionClauses[0].value.replaceAll('|, ', '| AND ')) {
+                this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+        }
     }
 
     openInfoDialog() {

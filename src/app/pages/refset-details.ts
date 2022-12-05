@@ -163,7 +163,10 @@ export class RefsetDetails implements OnInit {
     reviewNotesAdded = false;
     allowedToEdit = false;
     allowedToReview = false;
+    adminOverride = false;
+    adminOverrideText = '';
     showMembersSection = true;
+    noMemberSectionText = '';
     isLocked = false;
     stepperInfo: any = {};
     stepperStartInfo = {
@@ -249,6 +252,8 @@ export class RefsetDetails implements OnInit {
         this.editMode = false;
         this.isLocked = false;
         this.showFlag = true;
+        this.adminOverride = false;
+        this.adminOverrideText = '';
         this.refsetLoaded = new Subject<boolean>();
         this.refsetLoaded$ = this.refsetLoaded.asObservable();
         this.memberCacheLoaded = new Subject<boolean>();
@@ -356,8 +361,15 @@ export class RefsetDetails implements OnInit {
                 this.refsetService.setRefsetInformation(this.refsetData);
                 this.allowedToEdit = false;
                 this.allowedToReview = false;
-                this.showMembersSection = true;
                 this.changeDetectorRef.detectChanges();
+
+                if (this.refsetData.type === RefsetUtility.EXTERNAL) {
+                    
+                    this.showMembersSection = false;
+                    this.noMemberSectionText = 'The Reference Set members are not available here for external refsets.';
+                } else {
+                    this.showMembersSection = true;
+                }
 
                 if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT && this.refsetData?.roles?.includes('VIEWER')) ||
                     (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
@@ -486,6 +498,12 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
                 this.stepperInfo['IN_EDIT_STARTED'] = true;
 
+                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
+
+                    this.adminOverride = true;
+                    this.adminOverrideText = "Admin ";
+                }
+
             } else if (this.refsetStatus?.includes('READY_FOR_REVIEW')) {
 
                 this.stepperInfo['READY_FOR_EDIT_COLOR'] = stepperClass;
@@ -505,6 +523,12 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['READY_FOR_REVIEW_STARTED'] = true;
                 this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
                 this.stepperInfo['IN_REVIEW_STARTED'] = true;
+
+                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
+
+                    this.adminOverride = true;
+                    this.adminOverrideText = "Admin ";
+                }
 
             } else if (this.refsetStatus?.includes('REVIEW_COMPLETED')) {
 
@@ -545,10 +569,12 @@ export class RefsetDetails implements OnInit {
                 this.allowedToReview = true;
 
             }
-
+            
             // if you aren't the assigned author of an IN_EDIT or IN_UPGRADE refset then you can't see the members
             if (this.refsetData.assignedUser != this.user.userName && ['IN_EDIT', 'IN_UPGRADE'].includes(this.refsetData?.workflowStatus)) {
+
                 this.showMembersSection = false;
+                this.noMemberSectionText = 'The Reference Set members are unavailable while another author is making changes.';
             }
         }
     }
@@ -594,6 +620,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
+                    comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
                 },
             ];
 
@@ -1006,7 +1033,8 @@ export class RefsetDetails implements OnInit {
                             'refset-tool-details-column-description',
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
-                        tooltipValueGetter: this.descriptionValueGetter
+                        tooltipValueGetter: this.descriptionValueGetter,
+                        comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
                     });
                 }
 
@@ -1256,7 +1284,9 @@ export class RefsetDetails implements OnInit {
         // reload the members grid
         //this.loadTaxonomy();
         this.getMemberCount();
-        this.onMembersGridReady(this.originalGridParams);
+        if (CodeUtility.hasValue(this.originalGridParams)) {
+            this.onMembersGridReady(this.originalGridParams);
+        }
         this.onTaxonomySearchGridReady(this.taxonomyGridParams);
         this.memberCacheLoaded = new Subject<boolean>();
 
@@ -1435,6 +1465,8 @@ export class RefsetDetails implements OnInit {
             headerText: `Inactivate Reference Set`,
             template: this.inactivateRefsetDialog,
             data: this.refsetData,
+            showCancel: false,
+            confirmText: 'OK',
         };
 
         this.dialog = this.dialogFactoryService.open(dialogData);
@@ -1457,10 +1489,13 @@ export class RefsetDetails implements OnInit {
                     (status) => {
 
                         if (status.status == 'convert') {
+
                             this.notificationService.show('The Reference Set has been converted to extensional.', null, 'success', {
                                 timeOut: 0,
                                 extendedTimeOut: 0
                             });
+
+                            this.processChangedMemberEffects(null);
                             this.loadRefset();
                             return;
                         } else if (status.error) {
@@ -1715,7 +1750,7 @@ export class RefsetDetails implements OnInit {
                     return value.colId !== 'actions' && value.colId !== 'add-remove';
                 }
             }).map(value => value.colId),
-            fileName: `Refset_${this.refsetId}_Members-Table_${new Date().toLocaleDateString()}.csv`, suppressQuotes: true
+            fileName: `Refset_${this.refsetId}_Members-Table_${CodeUtility.getReverseDate()}.csv`, suppressQuotes: true
         });
     }
 

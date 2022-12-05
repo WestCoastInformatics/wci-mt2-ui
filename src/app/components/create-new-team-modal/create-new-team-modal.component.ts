@@ -50,7 +50,7 @@ export class CreateNewTeamModalComponent {
     try {
 
       this.refsetUser = JSON.parse(sessionStorage.getItem('refset_user'));
-      this.members = [this.refsetUser.id];
+
     } catch (ex) {
       return null;
     }

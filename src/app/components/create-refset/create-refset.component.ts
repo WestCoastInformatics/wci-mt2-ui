@@ -94,6 +94,8 @@ export class CreateRefsetComponent implements OnInit {
     @ViewChild('existingConceptDialog') existingConceptDialog: TemplateRef<any>;
     @ViewChild('newConceptDialog') newConceptDialog: TemplateRef<any>;
     @ViewChild('externalDialog') externalDialog: TemplateRef<any>;
+    @ViewChild('availabilityDialog') availabilityDialog: TemplateRef<any>;
+    @ViewChild('publicationDialog') publicationDialog: TemplateRef<any>;
 
 
     constructor(
@@ -151,9 +153,7 @@ export class CreateRefsetComponent implements OnInit {
 
         this.resetModal();
 
-        if (this.inputProperties.project.edition.modules.length == 1) {
-            this.selectedModuleId = this.inputProperties.project.edition.modules[0];
-        }
+        this.selectedModuleId = this.inputProperties.project.edition.modules[0];
 
         if (this.editMode) {
             this.setupEditMode();
@@ -338,7 +338,6 @@ export class CreateRefsetComponent implements OnInit {
             };
 
             if (this.type === RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0) {
-                this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
                 params.definitionClauses = this.definitionClauses;
             }
             if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
@@ -416,7 +415,6 @@ export class CreateRefsetComponent implements OnInit {
         };
 
         if (this.selectedReferenceType === RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0) {
-            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
@@ -499,6 +497,16 @@ export class CreateRefsetComponent implements OnInit {
         this.detectChanges.detectChanges();
     }
 
+    // Handle the radio buttons for "within edition" and "local set"
+    checkPublishability(event: any): void {        
+
+        if (event.value == 'true') {
+            this.localSet = true;
+        } else {
+            this.localSet = false;
+        }
+    }
+
     add(event: MatChipInputEvent): void {
 
         const input = event.input;
@@ -557,8 +565,15 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     openEclBuilder(fieldId) {
-
         UiUtility.openEclBuilder(fieldId, this.inputProperties.project.edition.branch);
+    }
+
+    // This event handler gets called when the ecl builder dispatches the output event.
+    eclDefinitionChanged(event) {
+        // Fix for ecl builder returning ", " as a clause separator instead of " AND "
+        if (event != this.definitionClauses[0].value.replaceAll('|, ', '| AND ')) {
+                this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+        }
     }
 
     openInfoDialog(referenceType): void {
@@ -572,7 +587,11 @@ export class CreateRefsetComponent implements OnInit {
             confirmText: 'OK',
         };
 
-        if (referenceType === 'external') {
+        if (referenceType === 'availability') {
+            dialogData.template = this.availabilityDialog;
+        } else if (referenceType === 'publication') {
+            dialogData.template = this.publicationDialog;
+        } else if (referenceType === 'external') {
             dialogData.template = this.externalDialog;
         } else if (this.step === 3 && referenceType === 'existingConcept') {
             dialogData.template = this.existingConceptDialog;
@@ -661,4 +680,5 @@ export class CreateRefsetComponent implements OnInit {
             }
         });
     }
+
 }

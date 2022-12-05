@@ -219,6 +219,14 @@ nav a span {
   height: 50px !important;
 }
 
+.flex-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 300px !important;
+  max-width: 300px !important;
+}
+
 #bg-landing-footer {
   background-color: rgb(33, 37, 41) !important;
   font-weight: 300;
@@ -2621,6 +2629,18 @@ div.modal-footer.rt2-modal-footer {
   background-color: rgba(245, 245, 246, 1);
   padding: 28px !important;
   padding-top: 0px !important;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.create-new-project-modal-body {
+  background-color: rgba(245, 245, 246, 1);
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.rt2-modal-body {
+  background-color: rgba(245, 245, 246, 1);
   border-radius: 3px;
   font-size: 14px;
 }
@@ -5479,4 +5499,8 @@ app-date-text-floating-filter {
 
 .fs14 {
   font-size: 14pt;
+}
+
+.pointer {
+  cursor: pointer;
 }

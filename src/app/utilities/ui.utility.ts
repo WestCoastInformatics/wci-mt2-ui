@@ -244,7 +244,7 @@ export class UiUtility {
 		$('body').append('<ecl-builder id="ecl-builder" branch=' + branch + ' api-url="' + snowstormApiUrl + '" ecl-string="' + eclString + '"></ecl-builder>');
 
 		const eclBuilder = document.querySelector('ecl-builder');
-		eclBuilder.querySelector('input').focus();
+		//eclBuilder.querySelector('input').focus();
 
 		eclBuilder.addEventListener('output', (event: any) => {
 
@@ -419,7 +419,14 @@ export class UiUtility {
 					notification.onAction.subscribe(button => {
 
 						if (button.id == 'download') {
-							this.createMemberChangeReport(refsetId, notification, notificationService);
+
+							let changeType = "add";
+
+							if (description.includes("remove")) {
+								changeType = "remove";
+							}
+
+							this.createMemberChangeReport(refsetId, notification, notificationService, changeType);
 
 						} else if (button.id == 'view') {
 							this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
@@ -554,15 +561,21 @@ export class UiUtility {
 		checkIfFinished();
 	}
 
-	static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService): void {
+	static createMemberChangeReport(refsetId: string, notification: ActiveToast<any>, notificationService: NotificationService, changeType): void {
 
 		let memberStatuses = this.memberChangeData[refsetId].statuses;
-		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + this.memberChangeData[refsetId].refset + "_Member_Change_Report_" + CodeUtility.getReverseDate();
 
 		for (let memberStatus of memberStatuses) {
 
 			if (memberStatus.Status.includes('Failed')) {
-				memberStatus.Status = "Invalid ID";
+
+				if (changeType == 'add') {
+					memberStatus.Status = "Invalid ID";
+				} else {
+					memberStatus.Status = "Unable to remove ID";
+				}
+				
 			}
 		}
 
@@ -573,14 +586,14 @@ export class UiUtility {
 
 	static createInactiveChangeReport(refsetId: string, data): void {
 		console.log(data);
-		let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + refsetId + "__Inactive_Change_Report_" + CodeUtility.getReverseDate();
 
 		this.downloadFile(data, ['Inactivation Reason', 'Inactive ID', 'Inactive Concept', 'Suggested Replacement Association', 'Suggested Replacement ID', 'Suggested Replacement Concept'], fileName, false, false, false);
 	}
 
 	static createFinishedChangeReport(refsetId: string, data): void {
 
-		let fileName = "Refset_" + refsetId + "__Change_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + refsetId + "__Change_Report_" + CodeUtility.getReverseDate();
 
 		const headerObject = {
 			'newMemberTitle': ['New Members'],
@@ -598,7 +611,7 @@ export class UiUtility {
 
 	static createAuditReport(refsetId: string, data): void {
 
-		let fileName = "Refset_" + refsetId + "__Audit_Report_" + new Date().toLocaleDateString();
+		let fileName = "Refset_" + refsetId + "__Audit_Report_" + CodeUtility.getReverseDate();
 
 		const headerObject = {
 			'auditHeader': ['Date', 'Modified By', 'Message', 'Details'],
@@ -607,7 +620,7 @@ export class UiUtility {
 		this.downloadFile(data, headerObject, fileName, true, false, true);
 	}
 
-	static downloadFile(data, headerlist, fileName = 'download' + '_' + new Date().toLocaleDateString(), merge: boolean = false, isFinishedChangeReport = false, isAuditReport = false) {
+	static downloadFile(data, headerlist, fileName = 'download' + '_' + CodeUtility.getReverseDate(), merge: boolean = false, isFinishedChangeReport = false, isAuditReport = false) {
 
 		let csvData;
 

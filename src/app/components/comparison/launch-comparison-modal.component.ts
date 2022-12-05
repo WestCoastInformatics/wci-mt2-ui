@@ -87,7 +87,6 @@ export class LaunchComparisonModalComponent {
     this.selectedConcept = null;
     this.conceptDetail = null;
     this.conceptDetailParents = null;
-    this.conceptDetailParents = null;
     this.allowedToEdit = false;
     this.showLoadingSpinner = false;
     this.showTable = false;
@@ -106,22 +105,24 @@ export class LaunchComparisonModalComponent {
     }
 
     if (this.activeRefsetVersionOptions.length > 1) {
-
       this.activeRefsetVersionOptions.splice(selectedVersionDateIndex, 1);
       this.comparisonTypeSelected = 'same_refset';
     } else {
-
       this.activeRefsetVersionOptions = [];
       this.comparisonTypeSelected = 'different_refset';
     }
 
+    this.comparisonRefsetInternalId = this.activeRefsetVersionOptions[0]?.value;
     this.openedModel = this.modalService.open(comparisonLaunchDialog, { backdrop: 'static', keyboard: false, windowClass: 'launch-comparison-dialog', size: 'lg' });
   }
 
   comparisonSelectionChange(event: any): void {
-
     this.comparisonTypeSelected = event.value;
-    this.comparisonRefsetInternalId = null;
+    if (this.comparisonTypeSelected === 'different_refset') {
+        this.comparisonRefsetInternalId = this.comparisonRefsetVersionOptions[0]?.value;
+    } else {
+        this.comparisonRefsetInternalId = this.activeRefsetVersionOptions[0]?.value;
+    }
     this.comparisonRefsetVersionOptions = [];
     this.comparisonSearchInput = '';
     this.comparisonRefsetSelect = '';
@@ -163,6 +164,7 @@ export class LaunchComparisonModalComponent {
     const comparisonRefset = event.value;
     this.comparisonRefsetVersionOptions = RefsetUtility.getVersionOptions(comparisonRefset);
     this.comparisonRefsetName = comparisonRefset.name;
+    this.comparisonRefsetInternalId = this.comparisonRefsetVersionOptions[0]?.value;
   }
 
   checkComplete() {
@@ -627,7 +629,7 @@ export class LaunchComparisonModalComponent {
     comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
 
     const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
-      this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + new Date().toLocaleDateString();
+      this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + CodeUtility.getReverseDate();
 
     UiUtility.downloadFile(members, ['Concept ID', 'Concept Name', 'Reference Set Membership', 'Reference Set Name'], fileName);
   }
@@ -660,7 +662,7 @@ export class LaunchComparisonModalComponent {
 
     activeRefsetDate = activeRefsetDate.replace(' ', '_');
 
-    const fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + new Date().toLocaleDateString();
+    const fileName = 'Comparison_Change_Report_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_' + CodeUtility.getReverseDate();
 
     UiUtility.downloadFile(this.changeReportData, ['Concept ID', 'Concept Name', 'Operation'], fileName);
   }
@@ -682,5 +684,9 @@ export class LaunchComparisonModalComponent {
       "&edition=" +
       this.refsetBranchPath;
     window.open(snomedBrowserUrl);
+  }
+
+  getLatestVersion() {
+
   }
 }
