@@ -14,7 +14,7 @@
             <div class="col-md-auto">
                 <div class="dropdown">
                     <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
-                        <mat-label class="search-label">Search concepts and tags</mat-label>
+                        <mat-label class="search-label">Search by name, concept or tags</mat-label>
                         <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
                     </mat-form-field>
                     <span class="clear-search" (click)="clearSearch()">&#10005;</span>

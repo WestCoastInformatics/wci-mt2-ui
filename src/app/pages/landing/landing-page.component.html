@@ -30,7 +30,7 @@
             <li><a href="#watchSection">Watch</a></li>-->
             <li class="search">
                 <div class="search-form">
-                    <input type="text" placeholder="Search for reference sets by name, concept or metadata" [(ngModel)]="searchInput" (input)="onSearchChange()">
+                    <input type="text" placeholder="Search for reference sets by name, concept or tags" [(ngModel)]="searchInput" (input)="onSearchChange()">
                     <i class="fa fa-search" *ngIf="!showResults"></i>
                     <i class="fa fa-times" *ngIf="showResults" (click)="clearSearch()"></i>
                 </div>
