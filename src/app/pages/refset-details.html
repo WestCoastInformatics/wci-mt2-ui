@@ -140,16 +140,14 @@
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
 
                         <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
-                            (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false"
-                            class="refset-tool-action-button refset-action-button"
-                            aria-label="Delete In Development Version" ng-reflect-color="red"
-                            title="Removes in-development reference set leaving any prior published versions unchanged">
+                          (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false" class="refset-tool-action-button refset-action-button"
+                          aria-label="Delete In Development Version" ng-reflect-color="red"
+                          title="Removes in-development reference set leaving any prior published versions unchanged">
                             Delete In Development Version
                         </button>
 
-                        <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionList"
-                            (click)="openInactivateRefset()"
-                            title="Inactivate previously published reference set">
+                        <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionList" (click)="openInactivateRefset()"
+                          title="Inactivate previously published reference set">
                             Inactivate Reference Set
                         </button>
 
@@ -206,17 +204,17 @@
                       [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
                     <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
                       *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
-                      (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button mr-15 cancel-upgrade"
-                      aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+                      (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button mr-15 cancel-upgrade" aria-label="Cancel Upgrade"
+                      title="Cancel Upgrade" ng-reflect-color="red">
                         Cancel Upgrade
                     </button>
-                    <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT') && isAdminOrAuthor()" mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
-                      class="refset-tool-action-button refset-action-button mr-15" aria-label="Undo all changes since last save" title="Undo all changes since last save"
-                      ng-reflect-color="primary" (click)="openUndoEditModal(undoEditDialog)">
+                    <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT') && isAdminOrAuthor()" mat-raised-button color="primary" aria-hidden="false"
+                      #cancelEditButton class="refset-tool-action-button refset-action-button" aria-label="Undo all changes since last save"
+                      title="Undo all changes since last save" ng-reflect-color="primary" (click)="openUndoEditModal(undoEditDialog)">
                         Undo Changes
                     </button>
-                    <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT') && isAdminOrAuthor()" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
-                      class="refset-tool-action-button refset-action-button" aria-label="Save changes and finish edit" title="Save changes and finish edit"
+                    <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT') && isAdminOrAuthor()" mat-raised-button color="primary" aria-hidden="false"
+                      #finishEditButton class="refset-tool-action-button refset-action-button" aria-label="Save changes and finish edit" title="Save changes and finish edit"
                       ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
                         Save Changes
                     </button>
@@ -255,9 +253,9 @@
                       (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
                     </review-modal>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN') && isAdminOrReviewer()" #unassignButton mat-raised-button color="primary" aria-hidden="false"
-                      (click)="setWorkflowStatusByAction('', 'UNASSIGN')" class="refset-tool-action-button refset-action-button" aria-label="Unassign" title="Unassign"
-                      ng-reflect-color="primary">
+                    <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN') && isAdminOrReviewer()" #unassignButton mat-raised-button color="primary"
+                      aria-hidden="false" (click)="setWorkflowStatusByAction('', 'UNASSIGN')" class="refset-tool-action-button refset-action-button" aria-label="Unassign"
+                      title="Unassign" ng-reflect-color="primary">
                         Unassign
                     </button>
 
@@ -500,7 +498,7 @@
                                             <mat-form-field floatLabel="never" class="refset-tool-details-search-field">
                                                 <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
                                                 <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()"
-                                                    [disabled]="!membersReady" />
+                                                  [disabled]="!membersReady" />
                                             </mat-form-field>
                                             <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
                                             <button mat-raised-button color="primary" aria-hidden="false"
