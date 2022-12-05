@@ -96,8 +96,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
                         minWidth: 140,
                         resizable: false,
                         unSortIcon: true, 
-                        cellRenderer: 'templateRenderer', 
-                        cellRendererParams: { template: this.refsetIdSection }
                     },
                     {
                         field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name',
