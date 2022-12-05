@@ -15,7 +15,7 @@
                 <div class="dropdown">
                     <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
                         <mat-label class="search-label">Search concepts and tags</mat-label>
-                        <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (keyup)="onSearchChange()" (change)="onSearchChange()" />
+                        <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
                     </mat-form-field>
                     <span class="clear-search" (click)="clearSearch()">&#10005;</span>
 
@@ -47,8 +47,8 @@
             " [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
         </ag-grid-angular>
 
-        <app-pagination #directoryPaging [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-          [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh" [isDirectoryPage]="true">
+        <app-pagination #directoryPaging *ngIf="showTable" [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+          [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
         </app-pagination>
 
         <!-- Information Templates -->

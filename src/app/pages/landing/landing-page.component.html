@@ -50,6 +50,12 @@
         </app-pagination>
 
 
+        <!-- Refset ID Templates -->
+        <ng-template #directoryRefsetIdSection let-params>
+            {{params?.value}} || 
+            
+        </ng-template>
+
         <!-- Workflow Status Templates -->
         <ng-template #directoryWorkflowStatusSection let-params>
             <object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{

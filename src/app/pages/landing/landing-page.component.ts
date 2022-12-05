@@ -46,6 +46,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     numOfMembers: any;
     uiUtility = UiUtility;
 
+    @ViewChild('directoryRefsetIdSection') refsetIdSection: TemplateRef<any>;
     @ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
     @ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
@@ -94,7 +95,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
                         cellClass: 'refset-tool-directory-column-id',
                         minWidth: 140,
                         resizable: false,
-                        unSortIcon: true
+                        unSortIcon: true, 
+                        cellRenderer: 'templateRenderer', 
+                        cellRendererParams: { template: this.refsetIdSection }
                     },
                     {
                         field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name',
@@ -404,7 +407,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
         return params.data.versionStatus.toLowerCase();
     };
 
-    @Debounce(500)
+    @Debounce()
     onSearchChange() {
         this.searchInput = this.searchInput.trim();
         if ((!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) &&

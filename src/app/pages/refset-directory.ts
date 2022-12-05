@@ -46,7 +46,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     };
     refsetGridLastFilter = '';
     refsetGridLastSort = '';
-    refsetGridLastQuery = '';
     showTable = false;
     refsetData: any;
     dialog: DialogService;
@@ -150,8 +149,8 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                         suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
                         suppressPaginationPanel: true,
                         paginationPageSize: this.refsetGridPaging.pageSize,
-                        enableCellTextSelection: true,
                         rowSelection: 'single',
+                        enableCellTextSelection: true,
                         onCellClicked: this.onGridCellClick,
                         onGridReady: this.onGridReady,
                         frameworkComponents: {
@@ -159,17 +158,16 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                             'categoryFilterComponent': CategoryFilterComponent,
                             'dateTextFilterComponent': DateTextFilterComponent
                         },
-                        enableBrowserTooltips: true,
                         defaultColDef: {
                             sortable: true,
                             filter: true,
                             sortingOrder: ['asc', 'desc'],
                             floatingFilter: true,
-                            floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
+                            floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
                             suppressMenu: true,
-                            menuTabs: ['columnsMenuTab'],
                             resizable: true
                         },
+                        enableBrowserTooltips: true,
                         rowClassRules: {
                             'refset_tool_grid_inactive_row': function (params) {
 
@@ -203,13 +201,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
         this.originalGridParams = gridReadyParams;
         this.refsetGridApi = gridReadyParams.api;
+        this.refsetGridApi.setFilterModel(null);
         this.refsetGridColumnApi = gridReadyParams.columnApi;
         this.onResize(undefined);
 
         this.refsetGridApi.showLoadingOverlay();
-        let pageNumber = this.refsetGridApi.paginationGetCurrentPage() + 1;
         let query = '';
-        const filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
 
         if (this.selectedView === 'public') {
             query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
@@ -221,20 +218,10 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
         }
 
-        const newQueryString = query;
-        const newFilterString = filter;
-
-        // if the filters or sort have changed then move to the first page
-        if (newQueryString !== this.refsetGridLastQuery) {
-
-            pageNumber = 1;
-            this.refsetGridPaging.totalRows = null;
-            this.refsetGridPaging.totalKnown = false;
-            this.refsetGridApi?.api?.paginationGoToPage(0);
-        }
-
-        this.refsetGridLastFilter = newFilterString;
-        this.refsetGridLastQuery = newQueryString;
+        let pageNumber = 1;
+        this.refsetGridPaging.totalRows = null;
+        this.refsetGridPaging.totalKnown = false;
+        this.refsetGridApi?.api?.paginationGoToPage(0);
 
         const restParams: any = {
             displayType: 'list',
@@ -244,9 +231,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             countComments: true,
         };
 
-        if (CodeUtility.hasValue(this.refsetGridLastQuery)) {
-            this.refsetGridLastQuery = this.refsetGridLastQuery.replace(/\//g, '%2F').replace(/%/g, '%25');
-            restParams.query = this.refsetGridLastQuery;
+        if (CodeUtility.hasValue(query)) {
+            query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+            restParams.query = query;
         }
 
         this.refsetService.getRefsets({ ...restParams, }).subscribe({
@@ -348,6 +335,27 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             setTimeout(callback, ms);
         };
     })()
+
+    clearSearch() {
+
+        if (this.searchInput) {
+
+            this.searchInput = '';
+            this.onSearchChange();
+        }
+    }
+
+    @Debounce()
+    onSearchChange() {
+
+        this.searchInput = this.searchInput.trim();
+        if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+            this.delay(() => {
+                this.onGridReady(this.originalGridParams);
+            }, 1)
+        }
+    }
+
     //***** General Functions *****/
 
     openEclBuilder(fieldId) {
@@ -471,23 +479,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
                 refset.feedback = data.feedback;
             }
         });
-    }
-
-    clearSearch() {
-        if (this.searchInput) {
-            this.searchInput = '';
-            this.paginationComponent.setPageSize(10);
-        }
-    }
-
-    @Debounce()
-    onSearchChange() {
-        this.searchInput = this.searchInput.trim();
-        if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            this.delay(() => {
-                this.onGridReady(this.originalGridParams);
-            }, 500)
-        }
     }
 
     setFullNarrativeText(show: boolean): void {
