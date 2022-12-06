@@ -625,8 +625,8 @@ export class LaunchComparisonModalComponent {
       }
     });
 
-    activeRefsetDate = activeRefsetDate.replace(' ', '_');
-    comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
+    activeRefsetDate = activeRefsetDate.replace(' ', '_').replace('-','');
+    comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_').replace('-','');
 
     const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
       this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + CodeUtility.getReverseDate();

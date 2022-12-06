@@ -87,6 +87,28 @@
                     </div>
                 </div>    
 
+                <div *ngIf="step > 2 && selectedExternalUrl" class="create-new-refset-form-field create-new-refset-row-spacing">
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
+                        <label style="margin-bottom: 0.7rem;">Reference Set Name:</label>
+                    </div>
+                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+                        <mat-form-field appearance="none">
+                            <input style="cursor: default" matInput type="text" [(ngModel)]="selectedExternalName" disabled />
+                        </mat-form-field>
+                    </div>
+                </div>    
+
+                <div *ngIf="step > 2 && selectedExternalUrl" class="create-new-refset-form-field create-new-refset-row-spacing">
+                    <div class="col create-new-refset-label create-new-refset-flex-weight">
+                        <label style="margin-bottom: 0.7rem;">External URL:</label>
+                    </div>
+                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+                        <mat-form-field appearance="none">
+                            <input style="cursor: default" matInput type="text" [(ngModel)]="selectedExternalUrl" disabled />
+                        </mat-form-field>
+                    </div>
+                </div>    
+
 
                 <!-- End Meta Labels -->
                 <div class="wizard">
@@ -184,10 +206,10 @@
                         </div>
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
-                                <label style="margin-top: 1.7rem">External:<span class="mandatory-field">*</span>
+                                <label style="margin-top: 1.7rem">External URL:<span class="mandatory-field">*</span>
                                     <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false"
-                                          aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
-                                          ng-reflect-color="primary">
+                                          aria-label="Location of the external refset" title="Valid URL for the location of the refset or information about it."
+                                          ng-reflect-color="primary"> 
                                             <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
                                         </button></span>
                                 </label>
