@@ -502,8 +502,7 @@
                                         <div class="col-lg ml-3" style="padding-right: 115px;" [style.display]="membersTableDisplay">
                                             <mat-form-field floatLabel="never" class="refset-tool-details-search-field">
                                                 <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
-                                                <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()"
-                                                  [disabled]="!membersReady" />
+                                                <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
                                             </mat-form-field>
                                             <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
                                             <button mat-raised-button color="primary" aria-hidden="false"
@@ -520,7 +519,7 @@
                                             <mat-form-field floatLabel="never" class="refset-tool-details-search-field" *ngIf="showMembersSearchBar()">
                                                 <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
                                                 <input matInput id="detailsTaxonomySearchInput" [(ngModel)]="taxonomySearchInput" (input)="onTaxonomySearchChange()"
-                                                  [disabled]="!membersReady || !showMembersSearchBar()" />
+                                                  [disabled]="!showMembersSearchBar()" />
                                             </mat-form-field>
                                             <span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
                                             <button mat-raised-button color="primary" aria-hidden="false"

@@ -168,6 +168,8 @@ export class RefsetDetails implements OnInit {
     showMembersSection = true;
     noMemberSectionText = '';
     isLocked = false;
+    membersSearchCallArray = [];
+    taxonomySearchCallArray = [];
     stepperInfo: any = {};
     stepperStartInfo = {
         'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
@@ -764,6 +766,10 @@ export class RefsetDetails implements OnInit {
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
+
+        let searchTime = Date.now();
+        this.taxonomySearchCallArray.push(searchTime);
+
         this.taxonomySearchGridApi = gridReadyParams?.api;
         this.taxonomySearchGridColumnApi = gridReadyParams?.columnApi;
         this.taxonomyGridParams = gridReadyParams;
@@ -809,6 +815,11 @@ export class RefsetDetails implements OnInit {
 
         this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
             next: (results) => {
+
+                // if this is not the latest search call then do not apply the results
+                if (searchTime - this.taxonomySearchCallArray[this.taxonomySearchCallArray.length - 1] < 0) {
+                    return;
+                }
 
                 this.taxonomySearchNumberOfResults = results.total;
                 this.taxonomySearchResults = results.items;
@@ -928,6 +939,9 @@ export class RefsetDetails implements OnInit {
     // ***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
 
+        let searchTime = Date.now();
+        this.membersSearchCallArray.push(searchTime);
+
         this.originalGridParams = gridReadyParams;
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
@@ -983,6 +997,11 @@ export class RefsetDetails implements OnInit {
 
         this.refsetService.getConceptList(this.id, restParams).subscribe({
             next: (results) => {
+
+                // if this is not the latest search call then do not apply the results
+                if (searchTime - this.membersSearchCallArray[this.membersSearchCallArray.length - 1] < 0) {
+                    return;
+                }
 
                 const data = results.items;
                 this.membersGridData = data;

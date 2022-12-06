@@ -62,6 +62,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     numOfMembers: any;
     disableChannel = new BroadcastChannel('disable-button-channel');
     originalGridParams: any;
+    searchCallArray = [];
     uiUtility = UiUtility;
 
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -199,6 +200,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
 
+        let searchTime = Date.now();
+        this.searchCallArray.push(searchTime);
+
         this.originalGridParams = gridReadyParams;
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridApi.setFilterModel(null);
@@ -238,6 +242,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
         this.refsetService.getRefsets({ ...restParams, }).subscribe({
             next: (results) => {
+
+                // if this is not the latest search call then do not apply the results
+                if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
+                    return;
+                }
+
                 const data = results.items;
                 this.refsetData = data;
                 this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
@@ -328,14 +338,6 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
         this.onGridReady(this.originalGridParams);
     }
 
-    delay = (function () {
-        var timer = 0;
-        return function (callback, ms) {
-            clearTimeout(timer);
-            setTimeout(callback, ms);
-        };
-    })()
-
     clearSearch() {
 
         if (this.searchInput) {
@@ -349,10 +351,9 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     onSearchChange() {
 
         this.searchInput = this.searchInput.trim();
+
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            this.delay(() => {
-                this.onGridReady(this.originalGridParams);
-            }, 1)
+            this.onGridReady(this.originalGridParams);
         }
     }
 
