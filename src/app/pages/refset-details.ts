@@ -367,6 +367,7 @@ export class RefsetDetails implements OnInit {
                     
                     this.showMembersSection = false;
                     this.noMemberSectionText = 'The Reference Set members are not available here for external refsets.';
+                    this.membersReady = true;
                 } else {
                     this.showMembersSection = true;
                 }
@@ -575,6 +576,7 @@ export class RefsetDetails implements OnInit {
 
                 this.showMembersSection = false;
                 this.noMemberSectionText = 'The Reference Set members are unavailable while another author is making changes.';
+                this.membersReady = true;
             }
         }
     }

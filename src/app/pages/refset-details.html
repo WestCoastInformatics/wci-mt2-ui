@@ -204,10 +204,10 @@
                       [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
                     <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
-                      *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR')"
+                      *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
                       (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button mr-15 cancel-upgrade" aria-label="Cancel Upgrade"
                       title="Cancel Upgrade" ng-reflect-color="red">
-                        Cancel Upgrade
+                      {{ adminOverrideText }} Cancel Upgrade
                     </button>
                     <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')" mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
                       class="refset-tool-action-button refset-action-button mr-15" aria-label="Undo all changes since last save" title="Undo all changes since last save"
