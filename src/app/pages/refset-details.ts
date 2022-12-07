@@ -1108,6 +1108,7 @@ export class RefsetDetails implements OnInit {
                 this.membersGridApi.showNoRowsOverlay();
                 this.membersGridApi.setRowData([]);
                 this.toggleLoadingSpinner(false);
+                this.membersReady = true;
             }
 
         });
