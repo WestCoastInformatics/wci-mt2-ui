@@ -233,7 +233,7 @@
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field appearance="fill">
 
-                                    <mat-select (selectionChange)="copyRefsetSelected($event)" [(ngModel)]="copyRefsetSelect" placeholder="Type here to search Reference Sets">
+                                    <mat-select (selectionChange)="copyRefsetSelected($event)" [(ngModel)]="selectedCopyRefset" placeholder="Type here to search Reference Sets">
 
                                         <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="copySearchInput"
                                           (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
@@ -250,6 +250,15 @@
 
                                     </mat-select>
                                 </mat-form-field>
+
+                                <mat-form-field [hidden]="copyRefsetVersionOptions.length == 0" appearance="legacy">
+
+                                    <mat-select [(ngModel)]="copyRefsetInternalId" (selectionChange)="copyCheckComplete()">
+                                        <mat-option *ngFor="let option of copyRefsetVersionOptions" [value]="option.value">{{ option.display }}</mat-option>
+                                    </mat-select>
+
+                                </mat-form-field>
+
                             </div>
                         </div>
 

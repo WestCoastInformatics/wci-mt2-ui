@@ -139,12 +139,9 @@ export class LaunchComparisonModalComponent {
   }
 
   comparisonSelectionChange(event: any): void {
+
     this.comparisonTypeSelected = event.value;
-    if (this.comparisonTypeSelected === 'different_refset') {
-        this.comparisonRefsetInternalId = this.comparisonRefsetVersionOptions[0]?.value;
-    } else {
-        this.comparisonRefsetInternalId = this.activeRefsetVersionOptions[0]?.value;
-    }
+    this.comparisonRefsetInternalId = null;
     this.comparisonRefsetVersionOptions = [];
     this.comparisonSearchInput = '';
     this.comparisonRefsetSelect = '';
@@ -182,7 +179,6 @@ export class LaunchComparisonModalComponent {
   }
 
   comparisonRefsetSelected(event) {
-
     const comparisonRefset = event.value;
     this.comparisonRefsetVersionOptions = RefsetUtility.getVersionOptions(comparisonRefset);
     this.comparisonRefsetName = comparisonRefset.name;
@@ -438,7 +434,7 @@ export class LaunchComparisonModalComponent {
     // Disable intensional refset comparison while in edit/upgrade/review
     if (this.activeRefset?.type === 'INTENSIONAL' && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
       return true
-    } 
+    }
     // Disable any  refset comparison while in edit/upgrade/review except for the currently assigned user
     if (this.currentUser.userName !== this.activeRefset?.assignedUser && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
       return true
@@ -454,7 +450,7 @@ export class LaunchComparisonModalComponent {
     // Disable intensional refset comparison while in edit/upgrade/review
     if (this.activeRefset?.type === 'INTENSIONAL' && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
       return 'Compare not available for Intensional reference set while being edited, upgraded, or reviewed';
-    } 
+    }
     return null;
   }
 

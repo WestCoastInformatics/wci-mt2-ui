@@ -38,6 +38,7 @@ export class CreateRefsetComponent implements OnInit {
     createdMetaDataConcept = '';
     copyRefsetVersionOptions: any[];
     copySearchInput: string;
+    copyRefsetInternalId: string;
     refsetOptions: any[];
     refsetOptionsLoading = false;
     selectedParentConcept = undefined;
@@ -147,7 +148,7 @@ export class CreateRefsetComponent implements OnInit {
         return this.step === 1 && !this.selectedReferenceType
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.EXTERNAL && (this.selectedExternalName?.length === 0 || !this.externalUrlValid))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.INTENSIONAL && (this.definitionClauses?.length === 0 || this.definitionClauses[0]?.value === ''))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && !this.selectedCopyRefset)
+            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset  || !this.copyRefsetInternalId))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COMBINATION && (this.selectedCombinationRefsets?.length === 0));
     }
 
@@ -265,6 +266,7 @@ export class CreateRefsetComponent implements OnInit {
         this.step = 1;
         this.copyRefsetVersionOptions = [];
         this.copySearchInput = '';
+        this.copyRefsetInternalId = undefined;
         this.refsetOptions = [];
         this.refsetOptionsLoading = false;
         this.selectedCopyRefset = '';
@@ -589,6 +591,7 @@ export class CreateRefsetComponent implements OnInit {
 
       this.refsetOptionsLoading = true;
       this.refsetOptions = [];
+      this.copyRefsetInternalId = null;
       this.copyRefsetVersionOptions = [];
 
       this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
@@ -604,8 +607,13 @@ export class CreateRefsetComponent implements OnInit {
 
     copyRefsetSelected(event) {
         const copyRefset = event.value;
+        this.copyRefsetVersionOptions = RefsetUtility.getVersionOptions(copyRefset);
         this.selectedCopyRefsetName = copyRefset.name;
-        this.selectedCopyRefset = event.value;
+        this.copyRefsetInternalId = this.copyRefsetVersionOptions[0]?.value;
+    }
+
+    copyCheckComplete() {
+        return this.selectedCopyRefset != null;
     }
 
     showFlagIcon(event, show) {
