@@ -2,9 +2,11 @@
     <img src="assets/import-file-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
 </button> -->
 
-<button mat-menu-item (click)="openImportFromFileModal(importFromFileDialog)"
-  alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file">Import
-  from File</button>
+<button mat-button  (click)="openImportFromFileModal(importFromFileDialog)"
+  title="Import File" aria-label="Import file" class="manage-refset-menu">
+  Import from File</button>
+
+  
 
 <ng-template #importFromFileDialog let-modal>
 

@@ -830,6 +830,9 @@ export class AdjudicateUpgradeModalComponent {
 			}
 		}
 
+		// Sort by referencedComponentId
+		newMembers = newMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
+
 
 		// Get new members from inactive concepts
 		inactiveConcepts = [];
@@ -843,6 +846,9 @@ export class AdjudicateUpgradeModalComponent {
 			if (!Boolean(oldMembers.some((x) => {
 				return x['Old Member ID'] === concept.code;
 			}))) {
+				if (oldMembers.length > 0 && oldMembers.find(item => item.id === concept.memberId)) {
+					continue
+				}
 				oldMembers.push({
 					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
@@ -873,6 +879,9 @@ export class AdjudicateUpgradeModalComponent {
 				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].replacementConcepts[0].descriptions)[0].term
 			});
 		}
+
+		// Sort by Inactive Concept ID
+		totalInactiveConcepts = totalInactiveConcepts.sort((a, b) => (a['Inactive Concept ID'] > b['Inactive Concept ID']) ? 1 : -1)
 
 		// Get members in common
 		const membersInCommonItems = this.membersOfRefset;

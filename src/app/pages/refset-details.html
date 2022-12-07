@@ -450,22 +450,24 @@
         </div>
 
         <br *ngIf="allowedToEdit && showMembersSection" />
-        <span *ngIf="allowedToEdit && showMembersSection">
-            <button mat-button [matMenuTriggerFor]="menu" [matMenuTriggerRestoreFocus]="false" class="manage-members-menu">Edit Members
-                <span class="down-arrow-for-menu">&#x25BC;</span></button>
-            <mat-menu #menu="matMenu">
-                <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
-                  [processChangedMemberFunction]="processChangedMemberEffects">
-                </import-from-file-modal>
+        <span class="edit-member-section" *ngIf="allowedToEdit && showMembersSection">
+            <!-- <button mat-button [matMenuTriggerFor]="menu" [matMenuTriggerRestoreFocus]="false" class="manage-members-menu">Edit Members
+                <span class="down-arrow-for-menu">&#x25BC;</span>
+            </button> -->
+            <!-- <mat-menu #menu="matMenu">
 
-                <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
-                  (changeLockedStatus)="changeLockedStatus($event)">
-                </import-from-list-modal>
+            </mat-menu> -->
+            <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
+                [processChangedMemberFunction]="processChangedMemberEffects">
+            </import-from-file-modal>
 
-                <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
-                  [processChangedMemberFunction]="processChangedMemberEffects">
-                </add-remove-by-concept-modal>
-            </mat-menu>
+            <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
+                (changeLockedStatus)="changeLockedStatus($event)">
+            </import-from-list-modal>
+
+            <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
+            [processChangedMemberFunction]="processChangedMemberEffects">
+            </add-remove-by-concept-modal>
         </span>
         <br>
         <!-- Member Concepts Section -->

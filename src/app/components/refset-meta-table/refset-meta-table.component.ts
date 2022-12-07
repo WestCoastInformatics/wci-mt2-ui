@@ -23,6 +23,14 @@ export class RefsetMetaTableComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    getEditionUrl() {
+        return `${window.location.origin}/organizations/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects`
+    }
+
+    getProjectUrl() {
+        return `${window.location.origin}/organization/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects/${this.refset?.projectId}/refsets`
+    }
+
     setDescriptions(refsetData: any): Array<string> {
         return refsetData?.descriptions;
     }

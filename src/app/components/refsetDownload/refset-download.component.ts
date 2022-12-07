@@ -35,6 +35,9 @@ export class RefsetDownloadComponent {
   dialog: DialogService;
   disableChannel = new BroadcastChannel('disable-button-channel');
   guestFreesetRefsets = ['787778008'];
+  currentUser: any;
+  disableDownload: boolean = false;
+  disableTitle: string = null;
 
   @Input() refset;
   @Input() refsets;
@@ -54,6 +57,18 @@ export class RefsetDownloadComponent {
     this.refsetsExportableAsFreeset = environment.refsetsExportableAsFreeset.split(',');
   }
 
+  ngOnInit(): void {
+    this.currentUser = this.authenticationService.getUser();
+  }
+
+  ngOnChanges(): void {
+    if (this.refset && this.currentUser) {
+      this.disableDownload = this.getDisableDownload();
+      if (this.disableDownload) {
+        this.disableTitle = 'Download is not available while the reference set is being worked on by another user.';
+      }
+    }
+  }
   // ***** General Functions *****/
   openDownload(refsetId: string) {
 
@@ -210,6 +225,11 @@ export class RefsetDownloadComponent {
       }
     });
   }
+
+  getDisableDownload() {
+    return (this.currentUser.userName !== this.refset?.assignedUser && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.refset?.workflowStatus));
+  }
+
 
   //**** For downloading all refsets for a project******/
   openProjectRefsetDownload(projectId: string, refsets: Array<any>) {

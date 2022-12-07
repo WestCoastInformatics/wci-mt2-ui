@@ -47,6 +47,11 @@ export class ColumnChooserComponent {
 
             for (let column of this.gridColumnApi?.columnController?.columnDefs) {
 
+                // Just remove the add-remove option from the dropdown
+                if (column.colId === 'add-remove') {
+                    continue;
+                }
+
                 let columnData: any = {};
 
                 if (!column.colId) {

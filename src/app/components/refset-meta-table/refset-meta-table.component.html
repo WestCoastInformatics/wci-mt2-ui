@@ -36,7 +36,7 @@
                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                        {{refset?.editionName}}
+                        <a href="{{getEditionUrl()}}">{{refset?.editionName}}</a>&nbsp;
                         <img *ngIf="refset?.flagIcon != null && showFlag"
                             (error)="showFlagIcon(false)" src="{{refset?.flagIcon}}"
                             class="refset-tool-edition-flag" title="{{refset?.editionName}} Flag"
@@ -100,7 +100,7 @@
                     <td class="
                                             refset-tool-refset-metadata-value
                                         ">
-                        {{refset?.project?.name}}
+                        <a href="{{getProjectUrl()}}">{{refset?.project?.name}}</a>
                     </td>
                 </tr>
 

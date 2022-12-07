@@ -1063,6 +1063,12 @@ select {
   line-height: 0px !important;
 }
 
+.edit-member-section {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+}
+
 // Taxonomy Styles
 .refset-tool-taxonomy {
 
@@ -2625,6 +2631,10 @@ div.modal-footer.rt2-modal-footer {
   padding-top: 0px !important;
   border-radius: 3px;
   font-size: 14px;
+}
+
+.disable-menu-btn {
+  cursor: not-allowed !important;
 }
 
 .create-new-project-modal-body {

@@ -13,6 +13,9 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
 import { environment } from 'src/environments/environment';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
   selector: 'app-launch-comparison-modal',
@@ -48,6 +51,7 @@ export class LaunchComparisonModalComponent {
   isConceptBeingAdded: boolean;
   addRemoveDefinitionExceptionType: string;
   changeReportData: any[];
+  currentUser: any;
 
   selectedConcept: any;
   conceptDetail: any;
@@ -59,6 +63,9 @@ export class LaunchComparisonModalComponent {
   };
   taxonomyManualStateRefresh = new Boolean(false);
   taxonomyNumberOfChildren: number;
+  dialog: DialogService;
+  disableCompare: boolean = false;
+  disableTitle: String = null;
 
   @Input() activeRefset: any;
   @Input() isDetailPage: boolean;
@@ -74,7 +81,22 @@ export class LaunchComparisonModalComponent {
     readonly refsetService: RefsetService,
     private readonly router: Router,
     private readonly notificationService: NotificationService,
+    private dialogFactoryService: DialogFactoryService,
+    private readonly authService: AuthenticationService,
     readonly refsetDetails: RefsetDetails) {
+  }
+
+  ngOnInit(): void {
+    this.currentUser = this.authService.getUser();
+  }
+
+  ngOnChanges(): void {
+    if (this.activeRefset && this.currentUser) {
+      this.disableCompare = this.getDisableCompare();
+      if (this.disableCompare) {
+        this.disableTitle = this.getDisableTitle();
+      }
+    }
   }
 
   openLaunchModal(comparisonLaunchDialog: NgbModal) {
@@ -410,6 +432,30 @@ export class LaunchComparisonModalComponent {
     this.refsetService.getConceptList(this.activeRefset.id, restParams).subscribe((results) => {
       this.conceptDetailParents = results.items;
     });
+  }
+
+  getDisableCompare(): boolean {
+    // Disable intensional refset comparison while in edit/upgrade/review
+    if (this.activeRefset?.type === 'INTENSIONAL' && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return true
+    } 
+    // Disable any  refset comparison while in edit/upgrade/review except for the currently assigned user
+    if (this.currentUser.userName !== this.activeRefset?.assignedUser && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return true
+    }
+    return false
+  }
+
+  getDisableTitle(): String {
+    // Disable any  refset comparison while in edit/upgrade/review except for the currently assigned user
+    if (this.currentUser.userName !== this.activeRefset?.assignedUser && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return 'Compare is not available while the reference set is being worked on by another user.';
+    }
+    // Disable intensional refset comparison while in edit/upgrade/review
+    if (this.activeRefset?.type === 'INTENSIONAL' && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return 'Compare not available for Intensional reference set while being edited, upgraded, or reviewed';
+    } 
+    return null;
   }
 
   closeConceptDetails() {

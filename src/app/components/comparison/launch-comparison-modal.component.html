@@ -1,5 +1,8 @@
-<button mat-button class="manage-refset-menu" (click)="openLaunchModal(comparisonLaunchDialog)">
+<button *ngIf="!disableCompare" mat-button class="manage-refset-menu" (click)="openLaunchModal(comparisonLaunchDialog)">
 	Compare
+</button>
+<button *ngIf="disableCompare" [title]="disableTitle" mat-button class="manage-refset-menu disable-menu-btn">
+    Compare
 </button>
 
 <ng-template #comparisonLaunchDialog let-modal>
@@ -432,3 +435,4 @@
   [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" [processChangedMemberFunction]="processChangedMemberEffects"
   (changeLockedStatus)="indicateChanges($event)" (processChangedMemberEffects)="processChangedMemberEffects($event)">
 </add-remove-concepts>
+
