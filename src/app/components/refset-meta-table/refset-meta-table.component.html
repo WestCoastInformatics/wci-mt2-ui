@@ -15,7 +15,7 @@
 
                     {{refset?.refsetId}}
                     <mat-icon *ngIf="refset?.privateRefset" aria-hidden="false" #directoryPrivateIcon
-                        class="refset-tool-table-action-icon refset-id-icons text-muted" aria-label="Private Refset" title="Private Refset">
+                        class="refset-tool-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
                         lock
                     </mat-icon>
                     <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="refset-tool-table-action-icon refset-id-icons text-muted" aria-label="Local Set"
@@ -187,6 +187,16 @@
                                             refset-tool-refset-metadata-value
                                         ">
                         {{toTitleCase(refset?.versionStatus)}}
+                    </td>
+                </tr>
+
+                <tr *ngIf="refset?.type != 'EXTERNAL'">
+                    <td class="refset-tool-refset-metadata-label" aria-label="Publishing">
+                        Publishing:
+                    </td>
+                    <td class="refset-tool-refset-metadata-value">
+                        <span *ngIf="refset?.localSet">Local Set</span>
+                        <span *ngIf="!refset?.localSet">Within Edition</span>
                     </td>
                 </tr>
 

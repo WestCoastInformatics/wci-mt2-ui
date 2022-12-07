@@ -447,7 +447,7 @@
                         <!-- Publishability -->
                         <div *ngIf="selectedReferenceType != 'EXTERNAL'" class="create-new-refset-form-field">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
-                                <label>Publication:</label>
+                                <label>Publishing:</label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-radio-group>
@@ -539,7 +539,7 @@
 </ng-template>
 
 <ng-template #availabilityDialog let-data>
-    If Private, only members of the project may access the reference set.
+    If Private, only authorized users and teams of the project may access the reference set.
 </ng-template>
 
 <ng-template #publicationDialog let-data>

@@ -389,16 +389,22 @@
                 </div>
 
 
-                <div class="create-new-refset-form-field">
+                <div *ngIf="selectedReferenceType != 'EXTERNAL'" class="create-new-refset-form-field">
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
-                        <label>Publishability:</label>
+                        <label>Publishing:</label>
                     </div>
                     <div class="col create-new-refset-field create-new-refset-flex-weight">
-                        <mat-checkbox [(ngModel)]="localSet">Local Set</mat-checkbox>
+                        <mat-radio-group>
+                            <mat-radio-button class="refset-radio create-refset-radio-button"
+                              (change)="checkPublishability($event)" value="false" [checked]="!localSet">Within Edition</mat-radio-button>
+
+                              <mat-radio-button class="ml-15 refset-radio create-refset-radio-button"
+                              (change)="checkPublishability($event)" value="true" [checked]="localSet">Local Set</mat-radio-button>                              
+                        </mat-radio-group>
                     </div>
                 </div>
 
-                <div *ngIf="editMode" class="create-new-refset-form-field">
+                <div *ngIf="editMode" class="create-new-refset-form-field mt-10">
                     <div class="col create-new-refset-label create-new-refset-flex-weight">
                         <label>Version Notes:</label>
                     </div>
