@@ -445,7 +445,7 @@
                         </div>
                         <!-- End Availability -->
                         <!-- Publishability -->
-                        <div class="create-new-refset-form-field">
+                        <div *ngIf="selectedReferenceType != 'EXTERNAL'" class="create-new-refset-form-field">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
                                 <label>Publication:</label>
                             </div>
