@@ -4,8 +4,7 @@
 
         <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
             <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
-            <span class="title text-ghost-grey refset-tool-nav-title">Reference Set Tool
-                <b>(BETA)</b></span>
+            <span class="title text-ghost-grey refset-tool-nav-title">SNOMED CT Reference Set Tool 2.0</span>
         </a>
 
         <div class="refset-tool-breadcrumb-bar text-ghost-grey"
@@ -77,11 +76,23 @@
         </div>
     </div>
 </nav>
-<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark p-2 pr-2" id="bg-landing-header">
-    <a class="logo" routerlink="/">
-        <img class="logo p-0" src="assets/small_logo.png" alt="Logo">
-        <span class="title header-title">SNOMED CT Reference Set Tool 2.0</span>
-    </a>
+<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;" id="bg-landing-header">
+    <div class="refset-tool-nav-item-row">
+
+        <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
+            <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
+            <span class="title text-ghost-grey refset-tool-nav-title">SNOMED CT Reference Set Tool 2.0</span>
+        </a>
+
+        <ng-container [ngSwitch]="environment">
+            <div *ngSwitchCase="'local'" class="banner text-white local"></div>
+            <div *ngSwitchCase="'dev'" class="banner text-white dev"></div>
+            <div *ngSwitchCase="'uat'" class="banner text-white uat"></div>
+            <div *ngSwitchCase="'training'" class="banner text-white training"></div>
+            <div *ngSwitchDefault class="banner text-white d-none"></div>
+        </ng-container>
+
+    </div>
     <div class="directory-nav" style="margin-left: auto; margin-right: 0;" (click)="navigateToRoute('/library')">
         <img class="directory-icon" src="/assets/directory-icon.svg">
         <span class="directory-icon-label">Library</span>
