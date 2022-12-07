@@ -13,6 +13,7 @@ import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
 
 @Component({
     selector: 'create-refset',
@@ -26,7 +27,7 @@ export class CreateRefsetComponent implements OnInit {
     addOnBlur = true;
     selectedRadioButton = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    isSelected = 0;
+    isSelected = 1;
     step = 1;
     selectedMetaDataConcept: any;
     selectedCopyRefset: any;
@@ -35,6 +36,10 @@ export class CreateRefsetComponent implements OnInit {
     selectedExternalName = '';
     selectedExternalUrl = '';
     createdMetaDataConcept = '';
+    copyRefsetVersionOptions: any[];
+    copySearchInput: string;
+    refsetOptions: any[];
+    refsetOptionsLoading = false;
     selectedParentConcept = undefined;
     selectedNarrative = '';
     selectedModuleId = '';
@@ -258,6 +263,11 @@ export class CreateRefsetComponent implements OnInit {
         this.localSet = false;
         this.conceptError = '';
         this.step = 1;
+        this.copyRefsetVersionOptions = [];
+        this.copySearchInput = '';
+        this.refsetOptions = [];
+        this.refsetOptionsLoading = false;
+        this.selectedCopyRefset = '';
 
     }
 
@@ -484,21 +494,11 @@ export class CreateRefsetComponent implements OnInit {
     checkRadioButtonValue(event: any): void {
 
         this.isSelected = event.value;
-
-        if (event.value === '1') {
-
-            this.createdMetaDataConcept = '';
-            this.selectedParentConcept = '';
-
-        } else if (event.value === '2') {
-            this.selectedMetaDataConcept = '';
-        }
-
         this.detectChanges.detectChanges();
     }
 
     // Handle the radio buttons for "within edition" and "local set"
-    checkPublishability(event: any): void {        
+    checkPublishability(event: any): void {
 
         if (event.value == 'true') {
             this.localSet = true;
@@ -576,6 +576,42 @@ export class CreateRefsetComponent implements OnInit {
         }
     }
 
+    async onSearchChange(value): Promise<void> {
+        await this.search(value);
+    }
+
+    handleInput(event: KeyboardEvent): void {
+        event.stopPropagation();
+    }
+
+    @Debounce()
+    search(query: string): void {
+
+      this.refsetOptionsLoading = true;
+      this.refsetOptions = [];
+      this.copyRefsetVersionOptions = [];
+
+      this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
+        this.refsetOptions = results.items.filter((item) => item.refsetId !== this.refsetId);
+
+        for (const option of this.refsetOptions) {
+          option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+        }
+
+        this.refsetOptionsLoading = false;
+      });
+    }
+
+    copyRefsetSelected(event) {
+        const copyRefset = event.value;
+        this.selectedCopyRefsetName = copyRefset.name;
+        this.selectedCopyRefset = event.value;
+    }
+
+    showFlagIcon(event, show) {
+        event.target.style.display = (show) ? 'inline' : 'none';
+    }
+
     openInfoDialog(referenceType): void {
         const dialogId = 'infoDialog';
 
@@ -644,7 +680,7 @@ export class CreateRefsetComponent implements OnInit {
             if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
                 this.type = RefsetUtility.EXTERNAL;
             }
-            if (this.selectedReferenceType === RefsetUtility.COPY && this.selectedCopyRefset?.name.length > 0) {
+            if (this.selectedReferenceType === RefsetUtility.COPY && this.selectedCopyRefset) {
                 this.getRefset();
             }
             if (this.selectedReferenceType === RefsetUtility.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
@@ -665,7 +701,7 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     getRefset(): void {
-        this.createdMetaDataConcept = 'Clone of ' + this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
+        this.createdMetaDataConcept = 'Copy of ' + this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
         this.refsetService.getRefset(this.selectedCopyRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.selectedCopyRefset)).subscribe({
             next: (results) => {
                 this.selectedNarrative = results?.narrative;
