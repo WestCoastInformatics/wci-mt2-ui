@@ -170,6 +170,8 @@ export class RefsetDetails implements OnInit {
     isLocked = false;
     membersSearchCallArray = [];
     taxonomySearchCallArray = [];
+    uiUtility = UiUtility;
+    localsetPublishValid = true;
     stepperInfo: any = {};
     stepperStartInfo = {
         'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
@@ -194,6 +196,7 @@ export class RefsetDetails implements OnInit {
     @ViewChild('convertRefsetDialog') convertRefsetDialog: TemplateRef<any>;
     @ViewChild('refsetVersionNotes') refsetVersionNotes: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
+    @ViewChild('publishLocalsetDialog') publishLocalsetDialog: TemplateRef<any>;
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
     @ViewChild('detailsMembersTaxonomy') taxonomyMembersComponent: TaxonomyTreeComponent;
@@ -1206,6 +1209,55 @@ export class RefsetDetails implements OnInit {
                 this.toggleLoadingSpinner(false);
             }
         });
+    }
+
+    openPublishLocalsetModal = () => {
+        
+        this.localsetPublishValid = true;
+        
+        this.modalService.open(this.publishLocalsetDialog, {
+            windowClass: 'ready-for-publication-modal',
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    publishLocalset = (versionDate: string) => {
+
+        if (!this.validatePublishDate(versionDate)) {
+
+            this.localsetPublishValid = false;
+            return;
+        }
+
+        this.toggleLoadingSpinner(true);
+
+        this.refsetService.publishLocalset(this.refsetData.id, versionDate).subscribe({
+            next: (results) => {
+
+                if (results) {
+                    this.loadNewRefsetVersion(results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results));
+                }
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
+            }
+        });
+
+        this.modalService.dismissAll();
+    }
+
+    validatePublishDate = (date: string) => {
+
+        let a = CodeUtility.DATE_FORMAT_REVERSE_ONLY_NUMBERS;
+        let b = RefsetUtility.EXCLUSION;
+        let c = UiUtility.getIconImageUrl("test");
+
+        if (date == "" || !CodeUtility.isDateValid(date) || CodeUtility.compareDates(date, "2000-01-01", CodeUtility.DATE_FORMAT_REVERSE) < 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     deleteDevelopmentVersion() {

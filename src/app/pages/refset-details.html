@@ -271,10 +271,9 @@
                         Withdraw Request
                     </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('REFSET_PUBLISHED')" #complete Publication mat-raised-button color="primary" aria-hidden="false"
-                      (click)="setWorkflowStatusByAction('', 'REFSET_PUBLISHED')" class="refset-tool-action-button refset-action-button" aria-label="Complete Publication"
-                      title="Complete Publication" ng-reflect-color="primary">
-                        Complete Publication
+                    <button *ngIf="this.refsetData?.availableActions?.includes('PUBLISH_REFSET')" mat-raised-button color="primary" aria-hidden="false"
+                      (click)="openPublishLocalsetModal()" class="refset-tool-action-button refset-action-button" aria-label="Publish Local Set" ng-reflect-color="primary">
+                        Publish Local Set
                     </button>
                   </span>
                 </div>
@@ -902,6 +901,56 @@
             No
         </button>
     </div>
+</ng-template>
+
+<!--Publish Localset Modal-->
+<ng-template #publishLocalsetDialog let-modal>
+
+    <div class="modal-header rt2-modal-header">
+        <button ngbAutofocus class="unfocus-btn" ></button>
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            Publish Local Reference Set
+        </h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="container-fluid ready-for-publication-container-fluid">
+        <div class="modal-body ready-for-publication-modal-body">
+
+            <div class="row mb-3">
+                You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version date past the year 2000.
+            </div>
+
+            <div class="row">
+                <div class="col">
+
+                    <div *ngIf="!localsetPublishValid">The version date must be a valid date after 01-01-2000</div>
+                    <label>Version Date:
+
+                        <mat-form-field floatLabel="never" title="Enter Search Critera">
+                            <mat-label class="search-label">mm/dd/yyyy</mat-label>
+                            <input type="date" matInput #publishVersionDate id="publishVersionDate" min="2000-01-01" />
+                        </mat-form-field>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer rt2-modal-footer">
+        <button [disabled]="!validatePublishDate(publishVersionDate.value)" type="button" (click)="publishLocalset(publishVersionDate.value);" mat-raised-button color="primary" aria-hidden="false"
+          class="refset-tool-action-button" aria-label="Publish" ng-reflect-color="primary" style="margin-right: 20px;">
+            Publish
+        </button>
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="Cancel"
+          ng-reflect-color="red">
+            Cancel
+        </button>
+    </div>
+
 </ng-template>
 
 <!--Delete In Development Version Modal-->
