@@ -1019,6 +1019,8 @@ export class RefsetDetails implements OnInit {
                         this.membersPaginationComponent.goToPage(pageNumber - 1);
                     }
 
+                    this.membersReady = true;
+
                     return;
                 }
 
