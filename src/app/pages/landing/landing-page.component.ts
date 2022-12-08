@@ -28,7 +28,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
     user: User;
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
-    selectedView = 'public';
     refsetGridApi: any;
     refsetGridColumnApi: any;
     columnDefs = [];
@@ -205,12 +204,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
         this.refsetGridApi.showLoadingOverlay();
         let query = '';
-
-        if (this.selectedView === 'public') {
-            query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
-        } else if (this.selectedView === 'private') {
-            query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
-        }
 
         if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
             query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
