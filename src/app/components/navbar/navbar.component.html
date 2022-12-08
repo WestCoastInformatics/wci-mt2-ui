@@ -1,4 +1,4 @@
-<nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;">
+<nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 5px !important;">
 
     <div class="refset-tool-nav-item-row">
 
@@ -76,7 +76,8 @@
         </div>
     </div>
 </nav>
-<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 0 !important;" id="bg-landing-header">
+<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 5px !important;"
+  id="bg-landing-header">
     <div class="refset-tool-nav-item-row">
 
         <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
@@ -93,9 +94,12 @@
         </ng-container>
 
     </div>
-    <div class="directory-nav" style="margin-left: auto; margin-right: 0;" (click)="navigateToRoute('/library')">
-        <img class="directory-icon" src="/assets/directory-icon.svg">
-        <span class="directory-icon-label">Library</span>
+    <div class="left-title-buttons">
+        <div class="directory-nav" style="margin-left: auto; margin-right: 0;" (click)="navigateToRoute('/library')">
+            <img class="directory-icon" src="/assets/directory-icon.svg">
+            <span class="directory-icon-label">Library</span>
+        </div>
+        <a class="btn btn-link text-white" (click)="login()">Log In</a>
     </div>
-    <a class="btn btn-link text-white" (click)="login()">Log In</a>
+
 </nav>
