@@ -141,14 +141,13 @@
 
                         <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
                           (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false" class="refset-tool-action-button refset-action-button"
-                          aria-label="Delete In Development Version" ng-reflect-color="red"
+                          ng-reflect-color="red" aria-label="Removes in-development reference set leaving any prior published versions unchanged"
                           title="Removes in-development reference set leaving any prior published versions unchanged">
                             Delete In Development Version
                         </button>
 
-                        <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionList" (click)="openInactivateRefset()"
-                          title="Inactivate previously published reference set">
-                            Inactivate Reference Set
+                        <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionList.length > 1" (click)="openChangeRefsetStatus()">
+                          {{ changeRefsetStatusButtonText }} Reference Set
                         </button>
 
                     </mat-menu>
@@ -324,10 +323,6 @@
                 </div>
 
                 <ng-template #cloneRefsetDialog let-data>
-                    This functionality will be implemented in subsequent phases.
-                </ng-template>
-
-                <ng-template #inactivateRefsetDialog let-data>
                     This functionality will be implemented in subsequent phases.
                 </ng-template>
 
@@ -957,6 +952,9 @@
 <ng-template #deleteDevelopmentVersionDialog let-modal>
     <div class="modal-header review-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            Delete In Development Reference Set Version
+        </h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -978,4 +976,38 @@
             No
         </button>
     </div>
+</ng-template>
+
+<!--Change Refset Status Modal-->
+
+<ng-template #changeRefsetStatusDialog let-modal>
+
+    <div class="modal-header rt2-modal-header">
+        <button ngbAutofocus class="unfocus-btn" ></button>
+        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+            {{ changeRefsetStatusButtonText }} Reference Set
+        </h4>
+        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        </button>
+    </div>
+
+    <div class="container-fluid ready-for-publication-container-fluid">
+        <div class="modal-body ready-for-publication-modal-body">
+            <div class="row">
+                {{ changeRefsetStatusText }} Are you sure you want to continue?
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer rt2-modal-footer">
+        <button type="button" (click)="changeRefsetStatus();" mat-raised-button color="primary" aria-hidden="false"
+          class="refset-tool-action-button" ng-reflect-color="primary" style="margin-right: 20px;">
+          {{ changeRefsetStatusButtonText }}
+        </button>
+        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" ng-reflect-color="red">
+            Cancel
+        </button>
+    </div>
+
 </ng-template>

@@ -161,6 +161,10 @@ export class RefsetService extends RestService {
         return this.put(this.contextPath + `admin/refset/${refsetInternalId}/publishLocalset?versionDate=${versionDate}`, '');
     }
 
+    changeRefsetStatus(refsetInternalId: string, active: boolean): Observable<any> {
+        return this.put(this.contextPath + `refset/${refsetInternalId}/refsetStatus?active=${active}`, '');
+    }
+
     updateWorkflowStatus(refsetId: string, notes: string): Observable<any> {
         return this.put(this.contextPath + `refset/${refsetId}/workflowNote`, notes);
     }

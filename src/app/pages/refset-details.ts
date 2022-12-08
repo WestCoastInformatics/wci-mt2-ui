@@ -173,6 +173,8 @@ export class RefsetDetails implements OnInit {
     uiUtility = UiUtility;
     localsetPublishValid = true;
     stepperInfo: any = {};
+    changeRefsetStatusText: string;
+    changeRefsetStatusButtonText: string;
     stepperStartInfo = {
         'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
         'READY_FOR_EDIT_STARTED': false,
@@ -192,7 +194,7 @@ export class RefsetDetails implements OnInit {
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
     @ViewChild('cloneRefsetDialog') cloneRefsetDialog: TemplateRef<any>;
-    @ViewChild('inactivateRefsetDialog') inactivateRefsetDialog: TemplateRef<any>;
+    @ViewChild('changeRefsetStatusDialog') changeRefsetStatusDialog: TemplateRef<any>;
     @ViewChild('convertRefsetDialog') convertRefsetDialog: TemplateRef<any>;
     @ViewChild('refsetVersionNotes') refsetVersionNotes: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
@@ -295,7 +297,6 @@ export class RefsetDetails implements OnInit {
                 ]);
             }
 
-            this.loadWorkflowHistoryData();
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -463,6 +464,16 @@ export class RefsetDetails implements OnInit {
                 this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == 'fsn';
                 this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
 
+                if (this.refsetData.active) {
+
+                    this.changeRefsetStatusButtonText = "Inactivate";
+                    this.changeRefsetStatusText = "You are about to inactivate this reference set, preventing it from being used in future published versions of the terminiology. You will be able to reactivate it."
+                } else {
+
+                    this.changeRefsetStatusButtonText = "Reactivate";
+                    this.changeRefsetStatusText = "You are about to reactivate this reference set, allowing it to be used in future published versions of the terminiology."
+                }
+                
                 if (CodeUtility.hasValue(this.refsetData)) {
                     this.shortenNoteFields();
                 } else {
@@ -476,6 +487,8 @@ export class RefsetDetails implements OnInit {
                     this.refsetLoaded.next(true);
                     this.refsetLoaded.complete();
                 }
+
+                this.loadWorkflowHistoryData();
 
                 this.showLoadingSpinner = false;
             },
@@ -1203,7 +1216,6 @@ export class RefsetDetails implements OnInit {
                 } else {
                     this.loadRefset();
                 }
-                this.loadWorkflowHistoryData();
             },
             error: (error) => {
                 this.toggleLoadingSpinner(false);
@@ -1536,18 +1548,31 @@ export class RefsetDetails implements OnInit {
         this.dialog.confirmed().subscribe();
     }
 
-    openInactivateRefset() {
-        const dialogData = {
-            headerText: `Inactivate Reference Set`,
-            template: this.inactivateRefsetDialog,
-            data: this.refsetData,
-            showCancel: false,
-            confirmText: 'OK',
-        };
+    openChangeRefsetStatus() {
 
-        this.dialog = this.dialogFactoryService.open(dialogData);
+        this.modalService.open(this.changeRefsetStatusDialog, {
+            windowClass: 'ready-for-publication-modal',
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
 
-        this.dialog.confirmed().subscribe();
+    changeRefsetStatus = () => {
+
+        this.toggleLoadingSpinner(true);
+
+        this.refsetService.changeRefsetStatus(this.refsetData.id, !this.refsetData.active).subscribe({
+            next: (results) => {
+
+                this.notificationService.show('The Reference Set has been ' + results.status + '.', null, 'success');
+                this.loadRefset();
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
+            }
+        });
+
+        this.modalService.dismissAll();
     }
 
     openConvertRefset() {
