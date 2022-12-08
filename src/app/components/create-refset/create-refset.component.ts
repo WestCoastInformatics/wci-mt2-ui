@@ -709,10 +709,11 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     getRefset(): void {
-        this.createdMetaDataConcept = 'Copy of ' + this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
+        var name = this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
+        this.createdMetaDataConcept = 'Copy of ' + name;
         this.refsetService.getRefset(this.selectedCopyRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.selectedCopyRefset)).subscribe({
             next: (results) => {
-                this.selectedNarrative = results?.narrative;
+                this.selectedNarrative = 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative;
                 this.selectedTags = results?.tags;
                 this.privateRefset = results?.privateRefset;
                 this.localSet = results?.localSet;
