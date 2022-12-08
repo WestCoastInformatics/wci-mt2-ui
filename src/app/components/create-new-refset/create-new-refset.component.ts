@@ -209,7 +209,7 @@ export class CreateNewRefsetComponent implements OnInit {
         };
 
         if (this.selectedReferenceType === this.INTENSIONAL && this.definitionClauses.length > 0) {
-            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+            //this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
         this.refsetService.createRefset(params).subscribe(
@@ -258,7 +258,7 @@ export class CreateNewRefsetComponent implements OnInit {
 
     editRefsetObject(): void {
 
-        this.showLoadingSpinner = true;
+        this.showLoadingSpinner = true;        
         let tagsToPersist: string[];
 
         if (this.tags) {
@@ -281,30 +281,33 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         if (this.selectedReferenceType === this.INTENSIONAL && this.definitionClauses.length > 0) {
-            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+            // NO longer needed
+            // this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
-        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe((status) => {
-
-            this.showLoadingSpinner = false;
-
-            if (status.error) {
-
-                this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
-                    timeOut: 0,
-                    extendedTimeOut: 0
-                });
-                return;
-            }
-
-            this.modalService.dismissAll();
-            this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
-            this.refsetDetails.initializeDetailsPage();
-        },
-            (error) => {
+        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe(
+            {
+                next: (status) => {
                 this.showLoadingSpinner = false;
-            }
+    
+                if (status.error) {
+    
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
+                        timeOut: 0,
+                        extendedTimeOut: 0
+                    });
+                    return;
+                }
+    
+                this.modalService.dismissAll();
+                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                this.refsetDetails.initializeDetailsPage();
+            },
+               error: (error) => {
+                this.showLoadingSpinner = false;
+                }
+            }    
         );
     }
 

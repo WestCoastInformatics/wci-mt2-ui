@@ -5,9 +5,9 @@
 </a>
 
 
-<div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <ng-template #createNewRefsetDialog let-modal>
+    <div *ngIf="showLoadingSpinner" class="loading"></div>
     <div class="modal-header rt2-modal-header">
         <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
             Create New Reference Set

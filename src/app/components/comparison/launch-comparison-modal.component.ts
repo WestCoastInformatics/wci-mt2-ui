@@ -45,7 +45,6 @@ export class LaunchComparisonModalComponent {
   comparisonRefsetName: string;
   comparisonRefsetStatus: string;
   allowedToEdit = false;
-  showLoadingSpinner = false;
   isLocked = false;
   conceptForAddRemove: any;
   isConceptBeingAdded: boolean;
@@ -110,7 +109,6 @@ export class LaunchComparisonModalComponent {
     this.conceptDetail = null;
     this.conceptDetailParents = null;
     this.allowedToEdit = false;
-    this.showLoadingSpinner = false;
     this.showTable = false;
     this.isConceptDetailsLoading = false;
     this.taxonomyManualStateRefresh = new Boolean(false);
@@ -384,7 +382,6 @@ export class LaunchComparisonModalComponent {
       next: (results) => {
 
         this.isConceptDetailsLoading = false;
-        //this.showLoadingSpinner = false;
         this.conceptDetail = results;
         this.conceptDetail.roleGroups = results.roleGroups;
         this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
@@ -471,7 +468,6 @@ export class LaunchComparisonModalComponent {
 
   indicateChanges(data) {
 
-    this.showLoadingSpinner = true;
     this.sendChangeLockedStatus(true);
 
     console.timeEnd('comparison indicateChanges');
@@ -495,7 +491,6 @@ export class LaunchComparisonModalComponent {
 
   addRemoveConceptGroup(params: any): void {
 
-    this.showLoadingSpinner = true;
     let operation = 'add';
 
     if (!params.addConcept) {
@@ -532,7 +527,6 @@ export class LaunchComparisonModalComponent {
 
     this.sendChangeLockedStatus(false);
     UiUtility.toggleLockedSections(false);
-    this.showLoadingSpinner = false;
 
     if (this.conceptDetail != null) {
 

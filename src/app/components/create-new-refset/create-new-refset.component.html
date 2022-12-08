@@ -14,9 +14,9 @@
   aria-label="Edit metadata">Edit Metadata
 </button>
 
-<div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <ng-template #createNewRefsetDialog let-modal>
+    <div *ngIf="showLoadingSpinner" class="loading"></div>
     <div class="modal-header rt2-modal-header">
         <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
             Create New Reference Set
@@ -103,7 +103,7 @@
                     </div>
 
                 </div>
-                <div class="create-new-refset-form-field" id="create-new-refset-assign-refset-field" style="border: 1px solid; margin-bottom: 10px;">
+                <div class="create-new-refset-form-field" id="create-new-refset-assign-refset-field" style="margin-bottom: 10px;">
                     <div *ngIf="editMode && !canEditName" class="col create-new-refset-label create-new-refset-flex-weight" style="margin-top: 5px">
                         <label>Assigned Reference Set Concept:</label>
                     </div>
