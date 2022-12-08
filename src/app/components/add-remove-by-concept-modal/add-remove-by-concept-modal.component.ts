@@ -247,6 +247,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.conceptDetail = null;
         this.showResults = false;
         this.showNoResultsLabel = false;
+        this.dataSource = [];
     }
 
     clearSearch(): void {

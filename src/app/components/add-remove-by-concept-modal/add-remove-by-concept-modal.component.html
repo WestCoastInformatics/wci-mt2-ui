@@ -27,9 +27,13 @@
                       [(ngModel)]="searchInput" (keyup.enter)="onTableSearchChange()" ngbAutofocus />
                   </mat-form-field>
                   <span class="add-remove-concept-hierarchy-modal-cancel-search" (click)="clearSearch()">&#10005;</span>
+                  <button type="button" (click)="onTableSearchChange()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button ml-3" aria-label="Search"
+                    title="Search Concepts" ng-reflect-color="green">
+                    Search
+                  </button>
                   <button (click)="
                       openEclBuilder('addRemoveByConceptHierarchySearchInput')
-                    " #addRemoveByConceptHierarchySearchEclButton class="btn btn-primary i18n ml-3 ecl-button rounded btn-wide-font" unfocus>
+                    " #addRemoveByConceptHierarchySearchEclButton class="btn btn-primary i18n ml-1 ecl-button rounded btn-wide-font" unfocus>
                     ECL Builder
                   </button>
                   <div *ngIf="!showResults && showNoResultsLabel">
@@ -221,10 +225,6 @@
   </div>
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    <button type="button" (click)="onTableSearchChange()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Search"
-      title="Search Concepts" ng-reflect-color="green">
-      Search
-    </button>
     <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="dataSource.length == 0" (click)="addRemoveAllMembers('add')" mat-raised-button color="green"
       aria-hidden="false" class="refset-tool-action-button" aria-label="Add All" title="Add All" ng-reflect-color="green">
       Add All
