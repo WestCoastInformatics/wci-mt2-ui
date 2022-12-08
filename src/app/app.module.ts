@@ -205,6 +205,15 @@ const appRoutes: Routes = [
         data: { breadcrumbLabel: 'Account Configuration' },
         canActivate: [AuthGuardGuard]
     },
+    // Redirect blanks to the landing page
+    {
+        path: 'organization/0/edition/0/projects',
+        component: LandingComponent
+    },
+    {
+        path: 'organization/0/edition/0/projects/0/refsets',
+        component: LandingComponent,
+    }
 ];
 
 @NgModule({
