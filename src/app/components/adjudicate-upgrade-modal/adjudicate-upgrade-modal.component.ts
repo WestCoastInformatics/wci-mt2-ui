@@ -200,8 +200,8 @@ export class AdjudicateUpgradeModalComponent {
 
 					let description = '';
 
-					if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-						description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+					if (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
+						description = this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
 					}
 
 					return description;
@@ -210,8 +210,8 @@ export class AdjudicateUpgradeModalComponent {
 
 					let description = '';
 
-					if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-						description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+					if (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
+						description = this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
 					}
 
 					return description;
@@ -604,7 +604,7 @@ export class AdjudicateUpgradeModalComponent {
 				return x.active === false;
 			});
 
-			// pre sort items by 
+			// pre sort items by
 			results.items.sort((a, b) => {
 
 				let nameA = this.getConceptName(a.descriptions) + a.replacementConcepts[0].reason.toUpperCase();
