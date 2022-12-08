@@ -198,7 +198,7 @@
                     </button>
 
                     <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
-                      *ngIf="(this.refsetData?.availableActions?.includes('EDIT') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
+                      *ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus != 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
                       [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
                       [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
