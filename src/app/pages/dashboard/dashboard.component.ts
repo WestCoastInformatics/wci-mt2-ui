@@ -96,14 +96,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 headerName: 'Reference Name',
                 flex: 2,
                 width: 550,
-                minWidth: 350,
+                minWidth: 65,
                 tooltipField: 'name',
                 unSortIcon: true,
                 sortable: true,
                 cellRenderer: params => {
                     return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
                 },
-                cellClass: 'pointer'
+                cellClass: 'pointer', resizable: true
             },
             {
                 field: 'workflowStatus',
@@ -115,6 +115,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 cellRendererParams: { template: this.workflowStatus },
                 sortable: true,
                 flex: 1,
+                minWidth: 65,
                 width: 200,
                 floatingFilterComponent: 'categoryFilterComponent',
                 floatingFilterComponentParams: {
@@ -128,7 +129,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                         { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
                         { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' }
                     ]
-                }
+                }, resizable: true
             },
             {
                 field: 'modified',
@@ -136,7 +137,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 headerName: 'Last Modified Date',
                 flex: 1,
                 width: 220,
-                minWidth: 220,
+                minWidth: 65,
                 unSortIcon: true,
                 sortable: true,
                 sort: 'desc',
@@ -144,6 +145,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 floatingFilterComponentParams: { suppressFilterButton: true },
                 valueGetter:
                     UiUtility.gridDateValueGetter,
+                    resizable: true
             }
         ];
 

@@ -4,39 +4,38 @@
         <table class="refset-tool-refset-metadata-table table-striped">
             <tbody>
                 <tr>
-                    <td class="
-                                            refset-tool-refset-metadata-label
-                                        " aria-label="Reference ID:">
+                    <td class="refset-tool-refset-metadata-label" aria-label="Reference ID:">
                         Reference ID:
                     </td>
-                    <td class="
-                                            refset-tool-refset-metadata-value
-                                        ">
-
-                    {{refset?.refsetId}}
-                    <mat-icon *ngIf="refset?.privateRefset" aria-hidden="false" #directoryPrivateIcon
-                        class="refset-tool-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
-                        lock
-                    </mat-icon>
-                    <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="refset-tool-table-action-icon refset-id-icons text-muted" aria-label="Local Set"
-                        title="Local Set">
-                        my_location
-                    </mat-icon>
-                    
+                    <td class="refset-tool-refset-metadata-value">
+                        {{refset?.refsetId}}
+                        <mat-icon *ngIf="refset?.privateRefset" aria-hidden="false" #directoryPrivateIcon
+                            class="refset-tool-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
+                            lock
+                        </mat-icon>
+                        <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="refset-tool-table-action-icon refset-id-icons text-muted" aria-label="Local Set"
+                            title="Local Set">
+                            my_location
+                        </mat-icon>                        
+                        </td>
+                </tr>
+                <tr>
+                    <td class="refset-tool-refset-metadata-label" aria-label="Module ID">
+                        Module ID:
                     </td>
-            </tr>
+                    <td class="refset-tool-refset-metadata-value">
+                      {{refset?.moduleId}}
+                    </td>
+                </tr>
 
 
                 <tr>
-                    <td class="
-                                            refset-tool-refset-metadata-label
-                                        " aria-label="Edition/Extension:">
+                    <td class="refset-tool-refset-metadata-label" aria-label="Edition/Extension:">
                         Edition/Extension:
                     </td>
-                    <td class="
-                                            refset-tool-refset-metadata-value
-                                        ">
-                        <a href="{{getEditionUrl()}}">{{refset?.editionName}}</a>&nbsp;
+                    <td class="refset-tool-refset-metadata-value">
+                        <span *ngIf="!loggedIn">{{refset?.editionName}}</span> 
+                        <a *ngIf="loggedIn" href="{{getEditionUrl()}}">{{refset?.editionName}}</a>&nbsp;
                         <img *ngIf="refset?.flagIcon != null && showFlag"
                             (error)="showFlagIcon(false)" src="{{refset?.flagIcon}}"
                             class="refset-tool-edition-flag" title="{{refset?.editionName}} Flag"
@@ -92,15 +91,12 @@
                 </tr>
 
                 <tr>
-                    <td class="
-                                            refset-tool-refset-metadata-label
-                                        " aria-label="Project:">
+                    <td class="refset-tool-refset-metadata-label" aria-label="Project:">
                         Project:
                     </td>
-                    <td class="
-                                            refset-tool-refset-metadata-value
-                                        ">
-                        <a href="{{getProjectUrl()}}">{{refset?.project?.name}}</a>
+                    <td class="refset-tool-refset-metadata-value">
+                        <span *ngIf="!loggedIn">{{refset?.project?.name}}</span> 
+                        <a *ngIf="loggedIn" href="{{getProjectUrl()}}">{{refset?.project?.name}}</a>
                     </td>
                 </tr>
 
@@ -217,14 +213,10 @@
                 </tr>
 
                 <tr>
-                    <td class="
-                                            refset-tool-refset-metadata-label
-                                        " aria-label="Direct URL/URI:">
+                    <td class="refset-tool-refset-metadata-label" aria-label="Direct URL/URI:">
                         Direct URL/URI:
                     </td>
-                    <td class="
-                                            refset-tool-refset-metadata-value
-                                        ">
+                    <td class="refset-tool-refset-metadata-value">
                         <a href="{{directUrl}}">{{directUrl}}</a>
                     </td>
                 </tr>

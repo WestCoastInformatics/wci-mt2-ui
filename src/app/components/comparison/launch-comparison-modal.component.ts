@@ -246,10 +246,10 @@ export class LaunchComparisonModalComponent {
     };
 
     this.gridColumnDefs = [
-      { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
-      { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 2, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
+      { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 65, tooltipField: 'code', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 2, resizable: true, minWidth: 65, sort: 'asc', unSortIcon: true },
       {
-        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 200, tooltipField: 'membership', resizable: false, unSortIcon: true,
+        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 65, tooltipField: 'membership', resizable: true, unSortIcon: true,
         floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
           suppressMenu: true, suppressFilterButton: true, names: [
             { type: 'membership', name: 'Active Refset', value: 'Active Refset' },
@@ -667,8 +667,8 @@ export class LaunchComparisonModalComponent {
       }
     });
 
-    activeRefsetDate = activeRefsetDate.replace(' ', '_').replace('-','');
-    comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_').replace('-','');
+    activeRefsetDate = activeRefsetDate.replace(' ', '_').replace(/-/g,'');
+    comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_').replace(/-/g,'');
 
     const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
       this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + CodeUtility.getReverseDate();

@@ -47,8 +47,8 @@ export class ColumnChooserComponent {
 
             for (let column of this.gridColumnApi?.columnController?.columnDefs) {
 
-                // Just remove the add-remove option from the dropdown
-                if (column.colId === 'add-remove') {
+                // Avoid these coluns (they are icon columns without titles)
+                if (column.headerName === '' || !column.headerName) {
                     continue;
                 }
 

@@ -52,10 +52,10 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.gridColumnDefs = [
             { field: 'id', hide: true },
-            { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500, unSortIcon: true },
-            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 1, minWidth: 65, maxWidth: 500, unSortIcon: true, resizable: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
             {
-                field: 'role', tooltipField: 'role', headerName: 'Role', resizable: true, cellClass: 'text-camel', unSortIcon: true,
+                field: 'role', tooltipField: 'role', headerName: 'Role', minWidth: 65, resizable: true, cellClass: 'text-camel', unSortIcon: true,
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {
@@ -90,9 +90,9 @@ export class OrganizationTeamsComponent implements OnInit {
                     ],
                 }
             },
-            { field: 'email', tooltipField: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
+            { field: 'email', tooltipField: 'email', headerName: 'Contact Email', minWidth: 65, resizable: true, unSortIcon: true},
             {
-                field: 'members', headerName: 'Users', maxWidth: 120, filter: false, resizable: false, sortable: false,
+                field: 'members', headerName: 'Users', minWidth: 65, filter: false, resizable: true, sortable: false,
                 cellClass: 'text-primary font-weight-bold', tooltipValueGetter: (params) => {
                     return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', ') : '';
                 }

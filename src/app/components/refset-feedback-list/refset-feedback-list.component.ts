@@ -175,7 +175,7 @@ export class RefsetFeedbackListComponent implements OnInit {
             {
                 field: 'id',
                 headerName: 'Author',
-                minWidth: 120,
+                minWidth: 65,
                 unSortIcon: true,
                 tooltipValueGetter: (params) => {
                     return params?.data?.posts[0]?.user?.name;
@@ -184,7 +184,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 cellRendererParams: { template: this.authorSection },
                 valueGetter: (params) => {
                     return params?.data?.posts[0]?.user?.name;
-                }
+                }, resizable: true
             },
             {
                 field: 'subject',
@@ -193,17 +193,19 @@ export class RefsetFeedbackListComponent implements OnInit {
                     return params.data.subject;
                 },
                 flex: 2,
-                minWidth: 300,
+                minWidth: 65,
                 unSortIcon: true,
                 cellRenderer: 'templateRenderer',
                 cellRendererParams: { template: this.subjectSection },
                 valueGetter: (params) => {
                     return params.data.subject;
-                }
+                },
+                resizable: true
             },
             {
                 field: 'status',
                 headerName: 'Status',
+                minWidth:65,
                 maxWidth: 125,
                 unSortIcon: true,
                 tooltipValueGetter: (params) => {
@@ -216,23 +218,24 @@ export class RefsetFeedbackListComponent implements OnInit {
                         { type: 'status', name: this.RESOLVED, value: this.RESOLVED }
                     ],
                     suppressFilterButton: true
-                }
+                }, resizable: true
             },
             {
                 field: 'lastPost',
                 headerName: 'Last Comment',
+                minWidth: 65,
                 maxWidth: 210,
                 unSortIcon: true,
                 sort: 'desc',
                 tooltipValueGetter: UiUtility.gridDateValueGetter,
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
-                floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }
+                floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, resizable: true
             },
             {
-                field: 'numberReplies', headerName: 'Replies', minWidth: 120, maxWidth: 150, unSortIcon: true, tooltipValueGetter: (params) => {
+                field: 'numberReplies', headerName: 'Replies', minWidth: 65, maxWidth: 150, unSortIcon: true, tooltipValueGetter: (params) => {
                     return params.data.numberReplies;
-                }, resizable: false, filter: false
+                }, resizable: true, filter: false
             }
         ];
 

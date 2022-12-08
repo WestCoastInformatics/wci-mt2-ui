@@ -1485,24 +1485,33 @@ select {
   padding-bottom: 1.4em;
 }
 
-  .date-selector {
-    margin-top: 25px;
-
-    .category-filter-select {
-      border: solid;
-      width: fit-content;
-      border-width: 1px;
-      border-color: #666;
-    }
-    mat-form-field {
-      visibility: hidden;
-    }
-  }
-
 .category-filter-select {
   padding-top: 10px;
   width: 100%;
   text-transform: capitalize;
+  .mat-select-arrow-wrapper {
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
+  .mat-form-field-infix {
+    top: 7px;
+  }
+}
+
+.date-selector {
+  margin-top: 25px;
+
+  mat-form-field {
+    visibility: hidden;
+  }
+}
+
+.date-filter-select {
+  border: solid;
+  border-width: 1px;
+  border-color: #666;
+  padding-top: 10px;
+  width: 125px;
   .mat-select-arrow-wrapper {
     padding-top: 0px;
     padding-bottom: 10px;
@@ -3570,8 +3579,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .adjudicate-format-option-drop-down {
-  margin-top: -15px;
-  padding-right: 15px;
+  margin-top: -30px;
+  padding-right: 20px;
 }
 
 .adjudicate-column-inactiveCode,

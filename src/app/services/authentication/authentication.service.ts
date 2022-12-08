@@ -138,8 +138,8 @@ export class AuthenticationService {
 
     isAuthenticated(): boolean {
 
-        let cookieFound = document.cookie.includes(this.IMS_COOKIE_NAME);
-        let token = sessionStorage.getItem('auth_token');
+       let cookieFound = null; //document.cookie.includes(this.IMS_COOKIE_NAME);
+       let token = null; // sessionStorage.getItem('auth_token');
 
         try {
 
