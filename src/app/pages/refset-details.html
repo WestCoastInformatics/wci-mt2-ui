@@ -2,7 +2,7 @@
 
 <div id="refsetDetailsPage" class="container-fluid">
     <!-- Page Title -->
-    <div class="row refset-title content-header workflow-stepper-bar">
+    <div class="row refset-title content-header workflow-stepper-bar" [class.refset_tool_inactive_row]="refsetData != undefined && !refsetData?.active">
 
         <!-- Reference Set Name, action icons, and roles -->
         <div class="col-4 refset-tool-refset-details-title-name-section">
@@ -27,7 +27,7 @@
 
         <!-- Status Stepper if in edit mode and Reference Set not locked -->
         <mat-horizontal-stepper *ngIf="!isLocked && editMode && refsetStatus != 'IN_UPGRADE'" class="col-5 details-page-stepper" [linear]="true" labelPosition="bottom"
-          #stepper>
+            [class.refset_tool_inactive_row]="refsetData != undefined && !refsetData?.active" #stepper>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
                 <ng-template matStepperIcon="number">

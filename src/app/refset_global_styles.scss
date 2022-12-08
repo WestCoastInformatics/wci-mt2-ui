@@ -524,7 +524,7 @@ button.refset-tool-table-action-icon {
 }
 
 // AG Grid Styles
-.refset_tool_inactive_row {
+.refset_tool_inactive_row, #refsetDetailsPage .refset-title.refset_tool_inactive_row, tr.refset_tool_inactive_row {
   background-color: $inactive_row_color;
 }
 

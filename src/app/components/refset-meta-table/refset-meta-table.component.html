@@ -57,6 +57,17 @@
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="
+                                            refset-tool-refset-metadata-label
+                                        " aria-label="Type:">
+                        Status:
+                    </td>
+                    <td class="refset-tool-refset-metadata-value capitalize-metadata-value" [class.refset_tool_inactive_row]="refset != undefined && !refset?.active">
+                        {{ refset == undefined || refset?.active ? 'Active' : 'Inactive' }}
+                    </td>
+                </tr>
+
                 <tr *ngIf="refset?.tags[0]">
                     <td class="
                                             refset-tool-refset-metadata-label
