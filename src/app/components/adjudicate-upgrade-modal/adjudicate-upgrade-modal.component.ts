@@ -193,7 +193,7 @@ export class AdjudicateUpgradeModalComponent {
 					return params?.data?.replacementConcepts[0]?.code;
 				}, headerName: 'Replacement ID', valueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
-				}, flex: 1, minWidth: 65, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true, resizable: true 
+				}, flex: 1, minWidth: 65, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'created', colId: 'replacementEnPtSection', tooltipValueGetter: (params) => {
@@ -571,7 +571,7 @@ export class AdjudicateUpgradeModalComponent {
 	}
 
 	changeLanguage($event: any) {
-		this.onGridReady(this.originalGridParams);
+        this.onGridReady(this.originalGridParams);
 	}
 
 	onGridReady = (gridReadyParams) => {
@@ -707,13 +707,14 @@ export class AdjudicateUpgradeModalComponent {
 				this.changeLockedStatus(false);
 			});
 
-
-		// set placeholders on the grid floating filter fields
+		//set placeholders on the grid floating filter fields
 		document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
-
-			let label = obj.getAttribute('aria-label');
-			let value = label.substring(0, label.indexOf('Filter Input')) + '...';
-			obj.setAttribute('placeholder', value);
+            let label = obj.getAttribute('aria-label');
+            let title = label.substring(0, label.indexOf('Filter Input'));
+            if ((title.includes('Inactive') || title.includes('Replacement')) && !title.includes('ID')) {
+                title = label.split(' ')[0] + ' ' + this.selectedLanguage + ' ';
+            }
+			obj.setAttribute('placeholder', title + '...');
 		});
 
 		let self = this;
