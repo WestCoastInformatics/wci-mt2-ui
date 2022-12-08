@@ -45,6 +45,8 @@ export class CreateNewRefsetComponent implements OnInit {
     referenceType: string;
     privateRefset: boolean;
     localSet: boolean;
+    publication: string;
+    moduleId: string;
     versionDate: string;
     refsetConcept: string;
     tags: string[];
@@ -70,9 +72,9 @@ export class CreateNewRefsetComponent implements OnInit {
         referenceType?: string;
         privateRefset?: boolean;
         localSet?: boolean;
+        moduleId?: string;
         versionDate?: any;
         definitionClauses?: [];
-        moduleId?: string;
     };
     @ViewChild('infoDialog') infoDialog: TemplateRef<any>;
 
@@ -140,6 +142,8 @@ export class CreateNewRefsetComponent implements OnInit {
         this.selectedReferenceType = '';
         this.privateRefset = false;
         this.localSet = false;
+        this.moduleId = null;
+        this.publication = "Within Edition";
         this.conceptError = '';
     }
 
@@ -161,6 +165,9 @@ export class CreateNewRefsetComponent implements OnInit {
             inputs.referenceType.substr(1).toLowerCase();
         this.privateRefset = inputs.privateRefset;
         this.localSet = inputs.localSet;
+        this.moduleId = inputs.moduleId;
+        this.publication = this.localSet ? 'Local Set' : 'Within Edition';
+
         this.refsetConcept = inputs.metadataConcept;
         this.versionNotes = inputs.versionNotes;
         this.selectedReferenceType = inputs.referenceType;
@@ -189,7 +196,6 @@ export class CreateNewRefsetComponent implements OnInit {
         const params: any = {
             name: this.capitalizeFirstLetterOfString(name),
             parentConceptId: parentConceptId,
-            moduleId: '',
             refsetId: refsetId,
             editionId: this.inputProperties.project.edition.id,
             projectId: this.inputProperties.project.id,
@@ -197,6 +203,7 @@ export class CreateNewRefsetComponent implements OnInit {
             type: this.selectedReferenceType,
             privateRefset: this.privateRefset,
             localSet: this.localSet,
+            moduleId: this.moduleId,
             tags: this.selectedTags,
             versionNotes: this.selectedVersionNotes,
         };
@@ -266,6 +273,7 @@ export class CreateNewRefsetComponent implements OnInit {
             versionNotes: this.versionNotes,
             privateRefset: this.privateRefset,
             localSet: this.localSet,
+            moduleId: this.moduleId,
             type: this.referenceType,
         };
         if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
@@ -444,6 +452,7 @@ export class CreateNewRefsetComponent implements OnInit {
             } else {
                 this.localSet = false;
             }
+            this.publication = this.localSet ? 'Local Set' : 'Within Edition';
         }
     
 }

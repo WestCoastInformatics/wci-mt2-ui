@@ -55,10 +55,11 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 flex: 1,
                 unSortIcon: true,
                 sortable: true,
-                minWidth: 110
+                minWidth: 65,
+                resizable: true
             },
-            { field: 'fileType', tooltipField: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true, minWidth: 110, flex: 1 },
-            { field: 'modifiedBy', tooltipField: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, flex: 2, sortable: true },
+            { field: 'fileType', tooltipField: 'fileType', headerName: 'Type', unSortIcon: true, sortable: true, minWidth: 65, flex: 1, resizable: true },
+            { field: 'modifiedBy', tooltipField: 'modifiedBy', headerName: 'Uploaded By', unSortIcon: true, flex: 2, sortable: true, minWidth: 65, resizable: true },
             {
                 field: 'created',
                 tooltipValueGetter: UiUtility.gridDateValueGetter,
@@ -69,9 +70,11 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 sort: 'desc',
                 valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
                 valueGetter: UiUtility.gridDateValueGetter,
-                floatingFilterComponent: 'dateTextFilterComponent'
+                floatingFilterComponent: 'dateTextFilterComponent',
+                minWidth: 65,
+                resizable: true
             },
-            { field: 'description', tooltipField: 'description', headerName: 'Description', minWidth: 250, flex: 4, width: 550 },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', minWidth: 65, flex: 4, width: 550, resizable: true },
             {
                 field: 'id',
                 headerName: '',
@@ -80,7 +83,8 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 flex: 1,
                 cellRenderer: 'templateRenderer',
                 tooltipField: 'id',
-                resizable: false,
+                minWidth: 65,
+                resizable: true,
                 cellRendererParams: { template: this.actionsSection }, maxWidth: 110
             }];
 

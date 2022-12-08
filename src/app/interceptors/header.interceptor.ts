@@ -21,12 +21,13 @@ export class HeaderInterceptor implements HttpInterceptor {
         if (!request.headers.has('Content-Type') && !request.headers.has('enctype')) {
             request = request.clone({
                 headers: request.headers.set('Content-Type', 'application/json'),
+                withCredentials: true
+            });
+        } else {
+            request = request.clone({
+                withCredentials: true
             });
         }
-
-        request = request.clone({
-            withCredentials: true
-        });
 
         const allCookies = document.cookie;
 
@@ -37,7 +38,9 @@ export class HeaderInterceptor implements HttpInterceptor {
 
         return next
             .handle(request).pipe(tap((event: HttpEvent<any>) => {
-
+                // if (event instanceof HttpResponse) {
+                //     let response = (event as HttpResponse<String> );
+                // }
             })
             );
     }

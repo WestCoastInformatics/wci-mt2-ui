@@ -139,7 +139,7 @@ export class AdjudicateUpgradeModalComponent {
 
 			{
 				field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
-				flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
+				flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
 			},
 			{
 				field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
@@ -149,13 +149,13 @@ export class AdjudicateUpgradeModalComponent {
 						+ '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
 						+ ' </a>'
 						+ ''
-				}, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60
+				}, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60, resizable: false
 			},
 			{
 				field: 'code', tooltipValueGetter: (params) => {
 					return params?.value;
 				}, filter: 'agTextColumnFilter', headerName: 'Inactive ID', cellRenderer: 'templateRenderer',
-				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 150, maxWidth: 190, unSortIcon: true
+				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 65, maxWidth: 190, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'inactiveEnPtSection', tooltipValueGetter: (params) => {
@@ -172,28 +172,28 @@ export class AdjudicateUpgradeModalComponent {
 					}
 
 					return '';
-				}, headerName: 'Inactive ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
+				}, headerName: 'Inactive ' + this.selectedLanguage, flex: 2, minWidth: 65, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'reason', valueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
 				}, tooltipValueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
-				}, headerName: 'Association', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
+				}, headerName: 'Association', flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
 					template: ' <a class="add-all mr-auto ml-auto">'
 						+ '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
 						+ ' </a>'
-				}, flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
+				}, flex: 1, minWidth: 60, maxWidth: 60, resizable: false, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
 			},
 			{
 				field: 'replacementId', tooltipValueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
 				}, headerName: 'Replacement ID', valueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
-				}, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
+				}, flex: 1, minWidth: 65, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true, resizable: true 
 			},
 			{
 				field: 'created', colId: 'replacementEnPtSection', tooltipValueGetter: (params) => {
@@ -206,7 +206,7 @@ export class AdjudicateUpgradeModalComponent {
 
 					return description;
 
-				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 65, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
 					let description = '';
 
@@ -216,9 +216,9 @@ export class AdjudicateUpgradeModalComponent {
 
 					return description;
 
-				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true,
+				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true, resizable: true
 			},
-			{ field: 'actionSection', tooltipField: 'actionSection', headerName: '', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
+			{ field: 'actionSection', tooltipField: 'actionSection', headerName: '', flex: 1, minWidth: 60, width: 60, maxWidth: 60, resizable: false, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
 		];
 
 		this.refsetGridOptions = {

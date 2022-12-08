@@ -45,11 +45,12 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             {
                 field: 'created', headerName: 'Date', tooltipValueGetter: UiUtility.gridDateValueGetter, flex: 1, unSortIcon: true, sortable: true, sortingOrder: ['desc', 'asc', null],
                 filterParams: { debounceMs: 2000 }, floatingFilterComponentParams: { debounceMs: 2000 },
-                valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent'
+                valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                minWidth: 65, resizable: true
             },
-            { field: 'modifiedBy', headerName: 'Modified By', tooltipField: 'modifiedBy', flex: 1, unSortIcon: true, sortable: true, sort: 'desc' },
-            { field: 'message', headerName: 'Message', tooltipField: 'message', flex: 1, unSortIcon: true, sortable: true },
-            { field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 550, sortable: false }];
+            { field: 'modifiedBy', headerName: 'Modified By', tooltipField: 'modifiedBy', flex: 1, unSortIcon: true, minWidth: 65, sortable: true, sort: 'desc', resizable: true },
+            { field: 'message', headerName: 'Message', tooltipField: 'message', flex: 1, unSortIcon: true, minWidth:65, sortable: true, resizable: true },
+            { field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 65, sortable: false, resizable: true }];
 
         this.gridOptions = {
             context: { componentParent: this },

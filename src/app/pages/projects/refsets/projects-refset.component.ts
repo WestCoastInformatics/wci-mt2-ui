@@ -163,22 +163,23 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             ];
 
             this.columnDefs = [
-                { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false, unSortIcon: true },
-                { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 280, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
-                { field: 'assignedUser', tooltipField: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 150, resizable: false, unSortIcon: true },
+                { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+                { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 65, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
+                { field: 'assignedUser', tooltipField: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 65, resizable: true, unSortIcon: true },
                 {
-                    field: 'workflowStatus', tooltipField: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
+                    field: 'workflowStatus', tooltipField: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 65, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
                     floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: workflowStatuses }, unSortIcon: true
                 },
                 {
-                    field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 150, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
+                    field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 65, resizable: true, valueGetter: UiUtility.gridDateValueGetter,
                     floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                 },
                 {
-                    field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 180, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
+                    field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 65, resizable: true, valueGetter: UiUtility.gridDateValueGetter,
                     floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, sort: 'desc', unSortIcon: true
                 },
-                { field: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
+                // This is an exception to a resizeable field because it is an action field
+                { field: 'downloadable', colId: 'actions', headerName: '', minWidth: 65, width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
 
             this.refsetGridOptions = {

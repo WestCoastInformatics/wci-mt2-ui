@@ -80,10 +80,10 @@ export class ProjectsPeopleComponent implements OnInit {
                 field: 'name',
                 tooltipField: 'name',
                 headerName: 'Users',
-                minWidth: 300,
+                minWidth: 65,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
-                cellRendererParams: { template: this.peopleNameSection, unSortIcon: true }
+                cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true
             },
             { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
             { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },

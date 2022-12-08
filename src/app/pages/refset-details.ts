@@ -623,15 +623,16 @@ export class RefsetDetails implements OnInit {
                     field: 'code',
                     colId: 'code',
                     headerName: 'Concept ID',
+                    minWidth: 65,
                     maxWidth: 140,
                     cellClass: 'refset-tool-taxonomy-search-column-name',
-                    tooltipField: 'code',
+                    tooltipField: 'code', resizable: true
                 },
                 {
                     field: 'name',
                     colId: 'result',
                     headerName: 'Result',
-                    minWidth: 120,
+                    minWidth: 65,
                     flex: 1,
                     cellClass: 'refset-tool-taxonomy-search-column-name',
                     valueGetter: this.taxonomyResultValueGetter.bind(this),
@@ -640,7 +641,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
-                    comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
+                    comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}), resizable: true
                 },
             ];
 
@@ -1040,7 +1041,9 @@ export class RefsetDetails implements OnInit {
                     return;
                 }
 
-                this.membersColumnDefs = [{
+                this.membersColumnDefs = [
+                // This column is an exception to resizable, it's the +/- icon column    
+                {
                     headerName: '',
                     colId: 'add-remove',
                     maxWidth: 40,
@@ -1051,16 +1054,16 @@ export class RefsetDetails implements OnInit {
                     cellRenderer: 'templateRenderer',
                     cellRendererParams: { template: this.conceptCodeSection }
                 }, {
-                    field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, tooltipField: 'code', unSortIcon: true,
-                    resizable: false, cellClass: 'refset-tool-details-column-concept-id'
+                    field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 65, maxWidth: 140, tooltipField: 'code', unSortIcon: true,
+                    resizable: true, cellClass: 'refset-tool-details-column-concept-id'
                 }
                 ];
 
                 for (let i = 0; i < this.languageOptions.length; i++) {
 
                     const language = this.languageOptions[i];
-                    const minWidth =
-                        language.value === '101FSN' ? 250 : 190;
+                    const minWidth = 65;
+                    // language.value === '101FSN' ? 250 : 190;
 
                     this.membersColumnDefs.push({
                         field: i.toString(),
@@ -1073,7 +1076,7 @@ export class RefsetDetails implements OnInit {
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
                         tooltipValueGetter: this.descriptionValueGetter,
-                        comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
+                        comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}), resizable: true
                     });
                 }
 
@@ -1083,7 +1086,7 @@ export class RefsetDetails implements OnInit {
                             field: 'memberEffectiveTime',
                             colId: 'modified',
                             flex: 1,
-                            minWidth: 190,
+                            minWidth: 65,
                             maxWidth: 190,
                             headerName: 'Last Modified Date',
                             cellClass:
@@ -1094,14 +1097,14 @@ export class RefsetDetails implements OnInit {
                             sort: 'desc',
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true },
+                            floatingFilterComponentParams: { suppressFilterButton: true }, resizable: true
                         },
                         {
                             field: 'active',
                             colId: 'actions',
                             flex: 1,
                             headerName: '',
-                            minWidth: 120,
+                            minWidth: 65,
                             cellClass:
                                 'refset-tool-details-column-actions',
                             cellRenderer: 'templateRenderer',
@@ -1111,7 +1114,7 @@ export class RefsetDetails implements OnInit {
                             filter: false,
                             tooltipField: 'active',
                             sortable: false,
-                            resizable: false
+                            resizable: true
                         },
                     ]
                 );

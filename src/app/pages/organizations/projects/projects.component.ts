@@ -53,13 +53,13 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.data = [];
         this.columnDefs = [
-            { field: 'name', tooltipField: 'name', headerName: 'Project Name', minWidth: 400, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true },
-            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 550, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Project Name', minWidth: 65, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true, resizable: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
             {
                 field: 'teams', tooltipValueGetter: (params) => {
                     return JSON.parse(params.data.teams).teams.length ? JSON.parse(params.data.teams).teams.map(team => team.name).join(', ') : '';
                 },
-                headerName: 'Teams', filter: false, resizable: false, sortable: false, cellRenderer: params => {
+                headerName: 'Teams', filter: false, minWidth: 65, resizable: true, sortable: false, cellRenderer: params => {
                     return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
                 }
             }
