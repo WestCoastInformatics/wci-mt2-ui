@@ -39,7 +39,7 @@ export class CreateRefsetComponent implements OnInit {
     createdMetaDataConcept = '';
     copyRefsetVersionOptions: any[];
     copySearchInput: string;
-    copyRefsetInternalId: string;
+    copySelectedVersion: any;
     refsetOptions: any[];
     refsetOptionsLoading = false;
     selectedParentConcept = undefined;
@@ -150,7 +150,7 @@ export class CreateRefsetComponent implements OnInit {
         return this.step === 1 && !this.selectedReferenceType
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.EXTERNAL && (this.selectedExternalName?.length === 0 || !this.externalUrlValid))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.INTENSIONAL && (this.definitionClauses?.length === 0 || this.definitionClauses[0]?.value === ''))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset || !this.copyRefsetInternalId))
+            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset  || !this.copySelectedVersion))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COMBINATION && (this.selectedCombinationRefsets?.length === 0));
     }
 
@@ -268,10 +268,11 @@ export class CreateRefsetComponent implements OnInit {
         this.step = 1;
         this.copyRefsetVersionOptions = [];
         this.copySearchInput = '';
-        this.copyRefsetInternalId = undefined;
         this.refsetOptions = [];
         this.refsetOptionsLoading = false;
         this.selectedCopyRefset = '';
+        this.selectedUUID = '';
+        this.copySelectedVersion = '';
 
     }
 
@@ -603,7 +604,8 @@ export class CreateRefsetComponent implements OnInit {
     search(query: string): void {
         this.refsetOptionsLoading = true;
         this.refsetOptions = [];
-        this.copyRefsetInternalId = null;
+        this.selectedUUID = null;
+        this.copySelectedVersion = null;
         this.copyRefsetVersionOptions = [];
 
         this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
@@ -660,7 +662,7 @@ export class CreateRefsetComponent implements OnInit {
         const copyRefset = event.value;
         this.copyRefsetVersionOptions = RefsetUtility.getVersionOptions(copyRefset);
         this.selectedCopyRefsetName = copyRefset.name;
-        this.copyRefsetInternalId = this.copyRefsetVersionOptions[0]?.value;
+        this.copySelectedVersion = this.copyRefsetVersionOptions[0];
     }
 
     optionSelect(event) {
@@ -774,9 +776,10 @@ export class CreateRefsetComponent implements OnInit {
     getRefset(): void {
         var name = this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
         this.createdMetaDataConcept = 'Copy of ' + name;
-        this.refsetService.getRefset(this.selectedCopyRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.selectedCopyRefset)).subscribe({
+        this.refsetService.getRefset(this.selectedCopyRefset.refsetId,
+            this.copySelectedVersion?.date).subscribe({
             next: (results) => {
-                this.selectedNarrative = 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative;
+                this.selectedNarrative = (results?.narrative) ? 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative : '';
                 this.selectedTags = results?.tags;
                 this.privateRefset = results?.privateRefset;
                 this.localSet = results?.localSet;
