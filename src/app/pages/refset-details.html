@@ -137,6 +137,8 @@
                           (saved)="loadWorkflowHistoryData($event)" [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes">
                         </workflow-history-notes-modal>
 
+                        <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="recalulateDefinition()">Recalulate Members</button>
+
                         <button mat-menu-item *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
 
                         <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionStatus == 'IN DEVELOPMENT'"

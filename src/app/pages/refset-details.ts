@@ -1287,6 +1287,21 @@ export class RefsetDetails implements OnInit {
         }
     }
 
+    recalulateDefinition() {
+
+        this.changeLockedStatus(false);
+
+        this.refsetService.recalulateDefinition(this.refsetData.id).subscribe({
+            next: (results) => {
+
+                this.processChangedMemberEffects(null);
+            },
+            error: (error) => {
+                this.changeLockedStatus(true);
+            }
+        });
+    }
+
     deleteDevelopmentVersion() {
 
         this.toggleLoadingSpinner(true);

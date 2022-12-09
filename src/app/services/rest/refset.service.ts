@@ -98,6 +98,10 @@ export class RefsetService extends RestService {
         return this.put(this.contextPath + `refset/${refsetInternalId}`, params);
     }
 
+    recalulateDefinition(refsetInternalId: string): Observable<any> {
+        return this.put(this.contextPath + `refset/${refsetInternalId}/recalculateDefinition`, {});
+    }
+
     getRefset(refsetId: string, versionDate: String = ''): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId + '/versionDate/' + versionDate);
     }
