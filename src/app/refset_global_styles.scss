@@ -1741,6 +1741,10 @@ select {
     border-radius: 8px;
     background: white;
   }
+      
+  .combination-chips {
+      transform: scale(1);
+  }
 
   .refset_tool_ecl_definition_field {
     width: calc(100% - 120px);
@@ -5485,4 +5489,10 @@ app-date-text-floating-filter {
 
 .landing-page-center {
   text-align: center;
+}
+
+.empty-value-checkbox {
+  mat-pseudo-checkbox {
+      display: none !important;
+    }
 }

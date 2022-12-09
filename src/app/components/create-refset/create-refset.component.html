@@ -28,7 +28,7 @@
                         <label style="margin-bottom: 0.7rem;">Organization:</label>
                     </div>
 
-                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text" >
+                    <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
                         <mat-form-field appearance="none">
                             <input style="cursor: default" matInput type="text" disabled [(ngModel)]="inputProperties.project.edition.organization.name" />
                         </mat-form-field>
@@ -132,8 +132,8 @@
                         <div class="create-new-refset-form-field create-new-refset-row-spacing">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
                                 <label style="margin-bottom: 0.7rem;">Module Id
-                                  <span *ngIf="inputProperties.project.edition.modules.length>1">({{inputProperties.project.edition.modules.length}})</span>
-                                  <span *ngIf="!editMode" class="mandatory-field">*</span>:
+                                    <span *ngIf="inputProperties.project.edition.modules.length>1">({{inputProperties.project.edition.modules.length}})</span>
+                                    <span *ngIf="!editMode" class="mandatory-field">*</span>:
                                 </label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
@@ -163,10 +163,8 @@
                                     <span *ngIf="i == 0">
 
                                         <mat-form-field class="refset_tool_ecl_definition_field">
-                                            <input style="cursor: default" matInput [(ngModel)]="clause.value"
-                                              (ngModelChange)="eclDefinitionChanged($event)"
-                                              id="createRefsetDefinitionClausesInput"
-                                              #createRefsetDefinitionClausesInput />
+                                            <input style="cursor: default" matInput [(ngModel)]="clause.value" (ngModelChange)="eclDefinitionChanged($event)"
+                                              id="createRefsetDefinitionClausesInput" #createRefsetDefinitionClausesInput />
                                         </mat-form-field>
                                         <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
@@ -207,9 +205,8 @@
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
                                 <label style="margin-top: 1.7rem">External URL:<span class="mandatory-field">*</span>
-                                    <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false"
-                                          aria-label="Location of the external refset" title="Valid URL for the location of the refset or information about it."
-                                          ng-reflect-color="primary">
+                                    <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false" aria-label="Location of the external refset"
+                                          title="Valid URL for the location of the refset or information about it." ng-reflect-color="primary">
                                             <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
                                         </button></span>
                                 </label>
@@ -233,7 +230,8 @@
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-form-field appearance="fill">
 
-                                    <mat-select (selectionChange)="copyRefsetSelected($event)" [(ngModel)]="selectedCopyRefset" placeholder="Type here to search Reference Sets">
+                                    <mat-select (selectionChange)="copyRefsetSelected($event)" [(ngModel)]="selectedCopyRefset"
+                                      placeholder="Type here to search Reference Sets">
 
                                         <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="copySearchInput"
                                           (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
@@ -270,16 +268,35 @@
                             </div>
 
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
-                                <mat-form-field appearance="fill">
-                                    <mat-label class="fs14">Choose existing reference sets (use Ctrl-click to select more than one)</mat-label>
-                                    <div class="mt-10">
-                                        <label *ngIf="data.length == 0">There are currently no published existing reference sets available</label>
-                                        <select matNativeControl [multiple]=true [(ngModel)]="selectedCombinationRefsets">
-                                            <option *ngFor="let refset of data" [ngValue]="refset">
-                                                {{ refset?.name }}
-                                            </option>
-                                        </select>
-                                    </div>
+                                <mat-form-field floatLabel="never" appearance="legacy">
+
+                                    <mat-label>Select Reference Sets by ID or FSN</mat-label>
+                                    <mat-select [formControl]="selectedCombinationRefsetsForm" multiple>
+
+                                        <input class="concept-dropdown-input full-width" placeholder="Type here..." (input)="onSearchChange($event.target.value, true)"
+                                          (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
+
+                                        <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading" class="empty-value-checkbox">
+                                            None</mat-option>
+                                        <mat-option *ngIf="refsetOptionsLoading" class="empty-value-checkbox">Loading...</mat-option>
+
+                                        <mat-option *ngFor="let refset of refsetOptions" [value]="refset" (click)="optionSelect(refset)">
+                                            <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}"
+                                              class="refset-tool-edition-flag" title="{{ refset?.editionName }} Flag" aria-label="{{ refset?.editionName }} Flag" />
+                                            {{ refset.name }} ({{ refset?.editionName }})
+                                        </mat-option>
+
+                                    </mat-select>
+
+                                </mat-form-field>
+                                <mat-form-field class="chiplist" *ngIf="selectedCombinationRefsetsForm.value && selectedCombinationRefsetsForm.value.length > 0">
+                                    <mat-chip-list class="mat-chip-list-stacked" aria-orientation="vertical">
+                                        <mat-chip *ngFor="let refset of selectedCombinationRefsets; index as i" [selectable]="selectable" [removable]="removable"
+                                          (removed)="removeCombinationRefset(i)" class="combination-chips mat-elevation-z5">
+                                            {{ refset?.name }}
+                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                        </mat-chip>
+                                    </mat-chip-list>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -444,12 +461,13 @@
                                 <label>Availability:</label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
-                                <span><mat-checkbox [(ngModel)]="privateRefset">Private</mat-checkbox></span>
-                                <span><button mat-icon-button (click)="openInfoDialog('availability')" aria-hidden="false"
-                                    aria-label="Open Availability Information Dialog" title="Open Availability Information Dialog"
-                                    ng-reflect-color="primary">
-                                      <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                  </button></span>
+                                <span>
+                                    <mat-checkbox [(ngModel)]="privateRefset">Private</mat-checkbox>
+                                </span>
+                                <span><button mat-icon-button (click)="openInfoDialog('availability')" aria-hidden="false" aria-label="Open Availability Information Dialog"
+                                      title="Open Availability Information Dialog" ng-reflect-color="primary">
+                                        <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
+                                    </button></span>
                             </div>
                         </div>
                         <!-- End Availability -->
@@ -460,16 +478,15 @@
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-radio-group>
-                                    <mat-radio-button class="refset-radio create-refset-radio-button"
-                                      (change)="checkPublishability($event)" value="false" [checked]="!localSet">Within Edition</mat-radio-button>
+                                    <mat-radio-button class="refset-radio create-refset-radio-button" (change)="checkPublishability($event)" value="false"
+                                      [checked]="!localSet">Within Edition</mat-radio-button>
 
-                                      <mat-radio-button class="ml-15 refset-radio create-refset-radio-button"
-                                      (change)="checkPublishability($event)" value="true">Local Set</mat-radio-button>
-                                      <span><button mat-icon-button (click)="openInfoDialog('publication')" aria-hidden="false"
-                                        aria-label="Open Publication Information Dialog" title="Open Publication Information Dialog"
-                                        ng-reflect-color="primary">
-                                          <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                      </button></span>
+                                    <mat-radio-button class="ml-15 refset-radio create-refset-radio-button" (change)="checkPublishability($event)" value="true">Local Set
+                                    </mat-radio-button>
+                                    <span><button mat-icon-button (click)="openInfoDialog('publication')" aria-hidden="false" aria-label="Open Publication Information Dialog"
+                                          title="Open Publication Information Dialog" ng-reflect-color="primary">
+                                            <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
+                                        </button></span>
                                 </mat-radio-group>
                             </div>
                         </div>

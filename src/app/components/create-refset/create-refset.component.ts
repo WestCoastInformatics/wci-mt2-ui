@@ -14,6 +14,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'create-refset',
@@ -32,7 +33,7 @@ export class CreateRefsetComponent implements OnInit {
     selectedMetaDataConcept: any;
     selectedCopyRefset: any;
     selectedCopyRefsetName: string;
-    selectedCombinationRefsets: any;
+    selectedCombinationRefsets = [];
     selectedExternalName = '';
     selectedExternalUrl = '';
     createdMetaDataConcept = '';
@@ -71,6 +72,7 @@ export class CreateRefsetComponent implements OnInit {
     parentConcepts: any;
     conceptError = '';
     dialog: DialogService;
+    selectedCombinationRefsetsForm = new FormControl();
 
     @Input() existingBranchVersions: any;
     @Input() isDetailsPage = false;
@@ -148,7 +150,7 @@ export class CreateRefsetComponent implements OnInit {
         return this.step === 1 && !this.selectedReferenceType
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.EXTERNAL && (this.selectedExternalName?.length === 0 || !this.externalUrlValid))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.INTENSIONAL && (this.definitionClauses?.length === 0 || this.definitionClauses[0]?.value === ''))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset  || !this.copyRefsetInternalId))
+            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset || !this.copyRefsetInternalId))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COMBINATION && (this.selectedCombinationRefsets?.length === 0));
     }
 
@@ -250,7 +252,7 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedMetaDataConcept = '';
         this.createdMetaDataConcept = '';
         this.selectedParentConcept = undefined;
-        this.selectedCombinationRefsets = '';
+        this.selectedCombinationRefsets = [];
         this.selectedExternalName = '';
         this.selectedExternalUrl = '';
         this.selectedNarrative = '';
@@ -566,6 +568,13 @@ export class CreateRefsetComponent implements OnInit {
         }
     }
 
+    removeCombinationRefset(index: number): void {
+        const newSelectedCombinationRefsetsForm = this.selectedCombinationRefsetsForm.value.filter((_, i) => i !== index);
+
+        this.selectedCombinationRefsetsForm.patchValue(newSelectedCombinationRefsetsForm);
+        this.selectedCombinationRefsets = this.selectedCombinationRefsetsForm.value
+    }
+
     openEclBuilder(fieldId) {
         UiUtility.openEclBuilder(fieldId, this.inputProperties.project.edition.branch);
     }
@@ -574,12 +583,16 @@ export class CreateRefsetComponent implements OnInit {
     eclDefinitionChanged(event) {
         // Fix for ecl builder returning ", " as a clause separator instead of " AND "
         if (event != this.definitionClauses[0].value.replaceAll('|, ', '| AND ')) {
-                this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
         }
     }
 
-    async onSearchChange(value): Promise<void> {
-        await this.search(value);
+    async onSearchChange(value, isCombination = false): Promise<void> {
+        if (isCombination) {
+            await this.combinationSearch(value);
+        } else {
+            await this.search(value);
+        }
     }
 
     handleInput(event: KeyboardEvent): void {
@@ -588,21 +601,63 @@ export class CreateRefsetComponent implements OnInit {
 
     @Debounce()
     search(query: string): void {
+        this.refsetOptionsLoading = true;
+        this.refsetOptions = [];
+        this.copyRefsetInternalId = null;
+        this.copyRefsetVersionOptions = [];
 
-      this.refsetOptionsLoading = true;
-      this.refsetOptions = [];
-      this.copyRefsetInternalId = null;
-      this.copyRefsetVersionOptions = [];
+        this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
+            this.refsetOptions = results.items.filter((item) => item.refsetId !== this.refsetId);
 
-      this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
-        this.refsetOptions = results.items.filter((item) => item.refsetId !== this.refsetId);
+            for (const option of this.refsetOptions) {
+                option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+            }
 
-        for (const option of this.refsetOptions) {
-          option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
-        }
+            this.refsetOptionsLoading = false;
+        });
+    }
 
-        this.refsetOptionsLoading = false;
-      });
+    @Debounce()
+    combinationSearch(query: string): void {
+        this.refsetOptionsLoading = true;
+        this.refsetOptions = [];
+
+        const restParams: any = {
+            displayType: 'list',
+            offset: 0,
+            searchConcepts: false,
+            showInDevelopment: true,
+            countComments: false,
+            query: query
+        };
+
+        this.refsetService.getRefsets({ ...restParams }).subscribe({
+            next: (results) => {
+                console.log(results)
+                for (const refset of results.items) {
+                    this.refsetOptions.push({
+                        name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
+                        , refsetId: refset.refsetId
+                        , private: refset.privateRefset
+                        , workflowStatus: `${refset?.workflowStatus}`
+                        , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
+                        , versionDate: `${refset.versionDate}`
+                    });
+
+                }
+                this.refsetOptions = this.sortRefsets(this.refsetOptions);
+
+                for (const option of this.refsetOptions) {
+                    option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+                }
+
+                this.refsetOptionsLoading = false;
+            },
+            error: (error) => {
+
+
+            }
+        });
     }
 
     copyRefsetSelected(event) {
@@ -610,6 +665,18 @@ export class CreateRefsetComponent implements OnInit {
         this.copyRefsetVersionOptions = RefsetUtility.getVersionOptions(copyRefset);
         this.selectedCopyRefsetName = copyRefset.name;
         this.copyRefsetInternalId = this.copyRefsetVersionOptions[0]?.value;
+    }
+
+    optionSelect(event) {
+        if (this.selectedCombinationRefsets.indexOf(event) === -1) {
+            this.selectedCombinationRefsets.push(event);
+        } else {
+            const index = this.selectedCombinationRefsets.indexOf(event);
+
+            this.selectedCombinationRefsets.splice(index, 1);
+        }
+
+        this.selectedCombinationRefsetsForm.patchValue(this.selectedCombinationRefsets);
     }
 
     copyCheckComplete() {
@@ -725,5 +792,4 @@ export class CreateRefsetComponent implements OnInit {
             }
         });
     }
-
 }
