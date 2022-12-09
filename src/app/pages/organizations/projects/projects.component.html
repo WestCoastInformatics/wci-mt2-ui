@@ -42,9 +42,12 @@
                             </ag-grid-angular>
                         </div>
                         <ng-template #descriptionSection let-params>
-                            <label class="ellipsed-label" [ngbPopover]="params?.data.description" container="body" placement="top" popoverTitle="Description">
+                            <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
                                 {{ params?.data.description }}
                             </label>
+                        </ng-template>
+                        <ng-template #teamSection let-params>
+                            <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">{{getTeamCount(params?.data)}} teams</span>
                         </ng-template>
                     </div>
                 </section>

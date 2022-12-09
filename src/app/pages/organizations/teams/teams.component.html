@@ -29,11 +29,15 @@
                         <div class="ag-theme-alpine">
                             <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" style="width: 100%">
                             </ag-grid-angular>
-                            <!-- Name Templates -->
+                            <!-- description template -->
                             <ng-template #descriptionSection let-params>
-                                <label class="ellipsed-label" [ngbPopover]="params?.data.description" container="body" placement="top" popoverTitle="Description">
+                                <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
                                     {{ params?.data.description }}
                                 </label>
+                            </ng-template>
+                            <!-- people template-->
+                            <ng-template #peopleSection let-params>
+                                <span class="text-primary font-weight-bold">{{params?.data?.members}} People</span>
                             </ng-template>
                         </div>
                     </div>

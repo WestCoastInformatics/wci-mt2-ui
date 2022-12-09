@@ -55,8 +55,9 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">{{getTeamCount(params.data)}}
-                                    teams</span>
+                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)" (click)="clickTeams($event)">
+                                    {{getTeamCount(params.data)}} teams
+                                </span>
                             </ng-template>
 
                             <ng-template #inactivateUserSection let-params>

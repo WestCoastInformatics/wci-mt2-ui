@@ -6,7 +6,6 @@ import { lastValueFrom } from 'rxjs';
 import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
@@ -22,6 +21,7 @@ export class OrganizationProjectsComponent implements OnInit {
     data = [];
     gridOptions: any;
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
+    @ViewChild('teamSection') teamSection: TemplateRef<any>;
     columnDefs = [];
     projectList: any[] = [];
     organizationList: any[] = [];
@@ -54,16 +54,9 @@ export class OrganizationProjectsComponent implements OnInit {
 
         this.data = [];
         this.columnDefs = [
-            { field: 'name', tooltipField: 'name', headerName: 'Project Name', minWidth: 65, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true, resizable: true },
-            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
-            {
-                field: 'teams', tooltipValueGetter: (params) => {
-                    return JSON.parse(params.data.teams).teams.length ? JSON.parse(params.data.teams).teams.map(team => team.name).join(', ') : '';
-                },
-                headerName: 'Teams', filter: false, minWidth: 65, resizable: true, sortable: false, cellRenderer: params => {
-                    return `<span class="text-primary font-weight-bold">${this.getTeamCount(JSON.parse(params.data.teams))} teams</span>`;
-                }
-            }
+            { field: 'name', tooltipField: 'name', headerName: 'Project Name', flex: 1, minWidth: 65, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true, resizable: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 2, wrapText: true, autoHeight: true, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
+            { field: 'teams', headerName: 'Teams', filter: false, minWidth: 65, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.teamSection } }
         ];
 
         this.route.params.subscribe(params => {
@@ -112,13 +105,18 @@ export class OrganizationProjectsComponent implements OnInit {
         this.gridParams = params;
         this.api = params.api;
         this.columnApi = params.columnApi;
+        // BAC: these are here because column defs are set up before view children are injected?
         this.columnDefs[1].cellRendererParams = { template: this.descriptionSection };
+        this.columnDefs[2].cellRendererParams = { template: this.teamSection };
         this.api.setColumnDefs(this.columnDefs);
     }
 
     onGridCellClick = (event) => {
 
-        if (event.column.colId === 'name') {
+        // If clicking on teams, go to teams page
+        if (event.column.colId === 'teams') {
+            this.router.navigate(['organizations', this.organizationId, 'teams']);
+        } else {
             this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets']);
         }
     }
@@ -319,7 +317,21 @@ export class OrganizationProjectsComponent implements OnInit {
     }
 
     getTeamCount(data: any): number {
-        return data.teams.length;
+        if (data && data.teams) {
+            let teams = JSON.parse(data.teams).teams;
+            return teams.length;
+        }
+        return 0;
     }
+
+    getTeamsTitle(data: any): string{
+        if (data && data.teams) {
+           let teams = JSON.parse(data.teams).teams;
+           return teams.map(t => t.name).join(', \n');
+        }
+        console.log('xxx')
+        return 'No teams';
+    }
+    
 }
 
