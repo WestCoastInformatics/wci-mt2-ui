@@ -210,8 +210,8 @@ export class RefsetDetails implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
     routeParamsSubscription$: Subscription;
-    activeInactiveStatus = 'Active and Inactive Concepts';
-    activeOnly = false;
+    activeInactiveStatus = 'Active Concepts Only';
+    activeOnly = true;
     inactiveOnly = false;
 
     constructor(
