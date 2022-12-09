@@ -27,7 +27,7 @@
 
         <!-- Status Stepper if in edit mode and Reference Set not locked -->
         <mat-horizontal-stepper *ngIf="!isLocked && editMode && refsetStatus != 'IN_UPGRADE'" class="col-5 details-page-stepper" [linear]="true" labelPosition="bottom"
-            [class.refset_tool_inactive_row]="refsetData != undefined && !refsetData?.active" #stepper>
+          [class.refset_tool_inactive_row]="refsetData != undefined && !refsetData?.active" #stepper>
 
             <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
                 <ng-template matStepperIcon="number">
@@ -147,7 +147,7 @@
                         </button>
 
                         <button mat-menu-item *ngIf="allowedToEdit && this.refsetData?.versionList.length > 1" (click)="openChangeRefsetStatus()">
-                          {{ changeRefsetStatusButtonText }} Reference Set
+                            {{ changeRefsetStatusButtonText }} Reference Set
                         </button>
 
                     </mat-menu>
@@ -190,91 +190,92 @@
                 </div>
 
                 <div *ngIf="editMode" class="edit-button-group-right-below-sticky-header">
-                  <span [class.disabled]="!membersReady">
-                    <button *ngIf="this.refsetData?.availableActions?.includes('EDIT') && editMode" mat-raised-button color="primary" aria-hidden="false" #editButton
-                      class="refset-tool-action-button refset-action-button" aria-label="Edit" title="Edit" ng-reflect-color="primary"
-                      (click)="setWorkflowStatusByAction('', 'EDIT')">
-                        Edit
-                    </button>
+                    <span [class.disabled]="!membersReady">
+                        <button *ngIf="this.refsetData?.availableActions?.includes('EDIT') && editMode" mat-raised-button color="primary" aria-hidden="false" #editButton
+                          class="refset-tool-action-button refset-action-button" aria-label="Edit" title="Edit" ng-reflect-color="primary"
+                          (click)="setWorkflowStatusByAction('', 'EDIT')">
+                            Edit
+                        </button>
 
-                    <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
-                      *ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus != 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
-                      [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
-                      [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
+                        <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
+                          *ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus != 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
+                          [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
+                          [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
-                    <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
-                      *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
-                      (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button mr-15 cancel-upgrade" aria-label="Cancel Upgrade"
-                      title="Cancel Upgrade" ng-reflect-color="red">
-                      {{ adminOverrideText }} Cancel Upgrade
-                    </button>
-                    <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')" mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
-                      class="refset-tool-action-button refset-action-button mr-15" aria-label="Undo all changes since last save" title="Undo all changes since last save"
-                      ng-reflect-color="primary" (click)="openUndoEditModal(undoEditDialog)"> 
-                        {{ adminOverrideText }} Undo Changes
-                    </button>
-                    <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
-                      class="refset-tool-action-button refset-action-button" aria-label="Save changes and finish edit" title="Save changes and finish edit"
-                      ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
-                        {{ adminOverrideText }} Save Changes
-                    </button>
+                        <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" mat-raised-button color="red"
+                          *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
+                          (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="refset-tool-action-button mr-15 cancel-upgrade"
+                          aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+                            {{ adminOverrideText }} Cancel Upgrade
+                        </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')" mat-raised-button color="primary" aria-hidden="false" #cancelEditButton
+                          class="refset-tool-action-button refset-action-button mr-15" aria-label="Undo all changes since last save" title="Undo all changes since last save"
+                          ng-reflect-color="primary" (click)="openUndoEditModal(undoEditDialog)">
+                            {{ adminOverrideText }} Undo Changes
+                        </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
+                          class="refset-tool-action-button refset-action-button" aria-label="Save changes and finish edit" title="Save changes and finish edit"
+                          ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
+                            {{ adminOverrideText }} Save Changes
+                        </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')" #readyForReviewButton
-                      (click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')" mat-raised-button color="primary" aria-hidden="false"
-                      class="refset-tool-action-button refset-action-button" attr.aria-label="{{inEditButtonPrefix}} Request Review"
-                      title="{{inEditButtonPrefix}} Request Review" ng-reflect-color="primary">
-                        {{inEditButtonPrefix}} Request Review
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')" #readyForReviewButton
+                          (click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')" mat-raised-button color="primary" aria-hidden="false"
+                          class="refset-tool-action-button refset-action-button" attr.aria-label="{{inEditButtonPrefix}} Request Review"
+                          title="{{inEditButtonPrefix}} Request Review" ng-reflect-color="primary">
+                            {{inEditButtonPrefix}} Request Review
+                        </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('REVIEW')" #reviewButton (click)="setWorkflowStatusByAction('', 'REVIEW')" mat-raised-button
-                       color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button" aria-label="Review" title="Review" ng-reflect-color="primary">
-                        Review
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('REVIEW')" #reviewButton (click)="setWorkflowStatusByAction('', 'REVIEW')" mat-raised-button
+                          color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button" aria-label="Review" title="Review"
+                          ng-reflect-color="primary">
+                            Review
+                        </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
-                      class="refset-tool-action-button refset-action-button" aria-label="Withdraw Review Request" title="Withdraw Review Request" ng-reflect-color="primary"
-                      (click)="setWorkflowStatusByAction('', 'WITHDRAW')">
-                        Withdraw Request
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
+                          class="refset-tool-action-button refset-action-button" aria-label="Withdraw Review Request" title="Withdraw Review Request"
+                          ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'WITHDRAW')">
+                            Withdraw Request
+                        </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')" #acceptRefsetButton mat-raised-button color="primary" aria-hidden="false"
-                      (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')" class="refset-tool-action-button refset-action-button" aria-label="Accept Reference Set"
-                      title="Accept Reference Set" ng-reflect-color="primary">
-                        Accept Reference Set
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')" #acceptRefsetButton mat-raised-button color="primary" aria-hidden="false"
+                          (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')" class="refset-tool-action-button refset-action-button" aria-label="Accept Reference Set"
+                          title="Accept Reference Set" ng-reflect-color="primary">
+                            Accept Reference Set
+                        </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && reviewNotesAdded" mat-raised-button color="primary" aria-hidden="false"
-                      #rejectRefsetButton class="refset-tool-action-button refset-action-button" aria-label="Reject Reference Set" title="Reject Reference Set"
-                      ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
-                        Reject Reference Set
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && reviewNotesAdded" mat-raised-button color="primary" aria-hidden="false"
+                          #rejectRefsetButton class="refset-tool-action-button refset-action-button" aria-label="Reject Reference Set" title="Reject Reference Set"
+                          ng-reflect-color="primary" (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
+                            Reject Reference Set
+                        </button>
 
-                    <review-modal [refsetInternalId]="refsetData.id" *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
-                      (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
-                    </review-modal>
+                        <review-modal [refsetInternalId]="refsetData.id" *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
+                          (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
+                        </review-modal>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')" #unassignButton mat-raised-button color="primary" aria-hidden="false"
-                      (click)="setWorkflowStatusByAction('', 'UNASSIGN')" class="refset-tool-action-button refset-action-button" aria-label="Unassign" title="Unassign"
-                       ng-reflect-color="primary">
-                       {{ adminOverrideText }} Unassign
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')" #unassignButton mat-raised-button color="primary" aria-hidden="false"
+                          (click)="setWorkflowStatusByAction('', 'UNASSIGN')" class="refset-tool-action-button refset-action-button" aria-label="Unassign" title="Unassign"
+                          ng-reflect-color="primary">
+                            {{ adminOverrideText }} Unassign
+                        </button>
 
-                    <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
-                      [refsetData]="refsetData" [labelPrefix]="inEditButtonPrefix" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')"
-                      (reloadPage)="initializeDetailsPage()">
-                    </ready-for-publication-modal>
+                        <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')" [refsetData]="refsetData"
+                          [labelPrefix]="inEditButtonPrefix" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')" (reloadPage)="initializeDetailsPage()">
+                        </ready-for-publication-modal>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')" #withdrawPublicationRequest mat-raised-button color="primary" aria-hidden="false"
-                      (click)="setWorkflowStatusByAction('', 'FAILS_RVF')" class="refset-tool-action-button refset-action-button" aria-label="Withdraw"
-                      title="Withdraw Publication Request" ng-reflect-color="primary">
-                        Withdraw Request
-                    </button>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')" #withdrawPublicationRequest mat-raised-button color="primary"
+                          aria-hidden="false" (click)="setWorkflowStatusByAction('', 'FAILS_RVF')" class="refset-tool-action-button refset-action-button" aria-label="Withdraw"
+                          title="Withdraw Publication Request" ng-reflect-color="primary">
+                            Withdraw Request
+                        </button>
 
-                    <button *ngIf="this.refsetData?.availableActions?.includes('PUBLISH_REFSET')" mat-raised-button color="primary" aria-hidden="false"
-                      (click)="openPublishLocalsetModal()" class="refset-tool-action-button refset-action-button" aria-label="Publish Local Set" ng-reflect-color="primary">
-                        Publish Local Set
-                    </button>
-                  </span>
+                        <button *ngIf="this.refsetData?.availableActions?.includes('PUBLISH_REFSET')" mat-raised-button color="primary" aria-hidden="false"
+                          (click)="openPublishLocalsetModal()" class="refset-tool-action-button refset-action-button" aria-label="Publish Local Set"
+                          ng-reflect-color="primary">
+                            Publish Local Set
+                        </button>
+                    </span>
                 </div>
 
             </div>
@@ -436,8 +437,8 @@
         <!-- Section Title -->
         <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title">
             Reference Set Members ({{refsetData?.memberCount}})
-            <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" mat-raised-button color="primary" aria-hidden="false" class="ml-4 refset-tool-action-button refset-action-button"
-              ng-reflect-color="primary" (click)="downloadMembersTable()">
+            <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" mat-raised-button color="primary" aria-hidden="false"
+              class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
                 Download Members Table
                 <i class="fa fa-download"></i>
             </button>
@@ -445,22 +446,16 @@
 
         <br *ngIf="allowedToEdit && showMembersSection" />
         <span class="edit-member-section" *ngIf="allowedToEdit && showMembersSection">
-            <!-- <button mat-button [matMenuTriggerFor]="menu" [matMenuTriggerRestoreFocus]="false" class="manage-members-menu">Edit Members
-                <span class="down-arrow-for-menu">&#x25BC;</span>
-            </button> -->
-            <!-- <mat-menu #menu="matMenu">
-
-            </mat-menu> -->
             <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
-                [processChangedMemberFunction]="processChangedMemberEffects">
+              [processChangedMemberFunction]="processChangedMemberEffects">
             </import-from-file-modal>
 
             <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
-                (changeLockedStatus)="changeLockedStatus($event)">
+              (changeLockedStatus)="changeLockedStatus($event)">
             </import-from-list-modal>
 
             <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
-            [processChangedMemberFunction]="processChangedMemberEffects">
+              [processChangedMemberFunction]="processChangedMemberEffects">
             </add-remove-by-concept-modal>
         </span>
         <br>
@@ -529,6 +524,20 @@
                                         </div>
 
                                         <div class="col-md-3" style="display: contents" id="refset-type">
+                                            <button mat-raised-button color="primary" aria-hidden="false" [matMenuTriggerFor]="activeInactive"
+                                              [matMenuTriggerRestoreFocus]="false" class="refset-tool-action-button btn btn-primary inactive-status" ng-reflect-color="primary"
+                                              unfocus>Status:
+                                                {{activeInactiveStatus}}
+                                            </button>
+                                            <mat-menu #activeInactive="matMenu">
+                                                <button mat-menu-item alt="Active Concepts Only" title="Active Concepts Only" aria-label="Active Concepts Only"
+                                                  (click)="changeActiveInactiveStatus('Active Concepts Only')">Active Concepts Only</button>
+                                                <button mat-menu-item alt="Active and Inactive Concepts" title="Active and Inactive Concepts"
+                                                  aria-label="Active and Inactive Concepts" (click)="changeActiveInactiveStatus('Active and Inactive Concepts')">Active and
+                                                    Inactive Concepts</button>
+                                                <button mat-menu-item alt="Inactive Concepts Only" title="Inactive Concepts Only" aria-label="Inactive Concepts Only"
+                                                  (click)="changeActiveInactiveStatus('Inactive Concepts Only')">Inactive Concepts Only</button>
+                                            </mat-menu>
                                             <mat-button-toggle-group class="refset-tool-toggle-buttons" name="membersListMode" aria-label="Members List Mode"
                                               (change)="onChangeMembersListMode()" [(ngModel)]="selectedMembersListMode">
                                                 <mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
@@ -902,7 +911,7 @@
 <ng-template #publishLocalsetDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             Publish Local Reference Set
         </h4>
@@ -915,7 +924,8 @@
         <div class="modal-body ready-for-publication-modal-body">
 
             <div class="row mb-3">
-                You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version date past the year 2000.
+                You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version
+                date past the year 2000.
             </div>
 
             <div class="row">
@@ -936,8 +946,8 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button [disabled]="!validatePublishDate(publishVersionDate.value)" type="button" (click)="publishLocalset(publishVersionDate.value);" mat-raised-button color="primary" aria-hidden="false"
-          class="refset-tool-action-button" aria-label="Publish" ng-reflect-color="primary" style="margin-right: 20px;">
+        <button [disabled]="!validatePublishDate(publishVersionDate.value)" type="button" (click)="publishLocalset(publishVersionDate.value);" mat-raised-button
+          color="primary" aria-hidden="false" class="refset-tool-action-button" aria-label="Publish" ng-reflect-color="primary" style="margin-right: 20px;">
             Publish
         </button>
         <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="Cancel"
@@ -983,7 +993,7 @@
 <ng-template #changeRefsetStatusDialog let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn" ></button>
+        <button ngbAutofocus class="unfocus-btn"></button>
         <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
             {{ changeRefsetStatusButtonText }} Reference Set
         </h4>
@@ -1001,9 +1011,9 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="changeRefsetStatus();" mat-raised-button color="primary" aria-hidden="false"
-          class="refset-tool-action-button" ng-reflect-color="primary" style="margin-right: 20px;">
-          {{ changeRefsetStatusButtonText }}
+        <button type="button" (click)="changeRefsetStatus();" mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button"
+          ng-reflect-color="primary" style="margin-right: 20px;">
+            {{ changeRefsetStatusButtonText }}
         </button>
         <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" ng-reflect-color="red">
             Cancel

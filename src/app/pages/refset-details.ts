@@ -210,6 +210,9 @@ export class RefsetDetails implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
     routeParamsSubscription$: Subscription;
+    activeInactiveStatus = 'Active and Inactive Concepts';
+    activeOnly = false;
+    inactiveOnly = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -370,7 +373,7 @@ export class RefsetDetails implements OnInit {
                 this.changeDetectorRef.detectChanges();
 
                 if (this.refsetData.type === RefsetUtility.EXTERNAL) {
-                    
+
                     this.showMembersSection = false;
                     this.noMemberSectionText = 'The Reference Set members are not available here for external refsets.';
                     this.membersReady = true;
@@ -473,7 +476,7 @@ export class RefsetDetails implements OnInit {
                     this.changeRefsetStatusButtonText = "Reactivate";
                     this.changeRefsetStatusText = "You are about to reactivate this reference set, allowing it to be used in future published versions of the terminiology."
                 }
-                
+
                 if (CodeUtility.hasValue(this.refsetData)) {
                     this.shortenNoteFields();
                 } else {
@@ -517,7 +520,7 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
                 this.stepperInfo['IN_EDIT_STARTED'] = true;
 
-                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
+                if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
 
                     this.adminOverride = true;
                     this.adminOverrideText = "Admin ";
@@ -543,7 +546,7 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
                 this.stepperInfo['IN_REVIEW_STARTED'] = true;
 
-                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
+                if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
 
                     this.adminOverride = true;
                     this.adminOverrideText = "Admin ";
@@ -588,7 +591,7 @@ export class RefsetDetails implements OnInit {
                 this.allowedToReview = true;
 
             }
-            
+
             // if you aren't the assigned author of an IN_EDIT or IN_UPGRADE refset then you can't see the members
             if (this.refsetData.assignedUser != this.user.userName && ['IN_EDIT', 'IN_UPGRADE'].includes(this.refsetData?.workflowStatus)) {
 
@@ -641,7 +644,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
-                    comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}), resizable: true
+                    comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: true
                 },
             ];
 
@@ -1020,11 +1023,20 @@ export class RefsetDetails implements OnInit {
                     return;
                 }
 
-                const data = results.items;
+                const data = results.items.filter((item) => {
+                    if (this.activeOnly) {
+                        return item.active === true;
+                    } else if (this.inactiveOnly) {
+                        return item.active === false;
+                    } else {
+                        return true;
+                    }
+                })
                 this.membersGridData = data;
-                this.membersGridNumberOfResults = results.total;
+                this.membersGridNumberOfResults = data.length;
 
-                if (results.items.length == 0) {
+                results.items = data;
+                if (data.length == 0) {
 
                     this.membersGridApi.showNoRowsOverlay();
                     this.membersGridApi.setRowData([]);
@@ -1042,21 +1054,21 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.membersColumnDefs = [
-                // This column is an exception to resizable, it's the +/- icon column    
-                {
-                    headerName: '',
-                    colId: 'add-remove',
-                    maxWidth: 40,
-                    resizable: false,
-                    filter: false,
-                    sort: false,
-                    cellClass: 'refset-tool-details-column-remove-icon',
-                    cellRenderer: 'templateRenderer',
-                    cellRendererParams: { template: this.conceptCodeSection }
-                }, {
-                    field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 65, maxWidth: 140, tooltipField: 'code', unSortIcon: true,
-                    resizable: true, cellClass: 'refset-tool-details-column-concept-id'
-                }
+                    // This column is an exception to resizable, it's the +/- icon column    
+                    {
+                        headerName: '',
+                        colId: 'add-remove',
+                        maxWidth: 40,
+                        resizable: false,
+                        filter: false,
+                        sort: false,
+                        cellClass: 'refset-tool-details-column-remove-icon',
+                        cellRenderer: 'templateRenderer',
+                        cellRendererParams: { template: this.conceptCodeSection }
+                    }, {
+                        field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 65, maxWidth: 140, tooltipField: 'code', unSortIcon: true,
+                        resizable: true, cellClass: 'refset-tool-details-column-concept-id'
+                    }
                 ];
 
                 for (let i = 0; i < this.languageOptions.length; i++) {
@@ -1076,7 +1088,7 @@ export class RefsetDetails implements OnInit {
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
                         tooltipValueGetter: this.descriptionValueGetter,
-                        comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}), resizable: true
+                        comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: true
                     });
                 }
 
@@ -1227,9 +1239,9 @@ export class RefsetDetails implements OnInit {
     }
 
     openPublishLocalsetModal = () => {
-        
+
         this.localsetPublishValid = true;
-        
+
         this.modalService.open(this.publishLocalsetDialog, {
             windowClass: 'ready-for-publication-modal',
             backdrop: 'static',
@@ -1864,5 +1876,22 @@ export class RefsetDetails implements OnInit {
 
     notesEditable(index: number, data: any): boolean {
         return index === 0 && data.workflowStatus === this.refsetData.workflowStatus && (this.allowedToEdit || this.allowedToReview);
+    }
+
+    changeActiveInactiveStatus(activeInactiveStatus: string): void {
+        this.activeInactiveStatus = activeInactiveStatus;
+
+        if (this.activeInactiveStatus.includes('Active Concepts Only')) {
+            this.activeOnly = true;
+            this.inactiveOnly = false;
+        } else if (this.activeInactiveStatus.includes('Active and Inactive Concepts')) {
+            this.activeOnly = false;
+            this.inactiveOnly = false;
+        } else if (this.activeInactiveStatus.includes('Inactive Concepts Only')) {
+            this.activeOnly = false;
+            this.inactiveOnly = true;
+        }
+
+        this.onMembersGridReady(this.originalGridParams);
     }
 }
