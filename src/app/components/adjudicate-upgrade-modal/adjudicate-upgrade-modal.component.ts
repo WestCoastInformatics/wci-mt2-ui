@@ -208,13 +208,9 @@ export class AdjudicateUpgradeModalComponent {
 
 				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 65, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
-					let description = '';
-
-					if (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-						description = this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
-					}
-
-					return description;
+					return this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0]?.term
+                        || this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions, true)[0]?.term
+                        || '';
 
 				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true, resizable: true
 			},
@@ -851,7 +847,7 @@ export class AdjudicateUpgradeModalComponent {
 		memberItems.forEach((item: any) => {
 			if (item.replaced === true || item.stillMember === false) {
 				// only add if not a duplicate
-				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {					
+				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {
 					inactiveConcepts.push(item);
 				}
 			}
@@ -879,7 +875,7 @@ export class AdjudicateUpgradeModalComponent {
 				oldMembers.push(item);
 			}
 		}
-		
+
 		// Sort by referencedComponentId
 		oldMembers = oldMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
@@ -946,7 +942,7 @@ export class AdjudicateUpgradeModalComponent {
 		};
 		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
 	}
-	
+
 	selectConcept(concept: any): void {
 
 		this.conceptSelected = true;
