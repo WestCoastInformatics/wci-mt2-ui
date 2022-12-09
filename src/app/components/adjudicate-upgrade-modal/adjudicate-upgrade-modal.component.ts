@@ -550,13 +550,12 @@ export class AdjudicateUpgradeModalComponent {
 
 	getLanguageAndType(isOption = false): string[] {
 		let language = '';
-		let type = '';
+		let type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];;
 		if (isOption) {
-			language = 'en';
-			type = 'FSN';
+            language = 'en';
+            type = (type.includes('FSN')) ? 'FSN' : 'PT';
 		} else {
 			language = this.selectedLanguage.split(' ')[0].toLowerCase();
-			type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
 		}
 		let type2 = '';
 		if (type === 'PT') {
