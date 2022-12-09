@@ -800,6 +800,7 @@ export class AdjudicateUpgradeModalComponent {
 
 	}
 
+	// NOTE: this is duplicated in "finish-upgrade-modal" component also - is that used??
 	getFinishedChangeReport(): void {
 
 		// Get old members from inactive concepts
@@ -809,6 +810,10 @@ export class AdjudicateUpgradeModalComponent {
 			if (items.replacementConcepts) {
 				for (let item of items.replacementConcepts) {
 					if (item.added === true) {
+						// skip duplicate entries (same code)
+						if (inactiveConcepts.filter(c => c.code==item.code).length > 0) {
+							continue;
+						}
 						inactiveConcepts.push(item);
 					}
 				}
@@ -820,14 +825,20 @@ export class AdjudicateUpgradeModalComponent {
 			if (!Boolean(newMembers.some((x) => {
 				return x['New Member ID'] === concept.code;
 			}))) {
-				newMembers.push({
+
+				let item = {
 					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
 					'refsetId': this.refsetData?.refsetId,
 					'referencedComponentId': concept.code
-				});
+				}
+				// Skip duplicate referencedComponentId (shouldn't be possible because of de-dup above)
+				if (newMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+					continue;
+				}
+				newMembers.push(item);
 			}
 		}
 
@@ -839,7 +850,10 @@ export class AdjudicateUpgradeModalComponent {
 		inactiveConcepts = [];
 		memberItems.forEach((item: any) => {
 			if (item.replaced === true || item.stillMember === false) {
-				inactiveConcepts.push(item);
+				// only add if not a duplicate
+				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {					
+					inactiveConcepts.push(item);
+				}
 			}
 		});
 		let oldMembers = [];
@@ -848,18 +862,26 @@ export class AdjudicateUpgradeModalComponent {
 				return x['Old Member ID'] === concept.code;
 			}))) {
 				if (oldMembers.length > 0 && oldMembers.find(item => item.id === concept.memberId)) {
-					continue
+					continue;
 				}
-				oldMembers.push({
+				let item = {
 					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
 					'refsetId': this.refsetData?.refsetId,
 					'referencedComponentId': concept.code
-				});
+				};
+				// skip duplicates
+				if (oldMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+					continue;
+				}
+				oldMembers.push(item);
 			}
 		}
+		
+		// Sort by referencedComponentId
+		oldMembers = oldMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
 		// Get all inactive concepts
 		const items = this.membersInCommon.items;
@@ -871,14 +893,19 @@ export class AdjudicateUpgradeModalComponent {
 
 
 		for (let i = 0; i < inactiveConcepts.length; i++) {
-			totalInactiveConcepts.push({
+			let item = {
 				'Inactive Concept ID': inactiveConcepts[i].code,
 				'Inactive Concept Name': this.transformDescriptions(inactiveConcepts[i].descriptions)[0].term,
 				'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
 				'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
 				'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
 				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].replacementConcepts[0].descriptions)[0].term
-			});
+			};
+			// skip duplicates
+			if (totalInactiveConcepts.filter(c => c['Suggested Replacement ConceptID(s)']==item['Suggested Replacement ConceptID(s)']).length > 0) {
+				continue;
+			}
+			totalInactiveConcepts.push(item);
 		}
 
 		// Sort by Inactive Concept ID
@@ -893,15 +920,23 @@ export class AdjudicateUpgradeModalComponent {
 		console.log(commonConcepts)
 		let membersInCommon = [];
 		for (let i = 0; i < commonConcepts?.length; i++) {
-			membersInCommon.push({
+			let item = {
 				'id': commonConcepts[i].memberId,
 				'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 				'active': commonConcepts[i].active ? '1' : '0',
 				'moduleId': this.refsetData?.moduleId,
 				'refsetId': this.refsetData?.refsetId,
 				'referencedComponentId': commonConcepts[i].code
-			});
+			}
+			// skip duplicates
+			if (membersInCommon.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+				continue;
+			}
+			membersInCommon.push(item);
 		}
+
+		// Sort by referencedComponentId
+		membersInCommon = membersInCommon.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
 		const changeReportObject = {
 			'newMember': newMembers,
@@ -911,6 +946,7 @@ export class AdjudicateUpgradeModalComponent {
 		};
 		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
 	}
+	
 	selectConcept(concept: any): void {
 
 		this.conceptSelected = true;

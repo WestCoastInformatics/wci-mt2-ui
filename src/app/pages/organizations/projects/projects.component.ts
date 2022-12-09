@@ -41,6 +41,7 @@ export class OrganizationProjectsComponent implements OnInit {
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private readonly teamService: TeamsService,
+        private readonly authService: AuthenticationService,
         private location: Location) {
         document.body.scrollTop = 0;
     }
@@ -133,6 +134,11 @@ export class OrganizationProjectsComponent implements OnInit {
 
                 this.organizationList = results?.items;
 
+                // If no organizations, assume we are logged out
+                if (!this.organizationList || this.organizationList.length == 0) {
+                    this.authService.notAuthenticated();
+                }
+
                 for (const organization of this.organizationList) {
 
                     if (this.organizationId == organization.id) {
@@ -143,11 +149,16 @@ export class OrganizationProjectsComponent implements OnInit {
                     }
                 }
 
+                // this calls getEditions() if it finds a selected org
                 this.getStoredOrganizationId();
 
                 if (!this.selectedOrganization) {
-                    this.showLoadingSpinner = false;
+                    // Pick the first one if nothing is working out
+                    this.selectedOrganization.id = this.organizationList[0].id;
+                    this.selectedOrganization = this.organizationList[0];
+                    this.selectOrganization();
                 }
+
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -186,7 +197,10 @@ export class OrganizationProjectsComponent implements OnInit {
                 this.getStoredEditionId();
 
                 if (!this.selectedEdition) {
-                    this.showLoadingSpinner = false;
+                    // Pick the first one if nothing is working out
+                    this.selectedEdition.id = this.editionList[0].id;
+                    this.selectedEdition = this.editionList[0];
+                    this.selectEdition();
                 }
             },
             error: (error) => {

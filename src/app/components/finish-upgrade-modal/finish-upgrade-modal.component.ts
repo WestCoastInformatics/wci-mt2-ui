@@ -104,105 +104,151 @@ export class FinishUpgradeModalComponent implements OnInit {
 
   }
 
-  getFinishedChangeReport(): void {
+	// NOTE: this is duplicated in "finish-upgrade-modal" component also - is that used??
+	getFinishedChangeReport(): void {
 
-    // Get old members from inactive concepts
-    let memberItems = this.membersInCommonForChangeReport?.items;
-    let inactiveConcepts = [];
-    memberItems.forEach((items: any) => {
-      if (items.replacementConcepts) {
-        for (let item of items.replacementConcepts) {
-          if (item.added === true) {
-            inactiveConcepts.push(item);
-          }
-        }
-      }
-    });
+		// Get old members from inactive concepts
+		let memberItems = this.membersInCommonForChangeReport?.items;
+		let inactiveConcepts = [];
+		memberItems.forEach((items: any) => {
+			if (items.replacementConcepts) {
+				for (let item of items.replacementConcepts) {
+					if (item.added === true) {
+						// skip duplicate entries (same code)
+						if (inactiveConcepts.filter(c => c.code==item.code).length > 0) {
+							continue;
+						}
+						inactiveConcepts.push(item);
+					}
+				}
+			}
+		});
 
-    let newMembers = [];
-    for (let concept of inactiveConcepts) {
-      if (!Boolean(newMembers.some((x) => {
-        return x['New Member ID'] === concept.code;
-      }))) {
-        newMembers.push({
-          'id': concept.memberId,
-          'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
-          'active': concept.active ? '1' : '0',
-          'moduleId': this.refsetData?.moduleId,
-          'refsetId': this.refsetData?.refsetId,
-          'referencedComponentId': concept.code
-        });
-      }
-    }
+		let newMembers = [];
+		for (let concept of inactiveConcepts) {
+			if (!Boolean(newMembers.some((x) => {
+				return x['New Member ID'] === concept.code;
+			}))) {
 
+				let item = {
+					'id': concept.memberId,
+					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+					'active': concept.active ? '1' : '0',
+					'moduleId': this.refsetData?.moduleId,
+					'refsetId': this.refsetData?.refsetId,
+					'referencedComponentId': concept.code
+				}
+				// Skip duplicate referencedComponentId (shouldn't be possible because of de-dup above)
+				if (newMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+					continue;
+				}
+				newMembers.push(item);
+			}
+		}
 
-    // Get new members from inactive concepts
-    inactiveConcepts = [];
-    memberItems.forEach((item: any) => {
-      if (item.replaced === true || item.stillMember === false) {
-        inactiveConcepts.push(item);
-      }
-    });
-    let oldMembers = [];
-    for (let concept of inactiveConcepts) {
-      if (!Boolean(oldMembers.some((x) => {
-        return x['Old Member ID'] === concept.code;
-      }))) {
-        oldMembers.push({
-          'id': concept.memberId,
-          'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
-          'active': concept.active ? '1' : '0',
-          'moduleId': this.refsetData?.moduleId,
-          'refsetId': this.refsetData?.refsetId,
-          'referencedComponentId': concept.code
-        });
-      }
-    }
-
-    // Get all inactive concepts
-    const items = this.membersInCommon.items;
-    inactiveConcepts = items.filter((items: any) => {
-      return items?.active == false;
-    });
-
-    let totalInactiveConcepts = [];
+		// Sort by referencedComponentId
+		newMembers = newMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
 
-    for (let i = 0; i < inactiveConcepts.length; i++) {
-      totalInactiveConcepts.push({
+		// Get new members from inactive concepts
+		inactiveConcepts = [];
+		memberItems.forEach((item: any) => {
+			if (item.replaced === true || item.stillMember === false) {
+				// only add if not a duplicate
+				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {					
+					inactiveConcepts.push(item);
+				}
+			}
+		});
+		let oldMembers = [];
+		for (let concept of inactiveConcepts) {
+			if (!Boolean(oldMembers.some((x) => {
+				return x['Old Member ID'] === concept.code;
+			}))) {
+				if (oldMembers.length > 0 && oldMembers.find(item => item.id === concept.memberId)) {
+					continue;
+				}
+				let item = {
+					'id': concept.memberId,
+					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+					'active': concept.active ? '1' : '0',
+					'moduleId': this.refsetData?.moduleId,
+					'refsetId': this.refsetData?.refsetId,
+					'referencedComponentId': concept.code
+				};
+				// skip duplicates
+				if (oldMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+					continue;
+				}
+				oldMembers.push(item);
+			}
+		}
+		
+		// Sort by referencedComponentId
+		oldMembers = oldMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
+
+		// Get all inactive concepts
+		const items = this.membersInCommon.items;
+		inactiveConcepts = items.filter((items: any) => {
+			return items?.active == false;
+		});
+
+		let totalInactiveConcepts = [];
+
+
+		for (let i = 0; i < inactiveConcepts.length; i++) {
+			let item = {
         'Inactive Concept ID': inactiveConcepts[i].code,
         'Inactive Concept Name': this.getConceptName(inactiveConcepts[i].descriptions),
         'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
         'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
         'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
         'Suggested Replacement Name': this.getReplacementConceptName(inactiveConcepts[i])
-      });
-    }
+			};
+			// skip duplicates
+			if (totalInactiveConcepts.filter(c => c['Suggested Replacement ConceptID(s)']==item['Suggested Replacement ConceptID(s)']).length > 0) {
+				continue;
+			}
+			totalInactiveConcepts.push(item);
+		}
 
-    // Get members in common
-    const membersInCommonItems = this.membersOfRefset;
-    const commonConcepts = membersInCommonItems?.filter((x) => {
-      return !memberItems?.includes(x.id);
-    });
+		// Sort by Inactive Concept ID
+		totalInactiveConcepts = totalInactiveConcepts.sort((a, b) => (a['Inactive Concept ID'] > b['Inactive Concept ID']) ? 1 : -1)
 
-    let membersInCommon = [];
-    for (let i = 0; i < commonConcepts?.length; i++) {
-      membersInCommon.push({
-        'id': commonConcepts[i].memberId,
-        'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
-        'active': commonConcepts[i].active ? '1' : '0',
-        'moduleId': this.refsetData?.moduleId,
-        'refsetId': this.refsetData?.refsetId,
-        'referencedComponentId': commonConcepts[i].code
-      });
-    }
+		// Get members in common
+		const membersInCommonItems = this.membersOfRefset;
+		const commonConcepts = membersInCommonItems?.filter((x) => {
+			return !memberItems?.includes(x.id);
+		});
 
-    const changeReportObject = {
-      'newMember': newMembers,
-      'oldMember': oldMembers,
-      'totalInactiveConcepts': totalInactiveConcepts,
-      'membersInCommon': membersInCommon
-    };
-    UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
-  }
+		console.log(commonConcepts)
+		let membersInCommon = [];
+		for (let i = 0; i < commonConcepts?.length; i++) {
+			let item = {
+				'id': commonConcepts[i].memberId,
+				'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
+				'active': commonConcepts[i].active ? '1' : '0',
+				'moduleId': this.refsetData?.moduleId,
+				'refsetId': this.refsetData?.refsetId,
+				'referencedComponentId': commonConcepts[i].code
+			}
+			// skip duplicates
+			if (membersInCommon.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+				continue;
+			}
+			membersInCommon.push(item);
+		}
+
+		// Sort by referencedComponentId
+		membersInCommon = membersInCommon.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
+
+		const changeReportObject = {
+			'newMember': newMembers,
+			'oldMember': oldMembers,
+			'totalInactiveConcepts': totalInactiveConcepts,
+			'membersInCommon': membersInCommon
+		};
+		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
+	}
+
 }

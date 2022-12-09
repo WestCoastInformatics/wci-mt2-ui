@@ -38,6 +38,7 @@ export class RefsetDownloadComponent {
   currentUser: any;
   disableDownload: boolean = false;
   disableTitle: string = null;
+  opened: boolean = false;
 
   @Input() refset;
   @Input() refsets;
@@ -71,6 +72,12 @@ export class RefsetDownloadComponent {
   }
   // ***** General Functions *****/
   openDownload(refsetId: string) {
+ 
+    // Prevent double-click
+    if (this.opened) {
+      return;
+    }
+    this.opened = true;
 
     const versionDate = RefsetUtility.getVersionDateForRefsetApiCall(this.refset);
     this.refsetService.getRefset(this.refset.refsetId, versionDate).subscribe({
@@ -169,6 +176,8 @@ export class RefsetDownloadComponent {
 
         this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
         this.disableDownloadButton(data);
+
+        this.opened = false;
 
         this.dialog.confirmed().subscribe(data => {
 
