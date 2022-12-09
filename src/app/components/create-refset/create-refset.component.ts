@@ -625,39 +625,35 @@ export class CreateRefsetComponent implements OnInit {
         const restParams: any = {
             displayType: 'list',
             offset: 0,
-            searchConcepts: false,
+            searchConcepts: true,
             showInDevelopment: true,
             countComments: false,
-            query: query
+            query: `name:${query} OR refsetId:${query}`
         };
 
-        this.refsetService.getRefsets({ ...restParams }).subscribe({
-            next: (results) => {
-                console.log(results)
-                for (const refset of results.items) {
-                    this.refsetOptions.push({
-                        name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                        , refsetId: refset.refsetId
-                        , private: refset.privateRefset
-                        , workflowStatus: `${refset?.workflowStatus}`
-                        , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
-                        , versionDate: `${refset.versionDate}`
-                    });
+        if (query.length > 2) {
+            this.showLoadingSpinner = true;
+            this.refsetService.getRefsets({ ...restParams }).subscribe({
+                next: (results) => {
+                    this.refsetOptions = this.sortRefsets(results.items);
+
+                    for (const option of this.refsetOptions) {
+                        option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+                    }
+
+                    this.showLoadingSpinner = false;
+
+                    this.refsetOptionsLoading = false;
+                },
+                error: (error) => {
+
+                    this.showLoadingSpinner = false;
 
                 }
-                this.refsetOptions = this.sortRefsets(this.refsetOptions);
-
-                for (const option of this.refsetOptions) {
-                    option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
-                }
-
-                this.refsetOptionsLoading = false;
-            },
-            error: (error) => {
-
-
-            }
-        });
+            });
+        } else {
+            this.refsetOptionsLoading = false;
+        }
     }
 
     copyRefsetSelected(event) {
