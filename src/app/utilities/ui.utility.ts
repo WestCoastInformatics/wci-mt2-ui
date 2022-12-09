@@ -275,11 +275,18 @@ export class UiUtility {
 					description = 'removed from';
 					message = 'An exclusion is being added and members are being removed from';
 					messagePrefix = 'An exclusion was added. ';
-				} else {
+
+				} else if (description.includes('removed')) {
 
 					description = 'added to';
 					message = 'An exclusion is being removed and members are being added to';
 					messagePrefix = 'An exclusion was removed. ';
+
+				} else {
+
+					description = 'changed';
+					message = 'members may be changed';
+					messagePrefix = 'Members may have changed. ';
 				}
 
 			} else {
@@ -384,8 +391,34 @@ export class UiUtility {
 							notificationType = 'warning';
 							message = messagePrefix + 'Some members were not able to be ' + messageEnd;
 						}
-					} else {
 
+					} else if (description.includes('changed')) {
+						
+
+						let noContentMessage = 'There were no concepts changed for Reference Set ' + refsetId + '. You may continue editing the Reference Set.';
+
+						notificationType = 'success';
+
+						if (previousNotifications.length > 0) {
+
+							if (notificationService.isNotificationOfType(previousNotifications[0], 'error')) {
+								notificationType = 'error';
+							}
+
+							if (previousNotifications[0].message == noContentMessage) {
+								message = previousNotifications[0].message;
+							} else {
+								message = 'There were no concepts changed in the last request for Reference Set ' + refsetId + '. Previous requests had: ' + previousNotifications[0].message;
+							}
+
+						} else {
+
+							message = noContentMessage;
+							buttons.pop();
+						}
+						
+					} else {
+						
 						let noContentMessage = 'There were no concepts in the request for Reference Set ' + refsetId + '.';
 						let noSpecialCharatersMessage = ' Make sure you do not have special characters included (ie: % $ # etc.).';
 						let continueEditingMessage = ' You may continue editing the Reference Set.';

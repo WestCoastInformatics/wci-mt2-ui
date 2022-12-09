@@ -1289,17 +1289,11 @@ export class RefsetDetails implements OnInit {
 
     recalulateDefinition() {
 
-        this.changeLockedStatus(false);
+        this.changeLockedStatus(true);
 
-        this.refsetService.recalulateDefinition(this.refsetData.id).subscribe({
-            next: (results) => {
+        this.refsetService.recalulateDefinition(this.refsetData.id).subscribe();
 
-                this.processChangedMemberEffects(null);
-            },
-            error: (error) => {
-                this.changeLockedStatus(true);
-            }
-        });
+        UiUtility.manageMemberNotifications(this.refsetId, this.refsetId, "changed", this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
     }
 
     deleteDevelopmentVersion() {
