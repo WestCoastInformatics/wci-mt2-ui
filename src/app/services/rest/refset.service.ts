@@ -98,6 +98,10 @@ export class RefsetService extends RestService {
         return this.put(this.contextPath + `refset/${refsetInternalId}`, params);
     }
 
+    recalulateDefinition(refsetInternalId: string): Observable<any> {
+        return this.put(this.contextPath + `refset/${refsetInternalId}/recalculateDefinition`, {});
+    }
+
     getRefset(refsetId: string, versionDate: String = ''): Observable<any> {
         return this.get(this.contextPath + 'refset/' + refsetId + '/versionDate/' + versionDate);
     }
@@ -155,6 +159,14 @@ export class RefsetService extends RestService {
 
     setWorkflowStatusByAction(refsetId: string, action: string, user: string, notes: string): Observable<any> {
         return this.post(this.contextPath + `refset/${refsetId}/workflowStatus?action=${action}&user=${user}&notes=${notes}`, '');
+    }
+
+    publishLocalset(refsetInternalId: string, versionDate: string): Observable<any> {
+        return this.put(this.contextPath + `admin/refset/${refsetInternalId}/publishLocalset?versionDate=${versionDate}`, '');
+    }
+
+    changeRefsetStatus(refsetInternalId: string, active: boolean): Observable<any> {
+        return this.put(this.contextPath + `refset/${refsetInternalId}/refsetStatus?active=${active}`, '');
     }
 
     updateWorkflowStatus(refsetId: string, notes: string): Observable<any> {

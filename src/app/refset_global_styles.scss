@@ -213,12 +213,6 @@ nav a span {
   color: white;
 }
 
-#bg-landing-header {
-  background-color: rgb(33, 37, 41) !important;
-  padding: 5px !important;
-  height: 50px !important;
-}
-
 .flex-space-between {
   display: flex;
   flex-direction: row;
@@ -530,7 +524,7 @@ button.refset-tool-table-action-icon {
 }
 
 // AG Grid Styles
-.refset_tool_inactive_row {
+.refset_tool_inactive_row, #refsetDetailsPage .refset-title.refset_tool_inactive_row, tr.refset_tool_inactive_row {
   background-color: $inactive_row_color;
 }
 
@@ -1069,6 +1063,12 @@ select {
   line-height: 0px !important;
 }
 
+.edit-member-section {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+}
+
 // Taxonomy Styles
 .refset-tool-taxonomy {
 
@@ -1485,24 +1485,33 @@ select {
   padding-bottom: 1.4em;
 }
 
-  .date-selector {
-    margin-top: 25px;
-
-    .category-filter-select {
-      border: solid;
-      width: fit-content;
-      border-width: 1px;
-      border-color: #666;
-    }
-    mat-form-field {
-      visibility: hidden;
-    }
-  }
-
 .category-filter-select {
   padding-top: 10px;
   width: 100%;
   text-transform: capitalize;
+  .mat-select-arrow-wrapper {
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
+  .mat-form-field-infix {
+    top: 7px;
+  }
+}
+
+.date-selector {
+  margin-top: 25px;
+
+  mat-form-field {
+    visibility: hidden;
+  }
+}
+
+.date-filter-select {
+  border: solid;
+  border-width: 1px;
+  border-color: #666;
+  padding-top: 10px;
+  width: 125px;
   .mat-select-arrow-wrapper {
     padding-top: 0px;
     padding-bottom: 10px;
@@ -1732,6 +1741,10 @@ select {
     border-radius: 8px;
     background: white;
   }
+      
+  .combination-chips {
+      transform: scale(1);
+  }
 
   .refset_tool_ecl_definition_field {
     width: calc(100% - 120px);
@@ -1901,32 +1914,6 @@ select {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.8));
-
-  background: -webkit-radial-gradient(rgba(20, 20, 20, 0.8),
-      rgba(0, 0, 0, 0.8));
-}
-
-/* Relative Center Spinner */
-.relative-loading {
-  position: relative;
-  margin: auto;
-  top: 45%;
-  left: 45%;
-  font-size: 14px;
-  color: white;
-  font-weight: 800;
-  z-index: 99999;
-}
-
-/* Transparent Overlay */
-.relative-loading-container {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  -ms-opacity: 0.5;
-  opacity: 0.5;
-  z-index: 1000000;
   background: radial-gradient(rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.8));
 
   background: -webkit-radial-gradient(rgba(20, 20, 20, 0.8),
@@ -2631,6 +2618,10 @@ div.modal-footer.rt2-modal-footer {
   padding-top: 0px !important;
   border-radius: 3px;
   font-size: 14px;
+}
+
+.disable-menu-btn {
+  cursor: not-allowed !important;
 }
 
 .create-new-project-modal-body {
@@ -3566,8 +3557,8 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .adjudicate-format-option-drop-down {
-  margin-top: -15px;
-  padding-right: 15px;
+  margin-top: -30px;
+  padding-right: 20px;
 }
 
 .adjudicate-column-inactiveCode,
@@ -4142,7 +4133,7 @@ span.title {
   color: #eeeeee;
   font-family: museo;
   Font-weight: 300;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .landing-page-guest-access {
@@ -4228,7 +4219,7 @@ span.title {
   width: -webkit-fill-available;
   /* Mozilla-based browsers will ignore this. */
   width: fill-available;
-  min-height: 78px;
+  min-height: 50px;
   height: fit-content;
   position: sticky;
 }
@@ -5338,6 +5329,13 @@ app-date-text-floating-filter {
   overflow: hidden;
 }
 
+.wrap-label {
+  display: inline;
+  white-space: normal;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+
 .modal.modal-static .modal-dialog {
   -webkit-transform: none !important;
   transform: none !important;
@@ -5457,6 +5455,7 @@ app-date-text-floating-filter {
 }
 .atlwdg-trigger.atlwdg-RIGHT {
   top: 60% !important;
+  left: 99% !important;
 }
 .placeholder-wrap .mat-form-field-label {
     white-space: normal;
@@ -5473,34 +5472,12 @@ app-date-text-floating-filter {
   text-align: center;
 }
 
-.mt-10 {
-  margin-top: 10px;
+.empty-value-checkbox {
+  mat-pseudo-checkbox {
+      display: none !important;
+    }
 }
 
-.mt-20 {
-  margin-top: 20px;
-}
-
-.mr-3 {
-  margin-right: 3px;
-}
-
-.ml-3 {
-  margin-left: 3px;
-}
-
-.mr-15 {
-  margin-right: 15px !important;
-}
-
-.ml-15 {
-  margin-left: 15px !important;
-}
-
-.fs14 {
-  font-size: 14pt;
-}
-
-.pointer {
-  cursor: pointer;
+.inactive-status {
+  margin-right: 60px !important;
 }

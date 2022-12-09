@@ -11,6 +11,7 @@ import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
+import { ColumnController } from 'ag-grid-community';
 
 @Component({
     selector: 'projects-people',
@@ -76,29 +77,33 @@ export class ProjectsPeopleComponent implements OnInit {
     ngAfterViewInit() {
 
         this.gridColumnDefs = [
-            {
-                field: 'name',
-                tooltipField: 'name',
-                headerName: 'Users',
-                minWidth: 300,
-                flex: 1,
-                cellRenderer: 'templateRenderer',
-                cellRendererParams: { template: this.peopleNameSection, unSortIcon: true }
-            },
-            { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-            { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
-            {
-                field: 'teams',
-                tooltipComponentFramework: CustomTooltipComponent,
-                tooltipField: 'teams',
-                tooltipComponentParams: { color: '#ececec' },
-                flex: 1,
-                headerName: 'Teams',
-                filter: false,
-                sortable: false,
-                cellRenderer: 'templateRenderer',
-                cellRendererParams: { template: this.peopleTeamsSection }
-            }
+            { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 65, flex: 2, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true },
+            { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
+            { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
+            { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: true }
+            //       {
+            //     field: 'name',
+            //     tooltipField: 'name',
+            //     headerName: 'Users',
+            //     minWidth: 65,
+            //     flex: 1,
+            //     cellRenderer: 'templateRenderer',
+            //     cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true
+            // },
+            // { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
+            // { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
+            // {
+            //     field: 'teams',
+            //     tooltipComponentFramework: CustomTooltipComponent,
+            //     tooltipField: 'teams',
+            //     tooltipComponentParams: { color: '#ececec' },
+            //     flex: 1,
+            //     headerName: 'Teams',
+            //     filter: false,
+            //     sortable: false,
+            //     cellRenderer: 'templateRenderer',
+            //     cellRendererParams: { template: this.peopleTeamsSection }
+            // }
         ];
 
         this.gridOptions = {
@@ -254,7 +259,6 @@ export class ProjectsPeopleComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
-
         const selectedRows = this.gridApi.getSelectedRows();
         let selectedId: string;
 
@@ -271,6 +275,14 @@ export class ProjectsPeopleComponent implements OnInit {
             this.router.navigate(['/personal/landing', event.data.id]);
         }
     }
+
+    clickTeams = (event) => {
+        //if (event.column.colId === 'name') {
+        this.router.navigate(['organizations', this.organizationId, 'teams']);
+        event.stopPropagation();
+        //}
+    }
+    
 
     getProjects(): void {
 

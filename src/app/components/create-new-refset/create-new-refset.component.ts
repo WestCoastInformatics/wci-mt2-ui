@@ -45,6 +45,8 @@ export class CreateNewRefsetComponent implements OnInit {
     referenceType: string;
     privateRefset: boolean;
     localSet: boolean;
+    publication: string;
+    moduleId: string;
     versionDate: string;
     refsetConcept: string;
     tags: string[];
@@ -70,9 +72,9 @@ export class CreateNewRefsetComponent implements OnInit {
         referenceType?: string;
         privateRefset?: boolean;
         localSet?: boolean;
+        moduleId?: string;
         versionDate?: any;
         definitionClauses?: [];
-        moduleId?: string;
     };
     @ViewChild('infoDialog') infoDialog: TemplateRef<any>;
 
@@ -140,6 +142,8 @@ export class CreateNewRefsetComponent implements OnInit {
         this.selectedReferenceType = '';
         this.privateRefset = false;
         this.localSet = false;
+        this.moduleId = null;
+        this.publication = "Within Edition";
         this.conceptError = '';
     }
 
@@ -161,6 +165,9 @@ export class CreateNewRefsetComponent implements OnInit {
             inputs.referenceType.substr(1).toLowerCase();
         this.privateRefset = inputs.privateRefset;
         this.localSet = inputs.localSet;
+        this.moduleId = inputs.moduleId;
+        this.publication = this.localSet ? 'Local Set' : 'Within Edition';
+
         this.refsetConcept = inputs.metadataConcept;
         this.versionNotes = inputs.versionNotes;
         this.selectedReferenceType = inputs.referenceType;
@@ -189,7 +196,6 @@ export class CreateNewRefsetComponent implements OnInit {
         const params: any = {
             name: this.capitalizeFirstLetterOfString(name),
             parentConceptId: parentConceptId,
-            moduleId: '',
             refsetId: refsetId,
             editionId: this.inputProperties.project.edition.id,
             projectId: this.inputProperties.project.id,
@@ -197,12 +203,13 @@ export class CreateNewRefsetComponent implements OnInit {
             type: this.selectedReferenceType,
             privateRefset: this.privateRefset,
             localSet: this.localSet,
+            moduleId: this.moduleId,
             tags: this.selectedTags,
             versionNotes: this.selectedVersionNotes,
         };
 
         if (this.selectedReferenceType === this.INTENSIONAL && this.definitionClauses.length > 0) {
-            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+            //this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
         this.refsetService.createRefset(params).subscribe(
@@ -251,7 +258,7 @@ export class CreateNewRefsetComponent implements OnInit {
 
     editRefsetObject(): void {
 
-        this.showLoadingSpinner = true;
+        this.showLoadingSpinner = true;        
         let tagsToPersist: string[];
 
         if (this.tags) {
@@ -266,6 +273,7 @@ export class CreateNewRefsetComponent implements OnInit {
             versionNotes: this.versionNotes,
             privateRefset: this.privateRefset,
             localSet: this.localSet,
+            moduleId: this.moduleId,
             type: this.referenceType,
         };
         if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
@@ -273,30 +281,33 @@ export class CreateNewRefsetComponent implements OnInit {
         }
 
         if (this.selectedReferenceType === this.INTENSIONAL && this.definitionClauses.length > 0) {
-            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+            // NO longer needed
+            // this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
             params.definitionClauses = this.definitionClauses;
         }
 
-        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe((status) => {
-
-            this.showLoadingSpinner = false;
-
-            if (status.error) {
-
-                this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
-                    timeOut: 0,
-                    extendedTimeOut: 0
-                });
-                return;
-            }
-
-            this.modalService.dismissAll();
-            this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
-            this.refsetDetails.initializeDetailsPage();
-        },
-            (error) => {
+        this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe(
+            {
+                next: (status) => {
                 this.showLoadingSpinner = false;
-            }
+    
+                if (status.error) {
+    
+                    this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
+                        timeOut: 0,
+                        extendedTimeOut: 0
+                    });
+                    return;
+                }
+    
+                this.modalService.dismissAll();
+                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                this.refsetDetails.initializeDetailsPage();
+            },
+               error: (error) => {
+                this.showLoadingSpinner = false;
+                }
+            }    
         );
     }
 
@@ -436,4 +447,15 @@ export class CreateNewRefsetComponent implements OnInit {
         });
     }
 
+        // Handle the radio buttons for "within edition" and "local set"
+        checkPublishability(event: any): void {
+
+            if (event.value == 'true') {
+                this.localSet = true;
+            } else {
+                this.localSet = false;
+            }
+            this.publication = this.localSet ? 'Local Set' : 'Within Edition';
+        }
+    
 }

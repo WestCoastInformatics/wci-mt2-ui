@@ -28,7 +28,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
     user: User;
     searchInput: string;
     viewOptions = [{ value: 'all', display: 'All' }, { value: 'public', display: 'Public' }, { value: 'private', display: 'Private' }];
-    selectedView = 'public';
     refsetGridApi: any;
     refsetGridColumnApi: any;
     columnDefs = [];
@@ -59,6 +58,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     numOfMembers: any;
     disableChannel = new BroadcastChannel('disable-button-channel');
     originalGridParams: any;
+    searchCallArray = [];
     uiUtility = UiUtility;
 
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
@@ -114,30 +114,32 @@ export class LandingComponent implements OnInit, AfterViewInit {
                     }
 
                     this.columnDefs = [
-                        { field: 'id', colId: 'information', headerName: '', maxWidth: 80, minWidth: 80, width: 80, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
-                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 140, resizable: false, unSortIcon: true },
-                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
+                        // This is an exception to resizeable field because it is an info icon field
+                        { field: 'id', colId: 'information', headerName: '', maxWidth: 80, minWidth: 65, width: 80, cellClass: 'refset-tool-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
+                        { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+                        { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, resizable: true, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
                         {
-                            field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 140, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
+                            field: 'editionName', tooltipField: 'editionName', headerName: 'Edition/Extension', cellClass: 'refset-tool-directory-column-edition', minWidth: 65, resizable: true, valueGetter: this.editionValueGetter, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.editionSection }, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 200, flex: 1, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
+                            field: 'organizationName', tooltipField: 'organizationName', headerName: 'Organization/Owner', cellClass: 'refset-tool-directory-column-organization', minWidth: 65, flex: 1, resizable: true, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray }, unSortIcon: true
                         },
                         {
-                            field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 140, resizable: false,
+                            field: 'versionStatus', tooltipField: 'versionStatus', headerName: 'Version Status', cellClass: 'refset-tool-directory-column-version-status', minWidth: 65, resizable: true,
                             valueGetter: this.versionStatusValueGetter, floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray }, unSortIcon: true
                         },
                         {
-                            field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 140, resizable: false, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
+                            field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 65, resizable: true, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'categoryFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                         },
                         {
-                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', width: 190, resizable: true, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
+                            field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth:65, width: 190, resizable: true, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true }, unSortIcon: true
                         },
-                        { field: 'downloadable', colId: 'actions', headerName: '', width: 120, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
+                        // This is an exception to a resizeable field because it is an action field
+                        { field: 'downloadable', colId: 'actions', headerName: '', cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
                     ];
                     this.refsetGridOptions = {
                         context: { componentParent: this },
@@ -191,6 +193,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
     //***** AG Grid Functions *****/
     onGridReady = (gridReadyParams) => {
 
+        let searchTime = Date.now();
+        this.searchCallArray.push(searchTime);
+
         this.originalGridParams = gridReadyParams;
         this.refsetGridApi = gridReadyParams.api;
         this.refsetGridApi.setFilterModel(null);
@@ -199,12 +204,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
         this.refsetGridApi.showLoadingOverlay();
         let query = '';
-
-        if (this.selectedView === 'public') {
-            query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
-        } else if (this.selectedView === 'private') {
-            query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
-        }
 
         if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
             query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
@@ -230,6 +229,12 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
         this.refsetService.getRefsets({ ...restParams, }).subscribe({
             next: (results) => {
+
+                // if this is not the latest search call then do not apply the results
+                if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
+                    return;
+                }
+
                 const data = results.items;
                 this.refsetData = data;
                 this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
@@ -320,14 +325,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
         this.onGridReady(this.originalGridParams);
     }
 
-    delay = (function () {
-        var timer = 0;
-        return function (callback, ms) {
-            clearTimeout(timer);
-            setTimeout(callback, ms);
-        };
-    })()
-
     clearSearch() {
 
         if (this.searchInput) {
@@ -341,10 +338,9 @@ export class LandingComponent implements OnInit, AfterViewInit {
     onSearchChange() {
 
         this.searchInput = this.searchInput.trim();
+        
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-            this.delay(() => {
-                this.onGridReady(this.originalGridParams);
-            }, 1)
+            this.onGridReady(this.originalGridParams);
         }
     }
 

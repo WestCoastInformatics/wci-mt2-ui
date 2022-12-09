@@ -28,6 +28,7 @@ export class OrganizationTeamsComponent implements OnInit {
     gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
 
     @ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
+    @ViewChild('peopleSection') peopleSection: TemplateRef<any>;
 
     constructor(private readonly breadcrumbService: BreadcrumbService,
         private readonly titleService: Title,
@@ -52,10 +53,10 @@ export class OrganizationTeamsComponent implements OnInit {
 
         this.gridColumnDefs = [
             { field: 'id', hide: true },
-            { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 1, minWidth: 200, maxWidth: 500, unSortIcon: true },
-            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 1, minWidth: 200, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true },
+            { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 2, minWidth: 65, maxWidth: 500, unSortIcon: true, resizable: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 2, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
             {
-                field: 'role', tooltipField: 'role', headerName: 'Role', resizable: true, cellClass: 'text-camel', unSortIcon: true,
+                field: 'role', tooltipField: 'role', headerName: 'Role', flex: 1, minWidth: 65, resizable: true, cellClass: 'text-camel', unSortIcon: true,
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {
@@ -90,13 +91,15 @@ export class OrganizationTeamsComponent implements OnInit {
                     ],
                 }
             },
-            { field: 'email', tooltipField: 'email', headerName: 'Contact Email', minWidth: 250, resizable: true, unSortIcon: true },
+            { field: 'email', tooltipField: 'email', headerName: 'Contact Email', flex: 2, minWidth: 65, resizable: true, unSortIcon: true},
             {
-                field: 'members', headerName: 'Users', maxWidth: 120, filter: false, resizable: false, sortable: false,
-                cellClass: 'text-primary font-weight-bold', tooltipValueGetter: (params) => {
-                    return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', ') : '';
+                field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: true, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
+                tooltipValueGetter: (params) => {
+                    return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', \n') : '';
                 }
             }
+
+
         ];
 
         this.gridOptions = {
@@ -169,7 +172,9 @@ export class OrganizationTeamsComponent implements OnInit {
     onGridReady = (params) => {
         this.gridParams = params;
         this.gridApi = params.api;
+        // BAC: are these here because the view children arn't ready yet in ngOnInit?
         this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
+        this.gridColumnDefs[5].cellRendererParams = { template: this.peopleSection };
         this.gridApi.setColumnDefs(this.gridColumnDefs);
         this.getTeams();
     }
@@ -247,18 +252,18 @@ export class OrganizationTeamsComponent implements OnInit {
     }
 
     onGridCellClick = (event) => {
-        if (event.column.colId !== 'description') {
-            const selectedRows = this.gridApi.getSelectedRows();
-            let selectedId: string;
+        const selectedRows = this.gridApi.getSelectedRows();
+        let selectedId: string;
 
-            selectedRows.forEach(function (selectedRow, index) {
+        selectedRows.forEach(function (selectedRow, index) {
+            selectedId = selectedRow.id;
+        });
 
-                selectedId = selectedRow.id;
-            });
-
-            this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
-        }
+        this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
     }
+
+
+
 
     getStoredOrganizationId(): void {
 

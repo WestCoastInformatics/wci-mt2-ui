@@ -47,6 +47,11 @@ export class ColumnChooserComponent {
 
             for (let column of this.gridColumnApi?.columnController?.columnDefs) {
 
+                // Avoid these coluns (they are icon columns without titles)
+                if (column.headerName === '' || !column.headerName) {
+                    continue;
+                }
+
                 let columnData: any = {};
 
                 if (!column.colId) {

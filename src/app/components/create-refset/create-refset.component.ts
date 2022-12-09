@@ -13,6 +13,8 @@ import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'create-refset',
@@ -26,15 +28,20 @@ export class CreateRefsetComponent implements OnInit {
     addOnBlur = true;
     selectedRadioButton = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-    isSelected = 0;
+    isSelected = 1;
     step = 1;
     selectedMetaDataConcept: any;
     selectedCopyRefset: any;
     selectedCopyRefsetName: string;
-    selectedCombinationRefsets: any;
+    selectedCombinationRefsets = [];
     selectedExternalName = '';
     selectedExternalUrl = '';
     createdMetaDataConcept = '';
+    copyRefsetVersionOptions: any[];
+    copySearchInput: string;
+    copySelectedVersion: any;
+    refsetOptions: any[];
+    refsetOptionsLoading = false;
     selectedParentConcept = undefined;
     selectedNarrative = '';
     selectedModuleId = '';
@@ -65,6 +72,7 @@ export class CreateRefsetComponent implements OnInit {
     parentConcepts: any;
     conceptError = '';
     dialog: DialogService;
+    selectedCombinationRefsetsForm = new FormControl();
 
     @Input() existingBranchVersions: any;
     @Input() isDetailsPage = false;
@@ -142,7 +150,7 @@ export class CreateRefsetComponent implements OnInit {
         return this.step === 1 && !this.selectedReferenceType
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.EXTERNAL && (this.selectedExternalName?.length === 0 || !this.externalUrlValid))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.INTENSIONAL && (this.definitionClauses?.length === 0 || this.definitionClauses[0]?.value === ''))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && !this.selectedCopyRefset)
+            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset  || !this.copySelectedVersion))
             || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COMBINATION && (this.selectedCombinationRefsets?.length === 0));
     }
 
@@ -244,7 +252,7 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedMetaDataConcept = '';
         this.createdMetaDataConcept = '';
         this.selectedParentConcept = undefined;
-        this.selectedCombinationRefsets = '';
+        this.selectedCombinationRefsets = [];
         this.selectedExternalName = '';
         this.selectedExternalUrl = '';
         this.selectedNarrative = '';
@@ -258,6 +266,13 @@ export class CreateRefsetComponent implements OnInit {
         this.localSet = false;
         this.conceptError = '';
         this.step = 1;
+        this.copyRefsetVersionOptions = [];
+        this.copySearchInput = '';
+        this.refsetOptions = [];
+        this.refsetOptionsLoading = false;
+        this.selectedCopyRefset = '';
+        this.selectedUUID = '';
+        this.copySelectedVersion = '';
 
     }
 
@@ -484,21 +499,11 @@ export class CreateRefsetComponent implements OnInit {
     checkRadioButtonValue(event: any): void {
 
         this.isSelected = event.value;
-
-        if (event.value === '1') {
-
-            this.createdMetaDataConcept = '';
-            this.selectedParentConcept = '';
-
-        } else if (event.value === '2') {
-            this.selectedMetaDataConcept = '';
-        }
-
         this.detectChanges.detectChanges();
     }
 
     // Handle the radio buttons for "within edition" and "local set"
-    checkPublishability(event: any): void {        
+    checkPublishability(event: any): void {
 
         if (event.value == 'true') {
             this.localSet = true;
@@ -564,6 +569,13 @@ export class CreateRefsetComponent implements OnInit {
         }
     }
 
+    removeCombinationRefset(index: number): void {
+        const newSelectedCombinationRefsetsForm = this.selectedCombinationRefsetsForm.value.filter((_, i) => i !== index);
+
+        this.selectedCombinationRefsetsForm.patchValue(newSelectedCombinationRefsetsForm);
+        this.selectedCombinationRefsets = this.selectedCombinationRefsetsForm.value
+    }
+
     openEclBuilder(fieldId) {
         UiUtility.openEclBuilder(fieldId, this.inputProperties.project.edition.branch);
     }
@@ -572,8 +584,105 @@ export class CreateRefsetComponent implements OnInit {
     eclDefinitionChanged(event) {
         // Fix for ecl builder returning ", " as a clause separator instead of " AND "
         if (event != this.definitionClauses[0].value.replaceAll('|, ', '| AND ')) {
-                this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
+            this.definitionClauses[0].value = this.definitionClauses[0].value.replaceAll('|, ', '| AND ');
         }
+    }
+
+    async onSearchChange(value, isCombination = false): Promise<void> {
+        if (isCombination) {
+            await this.combinationSearch(value);
+        } else {
+            await this.search(value);
+        }
+    }
+
+    handleInput(event: KeyboardEvent): void {
+        event.stopPropagation();
+    }
+
+    @Debounce()
+    search(query: string): void {
+        this.refsetOptionsLoading = true;
+        this.refsetOptions = [];
+        this.selectedUUID = null;
+        this.copySelectedVersion = null;
+        this.copyRefsetVersionOptions = [];
+
+        this.refsetService.searchRefsetsForDropdowns(query).subscribe((results) => {
+            this.refsetOptions = results.items.filter((item) => item.refsetId !== this.refsetId);
+
+            for (const option of this.refsetOptions) {
+                option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+            }
+
+            this.refsetOptionsLoading = false;
+        });
+    }
+
+    @Debounce()
+    combinationSearch(query: string): void {
+        this.refsetOptionsLoading = true;
+        this.refsetOptions = [];
+
+        const restParams: any = {
+            displayType: 'list',
+            offset: 0,
+            searchConcepts: true,
+            showInDevelopment: true,
+            countComments: false,
+            query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND name:${query} OR refsetId:${query}`
+        };
+
+        if (query.length > 2) {
+            this.showLoadingSpinner = true;
+            this.refsetService.getRefsets({ ...restParams }).subscribe({
+                next: (results) => {
+                    this.refsetOptions = this.sortRefsets(results.items);
+
+                    for (const option of this.refsetOptions) {
+                        option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
+                    }
+
+                    this.showLoadingSpinner = false;
+
+                    this.refsetOptionsLoading = false;
+                },
+                error: (error) => {
+
+                    this.showLoadingSpinner = false;
+
+                }
+            });
+        } else {
+            this.refsetOptionsLoading = false;
+        }
+    }
+
+    copyRefsetSelected(event) {
+        const copyRefset = event.value;
+        this.copyRefsetVersionOptions = RefsetUtility.getVersionOptions(copyRefset);
+        this.selectedCopyRefsetName = copyRefset.name;
+        this.copySelectedVersion = this.copyRefsetVersionOptions[0];
+    }
+
+    optionSelect(event) {
+        if (this.selectedCombinationRefsets.indexOf(event) === -1) {
+            this.selectedCombinationRefsets.push(event);
+        } else {
+            const index = this.selectedCombinationRefsets.indexOf(event);
+
+            this.selectedCombinationRefsets.splice(index, 1);
+        }
+
+        this.selectedCombinationRefsetsForm.patchValue(this.selectedCombinationRefsets);
+    }
+
+    copyCheckComplete() {
+        return this.selectedCopyRefset != null;
+    }
+
+    showFlagIcon(event, show) {
+        event.target.style.display = (show) ? 'inline' : 'none';
     }
 
     openInfoDialog(referenceType): void {
@@ -644,7 +753,7 @@ export class CreateRefsetComponent implements OnInit {
             if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
                 this.type = RefsetUtility.EXTERNAL;
             }
-            if (this.selectedReferenceType === RefsetUtility.COPY && this.selectedCopyRefset?.name.length > 0) {
+            if (this.selectedReferenceType === RefsetUtility.COPY && this.selectedCopyRefset) {
                 this.getRefset();
             }
             if (this.selectedReferenceType === RefsetUtility.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
@@ -665,10 +774,12 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     getRefset(): void {
-        this.createdMetaDataConcept = 'Clone of ' + this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
-        this.refsetService.getRefset(this.selectedCopyRefset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(this.selectedCopyRefset)).subscribe({
+        var name = this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
+        this.createdMetaDataConcept = 'Copy of ' + name;
+        this.refsetService.getRefset(this.selectedCopyRefset.refsetId,
+            this.copySelectedVersion?.date).subscribe({
             next: (results) => {
-                this.selectedNarrative = results?.narrative;
+                this.selectedNarrative = (results?.narrative) ? 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative : '';
                 this.selectedTags = results?.tags;
                 this.privateRefset = results?.privateRefset;
                 this.localSet = results?.localSet;
@@ -680,5 +791,4 @@ export class CreateRefsetComponent implements OnInit {
             }
         });
     }
-
 }

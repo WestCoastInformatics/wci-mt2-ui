@@ -168,7 +168,13 @@ export class RefsetDetails implements OnInit {
     showMembersSection = true;
     noMemberSectionText = '';
     isLocked = false;
+    membersSearchCallArray = [];
+    taxonomySearchCallArray = [];
+    uiUtility = UiUtility;
+    localsetPublishValid = true;
     stepperInfo: any = {};
+    changeRefsetStatusText: string;
+    changeRefsetStatusButtonText: string;
     stepperStartInfo = {
         'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
         'READY_FOR_EDIT_STARTED': false,
@@ -188,10 +194,11 @@ export class RefsetDetails implements OnInit {
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
     @ViewChild('cloneRefsetDialog') cloneRefsetDialog: TemplateRef<any>;
-    @ViewChild('inactivateRefsetDialog') inactivateRefsetDialog: TemplateRef<any>;
+    @ViewChild('changeRefsetStatusDialog') changeRefsetStatusDialog: TemplateRef<any>;
     @ViewChild('convertRefsetDialog') convertRefsetDialog: TemplateRef<any>;
     @ViewChild('refsetVersionNotes') refsetVersionNotes: TemplateRef<any>;
     @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
+    @ViewChild('publishLocalsetDialog') publishLocalsetDialog: TemplateRef<any>;
     @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
     @ViewChild('detailsMembersTaxonomy') taxonomyMembersComponent: TaxonomyTreeComponent;
@@ -203,6 +210,9 @@ export class RefsetDetails implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
     eclString: any;
     routeParamsSubscription$: Subscription;
+    activeInactiveStatus = 'Active Concepts Only';
+    activeOnly = true;
+    inactiveOnly = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -290,7 +300,6 @@ export class RefsetDetails implements OnInit {
                 ]);
             }
 
-            this.loadWorkflowHistoryData();
             this.membersGridOptions = {
                 context: { componentParent: this },
                 pagination: true,
@@ -364,9 +373,10 @@ export class RefsetDetails implements OnInit {
                 this.changeDetectorRef.detectChanges();
 
                 if (this.refsetData.type === RefsetUtility.EXTERNAL) {
-                    
+
                     this.showMembersSection = false;
                     this.noMemberSectionText = 'The Reference Set members are not available here for external refsets.';
+                    this.membersReady = true;
                 } else {
                     this.showMembersSection = true;
                 }
@@ -457,6 +467,16 @@ export class RefsetDetails implements OnInit {
                 this.taxonomyOptions.useFsn = this.getTaxonomyLanguageType().toLowerCase() == 'fsn';
                 this.taxonomyOptions.language = this.getTaxonomyLanguageWithoutType();
 
+                if (this.refsetData.active) {
+
+                    this.changeRefsetStatusButtonText = "Inactivate";
+                    this.changeRefsetStatusText = "You are about to inactivate this reference set, preventing it from being used in future published versions of the terminiology. You will be able to reactivate it."
+                } else {
+
+                    this.changeRefsetStatusButtonText = "Reactivate";
+                    this.changeRefsetStatusText = "You are about to reactivate this reference set, allowing it to be used in future published versions of the terminiology."
+                }
+
                 if (CodeUtility.hasValue(this.refsetData)) {
                     this.shortenNoteFields();
                 } else {
@@ -470,6 +490,8 @@ export class RefsetDetails implements OnInit {
                     this.refsetLoaded.next(true);
                     this.refsetLoaded.complete();
                 }
+
+                this.loadWorkflowHistoryData();
 
                 this.showLoadingSpinner = false;
             },
@@ -498,7 +520,7 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['IN_EDIT_COLOR'] = stepperClass;
                 this.stepperInfo['IN_EDIT_STARTED'] = true;
 
-                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
+                if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('AUTHOR')) {
 
                     this.adminOverride = true;
                     this.adminOverrideText = "Admin ";
@@ -524,7 +546,7 @@ export class RefsetDetails implements OnInit {
                 this.stepperInfo['IN_REVIEW_COLOR'] = stepperClass;
                 this.stepperInfo['IN_REVIEW_STARTED'] = true;
 
-                if ( this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
+                if (this.refsetData.roles.includes('ADMIN') && !this.refsetData.roles.includes('REVIEWER')) {
 
                     this.adminOverride = true;
                     this.adminOverrideText = "Admin ";
@@ -569,12 +591,13 @@ export class RefsetDetails implements OnInit {
                 this.allowedToReview = true;
 
             }
-            
+
             // if you aren't the assigned author of an IN_EDIT or IN_UPGRADE refset then you can't see the members
             if (this.refsetData.assignedUser != this.user.userName && ['IN_EDIT', 'IN_UPGRADE'].includes(this.refsetData?.workflowStatus)) {
 
                 this.showMembersSection = false;
                 this.noMemberSectionText = 'The Reference Set members are unavailable while another author is making changes.';
+                this.membersReady = true;
             }
         }
     }
@@ -603,15 +626,16 @@ export class RefsetDetails implements OnInit {
                     field: 'code',
                     colId: 'code',
                     headerName: 'Concept ID',
+                    minWidth: 65,
                     maxWidth: 140,
                     cellClass: 'refset-tool-taxonomy-search-column-name',
-                    tooltipField: 'code',
+                    tooltipField: 'code', resizable: true
                 },
                 {
                     field: 'name',
                     colId: 'result',
                     headerName: 'Result',
-                    minWidth: 120,
+                    minWidth: 65,
                     flex: 1,
                     cellClass: 'refset-tool-taxonomy-search-column-name',
                     valueGetter: this.taxonomyResultValueGetter.bind(this),
@@ -620,7 +644,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
-                    comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
+                    comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: true
                 },
             ];
 
@@ -762,6 +786,10 @@ export class RefsetDetails implements OnInit {
     }
 
     onTaxonomySearchGridReady = (gridReadyParams) => {
+
+        let searchTime = Date.now();
+        this.taxonomySearchCallArray.push(searchTime);
+
         this.taxonomySearchGridApi = gridReadyParams?.api;
         this.taxonomySearchGridColumnApi = gridReadyParams?.columnApi;
         this.taxonomyGridParams = gridReadyParams;
@@ -807,6 +835,11 @@ export class RefsetDetails implements OnInit {
 
         this.refsetService.getTaxonomySearch(this.id, restParams).subscribe({
             next: (results) => {
+
+                // if this is not the latest search call then do not apply the results
+                if (searchTime - this.taxonomySearchCallArray[this.taxonomySearchCallArray.length - 1] < 0) {
+                    return;
+                }
 
                 this.taxonomySearchNumberOfResults = results.total;
                 this.taxonomySearchResults = results.items;
@@ -926,6 +959,9 @@ export class RefsetDetails implements OnInit {
     // ***** Members Grid Functions *****/
     onMembersGridReady = (gridReadyParams) => {
 
+        let searchTime = Date.now();
+        this.membersSearchCallArray.push(searchTime);
+
         this.originalGridParams = gridReadyParams;
         this.membersGridApi = gridReadyParams.api;
         this.membersGridColumnApi = gridReadyParams.columnApi;
@@ -982,11 +1018,25 @@ export class RefsetDetails implements OnInit {
         this.refsetService.getConceptList(this.id, restParams).subscribe({
             next: (results) => {
 
-                const data = results.items;
-                this.membersGridData = data;
-                this.membersGridNumberOfResults = results.total;
+                // if this is not the latest search call then do not apply the results
+                if (searchTime - this.membersSearchCallArray[this.membersSearchCallArray.length - 1] < 0) {
+                    return;
+                }
 
-                if (results.items.length == 0) {
+                const data = results.items.filter((item) => {
+                    if (this.activeOnly) {
+                        return item.active === true;
+                    } else if (this.inactiveOnly) {
+                        return item.active === false;
+                    } else {
+                        return true;
+                    }
+                })
+                this.membersGridData = data;
+                this.membersGridNumberOfResults = data.length;
+
+                results.items = data;
+                if (data.length == 0) {
 
                     this.membersGridApi.showNoRowsOverlay();
                     this.membersGridApi.setRowData([]);
@@ -998,30 +1048,34 @@ export class RefsetDetails implements OnInit {
                         this.membersPaginationComponent.goToPage(pageNumber - 1);
                     }
 
+                    this.membersReady = true;
+
                     return;
                 }
 
-                this.membersColumnDefs = [{
-                    headerName: '',
-                    colId: 'add-remove',
-                    maxWidth: 40,
-                    resizable: false,
-                    filter: false,
-                    sort: false,
-                    cellClass: 'refset-tool-details-column-remove-icon',
-                    cellRenderer: 'templateRenderer',
-                    cellRendererParams: { template: this.conceptCodeSection }
-                }, {
-                    field: 'code', colId: 'code', headerName: 'Concept ID', maxWidth: 140, tooltipField: 'code', unSortIcon: true,
-                    resizable: false, cellClass: 'refset-tool-details-column-concept-id'
-                }
+                this.membersColumnDefs = [
+                    // This column is an exception to resizable, it's the +/- icon column    
+                    {
+                        headerName: '',
+                        colId: 'add-remove',
+                        maxWidth: 40,
+                        resizable: false,
+                        filter: false,
+                        sort: false,
+                        cellClass: 'refset-tool-details-column-remove-icon',
+                        cellRenderer: 'templateRenderer',
+                        cellRendererParams: { template: this.conceptCodeSection }
+                    }, {
+                        field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 65, maxWidth: 140, tooltipField: 'code', unSortIcon: true,
+                        resizable: true, cellClass: 'refset-tool-details-column-concept-id'
+                    }
                 ];
 
                 for (let i = 0; i < this.languageOptions.length; i++) {
 
                     const language = this.languageOptions[i];
-                    const minWidth =
-                        language.value === '101FSN' ? 250 : 190;
+                    const minWidth = 65;
+                    // language.value === '101FSN' ? 250 : 190;
 
                     this.membersColumnDefs.push({
                         field: i.toString(),
@@ -1034,7 +1088,7 @@ export class RefsetDetails implements OnInit {
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
                         tooltipValueGetter: this.descriptionValueGetter,
-                        comparator: (a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'})
+                        comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: true
                     });
                 }
 
@@ -1044,7 +1098,7 @@ export class RefsetDetails implements OnInit {
                             field: 'memberEffectiveTime',
                             colId: 'modified',
                             flex: 1,
-                            minWidth: 190,
+                            minWidth: 65,
                             maxWidth: 190,
                             headerName: 'Last Modified Date',
                             cellClass:
@@ -1055,14 +1109,14 @@ export class RefsetDetails implements OnInit {
                             sort: 'desc',
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true },
+                            floatingFilterComponentParams: { suppressFilterButton: true }, resizable: true
                         },
                         {
                             field: 'active',
                             colId: 'actions',
                             flex: 1,
                             headerName: '',
-                            minWidth: 120,
+                            minWidth: 65,
                             cellClass:
                                 'refset-tool-details-column-actions',
                             cellRenderer: 'templateRenderer',
@@ -1072,7 +1126,7 @@ export class RefsetDetails implements OnInit {
                             filter: false,
                             tooltipField: 'active',
                             sortable: false,
-                            resizable: false
+                            resizable: true
                         },
                     ]
                 );
@@ -1085,6 +1139,7 @@ export class RefsetDetails implements OnInit {
                 this.membersGridApi.showNoRowsOverlay();
                 this.membersGridApi.setRowData([]);
                 this.toggleLoadingSpinner(false);
+                this.membersReady = true;
             }
 
         });
@@ -1176,12 +1231,69 @@ export class RefsetDetails implements OnInit {
                 } else {
                     this.loadRefset();
                 }
-                this.loadWorkflowHistoryData();
             },
             error: (error) => {
                 this.toggleLoadingSpinner(false);
             }
         });
+    }
+
+    openPublishLocalsetModal = () => {
+
+        this.localsetPublishValid = true;
+
+        this.modalService.open(this.publishLocalsetDialog, {
+            windowClass: 'ready-for-publication-modal',
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    publishLocalset = (versionDate: string) => {
+
+        if (!this.validatePublishDate(versionDate)) {
+
+            this.localsetPublishValid = false;
+            return;
+        }
+
+        this.toggleLoadingSpinner(true);
+
+        this.refsetService.publishLocalset(this.refsetData.id, versionDate).subscribe({
+            next: (results) => {
+
+                if (results) {
+                    this.loadNewRefsetVersion(results.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(results));
+                }
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
+            }
+        });
+
+        this.modalService.dismissAll();
+    }
+
+    validatePublishDate = (date: string) => {
+
+        let a = CodeUtility.DATE_FORMAT_REVERSE_ONLY_NUMBERS;
+        let b = RefsetUtility.EXCLUSION;
+        let c = UiUtility.getIconImageUrl("test");
+
+        if (date == "" || !CodeUtility.isDateValid(date) || CodeUtility.compareDates(date, "2000-01-01", CodeUtility.DATE_FORMAT_REVERSE) < 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    recalulateDefinition() {
+
+        this.changeLockedStatus(true);
+
+        this.refsetService.recalulateDefinition(this.refsetData.id).subscribe();
+
+        UiUtility.manageMemberNotifications(this.refsetId, this.refsetId, "changed", this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
     }
 
     deleteDevelopmentVersion() {
@@ -1460,18 +1572,31 @@ export class RefsetDetails implements OnInit {
         this.dialog.confirmed().subscribe();
     }
 
-    openInactivateRefset() {
-        const dialogData = {
-            headerText: `Inactivate Reference Set`,
-            template: this.inactivateRefsetDialog,
-            data: this.refsetData,
-            showCancel: false,
-            confirmText: 'OK',
-        };
+    openChangeRefsetStatus() {
 
-        this.dialog = this.dialogFactoryService.open(dialogData);
+        this.modalService.open(this.changeRefsetStatusDialog, {
+            windowClass: 'ready-for-publication-modal',
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
 
-        this.dialog.confirmed().subscribe();
+    changeRefsetStatus = () => {
+
+        this.toggleLoadingSpinner(true);
+
+        this.refsetService.changeRefsetStatus(this.refsetData.id, !this.refsetData.active).subscribe({
+            next: (results) => {
+
+                this.notificationService.show('The Reference Set has been ' + results.status + '.', null, 'success');
+                this.loadRefset();
+            },
+            error: (error) => {
+                this.toggleLoadingSpinner(false);
+            }
+        });
+
+        this.modalService.dismissAll();
     }
 
     openConvertRefset() {
@@ -1760,5 +1885,22 @@ export class RefsetDetails implements OnInit {
 
     notesEditable(index: number, data: any): boolean {
         return index === 0 && data.workflowStatus === this.refsetData.workflowStatus && (this.allowedToEdit || this.allowedToReview);
+    }
+
+    changeActiveInactiveStatus(activeInactiveStatus: string): void {
+        this.activeInactiveStatus = activeInactiveStatus;
+
+        if (this.activeInactiveStatus.includes('Active Concepts Only')) {
+            this.activeOnly = true;
+            this.inactiveOnly = false;
+        } else if (this.activeInactiveStatus.includes('Active and Inactive Concepts')) {
+            this.activeOnly = false;
+            this.inactiveOnly = false;
+        } else if (this.activeInactiveStatus.includes('Inactive Concepts Only')) {
+            this.activeOnly = false;
+            this.inactiveOnly = true;
+        }
+
+        this.onMembersGridReady(this.originalGridParams);
     }
 }

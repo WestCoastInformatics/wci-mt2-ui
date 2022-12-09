@@ -221,11 +221,11 @@
         <img
           *ngIf="(params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
           src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
-          class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+          class="ml-1 add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
         <img *ngIf="(params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)" src="assets/subtract-symbol-icon.svg"
           (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract"
-          class="subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+          class="ml-1 subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </ng-container>
 </ng-template>
 
@@ -275,10 +275,10 @@
 <ng-template #replacementConceptCodeSection let-params>
     <ng-container *ngIf="!params?.data?.replacementConcepts[0]?.existingMember">
         <img *ngIf="!params?.data?.replacementConcepts[0]?.added" src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')" width="18px"
-          height="18px" title="Add {{actionText}}" aria-label="Add" class="add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+          height="18px" title="Add {{actionText}}" aria-label="Add" class="ml-1 add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
 
         <img *ngIf="params?.data?.replacementConcepts[0]?.added" src="assets/subtract-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
-          width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract" class="subtract-symbol-icon"
+          width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract" class="ml-1 subtract-symbol-icon"
           alt="Subtract symbol shown when you're able to remove a concept" />
     </ng-container>
 

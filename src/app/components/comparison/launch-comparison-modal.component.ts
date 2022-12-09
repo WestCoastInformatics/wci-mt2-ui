@@ -13,6 +13,9 @@ import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
 import { environment } from 'src/environments/environment';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
   selector: 'app-launch-comparison-modal',
@@ -42,12 +45,12 @@ export class LaunchComparisonModalComponent {
   comparisonRefsetName: string;
   comparisonRefsetStatus: string;
   allowedToEdit = false;
-  showLoadingSpinner = false;
   isLocked = false;
   conceptForAddRemove: any;
   isConceptBeingAdded: boolean;
   addRemoveDefinitionExceptionType: string;
   changeReportData: any[];
+  currentUser: any;
 
   selectedConcept: any;
   conceptDetail: any;
@@ -59,6 +62,9 @@ export class LaunchComparisonModalComponent {
   };
   taxonomyManualStateRefresh = new Boolean(false);
   taxonomyNumberOfChildren: number;
+  dialog: DialogService;
+  disableCompare: boolean = false;
+  disableTitle: String = null;
 
   @Input() activeRefset: any;
   @Input() isDetailPage: boolean;
@@ -74,7 +80,22 @@ export class LaunchComparisonModalComponent {
     readonly refsetService: RefsetService,
     private readonly router: Router,
     private readonly notificationService: NotificationService,
+    private dialogFactoryService: DialogFactoryService,
+    private readonly authService: AuthenticationService,
     readonly refsetDetails: RefsetDetails) {
+  }
+
+  ngOnInit(): void {
+    this.currentUser = this.authService.getUser();
+  }
+
+  ngOnChanges(): void {
+    if (this.activeRefset && this.currentUser) {
+      this.disableCompare = this.getDisableCompare();
+      if (this.disableCompare) {
+        this.disableTitle = this.getDisableTitle();
+      }
+    }
   }
 
   openLaunchModal(comparisonLaunchDialog: NgbModal) {
@@ -88,7 +109,6 @@ export class LaunchComparisonModalComponent {
     this.conceptDetail = null;
     this.conceptDetailParents = null;
     this.allowedToEdit = false;
-    this.showLoadingSpinner = false;
     this.showTable = false;
     this.isConceptDetailsLoading = false;
     this.taxonomyManualStateRefresh = new Boolean(false);
@@ -117,12 +137,9 @@ export class LaunchComparisonModalComponent {
   }
 
   comparisonSelectionChange(event: any): void {
+
     this.comparisonTypeSelected = event.value;
-    if (this.comparisonTypeSelected === 'different_refset') {
-        this.comparisonRefsetInternalId = this.comparisonRefsetVersionOptions[0]?.value;
-    } else {
-        this.comparisonRefsetInternalId = this.activeRefsetVersionOptions[0]?.value;
-    }
+    this.comparisonRefsetInternalId = null;
     this.comparisonRefsetVersionOptions = [];
     this.comparisonSearchInput = '';
     this.comparisonRefsetSelect = '';
@@ -160,7 +177,6 @@ export class LaunchComparisonModalComponent {
   }
 
   comparisonRefsetSelected(event) {
-
     const comparisonRefset = event.value;
     this.comparisonRefsetVersionOptions = RefsetUtility.getVersionOptions(comparisonRefset);
     this.comparisonRefsetName = comparisonRefset.name;
@@ -228,10 +244,10 @@ export class LaunchComparisonModalComponent {
     };
 
     this.gridColumnDefs = [
-      { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 120, tooltipField: 'code', resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
-      { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 2, resizable: true, minWidth: 300, sort: 'asc', unSortIcon: true },
+      { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 65, tooltipField: 'code', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
+      { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 2, resizable: true, minWidth: 65, sort: 'asc', unSortIcon: true },
       {
-        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 200, tooltipField: 'membership', resizable: false, unSortIcon: true,
+        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 65, tooltipField: 'membership', resizable: true, unSortIcon: true,
         floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
           suppressMenu: true, suppressFilterButton: true, names: [
             { type: 'membership', name: 'Active Refset', value: 'Active Refset' },
@@ -366,7 +382,6 @@ export class LaunchComparisonModalComponent {
       next: (results) => {
 
         this.isConceptDetailsLoading = false;
-        //this.showLoadingSpinner = false;
         this.conceptDetail = results;
         this.conceptDetail.roleGroups = results.roleGroups;
         this.conceptDetail.numRoleGroups = Object.keys(this.conceptDetail.roleGroups).length;
@@ -412,6 +427,30 @@ export class LaunchComparisonModalComponent {
     });
   }
 
+  getDisableCompare(): boolean {
+    // Disable intensional refset comparison while in edit/upgrade/review
+    if (this.activeRefset?.type === 'INTENSIONAL' && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return true
+    }
+    // Disable any  refset comparison while in edit/upgrade/review except for the currently assigned user
+    if (this.currentUser.userName !== this.activeRefset?.assignedUser && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return true
+    }
+    return false
+  }
+
+  getDisableTitle(): String {
+    // Disable any  refset comparison while in edit/upgrade/review except for the currently assigned user
+    if (this.currentUser.userName !== this.activeRefset?.assignedUser && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return 'Compare is not available while the reference set is being worked on by another user.';
+    }
+    // Disable intensional refset comparison while in edit/upgrade/review
+    if (this.activeRefset?.type === 'INTENSIONAL' && ['IN_EDIT', 'IN_UPGRADE', 'IN_REVEW'].includes(this.activeRefset?.workflowStatus)) {
+      return 'Compare not available for Intensional reference set while being edited, upgraded, or reviewed';
+    }
+    return null;
+  }
+
   closeConceptDetails() {
 
     this.conceptDetail = null;
@@ -429,7 +468,6 @@ export class LaunchComparisonModalComponent {
 
   indicateChanges(data) {
 
-    this.showLoadingSpinner = true;
     this.sendChangeLockedStatus(true);
 
     console.timeEnd('comparison indicateChanges');
@@ -453,7 +491,6 @@ export class LaunchComparisonModalComponent {
 
   addRemoveConceptGroup(params: any): void {
 
-    this.showLoadingSpinner = true;
     let operation = 'add';
 
     if (!params.addConcept) {
@@ -490,7 +527,6 @@ export class LaunchComparisonModalComponent {
 
     this.sendChangeLockedStatus(false);
     UiUtility.toggleLockedSections(false);
-    this.showLoadingSpinner = false;
 
     if (this.conceptDetail != null) {
 
@@ -625,8 +661,8 @@ export class LaunchComparisonModalComponent {
       }
     });
 
-    activeRefsetDate = activeRefsetDate.replace(' ', '_');
-    comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_');
+    activeRefsetDate = activeRefsetDate.replace(' ', '_').replace(/-/g,'');
+    comparisonRefsetDate = comparisonRefsetDate.replace(' ', '_').replace(/-/g,'');
 
     const fileName = 'Comparison_Active_Refset_' + this.activeRefset.refsetId + '_' + activeRefsetDate + '_To_Refset_' +
       this.comparisonData.comparisonRefsetId + '_' + comparisonRefsetDate + '_' + CodeUtility.getReverseDate();

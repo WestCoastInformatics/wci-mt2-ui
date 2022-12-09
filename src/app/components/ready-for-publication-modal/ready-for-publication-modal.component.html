@@ -16,7 +16,7 @@
     </div>
     <div class="container-fluid ready-for-publication-container-fluid">
         <div class="modal-body ready-for-publication-modal-body">
-            <div class="notes-title">Notes:</div>
+            <div class="notes-title">Notes: <span class="mandatory-field">*</span></div>
             <editor [(ngModel)]="requestForPublicationNotes" id="notesTitles" [init]="{
                     base_url: '/tinymce',
                     suffix: '.min',
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="
+        <button type="button" [disabled]="!requestForPublicationNotes" (click)="
                         setWorkflowStatusByAction(
                             requestForPublicationNotes
                         );

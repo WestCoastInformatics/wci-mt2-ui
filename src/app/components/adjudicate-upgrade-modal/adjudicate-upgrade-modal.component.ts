@@ -139,7 +139,7 @@ export class AdjudicateUpgradeModalComponent {
 
 			{
 				field: 'inactivationReason', tooltipField: 'inactivationReason', headerName: 'Inactivation Reason',
-				flex: 1, minWidth: 170, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
+				flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactivationReason }, unSortIcon: true
 			},
 			{
 				field: 'inactiveCode', sortable: true, tooltipField: 'inactiveCode', headerName: '', headerComponentParams: {
@@ -149,13 +149,13 @@ export class AdjudicateUpgradeModalComponent {
 						+ '   <img src="assets/subtract-symbol-icon.svg" width="18px" height="18px" title="Remove All" class="subtract-symbol-icon" />'
 						+ ' </a>'
 						+ ''
-				}, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60
+				}, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.inactiveCodeSection }, flex: 1, minWidth: 60, maxWidth: 60, resizable: false
 			},
 			{
 				field: 'code', tooltipValueGetter: (params) => {
 					return params?.value;
 				}, filter: 'agTextColumnFilter', headerName: 'Inactive ID', cellRenderer: 'templateRenderer',
-				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 150, maxWidth: 190, unSortIcon: true
+				cellRendererParams: { template: this.inactiveIdSection }, flex: 1, minWidth: 65, maxWidth: 190, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'inactiveEnPtSection', tooltipValueGetter: (params) => {
@@ -172,53 +172,53 @@ export class AdjudicateUpgradeModalComponent {
 					}
 
 					return '';
-				}, headerName: 'Inactive ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true
+				}, headerName: 'Inactive ' + this.selectedLanguage, flex: 2, minWidth: 65, width: 330, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.inactiveEnPtSection }, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'reason', valueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
 				}, tooltipValueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
-				}, headerName: 'Association', flex: 1, minWidth: 120, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true
+				}, headerName: 'Association', flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'replacementCode', tooltipField: 'replacementCode', headerName: '', headerComponentParams: {
 					template: ' <a class="add-all mr-auto ml-auto">'
 						+ '   <img src="assets/add-symbol-icon.svg" width="18px" height="18px" title="Add All" class="add-symbol-icon" />'
 						+ ' </a>'
-				}, flex: 1, minWidth: 60, width: 60, maxWidth: 70, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
+				}, flex: 1, minWidth: 60, maxWidth: 60, resizable: false, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.replacementCodeSection }
 			},
 			{
 				field: 'replacementId', tooltipValueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
 				}, headerName: 'Replacement ID', valueGetter: (params) => {
 					return params?.data?.replacementConcepts[0]?.code;
-				}, flex: 1, minWidth: 150, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true
+				}, flex: 1, minWidth: 65, maxWidth: 190, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.replacementIdSection }, unSortIcon: true, resizable: true
 			},
 			{
 				field: 'created', colId: 'replacementEnPtSection', tooltipValueGetter: (params) => {
 
 					let description = '';
 
-					if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-						description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+					if (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
+						description = this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
 					}
 
 					return description;
 
-				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 150, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
+				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 65, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
 					let description = '';
 
-					if (this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-						description = this.transformManualReplacementDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
+					if (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
+						description = this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
 					}
 
 					return description;
 
-				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true,
+				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true, resizable: true
 			},
-			{ field: 'actionSection', tooltipField: 'actionSection', headerName: '', flex: 1, minWidth: 60, width: 60, maxWidth: 60, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
+			{ field: 'actionSection', tooltipField: 'actionSection', headerName: '', flex: 1, minWidth: 60, width: 60, maxWidth: 60, resizable: false, cellRenderer: 'templateRenderer', floatingFilter: false, cellRendererParams: { template: this.actionSection } },
 		];
 
 		this.refsetGridOptions = {
@@ -571,7 +571,7 @@ export class AdjudicateUpgradeModalComponent {
 	}
 
 	changeLanguage($event: any) {
-		this.onGridReady(this.originalGridParams);
+        this.onGridReady(this.originalGridParams);
 	}
 
 	onGridReady = (gridReadyParams) => {
@@ -604,7 +604,7 @@ export class AdjudicateUpgradeModalComponent {
 				return x.active === false;
 			});
 
-			// pre sort items by 
+			// pre sort items by
 			results.items.sort((a, b) => {
 
 				let nameA = this.getConceptName(a.descriptions) + a.replacementConcepts[0].reason.toUpperCase();
@@ -707,13 +707,14 @@ export class AdjudicateUpgradeModalComponent {
 				this.changeLockedStatus(false);
 			});
 
-
-		// set placeholders on the grid floating filter fields
+		//set placeholders on the grid floating filter fields
 		document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
-
-			let label = obj.getAttribute('aria-label');
-			let value = label.substring(0, label.indexOf('Filter Input')) + '...';
-			obj.setAttribute('placeholder', value);
+            let label = obj.getAttribute('aria-label');
+            let title = label.substring(0, label.indexOf('Filter Input'));
+            if ((title.includes('Inactive') || title.includes('Replacement')) && !title.includes('ID')) {
+                title = label.split(' ')[0] + ' ' + this.selectedLanguage + ' ';
+            }
+			obj.setAttribute('placeholder', title + '...');
 		});
 
 		let self = this;
@@ -799,6 +800,7 @@ export class AdjudicateUpgradeModalComponent {
 
 	}
 
+	// NOTE: this is duplicated in "finish-upgrade-modal" component also - is that used??
 	getFinishedChangeReport(): void {
 
 		// Get old members from inactive concepts
@@ -808,6 +810,10 @@ export class AdjudicateUpgradeModalComponent {
 			if (items.replacementConcepts) {
 				for (let item of items.replacementConcepts) {
 					if (item.added === true) {
+						// skip duplicate entries (same code)
+						if (inactiveConcepts.filter(c => c.code==item.code).length > 0) {
+							continue;
+						}
 						inactiveConcepts.push(item);
 					}
 				}
@@ -819,23 +825,35 @@ export class AdjudicateUpgradeModalComponent {
 			if (!Boolean(newMembers.some((x) => {
 				return x['New Member ID'] === concept.code;
 			}))) {
-				newMembers.push({
+
+				let item = {
 					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
 					'refsetId': this.refsetData?.refsetId,
 					'referencedComponentId': concept.code
-				});
+				}
+				// Skip duplicate referencedComponentId (shouldn't be possible because of de-dup above)
+				if (newMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+					continue;
+				}
+				newMembers.push(item);
 			}
 		}
+
+		// Sort by referencedComponentId
+		newMembers = newMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
 
 		// Get new members from inactive concepts
 		inactiveConcepts = [];
 		memberItems.forEach((item: any) => {
 			if (item.replaced === true || item.stillMember === false) {
-				inactiveConcepts.push(item);
+				// only add if not a duplicate
+				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {					
+					inactiveConcepts.push(item);
+				}
 			}
 		});
 		let oldMembers = [];
@@ -843,16 +861,27 @@ export class AdjudicateUpgradeModalComponent {
 			if (!Boolean(oldMembers.some((x) => {
 				return x['Old Member ID'] === concept.code;
 			}))) {
-				oldMembers.push({
+				if (oldMembers.length > 0 && oldMembers.find(item => item.id === concept.memberId)) {
+					continue;
+				}
+				let item = {
 					'id': concept.memberId,
 					'effectiveTime': concept.memberEffectiveTime ? new Date(concept.memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 					'active': concept.active ? '1' : '0',
 					'moduleId': this.refsetData?.moduleId,
 					'refsetId': this.refsetData?.refsetId,
 					'referencedComponentId': concept.code
-				});
+				};
+				// skip duplicates
+				if (oldMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+					continue;
+				}
+				oldMembers.push(item);
 			}
 		}
+		
+		// Sort by referencedComponentId
+		oldMembers = oldMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
 		// Get all inactive concepts
 		const items = this.membersInCommon.items;
@@ -864,15 +893,23 @@ export class AdjudicateUpgradeModalComponent {
 
 
 		for (let i = 0; i < inactiveConcepts.length; i++) {
-			totalInactiveConcepts.push({
+			let item = {
 				'Inactive Concept ID': inactiveConcepts[i].code,
 				'Inactive Concept Name': this.transformDescriptions(inactiveConcepts[i].descriptions)[0].term,
 				'Reason': this.formatReason(inactiveConcepts[i].inactivationReason),
 				'Suggested Replacement Association': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].reason : '',
 				'Suggested Replacement ConceptID(s)': inactiveConcepts[i].replacementConcepts ? inactiveConcepts[i].replacementConcepts[0].code : '',
 				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].replacementConcepts[0].descriptions)[0].term
-			});
+			};
+			// skip duplicates
+			if (totalInactiveConcepts.filter(c => c['Suggested Replacement ConceptID(s)']==item['Suggested Replacement ConceptID(s)']).length > 0) {
+				continue;
+			}
+			totalInactiveConcepts.push(item);
 		}
+
+		// Sort by Inactive Concept ID
+		totalInactiveConcepts = totalInactiveConcepts.sort((a, b) => (a['Inactive Concept ID'] > b['Inactive Concept ID']) ? 1 : -1)
 
 		// Get members in common
 		const membersInCommonItems = this.membersOfRefset;
@@ -883,15 +920,23 @@ export class AdjudicateUpgradeModalComponent {
 		console.log(commonConcepts)
 		let membersInCommon = [];
 		for (let i = 0; i < commonConcepts?.length; i++) {
-			membersInCommon.push({
+			let item = {
 				'id': commonConcepts[i].memberId,
 				'effectiveTime': commonConcepts[i].memberEffectiveTime ? new Date(commonConcepts[i].memberEffectiveTime).toISOString().split('T')[0].replace(/[-]/g, '') : '',
 				'active': commonConcepts[i].active ? '1' : '0',
 				'moduleId': this.refsetData?.moduleId,
 				'refsetId': this.refsetData?.refsetId,
 				'referencedComponentId': commonConcepts[i].code
-			});
+			}
+			// skip duplicates
+			if (membersInCommon.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+				continue;
+			}
+			membersInCommon.push(item);
 		}
+
+		// Sort by referencedComponentId
+		membersInCommon = membersInCommon.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
 		const changeReportObject = {
 			'newMember': newMembers,
@@ -901,6 +946,7 @@ export class AdjudicateUpgradeModalComponent {
 		};
 		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
 	}
+	
 	selectConcept(concept: any): void {
 
 		this.conceptSelected = true;

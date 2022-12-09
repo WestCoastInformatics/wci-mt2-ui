@@ -1,0 +1,171 @@
+// Cursor styles
+.pointer {
+  cursor: pointer;
+}
+
+.default-cursor {
+  cursor: default;
+}
+
+// disabling components
+.disabled, :disabled {
+  cursor: not-allowed !important;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+// background styles
+.background-grey {
+  background: #434955 !important
+}
+
+// alignment
+.align-normal {
+  align-items: normal;
+}
+
+// height & width styles
+.h-fit-content {
+  height: fit-content;
+}
+
+.h-50 {
+  height: 50px;  
+}
+
+.h-350 {
+  height: 350px;  
+}
+
+.mh-650 {
+  max-height: 650px;
+}
+
+.w-100-pct {
+  width: 100%;  
+}
+
+.w-140 {
+  width: 140px;
+}
+
+.w-250 {
+  width: 250px;
+}
+
+.w-300 {
+  width: 300px;
+}
+
+.w-400 {
+  width: 400px;
+}
+
+
+// Margin/Padding  styles
+.pb-7 {
+  padding-bottom: 7px;
+}
+
+.pr-30 {
+  padding-right: 30px;
+}
+
+.mt-0 {
+  margin-top: 0px;
+}
+
+.mt-3 {
+  margin-top: 3px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-15 {
+  margin-top: 15px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mt-20 {
+  margin-top: 25px;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.mb-3 {
+  margin-bottom: 3px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.ml-1 {
+  margin-left: 1px;
+}
+
+.ml-3 {
+  margin-left: 3px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.ml-15 {
+  margin-left: 15px;
+}
+
+.ml-20 {
+  margin-left: 20px;
+}
+
+.mr-3 {
+  margin-right: 3px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.mr-15 {
+  margin-right: 15px;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+
+// Font styles
+
+.fs14 {
+  font-size: 14pt;
+}
+
+.ta-left {
+  text-align: left;
+}
+
+.ta-right {
+  text-align: right;
+}
+
+// Border styles
+.border-1 {
+  border: 1px solid;
+}

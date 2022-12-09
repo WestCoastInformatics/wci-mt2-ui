@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RefsetUtility} from '../../utilities/refset.utility';
 import {Router} from '@angular/router';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 
 @Component({
@@ -11,8 +12,10 @@ import {Router} from '@angular/router';
 export class RefsetMetaTableComponent implements OnInit {
     showFlag = true;
     @Input() refset: any;
+    loggedIn = false;
 
-    constructor(private router: Router) {
+    constructor(private router: Router,        
+        private authenticationService: AuthenticationService) {
     }
 
     get directUrl(): string {
@@ -21,6 +24,15 @@ export class RefsetMetaTableComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loggedIn = this.authenticationService.isAuthenticated();
+    }
+
+    getEditionUrl() {
+        return `${window.location.origin}/organizations/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects`
+    }
+
+    getProjectUrl() {
+        return `${window.location.origin}/organization/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects/${this.refset?.projectId}/refsets`
     }
 
     setDescriptions(refsetData: any): Array<string> {

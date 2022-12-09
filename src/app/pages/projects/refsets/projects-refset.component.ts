@@ -16,10 +16,12 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { User } from 'src/app/models/user';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
     selector: 'projects-refset',
@@ -90,6 +92,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
         private readonly modalService: NgbModal,
         protected route: ActivatedRoute,
         protected readonly projectsService: ProjectsService,
+        private notificationService: NotificationService,
         private location: Location
     ) {
         document.body.scrollTop = 0;
@@ -163,22 +166,23 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             ];
 
             this.columnDefs = [
-                { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 155, resizable: false, unSortIcon: true },
-                { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 280, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
-                { field: 'assignedUser', tooltipField: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 150, resizable: false, unSortIcon: true },
+                { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'refset-tool-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+                { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'refset-tool-directory-column-name', flex: 1, minWidth: 65, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, unSortIcon: true },
+                { field: 'assignedUser', tooltipField: 'assignedUser', headerName: 'Assignee', cellClass: 'refset-tool-directory-column-assignee', minWidth: 65, resizable: true, unSortIcon: true },
                 {
-                    field: 'workflowStatus', tooltipField: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 180, resizable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
+                    field: 'workflowStatus', tooltipField: 'workflowStatus', headerName: 'Workflow Status', cellClass: 'refset-tool-directory-column-workflow-status', minWidth: 65, resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.workflowStatus },
                     floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: workflowStatuses }, unSortIcon: true
                 },
                 {
-                    field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 150, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
+                    field: 'versionDate', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Version Date', cellClass: 'refset-tool-directory-column-version-date', minWidth: 65, resizable: true, valueGetter: UiUtility.gridDateValueGetter,
                     floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray }, unSortIcon: true
                 },
                 {
-                    field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 180, resizable: false, valueGetter: UiUtility.gridDateValueGetter,
+                    field: 'modified', tooltipValueGetter: UiUtility.gridDateValueGetter, headerName: 'Last Modified Date', cellClass: 'refset-tool-directory-column-modified-date', minWidth: 65, resizable: true, valueGetter: UiUtility.gridDateValueGetter,
                     floatingFilterComponent: 'dateTextFilterComponent', floatingFilterComponentParams: { suppressFilterButton: true }, sort: 'desc', unSortIcon: true
                 },
-                { field: 'downloadable', colId: 'actions', headerName: '', width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
+                // This is an exception to a resizeable field because it is an action field
+                { field: 'downloadable', colId: 'actions', headerName: '', minWidth: 65, width: 110, cellClass: 'refset-tool-directory-column-actions', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.actionSection }, sortable: false, filter: false, resizable: false }
             ];
 
             this.refsetGridOptions = {
@@ -231,8 +235,18 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
         this.refsetService.getOrganizations().subscribe({
             next: (results) => {
-
                 this.organizationList = results?.items;
+
+                // If no organizations, back to landing page
+                if (!this.organizationList || this.organizationList.length == 0) {
+                    this.notificationService.show('No organizations, you are likely logged out', null, 'error', {
+                        timeOut: 500,
+                        extendedTimeOut: 0
+                    });
+                    this.authService.notAuthenticated();
+                    //this.router.navigate(['/']);
+                    return;
+                }
 
                 for (const organization of this.organizationList) {
 
@@ -247,8 +261,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                 this.getStoredOrganizationId();
 
                 if (!this.selectedOrganization) {
-                    this.showLoadingSpinner = false;
+                    this.selectedOrganization = this.organizationList[0];
                 }
+
+                this.getEditions();
             },
             error: (error) => {
                 this.showLoadingSpinner = false;
@@ -274,6 +290,15 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
             next: (results) => {
 
                 this.editionList = results?.items;
+
+                if (!this.editionList || this.editionList.length == 0) {
+                    this.notificationService.show('No editions', null, 'error', {
+                        timeOut: 500,
+                        extendedTimeOut: 0
+                    });
+                    this.showLoadingSpinner = false;
+                    return;
+                }
 
                 for (const edition of this.editionList) {
 

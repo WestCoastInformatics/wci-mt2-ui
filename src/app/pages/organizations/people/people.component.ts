@@ -72,16 +72,19 @@ export class OrganizationPeopleComponent implements OnInit {
   ngAfterViewInit() {
 
     this.gridColumnDefs = [
-      { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 150, flex: 1, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true },
-      { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-      { field: 'email', tooltipField: 'email', minWidth: 400, headerName: 'Email', unSortIcon: true },
-      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection } },
-      {
-        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: 'Inactivate User', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
-          template: this.inactivateUserSection
-        }, flex: 1, maxWidth: 190, resizable: false
-      },
+      { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 65, flex: 2, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true },
+      { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
+      { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
+      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: true }
     ];
+    if (this.selectedOrganization?.roles?.includes('ADMIN')) {
+      this.gridColumnDefs.push({
+        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: '', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
+          template: this.inactivateUserSection
+        }, minWidth: 65, maxWidth: 65, resizable: false
+      });
+    }
+    
 
     this.gridOptions = {
       context: { componentParent: this },
@@ -157,6 +160,13 @@ export class OrganizationPeopleComponent implements OnInit {
     this.router.navigate(['/personal/' + selectedId + '/landing']);
   }
 
+  clickTeams = (event) => {
+    //if (event.column.colId === 'name') {
+    this.router.navigate(['organizations', this.organizationId, 'teams']);
+    event.stopPropagation();
+    //}
+  }
+
   get dataCount() {
     return this.data.length;
   }
@@ -212,19 +222,6 @@ export class OrganizationPeopleComponent implements OnInit {
     this.getPeople();
   }
 
-  async getTeams(teams: any): Promise<any> {
-
-    const teamObject = { teams: [] };
-    if (teams === 'undefined' || teams === undefined) {
-      return JSON.stringify(teamObject);
-    } else {
-      for (const team of teams) {
-        teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
-      }
-      return JSON.stringify(teamObject);
-    }
-  }
-
   confirmRemoveUser(user) {
     this.selectedUser = user;
     this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
@@ -239,12 +236,16 @@ export class OrganizationPeopleComponent implements OnInit {
     });
   }
 
-  getTeamCount(teams: any): number {
-    return teams.length;
+  getTeamsCount(data: any): number {
+    if (data) {
+      return data.teams.length;
+    }
   }
 
   getTeamsTitle(data: any): string {
-    return data?.teams.map(t => t.name).join(', ');
+    if (data) {
+        return data?.teams.map(t => t.name).join(', \n');
+    }
   }
 
   getStoredOrganizationId(): void {

@@ -43,13 +43,12 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">
-                                    {{getTeamCount(params.data.teams)}}
+                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)" (click)="clickTeams($event)">
+                                    {{getTeamsCount(params?.data)}}
                                     teams</span>
                             </ng-template>
 
                             <ng-template #inactivateUserSection let-params>
-
                                 <img *ngIf="selectedOrganization?.roles?.includes('ADMIN')" src="assets/subtract-symbol-icon.svg" (click)="confirmRemoveUser(params?.data)"
                                   width="30px" height="30px" title="Inactivate User" aria-label="Subtract" class="subtract-symbol-icon"
                                   alt="Subtract symbol shown when you're able to remove a user" />
