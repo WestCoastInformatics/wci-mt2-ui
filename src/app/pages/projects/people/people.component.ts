@@ -80,7 +80,7 @@ export class ProjectsPeopleComponent implements OnInit {
             { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 65, flex: 2, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true },
             { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
             { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
-            { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: true }
+            { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
             //       {
             //     field: 'name',
             //     tooltipField: 'name',
@@ -430,7 +430,15 @@ export class ProjectsPeopleComponent implements OnInit {
         return teams.length;
     }
 
+
     getTeamsTitle(data: any): string {
-        return data?.teams.map(t => t.name).join(', ');
-    }
+        if (data) {
+          if (data.teams) {
+            return this.selectedOrganization.name + ' Teams:\n' + (data?.teams.map(t => t.name).join(', \n'));
+          } else {
+            return 'No ' + this.selectedOrganization.name + ' Teams'
+          }
+        }
+      }
+        
 }

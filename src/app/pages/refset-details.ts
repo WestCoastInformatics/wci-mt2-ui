@@ -644,7 +644,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
-                    comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: true
+                    comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: false
                 },
             ];
 
@@ -1126,7 +1126,7 @@ export class RefsetDetails implements OnInit {
                             filter: false,
                             tooltipField: 'active',
                             sortable: false,
-                            resizable: true
+                            resizable: false
                         },
                     ]
                 );

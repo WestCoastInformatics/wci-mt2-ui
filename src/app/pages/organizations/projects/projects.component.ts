@@ -55,7 +55,7 @@ export class OrganizationProjectsComponent implements OnInit {
         this.data = [];
         this.columnDefs = [
             { field: 'name', tooltipField: 'name', headerName: 'Project Name', flex: 1, minWidth: 65, cellRenderer: params => `${params.data.name}` + (params.data.locked ? '<i class="ml-3 text-muted fa fa-lock"></i>' : ''), cellClass: 'pointer', unSortIcon: true, resizable: true },
-            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 2, wrapText: true, autoHeight: true, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
+            { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 2, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
             { field: 'teams', headerName: 'Teams', filter: false, minWidth: 65, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.teamSection } }
         ];
 
@@ -327,9 +327,11 @@ export class OrganizationProjectsComponent implements OnInit {
     getTeamsTitle(data: any): string{
         if (data && data.teams) {
            let teams = JSON.parse(data.teams).teams;
-           return teams.map(t => t.name).join(', \n');
+           if (teams.length > 0) {
+               return 'Organization Teams:\n' + teams.map(t => t.name).join(', \n');
+           } 
+           return "No Organization Teams";
         }
-        console.log('xxx')
         return 'No teams';
     }
     

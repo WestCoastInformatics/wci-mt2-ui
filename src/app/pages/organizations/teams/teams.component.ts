@@ -93,9 +93,11 @@ export class OrganizationTeamsComponent implements OnInit {
             },
             { field: 'email', tooltipField: 'email', headerName: 'Contact Email', flex: 2, minWidth: 65, resizable: true, unSortIcon: true},
             {
-                field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: true, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
+                field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
                 tooltipValueGetter: (params) => {
-                    return params?.data?.memberList ? params.data.memberList.map(member => member.name).join(', \n') : '';
+                    return params?.data?.memberList ? 
+                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) : 
+                        'No Team Users';
                 }
             }
 

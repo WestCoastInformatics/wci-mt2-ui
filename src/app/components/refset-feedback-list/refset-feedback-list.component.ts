@@ -235,7 +235,7 @@ export class RefsetFeedbackListComponent implements OnInit {
             {
                 field: 'numberReplies', headerName: 'Replies', minWidth: 65, maxWidth: 150, unSortIcon: true, tooltipValueGetter: (params) => {
                     return params.data.numberReplies;
-                }, resizable: true, filter: false
+                }, resizable: false, filter: false
             }
         ];
 
