@@ -233,7 +233,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
             displayType: 'list',
             offset: pageNumber - 1,
             searchConcepts: true,
-            showInDevelopment: false,
+            showInDevelopment: true,
             countComments: true,
         };
 
