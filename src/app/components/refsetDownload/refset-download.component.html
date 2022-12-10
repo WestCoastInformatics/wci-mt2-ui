@@ -1,5 +1,5 @@
 <button *ngIf="isDetailPage && refset!=null && project==null && !disableDownload" mat-button class="manage-refset-menu"
-    title=""Download Referense Set aria-label="Download Reference Set"
+    title="Download Reference Set" aria-label="Download Reference Set"
     (click)="openDownload(refset.refsetId)">Download
 </button>
 <button *ngIf="disableDownload" [title]="disableTitle" mat-button class="manage-refset-menu disable-menu-btn">
@@ -121,4 +121,5 @@
         </div>
     </div>
 </ng-template>
+
 

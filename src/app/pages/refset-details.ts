@@ -136,7 +136,7 @@ export class RefsetDetails implements OnInit {
     originalGridParams: any;
     membersGridNumberOfResults: number;
     taxonomySearchNumberOfResults: number;
-    unresolvedDiscussionCount: number;
+    openDiscussionCount: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
     editMode = false;
@@ -371,6 +371,7 @@ export class RefsetDetails implements OnInit {
                 this.allowedToEdit = false;
                 this.allowedToReview = false;
                 this.changeDetectorRef.detectChanges();
+                console.log('xxx', results.openDiscussionCount);
 
                 if (this.refsetData.type === RefsetUtility.EXTERNAL) {
 
@@ -410,12 +411,12 @@ export class RefsetDetails implements OnInit {
 
                 this.refsetService.getDiscussionThreads('REFSET', this.id, null).subscribe({
                     next: (threads) => {
-                        this.unresolvedDiscussionCount = 0;
+                        this.openDiscussionCount = 0;
                         for (const discussion of threads.items.filter(t => !t.privateThread ||
                             t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName || this.user?.roles?.includes('all-all-admin')))) {
 
                             if (discussion.status === 'Open') {
-                                this.unresolvedDiscussionCount++;
+                                this.openDiscussionCount++;
                             }
                         }
                     }

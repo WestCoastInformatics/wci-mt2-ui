@@ -162,13 +162,6 @@ export class OrganizationPeopleComponent implements OnInit {
     this.router.navigate(['/personal/' + selectedId + '/landing']);
   }
 
-  clickTeams = (event) => {
-    //if (event.column.colId === 'name') {
-    this.router.navigate(['organizations', this.organizationId, 'teams']);
-    event.stopPropagation();
-    //}
-  }
-
   get dataCount() {
     return this.data.length;
   }
@@ -247,9 +240,9 @@ export class OrganizationPeopleComponent implements OnInit {
   getTeamsTitle(data: any): string {
     if (data) {
       if (data.teams) {
-        return this.selectedOrganization.name + ' Teams:\n' + (data?.teams.map(t => t.name).join(', \n'));
+        return 'User Teams:\n' + (data?.teams.map(t => t.name).join(', \n'));
       } else {
-        return 'No ' + this.selectedOrganization.name + ' Teams'
+        return 'No User Teams'
       }
     }
   }

@@ -32,7 +32,7 @@
                             <ng-container *ngFor="let organization of organizationList">
                                 <div class='section-list' *ngIf="organization.name">
                                     <img [src]="organization.iconUri" *ngIf="organization.iconUri" />
-                                    <span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{ organization.name }}</a></span>
+                                    <a [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']" class="section-list pointer" >{{ organization.name }}</a>
                                 </div>
                             </ng-container>
                         </div>
@@ -43,7 +43,11 @@
                     <div class='section-header'>Teams</div>
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
-                            <p (click)="goToTeam(team.id, team.organizationId)" class="text-primary font-weight-bold" *ngFor="let team of teamList">{{ team.name }}</p>
+                            <ng-container *ngFor="let team of teamList">
+                                <div class='section-list' *ngIf="team.name">
+                                    <a (click)="goToTeam(team.id, team.organizationId)" class="section-list pointer">{{ team.name }}</a>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
                 </section>

@@ -62,10 +62,6 @@
         <mat-icon>information</mat-icon> 
     </button><span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
 
-    <mat-icon aria-hidden="false" #directoryPrivateIcon
-        class="refset-tool-table-icon" aria-label="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}" title="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}">
-        {{params?.data?.type === 'EXTENSIONAL' ? 'settings' : 'format_list_bulleted'}}
-    </mat-icon>
 </ng-template>
 
 <ng-template #directoryInfoDialog let-data>
@@ -118,7 +114,7 @@
 
             <div class="col-2">
                 <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                  [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.unresolvedDiscussionCount">
+                  [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
                 </app-refset-discussion-list>
             </div>
         </div>

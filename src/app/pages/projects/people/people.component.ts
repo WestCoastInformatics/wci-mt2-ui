@@ -434,9 +434,9 @@ export class ProjectsPeopleComponent implements OnInit {
     getTeamsTitle(data: any): string {
         if (data) {
           if (data.teams) {
-            return this.selectedOrganization.name + ' Teams:\n' + (data?.teams.map(t => t.name).join(', \n'));
+            return 'User Teams:\n' + (data?.teams.map(t => t.name).join(', \n'));
           } else {
-            return 'No ' + this.selectedOrganization.name + ' Teams'
+            return 'No User Teams'
           }
         }
       }

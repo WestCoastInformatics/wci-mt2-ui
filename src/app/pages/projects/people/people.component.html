@@ -70,7 +70,7 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)" (click)="clickTeams($event)">
+                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">
                                     {{ getTeamCount(params.data.teams) }} teams</span>
                             </ng-template>
 

@@ -1066,7 +1066,7 @@ select {
 .edit-member-section {
   display: flex;
   justify-content: space-between;
-  width: 500px;
+  width: 700px;
 }
 
 // Taxonomy Styles
@@ -5476,8 +5476,4 @@ app-date-text-floating-filter {
   mat-pseudo-checkbox {
       display: none !important;
     }
-}
-
-.inactive-status {
-  margin-right: 60px !important;
 }
