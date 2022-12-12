@@ -5,7 +5,7 @@
   <div class="modal-header rt2-modal-header">
     <button ngbAutofocus class="unfocus-btn"></button>
     <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-      Add a User to the "{{ name }}" {{ type }}
+      Add User to the "{{ name }}" {{ type }}
     </h4>
 
     <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -21,7 +21,7 @@
         <td>
           <mat-form-field floatLabel="never" appearance="legacy" class="email-input-field">
             <mat-label>Enter the email of the user to add:</mat-label>
-            <input matInput (keydown.tab)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />
+            <input matInput (keydown)="onKeyDownEvent($event)" #addMember placeholder="user-email@orgname.org" [(ngModel)]="email" />
             {{ setAutoFocus(addMember) }}
           </mat-form-field>
         </td>
@@ -36,7 +36,7 @@
   </div>
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    <button (click)="addUserAsMember()" [disabled]="email === '' || !isValidEmail()" mat-raised-button class="refset-tool-action-button mat-green">
+    <button (click)="addUserAsMember()" [disabled]="email === '' || !validEmail" mat-raised-button class="refset-tool-action-button mat-green">
       Add User
     </button>
     <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 

@@ -1066,7 +1066,7 @@ select {
 .edit-member-section {
   display: flex;
   justify-content: space-between;
-  width: 500px;
+  width: 700px;
 }
 
 // Taxonomy Styles
@@ -3337,7 +3337,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 #refsetDetailsPage .refset-title-container .edit-button-group-right-below-sticky-header .refset-action-button {
   margin-left: 5px !important;
   min-width: 150px !important;
-  margin-bottom: -5px !important;
 }
 
 .ready-for-publication-modal-body {
@@ -3608,7 +3607,7 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
 }
 
 .menu-spacer {
-  padding-right: 10px;
+  padding-right: 15px;
 }
 
 .down-arrow-for-menu {
@@ -5476,8 +5475,4 @@ app-date-text-floating-filter {
   mat-pseudo-checkbox {
       display: none !important;
     }
-}
-
-.inactive-status {
-  margin-right: 60px !important;
 }

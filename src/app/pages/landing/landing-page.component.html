@@ -43,7 +43,7 @@
 
         <h3 class="heading heading-3 text-main">Search Results</h3>
 
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" 
+        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
             [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
         </ag-grid-angular>
 
@@ -59,13 +59,9 @@
 <ng-template #directoryInfoSection let-params>
     <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
       title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
-        <mat-icon>information</mat-icon> 
+        <mat-icon>information</mat-icon>
     </button><span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
 
-    <mat-icon aria-hidden="false" #directoryPrivateIcon
-        class="refset-tool-table-icon" aria-label="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}" title="{{params?.data?.type === 'EXTENSIONAL' ? 'extensional refset' : 'intensional refset'}}">
-        {{params?.data?.type === 'EXTENSIONAL' ? 'settings' : 'format_list_bulleted'}}
-    </mat-icon>
 </ng-template>
 
 <ng-template #directoryInfoDialog let-data>
@@ -118,7 +114,7 @@
 
             <div class="col-2">
                 <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                  [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.unresolvedDiscussionCount">
+                  [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
                 </app-refset-discussion-list>
             </div>
         </div>
@@ -144,17 +140,23 @@
                     <p><a href="https://1drv.ms/u/s!Aq0sJzLep5rWhtp-oM89IU0da1YzDA?e=GVNZS1" target="_blank"><span class="text-main mr-3">Reference Set Tool User
                                 Guide.</span></a>Access the user guide to get the most out of the new Reference Set Tool.</p>
                     <hr class="dotted" />
-                    <p><a href="https://1drv.ms/b/s!Aq0sJzLep5rWhtwvIwQXoUeSvCV2uw?e=Qe7Arn" target="_blank"><span class="text-main mr-3">Workflow Definition.</span></a>View
+                    <p><a href="assets/1drv.ms/Organization UML.png" target="_blank"><span class="text-main mr-3">Organization Configuration.</span></a>View the ways Organizations, Projects, Teams, and Users connected.</p>
+                    <hr class="dotted" />
+                    <p><a href="assets/1drv.ms/RT2 Workflow State Diagram 11-23-2022.pdf" target="_blank"><span class="text-main mr-3">Workflow Definition.</span></a>View
                         the workflow options diagram to better understand the workflow authoring/reviewing process.</p>
                     <hr class="dotted" />
                 </div>
             </div>
             <div class="clearfix visible-sm"></div>
             <div class="col-md-6 col-12 videos-section">
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/GiDEdWw6WO0" title="YouTube video player" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <iframe src="https://drive.google.com/file/d/10mFWkwcDUlRMmUby2cgo42avhYVBLnOs/preview" width="100%" height="300" allow="autoplay"></iframe>
-                <iframe src="https://drive.google.com/file/d/1tXe9R5RuILj6rP_tYEL3EHjkTrCt_h8E/preview" width="100%" height="300" allow="autoplay"></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/GiDEdWw6WO0" title="Reference Set 2.0: Tool Demo" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/u2oO_QRIIF4" title="Reference Set 2.0: Organization Setup" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/ddpEsJ3oUTo" title="Reference Set 2.0: Reading Content" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/FtQiRwGkFEM" title="Reference Set 2.0: Making Changes" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </div>

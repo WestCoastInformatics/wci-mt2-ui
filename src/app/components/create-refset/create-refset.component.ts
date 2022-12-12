@@ -624,13 +624,23 @@ export class CreateRefsetComponent implements OnInit {
         this.refsetOptionsLoading = true;
         this.refsetOptions = [];
 
+        query = query.trim();
+        let queryField = "";
+
+        // if this is numeric only treat it as a refset ID
+        if (/^\d+$/.test(query)) {
+            queryField = 'refsetId:' + query;
+        } else { 
+            queryField = 'name:' + query;
+        }
+
         const restParams: any = {
             displayType: 'list',
             offset: 0,
-            searchConcepts: true,
-            showInDevelopment: true,
+            searchConcepts: false,
+            showInDevelopment: false,
             countComments: false,
-            query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND name:${query} OR refsetId:${query}`
+            query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND ${queryField}`
         };
 
         if (query.length > 2) {

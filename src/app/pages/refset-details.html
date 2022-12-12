@@ -117,7 +117,7 @@
                             {{refsetData?.name}}
                         </div>
                         <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
-                          [roles]="refsetData.roles" [(discussionCount)]="unresolvedDiscussionCount">
+                          [roles]="refsetData.roles" [(discussionCount)]="openDiscussionCount">
                         </app-refset-discussion-list>
                     </div>
 
@@ -446,19 +446,35 @@
             </button>
         </div>
 
-        <br *ngIf="allowedToEdit && showMembersSection" />
-        <span class="edit-member-section" *ngIf="allowedToEdit && showMembersSection">
-            <import-from-file-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
+        <!--<br *ngIf="allowedToEdit && showMembersSection" />-->
+        <span *ngIf="showMembersSection">
+            <import-from-file-modal *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
               [processChangedMemberFunction]="processChangedMemberEffects">
             </import-from-file-modal>
 
-            <import-from-list-modal *ngIf="!isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
+            <import-from-list-modal class="ml-20" *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
               (changeLockedStatus)="changeLockedStatus($event)">
             </import-from-list-modal>
 
-            <add-remove-by-concept-modal [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
+            <add-remove-by-concept-modal class="ml-20" *ngIf="allowedToEdit" [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
               [processChangedMemberFunction]="processChangedMemberEffects">
             </add-remove-by-concept-modal>
+
+            <span id="refset-type" class="ml-20" >
+                <button mat-button aria-hidden="false" aria-label="Show active/inactive concepts" [matMenuTriggerFor]="activeInactive"
+                  [matMenuTriggerRestoreFocus]="false" class="manage-refset-menu" >Status: {{activeInactiveStatus}} <span class="down-arrow-for-menu">&#x25BC;</span>
+                </button>
+                <mat-menu #activeInactive="matMenu">
+                    <button mat-menu-item alt="Active Concepts Only" title="Active Concepts Only" aria-label="Active Concepts Only"
+                      (click)="changeActiveInactiveStatus('Active Concepts Only')">Active Concepts Only</button>
+                    <button mat-menu-item alt="Active and Inactive Concepts" title="Active and Inactive Concepts"
+                      aria-label="Active and Inactive Concepts" (click)="changeActiveInactiveStatus('Active and Inactive Concepts')">Active and
+                        Inactive Concepts</button>
+                    <button mat-menu-item alt="Inactive Concepts Only" title="Inactive Concepts Only" aria-label="Inactive Concepts Only"
+                      (click)="changeActiveInactiveStatus('Inactive Concepts Only')">Inactive Concepts Only</button>
+                </mat-menu>
+            </span>
+
         </span>
         <br>
         <!-- Member Concepts Section -->
@@ -526,20 +542,6 @@
                                         </div>
 
                                         <div class="col-md-3" style="display: contents" id="refset-type">
-                                            <button mat-raised-button color="primary" aria-hidden="false" [matMenuTriggerFor]="activeInactive"
-                                              [matMenuTriggerRestoreFocus]="false" class="refset-tool-action-button btn btn-primary inactive-status" ng-reflect-color="primary"
-                                              unfocus>Status:
-                                                {{activeInactiveStatus}}
-                                            </button>
-                                            <mat-menu #activeInactive="matMenu">
-                                                <button mat-menu-item alt="Active Concepts Only" title="Active Concepts Only" aria-label="Active Concepts Only"
-                                                  (click)="changeActiveInactiveStatus('Active Concepts Only')">Active Concepts Only</button>
-                                                <button mat-menu-item alt="Active and Inactive Concepts" title="Active and Inactive Concepts"
-                                                  aria-label="Active and Inactive Concepts" (click)="changeActiveInactiveStatus('Active and Inactive Concepts')">Active and
-                                                    Inactive Concepts</button>
-                                                <button mat-menu-item alt="Inactive Concepts Only" title="Inactive Concepts Only" aria-label="Inactive Concepts Only"
-                                                  (click)="changeActiveInactiveStatus('Inactive Concepts Only')">Inactive Concepts Only</button>
-                                            </mat-menu>
                                             <mat-button-toggle-group class="refset-tool-toggle-buttons" name="membersListMode" aria-label="Members List Mode"
                                               (change)="onChangeMembersListMode()" [(ngModel)]="selectedMembersListMode">
                                                 <mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>

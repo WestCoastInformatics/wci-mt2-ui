@@ -247,7 +247,7 @@ export class LaunchComparisonModalComponent {
       { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 65, tooltipField: 'code', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.codeSection }, unSortIcon: true },
       { field: 'name', tooltipField: 'name', headerName: 'Concept Name (PT)', flex: 2, resizable: true, minWidth: 65, sort: 'asc', unSortIcon: true },
       {
-        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 65, tooltipField: 'membership', resizable: true, unSortIcon: true,
+        field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 65, tooltipField: 'membership', resizable: false, unSortIcon: true,
         floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
           suppressMenu: true, suppressFilterButton: true, names: [
             { type: 'membership', name: 'Active Refset', value: 'Active Refset' },

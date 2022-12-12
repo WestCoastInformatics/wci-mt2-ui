@@ -143,9 +143,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 sort: 'desc',
                 floatingFilterComponent: 'dateTextFilterComponent',
                 floatingFilterComponentParams: { suppressFilterButton: true },
-                valueGetter:
-                    UiUtility.gridDateValueGetter,
-                    resizable: true
+                valueGetter: UiUtility.gridDateValueGetter,
+                resizable: false
             }
         ];
 

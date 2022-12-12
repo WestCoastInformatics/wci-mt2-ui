@@ -136,7 +136,7 @@ export class RefsetDetails implements OnInit {
     originalGridParams: any;
     membersGridNumberOfResults: number;
     taxonomySearchNumberOfResults: number;
-    unresolvedDiscussionCount: number;
+    openDiscussionCount: number;
     showFullNarrativeText = false;
     showFullNotesText = false;
     editMode = false;
@@ -410,12 +410,12 @@ export class RefsetDetails implements OnInit {
 
                 this.refsetService.getDiscussionThreads('REFSET', this.id, null).subscribe({
                     next: (threads) => {
-                        this.unresolvedDiscussionCount = 0;
+                        this.openDiscussionCount = 0;
                         for (const discussion of threads.items.filter(t => !t.privateThread ||
                             t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName || this.user?.roles?.includes('all-all-admin')))) {
 
                             if (discussion.status === 'Open') {
-                                this.unresolvedDiscussionCount++;
+                                this.openDiscussionCount++;
                             }
                         }
                     }
@@ -644,7 +644,7 @@ export class RefsetDetails implements OnInit {
                         template: this.taxonomyResultSection,
                     },
                     tooltipField: 'name',
-                    comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: true
+                    comparator: (a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }), resizable: false
                 },
             ];
 
@@ -1126,7 +1126,7 @@ export class RefsetDetails implements OnInit {
                             filter: false,
                             tooltipField: 'active',
                             sortable: false,
-                            resizable: true
+                            resizable: false
                         },
                     ]
                 );

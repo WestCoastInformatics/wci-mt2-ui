@@ -208,13 +208,9 @@ export class AdjudicateUpgradeModalComponent {
 
 				}, headerName: 'Replacement ' + this.selectedLanguage, flex: 2, minWidth: 65, width: 330, cellRenderer: 'templateRenderer', valueGetter: (params) => {
 
-					let description = '';
-
-					if (this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)?.length > 0) {
-						description = this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0].term;
-					}
-
-					return description;
+					return this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions)[0]?.term
+						|| this.transformDescriptions(params?.data?.replacementConcepts[0]?.descriptions, true)[0]?.term
+						|| '';
 
 				}, cellRendererParams: { template: this.replacementEnPtSection }, unSortIcon: true, resizable: true
 			},
@@ -463,14 +459,13 @@ export class AdjudicateUpgradeModalComponent {
 	addManualReplacement(changeMethod: string): void {
 		if (this.concept) {
 			this.changeLockedStatus(true);
-			// Not necessary
-			//this.refsetDetails.toggleLoadingSpinner(true);
 			const body = { ...this.concept };
 			this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
 				// force auto-add of the replacement concept to the refset
 				this.addReplacementFlag = true;
 				this.onGridReady(this.originalGridParams);
 				this.refsetDetails.toggleLoadingSpinner(false);
+				this.disableAddRemove = true;
 			});
 		}
 		this.selectedConcepts = undefined;
@@ -554,13 +549,12 @@ export class AdjudicateUpgradeModalComponent {
 
 	getLanguageAndType(isOption = false): string[] {
 		let language = '';
-		let type = '';
+		let type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];;
 		if (isOption) {
 			language = 'en';
-			type = 'FSN';
+			type = (type.includes('FSN')) ? 'FSN' : 'PT';
 		} else {
 			language = this.selectedLanguage.split(' ')[0].toLowerCase();
-			type = this.selectedLanguage.split(' ')[1].split('(')[1].split(')')[0];
 		}
 		let type2 = '';
 		if (type === 'PT') {
@@ -571,7 +565,7 @@ export class AdjudicateUpgradeModalComponent {
 	}
 
 	changeLanguage($event: any) {
-        this.onGridReady(this.originalGridParams);
+		this.onGridReady(this.originalGridParams);
 	}
 
 	onGridReady = (gridReadyParams) => {
@@ -709,11 +703,11 @@ export class AdjudicateUpgradeModalComponent {
 
 		//set placeholders on the grid floating filter fields
 		document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
-            let label = obj.getAttribute('aria-label');
-            let title = label.substring(0, label.indexOf('Filter Input'));
-            if ((title.includes('Inactive') || title.includes('Replacement')) && !title.includes('ID')) {
-                title = label.split(' ')[0] + ' ' + this.selectedLanguage + ' ';
-            }
+			let label = obj.getAttribute('aria-label');
+			let title = label.substring(0, label.indexOf('Filter Input'));
+			if ((title.includes('Inactive') || title.includes('Replacement')) && !title.includes('ID')) {
+				title = label.split(' ')[0] + ' ' + this.selectedLanguage + ' ';
+			}
 			obj.setAttribute('placeholder', title + '...');
 		});
 
@@ -811,7 +805,7 @@ export class AdjudicateUpgradeModalComponent {
 				for (let item of items.replacementConcepts) {
 					if (item.added === true) {
 						// skip duplicate entries (same code)
-						if (inactiveConcepts.filter(c => c.code==item.code).length > 0) {
+						if (inactiveConcepts.filter(c => c.code == item.code).length > 0) {
 							continue;
 						}
 						inactiveConcepts.push(item);
@@ -835,7 +829,7 @@ export class AdjudicateUpgradeModalComponent {
 					'referencedComponentId': concept.code
 				}
 				// Skip duplicate referencedComponentId (shouldn't be possible because of de-dup above)
-				if (newMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+				if (newMembers.filter(c => c.referencedComponentId == item.referencedComponentId).length > 0) {
 					continue;
 				}
 				newMembers.push(item);
@@ -851,7 +845,7 @@ export class AdjudicateUpgradeModalComponent {
 		memberItems.forEach((item: any) => {
 			if (item.replaced === true || item.stillMember === false) {
 				// only add if not a duplicate
-				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {					
+				if (inactiveConcepts.filter(c => c.code == item.code).length == 0) {
 					inactiveConcepts.push(item);
 				}
 			}
@@ -873,13 +867,13 @@ export class AdjudicateUpgradeModalComponent {
 					'referencedComponentId': concept.code
 				};
 				// skip duplicates
-				if (oldMembers.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+				if (oldMembers.filter(c => c.referencedComponentId == item.referencedComponentId).length > 0) {
 					continue;
 				}
 				oldMembers.push(item);
 			}
 		}
-		
+
 		// Sort by referencedComponentId
 		oldMembers = oldMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
@@ -902,7 +896,7 @@ export class AdjudicateUpgradeModalComponent {
 				'Suggested Replacement Name': this.transformManualReplacementDescriptions(inactiveConcepts[i].replacementConcepts[0].descriptions)[0].term
 			};
 			// skip duplicates
-			if (totalInactiveConcepts.filter(c => c['Suggested Replacement ConceptID(s)']==item['Suggested Replacement ConceptID(s)']).length > 0) {
+			if (totalInactiveConcepts.filter(c => c['Suggested Replacement ConceptID(s)'] == item['Suggested Replacement ConceptID(s)']).length > 0) {
 				continue;
 			}
 			totalInactiveConcepts.push(item);
@@ -929,7 +923,7 @@ export class AdjudicateUpgradeModalComponent {
 				'referencedComponentId': commonConcepts[i].code
 			}
 			// skip duplicates
-			if (membersInCommon.filter(c => c.referencedComponentId==item.referencedComponentId).length > 0) {
+			if (membersInCommon.filter(c => c.referencedComponentId == item.referencedComponentId).length > 0) {
 				continue;
 			}
 			membersInCommon.push(item);
@@ -946,7 +940,7 @@ export class AdjudicateUpgradeModalComponent {
 		};
 		UiUtility.createFinishedChangeReport(this.refsetData?.refsetId, changeReportObject);
 	}
-	
+
 	selectConcept(concept: any): void {
 
 		this.conceptSelected = true;

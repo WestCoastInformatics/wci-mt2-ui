@@ -572,20 +572,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
                             currentRowCount = data.length + ((pageNumber - 1) * this.refsetGridApi.paginationGetPageSize());
                         }
 
-                        for (let i = 0; i < data?.length; i++) {
-                            this.refsetService.getDiscussionThreads('REFSET', data[i].id, null).subscribe({
-                                next: (results) => {
-                                    data[i].unresolvedDiscussionCount = 0;
-                                    for (const discussion of results.items) {
-
-                                        if (discussion.status == 'Open') {
-                                            data[i].unresolvedDiscussionCount++;
-                                        }
-                                    }
-                                }
-                            });
-                        }
-
                         rowParams.successCallback(data, lastRow);
                     } else {
 

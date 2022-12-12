@@ -50,7 +50,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
             },
             { field: 'modifiedBy', headerName: 'Modified By', tooltipField: 'modifiedBy', flex: 1, unSortIcon: true, minWidth: 65, sortable: true, sort: 'desc', resizable: true },
             { field: 'message', headerName: 'Message', tooltipField: 'message', flex: 1, unSortIcon: true, minWidth:65, sortable: true, resizable: true },
-            { field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 65, sortable: false, resizable: true }];
+            { field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 65, sortable: false, resizable: false }];
 
         this.gridOptions = {
             context: { componentParent: this },

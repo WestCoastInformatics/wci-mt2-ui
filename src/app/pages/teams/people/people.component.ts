@@ -44,7 +44,6 @@ export class TeamsPeopleComponent implements OnInit {
 
   @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
   @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
-  @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
   @ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
@@ -61,7 +60,7 @@ export class TeamsPeopleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Teams');
+    this.titleService.setTitle('Reference Set Tool - Teams - People');
     this.currentUser = this.authService.getUser();
     this.route.params.subscribe(params => {
 
@@ -83,15 +82,8 @@ export class TeamsPeopleComponent implements OnInit {
       { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 65, flex: 2, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true },
       { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
       { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
-      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: true }
-    ];
-    if (this.selectedOrganization?.roles?.includes('ADMIN')) {
-      this.gridColumnDefs.push({
-        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: '', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
-          template: this.inactivateUserSection
-        }, minWidth: 65, maxWidth: 65, resizable: false
-      });
-    }
+      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
+    ];    
 
     this.gridOptions = {
       context: { componentParent: this },
@@ -250,25 +242,18 @@ export class TeamsPeopleComponent implements OnInit {
   }
 
   onGridCellClick = (event) => {
+    // Skip clicks on action column
     if (event.column.colId == 'id') {
       return;
     }
 
     const selectedRows = this.gridApi.getSelectedRows();
-    let selectedId: string;
-
+    const router = this.router;
     selectedRows.forEach(function (selectedRow, index) {
-      selectedId = selectedRow.id;
+        router.navigate(['/personal/' + selectedRow.id + '/landing']);
+        return;
     });
 
-    this.router.navigate(['/personal/' + selectedId + '/landing']);
-  }
-
-  clickTeams = (event) => {
-    //if (event.column.colId === 'name') {
-    this.router.navigate(['organizations', this.organizationId, 'teams']);
-    event.stopPropagation();
-    //}
   }
 
   get dataCount() {
@@ -280,10 +265,12 @@ export class TeamsPeopleComponent implements OnInit {
     }
   }
 
-  confirmRemoveUser(user) {
+  confirmRemoveUser(user, event) {
     this.selectedUser = user;
     this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
+    event.stopPropagation();
   }
+
   removeUser() {
     this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
       next: (data) => {
@@ -293,12 +280,18 @@ export class TeamsPeopleComponent implements OnInit {
     });
   }
 
-  getTeamCount(data: any): number {
+  getTeamsCount(data: any): number {
     return data.teams.length;
   }
 
   getTeamsTitle(data: any): string {
-    return data?.teams.map(t => t.name).join(', ');
+    if (data) {
+      if (data.teams) {
+        return 'User Teams:\n' + (data?.teams.map(t => t.name).join(', \n'));
+      } else {
+        return 'No User Teams'
+      }
+    }
   }
 
 }
