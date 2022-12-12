@@ -61,7 +61,7 @@ export class TeamsPeopleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Teams');
+    this.titleService.setTitle('Reference Set Tool - Teams - People');
     this.currentUser = this.authService.getUser();
     this.route.params.subscribe(params => {
 
@@ -252,18 +252,18 @@ export class TeamsPeopleComponent implements OnInit {
   }
 
   onGridCellClick = (event) => {
+    // Skip clicks on action column
     if (event.column.colId == 'id') {
       return;
     }
 
     const selectedRows = this.gridApi.getSelectedRows();
-    let selectedId: string;
-
+    const router = this.router;
     selectedRows.forEach(function (selectedRow, index) {
-      selectedId = selectedRow.id;
+        router.navigate(['/personal/' + selectedRow.id + '/landing']);
+        return;
     });
 
-    this.router.navigate(['/personal/' + selectedId + '/landing']);
   }
 
   get dataCount() {

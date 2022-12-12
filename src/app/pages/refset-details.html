@@ -446,23 +446,23 @@
             </button>
         </div>
 
-        <br *ngIf="allowedToEdit && showMembersSection" />
-        <span class="edit-member-section" *ngIf="showMembersSection">
+        <!--<br *ngIf="allowedToEdit && showMembersSection" />-->
+        <span *ngIf="showMembersSection">
             <import-from-file-modal *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
               [processChangedMemberFunction]="processChangedMemberEffects">
             </import-from-file-modal>
 
-            <import-from-list-modal *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
+            <import-from-list-modal class="ml-20" *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
               (changeLockedStatus)="changeLockedStatus($event)">
             </import-from-list-modal>
 
-            <add-remove-by-concept-modal *ngIf="allowedToEdit" [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
+            <add-remove-by-concept-modal class="ml-20" *ngIf="allowedToEdit" [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
               [processChangedMemberFunction]="processChangedMemberEffects">
             </add-remove-by-concept-modal>
 
-            <div id="refset-type">
+            <span id="refset-type" class="ml-20" >
                 <button mat-button aria-hidden="false" aria-label="Show active/inactive concepts" [matMenuTriggerFor]="activeInactive"
-                  [matMenuTriggerRestoreFocus]="false" class="manage-refset-menu" >Status: {{activeInactiveStatus}}<span class="fs8">&#x25BC;</span>
+                  [matMenuTriggerRestoreFocus]="false" class="manage-refset-menu" >Status: {{activeInactiveStatus}} <span class="down-arrow-for-menu">&#x25BC;</span>
                 </button>
                 <mat-menu #activeInactive="matMenu">
                     <button mat-menu-item alt="Active Concepts Only" title="Active Concepts Only" aria-label="Active Concepts Only"
@@ -473,7 +473,7 @@
                     <button mat-menu-item alt="Inactive Concepts Only" title="Inactive Concepts Only" aria-label="Inactive Concepts Only"
                       (click)="changeActiveInactiveStatus('Inactive Concepts Only')">Inactive Concepts Only</button>
                 </mat-menu>
-            </div>
+            </span>
 
         </span>
         <br>

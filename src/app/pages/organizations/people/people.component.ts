@@ -2,17 +2,14 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -58,7 +55,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Organizations');
+    this.titleService.setTitle('Reference Set Tool - Organizations - People');
 
     this.route.params.subscribe(params => {
 
@@ -136,7 +133,8 @@ export class OrganizationPeopleComponent implements OnInit {
       this.menu.push({ name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs' });
     }
 
-    this.location.replaceState('organizations/' + this.organizationId + '/people/');
+    this.location.replaceState('organizations/' + this.organizationId + '/people');
+
   }
 
   onGridReady = (params) => {
@@ -147,19 +145,18 @@ export class OrganizationPeopleComponent implements OnInit {
   }
 
   onGridCellClick = (event) => {
+    // Skip clicks on action column
     if (event.column.colId == 'id') {
       return;
     }
 
     const selectedRows = this.gridApi.getSelectedRows();
-    let selectedId: string;
-
+    const router = this.router;
     selectedRows.forEach(function (selectedRow, index) {
-
-      selectedId = selectedRow.id;
+        router.navigate(['/personal/' + selectedRow.id + '/landing']);
+        return;
     });
 
-    this.router.navigate(['/personal/' + selectedId + '/landing']);
   }
 
   get dataCount() {

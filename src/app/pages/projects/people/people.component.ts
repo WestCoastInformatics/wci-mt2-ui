@@ -4,14 +4,11 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { ColumnController } from 'ag-grid-community';
 
 @Component({
     selector: 'projects-people',
@@ -59,7 +56,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Reference Set Tool - Projects');
+        this.titleService.setTitle('Reference Set Tool - Projects - People');
 
         this.route.params.subscribe(params => {
 
@@ -260,20 +257,11 @@ export class ProjectsPeopleComponent implements OnInit {
 
     onGridCellClick = (event) => {
         const selectedRows = this.gridApi.getSelectedRows();
-        let selectedId: string;
-
+        const router = this.router;
         selectedRows.forEach(function (selectedRow, index) {
-
-            selectedId = selectedRow.id;
+            router.navigate(['/personal/' + selectedRow.id + '/landing']);
+            return;
         });
-
-        this.router.navigate(['/personal/landing', selectedId]);
-    }
-
-    onMemberCellClick = (event) => {
-        if (event.data.id) {
-            this.router.navigate(['/personal/landing', event.data.id]);
-        }
     }
 
     clickTeams = (event) => {
