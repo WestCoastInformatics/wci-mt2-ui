@@ -43,7 +43,7 @@
 
         <h3 class="heading heading-3 text-main">Search Results</h3>
 
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" 
+        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
             [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
         </ag-grid-angular>
 
@@ -59,7 +59,7 @@
 <ng-template #directoryInfoSection let-params>
     <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
       title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
-        <mat-icon>information</mat-icon> 
+        <mat-icon>information</mat-icon>
     </button><span title="Search matches reference set member" *ngIf="params.data.memberSearchMatch" style="color:red">&#8226;</span>
 
 </ng-template>
@@ -149,10 +149,14 @@
             </div>
             <div class="clearfix visible-sm"></div>
             <div class="col-md-6 col-12 videos-section">
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/GiDEdWw6WO0" title="YouTube video player" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <iframe src="https://drive.google.com/file/d/10mFWkwcDUlRMmUby2cgo42avhYVBLnOs/preview" width="100%" height="300" allow="autoplay"></iframe>
-                <iframe src="https://drive.google.com/file/d/1tXe9R5RuILj6rP_tYEL3EHjkTrCt_h8E/preview" width="100%" height="300" allow="autoplay"></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/GiDEdWw6WO0" title="Reference Set 2.0: Tool Demo" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/u2oO_QRIIF4" title="Reference Set 2.0: Organization Setup" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/ddpEsJ3oUTo" title="Reference Set 2.0: Reading Content" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/FtQiRwGkFEM" title="Reference Set 2.0: Making Changes" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </div>
