@@ -13,7 +13,8 @@ export class AddMemberModalComponent {
 
     email = '';
     emailError = '';
-    openedModel: NgbModalRef;
+    validEmail = false;
+    openedModel: NgbModalRef;    
 
     @Input() type: string;
     @Input() id: string;
@@ -48,14 +49,17 @@ export class AddMemberModalComponent {
 
         if (flag == null) {
             this.emailError = 'Email is invalid.';
+            this.validEmail = false;
         } else {
             this.emailError = '';
+            this.validEmail = true;
         }
 
         return flag != null;
     }
 
     onKeyDownEvent(event: any) {
+
         this.isValidEmail();
     }
 

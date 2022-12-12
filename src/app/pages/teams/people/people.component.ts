@@ -44,7 +44,6 @@ export class TeamsPeopleComponent implements OnInit {
 
   @ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
   @ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
-  @ViewChild('inactivateUserSection') inactivateUserSection: TemplateRef<any>;
   @ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
@@ -83,17 +82,8 @@ export class TeamsPeopleComponent implements OnInit {
       { field: 'name', tooltipField: 'name', headerName: 'User', minWidth: 65, flex: 2, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true },
       { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
       { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
-      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65,
-      // depends on whether last column
-      resizable: this.selectedOrganization?.roles?.includes('ADMIN') }
-    ];
-    if (this.selectedOrganization?.roles?.includes('ADMIN')) {
-      this.gridColumnDefs.push({
-        field: 'id', type: 'centerAligned', tooltipField: 'inactiveCode', headerName: '', cellClass: 'column-inactiveOrgMember', cellRenderer: 'templateRenderer', cellStyle: { textAlign: 'center' }, floatingFilter: false, sortable: false, cellRendererParams: {
-          template: this.inactivateUserSection
-        }, minWidth: 65, maxWidth: 65, resizable: false
-      });
-    }
+      { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
+    ];    
 
     this.gridOptions = {
       context: { componentParent: this },
@@ -275,10 +265,12 @@ export class TeamsPeopleComponent implements OnInit {
     }
   }
 
-  confirmRemoveUser(user) {
+  confirmRemoveUser(user, event) {
     this.selectedUser = user;
     this.openedConfirmModal = this.modalService.open(this.confirmInactiveMemberModal, { centered: true });
+    event.stopPropagation();
   }
+
   removeUser() {
     this.teamsService.removeUser(this.teamId, this.selectedUser.id).subscribe({
       next: (data) => {
@@ -288,7 +280,7 @@ export class TeamsPeopleComponent implements OnInit {
     });
   }
 
-  getTeamCount(data: any): number {
+  getTeamsCount(data: any): number {
     return data.teams.length;
   }
 

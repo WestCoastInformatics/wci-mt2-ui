@@ -371,7 +371,6 @@ export class RefsetDetails implements OnInit {
                 this.allowedToEdit = false;
                 this.allowedToReview = false;
                 this.changeDetectorRef.detectChanges();
-                console.log('xxx', results.openDiscussionCount);
 
                 if (this.refsetData.type === RefsetUtility.EXTERNAL) {
 
