@@ -175,6 +175,9 @@ export class RefsetDetails implements OnInit {
     stepperInfo: any = {};
     changeRefsetStatusText: string;
     changeRefsetStatusButtonText: string;
+    eclString: any;
+    routeParamsSubscription$: Subscription;
+    activeInactiveStatus = 'both';
     stepperStartInfo = {
         'READY_FOR_EDIT_COLOR': 'details-page-stepper-unstarted-step',
         'READY_FOR_EDIT_STARTED': false,
@@ -208,11 +211,6 @@ export class RefsetDetails implements OnInit {
     @ViewChild('conceptCodeSection') conceptCodeSection: TemplateRef<any>;
     @ViewChild('importFromListDialog') importFromListDialog: TemplateRef<any>;
     @ViewChild(MatSort) sort: MatSort;
-    eclString: any;
-    routeParamsSubscription$: Subscription;
-    activeInactiveStatus = 'Active Concepts Only';
-    activeOnly = true;
-    inactiveOnly = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -318,7 +316,7 @@ export class RefsetDetails implements OnInit {
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
-                    suppressMenu: true,
+                    suppressMenu: false,
                     sortingOrder: ['asc', 'desc'],
                     filter: true,
                     floatingFilter: true,
@@ -970,7 +968,6 @@ export class RefsetDetails implements OnInit {
 
         let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
         let query = '';
-        const filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
 
         if (CodeUtility.hasValue(this.tableSearchInput) && this.tableSearchInput.length > 2) {
             query = this.tableSearchInput;
@@ -983,20 +980,10 @@ export class RefsetDetails implements OnInit {
             return;
         }
 
-        const newQueryString = query;
-        const newFilterString = filter;
-
-        // if the query has changed then move to the first page
-        if (newQueryString !== this.membersGridLastQuery) {
-
-            pageNumber = 1;
-            this.membersGridPaging.totalRows = null;
-            this.membersGridPaging.totalKnown = false;
-            this.membersGridApi?.api?.paginationGoToPage(0);
-        }
-
-        this.membersGridLastQuery = newQueryString;
-        this.membersGridLastFilter = newFilterString;
+        pageNumber = 1;
+        this.membersGridPaging.totalRows = null;
+        this.membersGridPaging.totalKnown = false;
+        this.membersGridApi?.api?.paginationGoToPage(0);
 
         const restParams: any = {
             displayType: 'list',
@@ -1023,19 +1010,12 @@ export class RefsetDetails implements OnInit {
                     return;
                 }
 
-                const data = results.items.filter((item) => {
-                    if (this.activeOnly) {
-                        return item.active === true;
-                    } else if (this.inactiveOnly) {
-                        return item.active === false;
-                    } else {
-                        return true;
-                    }
-                })
+                const data = results.items
                 this.membersGridData = data;
                 this.membersGridNumberOfResults = data.length;
 
                 results.items = data;
+
                 if (data.length == 0) {
 
                     this.membersGridApi.showNoRowsOverlay();
@@ -1056,11 +1036,10 @@ export class RefsetDetails implements OnInit {
                 this.membersColumnDefs = [
                     // This column is an exception to resizable, it's the +/- icon column    
                     {
+                        field: 'active',
                         headerName: '',
-                        colId: 'add-remove',
                         maxWidth: 40,
-                        resizable: false,
-                        filter: false,
+                        resizable: true,
                         sort: false,
                         cellClass: 'refset-tool-details-column-remove-icon',
                         cellRenderer: 'templateRenderer',
@@ -1133,6 +1112,7 @@ export class RefsetDetails implements OnInit {
 
                 UiUtility.applyServerPagedGridResults(results, this.membersGridApi, this.membersGridPaging, pageNumber, null, false);
                 this.membersReady = true;
+                this.changeActiveInactiveStatus();
             },
             error: (error) => {
 
@@ -1143,8 +1123,21 @@ export class RefsetDetails implements OnInit {
             }
 
         });
+    }
 
+    changeActiveInactiveStatus(): void {
 
+        let filters = this.membersGridApi.getFilterModel();
+
+        if (this.activeInactiveStatus == 'active') {
+            filters.active = {filterType: 'text', type: 'equals', filter: true};
+        } else if (this.activeInactiveStatus == 'both') {
+            delete filters.active;
+        } else if (this.activeInactiveStatus == 'inactive') {
+            filters.active = {filterType: 'text', type: 'equals', filter: false};
+        }
+
+        this.membersGridApi.setFilterModel(filters);
     }
 
     onMembersColumnsLoaded() {
@@ -1872,7 +1865,7 @@ export class RefsetDetails implements OnInit {
                 if (this.user.userName == this.authenticationService.GUEST_USER) {
                     return value.colId == 'code' || value.colId == 'modified';
                 } else {
-                    return value.colId !== 'actions' && value.colId !== 'add-remove';
+                    return value.colId !== 'actions' && value.colId !== 'active';
                 }
             }).map(value => value.colId),
             fileName: `Refset_${this.refsetId}_Members-Table_${CodeUtility.getReverseDate()}.csv`, suppressQuotes: true
@@ -1885,22 +1878,5 @@ export class RefsetDetails implements OnInit {
 
     notesEditable(index: number, data: any): boolean {
         return index === 0 && data.workflowStatus === this.refsetData.workflowStatus && (this.allowedToEdit || this.allowedToReview);
-    }
-
-    changeActiveInactiveStatus(activeInactiveStatus: string): void {
-        this.activeInactiveStatus = activeInactiveStatus;
-
-        if (this.activeInactiveStatus.includes('Active Concepts Only')) {
-            this.activeOnly = true;
-            this.inactiveOnly = false;
-        } else if (this.activeInactiveStatus.includes('Active and Inactive Concepts')) {
-            this.activeOnly = false;
-            this.inactiveOnly = false;
-        } else if (this.activeInactiveStatus.includes('Inactive Concepts Only')) {
-            this.activeOnly = false;
-            this.inactiveOnly = true;
-        }
-
-        this.onMembersGridReady(this.originalGridParams);
     }
 }
