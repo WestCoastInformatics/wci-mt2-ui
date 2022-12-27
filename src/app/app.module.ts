@@ -76,6 +76,7 @@ import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.co
 import { OrganizationPeopleComponent } from './pages/organizations/people/people.component';
 import { OrganizationConfigurationComponent } from './pages/organizations/configuration/configuration.component';
 import { ProjectsPeopleComponent } from './pages/projects/people/people.component';
+import { ProjectsTeamsComponent } from './pages/projects/teams/teams.component';
 import { ProjectsConfigurationComponent } from './pages/projects/configuration/configuration.component';
 import { TeamsPeopleComponent } from './pages/teams/people/people.component';
 import { TeamsConfigurationComponent } from './pages/teams/configuration/configuration.component';
@@ -174,6 +175,12 @@ const appRoutes: Routes = [
         canActivate: [AuthGuardGuard]
     },
     {
+        path: 'organization/:organizationId/edition/:editionId/projects/:projectId/teams',
+        component: ProjectsTeamsComponent,
+        data: { breadcrumbLabel: 'Teams' },
+        canActivate: [AuthGuardGuard]
+    },
+    {
         path: 'organization/:organizationId/edition/:editionId/projects/:projectId/configuration',
         component: ProjectsConfigurationComponent,
         data: { breadcrumbLabel: 'Configuration' },
@@ -264,6 +271,7 @@ const appRoutes: Routes = [
         OrganizationPeopleComponent,
         OrganizationConfigurationComponent,
         ProjectsPeopleComponent,
+        ProjectsTeamsComponent,
         ProjectsConfigurationComponent,
         RefsetFeedbackListComponent,
         TeamsConfigurationComponent,

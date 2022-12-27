@@ -1,0 +1,95 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
+<div class="content-header">
+    <div class="row header-title">
+
+        <span class="projects-dropdown-block">
+            <span class="title-label">Organizations</span>
+            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+                <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" 
+                    [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+                    <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
+                        {{ organization.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </span>
+
+        <span class="projects-dropdown-block">
+            <span class="title-label">Editions</span>
+            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+                <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
+                  (selectionChange)="selectedEdition()">
+                    <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                        {{ edition.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </span>
+
+        <span class="projects-dropdown-block">
+            <span class="title-label">Projects</span>
+            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+                <mat-select [disabled]="organizationId === '0'" [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'"
+                  [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
+                    <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
+                        {{ project.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </span>
+    </div>
+
+</div>
+<div class="content-wrapper">
+    <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+    <div class='container-fluid mt-3'>
+        
+        <div class='row'>
+            <div class='col-12'>
+                <section class="mb-3">
+
+                    <div class='section-header mb-4'>
+                        Teams ({{ numberOfTeams }})
+                    </div>
+
+                    <div class='dashboard-section'>
+                        <div class="ag-theme-alpine">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="teamData" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" style="width: 100%">
+                            </ag-grid-angular>
+                            <!-- description template -->
+                            <ng-template #descriptionSection let-params>
+                                <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
+                                    {{ params?.data?.description }}
+                                </label>
+                            </ng-template>
+                            <!-- people template-->
+                            <ng-template #peopleSection let-params>
+                                <span class="text-primary font-weight-bold">{{params?.data?.members}} People</span>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+
+    </div>
+</div>
+<scroll-top></scroll-top>
+
+<ng-template #workflowDiagramDialog let-modal>
+    <div class="modal-header review-modal-header">
+        <h4 class="modal-title review-modal-title" id="modal-basic-title">
+            Workflow Diagram
+        </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="container-fluid ready-for-review-container-fluid">
+        <div class="modal-body review-modal-body">
+            <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram" style="max-width: 100%; max-height: 100%;" />
+        </div>
+    </div>
+</ng-template>

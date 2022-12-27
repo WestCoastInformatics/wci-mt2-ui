@@ -36,6 +36,10 @@ export class ProjectsService extends RestService {
         return this.get(this.contextPath + 'project/' + projectId);
     }
 
+    getProjectTeams(projectId: string): Observable<any> {
+        return this.get(this.contextPath + 'project/' + projectId + "/teams");
+    }
+
     getProjectUsers(projectId: string): Observable<any> {
         return this.get(this.contextPath + 'project/' + projectId + '/users');
     }

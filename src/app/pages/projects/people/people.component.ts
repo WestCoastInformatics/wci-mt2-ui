@@ -157,6 +157,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
         this.menu = [
             { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
+            { name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users' },
             { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user', isActive: true },
         ];
 

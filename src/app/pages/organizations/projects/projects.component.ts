@@ -115,7 +115,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
         // If clicking on teams, go to teams page
         if (event.column.colId === 'teams') {
-            this.router.navigate(['organizations', this.organizationId, 'teams']);
+            this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams']);
         } else {
             this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets']);
         }
