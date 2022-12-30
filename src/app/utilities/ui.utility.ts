@@ -5,7 +5,7 @@ import { RefsetService } from "src/app/services/rest/refset.service";
 import { Router } from "@angular/router";
 import { IToastButton } from "src/app/components/notification/notification.component";
 import { ActiveToast } from "ngx-toastr";
-import { RefsetUtility } from "./refset.utility";
+import { Constants } from "./constants.utility";
 
 export class UiUtility {
 
@@ -266,9 +266,9 @@ export class UiUtility {
 		let message = 'Members are being ' + description + ' Reference Set ' + refsetId + '.';
 		let messagePrefix = '';
 
-		if (description.includes(RefsetUtility.EXCLUSION) || description.includes(RefsetUtility.INCLUSION)) {
+		if (description.includes(Constants.EXCLUSION) || description.includes(Constants.INCLUSION)) {
 
-			if (description.includes(RefsetUtility.EXCLUSION)) {
+			if (description.includes(Constants.EXCLUSION)) {
 
 				if (description.includes('added')) {
 
@@ -462,7 +462,7 @@ export class UiUtility {
 							this.createMemberChangeReport(refsetId, notification, notificationService, changeType);
 
 						} else if (button.id == 'view') {
-							this.viewRefset(refsetId, RefsetUtility.IN_DEVELOPMENT);
+							this.viewRefset(refsetId, Constants.IN_DEVELOPMENT);
 						}
 					});
 				}
@@ -731,7 +731,7 @@ export class UiUtility {
 
 	static viewRefset(refsetId, versionDate) {
 		if (!versionDate) {
-			versionDate = RefsetUtility.IN_DEVELOPMENT;
+			versionDate = Constants.IN_DEVELOPMENT;
 		}
 		this.router.navigate(['/details', refsetId, versionDate]);
 	}

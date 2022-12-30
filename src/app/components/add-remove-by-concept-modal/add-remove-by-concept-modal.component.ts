@@ -14,6 +14,7 @@ import { TreeOptions } from "src/app/models/tree-options.model";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { CodeUtility } from "src/app/utilities/code.utility";
 import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { Constants } from "src/app/utilities/constants.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from "src/app/services/notification.service";
@@ -35,10 +36,10 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     showActiveConceptsOnly = true;
     initialResults = [];
     selectedRowIndex = -1;
-    selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+    selectedTaxonomyLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ":" + Constants.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
         useFsn: false,
-        language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
+        language: Constants.DEFAULT_ACCEPT_LANGUAGE,
     };
     conceptDescriptions: any;
     editMode = true;

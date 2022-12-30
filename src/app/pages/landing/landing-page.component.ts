@@ -10,6 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { forkJoin } from 'rxjs';
@@ -506,7 +507,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     }
 
     latestDate(refset, versionList: any[]): string {
-        if (refset.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
+        if (refset.versionStatus === Constants.IN_DEVELOPMENT) {
             return 'Latest';
         }
         return versionList && versionList[0] ? `${versionList[0].date}` : '';

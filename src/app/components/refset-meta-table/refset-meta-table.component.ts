@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {RefsetUtility} from '../../utilities/refset.utility';
-import {Router} from '@angular/router';
+import { Component, Input, OnInit} from '@angular/core';
+import { RefsetUtility } from '../../utilities/refset.utility';
+import { Constants } from '../../utilities/constants.utility';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 
@@ -63,7 +64,7 @@ export class RefsetMetaTableComponent implements OnInit {
     }
 
     latestDate(versionList: any[]): string {
-        if (this.refset?.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
+        if (this.refset?.versionStatus === Constants.IN_DEVELOPMENT) {
             return 'Latest';
         }
         return versionList && versionList[0] ? `${versionList[0].date}` : '';

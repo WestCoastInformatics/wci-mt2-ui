@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 
 @Component({
     selector: 'add-remove-concept-group-icons',
@@ -34,12 +34,12 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
                 if (!this.refsetType) {
                     this.actionText = "Members";
 
-                } else if (this.refsetType != RefsetUtility.INTENSIONAL) {
+                } else if (this.refsetType != Constants.INTENSIONAL) {
                     this.actionText = "Members";
 
                 } else {
 
-                    if (this.definitionExceptionType != RefsetUtility.EXCLUSION && this.definitionExceptionType != RefsetUtility.INCLUSION) {
+                    if (this.definitionExceptionType != Constants.EXCLUSION && this.definitionExceptionType != Constants.INCLUSION) {
 
                         if (this.addConcept) {
                             this.actionText = "Exclusions";
@@ -49,10 +49,10 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
 
                     } else {
 
-                        if (this.definitionExceptionType == RefsetUtility.EXCLUSION) {
+                        if (this.definitionExceptionType == Constants.EXCLUSION) {
                             this.actionText = "Exclusions";
 
-                        } else if (this.definitionExceptionType == RefsetUtility.INCLUSION) {
+                        } else if (this.definitionExceptionType == Constants.INCLUSION) {
                             this.actionText = "Inclusions";
                         }
                     }

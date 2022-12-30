@@ -419,11 +419,6 @@ a.footer-link {
   margin-left: 3px;
 }
 
-.mat-icon-button {
-  .mat-button-focus-overlay {
-    //display: none;
-  }
-}
 
 .mat-option-text {
   text-transform: capitalize;
@@ -3593,9 +3588,6 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   padding-bottom: 15px;
 }
 
-.adjudicate-upgrade-modal-body-mid {}
-
-
 .manage-members-menu,
 .manage-refset-menu,
 .information-menu,
@@ -3610,6 +3602,11 @@ ngb-modal-window .import-from-ecl-modal.modal-dialog {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   cursor: pointer;
   letter-spacing: 1px;
+
+  // This prevents these buttons from having a grey background when they have focus
+  .mat-button-focus-overlay {
+    display: none;
+  }
 }
 
 .menu-spacer {

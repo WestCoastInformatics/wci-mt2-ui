@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
@@ -58,7 +59,7 @@ export class LaunchComparisonModalComponent {
   conceptDetailParents: any;
   conceptDetailsOptions: TreeOptions = {
     useFsn: false,
-    language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
+    language: Constants.DEFAULT_ACCEPT_LANGUAGE,
   };
   taxonomyManualStateRefresh = new Boolean(false);
   taxonomyNumberOfChildren: number;
@@ -120,7 +121,7 @@ export class LaunchComparisonModalComponent {
     this.activeRefsetVersionOptions = RefsetUtility.getVersionOptions(this.activeRefset);
     let selectedVersionDateIndex = 0;
 
-    if (this.activeRefset.versionStatus != RefsetUtility.IN_DEVELOPMENT) {
+    if (this.activeRefset.versionStatus != Constants.IN_DEVELOPMENT) {
       selectedVersionDateIndex = this.activeRefsetVersionOptions.findIndex((element) => { return element.display.startsWith(this.activeRefsetVersionDate); });
     }
 
@@ -146,7 +147,7 @@ export class LaunchComparisonModalComponent {
   }
 
   getStatus(value: string) {
-    return RefsetUtility.REFSET_STATUS_MAP[value]
+    return Constants.REFSET_STATUS_MAP[value]
   }
 
   async onSearchChange(value): Promise<void> {
@@ -195,7 +196,7 @@ export class LaunchComparisonModalComponent {
       this.refsetDetails.changeLockedStatus(false);
     });
 
-    UiUtility.manageProcessNotifications(this.activeRefset.id, this.activeRefset.refsetId, RefsetUtility.IN_DEVELOPMENT, this.showComparison, this.notificationService, this.refsetService, this.router, 'comparison');
+    UiUtility.manageProcessNotifications(this.activeRefset.id, this.activeRefset.refsetId, Constants.IN_DEVELOPMENT, this.showComparison, this.notificationService, this.refsetService, this.router, 'comparison');
 
     this.openedModel.close();
     this.openedModel = null;
@@ -403,7 +404,7 @@ export class LaunchComparisonModalComponent {
     this.loadConceptDetailParents(concept);
   }
 
-  loadConceptDetailParents(concept, language = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE) {
+  loadConceptDetailParents(concept, language = Constants.DEFAULT_ACCEPT_LANGUAGE) {
 
     this.conceptDetailParents = [];
 
@@ -616,11 +617,11 @@ export class LaunchComparisonModalComponent {
     let activeRefsetDate = this.activeRefsetVersionDate;
     let comparisonRefsetDate = this.comparisonRefsetVersionDate;
 
-    if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+    if (this.activeRefset.versionStatus == Constants.IN_DEVELOPMENT) {
       activeRefsetDate = '(In Development)';
     }
 
-    if (this.comparisonRefsetStatus == RefsetUtility.IN_DEVELOPMENT) {
+    if (this.comparisonRefsetStatus == Constants.IN_DEVELOPMENT) {
       comparisonRefsetDate = '(In Development)';
     }
 
@@ -676,7 +677,7 @@ export class LaunchComparisonModalComponent {
 
     let activeRefsetDate = this.activeRefsetVersionDate;
 
-    if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+    if (this.activeRefset.versionStatus == Constants.IN_DEVELOPMENT) {
       activeRefsetDate = '(In_Development)';
     }
 

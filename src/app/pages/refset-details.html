@@ -383,7 +383,7 @@
                             <!-- Progress Column -->
                             <ng-container matColumnDef="userName">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Project Member
+                                    User
                                 </th>
                                 <td mat-cell *matCellDef="let row">
                                     {{row.userName}}
@@ -437,8 +437,8 @@
         </div>
 
         <!-- Section Title -->
-        <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title">
-            Reference Set Members ({{refsetData?.memberCount}})
+        <div *ngIf="showMembersSection" class="refset-tool-refset-details-title-name refset-member-title ">
+            Reference Set Members&nbsp;<span class="default-cursor" title="Total member count">({{refsetData?.memberCount}})</span>
             <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" mat-raised-button color="primary" aria-hidden="false"
               class="ml-4 refset-tool-action-button refset-action-button" ng-reflect-color="primary" (click)="downloadMembersTable()">
                 Download Members Table

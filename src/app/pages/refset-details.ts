@@ -14,6 +14,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { forkJoin, Subject, Subscription } from 'rxjs';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { environment } from 'src/environments/environment';
@@ -56,25 +57,25 @@ export class RefsetDetails implements OnInit {
     languageOptions = [
         {
             value:
-                RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
+                Constants.DEFAULT_ACCEPT_LANGUAGE +
                 ':' +
-                RefsetUtility.DEFAULT_LANGUAGE_TYPE,
+                Constants.DEFAULT_LANGUAGE_TYPE,
             display:
-                RefsetUtility.DEFAULT_LANGUAGE_CODE +
+                Constants.DEFAULT_LANGUAGE_CODE +
                 ' (' +
-                RefsetUtility.DEFAULT_LANGUAGE_TYPE +
+                Constants.DEFAULT_LANGUAGE_TYPE +
                 ')',
         },
     ];
     selectedTaxonomyLanguage: string =
-        RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
+        Constants.DEFAULT_ACCEPT_LANGUAGE +
         ':' +
-        RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+        Constants.DEFAULT_LANGUAGE_TYPE;
     selectedTaxonomyLanguageIndex = 0;
     selectedConceptDetailLanguage: string =
-        RefsetUtility.DEFAULT_ACCEPT_LANGUAGE +
+        Constants.DEFAULT_ACCEPT_LANGUAGE +
         ':' +
-        RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+        Constants.DEFAULT_LANGUAGE_TYPE;
     selectedConceptDetailLanguageIndex = 0;
     membersGridChooserManualStateRefresh: Boolean = Boolean(true);
     useDialog = false;
@@ -109,11 +110,11 @@ export class RefsetDetails implements OnInit {
     taxonomyManualStateRefresh: Boolean = Boolean(false);
     taxonomyOptions: TreeOptions = {
         useFsn: false,
-        language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
+        language: Constants.DEFAULT_ACCEPT_LANGUAGE,
     };
     conceptDetailsOptions: TreeOptions = {
         useFsn: false,
-        language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
+        language: Constants.DEFAULT_ACCEPT_LANGUAGE,
     };
     taxonomyButtonLabel = 'Loading...';
     taxonomySearchInput: string;
@@ -360,7 +361,7 @@ export class RefsetDetails implements OnInit {
             next: (results) => {
                 this.refsetStatus = results?.workflowStatus;
                 this.id = results?.id;
-                this.isIntensional = results?.type == RefsetUtility.INTENSIONAL;
+                this.isIntensional = results?.type == Constants.INTENSIONAL;
                 this.refsetBranchPath = RefsetUtility.getBranchPath(results);
                 this.refsetData = results;
                 const channel = new BroadcastChannel('refsetDataChannel');
@@ -370,7 +371,7 @@ export class RefsetDetails implements OnInit {
                 this.allowedToReview = false;
                 this.changeDetectorRef.detectChanges();
 
-                if (this.refsetData.type === RefsetUtility.EXTERNAL) {
+                if (this.refsetData.type === Constants.EXTERNAL) {
 
                     this.showMembersSection = false;
                     this.noMemberSectionText = 'The Reference Set members are not available here for external refsets.';
@@ -379,7 +380,7 @@ export class RefsetDetails implements OnInit {
                     this.showMembersSection = true;
                 }
 
-                if ((this.refsetData.versionStatus == RefsetUtility.IN_DEVELOPMENT && this.refsetData?.roles?.includes('VIEWER')) ||
+                if ((this.refsetData.versionStatus == Constants.IN_DEVELOPMENT && this.refsetData?.roles?.includes('VIEWER')) ||
                     (this.refsetData?.roles?.includes('AUTHOR') && !this.refsetData?.hasVersionInDevelopment && this.refsetData?.latestPublishedVersion)) {
                     this.editMode = true;
                 }
@@ -401,7 +402,7 @@ export class RefsetDetails implements OnInit {
                         moduleId: this.refsetData.moduleId
                     };
 
-                    if (this.refsetData.type === RefsetUtility.INTENSIONAL) {
+                    if (this.refsetData.type === Constants.INTENSIONAL) {
                         this.editMetadataProperties.definitionClauses = this.refsetData.definitionClauses;
                     }
                 }
@@ -436,10 +437,10 @@ export class RefsetDetails implements OnInit {
                 this.versionOptions = RefsetUtility.getVersionOptions(this.refsetData, 'date');
                 this.refsetData.flagIcon = RefsetUtility.getEditionFlagIcon(this.refsetData.edition.branch);
 
-                if (this.refsetData.versionStatus != RefsetUtility.IN_DEVELOPMENT) {
+                if (this.refsetData.versionStatus != Constants.IN_DEVELOPMENT) {
                     this.selectedVersion = this.refsetData.versionDate;
                 } else {
-                    this.selectedVersion = RefsetUtility.IN_DEVELOPMENT;
+                    this.selectedVersion = Constants.IN_DEVELOPMENT;
                 }
 
                 for (const language of languages) {
@@ -709,7 +710,7 @@ export class RefsetDetails implements OnInit {
             returnStartingConcept: true,
             language: this.getTaxonomyLanguageWithoutType(),
             depth: 1,
-            startingConceptId: RefsetUtility.SNOMED_ROOT_CONCEPT_ID,
+            startingConceptId: Constants.SNOMED_ROOT_CONCEPT_ID,
             offset: 0,
             limit: 1000,
         };
@@ -1270,7 +1271,7 @@ export class RefsetDetails implements OnInit {
     validatePublishDate = (date: string) => {
 
         let a = CodeUtility.DATE_FORMAT_REVERSE_ONLY_NUMBERS;
-        let b = RefsetUtility.EXCLUSION;
+        let b = Constants.EXCLUSION;
         let c = UiUtility.getIconImageUrl("test");
 
         if (date == "" || !CodeUtility.isDateValid(date) || CodeUtility.compareDates(date, "2000-01-01", CodeUtility.DATE_FORMAT_REVERSE) < 0) {
@@ -1326,6 +1327,8 @@ export class RefsetDetails implements OnInit {
 
         this.refsetService.getRefsetMemberCount(this.id).subscribe((results) => {
             this.refsetData.memberCount = results;
+            // clone refset data here so button components can pick up the change
+            this.refsetData =  Object.assign({}, this.refsetData);
         });
     }
 
@@ -1375,7 +1378,7 @@ export class RefsetDetails implements OnInit {
         this.changeLockedStatus(false);
         this.taxonomyManualStateRefresh = new Boolean('true');
 
-        if (this.refsetData.type == RefsetUtility.INTENSIONAL) {
+        if (this.refsetData.type == Constants.INTENSIONAL) {
             this.initializeDetailsPage();
 
         } else {
@@ -1844,7 +1847,7 @@ export class RefsetDetails implements OnInit {
     }
 
     latestDate(versionList: any[]): string {
-        if (this.refsetData?.versionStatus === RefsetUtility.IN_DEVELOPMENT) {
+        if (this.refsetData?.versionStatus === Constants.IN_DEVELOPMENT) {
             return 'Latest';
         }
         return versionList && versionList[0] ? `${versionList[0].date}` : '';

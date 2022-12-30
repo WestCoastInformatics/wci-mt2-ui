@@ -4,6 +4,7 @@ import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.ser
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -60,16 +61,27 @@ export class RefsetDownloadComponent {
 
   ngOnInit(): void {
     this.currentUser = this.authenticationService.getUser();
+    this.computeDisableDownload();
   }
 
   ngOnChanges(): void {
+    this.computeDisableDownload();
+  }
+
+  computeDisableDownload() {
     if (this.refset && this.currentUser) {
       this.disableDownload = this.getDisableDownload();
       if (this.disableDownload) {
         this.disableTitle = 'Download is not available while the reference set is being worked on by another user.';
       }
-    }
+      // If there are zero members, also disable it    
+      else if (this.refset.memberCount == 0) {
+        this.disableDownload = true;
+        this.disableTitle = 'Download is not available for empty reference sets.';
+      }
+    }    
   }
+
   // ***** General Functions *****/
   openDownload(refsetId: string) {
  
@@ -189,7 +201,7 @@ export class RefsetDownloadComponent {
             const notification = this.notificationService.show('Your ' + description + ' is being generated.', null, notificationType, { timeOut: 0, extendedTimeOut: 0 });
             let fileNameDate: any = this.selectedVersionDate;
 
-            if (fileNameDate == '' || fileNameDate == RefsetUtility.IN_DEVELOPMENT) {
+            if (fileNameDate == '' || fileNameDate == Constants.IN_DEVELOPMENT) {
               fileNameDate = CodeUtility.getCurrentDate();
             }
 
@@ -321,7 +333,7 @@ export class RefsetDownloadComponent {
             const notification = this.notificationService.show('Your ' + description + ' are being generated.', null, notificationType, { timeOut: 0, extendedTimeOut: 0 });
 
             let fileNameDate: any = this.selectedVersionDate;
-            if (fileNameDate == '' || fileNameDate == RefsetUtility.PUBLISHED) {
+            if (fileNameDate == '' || fileNameDate == Constants.PUBLISHED) {
               fileNameDate = CodeUtility.getCurrentDate();
             }
             fileNameDate = fileNameDate.replaceAll('-', '');

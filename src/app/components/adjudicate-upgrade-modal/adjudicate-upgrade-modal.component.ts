@@ -1,5 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { RefsetDetails } from 'src/app/pages/refset-details';
@@ -9,7 +8,7 @@ import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-co
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
-import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { Constants } from "src/app/utilities/constants.utility";
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -35,7 +34,7 @@ export class AdjudicateUpgradeModalComponent {
 	hideReplacements = false;
 	refsetGridLastFilter: string = '';
 	refsetGridLastSort: string = '';
-	selectedTaxonomyLanguage: string = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE + ":" + RefsetUtility.DEFAULT_LANGUAGE_TYPE;
+	selectedTaxonomyLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ":" + Constants.DEFAULT_LANGUAGE_TYPE;
 	@ViewChild('adjudicatePaging') paginationComponent: PaginationComponent;
 	@ViewChild('inactiveConceptCodeSection') inactiveCodeSection: TemplateRef<any>;
 	@ViewChild('adjudicateInactiveId') inactiveIdSection: TemplateRef<any>;

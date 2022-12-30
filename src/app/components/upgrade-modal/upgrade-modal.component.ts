@@ -4,8 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -150,7 +149,7 @@ export class UpgradeModalComponent implements OnInit {
 
     this.refsetService.initializeUpgrade(this.refsetData?.id).subscribe();
 
-    UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, RefsetUtility.IN_DEVELOPMENT, this.processCompileDataResult, this.notificationService, this.refsetService, this.router, 'upgrade');
+    UiUtility.manageProcessNotifications(this.refsetInternalId, this.refsetId, Constants.IN_DEVELOPMENT, this.processCompileDataResult, this.notificationService, this.refsetService, this.router, 'upgrade');
   }
 
   processCompileDataResult = () => {
@@ -158,7 +157,7 @@ export class UpgradeModalComponent implements OnInit {
     if (this.router.url.includes('/' + this.refsetId)) {
 
       this.refsetDetails.changeLockedStatus(false);
-      this.refsetDetails.loadNewRefsetVersion(this.refsetId, RefsetUtility.IN_DEVELOPMENT);
+      this.refsetDetails.loadNewRefsetVersion(this.refsetId, Constants.IN_DEVELOPMENT);
     }
   }
 

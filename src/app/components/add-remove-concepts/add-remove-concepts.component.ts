@@ -4,7 +4,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
@@ -101,7 +101,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 
 		if (ecl == '' && CodeUtility.hasValue(this.conceptCode)) {
 
-			if (CodeUtility.testBoolean(this.conceptHasChildren) && this.refset.type != RefsetUtility.INTENSIONAL) {
+			if (CodeUtility.testBoolean(this.conceptHasChildren) && this.refset.type != Constants.INTENSIONAL) {
 
 				this.openAddRemoveDescendantsModal();
 				return;
@@ -136,7 +136,7 @@ export class AddRemoveConceptsComponent implements OnInit {
 		}
 
 		// if this is an intensional refset
-		else if (this.refset.type == RefsetUtility.INTENSIONAL) {
+		else if (this.refset.type == Constants.INTENSIONAL) {
 
 			if (this.isAdd) {
 

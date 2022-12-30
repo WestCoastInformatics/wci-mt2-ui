@@ -1,36 +1,13 @@
-import { Refset } from "../models/refset";
 import { CodeUtility } from "./code.utility";
 import { UiUtility } from "./ui.utility";
+import { Constants } from "./constants.utility";
 
 export class RefsetUtility {
 
     static mockedVersionOptions = [{ value: '2021-02-21', display: 'In Development' }, { value: '2021-01-15', display: 'Published (2021-01-15)' }, { value: '2020-11-23', display: 'Beta (2020-11-23)' }];
-    static SNOMED_ROOT_CONCEPT_ID = '138875005';
-    static DEFAULT_LANGUAGE_CODE = 'en';
-    static DEFAULT_LANGUAGE_REFSET = '900000000000509007';
-    static DEFAULT_LANGUAGE_TYPE = 'PT';
-    static DEFAULT_ACCEPT_LANGUAGE = RefsetUtility.DEFAULT_LANGUAGE_CODE + '-X-' + RefsetUtility.DEFAULT_LANGUAGE_REFSET;
-    static INTENSIONAL = 'INTENSIONAL';
-    static EXTENSIONAL = 'EXTENSIONAL';
-    static COPY = 'COPY';
-    static COMBINATION = 'COMBINATION';
-    static EXTERNAL = 'EXTERNAL';
-    static INCLUSION = 'INCLUSION';
-    static EXCLUSION = 'EXCLUSION';
-    static IN_DEVELOPMENT = 'IN DEVELOPMENT';
-    static PUBLISHED = 'PUBLISHED';
 
-    static REFSET_STATUS_MAP = {
-        'IN DEVELOPMENT': 'In Development',
-        PUBLISHED: 'Published',
-        IN_EDIT: 'In Edit',
-        IN_REVIEW: 'In Review',
-        IN_UPGRADE: 'In Upgrade',
-        READY_FOR_EDIT: 'Ready for Edit',
-        READY_FOR_PUBLICATION: 'Ready for Publication',
-        READY_FOR_REVIEW: 'Ready for Review',
-        REVIEW_COMPLETED: 'Review Completed'
-    }
+    // See constants.utility.ts for the things like INTENSIONAL, EXTENSIONAL, IN_DEVELOPMENT, etc.
+    // They were moved to resolve a circular dependency
 
     static getVersionOptions(refset, valueField: string = "id") {
 
@@ -42,22 +19,22 @@ export class RefsetUtility {
 
             if (valueField == "date") {
 
-                if (version.status != RefsetUtility.IN_DEVELOPMENT) {
+                if (version.status != Constants.IN_DEVELOPMENT) {
                     value = version.date;
                 } else {
-                    value = RefsetUtility.IN_DEVELOPMENT;
+                    value = Constants.IN_DEVELOPMENT;
                 }
             }
 
             let displayStatus = 'Published';
 
-            if (version.status == RefsetUtility.IN_DEVELOPMENT) {
+            if (version.status == Constants.IN_DEVELOPMENT) {
                 displayStatus = 'In Development'
             }
 
             let option: any = { value: value, display: version.date + ' (' + displayStatus + ')', date: version.date, status: displayStatus };
 
-            if (version.date === this.getVersionDate(refset) || (refset.versionStatus == this.IN_DEVELOPMENT && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
+            if (version.date === this.getVersionDate(refset) || (refset.versionStatus == Constants.IN_DEVELOPMENT && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
                 option.selected = true;
             }
 
@@ -75,7 +52,7 @@ export class RefsetUtility {
 
         let date = '';
 
-        if (refset.versionStatus == this.IN_DEVELOPMENT) {
+        if (refset.versionStatus == Constants.IN_DEVELOPMENT) {
             date = CodeUtility.getCurrentDate();
         } else {
             date = refset.versionDate;
@@ -88,8 +65,8 @@ export class RefsetUtility {
 
         let date = '';
 
-        if (refset?.versionStatus == this.IN_DEVELOPMENT) {
-            date = this.IN_DEVELOPMENT;
+        if (refset?.versionStatus == Constants.IN_DEVELOPMENT) {
+            date = Constants.IN_DEVELOPMENT;
         } else {
             date = CodeUtility.formatJsonDate(refset?.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
         }
