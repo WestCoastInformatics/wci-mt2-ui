@@ -197,13 +197,10 @@ export class RefsetDetails implements OnInit {
     @ViewChild('detailsActionSection') actionSection: TemplateRef<any>;
     @ViewChild('detailsRichTextDialog') richTextDialog: TemplateRef<any>;
     @ViewChild('detailsMembersPaging') membersPaginationComponent: PaginationComponent;
-    @ViewChild('cloneRefsetDialog') cloneRefsetDialog: TemplateRef<any>;
     @ViewChild('changeRefsetStatusDialog') changeRefsetStatusDialog: TemplateRef<any>;
     @ViewChild('convertRefsetDialog') convertRefsetDialog: TemplateRef<any>;
     @ViewChild('refsetVersionNotes') refsetVersionNotes: TemplateRef<any>;
-    @ViewChild('refsetAuditDialog') refsetAuditDialog: TemplateRef<any>;
     @ViewChild('publishLocalsetDialog') publishLocalsetDialog: TemplateRef<any>;
-    @ViewChild('refsetArtifactsDialog') refsetArtifactsDialog: TemplateRef<any>;
     @ViewChild('memberHistoryDialog') memberHistoryDialog: TemplateRef<any>;
     @ViewChild('detailsMembersTaxonomy') taxonomyMembersComponent: TaxonomyTreeComponent;
     @ViewChild('taxonomySearchPaginationComponent') taxonomySearchPaginationComponent: PaginationComponent;
@@ -1513,59 +1510,35 @@ export class RefsetDetails implements OnInit {
         this.selectedConcept = null;
     }
 
-    openRichTextEditor(fieldName, displayName = fieldName) {
-        const dialogId = 'detailsRichTextDialog';
+    // TODO: Unused
+    // openRichTextEditor(fieldName, displayName = fieldName) {
+    //     const dialogId = 'detailsRichTextDialog';
 
-        const dialogData = {
-            headerText: `Reference Set ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
-            template: this.richTextDialog,
-            data: { fieldName: fieldName, text: this.refsetData[fieldName] },
-        };
+    //     const dialogData = {
+    //         headerText: `Reference Set ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
+    //         template: this.richTextDialog,
+    //         data: { fieldName: fieldName, text: this.refsetData[fieldName] },
+    //     };
 
-        const dialogOptions = {
-            id: dialogId,
-            width: '750px',
-        };
+    //     const dialogOptions = {
+    //         id: dialogId,
+    //         width: '750px',
+    //     };
 
-        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+    //     this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
-        this.dialog.confirmed().subscribe((data) => {
-            if (data) {
-                this.refsetData[fieldName] = data.text;
-                this.shortenNoteFields();
-            }
-        });
-    }
+    //     this.dialog.confirmed().subscribe((data) => {
+    //         if (data) {
+    //             this.refsetData[fieldName] = data.text;
+    //             this.shortenNoteFields();
+    //         }
+    //     });
+    // }
 
     changeVersion() {
         this.router.navigate(['/details', this.refsetId, this.selectedVersion]).then((page) => {
             window.location.reload();
         });
-    }
-
-    openAuditTrail() {
-        const dialogData = {
-            headerText: `Reference Set Audit Trail`,
-            template: this.refsetAuditDialog,
-            data: this.refsetData,
-        };
-
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe();
-    }
-
-    openArtifacts() {
-        const dialogData = {
-            headerText: `Reference Set Artifacts`,
-            template: this.refsetArtifactsDialog,
-            data: this.refsetData,
-        };
-
-        this.dialog = this.dialogFactoryService.open(dialogData);
-
-        this.dialog.confirmed().subscribe();
     }
 
     openChangeRefsetStatus() {

@@ -284,27 +284,20 @@
         </div>
 
         <div class="metadata-collapsible-container">
-            <div class="metadata-collapsible-container-group-header">
-                <div class="metadata-collapsible-container-title">
+            <div class="metadata-collapsible-container-group-header pointer" (click)="metadataCollapseTrigger()">
+                <div class="metadata-collapsible-container-title" >
                     Reference Set Metadata
                     <!-- <div *ngIf="editMode" class="edit-refset-button">
                         <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
                             [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
                     </div> -->
-                    <!-- <a class="detail-top-link"
-                       (click)="openArtifacts()"
-                       title="Open Artifacts List"
-                       aria-label="Artifacts">Artifacts</a>
-                    <a class="detail-top-link"
-                       (click)="openAuditTrail()"
-                       title="Open Audit Trail"
-                       aria-label="Audit Trail">Audit Trail</a> -->
+                   
                 </div>
                 <img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable" alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button"
-                  class="caret-up-solid" (click)="metadataCollapseTrigger()" />
+                  class="caret-up-solid" />
                 <img src="assets/caret-down-solid.svg" *ngIf="hideMetadataTable" alt="Uncollapse Button" title="Uncollapse Metadata" aria-label="Uncollapse Button"
-                  class="caret-down-solid" (click)="metadataCollapseTrigger()" />
+                  class="caret-down-solid" />
             </div>
             <div class="container-fluid" id="detailsMetadataSection" [hidden]="hideMetadataTable">
                 <div class="row refset-tool-refset-metadata-section">
@@ -325,23 +318,15 @@
                     </ng-template>
                 </div>
 
-                <ng-template #cloneRefsetDialog let-data>
-                    This functionality will be implemented in subsequent phases.
-                </ng-template>
-
                 <ng-template #convertRefsetDialog let-data>
                     This intensional Reference Set will be converted into an extensional refset.
-                </ng-template>
-
-                <ng-template #refsetAuditDialog let-data>
-                    This functionality will be implemented in subsequent phases.
                 </ng-template>
             </div>
         </div>
 
         <div class="metadata-collapsible-container" *ngIf="editMode">
-            <div class="metadata-collapsible-container-group-header">
-                <div class="metadata-collapsible-container-title">
+            <div class="metadata-collapsible-container-group-header pointer" (click)="workflowCollapseTrigger()">
+                <div class="metadata-collapsible-container-title" >
                     Workflow History
                     <!-- <div class="set-of-buttons-workflow-history"> -->
                     <!-- TODO: Should download WF HX table contents, not the refset
@@ -358,9 +343,9 @@
                     <!-- </div> -->
                 </div>
                 <img src="assets/caret-up-solid.svg" *ngIf="!hideWorkflowTable" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button"
-                  class="caret-up-solid" (click)="workflowCollapseTrigger()" />
+                  class="caret-up-solid" />
                 <img src="assets/caret-down-solid.svg" *ngIf="hideWorkflowTable" alt="Uncollapse Button" title="Uncollapse Workflow History" aria-label="Uncollapse Button"
-                  class="caret-down-solid" (click)="workflowCollapseTrigger()" />
+                  class="caret-down-solid"/>
             </div>
             <div [hidden]="hideWorkflowTable">
                 <!-- <mat-form-field floatLabel="never" appearance="standard">

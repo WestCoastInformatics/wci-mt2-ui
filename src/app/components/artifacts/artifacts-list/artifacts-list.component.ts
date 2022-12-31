@@ -82,7 +82,6 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
                 sortable: false,
                 flex: 1,
                 cellRenderer: 'templateRenderer',
-                tooltipField: 'id',
                 minWidth: 65,
                 resizable: false,
                 cellRendererParams: { template: this.actionsSection }, maxWidth: 110

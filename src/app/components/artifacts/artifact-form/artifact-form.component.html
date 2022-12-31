@@ -1,5 +1,5 @@
-<a class="btn btn-main mb-3 btn-wide-font" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="!isEdit && loaded">Add An Artifact</a>
-<a class="pointer ml-3" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="isEdit && loaded">
+<a class="btn btn-main mb-3 btn-wide-font" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="!isEdit && loaded" title="Add artifact">Add An Artifact</a>
+<a class="pointer ml-3" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="isEdit && loaded" title="Edit artifact">
     <mat-icon>edit</mat-icon>
 </a>
 

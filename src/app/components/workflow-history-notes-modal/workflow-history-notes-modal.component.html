@@ -1,7 +1,9 @@
-<a *ngIf="edit" [innerHTML]="workflowHistoryNotes"
-        (click)="openReadyForReviewModal()">
-</a>
-
+<div>
+  <span class="float-right" title="Edit Note"><a *ngIf="edit" class="pointer" (click)="openReadyForReviewModal()">
+    <mat-icon>edit</mat-icon>
+  </a></span>
+  <span *ngIf="edit" [innerHTML]="workflowHistoryNotes"></span>
+</div>
 <button *ngIf="!edit" mat-menu-item alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
 
 <ng-template #modalContent>
