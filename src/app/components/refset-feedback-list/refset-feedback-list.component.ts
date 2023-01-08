@@ -46,7 +46,7 @@ export class RefsetFeedbackListComponent implements OnInit {
     tinyMceConfig = {
         base_url: '/tinymce',
         suffix: '.min',
-        height: 200,
+        height: 150,
         menubar: false,
         auto_focus: 'postMessageField',
         plugins: ['lists advlist'],
@@ -205,7 +205,7 @@ export class RefsetFeedbackListComponent implements OnInit {
             {
                 field: 'status',
                 headerName: 'Status',
-                minWidth:65,
+                minWidth: 65,
                 maxWidth: 125,
                 unSortIcon: true,
                 tooltipValueGetter: (params) => {
@@ -326,10 +326,10 @@ export class RefsetFeedbackListComponent implements OnInit {
         }
 
         this.openedThreadModal = this.modalService.open(this.threadModal, {
-            modalDialogClass: 'full-modal',
+            modalDialogClass: 'full-feedback-modal',
             centered: true,
             backdrop: 'static',
-            keyboard: false
+            keyboard: false,
         });
     }
 

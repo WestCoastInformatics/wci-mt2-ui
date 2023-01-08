@@ -4541,6 +4541,10 @@ $sidebar-width: 294px;
   max-width: 90%;
 }
 
+.modal-dialog.full-feedback-modal {
+  max-width: 60%;
+}
+
 .grey-close-icon,
 .add-symbol-icon,
 .subtract-symbol-icon,
@@ -5261,8 +5265,8 @@ $sidebar-width: 294px;
   border: 1px solid rgba(197, 196, 197, 1);
   font-size: 16px;
   font-weight: 400;
-  min-height: 113px;
-  height: 340px;
+  min-height: 100px;
+  height: 100px;
   overflow: auto;
 
   .topic-header {
