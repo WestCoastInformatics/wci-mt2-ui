@@ -285,14 +285,14 @@
 
         <div class="metadata-collapsible-container">
             <div class="metadata-collapsible-container-group-header pointer" (click)="metadataCollapseTrigger()">
-                <div class="metadata-collapsible-container-title" >
+                <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
                     <!-- <div *ngIf="editMode" class="edit-refset-button">
                         <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
                             [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects($event)">
                         </create-new-refset>
                     </div> -->
-                   
+
                 </div>
                 <img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable" alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button"
                   class="caret-up-solid" />
@@ -326,7 +326,7 @@
 
         <div class="metadata-collapsible-container" *ngIf="editMode">
             <div class="metadata-collapsible-container-group-header pointer" (click)="workflowCollapseTrigger()">
-                <div class="metadata-collapsible-container-title" >
+                <div class="metadata-collapsible-container-title">
                     Workflow History
                     <!-- <div class="set-of-buttons-workflow-history"> -->
                     <!-- TODO: Should download WF HX table contents, not the refset
@@ -345,7 +345,7 @@
                 <img src="assets/caret-up-solid.svg" *ngIf="!hideWorkflowTable" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button"
                   class="caret-up-solid" />
                 <img src="assets/caret-down-solid.svg" *ngIf="hideWorkflowTable" alt="Uncollapse Button" title="Uncollapse Workflow History" aria-label="Uncollapse Button"
-                  class="caret-down-solid"/>
+                  class="caret-down-solid" />
             </div>
             <div [hidden]="hideWorkflowTable">
                 <!-- <mat-form-field floatLabel="never" appearance="standard">
@@ -437,12 +437,12 @@
               [processChangedMemberFunction]="processChangedMemberEffects">
             </import-from-file-modal>
 
-            <import-from-list-modal class="ml-20" *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId" [processChangedMemberFunction]="processChangedMemberEffects"
-              (changeLockedStatus)="changeLockedStatus($event)">
+            <import-from-list-modal class="ml-20" *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId"
+              [processChangedMemberFunction]="processChangedMemberEffects" (changeLockedStatus)="changeLockedStatus($event)">
             </import-from-list-modal>
 
-            <add-remove-by-concept-modal class="ml-20" *ngIf="allowedToEdit" [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)" (changeLockedStatus)="changeLockedStatus($event)"
-              [processChangedMemberFunction]="processChangedMemberEffects">
+            <add-remove-by-concept-modal class="ml-20" *ngIf="allowedToEdit" [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)"
+              (changeLockedStatus)="changeLockedStatus($event)" [processChangedMemberFunction]="processChangedMemberEffects">
             </add-remove-by-concept-modal>
 
         </span>
@@ -478,7 +478,20 @@
                                             </mat-form-field>
                                         </div>
 
-                                        <div class="col-lg ml-3" style="padding-right: 75px;" [style.display]="membersTableDisplay">
+
+                                        <div class="refset-tool-details-member-status-field" [style.display]="membersTableDisplay">
+                                            <mat-form-field appearance="legacy">
+                                                <mat-label>Show by Concept Status</mat-label>
+                                                <mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus"
+                                                  (selectionChange)="changeActiveInactiveStatus()">
+                                                    <mat-option value="both">Active and Inactive</mat-option>
+                                                    <mat-option value="active">Active Only</mat-option>
+                                                    <mat-option value="inactive">Inactive Only</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="col-lg" style="padding-right: 75px;" [style.display]="membersTableDisplay">
                                             <mat-form-field floatLabel="never" class="refset-tool-details-search-field">
                                                 <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
                                                 <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
@@ -511,18 +524,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="refset-tool-details-member-status-field" [style.display]="membersTableDisplay">
-                                            <mat-form-field appearance="legacy">
-                                                <mat-label>Show by Concept Status</mat-label>
-                                                <mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus" (selectionChange)="changeActiveInactiveStatus()">
-                                                    <mat-option value="both">Active and Inactive</mat-option>
-                                                    <mat-option value="active">Active Only</mat-option>
-                                                    <mat-option value="inactive">Inactive Only</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-
-                                        <div>
+                                        <div class="refset-tool-toggle-buttons-container">
                                             <mat-button-toggle-group class="refset-tool-toggle-buttons" name="membersListMode" aria-label="Members List Mode"
                                               (change)="onChangeMembersListMode()" [(ngModel)]="selectedMembersListMode">
                                                 <mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
