@@ -95,8 +95,8 @@ export class OrganizationTeamsComponent implements OnInit {
             {
                 field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
                 tooltipValueGetter: (params) => {
-                    return params?.data?.memberList ? 
-                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) : 
+                    return params?.data?.memberList ?
+                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) :
                         'No Team Users';
                 }
             }
@@ -188,7 +188,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
             this.showLoadingSpinner = true;
 
-            this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
+            this.refsetService.getTeams('sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
 
                 this.data = [];
                 this.teamList = results.items;

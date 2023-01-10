@@ -78,7 +78,7 @@ export class PersonalLandingComponent implements OnInit {
 
     getTeams(): void {
 
-        this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getTeams('sort=name&sortAscending=true').subscribe((results) => {
             this.teamList = results.items.filter(i => {
                 return i.members.indexOf(this.userId) > -1;
             });

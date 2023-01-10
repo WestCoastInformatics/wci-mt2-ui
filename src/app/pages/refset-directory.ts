@@ -77,7 +77,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
     @ViewChild('directoryPaging') paginationComponent: PaginationComponent;
     @ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
     @ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
-    
+
     constructor(
         private router: Router,
         private titleService: Title,
@@ -102,7 +102,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-        forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('limit=500&sort=name'), this.refsetService.getOrganizationsKeyValue()).
+        forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('sort=name'), this.refsetService.getOrganizationsKeyValue()).
             subscribe({
                 next: ([results, versionResults, editionResults, organizationResults]) => {
 

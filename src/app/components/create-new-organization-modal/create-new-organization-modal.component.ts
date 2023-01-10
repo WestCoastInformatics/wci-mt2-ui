@@ -58,7 +58,7 @@ export class CreateNewOrganizationModalComponent {
     this.openedModel = this.modalService.open(createNewOrganizationDialog, { backdrop: 'static', keyboard: false });
 
     // get list of editions
-    this.refsetService.getEditions('limit=500&sort=name').subscribe((editionResults) => {
+    this.refsetService.getEditions('sort=name').subscribe((editionResults) => {
 
       this.editionsList = editionResults.items;
 

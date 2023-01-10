@@ -141,7 +141,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
     getTeams(): void {
 
-        this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
             this.teamList = results.items;

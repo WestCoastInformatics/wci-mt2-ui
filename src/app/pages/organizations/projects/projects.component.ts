@@ -177,7 +177,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.editionList = results?.items;
@@ -228,7 +228,7 @@ export class OrganizationProjectsComponent implements OnInit {
     getProjects(): void {
 
         this.showLoadingSpinner = true;
-        this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
             next: async (results) => {
 
                 this.data = [];
@@ -329,11 +329,11 @@ export class OrganizationProjectsComponent implements OnInit {
            let teams = JSON.parse(data.teams).teams;
            if (teams.length > 0) {
                return 'Organization Teams:\n' + teams.map(t => t.name).join(', \n');
-           } 
+           }
            return "No Organization Teams";
         }
         return 'No teams';
     }
-    
+
 }
 

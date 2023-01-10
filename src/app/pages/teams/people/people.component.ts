@@ -83,7 +83,7 @@ export class TeamsPeopleComponent implements OnInit {
       { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
       { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
-    ];    
+    ];
 
     this.gridOptions = {
       context: { componentParent: this },
@@ -196,7 +196,7 @@ export class TeamsPeopleComponent implements OnInit {
 
   getTeams(): void {
 
-    this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+    this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe((results) => {
 
       this.showLoadingSpinner = false;
       this.showTable = true;

@@ -214,7 +214,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.editionList = results?.items;
@@ -271,13 +271,13 @@ export class ProjectsPeopleComponent implements OnInit {
         event.stopPropagation();
         //}
     }
-    
+
 
     getProjects(): void {
 
         this.showTable = false;
 
-        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.showTable = true;
@@ -429,5 +429,5 @@ export class ProjectsPeopleComponent implements OnInit {
           }
         }
       }
-        
+
 }

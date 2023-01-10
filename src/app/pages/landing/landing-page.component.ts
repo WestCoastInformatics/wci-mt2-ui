@@ -97,7 +97,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-        forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('limit=500&sort=name'), this.refsetService.getOrganizationsKeyValue()).
+        forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('sort=name'), this.refsetService.getOrganizationsKeyValue()).
             subscribe({
                 next: ([results, versionResults, editionResults, organizationResults]) => {
 
@@ -339,7 +339,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     onSearchChange() {
 
         this.searchInput = this.searchInput.trim();
-        
+
         if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
             this.onGridReady(this.originalGridParams);
         }

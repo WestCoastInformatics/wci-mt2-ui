@@ -287,7 +287,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.editionList = results?.items;
@@ -335,7 +335,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
     getProjects(): void {
 
-        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.projectList = results.items;

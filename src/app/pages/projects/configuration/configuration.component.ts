@@ -138,7 +138,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   getEditions(): void {
 
-    this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+    this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
       next: (results) => {
 
         this.editionList = results?.items;
@@ -176,7 +176,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   getProjects(): void {
 
-    this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+    this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
       next: (results) => {
 
         this.projectList = results.items;
@@ -382,7 +382,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     const query = 'organizationId:' + this.organizationId;
 
-    this.refsetService.getTeams('hideOrganizationTeams=true&limit=500&offset=0&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
+    this.refsetService.getTeams('hideOrganizationTeams=true&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
       this.teamList = results.items;
     });
   }

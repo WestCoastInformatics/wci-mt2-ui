@@ -274,14 +274,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
 
     getProjects(): void {
-        this.refsetService.getProjects('limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getProjects('offset=0&sort=name&sortAscending=true').subscribe((results) => {
             this.projectList = results.items;
         });
     }
 
     getTeams(): void {
 
-        this.refsetService.getTeams('onlyUsersTeams=true&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getTeams('onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
             this.teamList = results.items;
         });
     }

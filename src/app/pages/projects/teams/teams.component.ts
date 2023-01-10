@@ -171,8 +171,8 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
             {
                 field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
                 tooltipValueGetter: (params) => {
-                    return params?.data?.memberList ? 
-                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) : 
+                    return params?.data?.memberList ?
+                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) :
                         'No Team Users';
                 }
             }
@@ -220,7 +220,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
     }
 
     onGridCellClick = (event) => {
-        
+
         const selectedRows = this.gridApi.getSelectedRows();
         let selectedId: string;
 
@@ -286,7 +286,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.editionList = results?.items;
@@ -334,7 +334,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 
     getProjects(): void {
 
-        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.projectList = results.items;

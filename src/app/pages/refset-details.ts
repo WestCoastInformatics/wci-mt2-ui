@@ -1032,7 +1032,7 @@ export class RefsetDetails implements OnInit {
                 }
 
                 this.membersColumnDefs = [
-                    // This column is an exception to resizable, it's the +/- icon column    
+                    // This column is an exception to resizable, it's the +/- icon column
                     {
                         field: 'active',
                         headerName: '',
@@ -1333,7 +1333,7 @@ export class RefsetDetails implements OnInit {
         if (showLoading) {
             this.toggleLoadingSpinner(true);
         }
-        this.refsetService.getWorkflowHistory(this.id, '?limit=500&offset=0&sort=modified&sortAscending=false').subscribe((results) => {
+        this.refsetService.getWorkflowHistory(this.id, '?sort=modified&sortAscending=false').subscribe((results) => {
 
             this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
             this.workflowHistoryDataSource.sort = this.sort;
