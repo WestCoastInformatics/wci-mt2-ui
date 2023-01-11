@@ -205,10 +205,11 @@
                         <div class="create-new-refset-form-field" style="align-items: normal" *ngIf="showExternal">
                             <div class="col create-new-refset-label create-new-refset-flex-weight">
                                 <label style="margin-top: 1.7rem">External URL:<span class="mandatory-field">*</span>
-                                    <span><button mat-icon-button (click)="openInfoDialog('external')" aria-hidden="false" aria-label="Location of the external refset"
-                                          title="Valid URL for the location of the refset or information about it." ng-reflect-color="primary">
-                                            <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                        </button></span>
+                                    <mat-icon class="pointer refset-tool-new-refset-info-icon" (click)="openInfoDialog('external')"
+                                        aria-hidden="false" aria-label="Location of the external refset"
+                                        title="Valid URL for the location of the refset or information about it.">
+                                        info_icon
+                                    </mat-icon>
                                 </label>
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
@@ -326,24 +327,26 @@
 
                             <div *ngIf="!editMode  && !showExternal" class="col create-new-refset-field create-new-refset-flex-weight create-new-refset-concept-radio">
                                 <mat-radio-group>
-
-                                    <mat-radio-button style="padding-right: 30px" value="1" [checked]="true" (change)="checkRadioButtonValue($event)">
-                                        Choose an existing reference set concept
-                                        <span><button mat-icon-button (click)="openInfoDialog('existingConcept')" aria-hidden="false"
-                                              aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
-                                              ng-reflect-color="primary">
-                                                <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                            </button></span>
-                                    </mat-radio-button>
-
-                                    <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
-                                        Create a new reference set concept
-                                        <span><button mat-icon-button (click)="openInfoDialog('newConcept')" aria-hidden="false"
-                                              aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog"
-                                              ng-reflect-color="primary">
-                                                <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                            </button></span>
-                                    </mat-radio-button>
+                                    <span style="padding-right: 20px">
+                                        <mat-radio-button value="1" [checked]="true" (change)="checkRadioButtonValue($event)">
+                                            Choose an existing reference set concept
+                                        </mat-radio-button>
+                                        <mat-icon class="pointer refset-tool-new-refset-info-icon" (click)="openInfoDialog('existingConcept')"
+                                            aria-hidden="false"
+                                            aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog">
+                                            info_icon
+                                        </mat-icon>
+                                    </span>
+                                    <span style="padding-right: 20px">
+                                        <mat-radio-button value="2" (change)="checkRadioButtonValue($event)">
+                                            Create a new reference set concept
+                                        </mat-radio-button>
+                                        <mat-icon class="pointer refset-tool-new-refset-info-icon" (click)="openInfoDialog('newConcept')"
+                                            aria-hidden="false"
+                                            aria-label="Open Assign Refset Concept Information Dialog" title="Open Assign Refset Concept Information Dialog">
+                                            info_icon
+                                        </mat-icon>
+                                    </span>
 
                                     <mat-form-field appearance="fill" [hidden]="isSelected == 2">
                                         <mat-label *ngIf="existingMetadataConcepts?.length > 0">Choose an existing reference set concept</mat-label>
@@ -464,10 +467,11 @@
                                 <span>
                                     <mat-checkbox [(ngModel)]="privateRefset">Private</mat-checkbox>
                                 </span>
-                                <span><button mat-icon-button (click)="openInfoDialog('availability')" aria-hidden="false" aria-label="Open Availability Information Dialog"
-                                      title="Open Availability Information Dialog" ng-reflect-color="primary">
-                                        <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                    </button></span>
+                                <mat-icon class="pointer refset-tool-new-refset-info-icon"
+                                    (click)="openInfoDialog('availability')" aria-hidden="false" aria-label="Open Availability Information Dialog"
+                                    title="Open Availability Information Dialog">
+                                    info_icon
+                                </mat-icon>
                             </div>
                         </div>
                         <!-- End Availability -->
@@ -483,10 +487,11 @@
 
                                     <mat-radio-button class="ml-15 refset-radio create-refset-radio-button" (change)="checkPublishability($event)" value="true">Local Set
                                     </mat-radio-button>
-                                    <span><button mat-icon-button (click)="openInfoDialog('publication')" aria-hidden="false" aria-label="Open Publication Information Dialog"
-                                          title="Open Publication Information Dialog" ng-reflect-color="primary">
-                                            <mat-icon class="refset-tool-new-refset-info-icon">info_icon</mat-icon>
-                                        </button></span>
+                                    <mat-icon class="pointer refset-tool-new-refset-info-icon"
+                                        (click)="openInfoDialog('publication')" aria-hidden="false" aria-label="Open Publication Information Dialog"
+                                        title="Open Publication Information Dialog">
+                                        info_icon
+                                    </mat-icon>
                                 </mat-radio-group>
                             </div>
                         </div>

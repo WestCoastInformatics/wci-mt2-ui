@@ -119,11 +119,11 @@
                         ">
                         <label>Assign Reference Set
                             Concept:<span *ngIf="!editMode" class="mandatory-field">*</span>
-                            <span><button mat-icon-button (click)="openInfoDialog()" aria-hidden="false" aria-label="Open Assign Reference Set Concept Information Dialog"
-                                  title="Open  Assign Reference Set Concept Information Dialog" ng-reflect-color="primary">
-                                    <mat-icon class="refset-tool-new-refset-info-icon">info_icon
-                                    </mat-icon>
-                                </button></span>
+                            <mat-icon class="pointer refset-tool-new-refset-info-icon" (click)="openInfoDialog()"
+                                aria-hidden="false" aria-label="Open Assign Reference Set Concept Information Dialog"
+                                title="Open  Assign Reference Set Concept Information Dialog">
+                                info_icon
+                            </mat-icon>
                         </label>
                     </div>
 
@@ -396,7 +396,7 @@
                               (change)="checkPublishability($event)" value="false" [checked]="!localSet">Within Edition</mat-radio-button>
 
                               <mat-radio-button class="ml-15 refset-radio create-refset-radio-button"
-                              (change)="checkPublishability($event)" value="true" [checked]="localSet">Local Set</mat-radio-button>                              
+                              (change)="checkPublishability($event)" value="true" [checked]="localSet">Local Set</mat-radio-button>
                         </mat-radio-group>
                     </div>
                     -->
@@ -431,7 +431,7 @@
           class="refset-tool-action-button" aria-label="Update Reference Set Metadata" title="Update Reference Set Metadata" ng-reflect-color="green">
             Update Metadata
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button  aria-hidden="false" 
+        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button  aria-hidden="false"
           class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
             Cancel
         </button>
