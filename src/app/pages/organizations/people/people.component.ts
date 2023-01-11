@@ -63,6 +63,7 @@ export class OrganizationPeopleComponent implements OnInit {
     });
 
     this.getOrganizations();
+
   }
 
   ngAfterViewInit() {
@@ -72,7 +73,7 @@ export class OrganizationPeopleComponent implements OnInit {
       { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
       { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
-    ];    
+    ];
 
     this.gridOptions = {
       context: { componentParent: this },

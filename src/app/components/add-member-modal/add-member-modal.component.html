@@ -1,11 +1,11 @@
 <a class='btn btn-primary rounded btn-lg float-right btn-wide-font' (click)="openAddMemberModal(addMemberModal)">Add User</a>
 
 <ng-template #addMemberModal let-modal>
-
+  <div *ngIf="showLoadingSpinner" class="loading"></div>
   <div class="modal-header rt2-modal-header">
     <button ngbAutofocus class="unfocus-btn"></button>
     <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-      Add User to the "{{ name }}" {{ type }}
+      Add User(s) to the "{{ name }}" {{ type }}
     </h4>
 
     <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -14,10 +14,8 @@
   </div>
 
   <div class="modal-body refset-tool-lockable">
-
     <table>
-
-      <tr>
+      <tr *ngIf="type!=='Team'">
         <td>
           <mat-form-field floatLabel="never" appearance="legacy" class="email-input-field">
             <mat-label>Enter the email of the user to add:</mat-label>
@@ -26,20 +24,31 @@
           </mat-form-field>
         </td>
       </tr>
-
+      <tr *ngIf="type=='Team'">
+        <td>
+            <div class="auto-width">
+                <mat-form-field floatLabel="never" appearance="legacy" class="team-member-select">
+                    <mat-label>Choose User(s) to Add</mat-label>
+                    <mat-select multiple [(ngModel)]="emails">
+                        <mat-option *ngFor="let user of users" [value]="user.email">
+                            {{ user.email }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </td>
+      </tr>
       <tr class="modal-error-message" [hidden]="!emailError">
         <div>{{emailError}}</div>
       </tr>
-
     </table>
-
   </div>
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    <button (click)="addUserAsMember()" [disabled]="email === '' || !validEmail" mat-raised-button class="refset-tool-action-button mat-green">
-      Add User
+    <button (click)="addUsersAsMembers()" [disabled]="(email === '' || !validEmail) && emails?.length < 1" mat-raised-button class="refset-tool-action-button mat-green">
+      Add User(s)
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 
+    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false"
       class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
       Cancel
     </button>

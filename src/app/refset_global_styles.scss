@@ -1505,6 +1505,18 @@ select {
   }
 }
 
+.team-member-select {
+    padding-top: 10px;
+    width: 100%;
+    .mat-select-arrow-wrapper {
+      padding-top: 0px;
+      padding-bottom: 10px;
+    }
+    .mat-form-field-infix {
+      top: 7px;
+    }
+  }
+
 .date-selector {
   margin-top: 25px;
 
@@ -1749,7 +1761,7 @@ select {
     border-radius: 8px;
     background: white;
   }
-      
+
   .combination-chips {
       transform: scale(1);
   }

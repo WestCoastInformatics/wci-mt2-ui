@@ -13,6 +13,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
   selector: 'teams-people',
@@ -26,6 +27,7 @@ export class TeamsPeopleComponent implements OnInit {
   selectedTeam: any;
   teamId: any;
   teamList = [];
+  userList: any;
   currentUser: any;
   gridOptions: any;
   gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
@@ -54,7 +56,8 @@ export class TeamsPeopleComponent implements OnInit {
     private readonly authService: AuthenticationService,
     private readonly teamsService: TeamsService,
     private readonly modalService: NgbModal,
-    private location: Location) {
+    private location: Location,
+    private organizationsService: OrganizationsService) {
     document.body.scrollTop = 0;
   }
 
@@ -74,6 +77,7 @@ export class TeamsPeopleComponent implements OnInit {
     this.selectedTeam = null;
 
     this.getOrganizations();
+
   }
 
   ngAfterViewInit() {
@@ -226,6 +230,14 @@ export class TeamsPeopleComponent implements OnInit {
     this.showTeamMembers();
   }
 
+  getAvailableOrganizationUsers(organizationId: string): void {
+    this.organizationsService.getOrgUsers(organizationId, false).subscribe({
+        next: (results) => {
+            this.userList = results?.items.filter(teamMember => !this.data.filter(orgMember => teamMember.id === orgMember.id).length);
+        }
+    });
+  }
+
   showTeamMembers() {
 
     this.data = this.selectedTeam.memberList;
@@ -233,6 +245,7 @@ export class TeamsPeopleComponent implements OnInit {
     localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
     this.setNavigation();
+    this.getAvailableOrganizationUsers(this.organizationId);
   }
 
   onGridReady = (params) => {

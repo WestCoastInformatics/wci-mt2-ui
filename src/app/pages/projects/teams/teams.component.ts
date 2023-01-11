@@ -19,6 +19,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { NotificationService } from 'src/app/services/notification.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { User } from 'src/app/models/user';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { P } from '@angular/cdk/keycodes';
@@ -37,6 +38,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
     organizationId: any;
     selectedOrganization: any;
     organizationList: any[] = [];
+    userList: any[] = [];
     editionId: any;
     selectedEdition: any;
     editionList: any[] = [];
@@ -70,7 +72,8 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
         protected route: ActivatedRoute,
         protected readonly projectsService: ProjectsService,
         private notificationService: NotificationService,
-        private location: Location
+        private location: Location,
+        private organizationsService: OrganizationsService
     ) {
         document.body.scrollTop = 0;
         refsetService.getTaxonomyRoot();
@@ -93,6 +96,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 
         this.getUser();
         this.getOrganizations();
+        this.getOrganizationUsers(this.organizationId);
     }
 
     setNavigation() {
@@ -229,6 +233,15 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
         });
 
         this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
+    }
+
+    getOrganizationUsers(organizationId: string): void {
+        this.organizationsService.getOrgUsers(organizationId, false).subscribe({
+            next: (results) => {
+                this.userList = results?.items;
+                console.log ("NUNO user list is", this.userList);
+            }
+        });
     }
 
     getOrganizations(): void {
