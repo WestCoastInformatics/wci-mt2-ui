@@ -16,14 +16,15 @@
     </div>
     <div class="container-fluid ready-for-review-container-fluid">
         <div class="modal-body pr-0 pl-0 pb-0">
-            <audit-trail-list [refsetInternalId]="refsetInternalId"></audit-trail-list>
+            <audit-trail-list [refsetInternalId]="refsetInternalId"
+             (recordsLoaded)="dataLoadedStatus($event)"></audit-trail-list>
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" mat-raised-button color="green" (click)="getAuditReport()" aria-hidden="false"
-          class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
-            Download Audit Trail
-        </button>        
+        <button [disabled]="downloadDisabled" type="button" mat-raised-button color="green" (click)="getAuditReport()"
+          aria-hidden="false" class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
+            Download Audit Trail {{downloadDisabled}}
+        </button>
         <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button ml-3" (click)="modal.dismiss('Cross click');"
           ng-reflect-color="primary">
             Close

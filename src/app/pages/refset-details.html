@@ -172,7 +172,7 @@
                     <mat-menu #informationMenu="matMenu">
                         <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
                         </artifacts-modal>
-                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="editMode && refsetData?.id"></audit-trail-modal>
+                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id && user?.userName !== 'Guest'"></audit-trail-modal>
                         <button #snowmedBroswerButton mat-menu-item aria-label="SNOMED Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">SNOMED
                                 Browser</a>
                         </button>

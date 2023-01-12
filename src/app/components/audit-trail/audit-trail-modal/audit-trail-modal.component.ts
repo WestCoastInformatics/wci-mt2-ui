@@ -9,6 +9,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 })
 export class AuditTrailModalComponent {
 
+    downloadDisabled: boolean = true;
 
 	@Input() refsetInternalId: string;
 	@Input() isDetails = true;
@@ -43,4 +44,8 @@ export class AuditTrailModalComponent {
 		};
 		UiUtility.createAuditReport(this.refsetInternalId, auditReportObject);
 	}
+
+    dataLoadedStatus = (value: boolean) => {
+        this.downloadDisabled = !value;
+    }
 }

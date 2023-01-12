@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, Output, OnInit, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
@@ -14,11 +14,8 @@ import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.c
 })
 export class AuditTrailListComponent implements OnInit, AfterViewInit {
 
-
     columnDefs = [];
-
     data: any;
-
     gridApi: any;
     gridColumnDefs = [];
     gridOptions: any;
@@ -35,6 +32,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
     @Input() refsetInternalId: string;
     @ViewChild('detailsSection') detailsSection: TemplateRef<any>;
     @ViewChild('pagination') paginationComponent: PaginationComponent;
+    @Output() recordsLoaded = new EventEmitter<any>(true);
 
     constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private auditService: AuditService,
         private changeDetectorRef: ChangeDetectorRef) {
@@ -160,7 +158,9 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                     this.auditService.getOrgAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
                         next: (results) => {
                             this.setUpAuditTable(results, pageNumber, rowParams);
-
+                            if (results?.items.length > 0) {
+                                this.recordsLoaded.emit(true);
+                            }
                         },
                         error: (error) => {
 
@@ -174,6 +174,9 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
                         next: (results) => {
                             this.setUpAuditTable(results, pageNumber, rowParams);
                             localStorage.setItem('audit_report', JSON.stringify(this.data));
+                            if (results?.items.length > 0) {
+                                this.recordsLoaded.emit(true);
+                            }
                         },
                         error: (error) => {
 
