@@ -239,7 +239,6 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
         this.organizationsService.getOrgUsers(organizationId, false).subscribe({
             next: (results) => {
                 this.userList = results?.items;
-                console.log ("NUNO user list is", this.userList);
             }
         });
     }
