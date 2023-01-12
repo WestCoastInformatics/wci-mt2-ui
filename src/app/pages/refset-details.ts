@@ -736,7 +736,7 @@ export class RefsetDetails implements OnInit {
         this.taxonomyOptions.language = this.conceptDetailsOptions.language = this.getTaxonomyLanguageWithoutType();
 
         // reload the members taxonomy tree
-        this.reloadTaxonomyTree();
+        // this.reloadTaxonomyTree();
 
         // if concept details is present reload the concept details child tree
         if (CodeUtility.hasValue(this.conceptDetail)) {
@@ -910,6 +910,7 @@ export class RefsetDetails implements OnInit {
 
     onTaxonomySearchGridCellClick = (event) => {
 
+        this.toggleLoadingSpinner(true)
         const selectedRows = this.taxonomySearchGridApi?.getSelectedRows();
         let selectedConcept;
 
@@ -919,9 +920,13 @@ export class RefsetDetails implements OnInit {
 
         this.loadConceptDetail(selectedConcept);
 
-        this.refsetService.getMemberAncestorConcepts(this.id, selectedConcept.code).subscribe((result) => {
-            this.goToTaxonomyConcept(selectedConcept.code, result.parents);
-        });
+        try {
+            this.refsetService.getMemberAncestorConcepts(this.id, selectedConcept.code).subscribe((result) => {
+                this.goToTaxonomyConcept(selectedConcept.code, result.parents);
+            });
+        } catch {
+            this.toggleLoadingSpinner(false)
+        }
     }
 
     @Debounce()
@@ -944,6 +949,7 @@ export class RefsetDetails implements OnInit {
 
     goToTaxonomyConcept(selectedConcept, selectedPath) {
         this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, undefined, true, true);
+        this.toggleLoadingSpinner(false)
     }
 
     reloadTaxonomyTree() {
@@ -1128,11 +1134,11 @@ export class RefsetDetails implements OnInit {
         let filters = this.membersGridApi.getFilterModel();
 
         if (this.activeInactiveStatus == 'active') {
-            filters.active = {filterType: 'text', type: 'equals', filter: true};
+            filters.active = { filterType: 'text', type: 'equals', filter: true };
         } else if (this.activeInactiveStatus == 'both') {
             delete filters.active;
         } else if (this.activeInactiveStatus == 'inactive') {
-            filters.active = {filterType: 'text', type: 'equals', filter: false};
+            filters.active = { filterType: 'text', type: 'equals', filter: false };
         }
 
         this.membersGridApi.setFilterModel(filters);
@@ -1325,7 +1331,7 @@ export class RefsetDetails implements OnInit {
         this.refsetService.getRefsetMemberCount(this.id).subscribe((results) => {
             this.refsetData.memberCount = results;
             // clone refset data here so button components can pick up the change
-            this.refsetData =  Object.assign({}, this.refsetData);
+            this.refsetData = Object.assign({}, this.refsetData);
         });
     }
 

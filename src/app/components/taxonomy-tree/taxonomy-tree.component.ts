@@ -435,7 +435,9 @@ export class TaxonomyTreeComponent {
                 deferred.resolve();
 
                 // put the target node ID into the return callback so the calling function has access to it
-                returnFunction(data);
+                if (returnFunction) {
+                    returnFunction(data);
+                }
             });
         };
 
@@ -478,6 +480,6 @@ export class TaxonomyTreeComponent {
         const element: any = $(
             "#" + node.parent.data.code + "-" + node.data.code
         );
-        element[0].scrollIntoView({ behavior: "smooth" });
+        element[0].scrollIntoView({ behavior: "smooth", block: 'center' });
     }
 }
