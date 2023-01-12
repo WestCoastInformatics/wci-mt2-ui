@@ -26,16 +26,14 @@
       </tr>
       <tr *ngIf="type=='Team'">
         <td>
-            <div class="auto-width">
-                <mat-form-field floatLabel="never" appearance="legacy" class="team-member-select">
-                    <mat-label>Choose User(s) to Add</mat-label>
-                    <mat-select multiple [(ngModel)]="emails">
-                        <mat-option *ngFor="let user of users" [value]="user.email">
-                            {{ user.email }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+            <mat-form-field floatLabel="never" appearance="legacy" class="team-member-form-field">
+                <mat-label>Choose User(s) to Add</mat-label>
+                <mat-select multiple [(ngModel)]="emails" [disableOptionCentering]="true" class="team-member-select">
+                    <mat-option class="team-member-select-option" *ngFor="let user of users" [value]="user.email" >
+                        {{ user.email }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
         </td>
       </tr>
       <tr class="modal-error-message" [hidden]="!emailError">

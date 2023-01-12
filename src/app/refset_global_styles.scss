@@ -1505,17 +1505,20 @@ select {
   }
 }
 
-.team-member-select {
+.team-member-form-field {
     padding-top: 10px;
-    width: 100%;
-    .mat-select-arrow-wrapper {
-      padding-top: 0px;
-      padding-bottom: 10px;
-    }
-    .mat-form-field-infix {
-      top: 7px;
-    }
-  }
+    width: 90%;
+}
+
+.team-member-select-option > .mat-option-text {
+    text-transform: none !important;
+}
+
+.mat-select-panel-wrap{
+    position: relative;
+    top: 2rem;
+    padding-left: 3rem;
+}
 
 .date-selector {
   margin-top: 25px;
