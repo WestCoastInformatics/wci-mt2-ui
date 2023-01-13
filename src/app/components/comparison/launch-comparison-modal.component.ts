@@ -401,7 +401,7 @@ export class LaunchComparisonModalComponent {
       error: (error) => {
 
         this.isConceptDetailsLoading = false;
-        this.notificationService.show("The concept does not exist in " + this.activeRefsetCodeSystem + ".", null, 'warning', { timeOut: 0, extendedTimeOut: 0 });
+        this.notificationService.show("The concept does not exist in " + this.activeRefsetCodeSystem + ".", null, 'warning', { timeOut: 5000, extendedTimeOut: 0 });
       }
     });
 
