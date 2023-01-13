@@ -263,7 +263,7 @@
                 <mat-option *ngFor="let concept of selectedConcepts" [value]="concept">{{
                     transformDescriptions(concept.descriptions, true)?.length ?
                     transformDescriptions(concept.descriptions, true)[0].term : ''}}</mat-option>
-                <!-- + ' | ' + transformDescriptions(concept.descriptions, true)[0].descriptionId -->
+
             </mat-select>
         </mat-form-field>
         <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT');" width="18px" height="18px" aria-label="Add"
@@ -308,7 +308,7 @@
           aria-label="Remove {{actionText}}" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
     </span>
     <span *ngIf="(!params?.data?.isHidden || replacementColumnSortFilter) && !params?.data?.isSearch">
-        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="" aria-label="Add" class="grey-add-symbol-icon"
+        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="Add replacement concept by ID or FSN" aria-label="Add" class="grey-add-symbol-icon"
           alt="Add symbol shown when you're able to add a concept" />
     </span>
     <span *ngIf="params?.data?.isSearch">

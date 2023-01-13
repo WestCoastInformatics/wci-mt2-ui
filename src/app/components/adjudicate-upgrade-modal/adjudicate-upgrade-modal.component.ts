@@ -177,7 +177,7 @@ export class AdjudicateUpgradeModalComponent {
 				field: 'reason', valueGetter: (params) => {
 					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
 				}, tooltipValueGetter: (params) => {
-					return this.formatReason(params?.data?.replacementConcepts[0]?.reason);
+				    return (!params?.data?.isSearch) ? this.formatReason(params?.data?.replacementConcepts[0]?.reason) : null;
 				}, headerName: 'Association', flex: 1, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.reasonSection }, colSpan: params => params.data.isSearch === true ? 4 : 1, unSortIcon: true, resizable: true
 			},
 			{
@@ -883,7 +883,6 @@ export class AdjudicateUpgradeModalComponent {
 		});
 
 		let totalInactiveConcepts = [];
-
 
 		for (let i = 0; i < inactiveConcepts.length; i++) {
 			let item = {
