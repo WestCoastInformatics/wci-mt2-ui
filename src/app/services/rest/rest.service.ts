@@ -27,7 +27,7 @@ export class RestService {
         return this.http[method]<any>(url);
     }
 
-    get(url: string, params: any = {}, parseParams: boolean = true, ignoreErrors: boolean = false): Observable<any> {
+    get(url: string, params: any = {}, parseParams: boolean = true, ignoreErrors: boolean = false, returnErrorOnIgnore: boolean = false): Observable<any> {
 
         let queryString: string;
         // if parseParams is true then build the query string, else use the params argument as is
@@ -46,7 +46,7 @@ export class RestService {
 
         return this.http.get<any>(this.restUrl + url + queryString).pipe(
             catchError((err) => {
-                return this.giveErrorNotification(err, ignoreErrors);
+                return this.giveErrorNotification(err, ignoreErrors, returnErrorOnIgnore);
             })
         );
     }
@@ -108,7 +108,7 @@ export class RestService {
         );
     }
 
-    giveErrorNotification(error: any, ignoreErrors: boolean = false) {
+    giveErrorNotification(error: any, ignoreErrors: boolean = false, returnErrorOnIgnore: boolean = false) {
 
         if (!ignoreErrors) {
 
@@ -126,7 +126,12 @@ export class RestService {
 
             return error;
         } else {
-            return EMPTY;
+
+            if (returnErrorOnIgnore) {
+                return error;
+            } else {
+                return EMPTY;
+            }
         }
     }
 

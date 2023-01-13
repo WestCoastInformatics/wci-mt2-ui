@@ -41,6 +41,7 @@ export class LaunchComparisonModalComponent {
   gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
   showTable = false;
   activeRefsetName: string;
+  activeRefsetCodeSystem: string
   comparisonData: any;
   comparisonRefsetVersionDate: string;
   comparisonRefsetName: string;
@@ -116,6 +117,7 @@ export class LaunchComparisonModalComponent {
     this.changeReportData = [];
     this.comparisonSearchInput = '';
     this.comparisonRefsetSelect = '';
+    this.activeRefsetCodeSystem = '';
 
     this.activeRefsetVersionDate = CodeUtility.formatJsonDate(this.activeRefset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
     this.activeRefsetVersionOptions = RefsetUtility.getVersionOptions(this.activeRefset);
@@ -263,6 +265,7 @@ export class LaunchComparisonModalComponent {
 
 
     this.activeRefsetName = this.activeRefset.name;
+    this.activeRefsetCodeSystem = this.activeRefset.organizationName + ' / ' + this.activeRefset.editionName + ' / ' + this.activeRefset.versionDate + ' (' + this.getStatus(this.activeRefset.versionStatus) + ')';
 
     if (this.comparisonTypeSelected == 'same_refset') {
 
@@ -379,7 +382,7 @@ export class LaunchComparisonModalComponent {
     this.conceptDetail = null;
     this.isConceptDetailsLoading = true;
 
-    this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.activeRefset.id, }).subscribe({
+    this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.activeRefset.id }, true).subscribe({
       next: (results) => {
 
         this.isConceptDetailsLoading = false;
@@ -398,6 +401,7 @@ export class LaunchComparisonModalComponent {
       error: (error) => {
 
         this.isConceptDetailsLoading = false;
+        this.notificationService.show("The concept does not exist in " + this.activeRefsetCodeSystem + ".", null, 'warning', { timeOut: 0, extendedTimeOut: 0 });
       }
     });
 

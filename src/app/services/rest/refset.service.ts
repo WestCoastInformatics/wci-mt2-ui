@@ -177,8 +177,8 @@ export class RefsetService extends RestService {
         return this.get(this.contextPath + 'refset/' + refsetId + '/members', params);
     }
 
-    getMembersDetails(conceptId: string, params: any): Observable<any> {
-        return this.get(this.contextPath + 'concept/' + conceptId, params);
+    getMembersDetails(conceptId: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+        return this.get(this.contextPath + 'concept/' + conceptId, params, true, ignoreErrors, true);
     }
 
     getTaxonomySearch(refsetId: string, params: any): Observable<any> {
