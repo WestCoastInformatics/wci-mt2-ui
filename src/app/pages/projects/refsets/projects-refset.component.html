@@ -105,7 +105,6 @@
             <div [hidden]="refsetData?.length < 1">
                 <app-refset-download [isDetailPage]="true" [refsets]="refsetData"  [project]="selectedProject"></app-refset-download>
             </div>
-            {{ refsetData | json }}
             <div [hidden]="!(user?.roles?.includes('AUTHOR'))">
                 <bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
             </div>
