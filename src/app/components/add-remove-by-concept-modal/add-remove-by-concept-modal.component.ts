@@ -281,10 +281,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     closeConceptDetails() {
-        console.log("NUNO closeConceptDetails");
         this.conceptDetail = null;
         this.selectedConcept = null;
-        console.log("NUNO closeConceptDetails", this.conceptDetail, this.selectedConcept);
     }
 
     @Debounce()
