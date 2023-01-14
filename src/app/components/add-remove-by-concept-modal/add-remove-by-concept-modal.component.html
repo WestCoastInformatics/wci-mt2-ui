@@ -16,14 +16,14 @@
       <div class="row">
         <div class="add-remove-concept-hierarchy-modal-Section-container">
           <as-split direction="horizontal" gutterSize="4">
-            <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
+            <as-split-area [lockSize]="true" [size]="isConceptDetailsLoading || conceptDetail ? 500 : 100" [minSize]="37">
               <div class="refset-tool-details-members-column">
                 <!-- Search Bar -->
                 <div class="add-remove-concept-hierarchy-modal-search-bar" [class.concept-opened]="isConceptDetailsLoading || conceptSelected">
                   <mat-form-field floatLabel="never" id="addRemoveByConceptHierarchySearchInputField" class="add-remove-concept-hierarchy-modal-input-field">
                     <mat-label>Search by ID or Keyword</mat-label>
                     <input aria-label="Search by ID or Keyword" matInput #addRemoveByConceptHierarchySearchInput id="addRemoveByConceptHierarchySearchInput"
-                      [(ngModel)]="searchInput" (keyup.enter)="onTableSearchChange()" ngbAutofocus />
+                      [(ngModel)]="searchInput" (input)="onTableSearchChange(false)" ngbAutofocus />
                   </mat-form-field>
                   <span class="add-remove-concept-hierarchy-modal-cancel-search" (click)="clearSearch()">&#10005;</span>
                   <button type="button" (click)="onTableSearchChange()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button ml-3"
@@ -92,16 +92,22 @@
               </div>
             </as-split-area>
 
-            <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="37">
-              <div class="refset-tool-concept-details-column" *ngIf="isConceptDetailsLoading || conceptSelected">
+            <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 50 : 0" [minSize]="isConceptDetailsLoading || conceptDetail ? 37 : 0">
+              <div class="refset-tool-concept-details-column" *ngIf="isConceptDetailsLoading || conceptDetail">
                 <div class="row" *ngIf="isConceptDetailsLoading">
                   <div>Loading...</div>
                 </div>
 
-                <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
+                <div *ngIf="conceptDetail">
                   <div class="row align-items-center no-gutters">
-                    <div class="col refset-tool-concept-details-title-name">
-                      Concept Details
+                    <div class="col refset-tool-concept-details-title-name concept-details-header">
+                        Concept Details
+                    </div>
+                    <div class="text-right close-button">
+                        <mat-icon (click)="closeConceptDetails()" aria-hidden="false"
+                            class="refset-tool-table-action-icon concept-details-header" aria-label="Close Concept Details" title="Close Concept Details">
+                            close
+                        </mat-icon>
                     </div>
                   </div>
 

@@ -280,6 +280,13 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         //this.closeModal();
     }
 
+    closeConceptDetails() {
+        console.log("NUNO closeConceptDetails");
+        this.conceptDetail = null;
+        this.selectedConcept = null;
+        console.log("NUNO closeConceptDetails", this.conceptDetail, this.selectedConcept);
+    }
+
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
 
