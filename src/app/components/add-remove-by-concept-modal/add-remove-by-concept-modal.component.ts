@@ -18,6 +18,7 @@ import { Constants } from "src/app/utilities/constants.utility";
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from "src/app/services/notification.service";
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: "add-remove-by-concept-modal",
@@ -325,5 +326,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
                 }
             });
         }
+    }
+
+    openInNewWindow(conceptId: string): void {
+        const snomedBrowserUrl =
+            environment['snomedBrowserUrl'] +
+            '&conceptId1=' +
+            conceptId +
+            '&edition=' +
+            this.refset.edition?.branch;
+        window.open(snomedBrowserUrl);
     }
 }
