@@ -289,7 +289,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     @Debounce()
     onTableSearchChange(showLoadingSpinner = true) {
 
-        if (CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+        if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 
             if (showLoadingSpinner) {
                 this.loadingSpinner.emit(true);

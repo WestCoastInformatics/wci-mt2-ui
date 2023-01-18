@@ -23,7 +23,7 @@
                   <mat-form-field floatLabel="never" id="addRemoveByConceptHierarchySearchInputField" class="add-remove-concept-hierarchy-modal-input-field">
                     <mat-label>Search by ID or Keyword</mat-label>
                     <input aria-label="Search by ID or Keyword" matInput #addRemoveByConceptHierarchySearchInput id="addRemoveByConceptHierarchySearchInput"
-                      [(ngModel)]="searchInput" (input)="onTableSearchChange(false)" ngbAutofocus />
+                      [(ngModel)]="searchInput" (input)="onTableSearchChange()" ngbAutofocus />
                   </mat-form-field>
                   <span class="add-remove-concept-hierarchy-modal-cancel-search" (click)="clearSearch()">&#10005;</span>
                   <button type="button" (click)="onTableSearchChange()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button ml-3"
