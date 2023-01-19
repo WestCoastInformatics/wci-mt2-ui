@@ -613,14 +613,14 @@ button.refset-tool-table-action-icon {
   height: 300px;
 }
 
-.ag-overlay {
-  .ag-overlay-panel {
-    .ag-overlay-wrapper {
-      .ag-overlay-no-rows-center {
-        padding-top: 8.5em
-      }
-    }
-  }
+.ag-overlay-wrapper {
+    align-items: normal  !important;
+}
+
+.ag-overlay-no-rows-center, .ag-overlay-loading-center {
+    padding-top: 8rem;
+    margin-top: 20px;
+    height: 2rem;
 }
 
 .ag-theme-alpine {
