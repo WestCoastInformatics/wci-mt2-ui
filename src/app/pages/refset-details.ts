@@ -862,7 +862,7 @@ export class RefsetDetails implements OnInit {
                 this.taxonomySearchResults = [];
                 this.taxonomySearchGridApi?.showNoRowsOverlay();
                 this.taxonomySearchGridApi?.setRowData([]);
-                this.toggleLoadingSpinner(false);
+                //this.toggleLoadingSpinner(false);
             }
         });
     }
@@ -910,7 +910,8 @@ export class RefsetDetails implements OnInit {
 
     onTaxonomySearchGridCellClick = (event) => {
 
-        this.toggleLoadingSpinner(true)
+        //this.toggleLoadingSpinner(true);
+        this.taxonomySearchGridApi.showLoadingOverlay();
         const selectedRows = this.taxonomySearchGridApi?.getSelectedRows();
         let selectedConcept;
 
@@ -925,7 +926,8 @@ export class RefsetDetails implements OnInit {
                 this.goToTaxonomyConcept(selectedConcept.code, result.parents);
             });
         } catch {
-            this.toggleLoadingSpinner(false)
+            this.taxonomySearchGridApi.hideLoadingOverlay();
+            //this.toggleLoadingSpinner(false)
         }
     }
 
@@ -948,7 +950,12 @@ export class RefsetDetails implements OnInit {
     }
 
     goToTaxonomyConcept(selectedConcept, selectedPath) {
-        this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, undefined, true, true);
+
+        const afterNodeFound = (node) => {
+            this.taxonomySearchGridApi.hideOverlay();
+        };
+
+        this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, afterNodeFound, true, true);
         this.toggleLoadingSpinner(false)
     }
 
