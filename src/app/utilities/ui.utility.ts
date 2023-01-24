@@ -500,7 +500,7 @@ export class UiUtility {
 
 		} else if (processType == ('comparison')) {
 
-			title = 'Reference Set Upgrade Comparison Launch Notification';
+			title = 'Reference Set Comparison Launch Notification';
 			message += 'but do not refresh the page or you will need to repeat the process.';
 			let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
 			buttons.push(showComparisonButton);
