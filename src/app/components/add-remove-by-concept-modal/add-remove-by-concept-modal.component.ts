@@ -5,6 +5,8 @@ import {
     OnInit,
     Output,
     SimpleChanges,
+    TemplateRef,
+    ViewChild,
 } from "@angular/core";
 import { ThemePalette } from "@angular/material/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -19,6 +21,9 @@ import { UiUtility } from "src/app/utilities/ui.utility";
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { NotificationService } from "src/app/services/notification.service";
 import { environment } from 'src/environments/environment';
+import { PaginationComponent } from "../pagination/pagination.component";
+import { CategoryFilterComponent } from "../categoryFilter/category-filter.component";
+import { TemplateRenderer } from "../cellRenderers/template.renderer";
 
 @Component({
     selector: "add-remove-by-concept-modal",
@@ -28,14 +33,12 @@ import { environment } from 'src/environments/environment';
 export class AddRemoveByConceptModalComponent implements OnInit {
 
     searchInput: string;
-    searchResults = [];
     displayedColumns: string[] = ["memberOfRefset", "name", "description"];
-    dataSource = [];
+    data: any;
     conceptIdArray = [];
     color: ThemePalette = "primary";
     checked = false;
     showActiveConceptsOnly = true;
-    initialResults = [];
     selectedRowIndex = -1;
     selectedTaxonomyLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ":" + Constants.DEFAULT_LANGUAGE_TYPE;
     taxonomyOptions: TreeOptions = {
@@ -44,7 +47,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     };
     conceptDescriptions: any;
     editMode = true;
-    showResults = false;
     conceptSelected: boolean;
     showLoadingSpinner = false;
     isConceptDetailsLoading = false;
@@ -60,12 +62,24 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     isLocked = false;
     showNoResultsLabel = false;
     eclString: any;
+    gridApi: any;
+    gridColumnDefs = [];
+    gridOptions: any;
+    gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+    originalGridParams: any;
+    showTable = false;
+    resultsDisplay = 'none';
 
     @Input() refset: any;
     @Input() processChangedMemberFunction: Function;
     @Output() loadingSpinner = new EventEmitter<boolean>(true);
     @Output() changeLockedStatus = new EventEmitter<boolean>(true);
     @Output() reloadData = new EventEmitter<boolean>(true);
+
+    @ViewChild('conceptSearchPaging') paginationComponent: PaginationComponent;
+    @ViewChild('conceptAddRemoveSection') conceptAddRemoveSection: TemplateRef<any>;
+    @ViewChild('conceptCodeSection') conceptCodeSection: TemplateRef<any>;
+    @ViewChild('conceptFsnSection') conceptFsnSection: TemplateRef<any>;
 
     constructor(
         private readonly modalService: NgbModal,
@@ -97,14 +111,15 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     filterActiveConcepts(): void {
 
-        if (this.showActiveConceptsOnly) {
+        let filters = this.gridApi.getFilterModel();
 
-            this.dataSource = this.dataSource.filter((item) => {
-                return item.active ? item : undefined;
-            });
+        if (this.showActiveConceptsOnly) {
+            filters.active = { filterType: 'text', type: 'equals', filter: true };
         } else {
-            this.dataSource = this.initialResults;
+            delete filters.active;
         }
+
+        this.gridApi.setFilterModel(filters);
     }
 
     addRemoveConcept(params: any): void {
@@ -146,6 +161,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
     openAddRemoveModal(addRemoveConceptHierarchyModal: NgbModal) {
 
+        this.showTable = false;
+        this.data = undefined;
+
         this.openedModel = this.modalService.open(addRemoveConceptHierarchyModal, {
             windowClass: "add-remove-concept-hierarchy-modal-size",
             animation: true,
@@ -162,17 +180,141 @@ export class AddRemoveByConceptModalComponent implements OnInit {
             keyboard: false,
         });
 
+        this.gridOptions = {
+            context: { componentParent: this },
+            pagination: true,
+            suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+            suppressPaginationPanel: true,
+            paginationPageSize: this.gridPaging.pageSize,
+            rowSelection: 'single',
+            enableCellTextSelection: true,
+            onCellClicked: this.onGridCellClick,
+            onGridReady: this.onGridReady,
+            frameworkComponents: {
+                templateRenderer: TemplateRenderer,
+                'categoryFilterComponent': CategoryFilterComponent
+            },
+            defaultColDef: {
+                sortable: true,
+                resizable: true,
+                sortingOrder: ['asc', 'desc'],
+                suppressMenu: true,
+                filter: true,
+                floatingFilter: true,
+                floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true },
+            },
+            enableBrowserTooltips: true,
+            rowClassRules: {
+                refset_tool_grid_inactive_row: function (params) {
+
+                    let inactivatedRow = false;
+
+                    if (params.data) {
+                        inactivatedRow = params.data.active == false;
+                    }
+
+                    return inactivatedRow;
+                },
+            },
+        };
+
+        this.gridColumnDefs = [
+            { field: 'active', colId: 'active', flex: 1, headerName: '', maxWidth: 40, cellClass: 'refset-tool-details-column-remove-icon', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptAddRemoveSection }, sort: false, filter: false },
+            { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 65, maxWidth: 200, cellClass: 'refset-tool-details-column-concept-id', tooltipField: 'code', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }, unSortIcon: true },
+            { field: 'fsn', colId: 'fsn', flex: 1, headerName: 'Concept Name', minWidth: 65, cellClass: 'refset-tool-details-column-description', tooltipField: 'fsn', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptFsnSection }, unSortIcon: true },
+        ]; 
+
+        this.showTable = true;
+    }
+
+    onGridReady = (gridReadyParams) => {
+
+        this.originalGridParams = gridReadyParams;
+        this.gridApi = gridReadyParams.api;
+        this.loadingSpinner.emit(true);
+
+        this.refsetService.getConceptSearch(this.refsetInternalId, `limit=200&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({
+            next: (results) => {
+
+                this.data = results;
+                let pageNumber = 1;
+
+                if (results.items.length == 0) {
+
+                    this.gridApi.showNoRowsOverlay();
+                    this.gridApi.setRowData([]);
+
+                    if (pageNumber > 1) {
+
+                        this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+                        this.gridPaging.totalKnown = true;
+                        this.paginationComponent.goToPage(pageNumber - 1);
+                    }
+
+                    return;
+                }
+
+                UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
+                UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
+
+                // tslint:disable-next-line: no-unused-expression
+                if (results.items.length) {
+                    this.changeModalSize();
+                }
+
+                this.filterActiveConcepts();
+
+                this.loadingSpinner.emit(false);
+            },
+            error: (error) => {
+                this.loadingSpinner.emit(false);
+            }
+        });
+    }
+
+    onGridCellClick = (event) => {
+
+        this.conceptSelected = true;
+        const selectedRows = this.gridApi.getSelectedRows();
+        let selectedId: string;
+
+        selectedRows.forEach(function (selectedRow, index) {
+            selectedId = selectedRow.code;
+        });
+
+        const selectedConcept = this.getGridRow(selectedId);
+        this.loadConceptDetail(selectedConcept);
+    }
+
+    getGridRow(conceptId: string) {
+
+        let concept;
+
+        for (let i = 0; i < this.data.items.length; i++) {
+
+            if (this.data.items[i].code == conceptId) {
+
+                concept = this.data.items[i];
+                break;
+            }
+        }
+
+        return concept;
+    }
+
+    getGridPageSize() {
+
+        let size = this.gridPaging.pageSize;
+
+        if (this.gridApi) {
+            size = this.gridApi.paginationGetPageSize();
+        }
+
+        return size;
     }
 
     closeModal() {
         this.openedModel.dismiss();
-    }
-
-    selectConcept(concept: any): void {
-
-        this.conceptSelected = true;
-        this.selectedConcept = concept;
-        this.loadConceptDetail(concept);
     }
 
     loadConceptDetail(concept) {
@@ -247,9 +389,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.isLocked = false;
         this.conceptSelected = false;
         this.conceptDetail = null;
-        this.showResults = false;
-        this.showNoResultsLabel = false;
-        this.dataSource = [];
+        this.showTable = false;
+        this.data = undefined;
+        this.resultsDisplay = 'none';
     }
 
     clearSearch(): void {
@@ -273,8 +415,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         this.sendChangeLockedStatus(true);
         this.showLoadingSpinner = true;
 
-        for (var i = 0; i < this.dataSource.length; i++) {
-            this.conceptIdArray.push(this.dataSource[i].code);
+        for (var i = 0; i < this.data.items.length; i++) {
+            this.conceptIdArray.push(this.data.items[i].code);
         }
 
         RefsetUtility.addRemoveMembersByList(this.refset.id, this.refset.refsetId, this.conceptIdArray.join(), type, this.processChangedMemberEffects, this.notificationService, this.refsetService, this.router);
@@ -287,44 +429,12 @@ export class AddRemoveByConceptModalComponent implements OnInit {
     }
 
     @Debounce()
-    onTableSearchChange(showLoadingSpinner = true) {
+    onTableSearchChange() {
 
         if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 
-            if (showLoadingSpinner) {
-                this.loadingSpinner.emit(true);
-            }
-
-            this.refsetService.getConceptSearch(this.refsetInternalId, `limit=200&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({
-                next: (results) => {
-
-                    this.dataSource = results.items;
-                    this.initialResults = this.dataSource;
-
-                    // tslint:disable-next-line: no-unused-expression
-                    if (results.items.length) {
-
-                        this.changeModalSize();
-                        this.showResults = true;
-                        this.showNoResultsLabel = false;
-                    } else {
-
-                        this.showResults = false;
-                        this.showNoResultsLabel = true;
-                    }
-                    this.filterActiveConcepts();
-
-                    if (showLoadingSpinner) {
-                        this.loadingSpinner.emit(false);
-                    }
-                },
-                error: (error) => {
-
-                    this.searchResults = [];
-                    this.showResults = false;
-                    this.loadingSpinner.emit(false);
-                }
-            });
+            this.resultsDisplay = 'block';
+            this.onGridReady(this.originalGridParams);
         }
     }
 

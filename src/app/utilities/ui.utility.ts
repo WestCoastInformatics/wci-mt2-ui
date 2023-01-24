@@ -485,6 +485,7 @@ export class UiUtility {
 		// set a small delay so the original call has some time to process
 		CodeUtility.delay();
 
+		let title = 'Reference Set Upgrade Analysis Launch Notification';
 		let message = 'Reference Set ' + refsetId + ' has started the ' + processType + ' process. The Reference Set is locked until the operation completes. You can close this message and do other operations on the site, ';
 		let viewRefsetButton: IToastButton = { id: 'view', title: 'View Reference Set', data: {} };
 		let buttons = [viewRefsetButton];
@@ -499,6 +500,7 @@ export class UiUtility {
 
 		} else if (processType == ('comparison')) {
 
+			title = 'Reference Set Upgrade Comparison Launch Notification';
 			message += 'but do not refresh the page or you will need to repeat the process.';
 			let showComparisonButton: IToastButton = { id: 'comparison', title: 'Show Comparison', data: {} };
 			buttons.push(showComparisonButton);
@@ -536,7 +538,7 @@ export class UiUtility {
 						setTimeout(checkIfFinished, callDelay);
 					} else {
 
-						let title = 'Reference Set Upgrade Analysis Launch Notification';
+						
 						let notificationType = 'success';
 						let previousNotifications = notificationService.getNotificationsForRefset(refsetId, title);
 

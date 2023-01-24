@@ -11,7 +11,7 @@
       <span aria-hidden="true" class="dialog-close-x">&times;</span>
     </button>
   </div>
-  <div class="container-fluid add-remove-concept-hierarchy-modal-container-fluid">
+  <div class="container-fluid">
     <div class="modal-body add-remove-concept-hierarchy-modal-body refset-tool-lockable">
       <div class="row">
         <div class="add-remove-concept-hierarchy-modal-Section-container">
@@ -35,60 +35,38 @@
                     " #addRemoveByConceptHierarchySearchEclButton class="btn btn-primary i18n ml-1 ecl-button rounded btn-wide-font" unfocus>
                     ECL Builder
                   </button>
-                  <div *ngIf="!showResults && showNoResultsLabel">
-                    No matching results.
-                  </div>
-                  <section *ngIf="showResults" class="add-remove-concept-hierarchy-modal-active-slider-section">
-                    <div class="add-remove-concept-hierarchy-modal-results-title" aria-label="Search results">
-                      Search Results ({{ dataSource?.length }})
-                    </div>
-                    <mat-slide-toggle class="add-remove-concept-hierarchy-modal-active-slider" [color]="color" [checked]="!checked" aria-label="Display Active Concepts Only"
-                      (change)="toggleDisplayActiveConcepts($event)">
-                      Display Active Concepts Only
-                    </mat-slide-toggle>
-                  </section>
+                </div>
+              </div>
+
+              <section [style.display]="resultsDisplay" class="add-remove-concept-hierarchy-modal-active-slider-section">
+
+                <div class="add-remove-concept-hierarchy-modal-results-title" aria-label="Search results">
+                  Search Results ({{ data?.items?.length }})
                 </div>
 
-                <div class="add-remove-concept-hierarchy-modal-results-container" *ngIf="showResults">
-                  <div class="add-remove-concept-hierarchy-modal-table">
-                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                      <ng-container matColumnDef="memberOfRefset">
-                        <td class="add-remove-concept-hierarchy-modal-table-first-column" mat-cell *matCellDef="let concept">
-                          <add-remove-concepts-icons [concept]="concept" [isParentConcept]="false" [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)">
-                          </add-remove-concepts-icons>
-                        </td>
-                      </ng-container>
+                <mat-slide-toggle class="add-remove-concept-hierarchy-modal-active-slider" [color]="color" [checked]="!checked" aria-label="Display Active Concepts Only"
+                  (change)="toggleDisplayActiveConcepts($event)">
+                  Display Active Concepts Only
+                </mat-slide-toggle>
 
-                      <!-- Name Column -->
-                      <ng-container matColumnDef="name">
-                        <td class="add-remove-concept-hierarchy-modal-table-second-column" mat-cell *matCellDef="let concept" (click)="selectConcept(concept)">
-                          <div class="add-remove-concept-hierarchy-modal-table-second-column-data">
-                            <img *ngIf="concept?.defined" width="13px" height="12.75px" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-                            <img *ngIf="!concept?.defined" width="13px" height="12.75px" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
-                            <div class="concept-name" [class.bold-if-member]="concept?.memberOfRefset" [class.greyed-if-not-member]="
-                                !concept?.memberOfRefset
-                              " title="{{ concept?.name }}" aria-label="{{ concept?.name }}">
-                              {{ concept?.id }} |{{ concept?.fsn }}|
-                            </div>
-                          </div>
-                        </td>
-                      </ng-container>
+              </section>
 
-                      <!-- Descriptions Column -->
-                      <ng-container matColumnDef="description">
-                        <td class="add-remove-concept-hierarchy-modal-table-third-column" mat-cell *matCellDef="let concept" (click)="selectConcept(concept)"
-                          title="{{ concept?.descriptions[0]?.term }}" aria-label="{{ concept?.descriptions[0]?.term }}">
-                          {{ concept?.descriptions[0]?.term }}
-                        </td>
-                      </ng-container>
+              <div class="container-fluid" [style.display]="resultsDisplay">
 
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="add-remove-concept-hierarchy-modal-results-row" [ngClass]="{
-                          'active-concept': selectedRowIndex == row.id,
-                          refset_tool_inactive_row: !row.active
-                        }" (click)="highlight(row)"></tr>
-                    </table>
-                  </div>
+                <div *ngIf="showTable" class="add-remove-concept-hierarchy-modal-table">
+
+                  <ag-grid-angular #conceptSearchTable style="max-height:350px"
+                    class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
+                    [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
+                  </ag-grid-angular>
+
                 </div>
+
+                <app-pagination *ngIf="showTable" #conceptSearchPaging [pageSize]="gridPaging.pageSize" [gridOptions]="gridOptions"
+                  [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown"
+                  [manualStateRefresh]="gridPaging.manualStateRefresh" [isDetailPage]="false" [refsetId]="refset?.refsetId">
+                </app-pagination>
+
               </div>
             </as-split-area>
 
@@ -262,11 +240,11 @@
   </div>
 
   <div class="modal-footer rt2-modal-footer refset-tool-lockable">
-    <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="dataSource.length == 0" (click)="addRemoveAllMembers('add')" mat-raised-button color="green"
+    <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="data?.items?.length == 0" (click)="addRemoveAllMembers('add')" mat-raised-button color="green"
       aria-hidden="false" class="refset-tool-action-button" aria-label="Add All" title="Add All" ng-reflect-color="green">
       Add All
     </button>
-    <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="dataSource.length == 0" (click)="addRemoveAllMembers('remove')" mat-raised-button color="red"
+    <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="data?.items?.length == 0" (click)="addRemoveAllMembers('remove')" mat-raised-button color="red"
       aria-hidden="false" class="refset-tool-action-button" aria-label="Remove All" title="Remove All" ng-reflect-color="red">
       Remove All
     </button>
@@ -281,4 +259,27 @@
     [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" [processChangedMemberFunction]="processChangedMemberEffects"
     (changeLockedStatus)="sendChangeLockedStatus($event)" (processChangedMemberEffects)="processChangedMemberEffects($event)">
   </add-remove-concepts>
+</ng-template>
+
+<!-- Add Remove Templates -->
+<ng-template #conceptAddRemoveSection let-params>
+  <add-remove-concepts-icons class="mb--2" [concept]="params?.data" [isParentConcept]="false"
+    [refsetType]="refset?.type" (processSelection)="addRemoveConcept($event)">
+  </add-remove-concepts-icons>
+</ng-template>
+
+<!-- Concept Code Templates -->
+<ng-template #conceptCodeSection let-params>
+  <img *ngIf="params?.data?.defined" width="13px" height="12.75px" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+  <img *ngIf="!params?.data?.defined" width="13px" height="12.75px" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
+  <span [class.bold-if-member]="params?.data?.memberOfRefset" [class.greyed-if-not-member]="!params?.data?.memberOfRefset" >
+    {{ params?.data?.code }}
+  </span>
+</ng-template>
+
+<!-- Concept FSN Templates -->
+<ng-template #conceptFsnSection let-params>
+  <span [class.bold-if-member]="params?.data?.memberOfRefset" [class.greyed-if-not-member]="!params?.data?.memberOfRefset" >
+    {{ params?.data?.fsn }}
+  </span>
 </ng-template>
