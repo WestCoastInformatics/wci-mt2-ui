@@ -1,0 +1,22 @@
+.date-selector {
+    margin-top: 25px;
+
+    mat-form-field {
+      visibility: hidden;
+    }
+}
+
+.date-filter-select {
+  border: solid;
+  border-width: 1px;
+  border-color: #666;
+  padding-top: 10px;
+  width: 125px;
+  .mat-select-arrow-wrapper {
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
+  .mat-form-field-infix {
+    top: 7px;
+  }
+}

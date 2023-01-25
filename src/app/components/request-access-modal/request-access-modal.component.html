@@ -1,4 +1,4 @@
-<button mat-menu-item (click)="openModal(formDialog)" title="Request Access" aria-label="Request Access"
+<button class="rt2-picklist-btn" (click)="openModal(formDialog)" title="Request Access" aria-label="Request Access"
         *ngIf="canRequest">
     Request Access
 </button>
@@ -12,7 +12,7 @@
             <span aria-hidden="true" class="dialog-close-x">&times;</span>
         </button>
     </div>
-    <div class="modal-body refset-tool-lockable">
+    <div class="modal-body rt2-lockable">
         <label class="modal-label-description">
             Request access to the underlying project for "{{this.refset?.name}}" which is
             "{{this.refset?.project?.name}}"
@@ -34,14 +34,14 @@
         </table>
 
     </div>
-    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+    <div class="modal-footer rt2-modal-footer rt2-lockable">
         <button type="button" [disabled]="description === ''" (click)="sendRequest()"
-                mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
+                mat-raised-button color="green" aria-hidden="false" class="rt2-action-button"
                 aria-label="Send Email" title="Send Email">
             Send Email
         </button>
         <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 
-          class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
+          class="ml-3 rt2-action-button default-btn" aria-label="Cancel" title="Cancel">
             Cancel
         </button>
     </div>

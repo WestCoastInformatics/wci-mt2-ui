@@ -9,7 +9,8 @@ import { Location } from '@angular/common';
 
 @Component({
     selector: 'personal-landing',
-    templateUrl: './landing.component.html'
+    templateUrl: './landing.component.html',
+    styleUrls: ['landing.component.scss']
 })
 export class PersonalLandingComponent implements OnInit {
 

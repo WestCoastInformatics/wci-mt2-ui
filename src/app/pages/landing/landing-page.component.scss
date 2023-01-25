@@ -1,210 +1,283 @@
+// landing-page
+@import "~src/variables.scss";
 @font-face {
-    font-family: 'museo100';
-    src: url(/assets/landing/fonts/museo-100-webfont.woff2) format("woff2"),url(/assets/landing/fonts/museo-100-webfont.woff) format("woff");
-    font-weight: normal;
-    font-style: normal
+  font-family: 'museo100';
+  src: url(/assets/landing/fonts/museo-100-webfont.woff2) format("woff2"),url(/assets/landing/fonts/museo-100-webfont.woff) format("woff");
+  font-weight: normal;
+  font-style: normal
 }
 
 @font-face {
-    font-family: 'museo300';
-    src: url(/assets/landing/fonts/museo-300-webfont.woff2) format("woff2"),url(/assets/landing/fonts/museo-300-webfont.woff) format("woff");
-    font-weight: normal;
-    font-style: normal
+  font-family: 'museo300';
+  src: url(/assets/landing/fonts/museo-300-webfont.woff2) format("woff2"),url(/assets/landing/fonts/museo-300-webfont.woff) format("woff");
+  font-weight: normal;
+  font-style: normal
 }
+
 body {
-    font-family: Roboto, "Helvetica Neue", sans-serif !important;
-    font-weight: 300;
-    font-size: 18px;
-    line-height: 26px;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 26px;
 }
 $main-color: #00a9e0;
 $secondary-color : #434a55;
 $heading-font: 'museo100',sans-serif;
 
 .heading{
-    font-family: $heading-font;
-    font-weight: 100;
-    font-size: 30px;
-    line-height: 36px;
+  font-family: $heading-font;
+  font-weight: 100;
+  font-size: 30px;
+  line-height: 36px;
 }
 .landing-page-container{
-    position: relative;
-    display: block;
-    padding: 3rem;
-    height: fit-content;
-    background: #fff;
-    margin: 0;
+  position: relative;
+  display: block;
+  padding: 3rem;
+  height: fit-content;
+  background: #fff;
+  margin: 0;
 }
 .landing-page-container:before {
-    z-index: 0;
-    content: " ";
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    background-image: url(/assets/landing/images/header.jpg);
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    background-size: cover;
+  z-index: 0;
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background-image: url(/assets/landing/images/header.jpg);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
 }
 .landing-page-container > .container{
-    position: relative;
-    z-index: 1;
-    color: #000;
+  position: relative;
+  z-index: 1;
+  color: #000;
 }
 .nav-bar{
-    background-color: #e6e9ee;
+  background-color: #e6e9ee;
 }
 .main-nav{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
-    padding-inline-start: 0;
-    list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  padding-inline-start: 0;
+  list-style: none;
 }
 .main-nav li{
-    display: inline-block;
+  display: inline-block;
 }
 .main-nav a{
-    color: $main-color;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-weight: 100;
-    font-size: 18px;
-    line-height: 23px;
-    padding: 15px 10px;
-    cursor: pointer;
-    display: block;
+  color: $main-color;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 100;
+  font-size: 18px;
+  line-height: 23px;
+  padding: 15px 10px;
+  cursor: pointer;
+  display: block;
 }
 .main-nav li:first-child a{
-    padding-left: 0;
+  padding-left: 0;
 }
 .main-nav a:hover{
-    color: #006181;
+  color: #006181;
 }
 .main-nav .search{
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    font-size: 14px;
-    justify-content: center;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  font-size: 14px;
+  justify-content: center;
 }
 .main-nav .search .search-form{
-    position: relative;
+  position: relative;
 }
 .main-nav .search input{
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    padding: 5px 25px 5px 5px;
-    line-height: 1;
-    border-radius: 5px;
-    border: 1px solid darkgray;
-    width: 420px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 5px 25px 5px 5px;
+  line-height: 1;
+  border-radius: 5px;
+  border: 1px solid darkgray;
+  width: 420px;
 }
 .main-nav .search i{
-    margin-left: -20px;
-    display: inline-block;
-    color: darkgray;
+  margin-left: -20px;
+  display: inline-block;
+  color: darkgray;
 }
 .heading-3{
-    margin-top: 18px;
-    margin-bottom: 18px;
+  margin-top: 18px;
+  margin-bottom: 18px;
 }
 .heading-4{
-    font-weight: 300;
-    font-size: 20px;
-    color: $secondary-color;
-    margin-bottom: 30px;
+  font-weight: 300;
+  font-size: 20px;
+  color: $secondary-color;
+  margin-bottom: 30px;
 }
 .text-main{
-    color: $main-color;
+  color: $main-color;
 }
 .text-secondary{
-    color: $secondary-color;
+  color: $secondary-color;
 }
 .panel{
-    padding: 20px;
+  padding: 20px;
 }
 .panel-well{
-    background-color: #f5f6fb;
+  background-color: #f5f6fb;
 }
 .dotted{
-    border: 0;
-    outline: 0;
-    border-bottom: 2px dotted #646e78;
+  border: 0;
+  outline: 0;
+  border-bottom: 2px dotted #646e78;
 }
+
 .panel-footer{
-    background-color: $main-color;
-    padding: 10px;
-    text-align: right;
-    font-size: 20px;
-    font-family: $heading-font;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-    i{
-        margin-left: 15px;
-    }
+  background-color: $main-color;
+  padding: 10px;
+  text-align: right;
+  font-size: 20px;
+  font-family: $heading-font;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  i{
+      margin-left: 15px;
+  }
 }
+
 .section{
-    padding-top: 30px;
-    padding-bottom: 30px;
-    font-weight: 300;
-    font-size: 18px;
-    line-height: 26px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 26px;
 }
+
 .page-section:nth-child(odd){
-    background-color: #e6e9ee;
+  background-color: #e6e9ee;
 }
+
 .panel.height-auto{
-    height: calc(100% - 46px);
+  height: calc(100% - 46px);
 }
-.news-card{
-    img{
-        width: 100%;
-    }
-    .position-absolute{
-        top: 0;
-    }
+
+.news-card {
+  img{
+      width: 100%;
+  }
+  .position-absolute{
+      top: 0;
+  }
 }
-.footer{
-    display: flex;
-    flex-wrap: wrap-reverse;
-    justify-content: center;
+
+
+
+.landing-page-info-section {
+  grid-area: landing-page-info-section;
+  padding-top: 30px;
+}
+
+.landing-page-login-section {
+  grid-area: landing-page-login-section;
+  justify-self: center;
+  padding-top: 20px;
+}
+
+.landing-page-text-1 {
+  font-size: 19px;
+}
+
+
+.landing-page-guest-access {
+  text-align-last: center;
+}
+
+.landing-page-guest-access-button {
+  background-color: $main-color;
+  color: white;
+  width: 220px;
+  height: 25px;
+  font-size: 14px;
+  font-family: inherit;
+  letter-spacing: .1rem;
+}
+
+.landing-page-guest-has-account {
+  color: black;
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 50px;
+  margin-left: 275px;
+}
+
+.landing-page-log-in-link {
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: underline;
+  color: rgb(50, 50, 212);
+}
+
+.landing-page-tool-logo {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  margin-top: -6px;
+}
+
+
+.landing-page-checkbox {
+  color: black;
 }
 
 @media (max-width: 575px) {
-    .header-title {
-        letter-spacing: 1px;
-        font-size: small;
-    }
-    .main-nav .search{
+  .main-nav .search {
+      .search-form{
+          flex-grow: 1;
+          input{
+              width: 100%;
+          }
+      }
+  }
+  .videos-section{
+      margin-top: 20px;
+  }
+}
 
-        //padding-bottom: 15px;
+.landing-page-center {
+  text-align: center;
+}
 
-        .search-form{
-            flex-grow: 1;
-            input{
-                width: 100%;
-            }
-        }
-    }
-    .panel.height-auto{
-        height: auto;
-    }
-    .videos-section{
-        margin-top: 20px;
-    }
-    #bg-landing-footer.footer{
-        height: auto !important;
-    }
-    .last-section{
-        padding-bottom: 80px;
-    }
+.landing-page-container {
+  display: grid;
+  grid-template-columns: 0.7fr 1.6fr 0.7fr;
+  grid-template-rows: 0.3fr 1.3fr 1.4fr;
+  grid-auto-columns: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "landing-page-top-bar-left landing-page-top-bar-center landing-page-top-bar-right"
+    ". landing-page-info-section ."
+    ". landing-page-login-section .";
+  background-image: url("/assets/rt2-landing-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  margin-bottom: -6rem;
+  overflow: unset;
+  color: white;
+  font-family: $standard_font_family;
+  letter-spacing: .1rem;
 }

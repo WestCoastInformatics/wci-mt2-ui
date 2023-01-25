@@ -1,5 +1,5 @@
-<button type="button" mat-raised-button color="primary" aria-hidden="false" #adjudicateUpgradeButton class="refset-tool-action-button refset-action-button"
-  (click)="openAdjudicateUpgradeModal(adjudicateUpgradeDialog)" aria-label="Adjudicate Upgrade" title="Adjudicate Upgrade" ng-reflect-color="primary">Continue Upgrade</button>
+<button type="button" color="primary" aria-hidden="false" #adjudicateUpgradeButton class="rt2-btn rt2-action-btn"
+  (click)="openAdjudicateUpgradeModal(adjudicateUpgradeDialog)" aria-label="Adjudicate Upgrade" title="Adjudicate Upgrade">Continue Upgrade</button>
 <ng-template #adjudicateUpgradeDialog class="modal-dialog-centered" let-modal>
     <ng-container>
         <div class="modal-header rt2-modal-header">
@@ -10,7 +10,7 @@
                 <span aria-hidden="true" class="dialog-close-x">&times;</span>
             </button>
         </div>
-        <div class="adjudicate-upgrade-container-fluid refset-tool-lockable">
+        <div class="adjudicate-upgrade-container-fluid rt2-lockable">
             <div class="modal-body adjudicate-upgrade-modal-body">
                 <div class="adjudicate-upgrade-modal-body-header">
                     <button ngbAutofocus class="unfocus-btn"></button>
@@ -35,14 +35,14 @@
                 <div class="adjudicate-upgrade-modal-body-mid">
                     <as-split direction="horizontal" gutterSize="4">
                         <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
-                            <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" id="adjudication-list"
-                              [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)" style="width: 100%">
+                            <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct adjudication-list"
+                              [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)">
                             </ag-grid-angular>
                         </as-split-area>
 
                         <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="37">
 
-                            <div class="refset-tool-concept-details-column" *ngIf="isConceptDetailsLoading || conceptSelected">
+                            <div class="rt2-concept-details-column" *ngIf="isConceptDetailsLoading || conceptSelected">
 
                                 <div class="row" *ngIf="isConceptDetailsLoading">
                                     <div>Loading...</div>
@@ -51,39 +51,39 @@
                                 <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
 
                                     <div class="row align-items-center no-gutters">
-                                        <div class="col refset-tool-concept-details-title-name">
+                                        <div class="col rt2-concept-details-title-name">
                                             Concept Details
                                         </div>
                                     </div>
 
                                     <!-- Parents Section -->
-                                    <div class="container-fluid refset-tool-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+                                    <div class="container-fluid rt2-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
 
                                         <div class="row">
-                                            <div class="refset-tool-concept-details-section-title">
+                                            <div class="rt2-concept-details-section-title">
                                                 Parents</div>
                                         </div>
 
                                         <div class="row">
-                                            <div class=" refset-tool-concept-details-no-relationships" *ngIf="conceptDetailParents?.length == 0">
+                                            <div class=" rt2-concept-details-no-relationships" *ngIf="conceptDetailParents?.length == 0">
                                                 No parents
                                             </div>
                                         </div>
 
-                                        <div class="row refset-tool-concept-details-taxonomy-item" *ngFor="let parent of conceptDetailParents">
+                                        <div class="row rt2-concept-details-taxonomy-item" *ngFor="let parent of conceptDetailParents">
 
-                                            <div class="refset-tool-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
+                                            <div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
 
                                                 <add-remove-concepts-icons [concept]="parent" [isParentConcept]="true" [refsetType]="refset?.type"
                                                   (processSelection)="addRemoveConcept($event)">
                                                 </add-remove-concepts-icons>
 
                                                 <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-                                                <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="refset-tool-logo p-0"
+                                                <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0"
                                                   src="/assets/unlinedTaxonomyIcon.png" />
                                             </div>
 
-                                            <div class="refset-tool-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
+                                            <div class="rt2-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
                                               [class.greyed-if-not-member]="!parent?.memberOfRefset">
                                                 <span *ngIf="this.taxonomyOptions?.useFsn">{{
                                                     parent?.fsn.trim()
@@ -98,41 +98,40 @@
                                     </div>
 
                                     <!-- Details Section -->
-                                    <div class="container-fluid refset-tool-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size"
-                                      style="height: fit-content">
+                                    <div class="container-fluid rt2-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size h-fit-content">
                                         <div class="row">
 
                                             <!-- Info Section -->
-                                            <div class="refset-tool-concept-details-concept-info-column"
-                                              [class.refset-tool-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
+                                            <div class="rt2-concept-details-concept-info-column"
+                                              [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
                                                 <div class="container-fluid">
 
                                                     <!-- Name -->
-                                                    <div class="row refset-tool-concept-details-concept-title-row">
-                                                        <div class="refset-tool-concept-details-taxonomy-icon">
+                                                    <div class="row rt2-concept-details-concept-title-row">
+                                                        <div class="rt2-concept-details-taxonomy-icon">
                                                         </div>
-                                                        <div class="col refset-tool-concept-details-concept-name">
+                                                        <div class="col rt2-concept-details-concept-name">
                                                             {{
                                                             conceptDescriptions?.length ?
                                                             conceptDescriptions[0]?.term :
                                                             null }}</div>
-                                                        <div class="col-1 refset-tool-concept-details-concept-link text-right">
+                                                        <div class="col-1 rt2-concept-details-concept-link text-right">
                                                         </div>
                                                     </div>
 
                                                     <!-- ID -->
-                                                    <div class="row refset-tool-concept-details-concept-row">
-                                                        <div class="refset-tool-concept-details-concept-id-label">
+                                                    <div class="row rt2-concept-details-concept-row">
+                                                        <div class="rt2-concept-details-concept-id-label">
                                                             SCTID
                                                         </div>
-                                                        <div class="col refset-tool-concept-details-concept-id-text">
+                                                        <div class="col rt2-concept-details-concept-id-text">
                                                             {{
                                                             conceptDetail?.code }}</div>
                                                     </div>
 
                                                     <!-- ECL -->
-                                                    <div class="row refset-tool-concept-details-concept-row">
-                                                        <div class="col refset-tool-concept-details-concept-ecl">
+                                                    <div class="row rt2-concept-details-concept-row">
+                                                        <div class="col rt2-concept-details-concept-ecl">
                                                             {{ conceptDetail?.code }} | {{
                                                             conceptDescriptions?.length ?
                                                             conceptDescriptions[0]?.term : null }} |
@@ -140,10 +139,10 @@
                                                     </div>
 
                                                     <!-- Descriptions -->
-                                                    <div class="row refset-tool-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
-                                                        <div class="refset-tool-concept-details-concept-description-language">
+                                                    <div class="row rt2-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
+                                                        <div class="rt2-concept-details-concept-description-language">
                                                             {{ description?.language }}</div>
-                                                        <div class="col refset-tool-concept-details-concept-description-text">
+                                                        <div class="col rt2-concept-details-concept-description-text">
                                                             {{ description?.term }}</div>
                                                     </div>
 
@@ -155,10 +154,10 @@
 
                                     <!-- Children Section -->
                                     <div
-                                      class="container-fluid refset-tool-concept-details-taxonomy-section children-section add-remove-concept-hierarchy-modal-children-size">
+                                      class="container-fluid rt2-concept-details-taxonomy-section children-section add-remove-concept-hierarchy-modal-children-size">
 
                                         <div class="row">
-                                            <div class="refset-tool-concept-details-section-title">
+                                            <div class="rt2-concept-details-section-title">
                                                 Children <span [hidden]="!numOfChildren"> ({{
                                                     numOfChildren }})</span></div>
                                         </div>
@@ -184,23 +183,23 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer rt2-modal-footer">
-            <button type="button" mat-raised-button color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
-              class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
+        <div class="modal-footer rt2-modal-footer rt2-btn-group">
+            <button type="button" color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
+              class="rt2-btn rt2-next-back-btn" aria-label="Download" title="Download">
                 Download Change Report
             </button>
-            <button type="button" mat-raised-button color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
-              class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
+            <button type="button" color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
+              class="rt2-btn rt2-next-back-btn" aria-label="Download" title="Download">
                 Download Inactive Concept Report
             </button>
-            <button type="button" mat-raised-button color="green" aria-label="Pause" (click)="openPauseUpdate()"
-              class="mr-15" title="Pause">
+            <button type="button" color="green" aria-label="Pause" (click)="openPauseUpdate()"
+              class="rt2-btn rt2-next-back-btn" title="Pause">
                 Pause Upgrade
             </button>
             <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon"
               [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
-            <button type="button" mat-raised-button color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
-              class="refset-tool-action-button ml-15 " aria-label="Cancel Upgrade" title="Cancel Upgrade" ng-reflect-color="red">
+            <button type="button" color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
+              class="rt2-btn rt2-remove-btn" aria-label="Cancel Upgrade" title="Cancel Upgrade">
                 Cancel Upgrade
             </button>
             </div>
@@ -252,10 +251,10 @@
         {{ formatReason(params?.data?.replacementConcepts[0]?.reason) }}
     </span>
     <span *ngIf="params.data.isSearch">
-        <mat-form-field floatLabel="never" appearance="legacy" style="width: 400px">
+        <mat-form-field floatLabel="never" appearance="legacy" class="w-400">
             <mat-label>Add Concept by ID or FSN</mat-label>
             <mat-select (selectionChange)="selectedConceptChanged($event)">
-                <input style="height: 50px; width: 300px;" placeholder="Type here..." (keydown)="handleInput($event)" (input)="onSearchChange($event.target.value)"
+                <input class="h-50 w-300" placeholder="Type here..." (keydown)="handleInput($event)" (input)="onSearchChange($event.target.value)"
                   (mouseover)="$event.target.focus()">
                 <mat-option *ngIf="!selectedConcepts && !manualReplacementOptionsLoading">None
                 </mat-option>
@@ -336,13 +335,13 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer ready-for-review-footer">
-        <button type="button" (click)="refsetDetails.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modalService.dismissAll(); " mat-raised-button color="primary"
-          aria-hidden="false" class="refset-tool-action-button" aria-label="Yes" title="Yes" ngbAutofocus ng-reflect-color="primary" style="margin-right: 20px;">
+    <div class="modal-footer ready-for-review-footer rt2-btn-group">
+        <button type="button" (click)="refsetDetails.setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modalService.dismissAll(); " color="primary"
+          aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes" ngbAutofocus>
             Yes
         </button>
-        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="No"
-          title="No" ng-reflect-color="red">
+        <button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn p-tb-1-lr-16" aria-label="No"
+          title="No">
             No
         </button>
     </div>

@@ -740,12 +740,12 @@ export class UiUtility {
 
 	static toggleLockedSections(lock: boolean) {
 
-		let containingDiv = $('.refset-tool-lockable');
+		let containingDiv = $('.rt2-lockable');
 
 		if (lock) {
-			containingDiv.addClass('refset-tool-disable-section');
+			containingDiv.addClass('rt2-disable-section');
 		} else {
-			containingDiv.removeClass('refset-tool-disable-section');
+			containingDiv.removeClass('rt2-disable-section');
 		}
 
 		containingDiv.find('input, select, button').each(function () {

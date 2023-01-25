@@ -1,9 +1,9 @@
-<!-- <button (click)="openImportFromFileModal(importFromFileDialog)" class="refset-tool-standard-icon-button">
+<!-- <button (click)="openImportFromFileModal(importFromFileDialog)" class="rt2-standard-icon-button">
     <img src="assets/import-file-upload-icon.svg" alt="Document symbol denoting an upload icon" title="Import File" aria-label="Import file" />
 </button> -->
 
-<button mat-button  (click)="openImportFromFileModal(importFromFileDialog)"
-  title="Import File" aria-label="Import file" class="manage-refset-menu">
+<button (click)="openImportFromFileModal(importFromFileDialog)"
+  title="Import File" aria-label="Import file" class="rt2-link-btn">
   Import from File</button>
 
   
@@ -23,7 +23,7 @@
   </div>
 
   <div class="container-fluid import-from-container-fluid">
-    <div class="modal-body import-from-modal-body refset-tool-lockable">
+    <div class="modal-body import-from-modal-body rt2-lockable">
 
       <div class="container-file-import" dragAndDrop (fileDropped)="onFileDropped($event)">
         <input type="file" #fileDropRef id="fileDropRef" multiple
@@ -63,27 +63,24 @@
     </div>
   </div>
 
-  <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+  <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 
     <button *ngIf="!showBanner" [disabled]="disableActionButtons" type="button"
-      (click)="callMemberOperation('add')" mat-raised-button color="green" aria-hidden="false"
-      class="refset-tool-action-button" aria-label="Add Members" title="Add Members"
-      ng-reflect-color="green">
+      (click)="callMemberOperation('add')" color="green" aria-hidden="false"
+      class="rt2-btn rt2-next-back-btn" aria-label="Add Members" title="Add Members">
       Add Members
     </button>
 
     <button *ngIf="!showBanner && !isIntensional" [disabled]="disableActionButtons" type="button"
-      (click)="callMemberOperation('remove')" mat-raised-button color="red" aria-hidden="false"
-      class="refset-tool-action-button" aria-label="Remove Members" ng-reflect-color="red"
-      style="margin-left: 15px">
+      (click)="callMemberOperation('remove')" color="red" aria-hidden="false"
+      class="rt2-btn rt2-remove-btn" aria-label="Remove Members">
       Remove Members
     </button>
 
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button
-    color="primary"
-      aria-hidden="false" class="refset-tool-action-button"
-      style="margin-left: 10px; " aria-label="Close"
-      ng-reflect-color="primary">
+    <button type="button" (click)="modal.dismiss('Cross click')"
+      color="primary"
+      aria-hidden="false" class="rt2-btn rt2-action-btn"
+      aria-label="Close">
       Close
     </button>
 

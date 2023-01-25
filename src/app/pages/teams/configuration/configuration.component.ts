@@ -13,7 +13,8 @@ import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'teams-configuration',
-    templateUrl: './configuration.component.html'
+    templateUrl: './configuration.component.html',
+    styleUrls: ['configuration.component.scss']
 })
 export class TeamsConfigurationComponent implements OnInit {
 

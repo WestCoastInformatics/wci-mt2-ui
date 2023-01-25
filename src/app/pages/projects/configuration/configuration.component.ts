@@ -13,7 +13,8 @@ import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'projects-configuration',
-  templateUrl: './configuration.component.html'
+  templateUrl: './configuration.component.html',
+  styleUrls: ['configuration.component.scss']
 })
 export class ProjectsConfigurationComponent implements OnInit {
 

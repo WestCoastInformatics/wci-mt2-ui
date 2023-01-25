@@ -35,6 +35,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 @Component({
     selector: 'app-refset-details',
     templateUrl: 'refset-details.html',
+    styleUrls: ['./refset-details.scss']
 })
 
 export class RefsetDetails implements OnInit {
@@ -624,7 +625,7 @@ export class RefsetDetails implements OnInit {
                     headerName: 'Concept ID',
                     minWidth: 65,
                     maxWidth: 140,
-                    cellClass: 'refset-tool-taxonomy-search-column-name',
+                    cellClass: 'rt2-taxonomy-search-column-name',
                     tooltipField: 'code', resizable: true
                 },
                 {
@@ -633,7 +634,7 @@ export class RefsetDetails implements OnInit {
                     headerName: 'Result',
                     minWidth: 65,
                     flex: 1,
-                    cellClass: 'refset-tool-taxonomy-search-column-name',
+                    cellClass: 'rt2-taxonomy-search-column-name',
                     valueGetter: this.taxonomyResultValueGetter.bind(this),
                     cellRenderer: 'templateRenderer',
                     cellRendererParams: {
@@ -1052,12 +1053,12 @@ export class RefsetDetails implements OnInit {
                         maxWidth: 40,
                         resizable: true,
                         sort: false,
-                        cellClass: 'refset-tool-details-column-remove-icon',
+                        cellClass: 'rt2-details-column-remove-icon',
                         cellRenderer: 'templateRenderer',
                         cellRendererParams: { template: this.conceptCodeSection }
                     }, {
                         field: 'code', colId: 'code', headerName: 'Concept ID', minWidth: 65, maxWidth: 140, tooltipField: 'code', unSortIcon: true,
-                        resizable: true, cellClass: 'refset-tool-details-column-concept-id'
+                        resizable: true, cellClass: 'rt2-details-column-concept-id'
                     }
                 ];
 
@@ -1074,7 +1075,7 @@ export class RefsetDetails implements OnInit {
                         colId: language.value,
                         headerName: language.display,
                         cellClass:
-                            'refset-tool-details-column-description',
+                            'rt2-details-column-description',
                         valueGetter: this.descriptionValueGetter,
                         unSortIcon: true,
                         tooltipValueGetter: this.descriptionValueGetter,
@@ -1092,7 +1093,7 @@ export class RefsetDetails implements OnInit {
                             maxWidth: 190,
                             headerName: 'Last Modified Date',
                             cellClass:
-                                'refset-tool-details-column-modified-date',
+                                'rt2-details-column-modified-date',
                             valueGetter:
                                 UiUtility.gridDateValueGetter,
                             tooltipValueGetter: UiUtility.gridDateValueGetter,
@@ -1108,7 +1109,7 @@ export class RefsetDetails implements OnInit {
                             headerName: '',
                             minWidth: 65,
                             cellClass:
-                                'refset-tool-details-column-actions',
+                                'rt2-details-column-actions',
                             cellRenderer: 'templateRenderer',
                             cellRendererParams: {
                                 template: this.actionSection,
@@ -1523,31 +1524,6 @@ export class RefsetDetails implements OnInit {
         this.selectedConcept = null;
     }
 
-    // TODO: Unused
-    // openRichTextEditor(fieldName, displayName = fieldName) {
-    //     const dialogId = 'detailsRichTextDialog';
-
-    //     const dialogData = {
-    //         headerText: `Reference Set ${displayName} for ${this.refsetData.name} (${this.refsetData.id})`,
-    //         template: this.richTextDialog,
-    //         data: { fieldName: fieldName, text: this.refsetData[fieldName] },
-    //     };
-
-    //     const dialogOptions = {
-    //         id: dialogId,
-    //         width: '750px',
-    //     };
-
-    //     this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
-
-    //     this.dialog.confirmed().subscribe((data) => {
-    //         if (data) {
-    //             this.refsetData[fieldName] = data.text;
-    //             this.shortenNoteFields();
-    //         }
-    //     });
-    // }
-
     changeVersion() {
         this.router.navigate(['/details', this.refsetId, this.selectedVersion]).then((page) => {
             window.location.reload();
@@ -1642,13 +1618,13 @@ export class RefsetDetails implements OnInit {
                     {
                         field: 'version',
                         headerName: 'Version',
-                        cellClass: 'refset-tool-member-history-column-version',
+                        cellClass: '',
                         tooltipField: 'version',
                     },
                     {
                         field: 'change',
                         headerName: 'Change',
-                        cellClass: 'refset-tool-member-history-column-change',
+                        cellClass: '',
                         tooltipField: 'change',
                     },
                 ];

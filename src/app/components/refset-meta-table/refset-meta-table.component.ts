@@ -7,7 +7,8 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 
 @Component({
     selector: 'refset-meta',
-    templateUrl: './refset-meta-table.component.html'
+    templateUrl: './refset-meta-table.component.html',
+    styleUrls: ['refset-meta-table.component.scss']
 })
 
 export class RefsetMetaTableComponent implements OnInit {

@@ -303,7 +303,7 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
     }
 
     onResize(event) {
-        const gridWidth = document.getElementsByClassName('refset-tool-ag-grid')[0]?.clientWidth;
+        const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
         document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
     }
 

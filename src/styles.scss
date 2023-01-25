@@ -7,6 +7,11 @@
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
 @import "./app/core-styles.scss";
 @import "./app/refset_global_styles.scss";
+@import "./app/button-styles.scss";
+@import "./app/font-styles.scss";
+@import "./app/icon-styles.scss";
+@import "./app/modal-styles.scss";
+
 
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";

@@ -28,7 +28,7 @@ import { TemplateRenderer } from "../cellRenderers/template.renderer";
 @Component({
     selector: "add-remove-by-concept-modal",
     templateUrl: "./add-remove-by-concept-modal.component.html",
-    styleUrls: ["./add-remove-by-concept-modal.component.scss"]
+    styleUrls: ['add-remove-by-concept-modal.component.scss']
 })
 export class AddRemoveByConceptModalComponent implements OnInit {
 
@@ -219,9 +219,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
         };
 
         this.gridColumnDefs = [
-            { field: 'active', colId: 'active', flex: 1, headerName: '', maxWidth: 40, cellClass: 'refset-tool-details-column-remove-icon', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptAddRemoveSection }, sort: false, filter: false },
-            { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 65, maxWidth: 200, cellClass: 'refset-tool-details-column-concept-id', tooltipField: 'code', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }, unSortIcon: true },
-            { field: 'fsn', colId: 'fsn', flex: 1, headerName: 'Concept Name', minWidth: 65, cellClass: 'refset-tool-details-column-description', tooltipField: 'fsn', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptFsnSection }, unSortIcon: true },
+            { field: 'active', colId: 'active', flex: 1, headerName: '', maxWidth: 40, cellClass: 'rt2-details-column-remove-icon', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptAddRemoveSection }, sort: false, filter: false },
+            { field: 'code', colId: 'code', flex: 1, headerName: 'Concept ID', minWidth: 65, maxWidth: 200, cellClass: 'rt2-details-column-concept-id', tooltipField: 'code', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptCodeSection }, unSortIcon: true },
+            { field: 'fsn', colId: 'fsn', flex: 1, headerName: 'Concept Name', minWidth: 65, cellClass: 'rt2-details-column-description', tooltipField: 'fsn', resizable: true, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.conceptFsnSection }, unSortIcon: true },
         ]; 
 
         this.showTable = true;
@@ -231,6 +231,14 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
         this.originalGridParams = gridReadyParams;
         this.gridApi = gridReadyParams.api;
+
+        // Bail if there is no search text
+        if (!this.searchInput) {
+          this.data= { items: [] };
+          return;
+        }
+
+        // Enable spinner (turn of when search errors or completes)
         this.loadingSpinner.emit(true);
 
         this.refsetService.getConceptSearch(this.refsetInternalId, `limit=200&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({

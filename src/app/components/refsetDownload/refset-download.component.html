@@ -1,13 +1,13 @@
-<button *ngIf="isDetailPage && refset!=null && project==null && !disableDownload" mat-button class="manage-refset-menu"
+<button *ngIf="isDetailPage && refset!=null && project==null && !disableDownload" class="rt2-link-btn"
     title="Download Reference Set" aria-label="Download Reference Set"
     (click)="openDownload(refset.refsetId)">Download
 </button>
-<button *ngIf="isDetailPage && refset!=null && project==null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" mat-button class="manage-refset-menu disable-menu-btn">
+<button *ngIf="isDetailPage && refset!=null && project==null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">
     Download
 </button>
 
 <button *ngIf="!isDetailPage && refset!=null && project==null && !disableDownload" mat-icon-button aria-hidden="false" (click)="openDownload(refset.refsetId)" aria-label="Download Reference Set" title="Download Reference Set"
-  class="refset-tool-table-action-icon {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">
+  class="rt2-table-action-icon {{buttonClasses}}" [ngClass]="{inactive: disabled}" [disabled]="disabled">
     <span class="mat-button-wrapper">
         <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download</mat-icon>
     </span>
@@ -16,7 +16,7 @@
 </button>
 
 <button *ngIf="!isDetailPage && refset!=null && project==null && disableDownload" mat-icon-button aria-hidden="false" [aria-label]="disableTitle" [title]="disableTitle"
-  class="refset-tool-table-action-icon {{buttonClasses}} disable-menu-btn" [ngClass]="{inactive: disabled}" [disabled]="disabled">
+  class="rt2-table-action-icon {{buttonClasses}} disable-menu-btn" [ngClass]="{inactive: disabled}" [disabled]="disabled">
     <span class="mat-button-wrapper">
         <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download</mat-icon>
     </span>
@@ -24,20 +24,24 @@
     <span class="mat-button-focus-overlay"></span>
 </button>
 
-<a *ngIf="project!=null && refsets!=null" aria-hidden="false"
-   class='btn btn-primary rounded btn-lg btn-wide-font mr-3' style="width: 160px"
+<!-- <a *ngIf="project!=null && refsets!=null" aria-hidden="false"
+   class='btn btn-primary rounded btn-lg btn-wide-font mr-3 w-160'
     title="Download All Refsets for Project"
 	aria-label="Download All Refsets for Project"  (click)="openProjectRefsetDownload(project, refsets)">
 	Bulk Download
-</a>
+</a> -->
+
+<button *ngIf="project!=null && refsets!=null" aria-hidden="false" class="rt2-btn rt2-action-btn" title="Download All Refsets for Project" aria-label="Download All Refsets for Project"  (click)="openProjectRefsetDownload(project, refsets)">
+    Bulk Download
+</button>
 
 <ng-template #refsetDownloadDialog let-data>
     <div class="container-fluid download-modal-container">
         <div class="row" id="downloadFormatRow">
-            <div class="col refset-tool-download-column-label">
+            <div class="col rt2-download-column-label">
                 <label>Format:</label>
             </div>
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-field">
                 <mat-form-field floatLabel="never" appearance="legacy">
                     <mat-select #downloadFormatField [(value)]="data.selectedFormat" (selectionChange)="changeFormat(data)">
                         <mat-option *ngFor="let option of data.formatOptions" [value]="option.value">
@@ -49,10 +53,10 @@
         </div>
 
         <div class="row" id="downloadContentRow" *ngIf="showContent">
-            <div class="col refset-tool-download-column-label">
+            <div class="col rt2-download-column-label">
                 <label>Content:</label>
             </div>
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-field">
                 <mat-form-field floatLabel="never" appearance="legacy">
                     <mat-select #downloadContentField [(value)]="data.selectedContent" (selectionChange)="changeContent(data)">
                         <ng-container *ngFor="let option of data.contentOptions">
@@ -65,17 +69,17 @@
             </div>
         </div>
         <div class="row" id="downloadContentRow" *ngIf="showVersions && !shouldShowDeltaContentLabel() && showDeltaOption(data)">
-            <div class="col refset-tool-download-column-label"></div>
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-label"></div>
+            <div class="col rt2-download-column-field">
                 *Delta option not available as this is the initial version of the refset
             </div>
         </div>
 
         <div class="row" id="downloadLanguageRow" *ngIf="showLanguages">
-            <div class="col refset-tool-download-column-label">
+            <div class="col rt2-download-column-label">
                 <label>Language Reference Set:</label>
             </div>
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-field">
                 <mat-form-field floatLabel="never" appearance="legacy">
                     <mat-select #downloadLanguageField [(value)]="data.selectedLanguage">
                         <mat-option *ngFor="let option of data.languageOptions" [value]="option.value">
@@ -87,21 +91,21 @@
         </div>
 
         <div class="row" id="downloadVersionRow" *ngIf="showVersions">
-            <div class="col refset-tool-download-column-label">
+            <div class="col rt2-download-column-label">
                 <label>Version:</label>
             </div>
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-field">
                 <input class="version-input-placeholder" placeholder="{{addSpaceAfterVersionDate(data.selectedVersion)}}" name="name" disabled />
             </div>
         </div>
 
         <div class="row" id="downloadComparisonRow" *ngIf="showComparison && shouldShowDeltaContentLabel()">
 
-            <div class="col refset-tool-download-column-label">
+            <div class="col rt2-download-column-label">
                 <label>Delta Comparison:</label>
             </div>
 
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-field">
                 <div class="row delta-row">
                     <div class="ml-3"><label class="in-form-label">From:</label></div>
 
@@ -121,10 +125,10 @@
         </div>
 
         <div class="row" id="downloadMetaDataRow" *ngIf="showContent || showMetadata">
-            <div class="col refset-tool-download-column-label">
+            <div class="col rt2-download-column-label">
                 <label>Include Metadata:</label>
             </div>
-            <div class="col refset-tool-download-column-field">
+            <div class="col rt2-download-column-field">
                 <mat-checkbox [(ngModel)]="data.exportMetadata" value="true"></mat-checkbox>
             </div>
         </div>

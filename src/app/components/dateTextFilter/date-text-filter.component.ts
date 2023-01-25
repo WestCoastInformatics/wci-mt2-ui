@@ -10,7 +10,8 @@ export interface DateTextFloatingFilterParams extends IFloatingFilterParams {
 
 @Component({
 	selector: 'app-date-text-floating-filter',
-	templateUrl: 'date-text-filter.component.html'
+	templateUrl: 'date-text-filter.component.html',
+	styleUrls: ['./date-text-filter.component.scss']
 })
 export class DateTextFilterComponent implements IFloatingFilter, AgFrameworkComponent<DateTextFloatingFilterParams> {
 

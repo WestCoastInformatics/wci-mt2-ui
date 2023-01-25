@@ -27,14 +27,13 @@
         <div class="modal-body pr-0 pl-0 pb-0">
 
             <div class="text-right">
-                <a class="btn btn-main mb-3" (click)="openThreadModal(true)">Start New Discussion</a>
+                <button class="rt2-btn rt2-action-btn" (click)="openThreadModal(true)">Start New Discussion</button>
                 <input type="hidden" ngbAutofocus />
             </div>
 
             <div class="ag-theme-alpine pr-1 pl-1 modal-section">
 
-                <ag-grid-angular [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-                  style="width: 100%">
+                <ag-grid-angular [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct">
                 </ag-grid-angular>
 
             </div>
@@ -52,7 +51,7 @@
 <!-- Topic Template -->
 <ng-template #discussionListSubjectSection let-params>
     {{ params?.value }}
-    <i *ngIf="params?.data?.privateThread" class="refset-tool-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
+    <i *ngIf="params?.data?.privateThread" class="rt2-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
 </ng-template>
 
 <!-- THREAD SECTION -->
@@ -91,7 +90,7 @@
                             <span *ngIf="selectedThread.posts[0]?.created != selectedThread.posts[0]?.modified"> (Edited: {{ formatDateTime(selectedThread.posts[0]?.modified)
                                 }}
                                 )</span>
-                            <i *ngIf="selectedThread.privateThread" class="refset-tool-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
+                            <i *ngIf="selectedThread.privateThread" class="rt2-table-action-icon ml-2 mt text-muted fa fa-lock"></i>
                         </div>
 
                     </div>
@@ -131,7 +130,7 @@
                 </div>
 
                 <!-- LIST POSTS SECTION -->
-                <div *ngIf="editMode != 'newThread' && !editMode.includes('edit')" class="discussion-list mb-3 refset-tool-resize-vertical">
+                <div *ngIf="editMode != 'newThread' && !editMode.includes('edit')" class="discussion-list mb-3 rt2-resize-vertical">
 
                     <div *ngIf="selectedThread.numberReplies == 0" class='section-list'>
                         There are no replies yet.
@@ -214,12 +213,12 @@
 
         <div class="feedback-modal-footer modal-footer mt-0 mb-3">
 
-            <button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" mat-raised-button class="refset-tool-action-button mat-green mr-2">{{
+            <button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" mat-raised-button class="rt2-action-button mat-green mr-2">{{
                 postButtonText }}</button>
-            <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" mat-raised-button class="refset-tool-action-button mat-red mr-2">Cancel Edit
+            <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" mat-raised-button class="rt2-action-button mat-red mr-2">Cancel Edit
             </button>
 
-            <button *ngIf="!editMode.includes('edit')" (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Close
+            <button *ngIf="!editMode.includes('edit')" (click)="modal.dismiss()" mat-raised-button class="rt2-action-button mat-primary">Close
             </button>
         </div>
 
@@ -244,9 +243,9 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deleteThread();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Thread
+        <button type="button" (click)="deleteThread();" mat-raised-button class="rt2-action-button mat-red mr-2">Delete Thread
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button default-btn">Cancel
+        <button (click)="modal.dismiss()" mat-raised-button class="rt2-action-button default-btn">Cancel
         </button>
     </div>
 
@@ -270,10 +269,10 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deletePost();" mat-raised-button class="refset-tool-action-button mat-red mr-2">
+        <button type="button" (click)="deletePost();" mat-raised-button class="rt2-action-button mat-red mr-2">
             Delete Post
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button default-btn">Cancel
+        <button (click)="modal.dismiss()" mat-raised-button class="rt2-action-button default-btn">Cancel
         </button>
     </div>
 

@@ -9,7 +9,8 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
 	selector: 'add-remove-concepts',
-	templateUrl: './add-remove-concepts.component.html'
+	templateUrl: './add-remove-concepts.component.html',
+	styleUrls: ['add-remove-concepts.component.scss']
 })
 export class AddRemoveConceptsComponent implements OnInit {
 

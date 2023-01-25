@@ -78,29 +78,6 @@ export class ProjectsPeopleComponent implements OnInit {
             { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
             { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
             { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
-            //       {
-            //     field: 'name',
-            //     tooltipField: 'name',
-            //     headerName: 'Users',
-            //     minWidth: 65,
-            //     flex: 1,
-            //     cellRenderer: 'templateRenderer',
-            //     cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true
-            // },
-            // { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-            // { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
-            // {
-            //     field: 'teams',
-            //     tooltipComponentFramework: CustomTooltipComponent,
-            //     tooltipField: 'teams',
-            //     tooltipComponentParams: { color: '#ececec' },
-            //     flex: 1,
-            //     headerName: 'Teams',
-            //     filter: false,
-            //     sortable: false,
-            //     cellRenderer: 'templateRenderer',
-            //     cellRendererParams: { template: this.peopleTeamsSection }
-            // }
         ];
 
         this.gridOptions = {

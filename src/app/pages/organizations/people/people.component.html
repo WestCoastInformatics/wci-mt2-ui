@@ -4,7 +4,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
               [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -21,7 +21,7 @@
                 <div *ngIf="showLoadingSpinner" class="loading"></div>
                 <section class="mb-3">
 
-                    <div class='section-header mb-4'>
+                    <div class='section-header mb-4 rt2-btn-group mt-1'>
                         People ({{dataCount}})
                         <add-member-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" type="Organization" [id]="selectedOrganization?.id"
                           [name]="selectedOrganization?.name"></add-member-modal>
@@ -32,8 +32,7 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"
-                              style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
@@ -43,7 +42,7 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <div style="display: flex; justify-content: space-between; width:160px" >
+                                <div class="d-flex jc-space-between w-160">
                                     <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">
                                         {{getTeamsCount(params?.data)}} teams</span>
                                     <img *ngIf="selectedOrganization?.roles?.includes('ADMIN')"  src="assets/subtract-symbol-icon.svg" (click)="confirmRemoveUser(params?.data, $event)"
@@ -84,9 +83,9 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="removeUser();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Remove User
+        <button type="button" (click)="removeUser();" mat-raised-button class="rt2-action-button mat-red mr-2">Remove User
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button default-btn">Cancel
+        <button (click)="modal.dismiss()" mat-raised-button class="rt2-action-button default-btn">Cancel
         </button>
     </div>
 

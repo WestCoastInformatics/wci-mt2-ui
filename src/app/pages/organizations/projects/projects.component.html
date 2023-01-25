@@ -5,7 +5,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization"
               [placeholder]="selectedOrganization?.id ? selectedOrganization?.name : 'Choose Organization'" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -15,7 +15,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select [disableOptionCentering]="true" [(value)]="selectedEdition" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'"
               (selectionChange)="selectedEdition()">
-                <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
                     {{ edition.name }}
                 </mat-option>
             </mat-select>
@@ -38,7 +38,7 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
                             <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
-                              (cellClicked)="onGridCellClick($event)" [tooltipShowDelay]="0" style="width: 100%">
+                              (cellClicked)="onGridCellClick($event)" [tooltipShowDelay]="0" class="w-100-pct">
                             </ag-grid-angular>
                         </div>
                         <ng-template #descriptionSection let-params>

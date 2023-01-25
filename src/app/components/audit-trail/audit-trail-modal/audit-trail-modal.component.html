@@ -1,8 +1,8 @@
-<button *ngIf="!isDetails" #artifactsButton aria-hidden="false" (click)="openTrailModal(trailDialog)" class="btn btn-primary btn-lg btn-wide-font" aria-label="Audit Trail"
+<button *ngIf="!isDetails" #artifactsButton aria-hidden="false" (click)="openTrailModal(trailDialog)" class="rt2-btn rt2-action-btn" aria-label="Audit Trail"
   title="Audit Trail">
     Organizational Audit Trail
 </button>
-<button mat-menu-item *ngIf="isDetails" (click)="openTrailModal(trailDialog)" title="Open Audit Trail List" aria-label="Audit Trail" id="audit-button">Audit Trail</button>
+<button class="rt2-picklist-btn" *ngIf="isDetails" (click)="openTrailModal(trailDialog)" title="Open Audit Trail List" aria-label="Audit Trail" id="audit-button">Audit Trail</button>
 
 <ng-template #trailDialog let-modal>
     <div class="modal-header rt2-modal-header">
@@ -20,13 +20,13 @@
              (recordsLoaded)="dataLoadedStatus($event)"></audit-trail-list>
         </div>
     </div>
-    <div class="modal-footer rt2-modal-footer">
-        <button [disabled]="downloadDisabled" type="button" mat-raised-button color="green" (click)="getAuditReport()"
-          aria-hidden="false" class="refset-tool-action-button mr-15" aria-label="Download" title="Download" ng-reflect-color="green">
+    <div class="modal-footer rt2-modal-footer rt2-btn-group">
+        <button [disabled]="downloadDisabled" type="button" (click)="getAuditReport()" aria-hidden="false"
+          class="rt2-btn rt2-download-btn" aria-label="Download" title="Download">
             Download Audit Trail
+            <i class="fa fa-download"></i>
         </button>
-        <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button ml-3" (click)="modal.dismiss('Cross click');"
-          ng-reflect-color="primary">
+        <button aria-hidden="false" class="rt2-btn rt2-close-btn" (click)="modal.dismiss('Cross click');">
             Close
         </button>
     </div>

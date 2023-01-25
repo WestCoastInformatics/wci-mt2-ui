@@ -1,0 +1,143 @@
+@import "~src/variables.scss";
+.organizations-configuration {
+    .organizations-configuration-title {
+      font-size: 19px;
+    }
+  
+    .title-bar {
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 100vw;
+      background-color: #FFF;
+      padding: 20px 30px;
+      filter: drop-shadow(8px 8px 10px rgba(0, 0, 0, 0.5));
+  
+      span {
+        padding: 0px 15px;
+      }
+    }
+  
+    .organizations-configuration-dropdown {
+      font-size: 17px;
+      font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
+    }
+  
+    .organizations-configuration-details {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+  
+      h3 {
+        font-size: 20px;
+        color: $main-color;
+      }
+  
+      .organizations-configuration-blocks-1 {
+        display: flex;
+        width: 100%;
+        flex-wrap: nowrap;
+  
+        .main-block {
+          min-height: 356px;
+          width: 100%;
+        }
+  
+        .profile-pic-block {
+          margin-left: 10px;
+          margin-bottom: 10px;
+        }
+  
+        .profile-block {
+          margin-right: 10px;
+          margin-bottom: 10px;
+        }
+      }
+  
+      .organizations-configuration-blocks-2 {
+        display: flex;
+        width: 100%;
+  
+        .secondary-block {
+          min-height: 190px;
+          width: 100%;
+        }
+  
+        .teams-block {
+          margin-right: 10px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+  
+        .projects-block {
+          margin: 10px;
+        }
+  
+        .remove-org-block {
+          margin-left: 10px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+      }
+  
+      .organizations-configuration-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-right: 0px;
+        background-color: #f5f5f6;
+        padding: 30px 55px;
+      }
+  
+      input {
+        font-size: 16px;
+        background-color: #f5f5f6;
+        border-bottom: 1px solid black;
+        width: 100%;
+      }
+  
+      textarea {
+        font-size: 13px;
+        background-color: #f5f5f6;
+        border: 1px solid black;
+        width: 100%;
+        height: 100px;
+      }
+    }
+  
+    .profile-name-field,
+    .profile-email-field,
+    .profile-description-field {
+      width: 100%;
+    }
+  
+    .organization-profile-head {
+      height: 10%;
+      width: 100%;
+    }
+  
+    .organization-profile-mid {
+      height: 80%;
+      width: 100%;
+      padding-top: 25px;
+    }
+  
+    .organization-picture {
+      text-align: center;
+    }
+  
+    .update-profile-button,
+    .edit-picture-button,
+    .create-team-button,
+    .create-project-button,
+    .remove-organization-button {
+      width: 100%;
+      height: 20%;
+    }
+  
+    .red-x {
+      transform: rotate(45deg);
+    }
+  
+  
+  }

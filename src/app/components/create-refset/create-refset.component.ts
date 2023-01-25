@@ -20,6 +20,7 @@ import { FormControl } from '@angular/forms';
 @Component({
     selector: 'create-refset',
     templateUrl: './create-refset.component.html',
+    styleUrls: ['create-refset.component.scss']
 })
 export class CreateRefsetComponent implements OnInit {
 

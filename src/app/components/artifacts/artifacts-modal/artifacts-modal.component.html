@@ -1,8 +1,8 @@
 <button *ngIf="!isDetails" #artifactsButton mat-raised-button color="primary" aria-hidden="false" (click)="openArtifactsModal(artifactsDialog)"
-  class="refset-tool-action-button refset-action-button" aria-label="Artifacts" title="Artifacts" ng-reflect-color="primary">
+  class="rt2-action-button refset-action-button" aria-label="Artifacts" title="Artifacts">
     Artifacts
 </button>
-<button mat-menu-item *ngIf="isDetails" (click)="openArtifactsModal(artifactsDialog)" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
+<button class="rt2-picklist-btn" *ngIf="isDetails" (click)="openArtifactsModal(artifactsDialog)" title="Open Artifacts List" aria-label="Artifacts">Artifacts</button>
 
 <ng-template #artifactsDialog let-modal>
     <div class="modal-header rt2-modal-header">
@@ -26,13 +26,8 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button aria-hidden="false" class="refset-tool-action-button refset-action-button mr-3 default-btn" (click)="modal.dismiss('Cross click');">
+        <button mat-raised-button aria-hidden="false" class="rt2-btn rt2-close-btn mr-3" (click)="modal.dismiss('Cross click');">
             Close
         </button>
-        <!--<button mat-raised-button color="primary" aria-hidden="false"
-            class="refset-tool-action-button refset-action-button" ng-reflect-color="primary">
-            Download
-            <i class="fa fa-download"></i>
-        </button>-->
     </div>
 </ng-template>

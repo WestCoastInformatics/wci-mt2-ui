@@ -1,6 +1,5 @@
-<button #readyForPublicationButton (click)="openreadyForPublicationModal(readyForPublicationDialog)" mat-raised-button color="primary" aria-hidden="false" #finishEditButton
-  class="refset-tool-action-button refset-action-button" attr.aria-label="{{labelPrefix}} Request Publication" title="{{labelPrefix}} Request Publication"
-  ng-reflect-color="primary">
+<button #readyForPublicationButton (click)="openreadyForPublicationModal(readyForPublicationDialog)" color="primary" aria-hidden="false" #finishEditButton
+  class="rt2-btn rt2-action-btn" attr.aria-label="{{labelPrefix}} Request Publication" title="{{labelPrefix}} Request Publication">
     {{labelPrefix}} Request Publication
 </button>
 
@@ -35,8 +34,8 @@
                         setWorkflowStatusByAction(
                             requestForPublicationNotes
                         );
-                    " mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button request-publication-modal-button" aria-label="Request Publication"
-          title="Request Publication" ng-reflect-color="green">
+                    " color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Request Publication"
+          title="Request Publication">
             Request Publication
         </button>
     </div>

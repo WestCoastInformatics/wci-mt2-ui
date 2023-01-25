@@ -1,80 +1,77 @@
-<div class="row refset-tool-refset-metadata-section">
+<div class="row ">
     <!-- Static Metadata Section -->
-    <div class="col refset-tool-refset-metadata-column col-md-6 col-12">
-        <table class="refset-tool-refset-metadata-table table-striped">
+    <div class="col rt2-refset-metadata-column col-md-6 col-12">
+        <table class="rt2-refset-metadata-table table-striped">
             <tbody>
                 <tr>
-                    <td class="refset-tool-refset-metadata-label" aria-label="Reference ID:">
+                    <td class="rt2-refset-metadata-label" aria-label="Reference ID:">
                         Reference ID:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                         {{refset?.refsetId}}
                         <mat-icon *ngIf="refset?.privateRefset" aria-hidden="false"
-                            class="refset-tool-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
+                            class="rt2-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
                             lock
                         </mat-icon>
-                        <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="refset-tool-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Local Set"
+                        <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="rt2-table-action-icon refset-id-icons text-muted default-cursor" aria-label="Local Set"
                             title="Local Set">
                             my_location
                         </mat-icon>                        
                         </td>
                 </tr>
                 <tr>
-                    <td class="refset-tool-refset-metadata-label" aria-label="Module ID">
+                    <td class="rt2-refset-metadata-label" aria-label="Module ID">
                         Module ID:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                       {{refset?.moduleId}}
                     </td>
                 </tr>
 
 
                 <tr>
-                    <td class="refset-tool-refset-metadata-label" aria-label="Edition/Extension:">
+                    <td class="rt2-refset-metadata-label" aria-label="Edition/Extension:">
                         Edition/Extension:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                         <span *ngIf="!loggedIn">{{refset?.editionName}}</span> 
                         <a *ngIf="loggedIn" href="{{getEditionUrl()}}">{{refset?.editionName}}</a>&nbsp;
                         <img *ngIf="refset?.flagIcon != null && showFlag"
                             (error)="showFlagIcon(false)" src="{{refset?.flagIcon}}"
-                            class="refset-tool-edition-flag" title="{{refset?.editionName}} Flag"
+                            class="rt2-edition-flag" title="{{refset?.editionName}} Flag"
                             aria-label="{{refset?.editionName}} Flag" />
                     </td>
                 </tr>
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Type:">
                         Type:
                     </td>
-                    <td class="
-                                            refset-tool-refset-metadata-value
-                                            capitalize-metadata-value
-                                        ">
+                    <td class="rt2-refset-metadata-value text-capitalize">
                         {{capitalizeFirstLetterOfString(refset?.type)}}
                     </td>
                 </tr>
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Type:">
                         Status:
                     </td>
-                    <td class="refset-tool-refset-metadata-value capitalize-metadata-value" [class.refset_tool_inactive_row]="refset != undefined && !refset?.active">
+                    <td class="rt2-refset-metadata-value text-capitalize" [class.refset_tool_inactive_row]="refset != undefined && !refset?.active">
                         {{ refset == undefined || refset?.active ? 'Active' : 'Inactive' }}
                     </td>
                 </tr>
 
                 <tr *ngIf="refset?.tags[0]">
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Tags:">
                         Tags:
                     </td>
-                    <td class="refset-tool-refset-metadata-value tag-container">
+                    <td class="rt2-refset-metadata-value tag-container">
                         <mat-chip-list>
                             <mat-chip *ngFor="let tag of refset?.tags"
                                 class="mat-elevation-z5 bg-white">
@@ -86,12 +83,12 @@
 
                 <tr *ngIf="refset?.narrative">
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Narrative:">
                         Narrative:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         <ng-container>
                             <readonly-text-modal [shortText]="refset?.narrativeShortText"
@@ -102,10 +99,10 @@
                 </tr>
 
                 <tr>
-                    <td class="refset-tool-refset-metadata-label" aria-label="Project:">
+                    <td class="rt2-refset-metadata-label" aria-label="Project:">
                         Project:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                         <span *ngIf="!loggedIn">{{refset?.project?.name}}</span> 
                         <a *ngIf="loggedIn" href="{{getProjectUrl()}}">{{refset?.project?.name}}</a>
                     </td>
@@ -113,26 +110,26 @@
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Reference Names:">
                         Reference Names:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         <span *ngFor="let description of setDescriptions(refset)">
                             {{ description?.term }} {{ description?.languageName }}
                             <img *ngIf="description?.flagIcon != null" (error)="showFlagIcon(false)"
-                                src="{{description?.flagIcon}}" class="refset-tool-edition-flag"
+                                src="{{description?.flagIcon}}" class="rt2-edition-flag"
                                 title="{{description?.editionName}} Flag"
                                 aria-label="{{description?.editionName}} Flag" /> <br></span>
                     </td>
                 </tr>
                 <tr *ngIf="refset?.externalUrl">
-                    <td class="refset-tool-refset-metadata-label" aria-label="External URL/URI:">
+                    <td class="rt2-refset-metadata-label" aria-label="External URL/URI:">
                         External URL/URI:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                         <a href="{{refset.externalUrl}}">{{refset.externalUrl}}</a>
                     </td>
                 </tr>
@@ -142,26 +139,26 @@
     </div>
 
     <!-- Versioned Metadata Section -->
-    <div class="col refset-tool-refset-metadata-column col-md-6 col-12">
+    <div class="col rt2-refset-metadata-column col-md-6 col-12">
         <table class="
-                                refset-tool-refset-metadata-table
+                                rt2-refset-metadata-table
                                 table-striped mb-1
                             ">
             <tbody>
                 <!-- Version Date with default if empty -->
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Version Date:">
                         Reference Version Date:
                     </td>
                     <td *ngIf="refset?.versionDate" class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         {{refset?.versionDate}}
                     </td>
                     <td *ngIf="!refset?.versionDate" class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         Not yet published
                     </td>
@@ -169,39 +166,39 @@
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Owner/Organization:">
                         Owner/Organization:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         {{refset?.organizationName}}
                         <img *ngIf="refset?.flagIcon != null && showFlag"
                             (error)="showFlagIcon(false)" src="{{refset?.flagIcon}}"
-                            class="refset-tool-edition-flag" title="{{refset?.editionName}} Flag"
+                            class="rt2-edition-flag" title="{{refset?.editionName}} Flag"
                             aria-label="{{refset?.editionName}} Flag" />
                     </td>
                 </tr>
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Version Status:">
                         Version Status:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         {{toTitleCase(refset?.versionStatus)}}
                     </td>
                 </tr>
 
                 <tr *ngIf="refset?.type != 'EXTERNAL'">
-                    <td class="refset-tool-refset-metadata-label" aria-label="Publishing">
+                    <td class="rt2-refset-metadata-label" aria-label="Publishing">
                         Publishing:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                         <span *ngIf="refset?.localSet">Local Set</span>
                         <span *ngIf="!refset?.localSet">Within Edition</span>
                     </td>
@@ -209,12 +206,12 @@
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Terminology Version:">
                         Terminology Version:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         
                         {{refset?.editionShortName}} 
@@ -224,22 +221,22 @@
                 </tr>
 
                 <tr>
-                    <td class="refset-tool-refset-metadata-label" aria-label="Direct URL/URI:">
+                    <td class="rt2-refset-metadata-label" aria-label="Direct URL/URI:">
                         Direct URL/URI:
                     </td>
-                    <td class="refset-tool-refset-metadata-value">
+                    <td class="rt2-refset-metadata-value">
                         <a href="{{directUrl}}">{{directUrl}}</a>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Version Notes:">
                         Version Notes:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         <ng-container>
                             <readonly-text-modal [shortText]="refset?.versionNotesShortText"
@@ -251,12 +248,12 @@
 
                 <tr *ngIf="refset?.definitionClauses && refset?.type === 'INTENSIONAL'">
                     <td class="
-                                            refset-tool-refset-metadata-label
+                                            rt2-refset-metadata-label
                                         " aria-label="Definition:">
                         Definition:
                     </td>
                     <td class="
-                                            refset-tool-refset-metadata-value
+                                            rt2-refset-metadata-value
                                         ">
                         <div *ngFor="let definitionClause of refset?.definitionClauses">
                             <span *ngIf="definitionClause.negated">MINUS </span>

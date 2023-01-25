@@ -9,7 +9,8 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'personal-configuration',
-  templateUrl: './configuration.component.html'
+  templateUrl: './configuration.component.html',
+  styleUrls: ['configuration.component.scss']
 })
 export class PersonalConfigurationComponent implements OnInit {
 

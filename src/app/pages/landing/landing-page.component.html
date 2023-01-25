@@ -5,13 +5,13 @@
         <p class="landing-page-text-1">Welcome to SNOMED International's New Reference Set
             Management Tool!</p>
         <br>
-        <p class="landing-page-text-2">SNOMED International's new Reference Set Management Tool
+        <p >SNOMED International's new Reference Set Management Tool
             builds upon the Reference Set and Translation Tool. It builds upon the existing tool by
             adding
             a modern interface, a better modeling user experience, richer capabilities, and
             integrates directly with Snowstorm.</p>
-        <p class="landing-page-text-3">Functionality Includes:</p>
-        <ul class="landing-page-text-4">
+        <p >Functionality Includes:</p>
+        <ul >
             <li>Full integration with SNOMED's Snowstorm Terminology Server</li>
             <li>Flexible content review workflow</li>
             <li>Enhanced in-tool communication</li>
@@ -38,13 +38,13 @@
         </ul>
     </div>
 </div>
-<div *ngIf="showResults" id="refsetDirectoryPage" class="container-fluid" (window:resize)="onResize($event)">
-    <div class="container-fluid" style="margin-top: 19px">
+<div *ngIf="showResults" class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
+    <div class="container-fluid m-t-19">
 
         <h3 class="heading heading-3 text-main">Search Results</h3>
 
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter"
-            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" style="width: 100%;height:638px">
+        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638"
+            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
         </ag-grid-angular>
 
         <app-pagination #directoryPaging *ngIf="showTable" [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
@@ -57,25 +57,25 @@
 <!-- START GRID TEMPLATES -->
 <!-- Information Templates -->
 <ng-template #directoryInfoSection let-params>
-    <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="refset-tool-table-action-icon" aria-label="View All Reference Set Metadata"
-      title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)" style="width: 30px; height: 30px;">
-        <mat-icon style="transform: scale(.7);">information</mat-icon>
+    <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="rt2-table-action-icon w-30 h-30" aria-label="View All Reference Set Metadata"
+      title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
+        <mat-icon class="scale-70-pct">information</mat-icon>
     </button>
-    <button mat-icon-button *ngIf="params.data.memberSearchMatch" style="width: 18px; height: 18px;">
-        <span title="Search matches reference set member" style="color:red; font-size:.7rem">M</span>
+    <button mat-icon-button *ngIf="params.data.memberSearchMatch" class="w-18 h-18">
+        <span title="Search matches reference set member" class="s-p7rem mandatory-field">M</span>
     </button>
 </ng-template>
 
 <ng-template #directoryInfoDialog let-data>
-    <div class="container-fluid" id="directoryInformationSection" style="overflow: auto;min-width: 350px;">
-        <div class="row refset-tool-refset-details-title-name" style="display: block;" title="{{data.name}}" aria-label="{{data.name}}">
-            <p style="font-size:18px; margin-bottom: 0px;">{{data.name}}</p>
-            <p style="font-size:16px"><span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
+    <div class="container-fluid overflow-auto w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+        <div class="row rt2-refset-details-title-name d-block" title="{{data.name}}" aria-label="{{data.name}}">
+            <p class="fs-18 mb-0 ml-10">{{data.name}}</p>
+            <p class="fs-16 ml-10"><span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
                   *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
         </div>
 
-        <refset-meta [refset]="data"></refset-meta>
-    </div>
+        <refset-meta  [refset]="data"></refset-meta>
+      </div>
 </ng-template>
 
 <!-- Workflow Status Templates -->
@@ -88,11 +88,11 @@
 <ng-template #directoryNameSection let-params>
     {{ params?.value }}
 
-    <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon" aria-label="Private Reference Set"
+    <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="rt2-table-action-icon" aria-label="Private Reference Set"
       title="Private Reference Set">
         lock
     </mat-icon>
-    <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="refset-tool-table-action-icon" aria-label="Local Set" title="Local Set">
+    <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set">
         my_location
     </mat-icon>
 
@@ -100,7 +100,7 @@
 
 <!-- Edition Templates -->
 <ng-template #directoryEditionSection let-params>
-    <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}" class="refset-tool-edition-flag"
+    <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}" class="rt2-edition-flag"
       title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag" />
     {{params?.data?.edition?.name}}
 </ng-template>
@@ -163,11 +163,4 @@
         </div>
     </div>
 </ng-container>
-<footer class="footer bg-dark" id="bg-landing-footer">
-    <a class="px-3 footer-link flex-grow-1" href="http://www.snomed.org/" target="_blank" i18n="">
-        Copyright © {{year}} SNOMED International All Rights Reserved
-    </a>
-    <a class="px-3 footer-link" href="https://confluence.ihtsdotools.org/display/SCTCR/Content+Request+Service+Terms+of+Service" target="_blank">Terms of Service</a>
-    <a class="px-3 footer-link" href="http://snomed.org/snomedtools-privacy" target="_blank">Privacy Policy</a>
-    <a class="px-3 footer-link" href="https://www.snomed.org/help-center/contact-us" target="_blank">Contact Us</a>
-</footer>
+

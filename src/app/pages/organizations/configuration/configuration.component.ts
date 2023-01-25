@@ -12,7 +12,8 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 
 @Component({
     selector: 'organization-configuration',
-    templateUrl: './configuration.component.html'
+    templateUrl: './configuration.component.html',
+    styleUrls: ['configuration.component.scss']
 })
 export class OrganizationConfigurationComponent implements OnInit {
 

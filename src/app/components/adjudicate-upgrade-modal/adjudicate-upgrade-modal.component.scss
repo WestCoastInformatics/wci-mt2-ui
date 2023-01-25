@@ -1,0 +1,41 @@
+.linethrough-inactive {
+    text-decoration: line-through;
+}
+
+.add-bold {
+    font-weight: 600;
+}
+
+.adjudicate-upgrade-modal-body-header {
+    display: flex;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+}
+
+.adjudicate-format-option-drop-down {
+    margin-top: -30px;
+    padding-right: 20px;
+}
+
+.adjudicate-inactive-concepts {
+    padding-right: 15px;
+}
+
+@media only screen and (max-height: 1440px) {
+    .adjudication-list {
+      max-height: 1000px
+    }
+}
+
+@media only screen and (max-height: 1080px) {
+    .adjudication-list {
+        max-height: 800px
+    }
+}
+
+.adjudicate-information-button {
+    color: #00a9e0;
+    padding-top: 20px;
+  }

@@ -11,6 +11,7 @@ import { TitleCasePipe } from "@angular/common";
 @Component({
     selector: "remove-dashboard-component-modal",
     templateUrl: "./remove-dashboard-component-modal.component.html",
+    styleUrls: ['remove-dashboard-component-modal.component.scss'],
     providers: [TitleCasePipe]
 })
 export class RemoveDashboardComponentModalComponent {

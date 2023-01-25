@@ -15,7 +15,8 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
 	selector: 'adjudicate-upgrade-modal',
-	templateUrl: './adjudicate-upgrade-modal.component.html'
+	templateUrl: './adjudicate-upgrade-modal.component.html',
+	styleUrls: ['adjudicate-upgrade-modal.component.scss']
 })
 export class AdjudicateUpgradeModalComponent {
 

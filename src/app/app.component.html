@@ -1,7 +1,5 @@
 <app-navbar></app-navbar>
-<feedback-collector *ngIf="!isLanding"></feedback-collector>
 <main class="container pt-0 app-container-padding">
-    <!-- Issue Collector link  -->
     <router-outlet #routerOutlet="outlet"></router-outlet>
 </main>
-<app-footer *ngIf="!isLanding"></app-footer>
+<app-footer></app-footer>

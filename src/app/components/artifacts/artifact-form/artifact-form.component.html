@@ -1,4 +1,6 @@
-<a class="btn btn-main mb-3 btn-wide-font" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="!isEdit && loaded" title="Add artifact">Add An Artifact</a>
+<button class="rt2-btn rt2-action-btn mb-2" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="!isEdit && loaded" title="Add artifact">
+    Add An Artifact
+</button>
 <a class="pointer ml-3" (click)="openArtifactsModal(artifactFormDialog)" *ngIf="isEdit && loaded" title="Edit artifact">
     <mat-icon>edit</mat-icon>
 </a>
@@ -38,14 +40,13 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button mat-raised-button color="red" aria-hidden="false" *ngIf="isEdit" class="refset-tool-action-button refset-action-button mr-3" (click)="confirmDelete()"
-          ng-reflect-color="red">
+        <button mat-raised-button color="red" aria-hidden="false" *ngIf="isEdit" class="rt2-action-button refset-action-button mr-3" (click)="confirmDelete()">
             Delete
         </button>
-        <button mat-raised-button color="primary" aria-hidden="false" class="refset-tool-action-button refset-action-button mr-3" ng-reflect-color="primary" (click)="onSave()">
+        <button mat-raised-button color="primary" aria-hidden="false" class="rt2-action-button refset-action-button mr-3" (click)="onSave()">
             Save
         </button>
-        <button mat-raised-button aria-hidden="false" class="refset-tool-action-button refset-action-button default-btn" (click)="modal.dismiss('Cross click');">
+        <button mat-raised-button aria-hidden="false" class="rt2-action-button refset-action-button default-btn" (click)="modal.dismiss('Cross click');">
             Cancel
         </button>
     </div>
@@ -67,8 +68,8 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deleteArtifact();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Delete Artifact</button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button mat-primary">Cancel</button>
+        <button type="button" (click)="deleteArtifact();" mat-raised-button class="rt2-action-button mat-red mr-2">Delete Artifact</button>
+        <button (click)="modal.dismiss()" mat-raised-button class="rt2-action-button mat-primary">Cancel</button>
     </div>
 
 </ng-template>

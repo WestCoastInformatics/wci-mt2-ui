@@ -1,10 +1,10 @@
-<div class='sidebar'>
+<div class="sidebar">
 	<div class="wrapper">
 		<ul>
 			<ng-container *ngFor="let item of menuItems">
 				<li [class.active]="item.isActive" (mouseenter)="onMouseEnter($event.target)" (mouseleave)="onMouseOut($event.target)">
 					<a [routerLink]="getLink(item.link)">
-						<i class="{{item.icon}}"></i>
+						<i [class]="item.icon"></i>
 						<span class="nav-label">{{item.name}}</span>
 					</a>
 				</li>

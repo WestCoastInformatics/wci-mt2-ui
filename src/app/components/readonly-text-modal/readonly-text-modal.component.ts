@@ -3,7 +3,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'readonly-text-modal',
-  templateUrl: './readonly-text-modal.component.html'
+  templateUrl: './readonly-text-modal.component.html',
+  styleUrls: ['readonly-text-modal.component.scss']
 })
 export class ReadonlyTextModalComponent implements OnInit {
   @Input()

@@ -7,7 +7,7 @@
     <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
       <mat-select #detailsVersionSelect [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" [disableOptionCentering]="true"
         [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-        <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+        <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
           {{ organization.name }}
         </mat-option>
       </mat-select>
@@ -17,7 +17,7 @@
     <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
       <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
         (selectionChange)="selectedEdition()">
-        <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+        <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
           {{ edition.name }}
         </mat-option>
       </mat-select>
@@ -28,7 +28,7 @@
       <mat-select [disabled]="organizationId === '0'" [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'" #detailsVersionSelect
         [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
         <mat-option *ngIf="projectList == null || projectList.length == 0">No Projects</mat-option>
-        <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3" [title]="project.name">
+        <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
           {{ project.name }}
         </mat-option>
       </mat-select>
@@ -76,8 +76,9 @@
 
             <div class="update-profile-button">
               <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font" [disabled]="!profileNameValue"
-                  (click)="updateProject()">Update Profile</button>
+                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn" [disabled]="!profileNameValue" (click)="updateProject()">Update Profile</button>
+                <!-- <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="btn btn-primary btn-lg btn-wide-font" [disabled]="!profileNameValue"
+                  (click)="updateProject()">Update Profile</button> -->
               </div>
             </div>
           </div>
@@ -105,7 +106,7 @@
               </div>
               <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="save-team-button">
                 <div class="section-list text-right" aria-label="Save Teams" title="Save Teams">
-                  <button class="btn btn-primary btn-lg" id="save-teams-btn" [disabled]="!containsRole" (click)="updateProjectTeams()">Save Teams</button>
+                  <button class="rt2-btn rt2-action-btn" id="save-teams-btn" [disabled]="!containsRole" (click)="updateProjectTeams()">Save Teams</button>
                 </div>
               </div>
             </div>

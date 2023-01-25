@@ -9,6 +9,7 @@ import { Constants } from "src/app/utilities/constants.utility";
 @Component({
 	selector: "bulk-upgrade-modal",
 	templateUrl: "./bulk-upgrade-modal.component.html",
+	styleUrls: ['bulk-upgrade-modal.component.scss']
 })
 export class BulkUpgradeModalComponent {
 

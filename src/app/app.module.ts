@@ -64,12 +64,10 @@ import { WorkflowStatusBadgeComponent } from './components/workflow-status-badge
 import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
-// import { FeedbackCollectorComponent } from 'src/app/components/feedback-collector.component';
 // PAGE IMPORTS
 import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { FeedbackCollectorComponent } from './components/feedback-collector/feedback-collector.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationProjectsComponent } from './pages/organizations/projects/projects.component';
 import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.component';
@@ -105,7 +103,6 @@ import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concep
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
-//import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
 import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade-modal/adjudicate-upgrade-modal.component';
@@ -113,7 +110,6 @@ import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { CommonModule } from '@angular/common';
-import { CustomTooltipComponent } from './components/custom-tooltip/custom-tooltip.component';
 import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
 import { PaginationModule } from './components/pagination/pagination.module';
@@ -121,7 +117,6 @@ import { ArtifactsService } from './services/rest/artifacts.service';
 import { AuditService } from './services/rest/audit.service';
 import { DirectivesModule } from './directives/directives.module';
 import { RefsetMetaTableComponent } from './components/refset-meta-table/refset-meta-table.component';
-import { ShareRefsetModalComponent } from './components/share-modal/share-refset-modal.component';
 import { CreateRefsetComponent } from './components/create-refset/create-refset.component';
 import { InvitePeopleModalComponent } from './components/invite-people-modal/invite-people-modal.component';
 import { RequestAccessModalComponent } from './components/request-access-modal/request-access-modal.component';
@@ -261,10 +256,8 @@ const appRoutes: Routes = [
         AddRemoveConceptsIconsComponent,
         AddRemoveConceptGroupIconsComponent,
         LoginComponent,
-        //LandingPageComponent,
         LandingComponent,
         DashboardComponent,
-        FeedbackCollectorComponent,
         SidebarComponent,
         OrganizationProjectsComponent,
         OrganizationTeamsComponent,
@@ -282,11 +275,9 @@ const appRoutes: Routes = [
         LaunchComparisonModalComponent,
         RemoveDashboardComponentModalComponent,
         RefsetFeedbackListComponent,
-        CustomTooltipComponent,
         ComposeModalComponent,
         WorkflowStatusBadgeComponent,
         RefsetMetaTableComponent,
-        ShareRefsetModalComponent,
         InvitePeopleModalComponent,
         RequestAccessModalComponent
     ],
@@ -327,7 +318,7 @@ const appRoutes: Routes = [
         }),
         DialogModule,
         TreeModule,
-        AgGridModule.withComponents([TemplateRenderer, CustomTooltipComponent]),
+        AgGridModule.withComponents([TemplateRenderer]),
         EditorModule,
         AngularSplitModule,
         NgbModule,

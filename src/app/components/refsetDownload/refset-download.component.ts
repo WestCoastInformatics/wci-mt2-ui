@@ -15,7 +15,8 @@ import { data } from 'jquery';
  */
 @Component({
   selector: 'app-refset-download',
-  templateUrl: 'refset-download.component.html'
+  templateUrl: 'refset-download.component.html',
+  styleUrls: ['refset-download.component.scss']
 })
 
 export class RefsetDownloadComponent {

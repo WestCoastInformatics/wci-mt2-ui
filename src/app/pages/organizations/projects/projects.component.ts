@@ -3,7 +3,6 @@ import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';

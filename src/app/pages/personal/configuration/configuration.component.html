@@ -32,7 +32,7 @@
               </mat-form-field>
             </div>
             <div class="section-btn">
-              <button class="btn btn-primary btn-lg btn-wide-font" aria-label="Update Profile" title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue  || !isValidEmail()"
+              <button class="rt2-btn rt2-action-btn" aria-label="Update Profile" title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue  || !isValidEmail()"
                 (click)="updateProfile()">Update Profile</button>
             </div>
           </div>
@@ -41,7 +41,7 @@
             <div class="account-profile-head section-header">Profile Picture</div>
             <div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
             <div class="section-btn">
-              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="btn btn-primary btn-lg btn-wide-font" style="margin-right: 0.25em"
+              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="btn btn-primary btn-lg btn-wide-font m-r-25em"
                 (click)="onPhotoDelete()">
                 Delete Picture
               </label>

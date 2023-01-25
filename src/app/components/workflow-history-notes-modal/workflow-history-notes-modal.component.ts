@@ -9,7 +9,7 @@ declare const tinymce: any;
 @Component({
   selector: 'workflow-history-notes-modal',
   templateUrl: './workflow-history-notes-modal.component.html',
-  styleUrls: ['./workflow-history-notes-modal.component.scss']
+  styleUrls: ['workflow-history-notes-modal.component.scss']
 })
 export class WorkflowHistoryNotesModalComponent implements OnInit {
 

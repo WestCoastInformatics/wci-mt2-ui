@@ -1,10 +1,10 @@
-<button type="button" mat-raised-button color="green"
+<button type="button" color="green"
     (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)"
-    aria-hidden="false" class="refset-tool-action-button mr-15"
-    aria-label="Finish Upgrade" title="Finish Upgrade" ng-reflect-color="green">
+    aria-hidden="false" class="rt2-btn rt2-next-back-btn"
+    aria-label="Finish Upgrade" title="Finish Upgrade">
     Finish Upgrade
 </button>
-<!-- <button mat-menu-item (click)="openUpgradeModal(upgradeDialog)" aria-label="Upgrade" title="Upgrade" ng-reflect-color="primary">Upgrade Reference Set</button> -->
+
 <ng-template #finishUpgradeDialog let-modal>
     <ng-container>
         <div class="modal-header rt2-modal-header">
@@ -33,22 +33,21 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer rt2-modal-footer">
-            <button type="button" mat-raised-button color="green"
+        <div class="modal-footer rt2-modal-footer rt2-btn-group">
+            <button type="button" color="green"
                 (click)="getInactiveChangeReport()" aria-hidden="false"
-                class="refset-tool-action-button export-inactive-concept-modal-button"
-                aria-label="Download" title="Download" ng-reflect-color="green">
+                class="rt2-btn rt2-next-back-btn"
+                aria-label="Download" title="Download">
                 Download Inactive Concept Report
             </button>
-            <button type="button" mat-raised-button color="green"
+            <button type="button" color="green"
                 (click)="getFinishedChangeReport()" aria-hidden="false"
-                class="refset-tool-action-button mr-15"
-                aria-label="Download" title="Download" ng-reflect-color="green">
+                class="rt2-btn rt2-next-back-btn"
+                aria-label="Download" title="Download">
                 Download Change Report
             </button>
-            <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button color="primary" aria-hidden="false"
-				class="ml-3 refset-tool-action-button" aria-label="Close"
-				ng-reflect-color="primary">
+            <button type="button" (click)="modal.dismiss('Cross click')" color="primary" aria-hidden="false"
+				class="rt2-btn rt2-cancel-btn" aria-label="Close">
 				Close
 			</button>
         </div>

@@ -20,7 +20,8 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 
 @Component({
   selector: 'app-launch-comparison-modal',
-  templateUrl: './launch-comparison-modal.component.html'
+  templateUrl: './launch-comparison-modal.component.html',
+  styleUrls: ['launch-comparison-modal.component.scss']
 })
 export class LaunchComparisonModalComponent {
 

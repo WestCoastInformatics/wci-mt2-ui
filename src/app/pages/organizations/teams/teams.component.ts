@@ -56,7 +56,7 @@ export class OrganizationTeamsComponent implements OnInit {
             { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 2, minWidth: 65, maxWidth: 500, unSortIcon: true, resizable: true },
             { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 2, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
             {
-                field: 'role', tooltipField: 'role', headerName: 'Role', flex: 1, minWidth: 65, resizable: true, cellClass: 'text-camel', unSortIcon: true,
+                field: 'role', tooltipField: 'role', headerName: 'Role', flex: 1, minWidth: 65, resizable: true, cellClass: 'text-capitalize', unSortIcon: true,
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {

@@ -9,7 +9,8 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
   selector: 'upgrade-modal',
-  templateUrl: './upgrade-modal.component.html'
+  templateUrl: './upgrade-modal.component.html',
+  styleUrls: ['upgrade-modal.component.scss']
 })
 export class UpgradeModalComponent implements OnInit {
 

@@ -1,7 +1,7 @@
 @import "~src/variables.scss";
 
 nav {
-    height: 50px;
+    height: 50px !important;
     padding: 5px;
     font-family: Roboto, Helvetica, Arial, sans-serif;
     font-size: 16px;
@@ -9,21 +9,12 @@ nav {
     position: fixed;
     width:100%;
     background-color: #434955 !important;
-    div {
-        margin-top: -10px;
-        div {
-            margin-top: 5px;
-        }
-    }
+
     a.logo {
         height: 40px;
         font-size: 1.6rem;
 
-        &:hover {
-            text-decoration: none;
-        }
-
-        span.title {
+        span.nav-title {
             font-weight: 300;
             letter-spacing: 1.5px;
             line-height: 4rem;
@@ -173,4 +164,166 @@ nav {
             }
         }
     }
+
+}
+
+.navbar  {
+  justify-content: center; 
+  padding-bottom: 5px !important;
+}
+
+.navbar.sticky-top.navbar-dark {
+  width: 100%;
+  width: -moz-available;
+  /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;
+  /* Mozilla-based browsers will ignore this. */
+  width: fill-available;
+  min-height: 50px;
+  height: fit-content;
+  position: sticky;
+}
+
+
+.rt2-nav-item-row>* {
+  margin-left: 10px;
+}
+
+.rt2-nav-item-row {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.rt2-nav-logo-section {
+  width: 350px;
+}
+
+.rt2-nav-title {
+  font-family: $standard_font_family;
+  font-size: 16px;
+  color: #eee;
+}
+.rt2-nav-title:hover {
+  color: #00a9e0;
+  text-decoration: none;
+}
+
+.rt2-breadcrumb-bar> :first-child {
+  margin-left: 10px;
+}
+
+.rt2-breadcrumb-bar> :not(:last-child)::after {
+  content: "/";
+  color: $ghost-grey;
+  margin: 0px 10px;
+}
+
+.rt2-breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  // margin-top: 0.5rem;
+  //font-size: smaller;
+
+  .rt2-breadcrumb {
+    color: #c8cfd6;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300;
+
+    &.rt2-breadcrumb-selectable {
+      cursor: pointer;
+      color: $standard_link_color;
+    }
+  }
+}
+
+.extended-breadcrumb-and-roles {
+  // display: inline-block !important
+}
+
+.navbar-div {
+  width: 60px;
+  border-left: 1px solid #797979;
+  border-right: 1px solid #797979;
+  height: 40px;
+  cursor: pointer;
+}
+
+.navbar-icon {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  text-align: center;
+  height: 25px;
+  width: 25px;
+}
+
+.navbar-icon-label {
+  text-align: center;
+  color: #ffffff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 9px;
+}
+
+.nav-item {
+  width: 75px;
+  border-right: 1px solid #797979;
+  height: 50px;
+  cursor: pointer;
+  padding-top: 6px;
+  text-align: center;
+
+  img {
+    max-height: 25px;
+    margin-bottom: -5px;
+  }
+
+  .nav-label {
+    color: #ffffff;
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 1450px) {
+  .extended-breadcrumb {
+    display:inline-block !important
+  }
+}
+
+@media (max-width: 1230px) {
+  .rt2-breadcrumb-bar {
+    display: inline-block !important;
+  }
+}
+
+.project-role-and-assignee-label {
+  font-size: 0.8em;
+  display: grid;
+}
+
+@media (max-width: 1170px) {
+  .project-role-and-assignee-label {
+    display: none !important;
+  }
+}
+
+.left-title-buttons {
+  display: contents;
+}
+
+.project-role-label {
+  height: 45px;
+}
+
+.project-role {
+  padding-right: 30px;
+  color: white;
+  position: relative;
+}
+
+.project-assignee {
+  padding-right: 30px;
+  color: white;
+  position: relative;
 }

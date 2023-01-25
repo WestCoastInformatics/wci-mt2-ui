@@ -14,12 +14,11 @@ import { filter } from 'rxjs/operators';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit {
     versions: object;
     environment: string;
-    isLanding = false;
 
     constructor(
         private authoringService: AuthoringService,
@@ -49,11 +48,6 @@ export class AppComponent implements OnInit {
         this.environment = this.envService.env;
 
         this.assignFavicon();
-        this.router.events.subscribe((event: any) => {
-            if (event instanceof RoutesRecognized) {
-                this.isLanding = event.url.split('/')[1] === '' || event.url.split('/')[1].startsWith('#');
-            }
-        });
 
         this.authenticationService.prepareUserSession();
     }

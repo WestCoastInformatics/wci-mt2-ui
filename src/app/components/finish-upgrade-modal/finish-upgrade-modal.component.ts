@@ -9,7 +9,8 @@ import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component'
 
 @Component({
   selector: 'finish-upgrade-modal',
-  templateUrl: './finish-upgrade-modal.component.html'
+  templateUrl: './finish-upgrade-modal.component.html',
+  styleUrls: ['finish-upgrade-modal.component.scss']
 })
 export class FinishUpgradeModalComponent implements OnInit {
 

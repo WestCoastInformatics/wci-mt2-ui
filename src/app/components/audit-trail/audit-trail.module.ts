@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
-import { CustomTooltipComponent } from '../custom-tooltip/custom-tooltip.component';
 import { MatButtonModule } from '@angular/material/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,7 +19,7 @@ import { PaginationModule } from '../pagination/pagination.module';
     ],
     imports: [
         CommonModule,
-        AgGridModule.withComponents([TemplateRenderer, CustomTooltipComponent]),
+        AgGridModule.withComponents([TemplateRenderer]),
         MatButtonModule,
         MatFormFieldModule,
         MatInputModule,

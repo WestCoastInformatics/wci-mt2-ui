@@ -6,7 +6,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
               [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -27,7 +27,7 @@
                     </div>
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
                             </ag-grid-angular>
                             <!-- description template -->
                             <ng-template #descriptionSection let-params>

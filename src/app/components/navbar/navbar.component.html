@@ -1,16 +1,14 @@
-<nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 5px !important;">
+<nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp">
 
-    <div class="refset-tool-nav-item-row">
+    <div class="rt2-nav-item-row">
 
-        <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
-            <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
-            <span class="title text-ghost-grey refset-tool-nav-title">SNOMED CT Reference Set Tool 2.0</span>
+        <a class="rt2-nav-logo-section" routerLink="/" title="SNOMED CT Reference Set Tool 2.0 Home" aria-label="SNOMED CT Reference Set Tool 2.0 home">
+            <img class="rt2-logo mr-2 p-0" src="/assets/small_logo.png">
+            <span class="text-ghost-grey rt2-nav-title">SNOMED CT Reference Set Tool 2.0</span>
         </a>
 
-        <div class="refset-tool-breadcrumb-bar text-ghost-grey"
-          [class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-bread-crumb-and-roles' : breadcrumbs.length > 2 ? 'extended-bread-crumb' : 'display: flex'">
-            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class"
-              (click)="navigate(breadcrumb.id)">
+        <div class="rt2-breadcrumb-bar text-ghost-grey" [class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-breadcrumb-and-roles' : breadcrumbs.length > 2 ? 'extended-breadcrumb' : 'display: flex'">
+            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
                 {{breadcrumb.label}}
             </div>
         </div>
@@ -34,19 +32,19 @@
                 assignedUser() }}</span>
         </div>
 
-        <div class="directory-nav" (click)="navigateToRoute('/library')">
-            <img class="directory-icon" src="/assets/directory-icon.svg">
-            <span class="directory-icon-label">Library</span>
+        <div class="navbar-div" (click)="navigateToRoute('/library')">
+            <div class="navbar-icon"><img class="navbar-icon" src="/assets/directory-icon.svg"></div>
+            <div class="navbar-icon-label">Library</div>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="project-nav" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
-            <img class="projects-icon" src="/assets/projects-icon.svg">
-            <span class="projects-icon-label">Projects</span>
+        <div *ngIf="isUserLoggedIn" class="navbar-div" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
+            <div class="navbar-icon"><img class="navbar-icon" src="/assets/projects-icon.svg"></div>
+            <div class="navbar-icon-label">Projects</div>
         </div>
 
-        <div *ngIf="isUserLoggedIn" class="nav-item" (click)="navigateToRoute('/dashboard')">
-            <img class="nav-icon dashboard-icon" src="/assets/dashboard-icon.svg">
-            <span class="nav-label dashboard-icon-label">Dashboard</span>
+        <div *ngIf="isUserLoggedIn" class="navbar-div" (click)="navigateToRoute('/dashboard')">
+            <div class="navbar-icon"><img class="navbar-icon" src="/assets/dashboard-icon.svg"></div>
+            <div class="navbar-icon-label">Dashboard</div>
         </div>
 
         <div *ngIf="isUserLoggedIn" class="float-right mr-2">
@@ -76,13 +74,13 @@
         </div>
     </div>
 </nav>
-<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row" style="justify-content: center; padding-bottom: 5px !important;"
+<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp"
   id="bg-landing-header">
-    <div class="refset-tool-nav-item-row">
+    <div class="rt2-nav-item-row">
 
-        <a class="refset-tool-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
-            <img class="refset-tool-logo mr-2 p-0" src="/assets/small_logo.png">
-            <span class="title text-ghost-grey refset-tool-nav-title">SNOMED CT Reference Set Tool 2.0</span>
+        <a class="rt2-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
+            <img class="rt2-logo mr-2 p-0" src="/assets/small_logo.png">
+            <span class="text-ghost-grey rt2-nav-title">SNOMED CT Reference Set Tool 2.0</span>
         </a>
 
         <ng-container [ngSwitch]="environment">
@@ -95,11 +93,12 @@
 
     </div>
     <div class="left-title-buttons">
-        <div class="directory-nav" style="margin-left: auto; margin-right: 0;" (click)="navigateToRoute('/library')">
-            <img class="directory-icon" src="/assets/directory-icon.svg">
-            <span class="directory-icon-label">Library</span>
+        <div class="navbar-div no-m-r m-l-auto" (click)="navigateToRoute('/library')">
+          <div class="navbar-icon"><img class="navbar-icon" src="/assets/directory-icon.svg"></div>
+          <div class="navbar-icon-label">Library</div>
         </div>
-        <a class="btn btn-link text-white" (click)="login()">Log In</a>
+
+        <a class="btn btn-link text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a>
     </div>
 
 </nav>

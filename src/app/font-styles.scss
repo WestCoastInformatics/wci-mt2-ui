@@ -1,0 +1,39 @@
+
+/****** Styles brought over from refset_global_styles.css related to fonts ****/
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.rt2-directory-column-workflow-status .ag-cell-value {
+  text-transform: capitalize;
+}
+
+.rt2-directory-column-version-status .ag-cell-value {
+  text-transform: capitalize;
+}
+
+.mat-option-text {
+  text-transform: capitalize;
+}
+
+.header-title {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 300
+}
+
+.page-title {
+  color: #9b9b9b;
+  font-family: $standard_font_family;
+  font-size: 1em;
+}
+

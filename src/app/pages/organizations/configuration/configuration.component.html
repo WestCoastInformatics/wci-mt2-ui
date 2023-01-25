@@ -4,7 +4,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
               [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -41,10 +41,13 @@
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
-                            <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                            <!-- <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
                               [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile"
                               class="btn btn-primary btn-lg btn-wide-font" (click)="updateOrganization()">Update
-                                Profile</button>
+                                Profile</button> -->
+                            <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn"
+                             [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile" 
+                             (click)="updateOrganization()">Update Profile</button>
                         </div>
                     </div>
 
@@ -54,12 +57,12 @@
                             <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
                         </div>
                         <div class="section-btn">
-                            <label aria-label="Delete Picture" title="Delete Picture" *ngIf="selectedOrganization?.iconUri" class="btn btn-primary btn-lg btn-wide-font"
-                              style="margin-right: 0.25em" (click)="onPhotoDelete()">
+                            <label aria-label="Delete Picture" title="Delete Picture" *ngIf="selectedOrganization?.iconUri" class="rt2-btn rt2-action-btn mr-3"
+                             (click)="onPhotoDelete()">
                                 Delete Picture
                             </label>
                             <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture"
-                              class="btn btn-primary btn-lg btn-wide-font">
+                              class="rt2-btn rt2-action-btn">
                                 Edit Picture
                                 <input type="file" class="d-none" (change)="onPhotoChange($event)" />
                             </label>
@@ -74,7 +77,7 @@
                             be
                             undone. Please be certain before taking action.
                             <br>
-                            <div class="org-config-spacing">
+                            <div class="rt2-config-spacing">
                                 <remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId()
                                   [componentName]=getSelectedOrganizationName()>
                                 </remove-dashboard-component-modal>
@@ -84,7 +87,7 @@
                             Organizational Audit Trail</div>
                         <div class="organization-profile-mid">View the administrative information associated with this organization (such as adding members or removing teams).
                             <br>
-                            <div class="org-config-spacing">
+                            <div class="rt2-config-spacing">
                                 <audit-trail-modal [refsetInternalId]="organizationId" [isDetails]="false" *ngIf="organizationId">
                                 </audit-trail-modal>
                             </div>

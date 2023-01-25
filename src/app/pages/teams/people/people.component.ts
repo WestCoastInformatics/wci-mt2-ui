@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
@@ -101,8 +100,7 @@ export class TeamsPeopleComponent implements OnInit {
       onGridReady: this.onGridReady,
       frameworkComponents: {
         templateRenderer: TemplateRenderer,
-        'categoryFilterComponent': CategoryFilterComponent,
-        customTooltipComponent: CustomTooltipComponent
+        'categoryFilterComponent': CategoryFilterComponent
       },
       defaultColDef: {
         sortable: true,
