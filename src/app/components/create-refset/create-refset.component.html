@@ -234,9 +234,10 @@
                                         <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="copySearchInput"
                                           (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
 
-                                        <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
-                                            None</mat-option>
-                                        <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
+                                        <mat-option [disabled]="true" *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
+                                            <span *ngIf="copySearchInput.length > 0">No Reference Sets matching your criteria</span>
+                                        </mat-option>
+                                        <mat-option *ngIf="refsetOptionsLoading" [disabled]="true">Loading...</mat-option>
 
                                         <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
                                             <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}"
@@ -272,11 +273,12 @@
                                     <mat-select [formControl]="selectedCombinationRefsetsForm" multiple>
 
                                         <input class="concept-dropdown-input full-width" placeholder="Type here..." (input)="onSearchChange($event.target.value, true)"
-                                          (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
+                                          (mouseover)="$event.target.focus()" (keydown)="handleInput($event)" [(ngModel)]="comboSearchInput">
 
-                                        <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading" class="empty-value-checkbox">
-                                            None</mat-option>
-                                        <mat-option *ngIf="refsetOptionsLoading" class="empty-value-checkbox">Loading...</mat-option>
+                                        <mat-option [disabled]="true" *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading" class="empty-value-checkbox">
+                                            <span *ngIf="comboSearchInput.length > 0">No Reference Sets matching your criteria</span>
+                                        </mat-option>
+                                        <mat-option *ngIf="refsetOptionsLoading" class="empty-value-checkbox" [disabled]="true">Loading...</mat-option>
 
                                         <mat-option *ngFor="let refset of refsetOptions" [value]="refset" (click)="optionSelect(refset)">
                                             <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}"

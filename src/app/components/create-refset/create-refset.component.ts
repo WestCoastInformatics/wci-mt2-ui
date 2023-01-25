@@ -42,6 +42,7 @@ export class CreateRefsetComponent implements OnInit {
     copyRefsetVersionOptions: any[];
     copySearchInput: string;
     copySelectedVersion: any;
+    comboSearchInput: string;
     refsetOptions: any[];
     refsetOptionsLoading = false;
     selectedParentConcept = undefined;
@@ -270,6 +271,7 @@ export class CreateRefsetComponent implements OnInit {
         this.step = 1;
         this.copyRefsetVersionOptions = [];
         this.copySearchInput = '';
+        this.comboSearchInput = '';
         this.refsetOptions = [];
         this.refsetOptionsLoading = false;
         this.selectedCopyRefset = '';
@@ -632,7 +634,7 @@ export class CreateRefsetComponent implements OnInit {
         // if this is numeric only treat it as a refset ID
         if (/^\d+$/.test(query)) {
             queryField = 'refsetId:' + query;
-        } else { 
+        } else {
             queryField = 'name:' + query;
         }
 

@@ -1957,3 +1957,9 @@ app-date-text-floating-filter {
 .taxonomy-code-text {
   line-height: normal;
 }
+
+.empty-value-checkbox {
+    mat-pseudo-checkbox {
+        display: none !important;
+      }
+}
