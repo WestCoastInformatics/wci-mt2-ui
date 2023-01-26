@@ -62,26 +62,7 @@
     .rt2-directory-column-information .rt2-table-action-icon {
       left: 0px;
     }
-  
-    .mat-raised-button {
-      min-width: 30px !important;
-      border-radius: 3px !important;
-      //padding: 0px !important;
-      line-height: 30px !important;
-    }
-  
-    .mat-raised-button.mat-primary {
-      background-color: $cerulean  !important;
-      margin-bottom: 5px
-    }
-  
-    .mat-raised-button .mat-button-wrapper {
-      color: black
-    }
-  
-    .mat-raised-button.mat-primary .mat-button-wrapper {
-      color: white
-    }
+
 }
 
 .refsetDetailsPage .page-title {
@@ -169,10 +150,6 @@
   padding-right: 15px;
 }
 
-.refsetDetailsPage button .mat-raised-button.mat-button-base {
-  width: 150px;
-}
-
 .rt2-details-search-field {
   width: 80%;
   padding-left: 30px;
@@ -214,16 +191,6 @@
 
   .open-container {
     padding: none;
-
-    .mat-button .mat-button-wrapper>*,
-    .mat-flat-button .mat-button-wrapper>*,
-    .mat-stroked-button .mat-button-wrapper>*,
-    .mat-raised-button .mat-button-wrapper>*,
-    .mat-icon-button .mat-button-wrapper>*,
-    .mat-fab .mat-button-wrapper>*,
-    .mat-mini-fab .mat-button-wrapper>* {
-      vertical-align: top !important;
-    }
   }
 }
 
@@ -284,17 +251,6 @@
   }
 }
 
-.refsetDetailsPage .mat-raised-button.mat-button-base.rt2-action-button {
-  line-height: 40px !important;
-}
-
-.refsetDetailsPage .mat-raised-button.mat-button-base.ecl-builder-action-button {
-  line-height: 30px !important;
-  font-size: 12px;
-  margin-top: 23px;
-  position: absolute;
-}
-
 .rt2-details-column-remove-icon {
   padding: 0 0 0 17px !important;
 }
@@ -305,14 +261,6 @@
 
 .workflow-stepper-bar {
   padding-bottom: 10px;
-}
-
-.edit-refset-button {
-  border-width: 1px;
-  border-style: solid;
-  border-color: $main-color;
-  border-radius: 3px;
-  margin-left: 15px;
 }
 
 .workflow-history-notes-modal>.modal-dialog>.modal-content {
@@ -343,11 +291,6 @@
 .down-arrow-for-menu {
   font-size: 8px;
   padding-top: 5px;
-}
-
-.refsetDetailsPage .refset-title-container .edit-button-group-right-below-sticky-header .refset-action-button {
-  margin-left: 5px !important;
-  min-width: 150px !important;
 }
 
 .edit-button-group-right-below-sticky-header {

@@ -1,6 +1,6 @@
 /******************************** Buttons ********************************/
 
-/*** Material design and pagination button styles ***/
+/*** Material design and pagination button styles 
 .mat-raised-button {
   background-color: $standard_default_button_color;
   color: white;
@@ -9,33 +9,18 @@
   letter-spacing: 1.5px;
   line-height: 30px !important;
 }
-
+***/
 
 .pagination-page-buttons>.mat-button-wrapper {
   color: black;
 }
 
 .rt2-pagination-container .pagination-page-buttons {
-  min-width: 30px !important;
+  min-width: 20px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
   border-radius: 3px !important;
   line-height: 30px !important;
-}
-
-.mat-flat-button.mat-primary,
-.mat-raised-button.mat-primary {
-  background-color: $standard_primary_button_color;
-}
-
-.mat-flat-button.mat-green,
-.mat-raised-button.mat-green {
-  background-color: $standard_green_button_color;
-  margin-left: 3px;
-}
-
-.mat-flat-button.mat-red,
-.mat-raised-button.mat-red {
-  background-color: $standard_red_button_color;
-  margin-left: 3px;
 }
 
 .close-button button.rt2-table-action-icon {
@@ -46,12 +31,16 @@
 .rt2-pagination-container {
   margin-right: 10px;
   padding: 20px 70px;
+  display: flex;
 
   .rt2-pagination-top-row {
-    display: flex;
+    flex: 2;
+    justify-content: center;
+    text-align: center;
   }
 
   .rt2-pagination-bottom-row {
+    margin-top: 3px;
     text-align: center;
   }
 
@@ -65,15 +54,9 @@
   }
 
   .rt2-pagination-total-label {
+    margin-top: 7px;
     flex: 1;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .rt2-pagination-spacer {
-    visibility: hidden;
-    flex: 1;
-    display: flex;
+    justify-content: center;
   }
 
   .rt2-pagination-count {
@@ -132,6 +115,15 @@
   background-color: #00a9e0;
   color: white;
   // border: 1px solid #00a9e0;
+}
+
+/***** Feedback btn *****/
+.rt2-feedback-btn {
+  background-color: #00a9e0;
+  color: white;
+  margin-top: 5px !important;
+  margin-right: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 /***** Remove btn *****/

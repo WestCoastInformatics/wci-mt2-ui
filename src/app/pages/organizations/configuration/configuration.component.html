@@ -41,10 +41,6 @@
                             </mat-form-field>
                         </div>
                         <div class="section-btn">
-                            <!-- <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
-                              [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile"
-                              class="btn btn-primary btn-lg btn-wide-font" (click)="updateOrganization()">Update
-                                Profile</button> -->
                             <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn"
                              [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile" 
                              (click)="updateOrganization()">Update Profile</button>

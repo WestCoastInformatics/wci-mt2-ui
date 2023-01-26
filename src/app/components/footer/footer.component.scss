@@ -25,11 +25,13 @@ footer.footer {
   }
 }
 
+// Hide feedback button
 .atlwdg-trigger {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .atlwdg-trigger.atlwdg-RIGHT {
+  visibility: hidden !important;
   top: 60% !important;
   left: 99% !important;
 }

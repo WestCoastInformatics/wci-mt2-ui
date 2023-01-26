@@ -1,5 +1,5 @@
-<button *ngIf="!isDetailsPage && canAdd" mat-raised-button color="primary" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
-  class="rt2-action-button" [ngClass]="{ inactive: disabled }" aria-label="Create New Reference Set" title="Create New Reference Set">
+<button *ngIf="!isDetailsPage && canAdd" (click)="openCreateRefsetModal(createNewRefsetDialog);" aria-hidden="false" #createRefsetButton
+  class="rt2-btn rt2-action-btn" [ngClass]="{ inactive: disabled }" aria-label="Create New Reference Set" title="Create New Reference Set">
     Create New Reference Set
 </button>
 
@@ -346,7 +346,7 @@
                                 </mat-form-field>
                                 <input type="hidden" [(ngModel)]="clause.negated" value="false">
 
-                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="btn btn-primary i18 ecl-buttonn rounded">ECL Builder
+                                <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="rt2-btn rt2-action-btn">ECL Builder
                                     <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
                                       aria-label="ECL Builder" title="Open ECL Builder" /> -->
                                 </button>

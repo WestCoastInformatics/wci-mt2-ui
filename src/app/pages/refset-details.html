@@ -286,11 +286,6 @@
             <div class="metadata-collapsible-container-group-header pointer" (click)="metadataCollapseTrigger()">
                 <div class="metadata-collapsible-container-title">
                     Reference Set Metadata
-                    <!-- <div *ngIf="editMode" class="edit-refset-button">
-                        <create-new-refset [disabled]="!allowedToEdit" [status]="refsetStatus" [isDetailsPage]="true" [editMode]="editMode" [refsetId]="refsetId"
-                            [refsetInternalId]="id" [inputProperties]="editMetadataProperties" (processChangedMemberEffects)="processChangedMemberEffects($event)">
-                        </create-new-refset>
-                    </div> -->
 
                 </div>
                 <img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable" alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button"
@@ -500,7 +495,7 @@
                                             </mat-form-field>
                                             <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
                                             <button color="primary" aria-hidden="false"
-                                              class="rt2-btn rt2-action-btn ecl-button" unfocus
+                                              class="rt2-btn rt2-action-btn" unfocus
                                               (click)="openEclBuilder('detailsTableSearchInput')">ECL
                                                  Builder
                                                 <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
@@ -516,8 +511,8 @@
                                                   [disabled]="!showMembersSearchBar()" />
                                             </mat-form-field>
                                             <span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
-                                            <button mat-raised-button color="primary" aria-hidden="false"
-                                              class="rt2-btn rt2-action-btn ecl-button"
+                                            <button aria-hidden="false"
+                                              class="rt2-btn rt2-action-btn"
                                               (click)="openEclBuilder('detailsTaxonomySearchInput')" unfocus>ECL
                                                 Builder
                                                 <!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
@@ -935,11 +930,11 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button [disabled]="!validatePublishDate(publishVersionDate.value)" type="button" (click)="publishLocalset(publishVersionDate.value);" mat-raised-button
-          color="primary" aria-hidden="false" class="rt2-action-button mr-20" aria-label="Publish">
+        <button [disabled]="!validatePublishDate(publishVersionDate.value)" type="button" (click)="publishLocalset(publishVersionDate.value);" 
+          aria-hidden="false" class="rt2-btn rt2-action-btn mr-20" aria-label="Publish">
             Publish
         </button>
-        <button type="button" (click)="modal.dismiss('No click')" mat-raised-button color="red" aria-hidden="false" class="rt2-action-button" aria-label="Cancel">
+        <button type="button" (click)="modal.dismiss('No click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel">
             Cancel
         </button>
     </div>

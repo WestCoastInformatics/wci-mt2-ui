@@ -24,7 +24,10 @@
         <button [disabled]="downloadDisabled" type="button" (click)="getAuditReport()" aria-hidden="false"
           class="rt2-btn rt2-download-btn" aria-label="Download" title="Download">
             Download Audit Trail
-            <i class="fa fa-download"></i>
+            <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
+              download
+            </mat-icon>
+
         </button>
         <button aria-hidden="false" class="rt2-btn rt2-close-btn" (click)="modal.dismiss('Cross click');">
             Close

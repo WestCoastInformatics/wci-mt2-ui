@@ -321,25 +321,6 @@ select {
     left: 0px;
   }
 
-  .mat-raised-button {
-    min-width: 30px !important;
-    border-radius: 3px !important;
-    //padding: 0px !important;
-    line-height: 30px !important;
-  }
-
-  .mat-raised-button.mat-primary {
-    background-color: $cerulean  !important;
-    margin-bottom: 5px
-  }
-
-  .mat-raised-button .mat-button-wrapper {
-    color: black
-  }
-
-  .mat-raised-button.mat-primary .mat-button-wrapper {
-    color: white
-  }
 
 }
 
@@ -574,8 +555,7 @@ select {
   margin-top: 0em !important;
 }
 
-.mat-input-element,
-.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+.mat-input-element {
   caret-color: $cerulean  !important;
 }
 
@@ -1489,13 +1469,6 @@ select {
   top: -20px;
 }
 
-.ecl-button {
-  font-size: 12px !important;
-  margin-top: 23px !important;
-  margin-left: 5px !important;
-  position: absolute !important;
-}
-
 img.rt2-edition-flag {
   margin-bottom: 4px;
 }
@@ -1581,14 +1554,6 @@ img.rt2-edition-flag {
   font-size: 20px;
   color: $main-color;
   margin-bottom: 10px;
-
-
-  .btn.btn-primary {
-    background-color: $main-color;
-    border-radius: 0.25rem !important;
-    border-color: $main-color;
-    font-size: 14px;
-  }
 }
 
 .section-btn {
@@ -1625,12 +1590,6 @@ img.rt2-edition-flag {
     text-decoration: underline !important;
   }
 
-  .btn.btn-primary {
-    background-color: $main-color;
-    border-radius: 0.25rem !important;
-    border-color: $main-color;
-    font-size: 14px;
-  }
 }
 
 .content-wrapper {
@@ -1754,11 +1713,6 @@ app-date-text-floating-filter {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, .5);
   box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-}
-
-.default-btn {
-  color: #000;
-  background-color: rgba(0, 0, 0, 0.2)
 }
 
 .unfocus-btn {

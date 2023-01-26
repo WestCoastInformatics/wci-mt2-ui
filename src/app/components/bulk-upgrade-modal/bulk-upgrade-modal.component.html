@@ -1,8 +1,4 @@
-<!-- <a *ngIf="project?.roles?.includes('AUTHOR') || project?.roles?.includes('ADMIN')" aria-hidden="false"
-   class='btn btn-primary rounded btn-lg float-right btn-wide-font w-140'
-	aria-label="Bulk Upgrade"  (click)="openUpgradeModal(bulkUpgradeDialog)">
-	Bulk Upgrade
-</a> -->
+
 <button *ngIf="project?.roles?.includes('AUTHOR') || project?.roles?.includes('ADMIN')" aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Bulk Upgrade"  (click)="openUpgradeModal(bulkUpgradeDialog)">
 	Bulk Upgrade
 </button>

@@ -55,7 +55,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
     ngAfterViewInit(): void {
         if (document.getElementById("audit-button")) {
-            document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
+            document.getElementById("audit-button").className = "rt2-btn rt2-action-btn";
         }
     }
 

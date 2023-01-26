@@ -213,12 +213,12 @@
 
         <div class="feedback-modal-footer modal-footer mt-0 mb-3">
 
-            <button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" mat-raised-button class="rt2-action-button mat-green mr-2">{{
+            <button *ngIf="!isResolved" [disabled]="!checkComplete()" (click)="saveChanges()" class="rt2-btn rt2-next-back-btn mr-2">{{
                 postButtonText }}</button>
-            <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" mat-raised-button class="rt2-action-button mat-red mr-2">Cancel Edit
+            <button *ngIf="editMode.includes('edit')" (click)="resetPostForm()" class="rt2-btn rt2-cancel-btn mr-2">Cancel Edit
             </button>
 
-            <button *ngIf="!editMode.includes('edit')" (click)="modal.dismiss()" mat-raised-button class="rt2-action-button mat-primary">Close
+            <button *ngIf="!editMode.includes('edit')" (click)="modal.dismiss()" class="rt2-btn rt2-close-btn">Close
             </button>
         </div>
 
@@ -243,9 +243,9 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deleteThread();" mat-raised-button class="rt2-action-button mat-red mr-2">Delete Thread
+        <button type="button" (click)="deleteThread();" class="rt2-btn rt2-remove-btn mr-2">Delete Thread
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="rt2-action-button default-btn">Cancel
+        <button (click)="modal.dismiss()" class="rt2-btn rt2-cancel-btn">Cancel
         </button>
     </div>
 
@@ -269,10 +269,10 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="deletePost();" mat-raised-button class="rt2-action-button mat-red mr-2">
+        <button type="button" (click)="deletePost();" class="rt2-btn rt2-remove-btn mr-2">
             Delete Post
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="rt2-action-button default-btn">Cancel
+        <button (click)="modal.dismiss()" class="rt2-btn rt2-cancel-btn">Cancel
         </button>
     </div>
 

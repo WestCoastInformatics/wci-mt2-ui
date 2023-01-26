@@ -36,12 +36,12 @@
     </div>
     <div class="modal-footer rt2-modal-footer rt2-lockable">
         <button type="button" [disabled]="description === ''" (click)="sendRequest()"
-                mat-raised-button color="green" aria-hidden="false" class="rt2-action-button"
+                aria-hidden="false" class="rt2-btn rt2-next-back-btn"
                 aria-label="Send Email" title="Send Email">
             Send Email
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 
-          class="ml-3 rt2-action-button default-btn" aria-label="Cancel" title="Cancel">
+        <button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" 
+          class="ml-3 rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">
             Cancel
         </button>
     </div>

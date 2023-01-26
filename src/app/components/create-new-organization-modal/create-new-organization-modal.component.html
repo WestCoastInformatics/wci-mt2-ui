@@ -1,5 +1,5 @@
-<div class='section-list text-right' title="Create New Organization" aria-label="Create New Organization">
-    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class='btn btn-primary rounded btn-lg btn-wide-font'>Create New Organization</a>
+<div class="section-list text-right" title="Create New Organization" aria-label="Create New Organization">
+    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class="rt2-btn rt2-action-btn">Create New Organization</a>
 </div>
 
 <ng-template #createNewOrganizationDialog let-modal>
@@ -74,7 +74,7 @@
     </div>
     <div class="modal-footer rt2-modal-footer rt2-lockable">
         <button ngbAutofocus type="button" [disabled]="name === ''  || !selectedEdition || email === '' || !isValidEmail()" (click)="createOrganizationObject()"
-          mat-raised-button color="green" aria-hidden="false" class="rt2-action-button" aria-label="Create Organization" title="Create Organization">
+           aria-hidden="false" class="rt2-btn rt2-acttion-btn" aria-label="Create Organization" title="Create Organization">
             Create Organization
         </button>
     </div>

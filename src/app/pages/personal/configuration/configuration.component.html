@@ -41,11 +41,11 @@
             <div class="account-profile-head section-header">Profile Picture</div>
             <div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
             <div class="section-btn">
-              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="btn btn-primary btn-lg btn-wide-font m-r-25em"
+              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="rt2-btn rt2-action-btn m-r-25em"
                 (click)="onPhotoDelete()">
                 Delete Picture
               </label>
-              <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg btn-wide-font">
+              <label aria-label="Edit Picture" title="Edit Picture" class="rt2-btn rt2-action-btn">
                 Edit Picture
                 <input type="file" class="d-none" (change)="onPhotoChange($event)" />
               </label>

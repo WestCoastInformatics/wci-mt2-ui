@@ -411,8 +411,11 @@
             Download Change Report
         </button>
 
-        <button type="button" (click)="downloadComparisonReport()" class="rt2-btn rt2-action-btn">
-            Download Comparison Report
+        <button type="button" (click)="downloadComparisonReport()" class="rt2-btn rt2-download-btn">
+          Download Comparison Report
+          <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
+            download
+          </mat-icon>
         </button>
 
         <button type="button" (click)="closeShowComparisonModal()" color="primary" class="rt2-btn rt2-cancel-btn">
