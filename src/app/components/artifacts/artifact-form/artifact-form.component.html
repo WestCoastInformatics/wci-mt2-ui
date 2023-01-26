@@ -40,13 +40,13 @@
         </div>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button aria-hidden="false" *ngIf="isEdit" class="rt2-btn refset-remove-btn mr-3" (click)="confirmDelete()">
+        <button aria-hidden="false" *ngIf="isEdit" class="rt2-btn rt2-remove-btn mr-3" (click)="confirmDelete()">
             Delete
         </button>
         <button color="primary" aria-hidden="false" class="rt2-btn rt2-next-back-btn mr-3" (click)="onSave()">
             Save
         </button>
-        <button aria-hidden="false" class="rt2-btn refset-cancel-btn" (click)="modal.dismiss('Cross click');">
+        <button aria-hidden="false" class="rt2-btn rt2-cancel-btn" (click)="modal.dismiss('Cross click');">
             Cancel
         </button>
     </div>
