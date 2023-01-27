@@ -1824,6 +1824,7 @@ export class RefsetDetails implements OnInit {
     }
 
     downloadMembersTable() {
+
         this.membersGridApi.exportDataAsCsv({
             columnKeys: this.membersColumnDefs.filter((value) => {
 
@@ -1833,7 +1834,11 @@ export class RefsetDetails implements OnInit {
                     return value.colId !== 'actions' && value.colId !== 'active';
                 }
             }).map(value => value.colId),
-            fileName: `Refset_${this.refsetId}_Members-Table_${CodeUtility.getReverseDate()}.csv`, suppressQuotes: true
+            fileName: `Refset_${this.refsetId}_Members-Table_${CodeUtility.getReverseDate()}.csv`,
+            suppressQuotes: true,
+            processCellCallback: function (params) {
+                return '"' + params.value + '"';
+            }
         });
     }
 
