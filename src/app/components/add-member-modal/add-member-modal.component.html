@@ -24,6 +24,11 @@
           </mat-form-field>
         </td>
       </tr>
+      <tr>
+        <td>
+          <span class="field-text">Only users that have already been added to this organization can be added to this team.</span>
+        </td>
+      </tr>
       <tr *ngIf="type=='Team'">
         <td>
             <mat-form-field floatLabel="never" appearance="legacy" class="team-member-form-field">
@@ -46,7 +51,7 @@
     <button (click)="addUserAsMember()" [disabled]="email === '' || !validEmail" class="rt2-btn rt2-next-back-btn">
       Add User(s)
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" 
+    <button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false"
       class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">
       Cancel
     </button>

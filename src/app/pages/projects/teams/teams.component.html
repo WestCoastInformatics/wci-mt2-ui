@@ -6,7 +6,7 @@
         <span class="projects-dropdown-block">
             <span class="title-label">Organizations</span>
             <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" 
+                <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
                     [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
                     <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3">
                         {{ organization.name }}
@@ -44,14 +44,17 @@
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
     <div class='container-fluid mt-3'>
-        
         <div class='row'>
             <div class='col-12'>
                 <section class="mb-3">
-
                     <div class='section-header mb-4'>
-                        Teams ({{ numberOfTeams }})
+                        <span>Teams ({{ numberOfTeams }})</span>
+                        <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                            class="pointer  float-right" title="Click to add/edit this organization's teams"
+                            [routerLink]="['/organizations/' + organizationId + '/teams']"><a>{{selectedOrganization?.name}} Team</a>
+                        </span>
                     </div>
+
 
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">

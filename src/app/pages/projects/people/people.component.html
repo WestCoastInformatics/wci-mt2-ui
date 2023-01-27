@@ -44,16 +44,17 @@
 </div>
 
 <div class="content-wrapper">
-
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-
     <div class='container-fluid mt-3'>
         <div class='row'>
             <div class='col-12'>
                 <section class="mb-3">
-
                     <div class='section-header mb-4'>
-                        People ({{dataCount}})
+                        <span>People ({{dataCount}})</span>
+                        <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                            class="pointer float-right" title="Click to add/edit this organization's people"
+                            [routerLink]="['/organizations/' + organizationId + '/people']"><a>{{selectedOrganization?.name}} People</a>
+                        </span>
                     </div>
 
                     <div class='dashboard-section'>
