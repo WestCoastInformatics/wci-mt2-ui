@@ -24,7 +24,8 @@
     <span class="mat-button-focus-overlay"></span>
 </button>
 
-<button *ngIf="project!=null && refsets!=null" aria-hidden="false" class="rt2-btn rt2-action-btn" title="Download All Refsets for Project" aria-label="Download All Refsets for Project"  (click)="openProjectRefsetDownload(project, refsets)">
+<button *ngIf="project!=null && refsets!=null" aria-hidden="false" class="rt2-btn rt2-action-btn"
+  title="Download Latest Published Reference Sets for Project" aria-label="Download Latest Published Reference Sets for Project"  (click)="openProjectRefsetDownload(project, refsets)">
     Bulk Download
 </button>
 
