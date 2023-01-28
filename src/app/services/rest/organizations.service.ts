@@ -56,7 +56,7 @@ export class OrganizationsService extends RestService {
         return this.post(this.contextPath + 'organization/' + organizationId + '/user?emails=' + emails, '', false
             , function (err) {
                 if (err.status === 404 && err.error?.error === 'Not Found') {
-                    err.error.error = `User(s) with ${emails} does not exist.`;
+                    err.error.error = `User with ${emails} does not exist.`;
                 }
                 return self.giveErrorNotification(err);
             });

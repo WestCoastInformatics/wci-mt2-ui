@@ -6,23 +6,20 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
-    selector: 'add-member-modal',
-    templateUrl: './add-member-modal.component.html',
-    styleUrls: ['add-member-modal.component.scss']
+    selector: 'add-member-to-organization-modal',
+    templateUrl: './add-member-to-organization-modal.component.html',
+    styleUrls: ['add-member-to-organization-modal.component.scss']
 })
-export class AddMemberModalComponent {
+export class AddMemberToOrganizationModalComponent {
 
     email = '';
-    emails = [];
     emailError = '';
     validEmail = false;
     openedModel: NgbModalRef;
     showLoadingSpinner = false;
 
-    @Input() type: string;
     @Input() id: string;
     @Input() name: string;
-    @Input() users: any;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
     firstLoad = true;
 
@@ -43,7 +40,6 @@ export class AddMemberModalComponent {
     openAddMemberModal(addMemberModal: NgbModal) {
         this.firstLoad = true;
         this.email = '';
-        this.emails = [];
         this.openedModel = this.modalService.open(addMemberModal, { backdrop: 'static', keyboard: false });
     }
 
@@ -68,33 +64,26 @@ export class AddMemberModalComponent {
         this.isValidEmail();
     }
 
-    addUsersAsMembers(): void {
+    addUserToOrganization(): void {
 
-        let usersToAdd = "";
+        let userToAdd = "";
         if (CodeUtility.hasValue(this.email)) {
-            usersToAdd = this.email;
+            userToAdd = this.email;
         }
-        if (CodeUtility.hasValue(this.emails)) {
-            usersToAdd = this.emails.join(";");
-        }
-        if (!CodeUtility.hasValue(usersToAdd)) {
+        if (!CodeUtility.hasValue(userToAdd)) {
             return;
         }
 
         this.changeLockedStatus.emit(true);
         this.showLoadingSpinner = true;
 
-        let operation = this.teamsService.addUsers.bind(this.teamsService);
+        //let operation = this.teamsService.addUsers.bind(this.teamsService);
+        let operation = this.organizationsService.addUsers.bind(this.organizationsService);
 
-        if (this.type.toLowerCase() == 'organization') {
-            operation = this.organizationsService.addUsers.bind(this.organizationsService);
-        }
-
-
-        operation(this.id, usersToAdd).subscribe(
+        operation(this.id, userToAdd).subscribe(
             (data) => {
 
-                this.notificationService.show('The user(s) added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show('The user is added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.openedModel.dismiss();
                 this.changeLockedStatus.emit(false);
                 this.showLoadingSpinner = false;

@@ -62,7 +62,7 @@ export class TeamsPeopleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Teams - People');
+    this.titleService.setTitle('Reference Set Tool - Teams - Users');
     this.currentUser = this.authService.getUser();
     this.route.params.subscribe(params => {
 
@@ -123,11 +123,11 @@ export class TeamsPeopleComponent implements OnInit {
       breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' });
     }
 
-    breadcrumbs.push({ label: 'People' });
+    breadcrumbs.push({ label: 'Users' });
     this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
     this.menu = [
-      { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
+      { name: 'Users', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
     ];
 
     const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';

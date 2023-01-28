@@ -21,7 +21,7 @@
                 <div *ngIf="showLoadingSpinner" class="loading"></div>
                 <section class="mb-3">
                     <div class='section-header mb-4'>
-                        Teams ({{dataCount}})
+                        Organization Teams ({{dataCount}})
                         <create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organization]="selectedOrganization">
                         </create-new-team-modal>
                     </div>
@@ -37,7 +37,7 @@
                             </ng-template>
                             <!-- people template-->
                             <ng-template #peopleSection let-params>
-                                <span class="text-primary font-weight-bold pointer">{{params?.data?.members}} People</span>
+                                <span class="text-primary font-weight-bold pointer">{{params?.data?.members}} Users</span>
                             </ng-template>
                         </div>
                     </div>

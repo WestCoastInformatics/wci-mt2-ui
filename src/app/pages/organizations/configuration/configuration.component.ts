@@ -69,7 +69,7 @@ export class OrganizationConfigurationComponent implements OnInit {
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
             { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
+            { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
             { name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true }
         ];
 

@@ -93,7 +93,7 @@ export class OrganizationTeamsComponent implements OnInit {
             },
             { field: 'email', tooltipField: 'email', headerName: 'Contact Email', flex: 2, minWidth: 65, resizable: true, unSortIcon: true},
             {
-                field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
+                field: 'members', headerName: 'Users', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
                 tooltipValueGetter: (params) => {
                     return params?.data?.memberList ?
                         ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) :
@@ -155,7 +155,7 @@ export class OrganizationTeamsComponent implements OnInit {
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
             { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users', isActive: true },
-            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
+            { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';

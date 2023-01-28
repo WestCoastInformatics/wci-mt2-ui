@@ -22,9 +22,11 @@
                 <section class="mb-3">
 
                     <div class='section-header mb-4 rt2-btn-group mt-1'>
-                        People ({{dataCount}})
-                        <add-member-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" type="Organization" [id]="selectedOrganization?.id"
-                          [name]="selectedOrganization?.name"></add-member-modal>
+                        Organization Users ({{dataCount}})
+                        <add-member-to-organization-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')"
+                          [id]="selectedOrganization?.id"
+                          [name]="selectedOrganization?.name">
+                        </add-member-to-organization-modal>
                         <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization">
                         </invite-people-modal>
                     </div>

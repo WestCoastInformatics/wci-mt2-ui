@@ -87,7 +87,7 @@ export class OrganizationProjectsComponent implements OnInit {
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-folder-open', isActive: true },
             { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
+            { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';

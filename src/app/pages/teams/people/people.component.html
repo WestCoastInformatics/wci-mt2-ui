@@ -34,11 +34,26 @@
             <div *ngIf="showLoadingSpinner" class="loading"></div>
             <div class='col-12'>
                 <section class="mb-3">
-
-                    <div class='section-header mb-4'>
-                        People ({{dataCount}})
-                        <add-member-modal *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" type="Team" [id]="selectedTeam?.id" [name]="selectedTeam?.name" [users]="userList">
-                        </add-member-modal>
+                    <div class='mb-4'>
+                        <span class='section-header'>Team Users ({{dataCount}})</span>
+                        <span class='float-right'>
+                            <table>
+                                <tr>
+                                    <td class='pr-20'>
+                                            To add a new user to this team, first go to the
+                                            <span class="pointer " title="Click to add a new user to this team in the organization users page">
+                                                <a href="{{'/organizations/' + selectedOrganization?.id + '/people'}}">organization users page</a>
+                                            </span>
+                                            and add the user there.
+                                    </td>
+                                    <td>
+                                        <add-member-to-team-modal *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
+                                            [id]="selectedTeam?.id" [name]="selectedTeam?.name" [users]="userList">
+                                        </add-member-to-team-modal>
+                                    </td>
+                                </tr>
+                            </table>
+                        </span>
                     </div>
 
                     <div class='dashboard-section'>

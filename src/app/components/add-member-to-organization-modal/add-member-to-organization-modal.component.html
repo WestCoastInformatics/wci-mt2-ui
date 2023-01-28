@@ -1,21 +1,23 @@
-<button class="rt2-btn rt2-action-btn float-right" (click)="openAddMemberModal(addMemberModal)">Add User</button>
+<button class="rt2-btn rt2-action-btn float-right" (click)="openAddMemberModal(addMemberModal)">
+    Add User
+</button>
 
 <ng-template #addMemberModal let-modal>
   <div *ngIf="showLoadingSpinner" class="loading"></div>
   <div class="modal-header rt2-modal-header">
     <button ngbAutofocus class="unfocus-btn"></button>
     <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
-      Add User(s) to the "{{ name }}" {{ type }}
+      <span>
+        Add User to the "{{ name }}" Organization
+      </span>
     </h4>
-
     <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x">&times;</span>
     </button>
   </div>
-
   <div class="modal-body rt2-lockable">
     <table>
-      <tr *ngIf="type!=='Team'">
+      <tr>
         <td>
           <mat-form-field floatLabel="never" appearance="legacy" class="email-input-field">
             <mat-label>Enter the email of the user to add:</mat-label>
@@ -24,37 +26,18 @@
           </mat-form-field>
         </td>
       </tr>
-      <tr>
-        <td>
-          <span class="field-text">Only users that have already been added to this organization can be added to this team.</span>
-        </td>
-      </tr>
-      <tr *ngIf="type=='Team'">
-        <td>
-            <mat-form-field floatLabel="never" appearance="legacy" class="team-member-form-field">
-                <mat-label>Choose User(s) to Add</mat-label>
-                <mat-select multiple [(ngModel)]="emails" [disableOptionCentering]="true" class="team-member-select">
-                    <mat-option class="team-member-select-option" *ngFor="let user of users" [value]="user.email" >
-                        {{ user.email }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </td>
-      </tr>
       <tr class="modal-error-message" [hidden]="!emailError">
         <div>{{emailError}}</div>
       </tr>
     </table>
   </div>
-
   <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-    <button (click)="addUserAsMember()" [disabled]="email === '' || !validEmail" class="rt2-btn rt2-next-back-btn">
-      Add User(s)
+    <button (click)="addUserToOrganization()" [disabled]="email === '' || !validEmail" class="rt2-btn rt2-next-back-btn">
+      Add User
     </button>
     <button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false"
       class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">
       Cancel
     </button>
   </div>
-
 </ng-template>

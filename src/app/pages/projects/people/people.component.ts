@@ -56,7 +56,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Reference Set Tool - Projects - People');
+        this.titleService.setTitle('Reference Set Tool - Projects - Users');
 
         this.route.params.subscribe(params => {
 
@@ -129,13 +129,13 @@ export class ProjectsPeopleComponent implements OnInit {
             breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '' });
         }
 
-        breadcrumbs.push({ label: 'People' });
+        breadcrumbs.push({ label: 'Users' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
             { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
             { name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users' },
-            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user', isActive: true },
+            { name: 'Users', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user', isActive: true },
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';

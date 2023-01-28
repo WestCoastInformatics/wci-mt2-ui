@@ -31,7 +31,7 @@
                 <div *ngIf="showLoadingSpinner" class="loading"></div>
                 <section class="mb-3">
                     <div class='section-header mb-4'>
-                        Projects ({{dataCount}})
+                        Organization Projects ({{dataCount}})
                         <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN') && selectedEdition" [edition]="selectedEdition">
                         </create-new-project-modal>
                     </div>

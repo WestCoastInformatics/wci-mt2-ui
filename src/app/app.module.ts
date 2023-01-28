@@ -56,7 +56,8 @@ import { CreateNewOrganizationModalComponent } from 'src/app/components/create-n
 import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
-import { AddMemberModalComponent } from 'src/app/components/add-member-modal/add-member-modal.component';
+import { AddMemberToOrganizationModalComponent } from 'src/app/components/add-member-to-organization-modal/add-member-to-organization-modal.component';
+import { AddMemberToTeamModalComponent } from 'src/app/components/add-member-to-team-modal/add-member-to-team-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
 import { AddRemoveConceptsIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concepts-icons.component';
 import { AddRemoveConceptGroupIconsComponent } from 'src/app/components/add-remove-concepts-icons/add-remove-concept-group-icons.component';
@@ -147,7 +148,7 @@ const appRoutes: Routes = [
     {
         path: 'organizations/:organizationId/people',
         component: OrganizationPeopleComponent,
-        data: { breadcrumbLabel: 'People' },
+        data: { breadcrumbLabel: 'Users' },
         canActivate: [AuthGuardGuard]
     },
     {
@@ -166,7 +167,7 @@ const appRoutes: Routes = [
     {
         path: 'organization/:organizationId/edition/:editionId/projects/:projectId/people',
         component: ProjectsPeopleComponent,
-        data: { breadcrumbLabel: 'People' },
+        data: { breadcrumbLabel: 'Users' },
         canActivate: [AuthGuardGuard]
     },
     {
@@ -185,7 +186,7 @@ const appRoutes: Routes = [
     {
         path: 'organization/:organizationId/teams/:teamId/people',
         component: TeamsPeopleComponent,
-        data: { breadcrumbLabel: 'People' },
+        data: { breadcrumbLabel: 'Users' },
         canActivate: [AuthGuardGuard]
     },
     {
@@ -244,7 +245,8 @@ const appRoutes: Routes = [
         CreateNewOrganizationModalComponent,
         EmailRefsetModalComponent,
         CreateNewTeamModalComponent,
-        AddMemberModalComponent,
+        AddMemberToOrganizationModalComponent,
+        AddMemberToTeamModalComponent,
         CreateNewProjectModalComponent,
         AddRemoveByConceptModalComponent,
         ScrollTopComponent,

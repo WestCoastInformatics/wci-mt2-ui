@@ -113,7 +113,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
         this.menu = [
             { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy'},
             { name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users', isActive: true },
-            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
+            { name: 'Users', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
@@ -173,7 +173,7 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
             },
             { field: 'email', tooltipField: 'email', headerName: 'Contact Email', flex: 2, minWidth: 65, resizable: true, unSortIcon: true},
             {
-                field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
+                field: 'members', headerName: 'Users', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
                 tooltipValueGetter: (params) => {
                     return params?.data?.memberList ?
                         ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) :
