@@ -36,18 +36,18 @@
                 <section class="mb-3">
                     <div class='mb-4'>
                         <span class='section-header'>Team Users ({{dataCount}})</span>
-                        <span class='float-right'>
+                        <span *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class='float-right'>
                             <table>
                                 <tr>
                                     <td class='pr-20'>
-                                            To add a new user to this team, first go to the
-                                            <span class="pointer " title="Click to add a new user to this team in the organization users page">
-                                                <a href="{{'/organizations/' + selectedOrganization?.id + '/people'}}">organization users page</a>
-                                            </span>
-                                            and add the user there.
+                                        To add a new user to this team, first go to the
+                                        <span class="pointer " title="Click to add a new user to this team in the organization users page">
+                                            <a href="{{'/organizations/' + selectedOrganization?.id + '/people'}}">organization users page</a>
+                                        </span>
+                                        and add the user there.
                                     </td>
                                     <td>
-                                        <add-member-to-team-modal *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
+                                        <add-member-to-team-modal
                                             [id]="selectedTeam?.id" [name]="selectedTeam?.name" [users]="userList">
                                         </add-member-to-team-modal>
                                     </td>
