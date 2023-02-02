@@ -7,11 +7,11 @@
 
 <ng-template #artifactFormDialog let-modal>
     <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             {{modalTitle}}
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
     <div class="container-fluid ready-for-review-container-fluid">
@@ -32,8 +32,8 @@
                 <input type="file" #fileDropRef id="fileDropRef" (click)="$event.target.value = null" (change)="fileChange($event)" />
                 <img src="assets/import-file-upload-icon2.svg" title="Choose Artifact File" aria-label="Choose Artifact File" />
 
-                <h3>Drag and drop file here</h3>
-                <h3>or</h3>
+                <h3 class="general-icon-font">Drag and drop file here</h3>
+                <h3 class="general-icon-font">or</h3>
 
                 <label for="fileDropRef" class="import-from-file-drop-down-label">Browse for file</label>
            </div>
@@ -55,9 +55,9 @@
 <ng-template #confirmDeleteModal let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Artifact Confirmation</h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Delete Artifact Confirmation</h4>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 

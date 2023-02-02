@@ -1153,24 +1153,6 @@ $red: #ff0000;
   min-height: 0px;
 }
 
-// Font styles
-
-.fs14 {
-  font-size: 14pt;
-}
-
-.fs-p7rem {
-  font-size: 0.7rem;
-}
-
-.ta-left {
-  text-align: left;
-}
-
-.ta-right {
-  text-align: right;
-}
-
 // Border styles
 .border-1 {
   border: 1px solid;
@@ -1383,100 +1365,6 @@ $red: #ff0000;
 
 .bg-custom-blue {
   background-color: rgb(0, 164, 228);
-}
-
-// typography
-
-.typo-h1 {
-  font-size: 3rem;
-}
-
-.typo-h2 {
-  font-size: 2.4rem;
-}
-
-.typo-h3 {
-  font-size: 1.8rem;
-}
-
-.typo-h4 {
-  font-size: 1.6rem;
-}
-
-.typo-h5 {
-  font-size: 1.4rem;
-}
-
-.typo-h6 {
-  font-size: 1.2rem;
-}
-
-.typo-paragraph {
-  font-size: 1.4rem;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-justify {
-  text-align: justify;
-}
-
-.text-nowrap {
-  white-space: nowrap;
-}
-
-.fw-100 {
-  font-weight: 100;
-}
-.fw-200 {
-  font-weight: 200;
-}
-.fw-300 {
-  font-weight: 300;
-}
-.fw-400 {
-  font-weight: 400;
-}
-.fw-500 {
-  font-weight: 500;
-}
-.fw-600 {
-  font-weight: 600;
-}
-.fw-700 {
-  font-weight: 500;
-}
-.fw-800 {
-  font-weight: 800;
-}
-.fw-900 {
-  font-weight: 900;
-}
-.fw-bold {
-  font-weight: bold;
-}
-
-.fs-14 {
-  font-size:14px
-}
-.fs-15 {
-  font-size:15px
-}
-.fs-16 {
-  font-size:16px
-}
-.fs-18 {
-  font-size:18px
 }
 
 // Height

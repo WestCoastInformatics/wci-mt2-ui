@@ -10,12 +10,12 @@
 
   <div class="modal-header rt2-modal-header">
     <button ngbAutofocus class="unfocus-btn"></button>
-    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Create New Team
     </h4>
 
-    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
 
@@ -65,7 +65,7 @@
           <label class="modal-label p-t-9">Role: <span class="mandatory-field">*</span></label>
         </td>
         <td>
-          <mat-form-field floatLabel="never" appearance="legacy" class="rt2-modal-select-field">
+          <mat-form-field floatLabel="never" appearance="legacy" class="default-font">
             <mat-select #detailsLanguageSelect placeholder="Choose role(s) to apply to this Team" [ngModel]="roleOptions" [(value)]="selectedRoles" multiple
               class="rt2-modal-select" panelClass="rt2-modal-panel" (selectionChange)="setRoles()">
 

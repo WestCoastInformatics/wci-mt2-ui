@@ -9,14 +9,8 @@ footer.footer {
   white-space: nowrap;
   z-index: 999;
 
-  button {
-    font-size: 0.9em !important;
-  }
-
   a {
-      font-size: 0.9em !important;
       color: #C8CFD6;
-      //letter-spacing: .1rem;
 
       &:hover {
           color: #00a9e0;

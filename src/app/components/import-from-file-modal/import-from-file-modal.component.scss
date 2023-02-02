@@ -20,15 +20,11 @@
       flex-grow: 1;
   
       .name {
-        font-size: 14px;
-        font-weight: 500;
         color: #353f4a;
         margin: 0;
       }
   
       .size {
-        font-size: 12px;
-        font-weight: 500;
         color: #a4a4a4;
         margin: 0;
         margin-bottom: 0.25rem;
@@ -43,5 +39,4 @@
 
   .allowed-file-types {
     color: red;
-    font-size: smaller;
   }

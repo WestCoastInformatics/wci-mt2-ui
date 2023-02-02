@@ -1,9 +1,5 @@
 @import "~src/variables.scss";
 .teams-configuration {
-    .teams-configuration-title {
-      font-size: 19px;
-    }
-  
     .title-bar {
       display: flex;
       align-items: center;
@@ -17,19 +13,13 @@
         padding: 0px 15px;
       }
     }
-  
-    .teams-configuration-dropdown {
-      font-size: 17px;
-      font-family: 'Roboto-Light', 'Roboto Light', 'Roboto', sans-serif;
-    }
-  
+
     .teams-configuration-details {
       display: flex;
       flex-direction: column;
       position: relative;
   
       h3 {
-        font-size: 20px;
         color: $main-color;
       }
   
@@ -76,7 +66,6 @@
   
         .teams-textarea {
           textarea {
-            font-size: 13px;
             background-color: #f5f5f6;
             border: 1px solid black;
             width: 100%;
@@ -104,14 +93,12 @@
       }
   
       input {
-        font-size: 16px;
         background-color: #f5f5f6;
         border-bottom: 1px solid black;
         width: 100%;
       }
   
       textarea {
-        font-size: 13px;
         background-color: #f5f5f6;
         border: 1px solid black;
         width: 100%;

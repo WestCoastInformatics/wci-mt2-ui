@@ -3,7 +3,7 @@
     Choose Columns
 </button>
 <!-- JESSE -->
-<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="legacy" class="rt2-column-chooser-select-field">
+<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="legacy" class="rt2-column-chooser-select-field form-field-header">
     <mat-select #detailsLanguageSelect placeholder="Select Columns" [ngModel]="columns" [(value)]="selectedColumns" multiple [compareWith]="valueCompare" [disabled]="disabled"
       (selectionChange)="applyColumns()" class="rt2-column-chooser-select" panelClass="rt2-column-chooser-select-panel">
 

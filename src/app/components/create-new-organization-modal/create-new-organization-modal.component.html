@@ -6,12 +6,12 @@
 
     <div class="modal-header rt2-modal-header">
 
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Create New Organization
         </h4>
 
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
@@ -25,7 +25,7 @@
                 <td>
                     <div class="row">
                         <div>
-                            <mat-form-field floatLabel="never" appearance="legacy" class="col rt2-modal-select-field">
+                            <mat-form-field floatLabel="never" appearance="legacy" class="col default-font">
                                 <mat-select class="rt2-modal-select" [(value)]="selectedEdition">
                                     <mat-option *ngIf="editionsList.length == 0">No Editions Avaialable</mat-option>
                                     <mat-option *ngFor="let edition of editionsList" [value]="edition">

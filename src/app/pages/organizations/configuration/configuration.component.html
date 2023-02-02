@@ -17,30 +17,30 @@
     <div class='container-fluid mt-3'>
         <span class="organizations-configuration">
 
-            <div class="section-header mb-3"> Organization Configuration </div>
+            <div class="section-header mb-3 form-title"> Organization Configuration </div>
             <div class="organizations-configuration-details">
                 <div class="organizations-configuration-blocks-1">
                     <div class="organizations-configuration-block main-block profile-block">
                         <div class="organization-profile-head section-header">Profile</div>
                         <div class="organization-profile-mid">
                             <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
-                                <mat-label>Name</mat-label>
+                                <mat-label class="form-field-header">Name</mat-label>
                                 <input matInput type="text" [disabled]="true" name="name" [(ngModel)]="profileNameValue">
                             </mat-form-field>
 
                             <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
-                                <mat-label>Primary Contact Email</mat-label>
+                                <mat-label class="form-field-header">Primary Contact Email</mat-label>
                                 <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
                                 <div class="modal-error-message" [hidden]="!emailError">
                                     {{emailError}}</div>
                             </mat-form-field>
 
                             <mat-form-field floatLabel="never" class="profile-description-field" appearance="none">
-                                <mat-label>Description</mat-label>
+                                <mat-label class="form-field-header">Description</mat-label>
                                 <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
                             </mat-form-field>
                         </div>
-                        <div class="section-btn">
+                        <div class="section-btn section-font">
                             <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn"
                              [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile" 
                              (click)="updateOrganization()">Update Profile</button>
@@ -48,11 +48,11 @@
                     </div>
 
                     <div class="organizations-configuration-block main-block profile-pic-block">
-                        <div class="organization-profile-head section-header">Profile Picture</div>
+                        <div class="organization-profile-head section-header form-title">Profile Picture</div>
                         <div class="organization-profile-mid organization-picture">
                             <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
                         </div>
-                        <div class="section-btn">
+                        <div class="section-btn section-font">
                             <label aria-label="Delete Picture" title="Delete Picture" *ngIf="selectedOrganization?.iconUri" class="rt2-btn rt2-action-btn mr-3"
                              (click)="onPhotoDelete()">
                                 Delete Picture

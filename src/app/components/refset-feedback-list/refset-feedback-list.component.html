@@ -5,7 +5,7 @@
         <img class="discussion-icon" src="/assets/comment-solid.svg"
           aria-label="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion" />
         <span class="fa fa-stack-1x">
-            <span class="discussion-icon-text"
+            <span class="discussion-icon-text header-font"
               title="Start a new discussion, participate in one of the {{discussionCount}} unresolved discussions, or review any of the existing discussion">
                 {{discussionCount}}
             </span>
@@ -57,7 +57,7 @@
 <!-- THREAD SECTION -->
 <ng-template #threadModal let-modal>
 
-    <div class="feedback-modal-header modal-header review-modal-header">
+    <div class="feedback-modal-header modal-header review-modal-header modal-header-font">
 
         <h4 class="modal-title">
             <span *ngIf="editMode == 'newThread'">New </span>{{ displayHeader }}
@@ -68,7 +68,7 @@
             <span *ngIf="editMode == 'newThread'">{{ OPEN }}</span>
         </span>
 
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <button type="button" class="close-icon-font" aria-label="Close" (click)="modal.dismiss()">
             <span aria-hidden="true">&times;</span>
         </button>
 
@@ -97,7 +97,7 @@
 
                     <div class="topic-action">
 
-                        <button *ngIf="canEditThread" mat-button [matMenuTriggerFor]="topicMenu" class="manage-refset-menu"><i
+                        <button *ngIf="canEditThread" mat-button [matMenuTriggerFor]="topicMenu" class="manage-refset-menu default-font"><i
                               class="fa fa-ellipsis-v text-main fa-2x"></i></button>
                         <span class="menu-spacer">&nbsp;</span>
                         <mat-menu #topicMenu="matMenu">
@@ -123,7 +123,7 @@
 
                 <!-- ORIGINAL POST SECTION -->
                 <div *ngIf="editMode != 'newThread' && !editMode.includes('edit')" class="mb-3">
-                    <div class="topic-title">
+                    <div class="topic-title feedback-topic-title-font">
                         {{ selectedThread.subject }}
                     </div>
                     <div [innerHTML]="selectedThread.posts[0]?.message"></div>
@@ -144,9 +144,9 @@
 
                                 <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, post.user.iconUri)" class="medium-icon-image" />
 
-                                <div class="topic-author">
+                                <div class="topic-author topic-author-font">
                                     <div>{{ post.user.name }}</div>
-                                    <div class="topic-time">
+                                    <div class="topic-time topic-author-time">
                                         {{ formatDateTime(post.created) }}
                                         <span *ngIf="post.created != post.modified"> (Edited: {{ formatDateTime(post.modified) }}
                                             )</span>
@@ -155,7 +155,7 @@
                                 </div>
 
                                 <div class="topic-action">
-                                    <button *ngIf="!isResolved && canUserEditPost(post)" mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu">
+                                    <button *ngIf="!isResolved && canUserEditPost(post)" mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu default-font">
                                         <i class="fa fa-ellipsis-v text-main fa-lg"></i>
                                     </button>
                                     <span class="menu-spacer">&nbsp;</span>
@@ -228,9 +228,9 @@
 <ng-template #confirmDeleteThreadModal let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Thread Confirmation</h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Delete Thread Confirmation</h4>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
@@ -254,9 +254,9 @@
 <ng-template #confirmDeletePostModal let-modal>
 
     <div class="modal-header rt2-modal-header">
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Delete Post Confirmation</h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Delete Post Confirmation</h4>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 

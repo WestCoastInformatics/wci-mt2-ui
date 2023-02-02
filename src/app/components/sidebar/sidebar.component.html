@@ -4,8 +4,8 @@
 			<ng-container *ngFor="let item of menuItems">
 				<li [class.active]="item.isActive" (mouseenter)="onMouseEnter($event.target)" (mouseleave)="onMouseOut($event.target)">
 					<a [routerLink]="getLink(item.link)">
-						<i [class]="item.icon"></i>
-						<span class="nav-label">{{item.name}}</span>
+						<i class="sidebar-icon-font" [class]="item.icon"></i>
+						<span class="nav-label sidebar-links-font">{{item.name}}</span>
 					</a>
 				</li>
 			</ng-container>

@@ -41,7 +41,7 @@
       </mat-form-field>
     </span>
 
-    <div class="col-md-auto page-title mr-20 color-custom-grey p-l-60 fs-14" *ngIf="selectedProject">
+    <div class="col-md-auto page-title mr-20 color-custom-grey p-l-60 fs-14 page-h1-font" *ngIf="selectedProject">
       <!-- <b>Project Role(s): </b><span>{{ getRoleString() }}</span> -->
 
       <span class="visible-h">
@@ -154,7 +154,7 @@
 
 <ng-template #workflowDiagramDialog let-modal>
   <div class="modal-header review-modal-header">
-    <h4 class="modal-title review-modal-title" id="modal-basic-title">
+    <h4 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">
       Workflow Diagram
     </h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">

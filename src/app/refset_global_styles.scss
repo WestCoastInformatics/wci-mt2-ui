@@ -1,15 +1,13 @@
 // Main Layout Styles
 
 @import "~src/variables.scss";
+@import "~src/app/font-styles.scss";
 
 /********  Tag Styles *******/
 
 html,
 body,
 body.refset-tool.modal-open {
-  font-family: $standard_font_family;
-  font-size: $standard_font_size;
-  font-weight: 400;
   color: $standard_font_color;
   position: relative;
   min-height: 100%;
@@ -30,8 +28,7 @@ label {
 button,
 input,
 textarea {
-  font-size: 1.2rem;
-  font-weight: 400;
+  @extend .form-field-header;
   letter-spacing: 0.5px;
   border: none;
   resize: none;
@@ -46,7 +43,6 @@ textarea {
   }
 
   &.btn {
-    font-size: 1.4rem;
     font-weight: 400;
     letter-spacing: 1.5px;
   }
@@ -129,8 +125,7 @@ select {
 
 .ag-theme-alpine .ag-header-row {
   color: #666;
-  font-size: 13px;
-  font-weight: 700;
+  @extend .col-header-font;
 }
 
 .ag-theme-alpine .ag-header {
@@ -139,7 +134,6 @@ select {
 
 .ag-theme-alpine .ag-icon {
   color: #666;
-  font-size: 20px;
   line-height: 20px;
 }
 
@@ -187,7 +181,7 @@ select {
   // Data Rows
   .ag-row {
     height: 51px !important;
-    font-size: 14px !important;
+    @extend .row-grid-font;
   }
 
   .ag-row:hover {
@@ -292,7 +286,7 @@ select {
 
 .rt2-directory-column-name .mat-icon {
   color: #888;
-  font-size: 14px;
+  @extend .default-font;
   padding-top: 12px;
 }
 
@@ -379,13 +373,11 @@ select {
   border-radius: 3px;
   margin-top: 20px;
   margin-bottom: 15px;
-  font-size: 14px;
   margin-left: 20px;
   margin-right: 5px;
 }
 
 .rt2-concept-details-title-name {
-  font-size: 1.25rem;
   padding: 0px;
 }
 
@@ -449,7 +441,6 @@ select {
 }
 
 .rt2-concept-details-concept-name {
-  font-size: 15px;
   padding-left: 0px !important;
 }
 
@@ -468,8 +459,6 @@ select {
   color: white;
   border-color: $concept_details_color;
   line-height: 1;
-  font-size: 12px;
-  font-weight: 400;
   @extend .rt2-rounded-borders;
 }
 
@@ -656,17 +645,10 @@ select {
 .mat-button-toggle-group-appearance-standard {
   margin-top: 15px;
   border: 1px solid #666;
-  //font-family: $standard_font_family;
 }
 
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-  //line-height: 31px;
-  //font-size: 14px;
-  //font-weight: 400;
   padding: 0 !important;
-  font-family: $standard_font_family;
-  font-size: 1.0rem;
-  font-weight: 300;
   letter-spacing: 1.5px;
   line-height: 30px !important;
 }
@@ -734,7 +716,6 @@ select {
     margin: 10px 5px;
     font-weight: 500;
     color: white;
-    font-size: 14px;
   }
 }
 
@@ -784,7 +765,7 @@ select {
 .loading:not(:required):after {
   content: "";
   display: block;
-  font-size: 10px;
+  @extend .loading-icon-font;
   width: 1em;
   height: 1em;
   margin-top: -0.5em;
@@ -915,10 +896,7 @@ select {
   }
 
   h3 {
-    font-size: 12px;
-    font-weight: 600;
     color: #38424c;
-    padding-top: 6px;
   }
 }
 
@@ -1036,7 +1014,6 @@ select {
   padding: 28px !important;
   padding-top: 0px !important;
   border-radius: 3px;
-  font-size: 14px;
 }
 
 .disable-menu-btn {
@@ -1072,7 +1049,6 @@ select {
 .create-refset-radio-button {
   text-transform: capitalize;
   color: rgba(102, 102, 102, 102);
-  font-size: 14px;
 }
 
 .create-new-refset-flex-weight {
@@ -1089,7 +1065,6 @@ select {
   background-color: rgba(245, 245, 246, 1);
   padding: 30px !important;
   border-radius: 3px;
-  font-size: 14px;
   text-align: -webkit-center;
 }
 
@@ -1315,8 +1290,6 @@ select {
   padding: 0px !important;
   color: #00a9e0;
   font-weight: 500;
-  font-size: 14px;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
   cursor: pointer;
   letter-spacing: 1px;
 }
@@ -1351,8 +1324,6 @@ select {
 
 .review-modal-title {
   color: #9b9b9b;
-  font-size: 1.5em;
-  font-family: $standard_font_family;
 }
 
 .metadata-collapsible-container {
@@ -1365,7 +1336,6 @@ select {
 }
 
 .metadata-collapsible-container-title {
-  font-size: 1.25rem;
   display: flex;
   align-items: center;
   font-weight: bold;
@@ -1491,7 +1461,7 @@ img.rt2-edition-flag {
 .content-header {
   position: sticky;
   z-index: 2;
-  top: 78px;
+  top: 50px;
 
   .header-title {
     align-items: baseline;
@@ -1503,9 +1473,7 @@ img.rt2-edition-flag {
       margin-right: 20px;
       color: #555555;
       padding-left: 60px;
-      font-family: Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 400;
-      font-size: 1.25em;
+      @extend .page-header-font;
       padding-bottom: 15px;
     }
 
@@ -1524,7 +1492,7 @@ img.rt2-edition-flag {
 
   .ag-row,
   .ag-header-cell-text {
-    font-size: 16px;
+    @extend .header-cell-font;
   }
 
   .text-primary {
@@ -1551,7 +1519,6 @@ img.rt2-edition-flag {
 
 .section-header,
 .section-btn {
-  font-size: 20px;
   color: $main-color;
   margin-bottom: 10px;
 }
@@ -1628,26 +1595,23 @@ img.rt2-edition-flag {
 .discussion-list {
   background-color: #fff;
   border: 1px solid rgba(197, 196, 197, 1);
-  font-size: 16px;
-  font-weight: 400;
   min-height: 100px;
   height: 100px;
   overflow: auto;
 
+  @extend .list-font;
+
   .topic-header {
-    font-size: 20px;
+    @extend .page-header-font;
 
     .topic-author {
       margin: 0 10px;
-      font-size: 20px;
-      font-weight: 400;
+      @extend .page-header-font;
     }
   }
 
   .section-list {
     color: #555555;
-    font-size: inherit;
-    font-weight: inherit;
   }
 }
 
@@ -1781,7 +1745,7 @@ app-date-text-floating-filter {
 @media (max-width: 575px) {
   .header-title {
       letter-spacing: 1px;
-      font-size: small;
+      font-size: 10px;
   }
   .panel.height-auto{
       height: auto;

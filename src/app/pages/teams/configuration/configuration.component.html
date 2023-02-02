@@ -31,30 +31,30 @@
   <div class='container-fluid mt-3'>
     <span class="teams-configuration">
 
-      <div class="section-header mb-3"> Team Configuration </div>
+      <div class="section-header mb-3 form-title"> Team Configuration </div>
       <div class="teams-configuration-details">
         <div class="teams-configuration-blocks-1">
 
           <div class="teams-configuration-block main-block profile-block">
 
-            <div class="teams-profile-head section-header">Profile</div>
+            <div class="teams-profile-head section-header form-title">Profile</div>
 
             <div class="teams-profile-mid">
               <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
-                <mat-label>Name</mat-label>
-                <input matInput type="text" name="name" [(ngModel)]="profileNameValue">
+                <mat-label class="form-field-header">Name</mat-label>
+                <input class="form-field-value" matInput type="text" name="name" [(ngModel)]="profileNameValue">
               </mat-form-field>
 
               <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
-                <mat-label>Primary Contact Email</mat-label>
-                <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
+                <mat-label class="form-field-header">Primary Contact Email</mat-label>
+                <input class="form-field-value" matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
                 <div class="modal-error-message" [hidden]="!emailError">
                   {{emailError}}</div>
               </mat-form-field>
 
               <mat-form-field floatLabel="never" class="profile-description-field" appearance="none">
-                <mat-label>Description</mat-label>
-                <textarea matInput type="text" name="description" placeholder="The full description of the purpose of the project"
+                <mat-label class="form-field-header">Description</mat-label>
+                <textarea class="form-field-value" matInput type="text" name="description" placeholder="The full description of the purpose of the project"
                   [(ngModel)]="profileDescriptionValue"></textarea>
               </mat-form-field>
             </div>
@@ -75,10 +75,10 @@
 
               <div class="save-permissions-head section-header">Permissions</div>
 
-              <div class="save-permissions-mid">Choose the permission level or roles
+              <div class="save-permissions-mid form-field-header">Choose the permission level or roles
                 for your team.
                 <br><br>
-                <mat-form-field floatLabel="never" appearance="legacy" class="rt2-modal-select-field">
+                <mat-form-field floatLabel="never" appearance="legacy" class="default-font">
                   <mat-select #detailsRoleSelect placeholder="Choose role(s) to apply to this team" [(ngModel)]="selectedRoles" multiple class="rt2-modal-select"
                     panelClass="rt2-modal-panel">
 
@@ -100,7 +100,7 @@
 
             <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row remove-teams-block">
 
-              <div class="remove-team-head section-header"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
+              <div class="remove-team-head section-header form-title"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
               <div class="remove-team-mid">Warning! This is a permanent operation and
                 cannot be undone. Please be certain before taking action.</div>
               <div class="remove-teams-button">

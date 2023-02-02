@@ -3,16 +3,12 @@
 nav {
     height: 50px !important;
     padding: 5px;
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    font-weight: 300;
     position: fixed;
     width:100%;
     background-color: #434955 !important;
 
     a.logo {
         height: 40px;
-        font-size: 1.6rem;
 
         span.nav-title {
             font-weight: 300;
@@ -35,7 +31,6 @@ nav {
         transform: rotate(-45deg);
         line-height: 1rem;
         opacity: 0.8;
-        font-size: 1.4rem;
     }
 
     div.local::before {
@@ -68,7 +63,6 @@ nav {
 
     div.user {
         height: 3rem;
-        font-size: 1.2rem;
 
         span {
             line-height: 3rem;
@@ -87,7 +81,6 @@ nav {
         height: 3rem;
 
         span {
-            font-size: 1.2rem;
             line-height: 3rem;
             font-weight: 400;
             letter-spacing: 0.1rem;
@@ -106,7 +99,6 @@ nav {
             display: inline-block;
 
             a {
-                font-size: 1.4rem;
                 color: $white;
                 line-height: 2rem;
                 font-weight: 400;
@@ -147,7 +139,6 @@ nav {
 
             .dropdown-item{
                 color: #fff;
-                font-size: 12px;
             }
             .dropdown-item:hover{
                 color: $bootstrap-black;
@@ -199,8 +190,6 @@ nav {
 }
 
 .rt2-nav-title {
-  font-family: $standard_font_family;
-  font-size: 16px;
   color: #eee;
 }
 .rt2-nav-title:hover {
@@ -221,8 +210,6 @@ nav {
 .rt2-breadcrumb-bar {
   display: flex;
   align-items: center;
-  // margin-top: 0.5rem;
-  //font-size: smaller;
 
   .rt2-breadcrumb {
     color: #c8cfd6;
@@ -261,8 +248,6 @@ nav {
 .navbar-icon-label {
   text-align: center;
   color: #ffffff;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-size: 9px;
 }
 
 .nav-item {
@@ -280,8 +265,6 @@ nav {
 
   .nav-label {
     color: #ffffff;
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-    font-size: 11px;
   }
 }
 
@@ -298,7 +281,6 @@ nav {
 }
 
 .project-role-and-assignee-label {
-  font-size: 0.8em;
   display: grid;
 }
 

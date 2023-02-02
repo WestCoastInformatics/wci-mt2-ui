@@ -6,18 +6,18 @@
 <ng-template #createNewRefsetDialog let-modal>
     <div *ngIf="showLoadingSpinner" class="loading"></div>
     <div class="modal-header rt2-modal-header">
-        <h4 *ngIf="!editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 *ngIf="!editMode" class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Create New Reference Set
         </h4>
-        <h4 *ngIf="editMode" class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 *ngIf="editMode" class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Edit Reference Set Metadata
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
     <div class="container-fluid create-new-refset-container-fluid">
-        <div class="modal-body create-new-refset-modal-body">
+        <div class="modal-body create-new-refset-modal-body default-font">
             <div class="row create-new-refset-row">
                 <!-- Meta Labels -->
                 <div class="create-new-refset-form-field create-new-refset-row-spacing">
@@ -117,7 +117,7 @@
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <div class="d-inline-flex align-items-center mr-4" *ngFor="let referenceType of referenceTypes">
-                                    <mat-radio-button class="refset-radio create-refset-radio-button" (change)="changeType($event)"
+                                    <mat-radio-button class="refset-radio create-refset-radio-button default-font" (change)="changeType($event)"
                                       [checked]="referenceType == selectedReferenceType" [value]="referenceType">
                                         {{referenceType.toLowerCase()}}
                                     </mat-radio-button>
@@ -481,10 +481,10 @@
                             </div>
                             <div class="col create-new-refset-field create-new-refset-flex-weight">
                                 <mat-radio-group>
-                                    <mat-radio-button class="refset-radio create-refset-radio-button" (change)="checkPublishability($event)" value="false"
+                                    <mat-radio-button class="refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="false"
                                       [checked]="!localSet">Within Edition</mat-radio-button>
 
-                                    <mat-radio-button class="ml-15 refset-radio create-refset-radio-button" (change)="checkPublishability($event)" value="true">Local Set
+                                    <mat-radio-button class="ml-15 refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="true">Local Set
                                     </mat-radio-button>
                                     <mat-icon class="pointer rt2-new-refset-info-icon"
                                         (click)="openInfoDialog('publication')" aria-hidden="false" aria-label="Open Publication Information Dialog"

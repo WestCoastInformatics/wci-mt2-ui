@@ -5,11 +5,11 @@
 
 <ng-template #addRemoveConceptHierarchyModal let-modal>
   <div class="modal-header rt2-modal-header">
-    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Add/Remove by Search
     </h4>
-    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="closeModal()">
-      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
   <div class="container-fluid">
@@ -40,11 +40,11 @@
 
               <section [style.display]="resultsDisplay" class="add-remove-concept-hierarchy-modal-active-slider-section">
 
-                <div class="add-remove-concept-hierarchy-modal-results-title" aria-label="Search results">
+                <div class="add-remove-concept-hierarchy-modal-results-title breadcrumb-font" aria-label="Search results">
                   Search Results ({{ data?.items?.length }})
                 </div>
 
-                <mat-slide-toggle class="add-remove-concept-hierarchy-modal-active-slider" [color]="color" [checked]="!checked" aria-label="Display Active Concepts Only"
+                <mat-slide-toggle class="add-remove-concept-hierarchy-modal-active-slider form-toggle-field" [color]="color" [checked]="!checked" aria-label="Display Active Concepts Only"
                   (change)="toggleDisplayActiveConcepts($event)">
                   Display Active Concepts Only
                 </mat-slide-toggle>

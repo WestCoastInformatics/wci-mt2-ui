@@ -15,9 +15,6 @@
 }
 
 body {
-  font-family: Roboto, "Helvetica Neue", sans-serif !important;
-  font-weight: 300;
-  font-size: 18px;
   line-height: 26px;
 }
 $main-color: #00a9e0;
@@ -25,9 +22,6 @@ $secondary-color : #434a55;
 $heading-font: 'museo100',sans-serif;
 
 .heading{
-  font-family: $heading-font;
-  font-weight: 100;
-  font-size: 30px;
   line-height: 36px;
 }
 .landing-page-container{
@@ -75,9 +69,6 @@ $heading-font: 'museo100',sans-serif;
 }
 .main-nav a{
   color: $main-color;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  font-weight: 100;
-  font-size: 18px;
   line-height: 23px;
   padding: 15px 10px;
   cursor: pointer;
@@ -94,7 +85,6 @@ $heading-font: 'museo100',sans-serif;
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
-  font-size: 14px;
   justify-content: center;
 }
 .main-nav .search .search-form{
@@ -118,8 +108,6 @@ $heading-font: 'museo100',sans-serif;
   margin-bottom: 18px;
 }
 .heading-4{
-  font-weight: 300;
-  font-size: 20px;
   color: $secondary-color;
   margin-bottom: 30px;
 }
@@ -145,8 +133,6 @@ $heading-font: 'museo100',sans-serif;
   background-color: $main-color;
   padding: 10px;
   text-align: right;
-  font-size: 20px;
-  font-family: $heading-font;
   color: #fff;
   display: flex;
   align-items: center;
@@ -160,8 +146,6 @@ $heading-font: 'museo100',sans-serif;
 .section{
   padding-top: 30px;
   padding-bottom: 30px;
-  font-weight: 300;
-  font-size: 18px;
   line-height: 26px;
 }
 
@@ -195,11 +179,6 @@ $heading-font: 'museo100',sans-serif;
   padding-top: 20px;
 }
 
-.landing-page-text-1 {
-  font-size: 19px;
-}
-
-
 .landing-page-guest-access {
   text-align-last: center;
 }
@@ -209,23 +188,17 @@ $heading-font: 'museo100',sans-serif;
   color: white;
   width: 220px;
   height: 25px;
-  font-size: 14px;
-  font-family: inherit;
   letter-spacing: .1rem;
 }
 
 .landing-page-guest-has-account {
   color: black;
-  font-size: 17px;
-  font-weight: 600;
   margin-top: 50px;
   margin-left: 275px;
 }
 
 .landing-page-log-in-link {
   cursor: pointer;
-  font-size: 17px;
-  font-weight: 600;
   text-decoration: underline;
   color: rgb(50, 50, 212);
 }
@@ -261,23 +234,12 @@ $heading-font: 'museo100',sans-serif;
 }
 
 .landing-page-container {
-  display: grid;
-  grid-template-columns: 0.7fr 1.6fr 0.7fr;
-  grid-template-rows: 0.3fr 1.3fr 1.4fr;
-  grid-auto-columns: 1fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
-  grid-template-areas:
-    "landing-page-top-bar-left landing-page-top-bar-center landing-page-top-bar-right"
-    ". landing-page-info-section ."
-    ". landing-page-login-section .";
-  background-image: url("/assets/rt2-landing-bg.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100vh;
-  margin-bottom: -6rem;
-  overflow: unset;
-  color: white;
-  font-family: $standard_font_family;
-  letter-spacing: .1rem;
+  position: relative;
+  display: block;
+  padding: 3rem;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  background: #fff;
+  margin: 0;
 }

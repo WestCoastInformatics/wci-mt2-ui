@@ -4,8 +4,6 @@
     align-items: center !important;
     border-bottom: none !important;
     color: #9B9B9B;
-    font-size: 24px;
-    font-weight: 300;
   
     .modal-title {
       flex-grow: 1;
@@ -17,10 +15,6 @@
       color: inherit;
       margin-right: 20px;
     }
-  
-    .close {
-      font-size: 30px;
-    }
 }
 
 .feedback-modal-footer {
@@ -28,9 +22,6 @@
 }
 
 .discussion-icon-text {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
   display: flex;
   color: white;
   background-color: red;
@@ -54,8 +45,6 @@
 }
 
 .topic-title {
-  font-size: large;
-  font-weight: 700;
   color: #555555;
   margin: 10px 0 5px;
 }
@@ -66,13 +55,8 @@
 
   .topic-author {
     flex-grow: 1;
-    font-size: 26px;
     margin: 0 20px;
     color: #555555;
-
-    .topic-time {
-      font-size: 16px;
-    }
   }
 
   .topic-action {

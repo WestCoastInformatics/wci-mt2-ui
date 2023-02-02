@@ -7,7 +7,7 @@
         <!-- Reference Set Name, action icons, and roles -->
         <div class="col-4 rt2-refset-details-title-name-section">
 
-            <div class="rt2-refset-details-title-name">
+            <div class="rt2-refset-details-title-name refset-details-title">
                 Reference Set Details
             </div>
 
@@ -18,7 +18,7 @@
         </div>
 
         <!-- Locked Reference Set bar -->
-        <div *ngIf="isLocked" class="col-5 refsetLockBanner">
+        <div *ngIf="isLocked" class="col-5 refsetLockBanner banner-lock-font">
             This Reference Set is locked while edits are processing.
         </div>
 
@@ -69,7 +69,7 @@
         </mat-horizontal-stepper>
 
         <!-- In Upgrade -->
-        <div *ngIf="refsetStatus == 'IN_UPGRADE'" class="rt2-refset-details-title-name">IN
+        <div *ngIf="refsetStatus == 'IN_UPGRADE'" class="rt2-refset-details-title-name refset-details-title">IN
             UPGRADE</div>
 
         <!-- Version Select -->
@@ -106,14 +106,14 @@
 
         <!-- Metadata Section -->
         <div class="metadata-container">
-            <div class="container-fluid">
+            <div class="container-fluid refset-metadata-container">
 
                 <div>
                     <!--
                     <span *ngIf="editMode" class="rt2-roles"><b>Role(s): </b>{{
                         getRoleString() }}</span> -->
                     <div class="rt2-refset-details-title-name-section">
-                        <div class="metadata-collapsible-container-title">
+                        <div class="metadata-collapsible-container-title page-header-font">
                             {{refsetData?.name}}
                         </div>
                         <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
@@ -123,7 +123,7 @@
 
                     <button *ngIf="allowedToEdit || allowedToReview" [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
                       class="rt2-link-btn">
-                        Manage Reference Set <span class="down-arrow-for-menu">&#x25BC;</span>
+                        Manage Reference Set <span class="down-arrow-for-menu carret-up-down-icon-font">&#x25BC;</span>
                     </button>
 
                     <mat-menu #refsetMenu="matMenu">
@@ -284,7 +284,7 @@
 
         <div class="metadata-collapsible-container">
             <div class="metadata-collapsible-container-group-header pointer" (click)="metadataCollapseTrigger()">
-                <div class="metadata-collapsible-container-title">
+                <div class="metadata-collapsible-container-title page-header-font">
                     Reference Set Metadata
 
                 </div>
@@ -320,7 +320,7 @@
 
         <div class="metadata-collapsible-container" *ngIf="editMode">
             <div class="metadata-collapsible-container-group-header pointer" (click)="workflowCollapseTrigger()">
-                <div class="metadata-collapsible-container-title">
+                <div class="metadata-collapsible-container-title page-header-font">
                     Workflow History
                     <!-- <div class="set-of-buttons-workflow-history"> -->
                     <!-- TODO: Should download WF HX table contents, not the refset
@@ -411,12 +411,12 @@
             </div>
         </div>
 
-        <div *ngIf="!showMembersSection" class="container-fluid detailsMemberSection">
+        <div *ngIf="!showMembersSection" class="container-fluid detailsMemberSection default-font">
             <b>{{ noMemberSectionText }}</b>
         </div>
 
         <!-- Section Title -->
-        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-member-title">
+        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title">
             Reference Set Members&nbsp;<span class="default-cursor" title="Total member count">({{refsetData?.memberCount}})</span>
             <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" color="primary" aria-hidden="false"
               class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
@@ -445,27 +445,27 @@
             </span>
         </div>
         <!-- Member Concepts Section -->
-        <div *ngIf="showMembersSection" class="container-fluid detailsMemberSection">
+        <div *ngIf="showMembersSection" class="container-fluid detailsMemberSection default-font">
             <div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
 
                 <div class="detailsMemberSection-container">
                     <as-split direction="horizontal" gutterSize="4">
                         <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
 
-                            <div class="rt2-details-members-column">
+                            <div class="rt2-details-members-column default-font">
 
                                 <!-- Search Bar -->
                                 <div class="container-fluid pr-0">
                                     <div class="row justify-content-start no-gutters align-items-baseline">
 
-                                        <div class="rt2-details-chooser-column p-l-5"
+                                        <div class="rt2-details-chooser-column filter-font p-l-5"
                                           [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
                                             <app-column-chooser title="Select Columns to Display" [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog"
                                               [disabled]="isLocked" [manualStateRefresh]="membersGridChooserManualStateRefresh">
                                             </app-column-chooser>
                                         </div>
 
-                                        <div class="rt2-details-chooser-column" [style.display]="membersTaxonomyDisplay">
+                                        <div class="rt2-details-chooser-column filter-font" [style.display]="membersTaxonomyDisplay">
                                             <mat-form-field floatLabel="never" appearance="legacy" class="format-option-drop-down">
                                                 <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
                                                     <mat-option *ngFor="let option of languageOptions" [value]="option.value">
@@ -476,7 +476,7 @@
                                         </div>
 
 
-                                        <div class="rt2-details-member-status-field" [style.display]="membersTableDisplay">
+                                        <div class="rt2-details-member-status-field filter-font" [style.display]="membersTableDisplay">
                                             <mat-form-field appearance="legacy">
                                                 <mat-label>Show by Concept Status</mat-label>
                                                 <mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus"
@@ -489,7 +489,7 @@
                                         </div>
 
                                         <div class="col-lg ml-3 p-r-75" [style.display]="membersTableDisplay">
-                                            <mat-form-field floatLabel="never" class="rt2-details-search-field">
+                                            <mat-form-field floatLabel="never" class="rt2-details-search-field default-font">
                                                 <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
                                                 <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
                                             </mat-form-field>
@@ -522,7 +522,7 @@
                                         </div>
 
                                         <div class="rt2-toggle-buttons-container">
-                                            <mat-button-toggle-group class="rt2-toggle-buttons" name="membersListMode" aria-label="Members List Mode"
+                                            <mat-button-toggle-group class="rt2-toggle-buttons tabs-font" name="membersListMode" aria-label="Members List Mode"
                                               (change)="onChangeMembersListMode()" [(ngModel)]="selectedMembersListMode">
                                                 <mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
                                                 <mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy"
@@ -633,14 +633,14 @@
                             </div>
                         </as-split-area>
                         <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0" [minSize]="isConceptDetailsLoading || conceptDetail ? 25 : 0">
-                            <div class="rt2-concept-details-column" *ngIf="isConceptDetailsLoading || conceptDetail">
+                            <div class="rt2-concept-details-column default-font" *ngIf="isConceptDetailsLoading || conceptDetail">
                                 <div class="row" *ngIf="isConceptDetailsLoading">
                                     <div>Loading...</div>
                                 </div>
 
                                 <div *ngIf="conceptDetail">
                                     <div class="row align-items-center no-gutters">
-                                        <div class="col rt2-concept-details-title-name concept-details-header">
+                                        <div class="col rt2-concept-details-title-name refset-details-title concept-details-header">
                                             Concept Details
                                         </div>
                                         <div class="rt2-details-chooser-column">
@@ -706,7 +706,7 @@
                                     <div class="container-fluid rt2-concept-details-concept-section">
                                         <div class="row">
                                             <!-- Info Section -->
-                                            <div class="col rt2-concept-details-concept-info-column"
+                                            <div class="col rt2-concept-details-concept-info-column default-font"
                                               [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active">
                                                 <div>
                                                     <!-- Name -->
@@ -722,7 +722,7 @@
                                                                     </div>
                                                                 </td>
                                                                 <td class="text-center">
-                                                                    <div class="rt2-concept-details-concept-name" title="{{conceptDescriptionTerm}}"
+                                                                    <div class="rt2-concept-details-concept-name default-font" title="{{conceptDescriptionTerm}}"
                                                                       aria-label="{{conceptDescriptionTerm}}">
                                                                         {{getFsn(conceptDescriptions)
                                                                         ?
@@ -787,7 +787,7 @@
                                                 <div *ngIf="true">
                                                     <span class="no-attributes" *ngIf="!conceptDetail.numRoleGroups">No
                                                         attributes</span>
-                                                    <div class="row rt2-concept-details-role-row" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
+                                                    <div class="row rt2-concept-details-role-row default-font" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
                                                         <div class="row rt2-concept-details-role-details" *ngFor="let detail of role.value">
                                                             {{detail}}
                                                         </div>
@@ -896,11 +896,11 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Publish Local Reference Set
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
@@ -945,7 +945,7 @@
 <ng-template #deleteDevelopmentVersionDialog let-modal>
     <div class="modal-header review-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Delete In Development Reference Set Version
         </h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -977,11 +977,11 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             {{ changeRefsetStatusButtonText }} Reference Set
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
