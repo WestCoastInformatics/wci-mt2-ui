@@ -9,13 +9,13 @@ declare const tinymce: any;
 @Component({
   selector: 'workflow-history-notes-modal',
   templateUrl: './workflow-history-notes-modal.component.html',
-  styleUrls: ['./workflow-history-notes-modal.component.scss']
+  styleUrls: ['workflow-history-notes-modal.component.scss']
 })
 export class WorkflowHistoryNotesModalComponent implements OnInit {
 
   characterCount = 0;
   title: string;
-  eidtorInstance: any;
+  editorInstance: any;
   isInitialized = false;
   modal: ComponentRef<ComposeModalComponent>;
 
@@ -40,8 +40,8 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
 
   // Returns text statistics for the specified editor by id
   getStats() {
-    this.eidtorInstance = tinymce.get('workflowHistoryNotesEditor').getBody();
-    var body = this.eidtorInstance, text = tinymce.trim(body.innerHTML || body.textContent);
+    this.editorInstance = tinymce.get('workflowHistoryNotesEditor').getBody();
+    var body = this.editorInstance, text = tinymce.trim(body.innerHTML || body.textContent);
 
     return {
       chars: text.length,

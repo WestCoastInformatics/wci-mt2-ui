@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ArtifactsModalComponent } from './artifacts-modal/artifacts-modal.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
-import { CustomTooltipComponent } from '../custom-tooltip/custom-tooltip.component';
 import { ArtifactsListComponent } from './artifacts-list/artifacts-list.component';
 import { MatButtonModule } from '@angular/material/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -23,7 +22,7 @@ import { DirectivesModule } from '../../directives/directives.module';
     ],
     imports: [
         CommonModule,
-        AgGridModule.withComponents([TemplateRenderer, CustomTooltipComponent]),
+        AgGridModule.withComponents([TemplateRenderer]),
         MatButtonModule,
         MatFormFieldModule,
         MatInputModule,

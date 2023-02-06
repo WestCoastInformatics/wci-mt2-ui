@@ -1,12 +1,11 @@
-<button *ngIf="useDialog" mat-raised-button color="primary" (click)="openColumnChooser()" aria-hidden="false"
-  class="refset-tool-action-button refset-tool-column-chooser-button outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser"
-  ng-reflect-color="primary">
+<button *ngIf="useDialog" (click)="openColumnChooser()" aria-hidden="false"
+  class="rt2-btn rt2-action-btn outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser">
     Choose Columns
 </button>
 <!-- JESSE -->
-<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="legacy" class="refset-tool-column-chooser-select-field">
+<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="legacy" class="rt2-column-chooser-select-field form-field-header">
     <mat-select #detailsLanguageSelect placeholder="Select Columns" [ngModel]="columns" [(value)]="selectedColumns" multiple [compareWith]="valueCompare" [disabled]="disabled"
-      (selectionChange)="applyColumns()" class="refset-tool-column-chooser-select" panelClass="refset-tool-column-chooser-select-panel">
+      (selectionChange)="applyColumns()" class="rt2-column-chooser-select" panelClass="rt2-column-chooser-select-panel">
 
         <mat-select-trigger class="trigger">
             Select Columns
@@ -21,8 +20,8 @@
 <!-- Column Chooser Template -->
 <ng-template #columnChooserSection let-data>
 
-    <div class="refset-tool-column-chooser-dialog-container" *ngFor="let column of data">
-        <mat-checkbox class="refset-tool-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
+    <div class="rt2-column-chooser-dialog-container" *ngFor="let column of data">
+        <mat-checkbox class="rt2-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
             {{column.name}}
         </mat-checkbox>
     </div>

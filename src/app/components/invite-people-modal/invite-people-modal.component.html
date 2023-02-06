@@ -1,20 +1,22 @@
-<a *ngIf="canInvite && organization" class='btn btn-primary rounded btn-lg float-right btn-wide-font mr-3'
-        (click)="openModal(formDialog)">Invite To Join</a>
-<button mat-menu-item (click)="openModal(formDialog)" title="Invite to Participate" aria-label="Invite to Participate"
+
+<button *ngIf="canInvite && organization" class="rt2-btn rt2-action-btn float-right" (click)="openModal(formDialog)">
+    Invite To Join
+</button>
+<button class="rt2-picklist-btn" (click)="openModal(formDialog)" title="Invite to Participate" aria-label="Invite to Participate"
     *ngIf="canInvite && refset">
     Invite to Participate</button>
 
 <ng-template #formDialog let-modal>
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             {{modalTitle}}
         </h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
-    <div class="modal-body refset-tool-lockable">
+    <div class="modal-body rt2-lockable">
         <label class="modal-label-description">Send someone an email invitation to join your Organization as a collaborator</label>
         <table>
 
@@ -23,8 +25,7 @@
                     <label class="modal-label">Recipient Email: <span class="mandatory-field">*</span></label>
                 </td>
                 <td>
-                    <input class="modal-input-field" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email"
-                           style="width: 250px; padding-bottom: 9px" />
+                    <input class="modal-input-field w-250 p-b-9" (keydown.tab)="onKeyDownEvent($event)" ngbAutofocus placeholder="primarycontactemail@orgname.org" [(ngModel)]="email" />
                 </td>
             </tr>
             <tr class="modal-error-message" [hidden]="!emailError">
@@ -43,13 +44,13 @@
         </table>
 
     </div>
-    <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+    <div class="modal-footer rt2-modal-footer rt2-lockable">
         <button type="button" [disabled]="email === '' || !isValidEmail()" (click)="sendInvitation()"
-                mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button" aria-label="Send Email" title="Send Email">
+                color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Send Email" title="Send Email">
             Send Email
         </button>
-        <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 
-          class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
+        <button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" 
+          class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">
             Cancel
         </button>
 

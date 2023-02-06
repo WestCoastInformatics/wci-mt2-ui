@@ -6,17 +6,18 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
-    selector: 'add-member-modal',
-    templateUrl: './add-member-modal.component.html',
+    selector: 'add-member-to-organization-modal',
+    templateUrl: './add-member-to-organization-modal.component.html',
+    styleUrls: ['add-member-to-organization-modal.component.scss']
 })
-export class AddMemberModalComponent {
+export class AddMemberToOrganizationModalComponent {
 
     email = '';
     emailError = '';
     validEmail = false;
-    openedModel: NgbModalRef;    
+    openedModel: NgbModalRef;
+    showLoadingSpinner = false;
 
-    @Input() type: string;
     @Input() id: string;
     @Input() name: string;
     @Output() changeLockedStatus = new EventEmitter<any>(true);
@@ -63,33 +64,38 @@ export class AddMemberModalComponent {
         this.isValidEmail();
     }
 
-    addUserAsMember(): void {
+    addUserToOrganization(): void {
 
-        if (!CodeUtility.hasValue(this.email)) {
+        let userToAdd = "";
+        if (CodeUtility.hasValue(this.email)) {
+            userToAdd = this.email;
+        }
+        if (!CodeUtility.hasValue(userToAdd)) {
             return;
         }
 
         this.changeLockedStatus.emit(true);
+        this.showLoadingSpinner = true;
 
-        let operation = this.teamsService.addUser.bind(this.teamsService);
+        //let operation = this.teamsService.addUsers.bind(this.teamsService);
+        let operation = this.organizationsService.addUsers.bind(this.organizationsService);
 
-        if (this.type.toLowerCase() == 'organization') {
-            operation = this.organizationsService.addUser.bind(this.organizationsService);
-        }
-
-        operation(this.id, this.email).subscribe(
+        operation(this.id, userToAdd).subscribe(
             (data) => {
 
-                this.notificationService.show('The user has been added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+                this.notificationService.show('The user is added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
                 this.openedModel.dismiss();
                 this.changeLockedStatus.emit(false);
+                this.showLoadingSpinner = false;
                 window.location.reload();
             },
             (err) => {
                 this.changeLockedStatus.emit(false);
+                this.showLoadingSpinner = false;
                 console.error(err);
             }
         );
 
     }
+
 }

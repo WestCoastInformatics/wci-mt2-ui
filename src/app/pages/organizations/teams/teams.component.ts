@@ -56,7 +56,7 @@ export class OrganizationTeamsComponent implements OnInit {
             { field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 2, minWidth: 65, maxWidth: 500, unSortIcon: true, resizable: true },
             { field: 'description', tooltipField: 'description', headerName: 'Description', flex: 2, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.descriptionSection }, unSortIcon: true, resizable: true },
             {
-                field: 'role', tooltipField: 'role', headerName: 'Role', flex: 1, minWidth: 65, resizable: true, cellClass: 'text-camel', unSortIcon: true,
+                field: 'role', tooltipField: 'role', headerName: 'Role', flex: 1, minWidth: 65, resizable: true, cellClass: 'text-capitalize', unSortIcon: true,
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     textCustomComparator: (filter, value, filterText) => {
@@ -93,10 +93,10 @@ export class OrganizationTeamsComponent implements OnInit {
             },
             { field: 'email', tooltipField: 'email', headerName: 'Contact Email', flex: 2, minWidth: 65, resizable: true, unSortIcon: true},
             {
-                field: 'members', headerName: 'People', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
+                field: 'members', headerName: 'Users', minWidth: 65, filter: false, resizable: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleSection },
                 tooltipValueGetter: (params) => {
-                    return params?.data?.memberList ? 
-                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) : 
+                    return params?.data?.memberList ?
+                        ('Team Users:\n' + params.data.memberList.map(member => member.name).join(', \n')) :
                         'No Team Users';
                 }
             }
@@ -155,7 +155,7 @@ export class OrganizationTeamsComponent implements OnInit {
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
             { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users', isActive: true },
-            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
+            { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
@@ -188,7 +188,7 @@ export class OrganizationTeamsComponent implements OnInit {
 
             this.showLoadingSpinner = true;
 
-            this.refsetService.getTeams('limit=500&offset=0&sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
+            this.refsetService.getTeams('sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
 
                 this.data = [];
                 this.teamList = results.items;

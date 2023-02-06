@@ -3,7 +3,6 @@ import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -88,7 +87,7 @@ export class OrganizationProjectsComponent implements OnInit {
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', icon: 'fa fa-folder-open', isActive: true },
             { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
+            { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' }
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
@@ -115,7 +114,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
         // If clicking on teams, go to teams page
         if (event.column.colId === 'teams') {
-            this.router.navigate(['organizations', this.organizationId, 'teams']);
+            this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams']);
         } else {
             this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets']);
         }
@@ -177,7 +176,7 @@ export class OrganizationProjectsComponent implements OnInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.editionList = results?.items;
@@ -228,7 +227,7 @@ export class OrganizationProjectsComponent implements OnInit {
     getProjects(): void {
 
         this.showLoadingSpinner = true;
-        this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
             next: async (results) => {
 
                 this.data = [];
@@ -329,11 +328,11 @@ export class OrganizationProjectsComponent implements OnInit {
            let teams = JSON.parse(data.teams).teams;
            if (teams.length > 0) {
                return 'Organization Teams:\n' + teams.map(t => t.name).join(', \n');
-           } 
+           }
            return "No Organization Teams";
         }
         return 'No teams';
     }
-    
+
 }
 

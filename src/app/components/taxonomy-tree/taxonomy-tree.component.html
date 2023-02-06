@@ -1,14 +1,10 @@
 <!-- <div *ngIf="showLoadingSpinner" class="loading"></div> -->
 
-<div class="refset-tool-taxonomy">
+<div class="rt2-taxonomy">
 
-    <div class="row" *ngIf="isLoading">
-        <div>Loading...</div>
-    </div>
+    <div class="taxonomy-loading" *ngIf="isLoading">Loading...</div>
 
-    <div class="row" *ngIf="noData">
-        <div>No children</div>
-    </div>
+    <div class="nodata" *ngIf="noData">No children</div>
 
     <tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)"
       (loadNodeChildren)="onLoadNodeChildren($event)">
@@ -21,7 +17,7 @@
             </ng-container>
 
             <div [style]="getNodeAddIconMargin(node)">
-                <tree-node-expander class="glyphicon glyphicon-chevron-down custom-inner-chevron" style="display:inline-block" [node]="node"></tree-node-expander>
+                <tree-node-expander class="glyphicon glyphicon-chevron-down custom-inner-chevron d-inline-block" [node]="node"></tree-node-expander>
                 <img *ngIf="node.data.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
                 <img *ngIf="!node.data.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
 

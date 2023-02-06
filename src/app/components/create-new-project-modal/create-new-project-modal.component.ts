@@ -13,6 +13,7 @@ import { AuthenticationService } from "src/app/services/authentication/authentic
 @Component({
   selector: "create-new-project-modal",
   templateUrl: "./create-new-project-modal.component.html",
+  styleUrls: ['create-new-project-modal.component.scss']
 })
 export class CreateNewProjectModalComponent {
 

@@ -4,7 +4,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
               [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -21,10 +21,12 @@
                 <div *ngIf="showLoadingSpinner" class="loading"></div>
                 <section class="mb-3">
 
-                    <div class='section-header mb-4'>
-                        People ({{dataCount}})
-                        <add-member-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" type="Organization" [id]="selectedOrganization?.id"
-                          [name]="selectedOrganization?.name"></add-member-modal>
+                    <div class='section-header mb-4 rt2-btn-group mt-1'>
+                        Organization Users ({{dataCount}})
+                        <add-member-to-organization-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')"
+                          [id]="selectedOrganization?.id"
+                          [name]="selectedOrganization?.name">
+                        </add-member-to-organization-modal>
                         <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization">
                         </invite-people-modal>
                     </div>
@@ -32,8 +34,7 @@
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
-                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"
-                              style="width: 100%">
+                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
@@ -43,8 +44,8 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <div style="display: flex; justify-content: space-between; width:160px" >
-                                    <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">
+                                <div class="d-flex jc-space-between w-160">
+                                    <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">
                                         {{getTeamsCount(params?.data)}} teams</span>
                                     <img *ngIf="selectedOrganization?.roles?.includes('ADMIN')"  src="assets/subtract-symbol-icon.svg" (click)="confirmRemoveUser(params?.data, $event)"
                                         width="30px" height="30px" title="Inactivate User" aria-label="Subtract" class="mt-10 subtract-symbol-icon"
@@ -70,9 +71,9 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title" id="modal-basic-title">Remove User Confirmation</h4>
-        <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Remove User Confirmation</h4>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
@@ -84,9 +85,9 @@
     </div>
 
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="removeUser();" mat-raised-button class="refset-tool-action-button mat-red mr-2">Remove User
+        <button type="button" (click)="removeUser();" class="rt2-btn rt2-remove-btn mr-2">Remove User
         </button>
-        <button (click)="modal.dismiss()" mat-raised-button class="refset-tool-action-button default-btn">Cancel
+        <button (click)="modal.dismiss()" class="rt2-btn rt2-cancel-btn">Cancel
         </button>
     </div>
 

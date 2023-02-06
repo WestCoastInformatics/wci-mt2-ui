@@ -1,20 +1,15 @@
-import { Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChild, ViewChildren } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { RefsetService } from "src/app/services/rest/refset.service";
 import { UiUtility } from "src/app/utilities/ui.utility";
 import { NotificationService } from "src/app/services/notification.service";
-import { CodeUtility } from "src/app/utilities/code.utility";
-import { RefsetDetails } from 'src/app/pages/refset-details';
-import { ProjectsService } from "src/app/services/rest/projects.service";
-import { OrganizationsService } from "src/app/services/rest/organizations.service";
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService } from "src/app/services/authentication/authentication.service";
-import { Refset } from "src/app/models/refset";
-import { RefsetUtility } from "src/app/utilities/refset.utility";
+import { Router } from '@angular/router';
+import { Constants } from "src/app/utilities/constants.utility";
 
 @Component({
 	selector: "bulk-upgrade-modal",
 	templateUrl: "./bulk-upgrade-modal.component.html",
+	styleUrls: ['bulk-upgrade-modal.component.scss']
 })
 export class BulkUpgradeModalComponent {
 
@@ -84,7 +79,7 @@ export class BulkUpgradeModalComponent {
 
     	this.refsetService.initializeUpgrade(refsetInternalIds).subscribe();
 
-    	UiUtility.manageProcessNotifications(refsetInternalIds, refsetIds, RefsetUtility.IN_DEVELOPMENT, this.emitProcessComplete, this.notificationService, this.refsetService, this.router, 'bulk upgrade');
+    	UiUtility.manageProcessNotifications(refsetInternalIds, refsetIds, Constants.IN_DEVELOPMENT, this.emitProcessComplete, this.notificationService, this.refsetService, this.router, 'bulk upgrade');
 	}
 
 	emitProcessComplete = () => { 

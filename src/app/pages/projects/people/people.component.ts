@@ -56,7 +56,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.titleService.setTitle('Reference Set Tool - Projects - People');
+        this.titleService.setTitle('Reference Set Tool - Projects - Users');
 
         this.route.params.subscribe(params => {
 
@@ -78,29 +78,6 @@ export class ProjectsPeopleComponent implements OnInit {
             { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
             { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
             { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
-            //       {
-            //     field: 'name',
-            //     tooltipField: 'name',
-            //     headerName: 'Users',
-            //     minWidth: 65,
-            //     flex: 1,
-            //     cellRenderer: 'templateRenderer',
-            //     cellRendererParams: { template: this.peopleNameSection }, unSortIcon: true, resizable: true
-            // },
-            // { field: 'company', tooltipField: 'company', flex: 1, headerName: 'Company Name', unSortIcon: true },
-            // { field: 'email', tooltipField: 'email', flex: 1, headerName: 'Email', unSortIcon: true },
-            // {
-            //     field: 'teams',
-            //     tooltipComponentFramework: CustomTooltipComponent,
-            //     tooltipField: 'teams',
-            //     tooltipComponentParams: { color: '#ececec' },
-            //     flex: 1,
-            //     headerName: 'Teams',
-            //     filter: false,
-            //     sortable: false,
-            //     cellRenderer: 'templateRenderer',
-            //     cellRendererParams: { template: this.peopleTeamsSection }
-            // }
         ];
 
         this.gridOptions = {
@@ -152,12 +129,13 @@ export class ProjectsPeopleComponent implements OnInit {
             breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '' });
         }
 
-        breadcrumbs.push({ label: 'People' });
+        breadcrumbs.push({ label: 'Users' });
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
             { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
-            { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user', isActive: true },
+            { name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users' },
+            { name: 'Users', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user', isActive: true },
         ];
 
         const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
@@ -213,7 +191,7 @@ export class ProjectsPeopleComponent implements OnInit {
 
     getEditions(): void {
 
-        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.editionList = results?.items;
@@ -270,13 +248,13 @@ export class ProjectsPeopleComponent implements OnInit {
         event.stopPropagation();
         //}
     }
-    
+
 
     getProjects(): void {
 
         this.showTable = false;
 
-        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+        this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
             next: (results) => {
 
                 this.showTable = true;
@@ -428,5 +406,5 @@ export class ProjectsPeopleComponent implements OnInit {
           }
         }
       }
-        
+
 }

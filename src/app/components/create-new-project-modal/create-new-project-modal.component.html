@@ -1,21 +1,22 @@
-<a title="Create New Project" class='btn btn-primary rounded btn-lg float-right btn-wide-font' aria-label="Create New Project"
-  (click)="openCreateNewProjectModal(createNewProjectDialog)">Create
-  New Project</a>
+
+<button title="Create New Project" class="rt2-btn rt2-action-btn float-right mt-1" aria-label="Create New Project" (click)="openCreateNewProjectModal(createNewProjectDialog)">
+  Create New Project
+</button>
 
 <ng-template #createNewProjectDialog let-modal>
 
   <div class="modal-header rt2-modal-header">
     <button ngbAutofocus class="unfocus-btn"></button>
-    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Create New Project
     </h4>
 
-    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
 
-  <div class="modal-body refset-tool-lockable create-new-project-modal-body">
+  <div class="modal-body rt2-lockable create-new-project-modal-body form-field-header">
 
     <table>
       <tr>
@@ -76,14 +77,14 @@
 
   </div>
 
-  <div class="modal-footer rt2-modal-footer refset-tool-lockable">
+  <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 
-    <button type="button" [disabled]="name === ''" (click)="createProjectObject()" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button"
-      aria-label="Create Project" title="Create Project" ng-reflect-color="green">
+    <button type="button" [disabled]="name === ''" (click)="createProjectObject()" color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn"
+      aria-label="Create Project" title="Create Project">
       Create Project
     </button>
     <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button aria-hidden="false" 
-      class="ml-3 refset-tool-action-button default-btn" aria-label="Cancel" title="Cancel">
+      class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">
       Cancel
     </button>
 

@@ -1,8 +1,10 @@
-<a *ngIf="edit" [innerHTML]="workflowHistoryNotes"
-        (click)="openReadyForReviewModal()">
-</a>
-
-<button *ngIf="!edit" mat-menu-item alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
+<div>
+  <span class="float-right" title="Edit Note"><a *ngIf="edit" class="pointer" (click)="openReadyForReviewModal()">
+    <mat-icon>edit</mat-icon>
+  </a></span>
+  <span *ngIf="edit" [innerHTML]="workflowHistoryNotes"></span>
+</div>
+<button *ngIf="!edit" class="rt2-picklist-btn" alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
 
 <ng-template #modalContent>
     <div class="compose-modal-body">
@@ -18,8 +20,8 @@
         </editor>
     </div>
     <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="saveNotes(modal)" mat-raised-button color="green" aria-hidden="false" class="refset-tool-action-button request-review-modal-button"
-          aria-label="Save" title="Save Notes" ng-reflect-color="green">
+        <button type="button" (click)="saveNotes(modal)" aria-hidden="false" class="rt2-btn rt2-next-back-btn"
+          aria-label="Save" title="Save Notes">
             Save
         </button>
     </div>

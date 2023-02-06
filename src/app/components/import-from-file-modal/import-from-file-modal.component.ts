@@ -11,6 +11,7 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 @Component({
     selector: "import-from-file-modal",
     templateUrl: "./import-from-file-modal.component.html",
+    styleUrls: ['import-from-file-modal.component.scss']
 })
 export class ImportFromFileModalComponent implements OnInit {
 

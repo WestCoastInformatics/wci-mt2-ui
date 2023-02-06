@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
@@ -19,6 +20,7 @@ import { FormControl } from '@angular/forms';
 @Component({
     selector: 'create-refset',
     templateUrl: './create-refset.component.html',
+    styleUrls: ['create-refset.component.scss']
 })
 export class CreateRefsetComponent implements OnInit {
 
@@ -40,6 +42,7 @@ export class CreateRefsetComponent implements OnInit {
     copyRefsetVersionOptions: any[];
     copySearchInput: string;
     copySelectedVersion: any;
+    comboSearchInput: string;
     refsetOptions: any[];
     refsetOptionsLoading = false;
     selectedParentConcept = undefined;
@@ -52,7 +55,7 @@ export class CreateRefsetComponent implements OnInit {
     data = [];
     originalRefsetMembers = [];
     selectedUUID: string;
-    referenceTypes = [RefsetUtility.EXTENSIONAL, RefsetUtility.INTENSIONAL, RefsetUtility.COMBINATION, RefsetUtility.EXTERNAL, RefsetUtility.COPY];
+    referenceTypes = [Constants.EXTENSIONAL, Constants.INTENSIONAL, Constants.COMBINATION, Constants.EXTERNAL, Constants.COPY];
     selectedReferenceType = 'EXTENSIONAL';
     showLoadingSpinner = false;
     organizationName: string;
@@ -125,33 +128,33 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     get showCombination(): boolean {
-        return this.selectedReferenceType && this.selectedReferenceType === RefsetUtility.COMBINATION;
+        return this.selectedReferenceType && this.selectedReferenceType === Constants.COMBINATION;
     }
 
     get showCopy(): boolean {
-        return this.selectedReferenceType && this.selectedReferenceType === RefsetUtility.COPY;
+        return this.selectedReferenceType && this.selectedReferenceType === Constants.COPY;
     }
 
     get showECL(): boolean {
-        return this.selectedReferenceType && this.selectedReferenceType === RefsetUtility.INTENSIONAL;
+        return this.selectedReferenceType && this.selectedReferenceType === Constants.INTENSIONAL;
     }
 
     get showExternal(): boolean {
-        return this.selectedReferenceType && this.selectedReferenceType === RefsetUtility.EXTERNAL;
+        return this.selectedReferenceType && this.selectedReferenceType === Constants.EXTERNAL;
     }
 
     get externalUrlValid(): boolean {
         const httpRegex = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{2,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
-        return this.selectedReferenceType === RefsetUtility.EXTERNAL && this.selectedExternalUrl && httpRegex.test(this.selectedExternalUrl);
+        return this.selectedReferenceType === Constants.EXTERNAL && this.selectedExternalUrl && httpRegex.test(this.selectedExternalUrl);
     }
 
     get nextDisabled(): boolean {
 
         return this.step === 1 && !this.selectedReferenceType
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.EXTERNAL && (this.selectedExternalName?.length === 0 || !this.externalUrlValid))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.INTENSIONAL && (this.definitionClauses?.length === 0 || this.definitionClauses[0]?.value === ''))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COPY && (!this.selectedCopyRefset  || !this.copySelectedVersion))
-            || (this.step === 2 && this.selectedReferenceType === RefsetUtility.COMBINATION && (this.selectedCombinationRefsets?.length === 0));
+            || (this.step === 2 && this.selectedReferenceType === Constants.EXTERNAL && (this.selectedExternalName?.length === 0 || !this.externalUrlValid))
+            || (this.step === 2 && this.selectedReferenceType === Constants.INTENSIONAL && (this.definitionClauses?.length === 0 || this.definitionClauses[0]?.value === ''))
+            || (this.step === 2 && this.selectedReferenceType === Constants.COPY && (!this.selectedCopyRefset  || !this.copySelectedVersion))
+            || (this.step === 2 && this.selectedReferenceType === Constants.COMBINATION && (this.selectedCombinationRefsets?.length === 0));
     }
 
     ngOnInit(): void {
@@ -268,6 +271,7 @@ export class CreateRefsetComponent implements OnInit {
         this.step = 1;
         this.copyRefsetVersionOptions = [];
         this.copySearchInput = '';
+        this.comboSearchInput = '';
         this.refsetOptions = [];
         this.refsetOptionsLoading = false;
         this.selectedCopyRefset = '';
@@ -304,7 +308,7 @@ export class CreateRefsetComponent implements OnInit {
     createRefsetObject(): void {
         this.showLoadingSpinner = true;
 
-        if (this.selectedReferenceType === RefsetUtility.COPY) {
+        if (this.selectedReferenceType === Constants.COPY) {
 
             let existingCpt = this.existingMetadataConcepts[this.selectedMetaDataConcept]?.code;
             this.refsetService.getRefsetCopy(this.selectedUUID, this.createdMetaDataConcept, this.inputProperties.project.id, this.localSet, this.privateRefset, this.comboRefset, this.selectedNarrative, this.selectedTags,
@@ -312,7 +316,7 @@ export class CreateRefsetComponent implements OnInit {
 
                     this.showLoadingSpinner = false;
                     this.modalService.dismissAll();
-                    this.router.navigate(['/details', results.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                    this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT]);
                     return;
                 },
                     (error) => {
@@ -352,14 +356,14 @@ export class CreateRefsetComponent implements OnInit {
                 versionNotes: this.selectedVersionNotes,
             };
 
-            if (this.type === RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0) {
+            if (this.type === Constants.INTENSIONAL && this.definitionClauses.length > 0) {
                 params.definitionClauses = this.definitionClauses;
             }
-            if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
+            if (this.selectedReferenceType === Constants.EXTERNAL) {
                 params.externalUrl = this.selectedExternalUrl;
                 params.name = this.capitalizeFirstLetterOfString(this.selectedExternalName);
             }
-            if (this.selectedReferenceType === RefsetUtility.COMBINATION) {
+            if (this.selectedReferenceType === Constants.COMBINATION) {
                 params.comboRefset = true;
             }
             this.refsetService.createRefset(params).subscribe(
@@ -377,7 +381,7 @@ export class CreateRefsetComponent implements OnInit {
                     }
 
                     this.modalService.dismissAll();
-                    this.router.navigate(['/details', status.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                    this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
 
                 },
                 (error) => {
@@ -429,7 +433,7 @@ export class CreateRefsetComponent implements OnInit {
             type: this.referenceType,
         };
 
-        if (this.selectedReferenceType === RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0) {
+        if (this.selectedReferenceType === Constants.INTENSIONAL && this.definitionClauses.length > 0) {
             params.definitionClauses = this.definitionClauses;
         }
 
@@ -447,7 +451,7 @@ export class CreateRefsetComponent implements OnInit {
             }
 
             this.modalService.dismissAll();
-            this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+            this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT]);
             this.refsetDetails.initializeDetailsPage();
         },
             (error) => {
@@ -459,15 +463,15 @@ export class CreateRefsetComponent implements OnInit {
     isComplete(): boolean {
         let typeCheck = false;
 
-        if (this.selectedReferenceType === RefsetUtility.EXTERNAL && this.selectedExternalUrl?.length > 0 && this.selectedExternalName?.length > 0) {
+        if (this.selectedReferenceType === Constants.EXTERNAL && this.selectedExternalUrl?.length > 0 && this.selectedExternalName?.length > 0) {
             return true;
-        } else if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
+        } else if (this.selectedReferenceType === Constants.EXTENSIONAL) {
             typeCheck = true;
-        } else if (this.selectedReferenceType === RefsetUtility.INTENSIONAL && this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
+        } else if (this.selectedReferenceType === Constants.INTENSIONAL && this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
             typeCheck = true;
-        } else if (this.selectedReferenceType === RefsetUtility.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
+        } else if (this.selectedReferenceType === Constants.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
             typeCheck = true;
-        } else if (this.selectedReferenceType === RefsetUtility.COPY) {
+        } else if (this.selectedReferenceType === Constants.COPY) {
             typeCheck = true;
         }
 
@@ -630,7 +634,7 @@ export class CreateRefsetComponent implements OnInit {
         // if this is numeric only treat it as a refset ID
         if (/^\d+$/.test(query)) {
             queryField = 'refsetId:' + query;
-        } else { 
+        } else {
             queryField = 'name:' + query;
         }
 
@@ -718,15 +722,15 @@ export class CreateRefsetComponent implements OnInit {
             dialogData.template = this.newConceptDialog;
         } else if (this.step === 3) {
             dialogData.template = this.infoDialog;
-        } else if (referenceType === RefsetUtility.EXTENSIONAL) {
+        } else if (referenceType === Constants.EXTENSIONAL) {
             dialogData.template = this.extensionalInfoDialog;
-        } else if (referenceType === RefsetUtility.INTENSIONAL) {
+        } else if (referenceType === Constants.INTENSIONAL) {
             dialogData.template = this.intensionalInfoDialog;
-        } else if (referenceType === RefsetUtility.EXTERNAL) {
+        } else if (referenceType === Constants.EXTERNAL) {
             dialogData.template = this.externalInfoDialog;
-        } else if (referenceType === RefsetUtility.COPY) {
+        } else if (referenceType === Constants.COPY) {
             dialogData.template = this.copyInfoDialog;
-        } else if (referenceType === RefsetUtility.COMBINATION) {
+        } else if (referenceType === Constants.COMBINATION) {
             dialogData.template = this.combinationInfoDialog;
         }
 
@@ -744,7 +748,7 @@ export class CreateRefsetComponent implements OnInit {
     goBack(): void {
         if (this.step > 1) {
             this.step -= 1;
-            if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
+            if (this.selectedReferenceType === Constants.EXTENSIONAL) {
                 this.step -= 1;
             }
         }
@@ -753,21 +757,21 @@ export class CreateRefsetComponent implements OnInit {
     goNext(): void {
         if (this.step < 3) {
             this.step += 1;
-            if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
-                this.type = RefsetUtility.EXTENSIONAL;
+            if (this.selectedReferenceType === Constants.EXTENSIONAL) {
+                this.type = Constants.EXTENSIONAL;
                 this.step += 1;
             }
-            if (this.selectedReferenceType === RefsetUtility.INTENSIONAL) {
-                this.type = RefsetUtility.INTENSIONAL;
+            if (this.selectedReferenceType === Constants.INTENSIONAL) {
+                this.type = Constants.INTENSIONAL;
             }
-            if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
-                this.type = RefsetUtility.EXTERNAL;
+            if (this.selectedReferenceType === Constants.EXTERNAL) {
+                this.type = Constants.EXTERNAL;
             }
-            if (this.selectedReferenceType === RefsetUtility.COPY && this.selectedCopyRefset) {
+            if (this.selectedReferenceType === Constants.COPY && this.selectedCopyRefset) {
                 this.getRefset();
             }
-            if (this.selectedReferenceType === RefsetUtility.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
-                this.type = RefsetUtility.INTENSIONAL;
+            if (this.selectedReferenceType === Constants.COMBINATION && this.selectedCombinationRefsets?.length > 0) {
+                this.type = Constants.INTENSIONAL;
                 this.comboRefset = true;
                 var str1 = '';
                 for (let comboRefset of this.selectedCombinationRefsets) {

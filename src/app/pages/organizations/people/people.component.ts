@@ -54,7 +54,7 @@ export class OrganizationPeopleComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Organizations - People');
+    this.titleService.setTitle('Reference Set Tool - Organizations - Users');
 
     this.route.params.subscribe(params => {
 
@@ -63,6 +63,7 @@ export class OrganizationPeopleComponent implements OnInit {
     });
 
     this.getOrganizations();
+
   }
 
   ngAfterViewInit() {
@@ -72,7 +73,7 @@ export class OrganizationPeopleComponent implements OnInit {
       { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
       { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
-    ];    
+    ];
 
     this.gridOptions = {
       context: { componentParent: this },
@@ -107,13 +108,13 @@ export class OrganizationPeopleComponent implements OnInit {
 
     this.breadcrumbService.setBreadcrumbs([
       { path: '/dashboard', label: 'Dashboard' },
-      { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / People' : '' },
+      { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Users' : '' },
     ]);
 
     this.menu = [
       { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
       { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-      { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user', isActive: true }
+      { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user', isActive: true }
     ];
 
     const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';

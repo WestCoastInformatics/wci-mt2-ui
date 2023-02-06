@@ -1,7 +1,6 @@
-<button *ngIf="isInitialUpgrade" type="button" mat-raised-button color="primary" aria-hidden="false"
-  #upgradeButton class="refset-tool-action-button refset-action-button"
-  (click)="openVersionChoiceModal()" aria-label="Upgrade" title="Upgrade"
-  ng-reflect-color="primary">
+<button *ngIf="isInitialUpgrade" aria-hidden="false"
+  #upgradeButton class="rt2-btn rt2-action-btn"
+  (click)="openVersionChoiceModal()" aria-label="Upgrade" title="Upgrade">
   Upgrade
 </button>
 <adjudicate-upgrade-modal *ngIf="!isInitialUpgrade" [refsetData]="refsetData"
@@ -10,12 +9,12 @@
 <ng-template #upgradeDialog let-modal>
   <ng-container>
     <div class="modal-header rt2-modal-header">
-      <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+      <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
         Upgrade Reference Set
       </h4>
-      <button type="button" class="close dialog-close-x" aria-label="Close"
+      <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
         (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true" class="dialog-close-x">&times;</span>
+        <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
       </button>
     </div>
     <div class="container-fluid upgrade-container-fluid">
@@ -26,8 +25,8 @@
 
       <!--Table-->
       <div class="container-fluid">
-        <div class="row refset-tool-refset-metadata-section">
-          <table class="refset-tool-refset-metadata-table table-striped mb-1">
+        <div class="row">
+          <table class="rt2-refset-metadata-table table-striped mb-1">
             <tbody>
               <tr>
                 <td class="upgrade-modal-current-version-label" aria-label="Current Version:">
@@ -71,14 +70,14 @@
     <!--Table-->
 
 
-    <div class="modal-footer rt2-modal-footer">
-      <button type="button" mat-raised-button color="green" aria-hidden="false"
-        class="refset-tool-action-button upgrade-modal-button" aria-label="Upgrade" title="Upgrade"
-        ng-reflect-color="green" (click)="modal.dismiss('Cross click'); upgrade()">
+    <div class="modal-footer rt2-modal-footer rt2-btn-group">
+      <button type="button" color="green" aria-hidden="false"
+        class="rt2-btn rt2-next-back-btn" aria-label="Upgrade" title="Upgrade"
+        (click)="modal.dismiss('Cross click'); upgrade()">
         Start Upgrade
       </button>
-      <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button 
-        aria-hidden="false" class="ml-3 refset-tool-action-button default-btn"
+      <button type="button" (click)="modal.dismiss('Cross click')"
+        aria-hidden="false" class="rt2-btn rt2-cancel-btn"
         aria-label="Cancel" title="Cancel">
         Cancel
       </button>
@@ -101,12 +100,10 @@
       </div>
   </div>
   <div class="modal-footer ready-for-review-footer">
-      <button type="button" (click)="setVersionContinueChoice(true)" mat-raised-button color="primary" aria-hidden="false"
-        class="refset-tool-action-button" aria-label="Yes" title="Yes" ng-reflect-color="primary" style="margin-right: 20px;">
+      <button type="button" (click)="setVersionContinueChoice(true)" aria-hidden="false" class="rt2-btn rt2-action-btn m-r-20" aria-label="Yes" title="Yes">
           Yes
       </button>
-      <button type="button" (click)="setVersionContinueChoice(false)" mat-raised-button color="red" aria-hidden="false" class="refset-tool-action-button" aria-label="No"
-        title="No" ng-reflect-color="red">
+      <button type="button" (click)="setVersionContinueChoice(false)" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No" title="No">
           No
       </button>
   </div>

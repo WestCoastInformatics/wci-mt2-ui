@@ -3,7 +3,8 @@ import { Component, Inject, HostListener } from '@angular/core';
 
 @Component({
     selector: 'scroll-top',
-    templateUrl: './scroll-top.component.html'
+    templateUrl: './scroll-top.component.html',
+    styleUrls: ['scroll-top.component.scss']
 })
 export class ScrollTopComponent {
     windowScrolled: boolean;

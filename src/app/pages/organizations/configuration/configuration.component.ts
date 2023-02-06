@@ -12,7 +12,8 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 
 @Component({
     selector: 'organization-configuration',
-    templateUrl: './configuration.component.html'
+    templateUrl: './configuration.component.html',
+    styleUrls: ['configuration.component.scss']
 })
 export class OrganizationConfigurationComponent implements OnInit {
 
@@ -54,7 +55,7 @@ export class OrganizationConfigurationComponent implements OnInit {
 
     ngAfterViewInit(): void {
         if (document.getElementById("audit-button")) {
-            document.getElementById("audit-button").className = "btn btn-primary btn-lg btn-wide-font";
+            document.getElementById("audit-button").className = "rt2-btn rt2-action-btn";
         }
     }
 
@@ -68,7 +69,7 @@ export class OrganizationConfigurationComponent implements OnInit {
         this.menu = [
             { name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
             { name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-            { name: 'People', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
+            { name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
             { name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true }
         ];
 

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 
 @Component({
     selector: 'add-remove-concepts-icons',
@@ -31,25 +31,25 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 
                 if (!this.refsetType) {
                     this.actionText = "Member";
-                } else if (this.refsetType != RefsetUtility.INTENSIONAL) {
+                } else if (this.refsetType != Constants.INTENSIONAL) {
 
                     this.actionText = "Member";
                     this.showAdd = !CodeUtility.testBoolean(this.concept.memberOfRefset);
 
                 } else {
 
-                    if (this.concept.definitionExceptionType != RefsetUtility.EXCLUSION && this.concept.definitionExceptionType != RefsetUtility.INCLUSION) {
+                    if (this.concept.definitionExceptionType != Constants.EXCLUSION && this.concept.definitionExceptionType != Constants.INCLUSION) {
 
                         if (CodeUtility.testBoolean(this.concept.memberOfRefset)) {
 
                             this.actionText = "Exclusion";
-                            this.definitionExceptionType = RefsetUtility.EXCLUSION;
+                            this.definitionExceptionType = Constants.EXCLUSION;
                             this.showAdd = true;
 
                         } else {
 
                             this.actionText = "Inclusion";
-                            this.definitionExceptionType = RefsetUtility.INCLUSION;
+                            this.definitionExceptionType = Constants.INCLUSION;
                             this.showAdd = true;
                         }
 
@@ -57,12 +57,12 @@ export class AddRemoveConceptsIconsComponent implements OnInit {
 
                         this.definitionExceptionType = this.concept.definitionExceptionType
 
-                        if (this.definitionExceptionType == RefsetUtility.EXCLUSION) {
+                        if (this.definitionExceptionType == Constants.EXCLUSION) {
 
                             this.actionText = "Exclusion";
                             this.showAdd = false;
 
-                        } else if (this.definitionExceptionType == RefsetUtility.INCLUSION) {
+                        } else if (this.definitionExceptionType == Constants.INCLUSION) {
 
                             this.actionText = "Inclusion";
                             this.showAdd = false;

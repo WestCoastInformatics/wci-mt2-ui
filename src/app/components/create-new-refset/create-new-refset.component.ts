@@ -6,7 +6,7 @@ import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Router } from '@angular/router';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
@@ -34,7 +34,7 @@ export class CreateNewRefsetComponent implements OnInit {
     selectedTags = [];
     definitionClauses = [];
     selectedVersionNotes = '';
-    referenceTypes = [RefsetUtility.EXTENSIONAL, RefsetUtility.INTENSIONAL, RefsetUtility.EXTERNAL];
+    referenceTypes = [Constants.EXTENSIONAL, Constants.INTENSIONAL, Constants.EXTERNAL];
     selectedReferenceType = '';
     showLoadingSpinner = false;
     organizationName: string;
@@ -50,7 +50,7 @@ export class CreateNewRefsetComponent implements OnInit {
     versionDate: string;
     refsetConcept: string;
     tags: string[];
-    INTENSIONAL = RefsetUtility.INTENSIONAL;
+    INTENSIONAL = Constants.INTENSIONAL;
     existingMetadataConcepts: any;
     parentConcepts: any;
     conceptError = '';
@@ -97,7 +97,7 @@ export class CreateNewRefsetComponent implements OnInit {
     }
 
     get canEditName(): boolean {
-        return this.editMode && this.selectedReferenceType === RefsetUtility.EXTERNAL;
+        return this.editMode && this.selectedReferenceType === Constants.EXTERNAL;
     }
 
     ngOnInit(): void {
@@ -227,7 +227,7 @@ export class CreateNewRefsetComponent implements OnInit {
                 }
 
                 this.modalService.dismissAll();
-                this.router.navigate(['/details', status.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
             },
             (error) => {
                 this.showLoadingSpinner = false;
@@ -276,7 +276,7 @@ export class CreateNewRefsetComponent implements OnInit {
             moduleId: this.moduleId,
             type: this.referenceType,
         };
-        if (this.selectedReferenceType === RefsetUtility.EXTERNAL) {
+        if (this.selectedReferenceType === Constants.EXTERNAL) {
             params.name = this.refsetConcept;
         }
 
@@ -301,7 +301,7 @@ export class CreateNewRefsetComponent implements OnInit {
                 }
     
                 this.modalService.dismissAll();
-                this.router.navigate(['/details', this.refsetId, RefsetUtility.IN_DEVELOPMENT]);
+                this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT]);
                 this.refsetDetails.initializeDetailsPage();
             },
                error: (error) => {
@@ -314,9 +314,9 @@ export class CreateNewRefsetComponent implements OnInit {
     isComplete(): boolean {
         let typeCheck = false;
 
-        if (this.selectedReferenceType === RefsetUtility.EXTENSIONAL) {
+        if (this.selectedReferenceType === Constants.EXTENSIONAL) {
             typeCheck = true;
-        } else if (this.selectedReferenceType === RefsetUtility.INTENSIONAL &&
+        } else if (this.selectedReferenceType === Constants.INTENSIONAL &&
             this.definitionClauses.length > 0 && CodeUtility.hasValue(this.definitionClauses[0].value)) {
             typeCheck = true;
         }

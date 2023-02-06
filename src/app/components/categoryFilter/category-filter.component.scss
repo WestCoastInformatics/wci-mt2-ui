@@ -1,0 +1,12 @@
+.category-filter-select {
+    padding-top: 10px;
+    width: 100%;
+    text-transform: capitalize;
+    .mat-select-arrow-wrapper {
+      padding-top: 0px;
+      padding-bottom: 10px;
+    }
+    .mat-form-field-infix {
+      top: 7px;
+    }
+  }

@@ -4,7 +4,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
 	selector: 'compose-modal',
 	templateUrl: './compose-modal.component.html',
-	styleUrls: ['./compose-modal.component.scss']
 })
 export class ComposeModalComponent {
 

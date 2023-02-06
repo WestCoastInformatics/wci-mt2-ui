@@ -6,6 +6,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
@@ -19,7 +20,8 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 
 @Component({
   selector: 'app-launch-comparison-modal',
-  templateUrl: './launch-comparison-modal.component.html'
+  templateUrl: './launch-comparison-modal.component.html',
+  styleUrls: ['launch-comparison-modal.component.scss']
 })
 export class LaunchComparisonModalComponent {
 
@@ -40,6 +42,7 @@ export class LaunchComparisonModalComponent {
   gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
   showTable = false;
   activeRefsetName: string;
+  activeRefsetCodeSystem: string
   comparisonData: any;
   comparisonRefsetVersionDate: string;
   comparisonRefsetName: string;
@@ -58,7 +61,7 @@ export class LaunchComparisonModalComponent {
   conceptDetailParents: any;
   conceptDetailsOptions: TreeOptions = {
     useFsn: false,
-    language: RefsetUtility.DEFAULT_ACCEPT_LANGUAGE,
+    language: Constants.DEFAULT_ACCEPT_LANGUAGE,
   };
   taxonomyManualStateRefresh = new Boolean(false);
   taxonomyNumberOfChildren: number;
@@ -115,12 +118,13 @@ export class LaunchComparisonModalComponent {
     this.changeReportData = [];
     this.comparisonSearchInput = '';
     this.comparisonRefsetSelect = '';
+    this.activeRefsetCodeSystem = '';
 
     this.activeRefsetVersionDate = CodeUtility.formatJsonDate(this.activeRefset.versionDate, CodeUtility.DATE_FORMAT_REVERSE);
     this.activeRefsetVersionOptions = RefsetUtility.getVersionOptions(this.activeRefset);
     let selectedVersionDateIndex = 0;
 
-    if (this.activeRefset.versionStatus != RefsetUtility.IN_DEVELOPMENT) {
+    if (this.activeRefset.versionStatus != Constants.IN_DEVELOPMENT) {
       selectedVersionDateIndex = this.activeRefsetVersionOptions.findIndex((element) => { return element.display.startsWith(this.activeRefsetVersionDate); });
     }
 
@@ -146,7 +150,7 @@ export class LaunchComparisonModalComponent {
   }
 
   getStatus(value: string) {
-    return RefsetUtility.REFSET_STATUS_MAP[value]
+    return Constants.REFSET_STATUS_MAP[value]
   }
 
   async onSearchChange(value): Promise<void> {
@@ -195,7 +199,7 @@ export class LaunchComparisonModalComponent {
       this.refsetDetails.changeLockedStatus(false);
     });
 
-    UiUtility.manageProcessNotifications(this.activeRefset.id, this.activeRefset.refsetId, RefsetUtility.IN_DEVELOPMENT, this.showComparison, this.notificationService, this.refsetService, this.router, 'comparison');
+    UiUtility.manageProcessNotifications(this.activeRefset.id, this.activeRefset.refsetId, Constants.IN_DEVELOPMENT, this.showComparison, this.notificationService, this.refsetService, this.router, 'comparison');
 
     this.openedModel.close();
     this.openedModel = null;
@@ -250,8 +254,8 @@ export class LaunchComparisonModalComponent {
         field: 'membership', colId: 'membership', headerName: 'Reference Set Membership', flex: 1, minWidth: 65, tooltipField: 'membership', resizable: false, unSortIcon: true,
         floatingFilterComponent: 'categoryFilterComponent', floatingFilterComponentParams: {
           suppressMenu: true, suppressFilterButton: true, names: [
-            { type: 'membership', name: 'Active Refset', value: 'Active Refset' },
-            { type: 'membership', name: 'Comparison Refset', value: 'Comparison Refset' },
+            { type: 'membership', name: 'Active Reference Set', value: 'Active Reference Set' },
+            { type: 'membership', name: 'Comparison Reference Set', value: 'Comparison Reference Set' },
             { type: 'membership', name: 'Both', value: 'Both' },
           ]
         }
@@ -262,6 +266,7 @@ export class LaunchComparisonModalComponent {
 
 
     this.activeRefsetName = this.activeRefset.name;
+    this.activeRefsetCodeSystem = this.activeRefset.organizationName + ' / ' + this.activeRefset.editionName + ' / ' + this.activeRefset.versionDate + ' (' + this.getStatus(this.activeRefset.versionStatus) + ')';
 
     if (this.comparisonTypeSelected == 'same_refset') {
 
@@ -378,7 +383,7 @@ export class LaunchComparisonModalComponent {
     this.conceptDetail = null;
     this.isConceptDetailsLoading = true;
 
-    this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.activeRefset.id, }).subscribe({
+    this.refsetService.getMembersDetails(concept?.code, { refsetInternalId: this.activeRefset.id }, true).subscribe({
       next: (results) => {
 
         this.isConceptDetailsLoading = false;
@@ -397,13 +402,14 @@ export class LaunchComparisonModalComponent {
       error: (error) => {
 
         this.isConceptDetailsLoading = false;
+        this.notificationService.show("The concept does not exist in " + this.activeRefsetCodeSystem + ".", null, 'warning', { timeOut: 5000, extendedTimeOut: 0 });
       }
     });
 
     this.loadConceptDetailParents(concept);
   }
 
-  loadConceptDetailParents(concept, language = RefsetUtility.DEFAULT_ACCEPT_LANGUAGE) {
+  loadConceptDetailParents(concept, language = Constants.DEFAULT_ACCEPT_LANGUAGE) {
 
     this.conceptDetailParents = [];
 
@@ -574,7 +580,7 @@ export class LaunchComparisonModalComponent {
             memberOfRefset: 'true',
             name: conceptStatus.name,
             active: conceptStatus.active,
-            membership: 'Active Refset'
+            membership: 'Active Reference Set'
           };
 
           this.comparisonData.items.push(concept);
@@ -616,11 +622,11 @@ export class LaunchComparisonModalComponent {
     let activeRefsetDate = this.activeRefsetVersionDate;
     let comparisonRefsetDate = this.comparisonRefsetVersionDate;
 
-    if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+    if (this.activeRefset.versionStatus == Constants.IN_DEVELOPMENT) {
       activeRefsetDate = '(In Development)';
     }
 
-    if (this.comparisonRefsetStatus == RefsetUtility.IN_DEVELOPMENT) {
+    if (this.comparisonRefsetStatus == Constants.IN_DEVELOPMENT) {
       comparisonRefsetDate = '(In Development)';
     }
 
@@ -634,7 +640,7 @@ export class LaunchComparisonModalComponent {
 
       let refset = '';
 
-      if (row.membership == 'Active Refset') {
+      if (row.membership == 'Active Reference Set') {
         refset = activeRefset;
       } else if (row.membership == 'Both') {
         refset = bothRefsets;
@@ -676,7 +682,7 @@ export class LaunchComparisonModalComponent {
 
     let activeRefsetDate = this.activeRefsetVersionDate;
 
-    if (this.activeRefset.versionStatus == RefsetUtility.IN_DEVELOPMENT) {
+    if (this.activeRefset.versionStatus == Constants.IN_DEVELOPMENT) {
       activeRefsetDate = '(In_Development)';
     }
 

@@ -1,180 +1,170 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div class="content-header">
-    <div class="row header-title">
+  <div class="row header-title">
 
-        <span class="projects-dropdown-block">
-            <span class="title-label">Organizations</span>
-            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose
+    <span class="projects-dropdown-block">
+      <span class="title-label">Organizations</span>
+      <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+        <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose
                             Organization'" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                    <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3">
-                        {{ organization.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+          <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3">
+            {{ organization.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+
+    <span class="projects-dropdown-block">
+      <span class="title-label">Editions</span>
+      <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+        <mat-select [disableOptionCentering]="true"
+          [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
+          (selectionChange)="selectedEdition()">
+          <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+            {{ edition.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+
+    <span class="projects-dropdown-block">
+      <span class="title-label">Projects</span>
+      <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
+        <mat-select [disabled]="organizationId === '0'"
+          [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'"
+          [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
+          <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3">
+            {{ project.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+
+    <div class="col-md-auto page-title mr-20 color-custom-grey p-l-60 fs-14 page-h1-font" *ngIf="selectedProject">
+      <!-- <b>Project Role(s): </b><span>{{ getRoleString() }}</span> -->
+
+      <span class="visible-h">
+        <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" |
+          "&nbsp;&nbsp;}}</span>
+
+        <b>Organization Name: </b><span>{{selectedProject?.edition?.organization?.name +
+          &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+
+        <span *ngIf="editionList.length > 1">
+          <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" |
+            "&nbsp;&nbsp;}}</span>
         </span>
 
-        <span class="projects-dropdown-block">
-            <span class="title-label">Editions</span>
-            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
-                  (selectionChange)="selectedEdition()">
-                    <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
-                        {{ edition.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </span>
-
-        <span class="projects-dropdown-block">
-            <span class="title-label">Projects</span>
-            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select [disabled]="organizationId === '0'" [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'"
-                  [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
-                    <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3">
-                        {{ project.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </span>
-
-        <div class="col-md-auto page-title" *ngIf="selectedProject" style="
-            margin-right: 20px;
-            color: #555555;
-            padding-left: 60px;
-            font-size: 14px;
-        ">
-            <!-- <b>Project Role(s): </b><span>{{ getRoleString() }}</span> -->
-
-            <span style="visibility: hidden">
-                <b>Project Name: </b><span>{{selectedProject?.name + &nbsp;&nbsp;" |
-                    "&nbsp;&nbsp;}}</span>
-
-                <b>Organization Name: </b><span>{{selectedProject?.edition?.organization?.name +
-                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-
-                <span *ngIf="editionList.length > 1">
-                    <b>Edition Name: </b><span>{{selectedProject?.edition?.name + &nbsp;&nbsp;" |
-                        "&nbsp;&nbsp;}}</span>
-                </span>
-
-                <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
-                    &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
-            </span>
-        </div>
+        <b>Status: </b><span>{{(selectedProject?.privateProject ? 'Private' : 'Public') +
+          &nbsp;&nbsp;" | "&nbsp;&nbsp;}}</span>
+      </span>
     </div>
+  </div>
 
 </div>
 <div class="content-wrapper">
-    <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <div class='container-fluid mt-3'>
-        <!-- Page Title -->
-        <div *ngIf="selectedProject" style="
-            width: 100%;
-            justify-content: space-between;
-            display: flex;
-            padding-right: 20px;
-            padding-top: 20px;
-            align-items: center;
-            padding-left: 15px;
-            padding-bottom: 10px;
-        " [class.container-toggled]="toggleService.isToggled">
-            <div class="container-fluid page-title" style="display: inline; padding-left: 0px; color: rgb(0, 164, 228)">
-                Reference Sets
-                <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
-            </div>
+  <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+  <div class='container-fluid mt-3'>
+    <!-- Page Title -->
+    <div *ngIf="selectedProject" class="w-100-pct jc-space-between d-flex p-r-20 align-center p-l-15 p-b-10"
+      [class.container-toggled]="toggleService.isToggled">
+      <div class="container-fluid page-title d-inline p-l-0 color-custom-blue">
+        Reference Sets
+        <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
+      </div>
 
-            <!-- <div style="display: inline; padding-right: 10px; cursor: pointer;"
-        (click)="openWorkflowDiagramModal(workflowDiagramDialog)">
-            <img src="assets/help-icon.svg"
-            alt="Display Workflow Diagram"
-            title="Display Workflow Diagram"
-            aria-label="Display Workflow Diagram" />
-        </div> -->
-            <div class=" mr-3">
-                <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
-                  [existingBranchVersions]="existingBranchVersions">
-                </create-refset>
-            </div>
-            <!--<div class="d-inline">
+      <div class="mr-3">
+        <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
+          [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
+        </create-refset>
+      </div>
+      <!--<div class="d-inline">
                 <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
                   [existingBranchVersions]="existingBranchVersions">
                 </create-new-refset>
             </div> -->
-            <div [hidden]="refsetData?.length < 1">
-                <app-refset-download [isDetailPage]="true" [refsets]="refsetData"  [project]="selectedProject"></app-refset-download>
-            </div>
-            <bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
-        </div>
-
-        <!-- Reference Set Table -->
-        <div class="container-fluid" [class.container-toggled]="toggleService.isToggled">
-            <ag-grid-angular *ngIf="showTable" #projectTable class="ag-theme-alpine refset-tool-ag-grid refset-tool-ag-grid-filter" [columnDefs]="columnDefs"
-              [gridOptions]="refsetGridOptions" style="width: 100%">
-            </ag-grid-angular>
-
-            <app-pagination *ngIf="showTable" #projectPaging [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions"
-              [pageSizeOptions]="refsetGridPaging.pageSizeOptions" [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
-              [isSelectedProject]="isSelectedProject" [isProjectsPage]="true">
-            </app-pagination>
-
-            <!-- Name Templates -->
-            <ng-template #projectNameSection let-params>
-                {{ params?.value }}
-
-                <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="refset-tool-table-action-icon"
-                  aria-label="Private Reference Set" title="Private Reference Set">
-                    lock
-                </mat-icon>
-                <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="refset-tool-table-action-icon" aria-label="Local Set" title="Local Set">
-                    my_location
-                </mat-icon>
-
-            </ng-template>
-
-            <!-- Workflow Status Templates -->
-            <ng-template #projectWorkflowStatusSection let-params>
-                <workflow-status-badge [status]="params?.data?.workflowStatus">
-                </workflow-status-badge>
-            </ng-template>
-
-            <!-- Action Templates -->
-            <ng-template #projectActionSection let-params>
-                <div class="container-fluid">
-                    <div class="row">
-
-                        <div class="col-2">
-                            <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable"
-                              [refset]="getRefsetRow(params.data.refsetId)">
-                            </app-refset-download>
-                        </div>
-
-                        <div class="col-2">
-                            <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                              [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
-                            </app-refset-discussion-list>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-        </div>
+      <div class="mr-3" [hidden]="refsetData?.length < 1">
+        <app-refset-download [isDetailPage]="true" [refsets]="refsetData"
+          [project]="selectedProject"></app-refset-download>
+      </div>
+      
+      <div [hidden]="!(user?.roles?.includes('AUTHOR'))">
+        <bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
+      </div>
     </div>
+
+    <!-- Reference Set Table -->
+    <div class="container-fluid" [class.container-toggled]="toggleService.isToggled">
+      <ag-grid-angular *ngIf="showTable" #projectTable class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct"
+        [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+      </ag-grid-angular>
+
+      <app-pagination *ngIf="showTable" #projectPaging [pageSize]="refsetGridPaging.pageSize"
+        [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+        [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+        [isSelectedProject]="isSelectedProject" [isProjectsPage]="true">
+      </app-pagination>
+
+      <!-- Name Templates -->
+      <ng-template #projectNameSection let-params>
+        {{ params?.value }}
+
+        <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon
+          class="rt2-table-action-icon" aria-label="Private Reference Set" title="Private Reference Set">
+          lock
+        </mat-icon>
+        <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon"
+          aria-label="Local Set" title="Local Set">
+          my_location
+        </mat-icon>
+
+      </ng-template>
+
+      <!-- Workflow Status Templates -->
+      <ng-template #projectWorkflowStatusSection let-params>
+        <workflow-status-badge [status]="params?.data?.workflowStatus">
+        </workflow-status-badge>
+      </ng-template>
+
+      <!-- Action Templates -->
+      <ng-template #projectActionSection let-params>
+        <div class="container-fluid">
+          <div class="row">
+
+            <div class="col-2">
+              <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable"
+                [refset]="getRefsetRow(params.data.refsetId)">
+              </app-refset-download>
+            </div>
+
+            <div class="col-2">
+              <app-refset-discussion-list *ngIf="params && params.data" type="REFSET"
+                [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId" [refsetName]="params.data.name"
+                [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
+              </app-refset-discussion-list>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>
 <scroll-top></scroll-top>
 
 <ng-template #workflowDiagramDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <h4 class="modal-title review-modal-title" id="modal-basic-title">
-            Workflow Diagram
-        </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="modal-header review-modal-header">
+    <h4 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">
+      Workflow Diagram
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="container-fluid ready-for-review-container-fluid">
+    <div class="modal-body review-modal-body">
+      <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram"
+        class="mw-100-pct mh-100-pct" />
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body review-modal-body">
-            <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram" style="max-width: 100%; max-height: 100%;" />
-        </div>
-    </div>
+  </div>
 </ng-template>

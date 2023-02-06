@@ -1,17 +1,17 @@
-<button #rejectRefsetButton mat-raised-button color="primary" aria-hidden="false"
-  (click)="openReviewModal(reviewDialog)" class="refset-tool-action-button refset-action-button"
-  aria-label="Reject Reference Set" title="Reject Reference Set" ng-reflect-color="primary">
+<button #rejectRefsetButton color="primary" aria-hidden="false"
+  (click)="openReviewModal(reviewDialog)" class="rt2-btn rt2-action-btn"
+  aria-label="Reject Reference Set" title="Reject Reference Set">
   Reject Reference Set
 </button>
 
 <ng-template #reviewDialog let-modal>
   <div class="modal-header rt2-modal-header">
-    <h4 class="modal-title rt2-modal-title" id="modal-basic-title">
+    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Finish Review
     </h4>
-    <button type="button" class="close dialog-close-x" aria-label="Close"
+    <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
       (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+      <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
   <div class="container-fluid ready-for-review-container-fluid">
@@ -33,16 +33,15 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer rt2-modal-footer">
-    <button #rejectRefsetNotesButton mat-raised-button color="green" aria-hidden="false"
-      class="refset-tool-action-button refset-action-button" aria-label="Reject Reference Set"
+  <div class="modal-footer rt2-modal-footer rt2-btn-group">
+    <button #rejectRefsetNotesButton color="green" aria-hidden="false"
+      class="rt2-btn rt2-next-back-btn" aria-label="Reject Reference Set"
       title="Reject Reference Set" [disabled]="!checkIfNoteAdded()"
-      (click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus();"
-      ng-reflect-color="green">
+      (click)="modal.dismiss('Cross click'); addNoteAndSetWorkflowStatus();">
       Save & Finish
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" mat-raised-button 
-      aria-hidden="false" class="ml-3 refset-tool-action-button default-btn"  aria-label="Cancel" title="Cancel">
+    <button type="button" (click)="modal.dismiss('Cross click')" 
+      aria-hidden="false" class="rt2-btn rt2-cancel-btn"  aria-label="Cancel" title="Cancel">
       Cancel
     </button>
   </div>

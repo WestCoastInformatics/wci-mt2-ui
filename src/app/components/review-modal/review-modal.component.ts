@@ -5,7 +5,8 @@ import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 
 @Component({
     selector: 'review-modal',
-    templateUrl: './review-modal.component.html'
+    templateUrl: './review-modal.component.html',
+    styleUrls: ['review-modal.component.scss']
 })
 export class ReviewModalComponent {
 

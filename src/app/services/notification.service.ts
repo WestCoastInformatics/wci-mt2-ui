@@ -5,177 +5,177 @@ import { IToastButton } from '../components/notification/notification.component'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 
 export class NotificationService {
 
-    constructor(
-        private toastr: ToastrService,
-        private readonly sanitizer: DomSanitizer
-    ) { }
+  constructor(
+    private toastr: ToastrService,
+    private readonly sanitizer: DomSanitizer
+  ) { }
 
-    show(message: string, title: string = null, type: string = 'info', config: any = {}, refsetId: string = '', buttons: IToastButton[] = []): ActiveToast<any> {
+  show(message: string, title: string = null, type: string = 'info', config: any = {}, refsetId: string = '', buttons: IToastButton[] = []): ActiveToast<any> {
 
-        let additonalConfig = {
-            'timeOut': 25000,
-            'enableHtml': true,
-            'tapToDismiss': false,
-            'closeButton': true,
-            'toastClass': 'refset-tool-notification'
-        };
+    let additonalConfig = {
+      'timeOut': 25000,
+      'enableHtml': true,
+      'tapToDismiss': false,
+      'closeButton': true,
+      'toastClass': 'rt2-notification'
+    };
 
-        const toast = this.toastr.show(message, title, { ...additonalConfig, ...config }, 'toast-' + type);
-        toast.toastRef.componentInstance.refsetId = refsetId;
+    const toast = this.toastr.show(message, title, { ...additonalConfig, ...config }, 'toast-' + type);
+    toast.toastRef.componentInstance.refsetId = refsetId;
 
-        if (buttons.length > 0) {
-            toast.toastRef.componentInstance.buttons = buttons;
-        }
-
-        return toast;
+    if (buttons.length > 0) {
+      toast.toastRef.componentInstance.buttons = buttons;
     }
 
-    showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}, refsetId: string = '', buttons: IToastButton[] = []): ActiveToast<any> {
+    return toast;
+  }
 
-        let additonalConfig = {
-            'extendedTimeOut': 0,
-            'timeOut': 100000000, // we need to set a timeout otherwise ngx-toastr won't display the progressBar
-            'enableHtml': true,
-            'tapToDismiss': false,
-            'progressBar': true,
-            'progressAnimation': 'increasing'
-        };
+  showProgress(message: string, title: string = null, progressFn: () => number = null, config: any = {}, refsetId: string = '', buttons: IToastButton[] = []): ActiveToast<any> {
 
-        const toast = this.show(message, title, 'info', { ...additonalConfig, ...config }, refsetId, buttons);
+    let additonalConfig = {
+      'extendedTimeOut': 0,
+      'timeOut': 100000000, // we need to set a timeout otherwise ngx-toastr won't display the progressBar
+      'enableHtml': true,
+      'tapToDismiss': false,
+      'progressBar': true,
+      'progressAnimation': 'increasing'
+    };
 
-        this.setProgressLength(toast, 0);
-        return toast;
+    const toast = this.show(message, title, 'info', { ...additonalConfig, ...config }, refsetId, buttons);
+
+    this.setProgressLength(toast, 0);
+    return toast;
+  }
+
+  update(toast: ActiveToast<any>, message: string = null, title: string = null, type: string = null, options: any = null, progress: number = null) {
+
+    if (message != null) {
+      toast.toastRef.componentInstance.message = message; //this.sanitizeString(message);
     }
 
-    update(toast: ActiveToast<any>, message: string = null, title: string = null, type: string = null, options: any = null, progress: number = null) {
-
-        if (message != null) {
-            toast.toastRef.componentInstance.message = message; //this.sanitizeString(message);
-        }
-
-        if (title != null) {
-            toast.toastRef.componentInstance.title = title;
-        }
-
-        if (type != null) {
-            toast.toastRef.componentInstance.type = type;
-        }
-
-        if (options != null) {
-            toast.toastRef.componentInstance.options = { ...toast.toastRef.componentInstance.options, ...options };
-        }
-
-        // if (options != null && options['closeButton'] != null) {
-        //     toast.toastRef.componentInstance.closeButton = options.closeButton;
-        // }
-
-        if (progress != null) {
-            this.setProgressLength(toast, progress);
-        }
-
-        toast.portal.changeDetectorRef.detectChanges();
+    if (title != null) {
+      toast.toastRef.componentInstance.title = title;
     }
 
-    close(toast: ActiveToast<any>) {
-
-        toast.toastRef.close();
-        toast.toastRef.componentInstance.remove();
+    if (type != null) {
+      toast.toastRef.componentInstance.type = type;
     }
 
-    closeAll() {
-        this.toastr.clear();
+    if (options != null) {
+      toast.toastRef.componentInstance.options = { ...toast.toastRef.componentInstance.options, ...options };
     }
 
-    isOpen(toast: ActiveToast<any>) {
-        return toast.toastRef.componentInstance.state.value != 'removed';
+    // if (options != null && options['closeButton'] != null) {
+    //     toast.toastRef.componentInstance.closeButton = options.closeButton;
+    // }
+
+    if (progress != null) {
+      this.setProgressLength(toast, progress);
     }
 
-    sanitizeUrl(url) {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    toast.portal.changeDetectorRef.detectChanges();
+  }
+
+  close(toast: ActiveToast<any>) {
+
+    toast.toastRef.close();
+    toast.toastRef.componentInstance.remove();
+  }
+
+  closeAll() {
+    this.toastr.clear();
+  }
+
+  isOpen(toast: ActiveToast<any>) {
+    return toast.toastRef.componentInstance.state.value != 'removed';
+  }
+
+  sanitizeUrl(url) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  sanitizeString(text) {
+    return this.sanitizer.sanitize(SecurityContext.HTML, this.sanitizer.bypassSecurityTrustHtml(text));
+  }
+
+  handleDuplicates(type = 'error', message = '', consolidate = false) {
+
+    let allToasts: ActiveToast<any>[] = this.toastr.toasts;
+    let toastInstances: ActiveToast<any>[] = [];
+    let consolidatedMessage = '';
+
+    for (let i = 0; i < allToasts.length; i++) {
+
+      const toast = allToasts[i];
+      const instance = toast.toastRef.componentInstance;
+
+      if (instance.toastClasses.includes(type)) {
+        toastInstances.push(toast);
+      }
     }
 
-    sanitizeString(text) {
-        return this.sanitizer.sanitize(SecurityContext.HTML, this.sanitizer.bypassSecurityTrustHtml(text));
+    if (toastInstances.length <= 1) {
+      return;
     }
 
-    handleDuplicates(type = 'error', message = '', consolidate = false) {
+    for (let i = 0; i < toastInstances.length; i++) {
 
-        let allToasts: ActiveToast<any>[] = this.toastr.toasts;
-        let toastInstances: ActiveToast<any>[] = [];
-        let consolidatedMessage = '';
+      const toast = toastInstances[i];
+      const instance = toast.toastRef.componentInstance;
 
-        for (let i = 0; i < allToasts.length; i++) {
+      if (consolidatedMessage == '') {
+        consolidatedMessage = (i + 1) + ': ' + instance.message;
 
-            const toast = allToasts[i];
-            const instance = toast.toastRef.componentInstance;
+      } else if (instance.message != message && instance.message.includes(message)) {
+        consolidatedMessage += '<br>' + (i + 1) + ': ' + instance.message;
+      }
 
-            if (instance.toastClasses.includes(type)) {
-                toastInstances.push(toast);
-            }
-        }
-
-        if (toastInstances.length <= 1) {
-            return;
-        }
-
-        for (let i = 0; i < toastInstances.length; i++) {
-
-            const toast = toastInstances[i];
-            const instance = toast.toastRef.componentInstance;
-
-            if (consolidatedMessage == '') {
-                consolidatedMessage = (i + 1) + ': ' + instance.message;
-
-            } else if (instance.message != message && instance.message.includes(message)) {
-                consolidatedMessage += '<br>' + (i + 1) + ': ' + instance.message;
-            }
-
-            toast.toastRef.close();
-            instance.remove();
-        }
-
-        if (!consolidate) {
-            consolidatedMessage = message;
-        }
-
-        const newToast = this.show(consolidatedMessage, null, type, { timeOut: 0, extendedTimeOut: 0 });
-        return newToast;
+      toast.toastRef.close();
+      instance.remove();
     }
 
-    getNotificationsForRefset(refsetId: string, title: string) {
-
-        let allToasts: ActiveToast<any>[] = this.toastr.toasts;
-        let toastInstances: ActiveToast<any>[] = [];
-
-        for (let i = 0; i < allToasts.length; i++) {
-
-            const toast = allToasts[i];
-            const instance = toast.toastRef.componentInstance;
-
-            if (instance.refsetId == refsetId && toast.title == title) {
-                toastInstances.push(toast);
-            }
-        }
-
-        return toastInstances;
+    if (!consolidate) {
+      consolidatedMessage = message;
     }
 
-    isNotificationOfType(toast: ActiveToast<any>, type: string) {
-        return toast.toastRef.componentInstance.toastClasses.includes(type);
+    const newToast = this.show(consolidatedMessage, null, type, { timeOut: 0, extendedTimeOut: 0 });
+    return newToast;
+  }
+
+  getNotificationsForRefset(refsetId: string, title: string) {
+
+    let allToasts: ActiveToast<any>[] = this.toastr.toasts;
+    let toastInstances: ActiveToast<any>[] = [];
+
+    for (let i = 0; i < allToasts.length; i++) {
+
+      const toast = allToasts[i];
+      const instance = toast.toastRef.componentInstance;
+
+      if (instance.refsetId == refsetId && toast.title == title) {
+        toastInstances.push(toast);
+      }
     }
 
-    private setProgressLength(toast: ActiveToast<any>, progress: number) {
+    return toastInstances;
+  }
 
-        // A bit "hacky", the ngx-toastr progress bar only works with its own progress method, based on the specified timeout, and cannot be controlled manually
-        // That's why we have to specify a big timeout in the options
-        // We overload the default progress method to use the one we want, this way, we can have a manual control of the progress bar
-        (<any>toast).toastRef.componentInstance.updateProgress = () => {
-            (<any>toast).toastRef.componentInstance.width = progress; //progressFn();
-        };
-    }
+  isNotificationOfType(toast: ActiveToast<any>, type: string) {
+    return toast.toastRef.componentInstance.toastClasses.includes(type);
+  }
+
+  private setProgressLength(toast: ActiveToast<any>, progress: number) {
+
+    // A bit "hacky", the ngx-toastr progress bar only works with its own progress method, based on the specified timeout, and cannot be controlled manually
+    // That's why we have to specify a big timeout in the options
+    // We overload the default progress method to use the one we want, this way, we can have a manual control of the progress bar
+    (<any>toast).toastRef.componentInstance.updateProgress = () => {
+      (<any>toast).toastRef.componentInstance.width = progress; //progressFn();
+    };
+  }
 }

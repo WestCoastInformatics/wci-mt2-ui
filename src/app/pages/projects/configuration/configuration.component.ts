@@ -13,7 +13,8 @@ import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'projects-configuration',
-  templateUrl: './configuration.component.html'
+  templateUrl: './configuration.component.html',
+  styleUrls: ['configuration.component.scss']
 })
 export class ProjectsConfigurationComponent implements OnInit {
 
@@ -81,7 +82,8 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     this.menu = [
       { name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
-      { name: 'People', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
+      { name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users' },
+      { name: 'Users', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
       {
         name: 'Configuration',
         link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration',
@@ -137,7 +139,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   getEditions(): void {
 
-    this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+    this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
       next: (results) => {
 
         this.editionList = results?.items;
@@ -175,7 +177,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
   getProjects(): void {
 
-    this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe({
+    this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
       next: (results) => {
 
         this.projectList = results.items;
@@ -381,7 +383,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     const query = 'organizationId:' + this.organizationId;
 
-    this.refsetService.getTeams('hideOrganizationTeams=true&limit=500&offset=0&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
+    this.refsetService.getTeams('hideOrganizationTeams=true&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
       this.teamList = results.items;
     });
   }

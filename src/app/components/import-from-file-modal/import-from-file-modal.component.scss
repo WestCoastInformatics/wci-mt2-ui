@@ -1,0 +1,42 @@
+.files-list-file-import {
+    margin-top: 1.5rem;
+  
+    .single-file {
+      display: flex;
+      padding: 0.5rem;
+      justify-content: space-between;
+      align-items: center;
+      border: dashed 1px #979797;
+      margin-bottom: 1rem;
+  
+      .delete {
+        display: flex;
+        margin-left: 0.5rem;
+        cursor: pointer;
+        align-self: flex-end;
+      }
+  
+      display: flex;
+      flex-grow: 1;
+  
+      .name {
+        color: #353f4a;
+        margin: 0;
+      }
+  
+      .size {
+        color: #a4a4a4;
+        margin: 0;
+        margin-bottom: 0.25rem;
+  
+      }
+  
+      .info {
+        width: 100%;
+      }
+    }
+  }
+
+  .allowed-file-types {
+    color: red;
+  }

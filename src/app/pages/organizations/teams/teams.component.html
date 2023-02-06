@@ -6,7 +6,7 @@
         <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
             <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
               [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                     {{ organization.name }}
                 </mat-option>
             </mat-select>
@@ -21,13 +21,13 @@
                 <div *ngIf="showLoadingSpinner" class="loading"></div>
                 <section class="mb-3">
                     <div class='section-header mb-4'>
-                        Teams ({{dataCount}})
+                        Organization Teams ({{dataCount}})
                         <create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organization]="selectedOrganization">
                         </create-new-team-modal>
                     </div>
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
-                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" style="width: 100%">
+                            <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
                             </ag-grid-angular>
                             <!-- description template -->
                             <ng-template #descriptionSection let-params>
@@ -37,7 +37,7 @@
                             </ng-template>
                             <!-- people template-->
                             <ng-template #peopleSection let-params>
-                                <span class="text-primary font-weight-bold">{{params?.data?.members}} People</span>
+                                <span class="text-primary font-weight-bold pointer">{{params?.data?.members}} Users</span>
                             </ng-template>
                         </div>
                     </div>

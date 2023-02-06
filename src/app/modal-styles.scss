@@ -1,0 +1,203 @@
+
+/****** Styles brought over from refset_global_styles.css related to modals ****/
+
+/****** Material Dialog Override Styles *******/
+
+.mat-dialog-actions.rt2-dialog-actions {
+  justify-content: flex-end;
+  margin-bottom: 0px;
+  padding: 8px 8px;
+}
+
+.mat-dialog-title.rt2-dialog-title {
+  display: flex;
+  float: right;
+  color: #fff;
+  font-weight: 300;
+  letter-spacing: .5px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.mat-dialog-container {
+  display: block;
+  border-radius: 3px;
+  box-sizing: border-box;
+  overflow: hidden !important;
+  outline: 0;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  padding: 0px !important;
+}
+
+.dialog-header {
+  background-color: black;
+  padding: 0 5px;
+  height: 40px;
+  display: flex;
+  float: right;
+  color: #fff;
+  font-weight: 300;
+  letter-spacing: .5px;
+  width: 100%;
+}
+
+.mat-dialog-content.rt2-dialog-content {
+  color: black;
+  margin: 0px;
+  padding-top: 8px;
+}
+
+.rt2-modal-select {
+  .mat-select-trigger {
+    width: 300px;
+  }
+}
+
+.modal-error-message {
+  color: $error_color;
+}
+
+.rt2-modal-header {
+  color: #fff;
+  font-weight: 300;
+  line-height: inherit;
+  letter-spacing: .5px;
+  background-color: #343a40;
+  border-top-left-radius: initial;
+  border-top-right-radius: initial;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.rt2-modal-title {
+  color: white;
+  letter-spacing: 1.5px;
+}
+
+.dialog-close-x {
+  color: white;
+  text-shadow: none;
+  line-height: .8rem;
+}
+
+.rt2-modal-footer {
+  border-top: 1px solid #dee2e6;
+  align-self: right;
+}
+
+.modal-section {
+  margin-bottom: 30px
+}
+
+
+
+/*** compose-modal.components.ts styles ***/
+// Related to compose-modal.components.ts - // TODO: remove these when we revert to NgbModal
+
+@mixin displayDivCenter {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.compose-dialog{
+	position: fixed;
+    top: 30%;
+    right: 30%;
+    width: 40%;
+    z-index: 999999;
+    transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+    border-radius: 7px;
+    overflow: hidden;
+	background-color: #fff;
+	// resize: both;
+
+	.header-icons{
+		i{
+			opacity: 0.5;
+			cursor: pointer	;
+		}
+
+		i:hover{
+			opacity: 0.75;
+		}
+	}
+
+	&.pop-in{
+		top: auto;
+		bottom: 40px;
+		right: 100px;
+		width: auto;
+		border-radius: 7px 7px 0 0;
+		transform: none !important;
+	}
+}
+.uploadMain {
+	position: relative;
+	height: 100%;
+
+	.dialog-header {
+		background: #404040;
+		width: 100%;
+		height: 38px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: #c4c6c8;
+		float: none;
+		cursor: move;
+
+		span {
+			margin: 0px 6px;
+		}
+
+		i{
+			color: #fff;
+		}
+	}
+
+	.dialog-body {
+		overflow: hidden;
+
+	}
+}
+
+.maximiseTheDIv {
+	animation: maxiseBox 0s ease-in forwards;
+}
+
+@keyframes maxiseBox {
+	from {
+		height: 0vh;
+		opacity: 0;
+	}
+
+	to {
+		height: auto;
+		opacity: 1;
+	}
+}
+
+.minimiseTheDiv {
+	animation: minimiseBox 0s ease-in forwards; //0.5s
+	overflow: hidden;
+}
+
+@keyframes minimiseBox {
+	from {
+		height: auto;
+		opacity: 1;
+	}
+
+	to {
+		height: 0vh;
+		opacity: 0;
+	}
+}
+/*** compose-modal.components.ts styles ***/

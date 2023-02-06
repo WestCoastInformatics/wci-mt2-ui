@@ -51,12 +51,12 @@ export class OrganizationsService extends RestService {
         return this.delete(this.contextPath + 'organization/' + organizationId);
     }
 
-    addUser(organizationId: any, email: any): Observable<any> {
+    addUsers(organizationId: any, emails: any): Observable<any> {
         const self = this;
-        return this.post(this.contextPath + 'organization/' + organizationId + '/user?email=' + email, '', false
+        return this.post(this.contextPath + 'organization/' + organizationId + '/user?emails=' + emails, '', false
             , function (err) {
                 if (err.status === 404 && err.error?.error === 'Not Found') {
-                    err.error.error = `User with ${email} does not exist.`;
+                    err.error.error = `User with ${emails} does not exist.`;
                 }
                 return self.giveErrorNotification(err);
             });

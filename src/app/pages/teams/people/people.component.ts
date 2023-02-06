@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { CustomTooltipComponent } from 'src/app/components/custom-tooltip/custom-tooltip.component';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
@@ -13,6 +12,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
   selector: 'teams-people',
@@ -26,6 +26,7 @@ export class TeamsPeopleComponent implements OnInit {
   selectedTeam: any;
   teamId: any;
   teamList = [];
+  userList: any;
   currentUser: any;
   gridOptions: any;
   gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: true };
@@ -54,13 +55,14 @@ export class TeamsPeopleComponent implements OnInit {
     private readonly authService: AuthenticationService,
     private readonly teamsService: TeamsService,
     private readonly modalService: NgbModal,
-    private location: Location) {
+    private location: Location,
+    private organizationsService: OrganizationsService) {
     document.body.scrollTop = 0;
   }
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('Reference Set Tool - Teams - People');
+    this.titleService.setTitle('Reference Set Tool - Teams - Users');
     this.currentUser = this.authService.getUser();
     this.route.params.subscribe(params => {
 
@@ -74,6 +76,7 @@ export class TeamsPeopleComponent implements OnInit {
     this.selectedTeam = null;
 
     this.getOrganizations();
+
   }
 
   ngAfterViewInit() {
@@ -83,7 +86,7 @@ export class TeamsPeopleComponent implements OnInit {
       { field: 'company', tooltipField: 'company', minWidth: 65, flex: 2, headerName: 'Company Name', unSortIcon: true, resizable: true },
       { field: 'email', tooltipField: 'email', minWidth: 65, flex: 2, headerName: 'Email', unSortIcon: true, resizable: true },
       { field: 'teams', flex: 1, headerName: 'Teams', filter: false, sortable: false, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.peopleTeamsSection }, minWidth: 65, resizable: false }
-    ];    
+    ];
 
     this.gridOptions = {
       context: { componentParent: this },
@@ -97,8 +100,7 @@ export class TeamsPeopleComponent implements OnInit {
       onGridReady: this.onGridReady,
       frameworkComponents: {
         templateRenderer: TemplateRenderer,
-        'categoryFilterComponent': CategoryFilterComponent,
-        customTooltipComponent: CustomTooltipComponent
+        'categoryFilterComponent': CategoryFilterComponent
       },
       defaultColDef: {
         sortable: true,
@@ -121,11 +123,11 @@ export class TeamsPeopleComponent implements OnInit {
       breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' });
     }
 
-    breadcrumbs.push({ label: 'People' });
+    breadcrumbs.push({ label: 'Users' });
     this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
     this.menu = [
-      { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
+      { name: 'Users', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user', isActive: true }
     ];
 
     const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
@@ -196,7 +198,7 @@ export class TeamsPeopleComponent implements OnInit {
 
   getTeams(): void {
 
-    this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+    this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe((results) => {
 
       this.showLoadingSpinner = false;
       this.showTable = true;
@@ -226,6 +228,14 @@ export class TeamsPeopleComponent implements OnInit {
     this.showTeamMembers();
   }
 
+  getAvailableOrganizationUsers(organizationId: string): void {
+    this.organizationsService.getOrgUsers(organizationId, false).subscribe({
+        next: (results) => {
+            this.userList = results?.items.filter(teamMember => !this.data.filter(orgMember => teamMember.id === orgMember.id).length);
+        }
+    });
+  }
+
   showTeamMembers() {
 
     this.data = this.selectedTeam.memberList;
@@ -233,6 +243,7 @@ export class TeamsPeopleComponent implements OnInit {
     localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
     this.setNavigation();
+    this.getAvailableOrganizationUsers(this.organizationId);
   }
 
   onGridReady = (params) => {

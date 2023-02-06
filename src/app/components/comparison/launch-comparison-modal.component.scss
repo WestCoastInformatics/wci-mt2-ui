@@ -1,0 +1,102 @@
+.launch-comparison-dialog>.modal-dialog {
+    max-width: 1000px;
+}
+  
+.show-comparison-dialog>.modal-dialog {
+    max-width: 1700px;
+  
+    .children-section {
+      height: 525px;
+    }
+}
+
+.comparisonGridSection .rt2-concept-details-taxonomy-section .row {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+div.container-fluid.rt2-dialog-container {
+    padding: 15px 15px 0px 15px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    max-height: calc(100vh - 55px - 52px - (1.75rem * 2) - 2px); // 100% height - header - footer - margin
+    overflow: auto;
+  
+    div.modal-body.rt2-dialog-body {
+      background-color: rgba(245, 245, 246, 1);
+      padding: 15px 15px 15px 15px;
+      border-radius: 3px;
+  
+      div.dialog-form {
+        align-items: baseline;
+        display: flex;
+        align-items: normal;
+      }
+  
+      div.dialog-form-field-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+  
+        &.top-aligned {
+          align-items: normal;
+        }
+  
+        &.first-row {
+          margin-top: 20px;
+        }
+  
+        &.boxed-row {
+          border: 1px solid;
+          margin-bottom: 10px;
+          padding-top: 10px;
+        }
+      }
+  
+      .col.dialog-form-field {
+        width: 900px;
+        max-width: 900px;
+        flex: 1;
+  
+        mat-form-field {
+          width: 100%;
+        }
+  
+        mat-chip {
+          transform: scale(0.8);
+          margin-right: 5px;
+          margin-bottom: 5px;
+          border-radius: 8px;
+          background: white;
+        }
+  
+        .refset_tool_ecl_definition_field {
+          width: calc(100% - 120px);
+          margin-right: 5px;
+        }
+      }
+  
+      .col.dialog-form-label {
+        width: 200px;
+        max-width: 200px;
+        flex: 1;
+  
+        label.raised {
+          margin-bottom: 0.7rem;
+        }
+      }
+  
+      .dialog-form-radio-option-padding {
+        padding-right: 30px;
+      }
+    }
+  }
+
+  .compare-sumary-table td {
+    vertical-align: middle;
+  }
+
+  .unset-gutter-height .as-split-gutter {
+    height: unset !important;
+  }

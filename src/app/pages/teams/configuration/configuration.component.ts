@@ -13,7 +13,8 @@ import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'teams-configuration',
-    templateUrl: './configuration.component.html'
+    templateUrl: './configuration.component.html',
+    styleUrls: ['configuration.component.scss']
 })
 export class TeamsConfigurationComponent implements OnInit {
 
@@ -76,7 +77,7 @@ export class TeamsConfigurationComponent implements OnInit {
         this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 
         this.menu = [
-            { name: 'People', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user' },
+            { name: 'Users', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user' },
             { name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs', isActive: true }
         ];
 
@@ -141,7 +142,7 @@ export class TeamsConfigurationComponent implements OnInit {
 
     getTeams(): void {
 
-        this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&limit=500&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+        this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe((results) => {
 
             this.showLoadingSpinner = false;
             this.teamList = results.items;

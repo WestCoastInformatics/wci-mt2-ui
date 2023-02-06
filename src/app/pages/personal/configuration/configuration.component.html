@@ -9,43 +9,43 @@
   <div class='container-fluid mt-3'>
     <span class="account-configuration">
 
-      <div class="section-header mb-3"> Account Configuration </div>
+      <div class="section-header mb-3 form-title"> Account Configuration </div>
       <div class="account-configuration-details">
         <div class="account-configuration-blocks-1">
           <div class="account-configuration-block main-block profile-block">
-            <div class="account-profile-head section-header">Profile</div>
+            <div class="account-profile-head section-header form-title">Profile</div>
             <div class="account-profile-mid">
               <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
-                <mat-label>Name <span class="mandatory-field">*</span></mat-label>
+                <mat-label class="form-field-header" >Name <span class="mandatory-field">*</span></mat-label>
                 <input matInput type="text" [disabled]="true" name="name" [(ngModel)]="profileNameValue">
               </mat-form-field>
 
               <mat-form-field floatLabel="never" class="profile-company-field" appearance="none">
-                <mat-label>Company</mat-label>
+                <mat-label class="form-field-header">Company</mat-label>
                 <input matInput type="text" name="email" [(ngModel)]="profileCompanyValue">
               </mat-form-field>
 
               <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
-                <mat-label>Email <span class="mandatory-field">*</span></mat-label>
+                <mat-label class="form-field-header">Email <span class="mandatory-field">*</span></mat-label>
                 <input matInput type="text" name="email" [disabled]="true" [(ngModel)]="profileEmailValue"  (keydown.tab)="onKeyDownEvent($event)">
                 <div class="modal-error-message" *ngIf="emailError">{{emailError}}</div>
               </mat-form-field>
             </div>
-            <div class="section-btn">
-              <button class="btn btn-primary btn-lg btn-wide-font" aria-label="Update Profile" title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue  || !isValidEmail()"
+            <div class="section-btn section-font">
+              <button class="rt2-btn rt2-action-btn" aria-label="Update Profile" title="Update Profile" [disabled]="!profileNameValue || !profileEmailValue  || !isValidEmail()"
                 (click)="updateProfile()">Update Profile</button>
             </div>
           </div>
 
           <div class="account-configuration-block main-block profile-pic-block">
-            <div class="account-profile-head section-header">Profile Picture</div>
+            <div class="account-profile-head section-header form-title">Profile Picture</div>
             <div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
-            <div class="section-btn">
-              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="btn btn-primary btn-lg btn-wide-font" style="margin-right: 0.25em"
+            <div class="section-btn section-font">
+              <label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="rt2-btn rt2-action-btn m-r-25em"
                 (click)="onPhotoDelete()">
                 Delete Picture
               </label>
-              <label aria-label="Edit Picture" title="Edit Picture" class="btn btn-primary btn-lg btn-wide-font">
+              <label aria-label="Edit Picture" title="Edit Picture" class="rt2-btn rt2-action-btn">
                 Edit Picture
                 <input type="file" class="d-none" (change)="onPhotoChange($event)" />
               </label>

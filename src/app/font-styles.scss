@@ -1,0 +1,266 @@
+
+/****** Styles brought over from refset_global_styles.css related to fonts ****/
+
+// Font styles
+
+.fs14 {
+  font-size: 14pt;
+}
+
+.fs-p7rem {
+  font-size: 0.7rem;
+}
+
+.ta-left {
+  text-align: left;
+}
+
+.ta-right {
+  text-align: right;
+}
+
+// typography
+
+.typo-h1 {
+  font-size: 3rem;
+}
+
+.typo-h2 {
+  font-size: 2.4rem;
+}
+
+.typo-h3 {
+  font-size: 1.8rem;
+}
+
+.typo-h4 {
+  font-size: 1.6rem;
+}
+
+.typo-h5 {
+  font-size: 1.4rem;
+}
+
+.typo-h6 {
+  font-size: 1.2rem;
+}
+
+.typo-paragraph {
+  font-size: 1.4rem;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.fw-100 {
+  font-weight: 100;
+}
+.fw-200 {
+  font-weight: 200;
+}
+.fw-300 {
+  font-weight: 300;
+}
+.fw-400 {
+  font-weight: 400;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.fw-600 {
+  font-weight: 600;
+}
+.fw-700 {
+  font-weight: 500;
+}
+.fw-800 {
+  font-weight: 800;
+}
+.fw-900 {
+  font-weight: 900;
+}
+.fw-bold {
+  font-weight: bold;
+}
+
+.fs-14 {
+  font-size:14px
+}
+.fs-15 {
+  font-size:15px
+}
+.fs-16 {
+  font-size:16px
+}
+.fs-18 {
+  font-size:18px
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-lowercase {
+  text-transform: lowercase;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.rt2-directory-column-workflow-status .ag-cell-value {
+  text-transform: capitalize;
+}
+
+.rt2-directory-column-version-status .ag-cell-value {
+  text-transform: capitalize;
+}
+
+.mat-option-text {
+  text-transform: capitalize;
+}
+
+.header-title {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 300
+}
+
+.page-title {
+  color: #9b9b9b;
+  font-family: $standard_font_family;
+  font-size: 1em;
+}
+
+.default-font-family {
+  font-family: Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+body, p, .default-font, .intro-text-font {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  @extend .default-font-family;
+}
+
+.header-font {
+  font-size: 16px;
+  font-weight: 300;
+  @extend .default-font-family;
+}
+
+.header-icon-font, .carret-up-down-icon-font, .loading-icon-font {
+  font-size: 9px;
+  @extend .default-font-family;
+}
+
+.page-h1-font, .secondary-header-font, .intro-title-font {
+  font-size: 20px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.page-h2-font, .page-header-font, .intro-header-font {
+  font-size: 1.25rem;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.form-toggle-field, .file-size-field, .general-icon-font {
+  font-size: 12px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.project-role-font {
+  font-size: 12px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.breadcrumb-font, .breadcrumb-link-font, .topic-author-time, .tabs-font, .banner-lock-font, .header-cell-font {
+  font-size: 16px;
+  font-weight: 300;
+  @extend .default-font-family;
+}
+
+.modal-header-font {
+  font-size: 1.2rem;
+  font-weight: 500;
+  @extend .default-font-family;
+}
+
+.col-header-font {
+  font-size: 13px;
+  font-weight: 700;
+  @extend .default-font-family;
+}
+
+.filter-font, .form-field-header, .form-field-value, .row-grid-font {
+  font-size: 14px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.form-title, .topic-author-font, .section-font {
+  font-size: 20px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.feedback-topic-title-font, .refset-details-title, .refset-metadata-container {
+  font-size: 18px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.sidebar-links-font, .list-font {
+  font-size: 16px;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.sidebar-icon-font {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.nav-font {
+  font-size: 14px;
+  font-weight: 700;
+  @extend .default-font-family;
+}
+
+.footer-font {
+  font-size: 12.6px;
+  @extend .default-font-family;
+}
+
+.smaller-font {
+  font-size: smaller;
+  font-weight: 400;
+  @extend .default-font-family;
+}
+
+.close-icon-font, .cross-icon-font {
+  font-size: 2rem;
+  font-weight: 300;
+  @extend .default-font-family;
+}
+

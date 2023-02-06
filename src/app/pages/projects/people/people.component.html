@@ -9,7 +9,7 @@
                 <mat-select #detailsVersionSelect [disableOptionCentering]="true"
                   [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" [(value)]="selectedOrganization"
                   (selectionChange)="selectOrganization()">
-                    <mat-option *ngFor="let organization of organizationList" [value]="organization" style="z-index: 3" [title]="organization.name">
+                    <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
                         {{ organization.name }}
                     </mat-option>
                 </mat-select>
@@ -22,7 +22,7 @@
             <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
                 <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
                   (selectionChange)="selectedEdition()">
-                    <mat-option *ngFor="let edition of editionList" [value]="edition" style="z-index: 3">
+                    <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
                         {{ edition.name }}
                     </mat-option>
                 </mat-select>
@@ -34,7 +34,7 @@
             <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
                 <mat-select #detailsVersionSelect [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'" [disabled]="organizationId === '0'"
                   [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
-                    <mat-option *ngFor="let project of projectList" [value]="project" style="z-index: 3" [title]="project.name">
+                    <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
                         {{ project.name }}
                     </mat-option>
                 </mat-select>
@@ -44,23 +44,35 @@
 </div>
 
 <div class="content-wrapper">
-
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-
     <div class='container-fluid mt-3'>
         <div class='row'>
             <div class='col-12'>
-                <section class="mb-3">
-
-                    <div class='section-header mb-4'>
-                        People ({{dataCount}})
+                <section class='mb-3'>
+                    <div class='mb-4'>
+                        <span class='section-header'>Project Users ({{dataCount}})</span>
+                        <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                            class="float-right" >
+                            <div>
+                                To add a new user to this project, first go to the
+                                <span  class="pointer " title="Click add a new user to this project, first go to the organization users page">
+                                    <a href="{{'/organizations/' + selectedOrganization?.id + '/people'}}">organization users page</a>
+                                </span>
+                            </div>
+                            <div>
+                                To add an existing user to this project, add an existing user to a team on the
+                                <span  class="pointer " title="Clic to add an existing user to this project, add an existing user to a team on the organization teams page">
+                                    <a href="{{'/organizations/' + selectedOrganization?.id + '/teams'}}">organization teams page</a>
+                                </span>
+                            </div>
+                        </span>
                     </div>
 
                     <div class='dashboard-section'>
                         <div class="ag-theme-alpine">
 
                             <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)"
-                               [gridOptions]="gridOptions" style="width: 100%">
+                               [gridOptions]="gridOptions" class="w-100-pct">
                             </ag-grid-angular>
 
                             <!-- Name Template -->
@@ -70,7 +82,7 @@
 
                             <!-- Teams Template -->
                             <ng-template #peopleTeamsSection let-params>
-                                <span class="text-primary font-weight-bold" [title]="getTeamsTitle(params?.data)">
+                                <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">
                                     {{ getTeamCount(params.data.teams) }} teams</span>
                             </ng-template>
 
