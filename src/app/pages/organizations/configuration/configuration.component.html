@@ -42,7 +42,7 @@
                         </div>
                         <div class="section-btn section-font">
                             <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn"
-                             [disabled]="!profileNameValue || !profileEmailValue || !isValidEmail()" aria-label="Update Profile" title="Update Profile" 
+                             [disabled]="!isEmailOrOrganizationChange() || !isValidEmail()" aria-label="Update Profile" title="Update Profile" 
                              (click)="updateOrganization()">Update Profile</button>
                         </div>
                     </div>

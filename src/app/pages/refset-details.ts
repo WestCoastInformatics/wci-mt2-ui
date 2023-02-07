@@ -1607,6 +1607,7 @@ export class RefsetDetails implements OnInit {
     }
 
     openMemberHistory(conceptId) {
+        this.showLoadingSpinner = true
         const concept = this.getMemberRow(conceptId);
         this.refsetService
             .getMemberHistory(this.refsetData?.id, conceptId, null)
@@ -1652,6 +1653,8 @@ export class RefsetDetails implements OnInit {
                     template: this.memberHistoryDialog,
                     data: historyData,
                 };
+
+                this.showLoadingSpinner = false
 
                 this.dialog = this.dialogFactoryService.open(dialogData);
             });

@@ -8,7 +8,8 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
  */
 @Component({
     selector: 'app-dialog',
-    templateUrl: './dialog.component.html'
+    templateUrl: './dialog.component.html',
+    styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent<T> {
 

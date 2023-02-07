@@ -89,4 +89,8 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
       }
     });
   }
+
+  cancel(): void {
+    this.modal.instance.isHidden = true;
+  }
 }

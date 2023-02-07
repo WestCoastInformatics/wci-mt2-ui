@@ -19,10 +19,14 @@
           toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount' }">
         </editor>
     </div>
-    <div class="modal-footer rt2-modal-footer">
+    <div class="modal-footer rt2-modal-footer rt2-lockable">
         <button type="button" (click)="saveNotes(modal)" aria-hidden="false" class="rt2-btn rt2-next-back-btn"
           aria-label="Save" title="Save Notes">
             Save
+        </button>
+        <button type="button" (click)="cancel(modal)" aria-hidden="false" class="rt2-btn rt2-cancel-btn"
+          aria-label="Save" title="Save Notes">
+            Cancel
         </button>
     </div>
 </ng-template>
