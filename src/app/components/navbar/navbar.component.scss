@@ -187,6 +187,7 @@ nav {
 
 .rt2-nav-logo-section {
   width: 350px;
+  text-decoration: none;
 }
 
 .rt2-nav-title {
@@ -194,7 +195,6 @@ nav {
 }
 .rt2-nav-title:hover {
   color: #00a9e0;
-  text-decoration: none;
 }
 
 .rt2-breadcrumb-bar> :first-child {
@@ -271,12 +271,6 @@ nav {
 @media (max-width: 1450px) {
   .extended-breadcrumb {
     display:inline-block !important
-  }
-}
-
-@media (max-width: 1230px) {
-  .rt2-breadcrumb-bar {
-    display: inline-block !important;
   }
 }
 

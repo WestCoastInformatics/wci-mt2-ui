@@ -147,6 +147,7 @@ select {
 
 .ag-theme-alpine .ag-cell {
   line-height: 50px;
+  // width: 90px !important;
 }
 
 .ag-theme-alpine .ag-row-odd {
@@ -510,6 +511,22 @@ select {
   padding-right: 0;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+#downloadDialog {
+  .mat-form-field-appearance-legacy .mat-form-field-infix {
+    margin-top: 0;
+    padding: 0;
+    border-top: none;
+  }
+
+  .mat-form-field-infix {
+    border-top: none;
+  }
+
+  .mat-select-arrow-wrapper {
+    padding-top: 0;
+  }
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex {
@@ -1880,4 +1897,23 @@ app-date-text-floating-filter {
     mat-pseudo-checkbox {
         display: none !important;
       }
+}
+
+.rt2-wrap {
+  width: 90px;
+  word-wrap: break-word;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// Hide feedback button
+.atlwdg-trigger {
+  visibility: hidden !important;
+}
+
+.atlwdg-trigger.atlwdg-RIGHT {
+  visibility: hidden !important;
+  top: 60% !important;
+  left: 99% !important;
 }

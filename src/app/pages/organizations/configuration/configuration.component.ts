@@ -18,6 +18,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 export class OrganizationConfigurationComponent implements OnInit {
 
     menu: SidebarMenuItem[] = [];
+    organization:any = {};
     profileNameValue = '';
     profileEmailValue = '';
     profileDescriptionValue = '';
@@ -107,7 +108,7 @@ export class OrganizationConfigurationComponent implements OnInit {
     }
 
     setOrganizationData(organization: any) {
-
+        this.organization = organization
         this.organizationId = organization.id;
         this.selectedOrganization = organization;
         this.profileNameValue = organization.name;
@@ -117,6 +118,18 @@ export class OrganizationConfigurationComponent implements OnInit {
         localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
         this.setNavigation();
+    }
+
+    isEmailOrOrganizationChange() {
+        if (this.profileEmailValue !== this.organization.primaryContactEmail) {
+            return true
+        }
+
+        if (this.profileDescriptionValue !== this.organization.description) {
+            return true
+        }
+
+        return false
     }
 
     updateOrganization(): void {
