@@ -325,6 +325,10 @@ export class LaunchComparisonModalComponent {
           return;
         }
 
+        if (results.items.length) {
+          this.changeModalSize();
+        }
+
         UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
         UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
 
@@ -616,6 +620,23 @@ export class LaunchComparisonModalComponent {
     this.gridApi.onFilterChanged();
     this.gridPaging.totalRows = this.comparisonData.items.length;
   }
+
+  changeModalSize(): void {
+    const modalDialog = <HTMLElement>(
+        document.getElementsByClassName("modal-dialog")[0]
+    );
+    if (modalDialog) {
+        modalDialog.style.width = "1000px";
+        modalDialog.style.maxWidth = "1240px";
+    }
+
+    const modalContent = <HTMLElement>(
+        document.getElementsByClassName("modal-content")[0]
+    );
+    if (modalContent) {
+        modalContent.style.height = "100%";
+    }
+}
 
   downloadComparisonReport() {
 

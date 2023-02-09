@@ -23,10 +23,10 @@
         </button>
     </div>
 
-    <div class="container-fluid ready-for-review-container-fluid">
+    <div class="ready-for-review-container-fluid">
         <div class="modal-body pr-0 pl-0 pb-0">
 
-            <div class="text-right">
+            <div class="text-right mb-20 mr-10">
                 <button class="rt2-btn rt2-action-btn" (click)="openThreadModal(true)">Start New Discussion</button>
                 <input type="hidden" ngbAutofocus />
             </div>
@@ -155,7 +155,7 @@
                                 </div>
 
                                 <div class="topic-action">
-                                    <button *ngIf="!isResolved && canUserEditPost(post)" mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu default-font">
+                                    <button *ngIf="!isResolved && canUserEditPost(post)" mat-button [matMenuTriggerFor]="discussionMenu" class="manage-refset-menu defa">
                                         <i class="fa fa-ellipsis-v text-main fa-lg"></i>
                                     </button>
                                     <span class="menu-spacer">&nbsp;</span>

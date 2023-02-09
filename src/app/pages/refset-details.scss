@@ -21,7 +21,7 @@
 }
 
 .rt2-details-member-status-field {
-    margin-left: 35px;
+    margin-left: 20px;
     .mat-form-field-infix {
       width: 153px;
     }
@@ -29,6 +29,24 @@
 
 .rt2-toggle-buttons-container {
     padding-left: 20px;
+    padding-top: 8px;
+}
+
+.rt2-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.rt2-custom-width {
+  width: 1180px;
+}
+
+.rt2-custom-width-fields {
+  width: 420px;
+}
+
+.rt2-custom-width-fields-btn {
+  width: 670px;
 }
 
 .rt2-toggle-buttons {
@@ -135,7 +153,6 @@
 
 .rt2-details-search-field {
   width: 80%;
-  padding-left: 30px;
 
   // set this to 20px less than the field to leave room for the cancel 'X'
   .mat-form-field-flex {
@@ -279,7 +296,6 @@
 
 .details-page-stepper {
   transform: scale(0.7);
-  margin-top: -25px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -388,7 +404,7 @@
 .refsetDetailsPage>.refset-title {
   align-items: center;
   box-shadow: 0 4px 2px -2px gray;
-  min-height: 65px;
+  min-height: 60px;
   justify-content: space-between;
 }
 

@@ -513,19 +513,42 @@ select {
   padding-bottom: 0.5em;
 }
 
-#downloadDialog {
+#downloadDialog, .projects-dropdown-block, .details-version-select, .dropdown-group {
   .mat-form-field-appearance-legacy .mat-form-field-infix {
     margin-top: 0;
     padding: 0;
     border-top: none;
   }
 
+  .directoryInput {
+    .mat-form-field-label-wrapper {
+      top: -1.4em !important;
+      padding-top: 4em !important;
+    }
+  }
+
   .mat-form-field-infix {
     border-top: none;
+
+    #directorySearchInput {
+      .mat-form-field-label-wrapper {
+        .mat-form-field-label {
+          top: 10px;
+        }
+      }
+    }
   }
 
   .mat-select-arrow-wrapper {
     padding-top: 0;
+  }
+
+  .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  .mat-form-field-underline {
+    top: 20px;
   }
 }
 
@@ -1238,7 +1261,12 @@ select {
 }
 
 .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
+  padding: 0 !important;
   pointer-events: none !important;
+}
+
+.mat-step-label {
+  padding: 8px 0 0 0 !important;
 }
 
 .ready-for-publication-modal-body {
@@ -1465,7 +1493,6 @@ img.rt2-edition-flag {
   margin-left: -80px;
   margin-right: -80px;
   min-width: 600px !important;
-  margin-bottom: 15px;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
@@ -1483,7 +1510,7 @@ img.rt2-edition-flag {
   .header-title {
     align-items: baseline;
     background-color: white;
-    min-height: 73px;
+    min-height: 60px;
     box-shadow: 0 5px 7px -2px grey;
 
     .title-label {
@@ -1491,11 +1518,10 @@ img.rt2-edition-flag {
       color: #555555;
       padding-left: 60px;
       @extend .page-header-font;
-      padding-bottom: 15px;
     }
 
     .dashboard-title {
-      padding-top: 20px;
+      margin: auto 0;
     }
   }
 }

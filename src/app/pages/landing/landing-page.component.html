@@ -61,9 +61,7 @@
       title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
         <mat-icon class="scale-70-pct">information</mat-icon>
     </button>
-    <button mat-icon-button *ngIf="params.data.memberSearchMatch" class="w-18 h-18">
-        <span title="Search matches reference set member" class="s-p7rem mandatory-field">M</span>
-    </button>
+    <span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
 </ng-template>
 
 <ng-template #directoryInfoDialog let-data>
@@ -107,18 +105,16 @@
 
 <!-- Action Templates -->
 <ng-template #directoryActionSection let-params>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-2">
-                <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
-                </app-refset-download>
-            </div>
+    <div class="d-flex rt2-wrap">
+        <div class="col-2">
+            <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
+            </app-refset-download>
+        </div>
 
-            <div class="col-2">
-                <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                  [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
-                </app-refset-discussion-list>
-            </div>
+        <div class="col-2">
+            <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
+                [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
+            </app-refset-discussion-list>
         </div>
     </div>
 </ng-template>

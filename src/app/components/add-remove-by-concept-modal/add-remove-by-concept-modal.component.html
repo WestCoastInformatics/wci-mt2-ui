@@ -23,7 +23,7 @@
                 <div class="add-remove-concept-hierarchy-modal-search-bar" [class.concept-opened]="isConceptDetailsLoading || conceptSelected">
                   <mat-form-field floatLabel="never" id="addRemoveByConceptHierarchySearchInputField" class="add-remove-concept-hierarchy-modal-input-field">
                     <mat-label>Search by ID or Keyword</mat-label>
-                    <input aria-label="Search by ID or Keyword" matInput #addRemoveByConceptHierarchySearchInput class="addRemoveByConceptHierarchySearchInput"
+                    <input aria-label="Search by ID or Keyword" matInput id="addRemoveByConceptHierarchySearchInput" class="addRemoveByConceptHierarchySearchInput"
                       [(ngModel)]="searchInput" (input)="onTableSearchChange()" ngbAutofocus />
                   </mat-form-field>
                   <span class="add-remove-concept-hierarchy-modal-cancel-search" (click)="clearSearch()">&#10005;</span>
@@ -241,7 +241,7 @@
 
   <div class="modal-footer rt2-modal-footer rt2-lockable">
     <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="data?.items?.length == 0" (click)="addRemoveAllMembers('add')" 
-      aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Add All" title="Add All" >
+      aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Add All" title="Add All" >
       Add All
     </button>
     <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="data?.items?.length == 0" (click)="addRemoveAllMembers('remove')"

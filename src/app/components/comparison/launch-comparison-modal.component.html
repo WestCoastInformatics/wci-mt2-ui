@@ -407,8 +407,11 @@
 
     <div class="modal-footer rt2-modal-footer rt2-btn-group">
 
-        <button *ngIf="changeReportData.length > 0" type="button" (click)="downloadChangeReport()" class="rt2-btn rt2-action-btn">
+        <button *ngIf="changeReportData.length > 0" type="button" (click)="downloadChangeReport()" class="rt2-btn rt2-download-btn">
             Download Change Report
+            <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
+                download
+            </mat-icon>
         </button>
 
         <button type="button" (click)="downloadComparisonReport()" class="rt2-btn rt2-download-btn">
