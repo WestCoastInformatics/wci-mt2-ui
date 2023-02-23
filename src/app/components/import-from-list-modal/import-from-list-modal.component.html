@@ -39,12 +39,12 @@
   <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
 
     <button type="button" (click)="callMemberOperation('add')" color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Add Members"
-      title="Add Members">
+      title="Add Members" [disabled]="!(listOfIds?.length && listOfIds?.length > 0)">
       Add Members
     </button>
 
     <button *ngIf="!isIntensional" type="button" (click)="callMemberOperation('remove')" color="red" aria-hidden="false"
-      class="rt2-btn rt2-remove-btn" aria-label="Remove Members" title="Remove Members">
+      class="rt2-btn rt2-remove-btn" aria-label="Remove Members" title="Remove Members" [disabled]="!(listOfIds?.length && listOfIds?.length > 0)">
       Remove Members
     </button>
 

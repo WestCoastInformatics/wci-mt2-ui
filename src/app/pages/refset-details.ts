@@ -1089,9 +1089,10 @@ export class RefsetDetails implements OnInit {
                             field: 'memberEffectiveTime',
                             colId: 'modified',
                             flex: 1,
-                            minWidth: 65,
+                            minWidth: 170,
                             maxWidth: 190,
                             headerName: 'Last Modified Date',
+                            headerClass: 'rt2-details-column-modified-date',
                             cellClass:
                                 'rt2-details-column-modified-date',
                             valueGetter:
@@ -1100,7 +1101,8 @@ export class RefsetDetails implements OnInit {
                             sort: 'desc',
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
-                            floatingFilterComponentParams: { suppressFilterButton: true }, resizable: true
+                            floatingFilterComponentParams: { suppressFilterButton: true },
+                            resizable: true
                         },
                         {
                             field: 'active',

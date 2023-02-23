@@ -12,7 +12,8 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
     selector: 'projects-people',
-    templateUrl: './people.component.html'
+    templateUrl: './people.component.html',
+    styleUrls: ['./people.component.scss']
 })
 export class ProjectsPeopleComponent implements OnInit {
 

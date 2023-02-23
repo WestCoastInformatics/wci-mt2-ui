@@ -26,7 +26,7 @@ import { P } from '@angular/cdk/keycodes';
 @Component({
   selector: 'projects-refset',
   templateUrl: './projects-refset.component.html',
-  styleUrls: ['projects-refset.component.scss']
+  styleUrls: ['./projects-refset.component.scss']
 })
 export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 

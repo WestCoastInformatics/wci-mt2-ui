@@ -116,7 +116,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
           this.columnDefs = [
             // This is an exception to resizeable field because it is an info icon field
-            { field: 'id', colId: 'information', headerName: '', minWidth: 80, width: 80, cellClass: 'rt2-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
+            { field: 'id', colId: 'information', headerName: '', minWidth: 50, width: 90, cellClass: 'rt2-directory-column-information', cellRenderer: 'templateRenderer', cellRendererParams: { template: this.infoSection }, filter: false, resizable: false, sortable: false },
             { field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
             { field: 'name', tooltipField: 'name', headerName: 'Reference Name', cellClass: 'rt2-directory-column-name', flex: 1, resizable: true, minWidth: 65, cellRenderer: 'templateRenderer', cellRendererParams: { template: this.nameSection }, sort: 'asc', unSortIcon: true },
             {

@@ -1,7 +1,7 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <!-- Search Bar -->
-<div class="container-fluid top-search-bar content-header">
+<div class="top-search-bar content-header">
     <div class="row justify-content-end align-items-baseline">
         <div class="page-title">Reference Set Library <span [hidden]="!numOfMembers">{{'(' +
                 numOfMembers + ')'}}</span></div>
@@ -12,7 +12,7 @@
             </div>
 
             <div class="col-md-auto">
-                <div class="dropdown">
+                <div class="dropdown directoryInput">
                     <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
                         <mat-label class="search-label">Search by name, concept or tags</mat-label>
                         <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />

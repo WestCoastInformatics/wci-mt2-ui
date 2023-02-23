@@ -26,7 +26,8 @@ import { P } from '@angular/cdk/keycodes';
 
 @Component({
     selector: 'projects-teams',
-    templateUrl: './teams.component.html'
+    templateUrl: './teams.component.html',
+    styleUrls: ['./teams.component.scss']
 })
 export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 
