@@ -15,48 +15,37 @@
     margin-right: 3px;
 }
 
-div.container-fluid.rt2-dialog-container {
-    padding: 15px 15px 0px 15px;
-    padding-bottom: 0px;
-    padding-top: 0px;
+.rt2-dialog-container {
+    display: flex;
     max-height: calc(100vh - 55px - 52px - (1.75rem * 2) - 2px); // 100% height - header - footer - margin
     overflow: auto;
-  
-    div.modal-body.rt2-dialog-body {
-      background-color: rgba(245, 245, 246, 1);
-      padding: 15px 15px 15px 15px;
-      border-radius: 3px;
-  
-      div.dialog-form {
+    border-radius: 3px;
+
+      .dialog-form {
         align-items: baseline;
         display: flex;
         align-items: normal;
-      }
-  
-      div.dialog-form-field-row {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        align-items: center;
-  
-        &.top-aligned {
-          align-items: normal;
-        }
-  
-        &.first-row {
-          margin-top: 20px;
-        }
-  
-        &.boxed-row {
-          border: 1px solid;
-          margin-bottom: 10px;
-          padding-top: 10px;
+
+        .dialog-form-field-row {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          align-items: center;
+    
+          &.top-aligned {
+            align-items: normal;
+          }
+
+          &.boxed-row {
+            border: 1px solid;
+            padding-top: 10px;
+          }
         }
       }
-  
+
       .col.dialog-form-field {
-        width: 900px;
-        max-width: 900px;
+        width: 100%;
+        max-width: 100%;
         flex: 1;
   
         mat-form-field {
@@ -90,7 +79,6 @@ div.container-fluid.rt2-dialog-container {
       .dialog-form-radio-option-padding {
         padding-right: 30px;
       }
-    }
   }
 
   .compare-sumary-table td {

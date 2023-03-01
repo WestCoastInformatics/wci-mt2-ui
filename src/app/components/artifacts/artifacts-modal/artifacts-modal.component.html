@@ -9,22 +9,20 @@
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
 
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Artifacts
-        </h4>
+        </h3>
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body pr-0 pl-0 pb-0">
+    <div class="modal-body">
 
-            <div class="text-right" *ngIf="canAdd">
-                <artifact-form [refsetInternalId]="refsetInternalId" (refresh)="onRefresh(artifactsList)"></artifact-form>
-            </div>
-
-            <artifacts-list [refsetInternalId]="refsetInternalId" [refset]="refset" #artifactsList></artifacts-list>
+        <div class="text-right" *ngIf="canAdd">
+            <artifact-form [refsetInternalId]="refsetInternalId" (refresh)="onRefresh(artifactsList)"></artifact-form>
         </div>
+
+        <artifacts-list [refsetInternalId]="refsetInternalId" [refset]="refset" #artifactsList></artifacts-list>
     </div>
     <div class="modal-footer rt2-modal-footer">
         <button aria-hidden="false" class="rt2-btn rt2-close-btn mr-3" (click)="modal.dismiss('Cross click');">

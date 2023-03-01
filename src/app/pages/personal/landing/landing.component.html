@@ -6,11 +6,12 @@
 
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu"></app-sidebar>
-    <div class='container-fluid mt-3'>
+    <div class='rt2-container'>
         <div class='row'>
             <div class='col-md-4 col-12'>
                 <section>
-                    <div class='section-header'>About</div>
+                    <!-- <div class='section-header'>About</div> -->
+                    <heading-with-count title="About" showcount=false></heading-with-count>
                     <div class='dashboard-section pr-2 pl-2'>
                         <div class="about-section">
                             <div><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
@@ -26,7 +27,8 @@
             </div>
             <div class='col-md-8 col-12'>
                 <section>
-                    <div class='section-header'>Organizations</div>
+                    <!-- <div class='section-header'>Organizations</div> -->
+                    <heading-with-count title="Organizations" showcount=false></heading-with-count>
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let organization of organizationList">
@@ -40,7 +42,8 @@
                 </section>
 
                 <section>
-                    <div class='section-header'>Teams</div>
+                    <heading-with-count title="Teams" showcount=false></heading-with-count>
+                    <!-- <div class='section-header'>Teams</div> -->
                     <div class='dashboard-section'>
                         <div class="dashboard-section-mid">
                             <ng-container *ngFor="let team of teamList">

@@ -12,9 +12,9 @@
 
   <div class="modal-header rt2-modal-header">
     <button ngbAutofocus class="unfocus-btn"></button>
-    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+    <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Add or Remove Members From File
-    </h4>
+    </h3>
 
     <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
       (click)="modal.dismiss('Cross click')">
@@ -22,45 +22,43 @@
     </button>
   </div>
 
-  <div class="container-fluid import-from-container-fluid">
-    <div class="modal-body import-from-modal-body default-font rt2-lockable">
+  <div class="modal-body default-font rt2-lockable">
 
-      <div class="container-file-import" dragAndDrop (fileDropped)="onFileDropped($event)">
-        <input type="file" #fileDropRef id="fileDropRef" multiple
-          (click)="$event.target.value = null" (change)="fileBrowseHandler($event.target.files)" />
-        <img src="assets/import-file-upload-icon2.svg" alt="Document symbol denoting an upload icon"
-          title="Import File" aria-label="Import file" />
+    <div class="container-file-import" dragAndDrop (fileDropped)="onFileDropped($event)">
+      <input type="file" #fileDropRef id="fileDropRef" multiple
+        (click)="$event.target.value = null" (change)="fileBrowseHandler($event.target.files)" />
+      <img src="assets/import-file-upload-icon2.svg" alt="Document symbol denoting an upload icon"
+        title="Import File" aria-label="Import file" />
 
-        <h3 class="general-icon-font">Drag and drop file here</h3>
-        <h3 class="general-icon-font">or</h3>
+      <h3 class="general-icon-font">Drag and drop file here</h3>
+      <h3 class="general-icon-font">or</h3>
 
-        <label for="fileDropRef" class="import-from-file-drop-down-label">Browse for file</label>
-        <div class="allowed-file-types smaller-font">*Allowed file types: .rf2, .txt</div>
-      </div>
+      <label for="fileDropRef" class="import-from-file-drop-down-label">Browse for file</label>
+      <div class="allowed-file-types smaller-font">*Allowed file types: .rf2, .txt</div>
+    </div>
 
-      <div class="files-list-file-import">
+    <div class="files-list-file-import">
 
-        <div class="single-file" *ngFor="let file of files; let i = index">
+      <div class="single-file" *ngFor="let file of files; let i = index">
 
-          <div class="file-icon">
-            <img src="assets/doc-upload-icon.svg" alt="Document symbol denoting an uploaded file" />
-          </div>
+        <div class="file-icon">
+          <img src="assets/doc-upload-icon.svg" alt="Document symbol denoting an uploaded file" />
+        </div>
 
-          <div class="info">
-            <h4 class="name form-field-value">{{ file?.name }}</h4>
-            <p class="size file-size-field">{{ formatBytes(file?.size) }}</p>
-            <app-progress [progress]="file?.progress"></app-progress>
-          </div>
+        <div class="info">
+          <h4 class="name form-field-value">{{ file?.name }}</h4>
+          <p class="size file-size-field">{{ formatBytes(file?.size) }}</p>
+          <app-progress [progress]="file?.progress"></app-progress>
+        </div>
 
-          <div class="delete" (click)="deleteFile(i)">
-            <img src="assets/doc-delete-icon.svg"
-              alt="Document symbol denoting a trash can to delete files" title="Remove File"
-              aria-label="Delete file" />
-          </div>
+        <div class="delete" (click)="deleteFile(i)">
+          <img src="assets/doc-delete-icon.svg"
+            alt="Document symbol denoting a trash can to delete files" title="Remove File"
+            aria-label="Delete file" />
         </div>
       </div>
-
     </div>
+
   </div>
 
   <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">

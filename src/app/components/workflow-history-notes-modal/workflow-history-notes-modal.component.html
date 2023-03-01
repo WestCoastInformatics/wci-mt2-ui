@@ -1,32 +1,46 @@
 <div>
-  <span class="float-right" title="Edit Note"><a *ngIf="edit" class="pointer" (click)="openReadyForReviewModal()">
+  <span class="float-right" title="Edit Note"><a *ngIf="edit" class="pointer" (click)="openReadyForReviewModal(modalContent)">
     <mat-icon>edit</mat-icon>
   </a></span>
   <span *ngIf="edit" [innerHTML]="workflowHistoryNotes"></span>
 </div>
-<button *ngIf="!edit" class="rt2-picklist-btn" alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal()">Create Note</button>
+<button *ngIf="!edit" class="rt2-picklist-btn" alt="Edit Notes" title="Edit Notes" aria-label="Edit Workflow History" [disabled]="disabled" (click)="openReadyForReviewModal(modalContent)">Create Note</button>
 
-<ng-template #modalContent>
+<ng-template #modalContent let-modal>
+  <div class="modal-header rt2-modal-header">
+    <button ngbAutofocus class="unfocus-btn"></button>
+    <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+      <span>
+        {{ title }}
+      </span>
+    </h3>
+    <button type="button" class="close dialog-close-x" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true" class="dialog-close-x">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body rt2-lockable">
     <div class="compose-modal-body">
-        <editor class="fill-height" #workflowHistoryNotesEditor id="workflowHistoryNotesEditor" [(ngModel)]="workflowHistoryNotes" [init]="{
-                base_url: '/tinymce',
-                suffix: '.min',
-                height: 200,
-                menubar: false,
-                auto_focus: 'workflowHistoryNotesEditor',
-                placeholder: 'Enter your notes' ,
-                plugins: ['lists advlist wordcount'],
-          toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount' }">
-        </editor>
+      <editor class="fill-height" #workflowHistoryNotesEditor id="workflowHistoryNotesEditor" [(ngModel)]="workflowHistoryNotes" [init]="{
+              base_url: '/tinymce',
+              suffix: '.min',
+              height: 200,
+              menubar: false,
+              auto_focus: 'workflowHistoryNotesEditor',
+              placeholder: 'Enter your notes' ,
+              plugins: ['lists advlist wordcount'],
+        toolbar: 'undo redo | bold italic | bullist numlist outdent indent | wordcount' }">
+      </editor>
     </div>
-    <div class="modal-footer rt2-modal-footer rt2-lockable">
-        <button type="button" (click)="saveNotes(modal)" aria-hidden="false" class="rt2-btn rt2-next-back-btn"
-          aria-label="Save" title="Save Notes" [disabled]="!(workflowHistoryNotes?.length && workflowHistoryNotes?.length > 0)">
-            Save
-        </button>
-        <button type="button" (click)="cancel(modal)" aria-hidden="false" class="rt2-btn rt2-cancel-btn"
-          aria-label="Save" title="Save Notes">
-            Cancel
-        </button>
-    </div>
+  </div>
+
+  <div class="modal-footer rt2-modal-footer rt2-lockable">
+      <button type="button" (click)="saveNotes(modal)" aria-hidden="false" class="rt2-btn rt2-next-back-btn"
+        aria-label="Save" title="Save Notes" [disabled]="!(workflowHistoryNotes?.length && workflowHistoryNotes?.length > 0)">
+          Save
+      </button>
+      <button type="button" (click)="cancel(modal)" aria-hidden="false" class="rt2-btn rt2-cancel-btn"
+        aria-label="Save" title="Save Notes">
+          Cancel
+      </button>
+  </div>
 </ng-template>

@@ -44,52 +44,50 @@
 
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <div class='container-fluid mt-3'>
-        <div class='row'>
-            <div class='col-12'>
-                <section class="mb-3">
-                    <div class='mb-4'>
-                        <span class='section-header'>Project Teams ({{ numberOfTeams }})</span>
-                        <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
-                            class="float-right">
-                            <div>
-                                <span>
-                                    To create a new team, first go to the
-                                    <span class="pointer" title="Click create a new team, first go to the organization team page">
-                                        <a href="{{'/organizations/' + selectedOrganization?.id + '/teams'}}">organization team page</a>
-                                    </span>
+    <div class='rt2-container'>
+        <div class='rt2-flex-wrap'>
+            <section>
+                <div class='mb-10'>
+                    <heading-with-count title="Project Teams" [count]="numberOfTeams"></heading-with-count>
+                    <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                        class="float-right">
+                        <div>
+                            <span>
+                                To create a new team, first go to the
+                                <span class="pointer" title="Click create a new team, first go to the organization team page">
+                                    <a href="{{'/organizations/' + selectedOrganization?.id + '/teams'}}">organization team page</a>
                                 </span>
-                            </div>
-                            <div>
-                                <span>
-                                    To add an existing team to this project go to the
-                                    <span class="pointer" title="Click add an existing team to this project go to the project configuration page">
-                                        <a href="{{'/organization/' + selectedOrganization?.id + '/edition/' + selectedEdition?.id + '/projects/' + selectedProject?.id + '/configuration' }}">project configuration page</a>
-                                    </span>
-                                </span>
-                            </div>
-                        </span>
-                    </div>
-
-                    <div class='dashboard-section'>
-                        <div class="ag-theme-alpine">
-                            <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="teamData" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
-                            </ag-grid-angular>
-                            <!-- description template -->
-                            <ng-template #descriptionSection let-params>
-                                <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
-                                    {{ params?.data?.description }}
-                                </label>
-                            </ng-template>
-                            <!-- people template-->
-                            <ng-template #peopleSection let-params>
-                                <span class="text-primary font-weight-bold pointer">{{params?.data?.members}} Users</span>
-                            </ng-template>
+                            </span>
                         </div>
-                    </div>
+                        <div>
+                            <span>
+                                To add an existing team to this project go to the
+                                <span class="pointer" title="Click add an existing team to this project go to the project configuration page">
+                                    <a href="{{'/organization/' + selectedOrganization?.id + '/edition/' + selectedEdition?.id + '/projects/' + selectedProject?.id + '/configuration' }}">project configuration page</a>
+                                </span>
+                            </span>
+                        </div>
+                    </span>
+                </div>
 
-                </section>
-            </div>
+                <div class='dashboard-section'>
+                    <div class="ag-theme-alpine">
+                        <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="teamData" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
+                        </ag-grid-angular>
+                        <!-- description template -->
+                        <ng-template #descriptionSection let-params>
+                            <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
+                                {{ params?.data?.description }}
+                            </label>
+                        </ng-template>
+                        <!-- people template-->
+                        <ng-template #peopleSection let-params>
+                            <span class="text-primary font-weight-bold pointer">{{params?.data?.members}} Users</span>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </section>
         </div>
 
     </div>
@@ -98,16 +96,14 @@
 
 <ng-template #workflowDiagramDialog let-modal>
     <div class="modal-header review-modal-header">
-        <h4 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">
+        <h3 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">
             Workflow Diagram
-        </h4>
+        </h3>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body review-modal-body">
-            <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram" class="mw-100-pct mh-100-pct" />
-        </div>
+    <div class="modal-body review-modal-body">
+        <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram" class="mw-100-pct mh-100-pct" />
     </div>
 </ng-template>

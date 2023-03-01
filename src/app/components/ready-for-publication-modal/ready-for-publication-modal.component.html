@@ -6,28 +6,26 @@
 <ng-template #readyForPublicationDialog let-modal>
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn" ></button>
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Ready for Publication
-        </h4>
+        </h3>
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-publication-container-fluid">
-        <div class="modal-body ready-for-publication-modal-body">
-            <div class="notes-title">Notes: <span class="mandatory-field">*</span></div>
-            <editor [(ngModel)]="requestForPublicationNotes" id="notesTitles" [init]="{
-                    base_url: '/tinymce',
-                    suffix: '.min',
-                    height: 200,
-                    auto_focus: 'notesTitles',
-                    menubar: false,
-                    placeholder: 'Notes for consideration.',
-                    plugins: ['lists advlist'],
-                    toolbar:
-                        'undo redo | bold italic | bullist numlist outdent indent'
-                }"></editor>
-        </div>
+    <div class="modal-body">
+        <div class="notes-title">Notes: <span class="mandatory-field">*</span></div>
+        <editor [(ngModel)]="requestForPublicationNotes" id="notesTitles" [init]="{
+                base_url: '/tinymce',
+                suffix: '.min',
+                height: 200,
+                auto_focus: 'notesTitles',
+                menubar: false,
+                placeholder: 'Notes for consideration.',
+                plugins: ['lists advlist'],
+                toolbar:
+                    'undo redo | bold italic | bullist numlist outdent indent'
+            }"></editor>
     </div>
     <div class="modal-footer rt2-modal-footer">
         <button type="button" [disabled]="!requestForPublicationNotes" (click)="

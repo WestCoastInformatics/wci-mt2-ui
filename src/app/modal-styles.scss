@@ -96,10 +96,6 @@
 }
 
 
-
-/*** compose-modal.components.ts styles ***/
-// Related to compose-modal.components.ts - // TODO: remove these when we revert to NgbModal
-
 @mixin displayDivCenter {
 	display: flex;
 	align-items: center;
@@ -200,4 +196,43 @@
 		opacity: 0;
 	}
 }
-/*** compose-modal.components.ts styles ***/
+
+.modal-dialog {
+  margin: 1.75rem auto;
+  // align-items: center;
+}
+
+.modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #343a40;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: #fff;
+    letter-spacing: .5px;
+  }
+}
+
+.modal-body {
+  padding: 1rem;
+  background-color: white;
+}
+
+.modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
+}
+

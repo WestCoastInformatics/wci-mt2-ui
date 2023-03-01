@@ -65,36 +65,39 @@
 </div>
 <div class="content-wrapper">
   <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-  <div class='container-fluid mt-3'>
+  <div class='rt2-container'>
     <!-- Page Title -->
-    <div *ngIf="selectedProject" class="w-100-pct jc-space-between d-flex p-r-20 align-center p-l-15 p-b-10"
+    <div *ngIf="selectedProject" class="w-100-pct jc-space-between d-flex align-center mb-10"
       [class.container-toggled]="toggleService.isToggled">
-      <div class="container-fluid page-title d-inline p-l-0 color-custom-blue">
+      <heading-with-count title="Reference Sets" [count]="numOfResults"></heading-with-count>
+      <!-- <div class="container-fluid page-title d-inline p-l-0 color-custom-blue">
         Reference Sets
         <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
-      </div>
+      </div> -->
 
-      <div class="mr-3">
-        <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
-          [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
-        </create-refset>
-      </div>
-      <!--<div class="d-inline">
-                <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
-                  [existingBranchVersions]="existingBranchVersions">
-                </create-new-refset>
-            </div> -->
-      <div class="mr-3" [hidden]="refsetData?.length < 1">
-        <app-refset-download [isDetailPage]="true" [refsets]="refsetData"
-          [project]="selectedProject"></app-refset-download>
-      </div>
-      <div [hidden]="!selectedProject?.roles?.includes('AUTHOR')">
-        <bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
+      <div class="d-flex w-100-pct jc-flex-e">
+        <div class="mr-3">
+          <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
+            [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
+          </create-refset>
+        </div>
+        <!--<div class="d-inline">
+                  <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
+                    [existingBranchVersions]="existingBranchVersions">
+                  </create-new-refset>
+              </div> -->
+        <div class="mr-3" [hidden]="refsetData?.length < 1">
+          <app-refset-download [isDetailPage]="true" [refsets]="refsetData"
+            [project]="selectedProject"></app-refset-download>
+        </div>
+        <div [hidden]="!selectedProject?.roles?.includes('AUTHOR')">
+          <bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
+        </div>
       </div>
     </div>
 
     <!-- Reference Set Table -->
-    <div class="container-fluid" [class.container-toggled]="toggleService.isToggled">
+    <div [class.container-toggled]="toggleService.isToggled">
       <ag-grid-angular *ngIf="showTable" #projectTable class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct"
         [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
       </ag-grid-angular>
@@ -153,17 +156,15 @@
 
 <ng-template #workflowDiagramDialog let-modal>
   <div class="modal-header review-modal-header">
-    <h4 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">
+    <h3 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">
       Workflow Diagram
-    </h4>
+    </h3>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="container-fluid ready-for-review-container-fluid">
-    <div class="modal-body review-modal-body">
-      <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram"
-        class="mw-100-pct mh-100-pct" />
-    </div>
+  <div class="modal-body review-modal-body">
+    <img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram"
+      class="mw-100-pct mh-100-pct" />
   </div>
 </ng-template>

@@ -8,29 +8,27 @@
 <ng-template #finishUpgradeDialog let-modal>
     <ng-container>
         <div class="modal-header rt2-modal-header">
-            <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+            <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
                 Upgrade Reference Set
-            </h4>
+            </h3>
             <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
                 (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
             </button>
         </div>
-        <div class="container-fluid upgrade-container-fluid">
-            <div class="modal-body finish-upgrade-modal-body">
-                <div class="successful-finish-upgrade-modal-body-header">
-                    <ngb-alert [dismissible]="false" type="success"
-                        class="finish-upgrade-modal-success-warning">
-                        <div class="success-header">
-                            <img class="circled-check" src="assets/circled-check.svg"
-                                alt="circled check" aria-label="Circled Check"
-                                title="Circled Check" />
-                            <div class="success-body finish-upgrade-modal-success">
-                                <strong>Success!</strong><br />Members updated and Upgrade complete.
-                            </div>
+        <div class="modal-body">
+            <div class="successful-finish-upgrade-modal-body-header">
+                <ngb-alert [dismissible]="false" type="success"
+                    class="finish-upgrade-modal-success-warning">
+                    <div class="success-header">
+                        <img class="circled-check" src="assets/circled-check.svg"
+                            alt="circled check" aria-label="Circled Check"
+                            title="Circled Check" />
+                        <div class="success-body finish-upgrade-modal-success">
+                            <strong>Success!</strong><br />Members updated and Upgrade complete.
                         </div>
-                    </ngb-alert>
-                </div>
+                    </div>
+                </ngb-alert>
             </div>
         </div>
         <div class="modal-footer rt2-modal-footer rt2-btn-group">

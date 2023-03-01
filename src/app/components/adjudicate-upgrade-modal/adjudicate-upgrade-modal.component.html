@@ -3,184 +3,182 @@
 <ng-template #adjudicateUpgradeDialog class="modal-dialog-centered" let-modal>
     <ng-container>
         <div class="modal-header rt2-modal-header">
-            <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+            <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
                 Select Replacements for {{refsetData.name}}
-            </h4>
+            </h3>
             <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="openPauseUpdate()">
                 <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
             </button>
         </div>
-        <div class="adjudicate-upgrade-container-fluid rt2-lockable">
-            <div class="modal-body adjudicate-upgrade-modal-body">
-                <div class="adjudicate-upgrade-modal-body-header">
-                    <button ngbAutofocus class="unfocus-btn"></button>
-                    <div class="adjudicate-inactive-concepts">Inactive Concepts
-                        ({{inactiveConcepts}})</div>
-                    <div class="adjudicate-format-option-drop-down">
-                        <mat-form-field floatLabel="never" appearance="legacy">
-                            <mat-label>Select Language(s):</mat-label>
-                            <select matNativeControl [(ngModel)]="selectedLanguage" (change)="setupColumns(); changeLanguage($event)">
-                                <option *ngFor="let option of languageOptions" [value]="option">
-                                    {{ option }}
-                                </option>
-                            </select>
-                        </mat-form-field>
-                    </div>
-                    <div class="adjudicate-toggle">
-                        <mat-slide-toggle color="primary" (change)="hideIncludedReplacements($event);">
-                            Hide Included Replacements
-                        </mat-slide-toggle>
-                    </div>
+        <div class="modal-body adjudicate-upgrade-modal-body">
+            <div class="adjudicate-upgrade-modal-body-header">
+                <button ngbAutofocus class="unfocus-btn"></button>
+                <div class="adjudicate-inactive-concepts">Inactive Concepts
+                    ({{inactiveConcepts}})</div>
+                <div class="adjudicate-format-option-drop-down">
+                    <mat-form-field floatLabel="never" appearance="legacy">
+                        <mat-label>Select Language(s):</mat-label>
+                        <select matNativeControl [(ngModel)]="selectedLanguage" (change)="setupColumns(); changeLanguage($event)">
+                            <option *ngFor="let option of languageOptions" [value]="option">
+                                {{ option }}
+                            </option>
+                        </select>
+                    </mat-form-field>
                 </div>
-                <div class="adjudicate-upgrade-modal-body-mid">
-                    <as-split direction="horizontal" gutterSize="4">
-                        <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
-                            <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct adjudication-list"
-                              [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)">
-                            </ag-grid-angular>
-                        </as-split-area>
+                <div class="adjudicate-toggle">
+                    <mat-slide-toggle color="primary" (change)="hideIncludedReplacements($event);">
+                        Hide Included Replacements
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="adjudicate-upgrade-modal-body-mid">
+                <as-split direction="horizontal" gutterSize="4">
+                    <as-split-area [lockSize]="true" [size]="showResults && conceptSelected ? 50 : 100" [minSize]="37">
+                        <ag-grid-angular *ngIf="showGrid" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct adjudication-list"
+                            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" (cellMouseOver)="onCellMouseOver($event)">
+                        </ag-grid-angular>
+                    </as-split-area>
 
-                        <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="37">
+                    <as-split-area [size]="showResults && conceptSelected ? 50 : 0" [minSize]="37">
 
-                            <div class="rt2-concept-details-column" *ngIf="isConceptDetailsLoading || conceptSelected">
+                        <div class="rt2-concept-details-column" *ngIf="isConceptDetailsLoading || conceptSelected">
 
-                                <div class="row" *ngIf="isConceptDetailsLoading">
-                                    <div>Loading...</div>
-                                </div>
-
-                                <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
-
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col rt2-concept-details-title-name">
-                                            Concept Details
-                                        </div>
-                                    </div>
-
-                                    <!-- Parents Section -->
-                                    <div class="container-fluid rt2-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
-
-                                        <div class="row">
-                                            <div class="rt2-concept-details-section-title">
-                                                Parents</div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class=" rt2-concept-details-no-relationships" *ngIf="conceptDetailParents?.length == 0">
-                                                No parents
-                                            </div>
-                                        </div>
-
-                                        <div class="row rt2-concept-details-taxonomy-item" *ngFor="let parent of conceptDetailParents">
-
-                                            <div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
-
-                                                <add-remove-concepts-icons [concept]="parent" [isParentConcept]="true" [refsetType]="refset?.type"
-                                                  (processSelection)="addRemoveConcept($event)">
-                                                </add-remove-concepts-icons>
-
-                                                <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-                                                <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0"
-                                                  src="/assets/unlinedTaxonomyIcon.png" />
-                                            </div>
-
-                                            <div class="rt2-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
-                                              [class.greyed-if-not-member]="!parent?.memberOfRefset">
-                                                <span *ngIf="this.taxonomyOptions?.useFsn">{{
-                                                    parent?.fsn.trim()
-                                                    }}</span>
-                                                <span *ngIf="!this.taxonomyOptions?.useFsn">{{
-                                                    parent?.name.trim()
-                                                    }}</span>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                    <!-- Details Section -->
-                                    <div class="container-fluid rt2-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size h-fit-content">
-                                        <div class="row">
-
-                                            <!-- Info Section -->
-                                            <div class="rt2-concept-details-concept-info-column"
-                                              [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
-                                                <div class="container-fluid">
-
-                                                    <!-- Name -->
-                                                    <div class="row rt2-concept-details-concept-title-row">
-                                                        <div class="rt2-concept-details-taxonomy-icon">
-                                                        </div>
-                                                        <div class="col rt2-concept-details-concept-name">
-                                                            {{
-                                                            conceptDescriptions?.length ?
-                                                            conceptDescriptions[0]?.term :
-                                                            null }}</div>
-                                                        <div class="col-1 rt2-concept-details-concept-link text-right">
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- ID -->
-                                                    <div class="row rt2-concept-details-concept-row">
-                                                        <div class="rt2-concept-details-concept-id-label">
-                                                            SCTID
-                                                        </div>
-                                                        <div class="col rt2-concept-details-concept-id-text">
-                                                            {{
-                                                            conceptDetail?.code }}</div>
-                                                    </div>
-
-                                                    <!-- ECL -->
-                                                    <div class="row rt2-concept-details-concept-row">
-                                                        <div class="col rt2-concept-details-concept-ecl">
-                                                            {{ conceptDetail?.code }} | {{
-                                                            conceptDescriptions?.length ?
-                                                            conceptDescriptions[0]?.term : null }} |
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Descriptions -->
-                                                    <div class="row rt2-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
-                                                        <div class="rt2-concept-details-concept-description-language">
-                                                            {{ description?.language }}</div>
-                                                        <div class="col rt2-concept-details-concept-description-text">
-                                                            {{ description?.term }}</div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Children Section -->
-                                    <div
-                                      class="container-fluid rt2-concept-details-taxonomy-section children-section add-remove-concept-hierarchy-modal-children-size">
-
-                                        <div class="row">
-                                            <div class="rt2-concept-details-section-title">
-                                                Children <span [hidden]="!numOfChildren"> ({{
-                                                    numOfChildren }})</span></div>
-                                        </div>
-
-                                        <!-- Children Taxonomy Tree -->
-                                        <div class="">
-                                            <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="refset" [editMode]="editMode"
-                                              [rootNode]="conceptDetail" [options]="taxonomyOptions" [selectedConcept]="selectedConcept"
-                                              [manualStateRefresh]="taxonomyManualStateRefresh" hasMultipleRootNodes="false"
-                                              [processChangedMemberFunction]="processChangedMemberEffects" (loadConceptDetail)="loadConceptDetail($event)"
-                                              (changeLockedStatus)="sendChangeLockedStatus($event)" (numOfChildren)="numOfChildren = $event">
-                                            </app-taxonomy-tree>
-                                        </div>
-
-                                    </div>
-                                </div>
-
+                            <div class="row" *ngIf="isConceptDetailsLoading">
+                                <div>Loading...</div>
                             </div>
 
-                        </as-split-area>
-                    </as-split>
+                            <div *ngIf="showResults && conceptSelected && !isConceptDetailsLoading">
 
-                </div>
+                                <div class="row align-items-center no-gutters">
+                                    <div class="col rt2-concept-details-title-name">
+                                        Concept Details
+                                    </div>
+                                </div>
+
+                                <!-- Parents Section -->
+                                <div class="container-fluid rt2-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+
+                                    <div class="row">
+                                        <div class="rt2-concept-details-section-title">
+                                            Parents</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class=" rt2-concept-details-no-relationships" *ngIf="conceptDetailParents?.length == 0">
+                                            No parents
+                                        </div>
+                                    </div>
+
+                                    <div class="row rt2-concept-details-taxonomy-item" *ngFor="let parent of conceptDetailParents">
+
+                                        <div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="editMode">
+
+                                            <add-remove-concepts-icons [concept]="parent" [isParentConcept]="true" [refsetType]="refset?.type"
+                                                (processSelection)="addRemoveConcept($event)">
+                                            </add-remove-concepts-icons>
+
+                                            <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+                                            <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0"
+                                                src="/assets/unlinedTaxonomyIcon.png" />
+                                        </div>
+
+                                        <div class="rt2-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
+                                            [class.greyed-if-not-member]="!parent?.memberOfRefset">
+                                            <span *ngIf="this.taxonomyOptions?.useFsn">{{
+                                                parent?.fsn.trim()
+                                                }}</span>
+                                            <span *ngIf="!this.taxonomyOptions?.useFsn">{{
+                                                parent?.name.trim()
+                                                }}</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- Details Section -->
+                                <div class="container-fluid rt2-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size h-fit-content">
+                                    <div class="row">
+
+                                        <!-- Info Section -->
+                                        <div class="rt2-concept-details-concept-info-column"
+                                            [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
+                                            <div class="container-fluid">
+
+                                                <!-- Name -->
+                                                <div class="row rt2-concept-details-concept-title-row">
+                                                    <div class="rt2-concept-details-taxonomy-icon">
+                                                    </div>
+                                                    <div class="col rt2-concept-details-concept-name">
+                                                        {{
+                                                        conceptDescriptions?.length ?
+                                                        conceptDescriptions[0]?.term :
+                                                        null }}</div>
+                                                    <div class="col-1 rt2-concept-details-concept-link text-right">
+                                                    </div>
+                                                </div>
+
+                                                <!-- ID -->
+                                                <div class="row rt2-concept-details-concept-row">
+                                                    <div class="rt2-concept-details-concept-id-label">
+                                                        SCTID
+                                                    </div>
+                                                    <div class="col rt2-concept-details-concept-id-text">
+                                                        {{
+                                                        conceptDetail?.code }}</div>
+                                                </div>
+
+                                                <!-- ECL -->
+                                                <div class="row rt2-concept-details-concept-row">
+                                                    <div class="col rt2-concept-details-concept-ecl">
+                                                        {{ conceptDetail?.code }} | {{
+                                                        conceptDescriptions?.length ?
+                                                        conceptDescriptions[0]?.term : null }} |
+                                                    </div>
+                                                </div>
+
+                                                <!-- Descriptions -->
+                                                <div class="row rt2-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
+                                                    <div class="rt2-concept-details-concept-description-language">
+                                                        {{ description?.language }}</div>
+                                                    <div class="col rt2-concept-details-concept-description-text">
+                                                        {{ description?.term }}</div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Children Section -->
+                                <div
+                                    class="container-fluid rt2-concept-details-taxonomy-section children-section add-remove-concept-hierarchy-modal-children-size">
+
+                                    <div class="row">
+                                        <div class="rt2-concept-details-section-title">
+                                            Children <span [hidden]="!numOfChildren"> ({{
+                                                numOfChildren }})</span></div>
+                                    </div>
+
+                                    <!-- Children Taxonomy Tree -->
+                                    <div class="">
+                                        <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="refset" [editMode]="editMode"
+                                            [rootNode]="conceptDetail" [options]="taxonomyOptions" [selectedConcept]="selectedConcept"
+                                            [manualStateRefresh]="taxonomyManualStateRefresh" hasMultipleRootNodes="false"
+                                            [processChangedMemberFunction]="processChangedMemberEffects" (loadConceptDetail)="loadConceptDetail($event)"
+                                            (changeLockedStatus)="sendChangeLockedStatus($event)" (numOfChildren)="numOfChildren = $event">
+                                        </app-taxonomy-tree>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </as-split-area>
+                </as-split>
+
             </div>
         </div>
         <div class="modal-footer rt2-modal-footer rt2-btn-group">
@@ -335,10 +333,8 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body review-modal-body">
-            <div>You are about to undo your work. Are you sure you want to cancel your changes?
-            </div>
+    <div class="modal-body review-modal-body">
+        <div>You are about to undo your work. Are you sure you want to cancel your changes?
         </div>
     </div>
     <div class="modal-footer ready-for-review-footer rt2-btn-group">

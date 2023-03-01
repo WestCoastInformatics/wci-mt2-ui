@@ -6,31 +6,29 @@
 
 <ng-template #reviewDialog let-modal>
   <div class="modal-header rt2-modal-header">
-    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+    <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Finish Review
-    </h4>
+    </h3>
     <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
       (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
-  <div class="container-fluid ready-for-review-container-fluid">
-    <div class="modal-body review-modal-body">
-      <ngb-alert [dismissible]="false" type="warning" (click)="showBanner = false">
-        <div class="warning-header">
-          <span class="material-icons warning-logo">
-            warning
-          </span>
-          <div class="warning-review-body">
-            <strong>Warning!</strong><br /><br />
-            Review notes have not been made or recorded. A reason must be included if
-            the Reference Set changes are rejected.
-          </div>
+  <div class="modal-body review-modal-body">
+    <ngb-alert [dismissible]="false" type="warning" (click)="showBanner = false">
+      <div class="warning-header">
+        <span class="material-icons warning-logo">
+          warning
+        </span>
+        <div class="warning-review-body">
+          <strong>Warning!</strong><br /><br />
+          Review notes have not been made or recorded. A reason must be included if
+          the Reference Set changes are rejected.
         </div>
-      </ngb-alert>
-      <div class="">
-        <editor [(ngModel)]="reviewNotes" [init]="editorConfig" id="reviewNotes"></editor>
       </div>
+    </ngb-alert>
+    <div class="">
+      <editor [(ngModel)]="reviewNotes" [init]="editorConfig" id="reviewNotes"></editor>
     </div>
   </div>
   <div class="modal-footer rt2-modal-footer rt2-btn-group">

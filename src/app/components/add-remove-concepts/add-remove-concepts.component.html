@@ -2,23 +2,21 @@
 
     <div class="modal-header add-remove-descendants-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title add-remove-descendants-modal-title" id="modal-basic-title">
+        <h3 class="modal-title add-remove-descendants-modal-title" id="modal-basic-title">
             {{ actionText }} Member(s)
-        </h4>
+        </h3>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 
-    <div class="container-fluid add-remove-descendants-container-fluid">
-        <div class="modal-body add-remove-descendants-modal-body">
-            <mat-radio-group aria-labelledby="add-remove-descendants-radio-group-label" class="add-remove-descendants-radio-group" [(ngModel)]="selectedOption">
-                <mat-radio-button *ngFor="let option of options" class="add-remove-descendants-radio-button" value="{{ option.value + conceptCode }}">
-                    {{ option.display }}
-                    <span>{{ conceptCode + ' | ' + conceptName }}</span>
-                </mat-radio-button>
-            </mat-radio-group>
-        </div>
+    <div class="modal-body add-remove-descendants-modal-body">
+        <mat-radio-group aria-labelledby="add-remove-descendants-radio-group-label" class="add-remove-descendants-radio-group" [(ngModel)]="selectedOption">
+            <mat-radio-button *ngFor="let option of options" class="add-remove-descendants-radio-button" value="{{ option.value + conceptCode }}">
+                {{ option.display }}
+                <span>{{ conceptCode + ' | ' + conceptName }}</span>
+            </mat-radio-button>
+        </mat-radio-group>
     </div>
 
     <div class="modal-footer add-remove-descendants-footer">

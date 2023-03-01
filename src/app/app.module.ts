@@ -56,6 +56,7 @@ import { CreateNewOrganizationModalComponent } from 'src/app/components/create-n
 import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal/email-refset-modal.component';
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
+import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
 import { AddMemberToOrganizationModalComponent } from 'src/app/components/add-member-to-organization-modal/add-member-to-organization-modal.component';
 import { AddMemberToTeamModalComponent } from 'src/app/components/add-member-to-team-modal/add-member-to-team-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
@@ -111,7 +112,6 @@ import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
 import { CommonModule } from '@angular/common';
-import { ComposeModalComponent } from './components/compose-modal/compose-modal.component';
 import { DomService } from './services/dom.service';
 import { PaginationModule } from './components/pagination/pagination.module';
 import { ArtifactsService } from './services/rest/artifacts.service';
@@ -272,12 +272,12 @@ const appRoutes: Routes = [
         TeamsConfigurationComponent,
         TeamsPeopleComponent,
         BulkUpgradeModalComponent,
+        HeadingWithCountComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent,
         LaunchComparisonModalComponent,
         RemoveDashboardComponentModalComponent,
         RefsetFeedbackListComponent,
-        ComposeModalComponent,
         WorkflowStatusBadgeComponent,
         RefsetMetaTableComponent,
         InvitePeopleModalComponent,

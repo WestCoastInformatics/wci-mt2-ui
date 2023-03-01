@@ -5,16 +5,15 @@
 
 <ng-template #addRemoveConceptHierarchyModal let-modal>
   <div class="modal-header rt2-modal-header">
-    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+    <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Add/Remove by Search
-    </h4>
+    </h3>
     <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="closeModal()">
       <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
-  <div class="container-fluid">
-    <div class="modal-body add-remove-concept-hierarchy-modal-body rt2-lockable">
-      <div class="row">
+    <div class="modal-body rt2-lockable">
+      <div class="rt2-flex-wrap">
         <div class="add-remove-concept-hierarchy-modal-Section-container">
           <as-split direction="horizontal" gutterSize="4">
             <as-split-area [lockSize]="true" [size]="isConceptDetailsLoading || conceptDetail ? 500 : 100" [minSize]="37">
@@ -237,7 +236,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   <div class="modal-footer rt2-modal-footer rt2-lockable">
     <button *ngIf="refset.type == 'EXTENSIONAL'" type="button" [hidden]="data?.items?.length == 0" (click)="addRemoveAllMembers('add')" 
