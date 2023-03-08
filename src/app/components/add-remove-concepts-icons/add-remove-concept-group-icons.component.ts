@@ -32,28 +32,28 @@ export class AddRemoveConceptGroupIconsComponent implements OnInit {
                 this.showAdd = this.addConcept;
 
                 if (!this.refsetType) {
-                    this.actionText = "Members";
+                    this.actionText = "All Members";
 
                 } else if (this.refsetType != Constants.INTENSIONAL) {
-                    this.actionText = "Members";
+                    this.actionText = "All Members";
 
                 } else {
 
                     if (this.definitionExceptionType != Constants.EXCLUSION && this.definitionExceptionType != Constants.INCLUSION) {
 
                         if (this.addConcept) {
-                            this.actionText = "Exclusions";
+                            this.actionText = "All Exclusions";
                         } else {
-                            this.actionText = "Inclusions";
+                            this.actionText = "All Inclusions";
                         }
 
                     } else {
 
                         if (this.definitionExceptionType == Constants.EXCLUSION) {
-                            this.actionText = "Exclusions";
+                            this.actionText = "All Exclusions";
 
                         } else if (this.definitionExceptionType == Constants.INCLUSION) {
-                            this.actionText = "Inclusions";
+                            this.actionText = "All Inclusions";
                         }
                     }
                 }
