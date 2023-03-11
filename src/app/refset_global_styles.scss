@@ -2,6 +2,7 @@
 
 @import "~src/variables.scss";
 @import "~src/app/font-styles.scss";
+//@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 /********  Tag Styles *******/
 
@@ -287,8 +288,9 @@ select {
 
 .rt2-directory-column-name .mat-icon {
   color: #888;
-  @extend .default-font;
+  font-family: 'Material Icons' !important;
   padding-top: 12px;
+  font-size: 1em;
 }
 
 .mat-select-arrow-wrapper {
