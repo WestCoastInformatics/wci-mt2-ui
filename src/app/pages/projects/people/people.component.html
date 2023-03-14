@@ -3,98 +3,103 @@
 <div class="content-header">
     <div class="row header-title">
 
-        <span class="projects-dropdown-block">
-            <span class="title-label">Organizations</span>
-            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select #detailsVersionSelect [disableOptionCentering]="true"
-                  [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" [(value)]="selectedOrganization"
-                  (selectionChange)="selectOrganization()">
-                    <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
-                        {{ organization.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </span>
-
-        <span class="projects-dropdown-block">
-
-            <span class="title-label">Editions</span>
-            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
-                  (selectionChange)="selectedEdition()">
-                    <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
-                        {{ edition.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </span>
-
-        <span class="projects-dropdown-block">
-            <span class="title-label">Projects</span>
-            <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-                <mat-select #detailsVersionSelect [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'" [disabled]="organizationId === '0'"
-                  [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
-                    <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
-                        {{ project.name }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </span>
+        <div class="d-flex jc-space-between w-100-pct projects-dropdown-block">
+            <div>
+              <span class="title-label">Projects</span>
+            </div>
+        
+            <div class="d-flex rt2-select-group">
+                <span class="projects-dropdown-block">
+                    <!-- <span class="title-label">Organizations</span> -->
+                    <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+                        <mat-select #detailsVersionSelect [disableOptionCentering]="true"
+                          [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'" [(value)]="selectedOrganization"
+                          (selectionChange)="selectOrganization()">
+                            <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+                                {{ organization.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </span>
+        
+                <span class="projects-dropdown-block">
+        
+                    <!-- <span class="title-label">Editions</span> -->
+                    <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+                        <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'" [(value)]="selectedEdition"
+                          (selectionChange)="selectedEdition()">
+                            <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+                                {{ edition.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </span>
+        
+                <span class="projects-dropdown-block">
+                    <!-- <span class="title-label">Projects</span> -->
+                    <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+                        <mat-select #detailsVersionSelect [placeholder]="selectedProject?.name ? selectedProject?.name : 'Select Project'" [disabled]="organizationId === '0'"
+                          [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
+                            <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
+                                {{ project.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <div class='rt2-container'>
-        <div class='rt2-flex-wrap'>
-            <section>
-                <div class='mb-10'>
-                    <heading-with-count title="Project Users" [count]="dataCount"></heading-with-count>
-                    <!-- <span class='section-header'>Project Users ({{dataCount}})</span> -->
-                    <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
-                        class="float-right" >
-                        <div>
-                            To add a new user to this project, first go to the
-                            <span  class="pointer " title="Click add a new user to this project, first go to the organization users page">
-                                <a href="{{'/organizations/' + selectedOrganization?.id + '/people'}}">organization users page</a>
-                            </span>
-                        </div>
-                        <div>
-                            To add an existing user to this project, add an existing user to a team on the
-                            <span  class="pointer " title="Clic to add an existing user to this project, add an existing user to a team on the organization teams page">
-                                <a href="{{'/organizations/' + selectedOrganization?.id + '/teams'}}">organization teams page</a>
-                            </span>
-                        </div>
-                    </span>
-                </div>
-
-                <div class='dashboard-section'>
-                    <div class="ag-theme-alpine">
-
-                        <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)"
-                            [gridOptions]="gridOptions" class="w-100-pct">
-                        </ag-grid-angular>
-
-                        <!-- Name Template -->
-                        <ng-template #peopleNameSection let-params>
-                            <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                        </ng-template>
-
-                        <!-- Teams Template -->
-                        <ng-template #peopleTeamsSection let-params>
-                            <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">
-                                {{ getTeamCount(params.data.teams) }} teams</span>
-                        </ng-template>
-
+    <page-container>
+        <section>
+            <div class='d-flex mb-10'>
+                <heading-with-count title="Project Users" [count]="dataCount"></heading-with-count>
+                <!-- <span class='section-header'>Project Users ({{dataCount}})</span> -->
+                <span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+                    class="w-72-pct float-right" >
+                    <div>
+                        To add a new user to this project, first go to the
+                        <span  class="pointer " title="Click add a new user to this project, first go to the organization users page">
+                            <a href="{{'/organizations/' + selectedOrganization?.id + '/people'}}">organization users page</a>
+                        </span>
                     </div>
+                    <div>
+                        To add an existing user to this project, add an existing user to a team on the
+                        <span  class="pointer " title="Clic to add an existing user to this project, add an existing user to a team on the organization teams page">
+                            <a href="{{'/organizations/' + selectedOrganization?.id + '/teams'}}">organization teams page</a>
+                        </span>
+                    </div>
+                </span>
+            </div>
+
+            <div class='dashboard-section'>
+                <div class="ag-theme-alpine">
+
+                    <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)"
+                        [gridOptions]="gridOptions" class="w-100-pct">
+                    </ag-grid-angular>
+
+                    <!-- Name Template -->
+                    <ng-template #peopleNameSection let-params>
+                        <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
+                    </ng-template>
+
+                    <!-- Teams Template -->
+                    <ng-template #peopleTeamsSection let-params>
+                        <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">
+                            {{ getTeamCount(params.data.teams) }} teams</span>
+                    </ng-template>
+
                 </div>
+            </div>
 
-                <!-- <div class='text-right'>
-                    <a class='text-muted light'>show/hide admin</a>
-                </div> -->
+            <!-- <div class='text-right'>
+                <a class='text-muted light'>show/hide admin</a>
+            </div> -->
 
-            </section>
-        </div>
-    </div>
-
+        </section>
+    </page-container>
 </div>

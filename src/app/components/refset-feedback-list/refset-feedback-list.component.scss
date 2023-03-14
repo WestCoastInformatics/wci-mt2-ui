@@ -10,11 +10,15 @@
       color: inherit;
       font-family: inherit;
     }
-  
-    .feedback-status {
-      color: inherit;
-      margin-right: 20px;
-    }
+}
+
+.feedback-status {
+  color: inherit;
+  margin-right: 20px;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #fff;
+  letter-spacing: .5px;
 }
 
 .feedback-modal-footer {

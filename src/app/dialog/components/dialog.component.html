@@ -1,6 +1,14 @@
-<div class="dialog-header accent-background">
+<!-- <div class="dialog-header accent-background"> -->
     <!--<span class="dialog-header-title">{{ config.headerText }}</span>-->
-    <div mat-dialog-title class="rt2-dialog-title page-h2-font">
+  <div class="modal-header rt2-modal-header">
+      <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title " *ngIf="config.showTitle" id="{{ id }}Title">
+        {{ config.headerText }}
+      </h3>
+      <button *ngIf="config.showCloseIcon" type="button" class="close dialog-close-x close-icon-font" aria-label="Close Dialog" (click)="cancel()">
+          <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+      </button>
+  </div>
+    <!-- <div mat-dialog-title class="rt2-dialog-title page-h2-font">
         <div *ngIf="config.showTitle" id="{{ id }}Title">
             {{ config.headerText }}
         </div>
@@ -8,8 +16,8 @@
         <button *ngIf="config.showCloseIcon" mat-icon-button aria-hidden="false" aria-label="Close Dialog" (click)="cancel()">
             <mat-icon>close</mat-icon>
         </button>
-    </div>
-</div>
+    </div> -->
+<!-- </div> -->
 <div mat-dialog-content class="rt2-dialog-content">
 
     <ng-container [ngTemplateOutlet]="config.template" [ngTemplateOutletContext]="{ $implicit: data }"></ng-container>
@@ -18,7 +26,7 @@
 <div mat-dialog-actions class="rt2-dialog-actions" id="{{ id }}Actions">
 
     <div class="p-2 w-100-pct d-flex jc-flex-e rt2-btn-group">
-      <button color="primary" [hidden]="config.showConfirm === false" class="rt2-btn" [class]="isDisabled ? 'rt2-download-btn' : 'rt2-action-btn'"
+      <button [hidden]="config.showConfirm === false" class="rt2-btn" [class]="config.confirmText == 'Download' ? 'rt2-download-btn' : 'rt2-action-btn'"
         id="{{ id }}Confirm" (click)="isDisabled ? '' : confirm() ">
           {{ config.confirmText }}
           <mat-icon *ngIf="config.confirmIcon" role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true"

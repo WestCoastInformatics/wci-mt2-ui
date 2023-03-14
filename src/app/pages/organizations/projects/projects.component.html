@@ -25,32 +25,30 @@
 </div>
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <div class='rt2-container'>
-        <div class='rt2-flex-wrap'>
-            <div *ngIf="showLoadingSpinner" class="loading"></div>
-            <section>
-                <div class='section-header mb-10'>
-                    <heading-with-count title="Organization Projects" [count]="dataCount"></heading-with-count>
-                    <!-- Organization Projects ({{dataCount}}) -->
-                    <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN') && selectedEdition" [edition]="selectedEdition">
-                    </create-new-project-modal>
+    <page-container>
+        <div *ngIf="showLoadingSpinner" class="loading"></div>
+        <section>
+            <div class='section-header mb-10 d-flex'>
+                <heading-with-count title="Organization Projects" [count]="dataCount"></heading-with-count>
+                <!-- Organization Projects ({{dataCount}}) -->
+                <create-new-project-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN') && selectedEdition" [edition]="selectedEdition">
+                </create-new-project-modal>
+            </div>
+            <div class='dashboard-section'>
+                <div class="ag-theme-alpine">
+                    <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
+                        (cellClicked)="onGridCellClick($event)" [tooltipShowDelay]="0" class="w-100-pct">
+                    </ag-grid-angular>
                 </div>
-                <div class='dashboard-section'>
-                    <div class="ag-theme-alpine">
-                        <ag-grid-angular [columnDefs]="columnDefs" [rowData]="data" [gridOptions]="gridOptions" (gridReady)="onGridReady($event)"
-                            (cellClicked)="onGridCellClick($event)" [tooltipShowDelay]="0" class="w-100-pct">
-                        </ag-grid-angular>
-                    </div>
-                    <ng-template #descriptionSection let-params>
-                        <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
-                            {{ params?.data.description }}
-                        </label>
-                    </ng-template>
-                    <ng-template #teamSection let-params>
-                        <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">{{getTeamCount(params?.data)}} teams</span>
-                    </ng-template>
-                </div>
-            </section>
-        </div>
-    </div>
+                <ng-template #descriptionSection let-params>
+                    <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
+                        {{ params?.data.description }}
+                    </label>
+                </ng-template>
+                <ng-template #teamSection let-params>
+                    <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">{{getTeamCount(params?.data)}} teams</span>
+                </ng-template>
+            </div>
+        </section>
+    </page-container>
 </div>

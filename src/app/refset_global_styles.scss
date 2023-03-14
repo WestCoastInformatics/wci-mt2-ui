@@ -514,6 +514,10 @@ select {
   padding-bottom: 0.5em;
 }
 
+page-container {
+  width: 100%;
+}
+
 #downloadDialog, .projects-dropdown-block, .details-version-select, .dropdown-group {
   .mat-form-field-appearance-legacy .mat-form-field-infix {
     margin-top: 0;

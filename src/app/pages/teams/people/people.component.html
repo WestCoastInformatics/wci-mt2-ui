@@ -33,7 +33,7 @@
         <div class='rt2-flex-wrap'>
             <div *ngIf="showLoadingSpinner" class="loading"></div>
             <section>
-                <div class='mb-10'>
+                <div class='mb-10 d-flex'>
                     <heading-with-count title="Team Users" [count]="dataCount"></heading-with-count>
                     <!-- <span class='section-header'>Team Users ({{dataCount}})</span> -->
                     <span *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class='float-right'>

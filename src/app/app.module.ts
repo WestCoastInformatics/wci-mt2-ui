@@ -57,6 +57,7 @@ import { EmailRefsetModalComponent } from 'src/app/components/email-refset-modal
 import { CreateNewTeamModalComponent } from 'src/app/components/create-new-team-modal/create-new-team-modal.component';
 import { BulkUpgradeModalComponent } from 'src/app/components/bulk-upgrade-modal/bulk-upgrade-modal.component';
 import { HeadingWithCountComponent } from 'src/app/components/heading-with-count/heading-with-count.component';
+import { PageContainerComponent } from 'src/app/components/page-container/page-container.component';
 import { AddMemberToOrganizationModalComponent } from 'src/app/components/add-member-to-organization-modal/add-member-to-organization-modal.component';
 import { AddMemberToTeamModalComponent } from 'src/app/components/add-member-to-team-modal/add-member-to-team-modal.component';
 import { CreateNewProjectModalComponent } from 'src/app/components/create-new-project-modal/create-new-project-modal.component';
@@ -273,6 +274,7 @@ const appRoutes: Routes = [
         TeamsPeopleComponent,
         BulkUpgradeModalComponent,
         HeadingWithCountComponent,
+        PageContainerComponent,
         PersonalLandingComponent,
         PersonalConfigurationComponent,
         LaunchComparisonModalComponent,

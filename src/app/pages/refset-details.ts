@@ -1117,7 +1117,6 @@ export class RefsetDetails implements OnInit {
                                 template: this.actionSection,
                             },
                             filter: false,
-                            tooltipField: 'active',
                             sortable: false,
                             resizable: false
                         },

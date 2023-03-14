@@ -14,14 +14,14 @@
 
 <div class="content-wrapper">
     <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <div class='container-fluid mt-3'>
+    <page-container>
         <span class="organizations-configuration">
-
-            <div class="section-header mb-3 form-title"> Organization Configuration </div>
+            <heading-with-count title="Organization Configuration" classname="mb-3" showcount="false"></heading-with-count>
+            <!-- <div class="section-header mb-3 form-title"> Organization Configuration </div> -->
             <div class="organizations-configuration-details">
                 <div class="organizations-configuration-blocks-1">
                     <div class="organizations-configuration-block main-block profile-block">
-                        <div class="organization-profile-head section-header">Profile</div>
+                        <div class="organization-profile-head section-header head-section-title-font">Profile</div>
                         <div class="organization-profile-mid">
                             <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
                                 <mat-label class="form-field-header">Name</mat-label>
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="organizations-configuration-block main-block profile-pic-block">
-                        <div class="organization-profile-head section-header form-title">Profile Picture</div>
+                        <div class="organization-profile-head section-header head-section-title-font">Profile Picture</div>
                         <div class="organization-profile-mid organization-picture">
                             <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
                         </div>
@@ -66,7 +66,7 @@
                     </div>
 
                     <div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="organizations-configuration-block main-block profile-pic-block">
-                        <div class="organization-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
+                        <div class="organization-profile-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg">
                             Remove this Organization</div>
                         <div class="organization-profile-mid">Warning! This is a permanent operation
                             and cannot
@@ -79,7 +79,7 @@
                                 </remove-dashboard-component-modal>
                             </div>
                         </div>
-                        <div class="organization-profile-head section-header">
+                        <div class="organization-profile-head section-header head-section-title-font">
                             Organizational Audit Trail</div>
                         <div class="organization-profile-mid">View the administrative information associated with this organization (such as adding members or removing teams).
                             <br>
@@ -93,5 +93,5 @@
             </div>
 
         </span>
-    </div>
+    </page-container>
 </div>

@@ -418,8 +418,8 @@
         </div>
 
         <!-- Section Title -->
-        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title">
-            <!-- <heading-with-count title="Reference Set Members" [count]="refsetData?.memberCount"></heading-with-count> -->
+        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title head-title">
+            <!-- <heading-with-count title="Reference Set Members" [count]="refsetData?.memberCount || ''"></heading-with-count> -->
             Reference Set Members&nbsp;<span class="default-cursor" title="Total member count">({{refsetData?.memberCount}})</span>
             <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" color="primary" aria-hidden="false"
               class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
@@ -840,8 +840,9 @@
 <ng-template #undoEditDialog let-modal>
     <div class="modal-header review-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
+        (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
     <div class="modal-body review-modal-body">
@@ -938,8 +939,9 @@
         <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Delete In Development Reference Set Version
         </h3>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
+        (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
     <div class="modal-body review-modal-body">

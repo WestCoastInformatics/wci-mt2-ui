@@ -18,8 +18,9 @@
 
     <div class="modal-header review-modal-header">
         <h3 class="modal-title">{{displayHeader}}</h3>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
+        (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
@@ -39,6 +40,11 @@
 
     </div>
 
+    <div class="modal-footer">
+        <button (click)="modal.dismiss('Cross click')" class="rt2-btn rt2-close-btn">Close
+        </button>
+    </div>
+
 </ng-template>
 
 <!-- Author Template -->
@@ -55,7 +61,7 @@
 <!-- THREAD SECTION -->
 <ng-template #threadModal let-modal>
 
-    <div class="feedback-modal-header modal-header review-modal-header modal-header-font">
+    <div class="modal-header modal-header-font">
 
         <h3 class="modal-title">
             <span *ngIf="editMode == 'newThread'">New </span>{{ displayHeader }}
@@ -64,11 +70,16 @@
         <span class="feedback-status">
             Status: {{ selectedThread?.status }}
             <span *ngIf="editMode == 'newThread'">{{ OPEN }}</span>
+
+            <button type="button" class="close dialog-close-x close-icon-font p-t-18" aria-label="Close"
+            (click)="modal.dismiss()">
+                <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+            </button>
         </span>
 
-        <button type="button" class="close-icon-font" aria-label="Close" (click)="modal.dismiss()">
+        <!-- <button type="button" class="close-icon-font" aria-label="Close" (click)="modal.dismiss()">
             <span aria-hidden="true">&times;</span>
-        </button>
+        </button> -->
 
     </div>
 

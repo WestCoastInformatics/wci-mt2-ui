@@ -3,50 +3,57 @@
 <div class="content-header">
   <div class="row header-title">
 
-    <span class="title-label">Organizations</span>
-    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-      <mat-select #detailsVersionSelect [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'" [disableOptionCentering]="true"
-        [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-        <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
-          {{ organization.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="d-flex jc-space-between w-100-pct projects-dropdown-block">
+      <div>
+        <span class="title-label">Projects</span>
+      </div>
+  
+      <div class="d-flex rt2-select-group">
+        <!-- <span class="title-label">Organizations</span> -->
+        <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+          <mat-select #detailsVersionSelect [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'" [disableOptionCentering]="true"
+            [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+            <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+              {{ organization.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <span class="title-label">Editions</span>
-    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-      <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
-        (selectionChange)="selectedEdition()">
-        <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
-          {{ edition.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <!-- <span class="title-label">Editions</span> -->
+        <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+          <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'" [(value)]="selectedEdition"
+            (selectionChange)="selectedEdition()">
+            <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+              {{ edition.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <span class="title-label">Projects</span>
-    <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-      <mat-select [disabled]="organizationId === '0'" [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'" #detailsVersionSelect
-        [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
-        <mat-option *ngIf="projectList == null || projectList.length == 0">No Projects</mat-option>
-        <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
-          {{ project.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <!-- <span class="title-label">Projects</span> -->
+        <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+          <mat-select [disabled]="organizationId === '0'" [placeholder]="selectedProject?.name ? selectedProject?.name : 'Select Project'" #detailsVersionSelect
+            [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
+            <mat-option *ngIf="projectList == null || projectList.length == 0">No Projects</mat-option>
+            <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
+              {{ project.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
 
   </div>
 </div>
 
 <div class="content-wrapper">
   <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-  <div class='container-fluid mt-3'>
+  <page-container>
     <span class="projects-configuration">
-
-      <div class="section-header mb-3"> Project Configuration </div>
+      <heading-with-count title="Project Configuration" classname="mb-3" showcount="false"></heading-with-count>
       <div class="projects-configuration-details">
         <div class="projects-configuration-blocks-1">
           <div class="projects-configuration-block main-block profile-block">
-            <div class="projects-profile-head section-header">Profile</div>
+            <div class="projects-profile-head section-header head-section-title-font">Profile</div>
             <div class="projects-profile-mid">
 
               <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
@@ -76,14 +83,14 @@
 
             <div class="update-profile-button">
               <div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn" [disabled]="!profileNameValue" (click)="updateProject()">Update Profile</button>
+                <button *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn" [disabled]="!isAnyFieldChanged()" (click)="updateProject()">Update Profile</button>
               </div>
             </div>
           </div>
 
           <div class="secondary-block">
             <div class="projects-configuration-block teams-block">
-              <div class="projects-profile-head section-header">Teams</div>
+              <div class="projects-profile-head section-header head-section-title-font">Teams</div>
               <div class="projects-profile-mid">
                 Add Teams to your Project to define Project user roles.
                 <br>
@@ -109,7 +116,7 @@
               </div>
             </div>
             <div *ngIf="selectedProject && selectedProject.roles.includes('ADMIN')" class="projects-configuration-block remove-project-block">
-              <div class="projects-profile-head section-header"><img class="red-x" src="assets/red-x.svg">
+              <div class="projects-profile-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg">
                 Remove this Project</div>
               <div class="projects-profile-mid">Warning! This is a permanent operation and cannot be
                 undone. Please be certain before taking action.</div>
@@ -125,5 +132,5 @@
       </div>
 
     </span>
-  </div>
+  </page-container>
 </div>

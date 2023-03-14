@@ -3,43 +3,48 @@
 <div class="content-header">
   <div class="row header-title">
 
-    <span class="projects-dropdown-block">
-      <span class="title-label">Organizations</span>
-      <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-        <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose
-                            Organization'" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-          <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3">
-            {{ organization.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </span>
-
-    <span class="projects-dropdown-block">
-      <span class="title-label">Editions</span>
-      <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-        <mat-select [disableOptionCentering]="true"
-          [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'" [(value)]="selectedEdition"
-          (selectionChange)="selectedEdition()">
-          <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
-            {{ edition.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </span>
-
-    <span class="projects-dropdown-block">
-      <span class="title-label">Projects</span>
-      <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-        <mat-select [disabled]="organizationId === '0'"
-          [placeholder]="selectedProject?.name ? selectedProject?.name : 'Choose Project'"
-          [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
-          <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3">
-            {{ project.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </span>
+    <div class="d-flex jc-space-between w-100-pct projects-dropdown-block">
+      <div>
+        <span class="title-label">Projects</span>
+      </div>
+  
+      <div class="d-flex rt2-select-group">
+        <span class="projects-dropdown-block">
+          <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+            <mat-select [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select
+                                Organization'" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+              <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3">
+                {{ organization.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+    
+        <span class="projects-dropdown-block">
+          <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+            <mat-select [disableOptionCentering]="true"
+              [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'" [(value)]="selectedEdition"
+              (selectionChange)="selectedEdition()">
+              <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+                {{ edition.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+    
+        <span class="projects-dropdown-block">
+          <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
+            <mat-select [disabled]="organizationId === '0'"
+              [placeholder]="selectedProject?.name ? selectedProject?.name : 'Select Project'"
+              [disableOptionCentering]="true" [(value)]="selectedProject" (selectionChange)="selectProject()">
+              <mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3">
+                {{ project.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </span>
+      </div>
+    </div>
 
     <!-- <div class="col-md-auto page-title mr-20 color-custom-grey p-l-60 fs-14 page-h1-font" *ngIf="selectedProject">
       <b>Project Role(s): </b><span>{{ getRoleString() }}</span>
@@ -75,18 +80,16 @@
         <span [hidden]="!numOfResults">{{ '(' + numOfResults + ')' }}</span>
       </div> -->
 
-      <div class="d-flex w-100-pct jc-flex-e">
-        <div class="mr-3">
-          <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
+      <div class="d-flex w-100-pct jc-flex-e rt2-btn-group">
+        <create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
             [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
           </create-refset>
-        </div>
         <!--<div class="d-inline">
                   <create-new-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties"
                     [existingBranchVersions]="existingBranchVersions">
                   </create-new-refset>
               </div> -->
-        <div class="mr-3" [hidden]="refsetData?.length < 1">
+        <div [hidden]="refsetData?.length < 1">
           <app-refset-download [isDetailPage]="true" [refsets]="refsetData"
             [project]="selectedProject"></app-refset-download>
         </div>
