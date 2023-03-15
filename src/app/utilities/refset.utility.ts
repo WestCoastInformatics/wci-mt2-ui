@@ -16,6 +16,7 @@ export class RefsetUtility {
         for (let version of refset.versionList) {
 
             let value = version.refsetInternalId;
+            let versionDate = "";
 
             if (valueField == "date") {
 
@@ -29,10 +30,14 @@ export class RefsetUtility {
             let displayStatus = 'Published';
 
             if (version.status == Constants.IN_DEVELOPMENT) {
-                displayStatus = 'In Development'
+
+                displayStatus = 'In Development';
+                versionDate = Constants.IN_DEVELOPMENT;
+            } else {
+                versionDate = version.date;
             }
 
-            let option: any = { value: value, display: version.date + ' (' + displayStatus + ')', date: version.date, status: displayStatus };
+            let option: any = { value: value, display: version.date + ' (' + displayStatus + ')', date: version.date, versionDate: versionDate, status: displayStatus };
 
             if (version.date === this.getVersionDate(refset) || (refset.versionStatus == Constants.IN_DEVELOPMENT && CodeUtility.getCurrentDate() === this.getVersionDate(refset))) {
                 option.selected = true;

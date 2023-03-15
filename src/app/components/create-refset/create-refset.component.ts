@@ -328,16 +328,14 @@ export class CreateRefsetComponent implements OnInit {
             let refsetId = null;
             let parentConceptId = null;
 
-            if (this.selectedParentConcept) {
-                parentConceptId = this.selectedParentConcept;
-            }
-
-            if (this.selectedMetaDataConcept) {
+            if (this.isSelected == 1) {
 
                 name = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
                 refsetId = this.existingMetadataConcepts[this.selectedMetaDataConcept].code;
             } else {
+
                 name = this.createdMetaDataConcept;
+                parentConceptId = this.selectedParentConcept;
             }
 
             let params: any = {
@@ -461,7 +459,9 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     isComplete(): boolean {
+
         let typeCheck = false;
+        let conceptCheck = false;
 
         if (this.selectedReferenceType === Constants.EXTERNAL && this.selectedExternalUrl?.length > 0 && this.selectedExternalName?.length > 0) {
             return true;
@@ -475,7 +475,14 @@ export class CreateRefsetComponent implements OnInit {
             typeCheck = true;
         }
 
-        return ((typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName()) && this.selectedModuleId.length > 0)
+        if (this.isSelected == 1 && CodeUtility.hasValue(this.selectedMetaDataConcept)) {
+            conceptCheck = true;
+
+        } else if (this.isSelected == 2 && CodeUtility.hasValue(this.createdMetaDataConcept) && CodeUtility.hasValue(this.selectedParentConcept) && this.isValidConceptName()) {
+            conceptCheck = true;
+        }
+
+        return (typeCheck && conceptCheck && this.selectedModuleId.length > 0);
     }
 
     isValidConceptName(): boolean {
@@ -791,7 +798,7 @@ export class CreateRefsetComponent implements OnInit {
         var name = this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
         this.createdMetaDataConcept = 'Copy of ' + name;
         this.refsetService.getRefset(this.selectedCopyRefset.refsetId,
-            this.copySelectedVersion?.date).subscribe({
+            this.copySelectedVersion.versionDate).subscribe({
             next: (results) => {
                 this.selectedNarrative = (results?.narrative) ? 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative : '';
                 this.selectedTags = results?.tags;
