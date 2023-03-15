@@ -315,7 +315,7 @@ export class RefsetDetails implements OnInit {
                 defaultColDef: {
                     sortable: true,
                     resizable: true,
-                    suppressMenu: false,
+                    suppressMenu: true,
                     sortingOrder: ['asc', 'desc'],
                     filter: true,
                     floatingFilter: true,
@@ -405,18 +405,8 @@ export class RefsetDetails implements OnInit {
                     }
                 }
 
-                this.refsetService.getDiscussionThreads('REFSET', this.id, null).subscribe({
-                    next: (threads) => {
-                        this.openDiscussionCount = 0;
-                        for (const discussion of threads.items.filter(t => !t.privateThread ||
-                            t.posts.length > 0 && (t.posts[0].user.userName === this.user.userName || this.user?.roles?.includes('all-all-admin')))) {
-
-                            if (discussion.status === 'Open') {
-                                this.openDiscussionCount++;
-                            }
-                        }
-                    }
-                });
+                // This should be handled the same as the library page - the backend determines the number of threads to count
+                this.openDiscussionCount = this.refsetData.openDiscussionCount;
 
                 for (const description of this.refsetData.descriptions) {
 
@@ -1089,9 +1079,9 @@ export class RefsetDetails implements OnInit {
                             field: 'memberEffectiveTime',
                             colId: 'modified',
                             flex: 1,
-                            minWidth: 170,
-                            maxWidth: 190,
-                            headerName: 'Last Modified Date',
+                            minWidth: 115,
+                            maxWidth: 165,
+                            headerName: 'Published Date',
                             headerClass: 'rt2-details-column-modified-date',
                             cellClass:
                                 'rt2-details-column-modified-date',
@@ -1102,7 +1092,8 @@ export class RefsetDetails implements OnInit {
                             unSortIcon: true,
                             floatingFilterComponent: 'dateTextFilterComponent',
                             floatingFilterComponentParams: { suppressFilterButton: true },
-                            resizable: true
+                            resizable: true,
+                            tooltipField: 'modified'
                         },
                         {
                             field: 'active',
