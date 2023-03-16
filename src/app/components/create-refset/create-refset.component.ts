@@ -328,10 +328,11 @@ export class CreateRefsetComponent implements OnInit {
             let refsetId = null;
             let parentConceptId = null;
 
-            if (this.isSelected == 1) {
+            if (this.selectedReferenceType !== Constants.EXTERNAL && this.isSelected == 1) {
 
                 name = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
                 refsetId = this.existingMetadataConcepts[this.selectedMetaDataConcept].code;
+                
             } else {
 
                 name = this.createdMetaDataConcept;
