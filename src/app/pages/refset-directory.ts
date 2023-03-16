@@ -191,7 +191,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
           this.changeDetectorRef.detectChanges();
         },
         error: (error) => {
-          this.showLoadingSpinner = true;
+          this.showLoadingSpinner = false;
         }
       }
       );
