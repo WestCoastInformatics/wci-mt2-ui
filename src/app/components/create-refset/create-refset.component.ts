@@ -52,7 +52,6 @@ export class CreateRefsetComponent implements OnInit {
     definitionClauses = [];
     type = '';
     selectedVersionNotes = '';
-    data = [];
     originalRefsetMembers = [];
     selectedUUID: string;
     referenceTypes = [Constants.EXTENSIONAL, Constants.INTENSIONAL, Constants.COMBINATION, Constants.EXTERNAL, Constants.COPY];
@@ -192,28 +191,6 @@ export class CreateRefsetComponent implements OnInit {
                 //filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
             };
 
-            this.refsetService.getRefsets({ ...restParams }).subscribe({
-                next: (results) => {
-
-                    for (const refset of results.items) {
-                        this.data.push({
-                            name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                            , refsetId: refset.refsetId
-                            , private: refset.privateRefset
-                            , workflowStatus: `${refset?.workflowStatus}`
-                            , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
-                            , versionDate: `${refset.versionDate}`
-                        });
-
-                    }
-                    this.data = this.sortRefsets(this.data);
-                },
-                error: (error) => {
-
-
-                }
-            });
-
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
                 backdrop: 'static',
@@ -261,7 +238,6 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
-        this.data = [];
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = 'EXTENSIONAL';
         this.privateRefset = false;
@@ -793,6 +769,10 @@ export class CreateRefsetComponent implements OnInit {
 
     changeType($event: any): void {
         this.selectedReferenceType = $event.value;
+    }
+
+    setModuleIdOrder(moduleA, moduleB) {
+        return 1;
     }
 
     getRefset(): void {

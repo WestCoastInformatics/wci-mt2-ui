@@ -67,7 +67,7 @@
                 </div>
                 <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
                     <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [(ngModel)]="selectedModuleId" disabled />
+                        <input class="default-cursor" matInput type="text" [value]="selectedModuleId + ' - ' + inputProperties.project.edition.moduleNames[selectedModuleId]" disabled>
                     </mat-form-field>
                 </div>
             </div>
@@ -136,8 +136,8 @@
                             <mat-form-field floatLabel="never" appearance="legacy">
                                 <mat-label>Choose Module Id</mat-label>
                                 <select matNativeControl [(ngModel)]="selectedModuleId">
-                                    <option *ngFor="let moduleId of inputProperties.project.edition.modules">
-                                        {{ moduleId }}
+                                    <option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue: setModuleIdOrder" [value]="module.key">
+                                        {{ module.key }} - {{ module.value }}
                                     </option>
                                 </select>
                             </mat-form-field>

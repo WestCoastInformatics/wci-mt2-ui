@@ -447,15 +447,19 @@ export class CreateNewRefsetComponent implements OnInit {
         });
     }
 
-        // Handle the radio buttons for "within edition" and "local set"
-        checkPublishability(event: any): void {
+    // Handle the radio buttons for "within edition" and "local set"
+    checkPublishability(event: any): void {
 
-            if (event.value == 'true') {
-                this.localSet = true;
-            } else {
-                this.localSet = false;
-            }
-            this.publication = this.localSet ? 'Local Set' : 'Within Edition';
+        if (event.value == 'true') {
+            this.localSet = true;
+        } else {
+            this.localSet = false;
         }
+        this.publication = this.localSet ? 'Local Set' : 'Within Edition';
+    }
+
+    setModuleIdOrder(moduleA, moduleB) {
+        return 1;
+    }
     
 }

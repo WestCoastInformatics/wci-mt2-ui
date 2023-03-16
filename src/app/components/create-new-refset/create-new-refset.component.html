@@ -81,8 +81,8 @@
                     <mat-form-field floatLabel="never" appearance="legacy">
                         <mat-label>Choose Module Id</mat-label>
                         <select matNativeControl [(ngModel)]="moduleId">
-                            <option *ngFor="let mid of inputProperties.project.edition.modules">
-                                {{ mid }}
+                            <option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue: setModuleIdOrder" [value]="module.key">
+                                {{ module.key }} - {{ module.value }}
                             </option>
                         </select>
                     </mat-form-field>
