@@ -78,6 +78,7 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
       if (response) {
         this.workflowHistoryNotes = '';
         this.saved.emit(true);
+        this.cancel()
       }
     });
   }

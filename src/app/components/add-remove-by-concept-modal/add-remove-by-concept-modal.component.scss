@@ -94,11 +94,16 @@
     padding: 0;
   }
   
-  .add-remove-concept-hierarchy-modal-body .rt2-concept-details-column .row {
+  .add-remove-concept-hierarchy-modal-body .rt2-concept-details-modal-column .row {
     margin-left: 3px;
     margin-right: 3px;
   }
   
   .add-remove-concept-hierarchy-modal-input-field {
     width: 308px;
+  }
+
+  .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }

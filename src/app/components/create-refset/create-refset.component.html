@@ -228,10 +228,10 @@
                             <mat-form-field appearance="fill">
 
                                 <mat-select (selectionChange)="copyRefsetSelected($event)" [(ngModel)]="selectedCopyRefset"
-                                    placeholder="Type here to search Reference Sets">
+                                    placeholder="Click here to search Reference Sets">
 
                                     <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="copySearchInput"
-                                        (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
+                                        (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)" autofocus>
 
                                     <mat-option [disabled]="true" *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
                                         <span *ngIf="copySearchInput.length > 0">No Reference Sets matching your criteria</span>

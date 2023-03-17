@@ -977,7 +977,7 @@ export class AdjudicateUpgradeModalComponent {
 			headerText: `Pause Upgrade`,
 			template: this.pauseUpdateDialog,
 			data: this.refsetData,
-			showCloseIcon: false
+			showCloseIcon: true
 		};
 
 		const dialogOptions = {

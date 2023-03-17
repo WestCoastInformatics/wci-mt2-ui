@@ -838,8 +838,10 @@
 
 <!--Undo Edit Modal-->
 <ng-template #undoEditDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
+    <div class="modal-header review-modal-header rt2-modal-header">
+        <h3 class="modal-title rt2-modal-title modal-header-font">
+            Undo Changes
+        </h3>
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
         (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
