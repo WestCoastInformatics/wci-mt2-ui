@@ -864,10 +864,12 @@
 
 <!--Cancel Upgrade Modal-->
 <ng-template #cancelUpgradeDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+    <div class="modal-header review-modal-header rt2-modal-header">
+        <h3 class="modal-title rt2-modal-title modal-header-font">
+            Cancel Upgrade
+        </h3>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close Dialog" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
     <div class="modal-body review-modal-body">
