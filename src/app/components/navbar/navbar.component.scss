@@ -186,12 +186,17 @@ nav {
 }
 
 .rt2-nav-logo-section {
+  display: flex;
+  align-items: center;
   width: 350px;
   text-decoration: none;
 }
 
 .rt2-nav-title {
   color: #eee;
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+  overflow: hidden;
 }
 .rt2-nav-title:hover {
   color: #00a9e0;
@@ -221,10 +226,6 @@ nav {
       color: $standard_link_color;
     }
   }
-}
-
-.extended-breadcrumb-and-roles {
-  // display: inline-block !important
 }
 
 .navbar-div {
@@ -268,11 +269,18 @@ nav {
   }
 }
 
-@media (max-width: 1450px) {
-  .extended-breadcrumb {
-    display:inline-block !important
-  }
-}
+// @media (max-width: 1450px) {
+//   .extended-breadcrumb {
+//     white-space: nowrap; 
+//     text-overflow: ellipsis; 
+//     overflow: hidden;
+//     max-width: calc(100vw - 1%)
+//   }
+//   .rt2-breadcrumb-ellipsis::before {
+//     content: '...';
+//     color: white;
+//   }
+// }
 
 .project-role-and-assignee-label {
   display: grid;

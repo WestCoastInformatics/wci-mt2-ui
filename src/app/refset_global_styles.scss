@@ -166,7 +166,7 @@ select {
   height: max-content !important;
 }
 
-.ag-overlay-wrapper {
+.ag-overlay-no-rows-wrapper {
     align-items: normal  !important;
 }
 
@@ -287,8 +287,9 @@ select {
 
 .rt2-directory-column-name .mat-icon {
   color: #888;
-  @extend .default-font;
+  font-family: 'Material Icons' !important;
   padding-top: 12px;
+  font-size: 1em;
 }
 
 .mat-select-arrow-wrapper {
@@ -376,6 +377,13 @@ select {
   margin-bottom: 15px;
   margin-left: 20px;
   margin-right: 5px;
+}
+
+.rt2-concept-details-modal-column {
+  background-color: white;
+  border-radius: 3px;
+  margin-top: 20px;
+  margin-bottom: 15px;
 }
 
 .rt2-concept-details-title-name {
@@ -511,6 +519,10 @@ select {
   padding-right: 0;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+page-container {
+  width: 100%;
 }
 
 #downloadDialog, .projects-dropdown-block, .details-version-select, .dropdown-group {
@@ -1515,8 +1527,8 @@ img.rt2-edition-flag {
 
     .title-label {
       margin-right: 20px;
-      color: #555555;
-      padding-left: 60px;
+      color: black;
+      padding-left: 30px;
       @extend .page-header-font;
     }
 
@@ -1942,4 +1954,15 @@ app-date-text-floating-filter {
   visibility: hidden !important;
   top: 60% !important;
   left: 99% !important;
+}
+
+.rt2-container {
+  width: 100%;
+  align-items: stretch;
+  min-height: calc(100vh - 158px);
+  padding: 1rem;
+}
+
+heading-with-count {
+  width: 100%;
 }

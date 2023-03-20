@@ -9,7 +9,7 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Set</h4>
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Set</h3>
 
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
@@ -17,93 +17,91 @@
 
     </div>
 
-    <div class="container-fluid rt2-dialog-container">
-        <div class="modal-body rt2-dialog-body form-field-header">
+    <div class="modal-body rt2-dialog-container rt2-dialog-body form-field-header">
 
-            <div class="row dialog-form">
+        <div class="rt2-flex-row dialog-form">
 
-                <div class="dialog-form-field-row first-row">
+            <div class="dialog-form-field-row first-row">
 
-                    <div class="col dialog-form-label">
-                        <label>Active Reference Set:</label>
-                    </div>
-
-                    <div class="col dialog-form-field">
-                        <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{
-                            getStatus(activeRefset.versionStatus) }})</label>
-                    </div>
-
+                <div class="col dialog-form-label">
+                    <label>Active Reference Set:</label>
                 </div>
 
-                <div class="dialog-form-field-row boxed-row top-aligned">
+                <div class="col dialog-form-field">
+                    <label>{{ activeRefset.name }} {{ activeRefset.versionDate }} ({{
+                        getStatus(activeRefset.versionStatus) }})</label>
+                </div>
 
-                    <div class="col dialog-form-label">
-                        <label>Comparison Reference Set:<span class="mandatory-field">*</span></label>
-                    </div>
+            </div>
 
-                    <div class="col dialog-form-field">
+            <div class="dialog-form-field-row boxed-row top-aligned">
 
-                        <mat-radio-group>
+                <div class="col dialog-form-label">
+                    <label>Comparison Reference Set:<span class="mandatory-field">*</span></label>
+                </div>
 
-                            <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset" (change)="comparisonSelectionChange($event)"
-                              [checked]="activeRefsetVersionOptions.length > 0" [disabled]="activeRefsetVersionOptions.length == 0">
-                                Another version
-                            </mat-radio-button>
+                <div class="col dialog-form-field">
 
-                            <mat-radio-button class="dialog-form-radio-option-padding" value="different_refset" (change)="comparisonSelectionChange($event)"
-                              [checked]="activeRefsetVersionOptions.length == 0">
-                                Different Reference Set
-                            </mat-radio-button>
+                    <mat-radio-group>
 
-                            <mat-form-field floatLabel="never" [hidden]="comparisonTypeSelected == 'different_refset'" appearance="legacy">
+                        <mat-radio-button class="dialog-form-radio-option-padding" value="same_refset" (change)="comparisonSelectionChange($event)"
+                            [checked]="activeRefsetVersionOptions.length > 0" [disabled]="activeRefsetVersionOptions.length == 0">
+                            Another version
+                        </mat-radio-button>
 
-                                <mat-label>Choose comparison version</mat-label>
-                                <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
-                                    <mat-option *ngFor="let option of activeRefsetVersionOptions" [value]="option.value"> {{ option.display }}</mat-option>
-                                </mat-select>
+                        <mat-radio-button class="dialog-form-radio-option-padding" value="different_refset" (change)="comparisonSelectionChange($event)"
+                            [checked]="activeRefsetVersionOptions.length == 0">
+                            Different Reference Set
+                        </mat-radio-button>
 
-                            </mat-form-field>
+                        <mat-form-field floatLabel="never" [hidden]="comparisonTypeSelected == 'different_refset'" appearance="legacy">
 
-                            <mat-form-field floatLabel="never" appearance="legacy" [hidden]="comparisonTypeSelected == 'same_refset'">
+                            <mat-label>Choose comparison version</mat-label>
+                            <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
+                                <mat-option *ngFor="let option of activeRefsetVersionOptions" [value]="option.value"> {{ option.display }}</mat-option>
+                            </mat-select>
 
-                                <mat-label>Select a Reference Set by ID or FSN</mat-label>
-                                <mat-select (selectionChange)="comparisonRefsetSelected($event)" [(ngModel)]="comparisonRefsetSelect">
+                        </mat-form-field>
 
-                                    <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="comparisonSearchInput"
-                                      (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
+                        <mat-form-field floatLabel="never" appearance="legacy" [hidden]="comparisonTypeSelected == 'same_refset'">
 
-                                    <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
-                                        None</mat-option>
-                                    <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
+                            <mat-label>Select a Reference Set by ID or FSN</mat-label>
+                            <mat-select (selectionChange)="comparisonRefsetSelected($event)" [(ngModel)]="comparisonRefsetSelect">
 
-                                    <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
-                                        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}"
-                                          class="rt2-edition-flag" title="{{ refset?.editionName }} Flag" aria-label="{{ refset?.editionName }} Flag" />
-                                        {{ refset.name }} ({{ refset?.editionName }})
-                                    </mat-option>
+                                <input class="concept-dropdown-input full-width" placeholder="Type here..." [(ngModel)]="comparisonSearchInput"
+                                    (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" (keydown)="handleInput($event)">
 
-                                </mat-select>
+                                <mat-option *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
+                                    None</mat-option>
+                                <mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
 
-                            </mat-form-field>
+                                <mat-option *ngFor="let refset of refsetOptions" [value]="refset">
+                                    <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{ refset?.flagIcon }}"
+                                        class="rt2-edition-flag" title="{{ refset?.editionName }} Flag" aria-label="{{ refset?.editionName }} Flag" />
+                                    {{ refset.name }} ({{ refset?.editionName }})
+                                </mat-option>
 
-                            <mat-form-field [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefsetVersionOptions.length == 0" appearance="legacy">
+                            </mat-select>
 
-                                <mat-label>Select version for comparison</mat-label>
-                                <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
-                                    <mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value">{{ option.display }}</mat-option>
-                                </mat-select>
+                        </mat-form-field>
 
-                            </mat-form-field>
+                        <mat-form-field [hidden]="comparisonTypeSelected == 'same_refset' || comparisonRefsetVersionOptions.length == 0" appearance="legacy">
 
-                        </mat-radio-group>
+                            <mat-label>Select version for comparison</mat-label>
+                            <mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
+                                <mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value">{{ option.display }}</mat-option>
+                            </mat-select>
 
-                    </div>
+                        </mat-form-field>
+
+                    </mat-radio-group>
 
                 </div>
 
             </div>
 
         </div>
+
     </div>
 
     <div class="modal-footer rt2-modal-footer">
@@ -124,7 +122,7 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Sets</h4>
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Sets</h3>
 
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="closeShowComparisonModal()">
             <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
@@ -132,277 +130,275 @@
 
     </div>
 
-    <div class="container-fluid rt2-dialog-container">
-        <div class="modal-body rt2-dialog-body">
+    <div class="modal-body rt2-dialog-body">
 
 
-            <div>
-                <!-- SPLITTER -->
-                <as-split direction="horizontal" gutterSize="4" [class.unset-gutter-height]="isConceptDetailsLoading || conceptDetail">
+        <div>
+            <!-- SPLITTER -->
+            <as-split direction="horizontal" gutterSize="4" [class.unset-gutter-height]="isConceptDetailsLoading || conceptDetail">
 
-                    <!-- MEMBERS SECTION -->
-                    <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 70 : 100" [minSize]="65">
-                        <div class="container-fluid p-0 comparisonGridSection">
+                <!-- MEMBERS SECTION -->
+                <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 70 : 100" [minSize]="65">
+                    <div class="container-fluid p-0 comparisonGridSection">
 
-                            <!-- HEADER STATISTIC TABLE -->
-                            <div class="metadata-collapsible-container white">
+                        <!-- HEADER STATISTIC TABLE -->
+                        <div class="metadata-collapsible-container white">
 
-                                <div class="col">
-                                    <div class="metadata-collapsible-container-title font-weight-bold mb-1">
-                                        Reference Set Members</div>
-                                </div>
-
-                                <div class="container-fluid">
-
-                                        <div class="col">
-                                            <table class="rt2-refset-metadata-table m-0 compare-sumary-table">
-                                                <tbody>
-
-                                                    <tr>
-
-                                                        <td class="rt2-comparison-refset-member-total font-weight-bold">
-                                                            <div>{{ activeRefsetName }} {{ activeRefsetVersionDate }}
-                                                                {{ activeRefset.versionStatus ? ' (' + getStatus(activeRefset.versionStatus) + ')' : '' }}
-                                                                ({{ comparisonData?.activeRefsetMemberTotal }}):</div>
-                                                        </td>
-
-                                                        <td class="rt2-comparison-refset-name font-weight-bold">
-                                                            <!-- {{ activeRefsetName }} {{
-                                                            activeRefsetVersionDate }} ({{
-                                                            activeRefset.versionStatus }}) -->
-                                                        </td>
-
-                                                        <td class="rt2-comparison-refset-distinct font-weight-bold">
-                                                            <add-remove-concept-group-icons *ngIf="allowedToEdit && comparisonData?.activeRefsetDistinctMembersCount > 0"
-                                                              [addConcept]="false" [concepts]="comparisonData?.activeRefsetDistinctMembers" [refsetType]="activeRefset.type"
-                                                              [definitionExceptionType]="activeRefset.definitionExceptionType"
-                                                              (processSelection)="addRemoveConceptGroup($event)">
-                                                            </add-remove-concept-group-icons>
-                                                            {{
-                                                            comparisonData?.activeRefsetDistinctMembersCount
-                                                            }}
-                                                            Distinct Members
-                                                        </td>
-
-                                                    </tr>
-
-                                                    <tr>
-
-                                                        <td class="rt2-comparison-refset-member-total">
-                                                            {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }}
-                                                            ({{ comparisonRefsetStatus }}) ({{
-                                                            comparisonData?.comparisonRefsetMemberTotal
-                                                            }}):
-                                                        </td>
-
-                                                        <td class="rt2-comparison-refset-name">
-                                                            <!-- {{ comparisonRefsetName }} {{
-                                                            comparisonRefsetVersionDate }} ({{
-                                                            comparisonRefsetStatus }}) -->
-                                                        </td>
-
-                                                        <td class="rt2-comparison-refset-distinct">
-                                                            <add-remove-concept-group-icons *ngIf="allowedToEdit && comparisonData?.comparisonRefsetDistinctMembersCount > 0"
-                                                              [addConcept]="true" [concepts]="comparisonData?.comparisonRefsetDistinctMembers" [refsetType]="activeRefset.type"
-                                                              [definitionExceptionType]="activeRefset.definitionExceptionType"
-                                                              (processSelection)="addRemoveConceptGroup($event)">
-                                                            </add-remove-concept-group-icons>
-                                                            {{
-                                                            comparisonData?.comparisonRefsetDistinctMembersCount
-                                                            }} Members Not Common
-                                                        </td>
-
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                </div>
+                            <div class="col">
+                                <div class="metadata-collapsible-container-title font-weight-bold mb-1">
+                                    Reference Set Members</div>
                             </div>
 
-                            <!-- MEMBERS GRID -->
-                            <ag-grid-angular *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter mh-622"
-                              [ngClass]="getGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'" [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
-                            </ag-grid-angular>
+                            <div class="container-fluid">
 
-                            <app-pagination class="compare-pagination" *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize" [gridOptions]="gridOptions"
-                              [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown" [manualStateRefresh]="gridPaging.manualStateRefresh"
-                              [isDetailPage]="true" [refsetId]="activeRefset.refsetId">
-                            </app-pagination>
+                                    <div class="col">
+                                        <table class="rt2-refset-metadata-table m-0 compare-sumary-table">
+                                            <tbody>
 
-                        </div>
-                    </as-split-area>
+                                                <tr>
 
-                    <!-- CONCEPT DETAILS SECTION -->
-                    <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 30 : 0" [minSize]="25">
-                        <div id="comparisonGridSection" class="container-fluid py-0 px-2">
+                                                    <td class="rt2-comparison-refset-member-total font-weight-bold">
+                                                        <div>{{ activeRefsetName }} {{ activeRefsetVersionDate }}
+                                                            {{ activeRefset.versionStatus ? ' (' + getStatus(activeRefset.versionStatus) + ')' : '' }}
+                                                            ({{ comparisonData?.activeRefsetMemberTotal }}):</div>
+                                                    </td>
 
-                            <div *ngIf="isConceptDetailsLoading || conceptDetail" class="metadata-collapsible-container white rt2-flex-column">
+                                                    <td class="rt2-comparison-refset-name font-weight-bold">
+                                                        <!-- {{ activeRefsetName }} {{
+                                                        activeRefsetVersionDate }} ({{
+                                                        activeRefset.versionStatus }}) -->
+                                                    </td>
 
-                                <div>
+                                                    <td class="rt2-comparison-refset-distinct font-weight-bold">
+                                                        <add-remove-concept-group-icons *ngIf="allowedToEdit && comparisonData?.activeRefsetDistinctMembersCount > 0"
+                                                            [addConcept]="false" [concepts]="comparisonData?.activeRefsetDistinctMembers" [refsetType]="activeRefset.type"
+                                                            [definitionExceptionType]="activeRefset.definitionExceptionType"
+                                                            (processSelection)="addRemoveConceptGroup($event)">
+                                                        </add-remove-concept-group-icons>
+                                                        {{
+                                                        comparisonData?.activeRefsetDistinctMembersCount
+                                                        }}
+                                                        Distinct Members
+                                                    </td>
 
-                                    <div *ngIf="isConceptDetailsLoading">
-                                        <div>Loading...</div>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td class="rt2-comparison-refset-member-total">
+                                                        {{ comparisonRefsetName }} {{ comparisonRefsetVersionDate }}
+                                                        ({{ comparisonRefsetStatus }}) ({{
+                                                        comparisonData?.comparisonRefsetMemberTotal
+                                                        }}):
+                                                    </td>
+
+                                                    <td class="rt2-comparison-refset-name">
+                                                        <!-- {{ comparisonRefsetName }} {{
+                                                        comparisonRefsetVersionDate }} ({{
+                                                        comparisonRefsetStatus }}) -->
+                                                    </td>
+
+                                                    <td class="rt2-comparison-refset-distinct">
+                                                        <add-remove-concept-group-icons *ngIf="allowedToEdit && comparisonData?.comparisonRefsetDistinctMembersCount > 0"
+                                                            [addConcept]="true" [concepts]="comparisonData?.comparisonRefsetDistinctMembers" [refsetType]="activeRefset.type"
+                                                            [definitionExceptionType]="activeRefset.definitionExceptionType"
+                                                            (processSelection)="addRemoveConceptGroup($event)">
+                                                        </add-remove-concept-group-icons>
+                                                        {{
+                                                        comparisonData?.comparisonRefsetDistinctMembersCount
+                                                        }} Members Not Common
+                                                    </td>
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
                                     </div>
 
-                                    <div *ngIf="conceptDetail">
+                            </div>
+                        </div>
 
-                                        <div class="row align-items-center no-gutters">
+                        <!-- MEMBERS GRID -->
+                        <ag-grid-angular *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter mh-622"
+                            [ngClass]="getGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'" [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions">
+                        </ag-grid-angular>
 
-                                            <div class="col rt2-concept-details-title-name">
-                                                Concept Details
-                                            </div>
+                        <app-pagination class="compare-pagination" *ngIf="showTable" #comparisonGridPaging [pageSize]="gridPaging.pageSize" [gridOptions]="gridOptions"
+                            [pageSizeOptions]="gridPaging.pageSizeOptions" [totalKnown]="gridPaging.totalKnown" [manualStateRefresh]="gridPaging.manualStateRefresh"
+                            [isDetailPage]="true" [refsetId]="activeRefset.refsetId">
+                        </app-pagination>
 
-                                            <div class="text-right close-button">
-                                                <button mat-icon-button (click)="closeConceptDetails()" aria-hidden="false" class="rt2-table-action-icon">
-                                                    <mat-icon aria-label="Close Concept Details" title="Close Concept Details">close
-                                                    </mat-icon>
-                                                </button>
-                                            </div>
+                    </div>
+                </as-split-area>
 
+                <!-- CONCEPT DETAILS SECTION -->
+                <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 30 : 0" [minSize]="25">
+                    <div id="comparisonGridSection" class="container-fluid py-0 px-2">
+
+                        <div *ngIf="isConceptDetailsLoading || conceptDetail" class="metadata-collapsible-container white rt2-flex-column">
+
+                            <div>
+
+                                <div *ngIf="isConceptDetailsLoading">
+                                    <div>Loading...</div>
+                                </div>
+
+                                <div *ngIf="conceptDetail">
+
+                                    <div class="row align-items-center no-gutters">
+
+                                        <div class="col rt2-concept-details-title-name">
+                                            Concept Details
                                         </div>
 
-                                        <div>{{ activeRefsetCodeSystem }}</div>
+                                        <div class="text-right close-button">
+                                            <button mat-icon-button (click)="closeConceptDetails()" aria-hidden="false" class="rt2-table-action-icon">
+                                                <mat-icon aria-label="Close Concept Details" title="Close Concept Details">close
+                                                </mat-icon>
+                                            </button>
+                                        </div>
 
-                                        <!-- Parents Section -->
-                                        <div class="rt2-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+                                    </div>
 
+                                    <div>{{ activeRefsetCodeSystem }}</div>
+
+                                    <!-- Parents Section -->
+                                    <div class="rt2-concept-details-taxonomy-section add-remove-concept-hierarchy-modal-parent-size">
+
+                                        <!-- <div class="row"> -->
+                                            <div class="rt2-concept-details-section-title">
+                                                Parents</div>
+                                        <!-- </div> -->
+
+                                        <div class="container-fluid">
                                             <div class="row">
-                                                <div class="rt2-concept-details-section-title">
-                                                    Parents</div>
-                                            </div>
-
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div *ngIf="conceptDetailParents?.length == 0" class=" rt2-concept-details-no-relationships">
-                                                        No parents
-                                                    </div>
-                                                </div>
-
-                                                <div *ngFor="let parent of conceptDetailParents" class="row rt2-concept-details-taxonomy-item">
-
-                                                    <div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
-
-                                                        <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="parent" [isParentConcept]="true"
-                                                          [refsetType]="activeRefset.type" (processSelection)="addRemoveConcept($event)">
-                                                        </add-remove-concepts-icons>
-
-                                                        <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-                                                        <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0"
-                                                          src="/assets/unlinedTaxonomyIcon.png" />
-                                                    </div>
-
-                                                    <div class="rt2-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
-                                                      [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
-                                                        <span *ngIf="this.taxonomyOptions?.useFsn">{{
-                                                            parent?.fsn.trim() }}</span>
-                                                        <span *ngIf="!this.taxonomyOptions?.useFsn">{{
-                                                            parent?.name.trim() }}</span>
-                                                    </div>
-
+                                                <div *ngIf="conceptDetailParents?.length == 0" class=" rt2-concept-details-no-relationships">
+                                                    No parents
                                                 </div>
                                             </div>
 
-                                        </div>
+                                            <div *ngFor="let parent of conceptDetailParents" class="row rt2-concept-details-taxonomy-item">
 
-                                        <!-- Details Section -->
-                                        <div class="rt2-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size h-fit-content">
-                                            <div class="row m-0">
+                                                <div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
 
-                                                <!-- Info Section -->
-                                                <div class="rt2-concept-details-concept-info-column"
-                                                  [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
-                                                    <div class="container-fluid">
+                                                    <add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="parent" [isParentConcept]="true"
+                                                        [refsetType]="activeRefset.type" (processSelection)="addRemoveConcept($event)">
+                                                    </add-remove-concepts-icons>
 
-                                                        <!-- Name -->
-                                                        <div class="row rt2-concept-details-concept-title-row">
-                                                            <div class="text-left">
-                                                                <div class="rt2-concept-details-taxonomy-icon status-icon-container">
-                                                                    <img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined"
-                                                                      src="/assets/linedTaxonomyIcon.png" />
-                                                                    <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive"
-                                                                      class="rt2-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col rt2-concept-details-concept-name">
-                                                                {{ conceptDetail?.name }}</div>
-                                                            <div class="text-right">
-                                                                <div class="open-container">
-                                                                    <button mat-icon-button (click)="openInNewWindow(conceptDetail.code)"
-                                                                      class="rt2-concept-details-action-icon" aria-hidden="false"
-                                                                      aria-label="Open Concept in New SNOMED Browser Window" title="Open Concept in SNOMED Browser Window">
-                                                                        <mat-icon>open_in_new
-                                                                        </mat-icon>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+                                                    <img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0"
+                                                        src="/assets/unlinedTaxonomyIcon.png" />
+                                                </div>
 
-                                                        <!-- ID -->
-                                                        <div class="row rt2-concept-details-concept-row">
-                                                            <div class="rt2-concept-details-concept-id-label">
-                                                                SCTID</div>
-                                                            <div class="col rt2-concept-details-concept-id-text">
-                                                                {{ conceptDetail?.code }}</div>
-                                                        </div>
-
-                                                        <!-- ECL -->
-                                                        <div class="row rt2-concept-details-concept-row">
-                                                            <div class="col rt2-concept-details-concept-ecl">
-                                                                {{ conceptDetail?.code }} | {{
-                                                                conceptDetail?.name }} |
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Descriptions -->
-                                                        <div *ngFor="let description of conceptDetail?.descriptions" class="row rt2-concept-details-concept-row">
-                                                            <div class="rt2-concept-details-concept-description-language">
-                                                                {{ description?.language }}</div>
-                                                            <div class="col rt2-concept-details-concept-description-text">
-                                                                {{ description?.term }}</div>
-                                                        </div>
-
-                                                    </div>
+                                                <div class="rt2-concept-details-taxonomy-description" [class.bold-if-member]="parent?.memberOfRefset"
+                                                    [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
+                                                    <span *ngIf="this.taxonomyOptions?.useFsn">{{
+                                                        parent?.fsn.trim() }}</span>
+                                                    <span *ngIf="!this.taxonomyOptions?.useFsn">{{
+                                                        parent?.name.trim() }}</span>
                                                 </div>
 
                                             </div>
                                         </div>
 
-                                        <!-- Children Section -->
-                                        <div class="rt2-concept-details-taxonomy-section children-section">
+                                    </div>
 
-                                            <div class="row">
-                                                <div class="rt2-concept-details-section-title">
-                                                    Children <span [hidden]="!taxonomyNumberOfChildren"> ({{
-                                                        taxonomyNumberOfChildren }})</span>
+                                    <!-- Details Section -->
+                                    <div class="rt2-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size h-fit-content">
+                                        <div class="row m-0">
+
+                                            <!-- Info Section -->
+                                            <div class="rt2-concept-details-concept-info-column"
+                                                [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
+                                                <div class="container-fluid">
+
+                                                    <!-- Name -->
+                                                    <div class="row rt2-concept-details-concept-title-row">
+                                                        <div class="text-left">
+                                                            <div class="rt2-concept-details-taxonomy-icon status-icon-container">
+                                                                <img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined"
+                                                                    src="/assets/linedTaxonomyIcon.png" />
+                                                                <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive"
+                                                                    class="rt2-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col rt2-concept-details-concept-name">
+                                                            {{ conceptDetail?.name }}</div>
+                                                        <div class="text-right">
+                                                            <div class="open-container">
+                                                                <button mat-icon-button (click)="openInNewWindow(conceptDetail.code)"
+                                                                    class="rt2-concept-details-action-icon" aria-hidden="false"
+                                                                    aria-label="Open Concept in New SNOMED Browser Window" title="Open Concept in SNOMED Browser Window">
+                                                                    <mat-icon>open_in_new
+                                                                    </mat-icon>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- ID -->
+                                                    <div class="row rt2-concept-details-concept-row">
+                                                        <div class="rt2-concept-details-concept-id-label">
+                                                            SCTID</div>
+                                                        <div class="col rt2-concept-details-concept-id-text">
+                                                            {{ conceptDetail?.code }}</div>
+                                                    </div>
+
+                                                    <!-- ECL -->
+                                                    <div class="row rt2-concept-details-concept-row">
+                                                        <div class="col rt2-concept-details-concept-ecl">
+                                                            {{ conceptDetail?.code }} | {{
+                                                            conceptDetail?.name }} |
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Descriptions -->
+                                                    <div *ngFor="let description of conceptDetail?.descriptions" class="row rt2-concept-details-concept-row">
+                                                        <div class="rt2-concept-details-concept-description-language">
+                                                            {{ description?.language }}</div>
+                                                        <div class="col rt2-concept-details-concept-description-text">
+                                                            {{ description?.term }}</div>
+                                                    </div>
+
                                                 </div>
-                                            </div>
-
-                                            <!-- Children Taxonomy Tree -->
-                                            <div class="container-fluid">
-                                                <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="activeRefset"
-                                                  (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
-                                                  hasMultipleRootNodes="false" (changeLockedStatus)="indicateChanges($event)"
-                                                  [processChangedMemberFunction]="processChangedMemberEffects" [editMode]="allowedToEdit"
-                                                  (numOfChildren)="taxonomyNumberOfChildren = $event">
-                                                </app-taxonomy-tree>
                                             </div>
 
                                         </div>
                                     </div>
 
+                                    <!-- Children Section -->
+                                    <div class="rt2-concept-details-taxonomy-section children-section">
+
+                                        <!-- <div class="row"> -->
+                                            <div class="rt2-concept-details-section-title">
+                                                Children <span [hidden]="!taxonomyNumberOfChildren"> ({{
+                                                    taxonomyNumberOfChildren }})</span>
+                                            </div>
+                                        <!-- </div> -->
+
+                                        <!-- Children Taxonomy Tree -->
+                                        <div class="container-fluid">
+                                            <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="activeRefset"
+                                                (loadConceptDetail)="loadConceptDetail($event)" [rootNode]="conceptDetail" [options]="conceptDetailsOptions"
+                                                hasMultipleRootNodes="false" (changeLockedStatus)="indicateChanges($event)"
+                                                [processChangedMemberFunction]="processChangedMemberEffects" [editMode]="allowedToEdit"
+                                                (numOfChildren)="taxonomyNumberOfChildren = $event">
+                                            </app-taxonomy-tree>
+                                        </div>
+
+                                    </div>
                                 </div>
 
                             </div>
 
                         </div>
-                    </as-split-area>
 
-                </as-split>
-            </div>
+                    </div>
+                </as-split-area>
 
+            </as-split>
         </div>
+
     </div>
 
     <div class="modal-footer rt2-modal-footer rt2-btn-group">

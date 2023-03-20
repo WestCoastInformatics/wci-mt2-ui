@@ -10,29 +10,25 @@
 
   <div class="modal-header rt2-modal-header">
     <button class="unfocus-btn"></button>
-    <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+    <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
       Add or Remove Members By List
-    </h4>
+    </h3>
 
     <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
     </button>
   </div>
 
-  <div class="modal-body rt2-lockable">
+  <div class="modal-body rt2-lockable default-font">
 
-    <div class="container-fluid import-from-container-fluid">
-      <div class="modal-body import-from-modal-body default-font">
 
-        <div class="import-from-label form-field-header"> Enter a list of SCTIDs. Use a comma or whitespace delimited
-          Concept Ids.</div>
+    <div class="import-from-label form-field-header"> Enter a list of SCTIDs. Use a comma or whitespace delimited
+      Concept Ids.</div>
 
-        <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
-          <textarea matInput #listTextArea ngbAutofocus class="import-from-list-text-area" [(ngModel)]="listOfIds"></textarea>
-        </mat-form-field>
+    <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
+      <textarea matInput #listTextArea ngbAutofocus class="import-from-list-text-area" [(ngModel)]="listOfIds"></textarea>
+    </mat-form-field>
 
-      </div>
-    </div>
 
   </div>
 

@@ -21,7 +21,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 @Component({
   selector: 'app-launch-comparison-modal',
   templateUrl: './launch-comparison-modal.component.html',
-  styleUrls: ['launch-comparison-modal.component.scss']
+  styleUrls: ['./launch-comparison-modal.component.scss']
 })
 export class LaunchComparisonModalComponent {
 
@@ -626,8 +626,8 @@ export class LaunchComparisonModalComponent {
         document.getElementsByClassName("modal-dialog")[0]
     );
     if (modalDialog) {
-        modalDialog.style.width = "1000px";
-        modalDialog.style.maxWidth = "1240px";
+        modalDialog.style.width = "1240px";
+        modalDialog.style.maxWidth = "1380px";
     }
 
     const modalContent = <HTMLElement>(

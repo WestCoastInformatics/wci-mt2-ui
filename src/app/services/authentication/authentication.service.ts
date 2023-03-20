@@ -45,6 +45,7 @@ export class AuthenticationService {
             (user) => {
 
                 user.userName = user.login;
+                delete user.password;
 
                 if (user != null) {
                     this.handleImsSuccess(user);
@@ -101,9 +102,6 @@ export class AuthenticationService {
     authenticateWithBackend(userData: User): Observable<any> {
 
         return this.http.post(environment.restUrl + environment.restContextPath + 'authenticate/' + userData.userName,
-            {
-                userData,
-            },
             {
                 headers: new HttpHeaders({
                     'content-type': 'plain/text',

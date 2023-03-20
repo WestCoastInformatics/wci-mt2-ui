@@ -7,8 +7,17 @@
         <!-- Reference Set Name, action icons, and roles -->
         <div class="col-4 rt2-refset-details-title-name-section">
 
-            <div class="rt2-refset-details-title-name refset-details-title">
+            <!-- <div class="rt2-refset-details-title-name refset-details-title">
                 Reference Set Details
+            </div> -->
+
+            <div class="rt2-refset-details-title-name-section">
+                <div class="metadata-collapsible-container-title page-header-font">
+                    {{refsetData?.name}}
+                </div>
+                <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
+                  [roles]="refsetData.roles" [(discussionCount)]="openDiscussionCount">
+                </app-refset-discussion-list>
             </div>
 
             <div class="set-of-buttons">
@@ -106,23 +115,16 @@
 
         <!-- Metadata Section -->
         <div class="metadata-container">
-            <div class="container-fluid refset-metadata-container">
+            <div class="refset-metadata-container">
 
                 <div>
                     <!--
                     <span *ngIf="editMode" class="rt2-roles"><b>Role(s): </b>{{
                         getRoleString() }}</span> -->
-                    <div class="rt2-refset-details-title-name-section">
-                        <div class="metadata-collapsible-container-title page-header-font">
-                            {{refsetData?.name}}
-                        </div>
-                        <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
-                          [roles]="refsetData.roles" [(discussionCount)]="openDiscussionCount">
-                        </app-refset-discussion-list>
-                    </div>
+                    
 
                     <button *ngIf="allowedToEdit || allowedToReview" [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
-                      class="rt2-link-btn">
+                      class="rt2-link-btn p-0">
                         Manage Reference Set <span class="down-arrow-for-menu carret-up-down-icon-font">&#x25BC;</span>
                     </button>
 
@@ -416,7 +418,8 @@
         </div>
 
         <!-- Section Title -->
-        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title">
+        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title head-title">
+            <!-- <heading-with-count title="Reference Set Members" [count]="refsetData?.memberCount || ''"></heading-with-count> -->
             Reference Set Members&nbsp;<span class="default-cursor" title="Total member count">({{refsetData?.memberCount}})</span>
             <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" color="primary" aria-hidden="false"
               class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
@@ -835,16 +838,17 @@
 
 <!--Undo Edit Modal-->
 <ng-template #undoEditDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+    <div class="modal-header review-modal-header rt2-modal-header">
+        <h3 class="modal-title rt2-modal-title modal-header-font">
+            Undo Changes
+        </h3>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
+        (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body review-modal-body">
-            <div>Are you sure you want to undo the changes?</div>
-        </div>
+    <div class="modal-body review-modal-body">
+        <div>Are you sure you want to undo the changes?</div>
     </div>
     <div class="modal-footer ready-for-review-footer rt2-btn-group">
         <button type="button" (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');" color="primary" aria-hidden="false"
@@ -860,16 +864,16 @@
 
 <!--Cancel Upgrade Modal-->
 <ng-template #cancelUpgradeDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+    <div class="modal-header review-modal-header rt2-modal-header">
+        <h3 class="modal-title rt2-modal-title modal-header-font">
+            Cancel Upgrade
+        </h3>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close Dialog" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body review-modal-body">
-            <div>You are about to undo your work. Are you sure you want to cancel your changes?
-            </div>
+    <div class="modal-body review-modal-body">
+        <div>You are about to undo your work. Are you sure you want to cancel your changes?
         </div>
     </div>
     <div class="modal-footer ready-for-review-footer rt2-btn-group">
@@ -889,37 +893,35 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Publish Local Reference Set
-        </h4>
+        </h3>
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
-    <div class="container-fluid ready-for-publication-container-fluid">
-        <div class="modal-body ready-for-publication-modal-body">
+    <div class="modal-body ready-for-publication-modal-body">
 
-            <div class="row mb-3">
-                You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version
-                date past the year 2000.
-            </div>
-
-            <div class="row">
-                <div class="col">
-
-                    <div *ngIf="!localsetPublishValid">The version date must be a valid date after 01-01-2000</div>
-                    <label>Version Date:
-
-                        <mat-form-field floatLabel="never" title="Enter Search Critera">
-                            <mat-label class="search-label">mm/dd/yyyy</mat-label>
-                            <input type="date" matInput #publishVersionDate id="publishVersionDate" min="2000-01-01" />
-                        </mat-form-field>
-                    </label>
-                </div>
-            </div>
-
+        <div class="row mb-3">
+            You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version
+            date past the year 2000.
         </div>
+
+        <div class="row">
+            <div class="col">
+
+                <div *ngIf="!localsetPublishValid">The version date must be a valid date after 01-01-2000</div>
+                <label>Version Date:
+
+                    <mat-form-field floatLabel="never" title="Enter Search Critera">
+                        <mat-label class="search-label">mm/dd/yyyy</mat-label>
+                        <input type="date" matInput #publishVersionDate id="publishVersionDate" min="2000-01-01" />
+                    </mat-form-field>
+                </label>
+            </div>
+        </div>
+
     </div>
 
     <div class="modal-footer rt2-modal-footer">
@@ -938,18 +940,17 @@
 <ng-template #deleteDevelopmentVersionDialog let-modal>
     <div class="modal-header review-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             Delete In Development Reference Set Version
-        </h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
+        </h3>
+        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
+        (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
-    <div class="container-fluid ready-for-review-container-fluid">
-        <div class="modal-body review-modal-body">
-            <div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of
-                the refset?
-            </div>
+    <div class="modal-body review-modal-body">
+        <div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of
+            the refset?
         </div>
     </div>
     <div class="modal-footer ready-for-review-footer rt2-btn-group">
@@ -970,19 +971,17 @@
 
     <div class="modal-header rt2-modal-header">
         <button ngbAutofocus class="unfocus-btn"></button>
-        <h4 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
             {{ changeRefsetStatusButtonText }} Reference Set
-        </h4>
+        </h3>
         <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
         </button>
     </div>
 
-    <div class="container-fluid ready-for-publication-container-fluid">
-        <div class="modal-body ready-for-publication-modal-body">
-            <div class="row">
-                {{ changeRefsetStatusText }} Are you sure you want to continue?
-            </div>
+    <div class="modal-body ready-for-publication-modal-body">
+        <div class="row">
+            {{ changeRefsetStatusText }} Are you sure you want to continue?
         </div>
     </div>
 

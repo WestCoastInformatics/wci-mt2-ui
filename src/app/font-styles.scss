@@ -143,6 +143,12 @@
   font-weight: 300
 }
 
+.title-label {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 300
+}
+
 .page-title {
   color: #9b9b9b;
   font-family: $standard_font_family;
@@ -264,3 +270,8 @@ body, p, .default-font, .intro-text-font {
   @extend .default-font-family;
 }
 
+.head-section-title-font {
+  font-size: 17px;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}

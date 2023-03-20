@@ -121,11 +121,7 @@ export class OrganizationConfigurationComponent implements OnInit {
     }
 
     isEmailOrOrganizationChange() {
-        if (this.profileEmailValue !== this.organization.primaryContactEmail) {
-            return true
-        }
-
-        if (this.profileDescriptionValue !== this.organization.description) {
+        if (this.profileEmailValue !== this.organization.primaryContactEmail || this.profileDescriptionValue !== this.organization.description) {
             return true
         }
 

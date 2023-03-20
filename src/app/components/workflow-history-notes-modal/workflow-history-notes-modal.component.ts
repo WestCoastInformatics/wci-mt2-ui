@@ -2,7 +2,7 @@ import {Component, ComponentRef, EventEmitter, Input, OnInit, Output, SimpleChan
 import {WorkflowService} from 'src/app/services/workflow/workflow.service';
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {DomService} from 'src/app/services/dom.service';
-import {ComposeModalComponent} from '../compose-modal/compose-modal.component';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 declare const tinymce: any;
 
@@ -16,8 +16,7 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
   characterCount = 0;
   title: string;
   editorInstance: any;
-  isInitialized = false;
-  modal: ComponentRef<ComposeModalComponent>;
+  openedModel: NgbModalRef;
 
   @Input() workflowHistoryNotes: string;
   @Input() refsetInternalId: string;
@@ -30,8 +29,10 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
   @ViewChild('workflowHistoryNotesEditor') editor: EditorModule;
   @ViewChild('modalContent', {read: TemplateRef}) content: TemplateRef<any>;
 
-  constructor(private readonly workflowService: WorkflowService,
-              private readonly domService: DomService) {
+  constructor(
+    private modalService: NgbModal,
+    private readonly workflowService: WorkflowService,
+    private readonly domService: DomService) {
   }
 
   ngOnInit(): void {
@@ -68,29 +69,21 @@ export class WorkflowHistoryNotesModalComponent implements OnInit {
     }
   }
 
-  openReadyForReviewModal() {
-    if (!this.isInitialized) {
-      const comp = this.domService.appendComponentToBody(ComposeModalComponent) as ComponentRef<ComposeModalComponent>;
-      comp.instance.content = this.content;
-      comp.instance.title = this.title;
-      this.modal = comp;
-      this.isInitialized = true;
-    } else {
-      this.modal.instance.isHidden = false;
-    }
+  openReadyForReviewModal(workflowModal: NgbModal) {
+    this.openedModel = this.modalService.open(workflowModal, { backdrop: 'static', keyboard: false });
   }
 
   saveNotes(): void {
     this.workflowService.saveNotes(this.refsetInternalId, this.workflowHistoryNotes).subscribe(response => {
       if (response) {
         this.workflowHistoryNotes = '';
-        this.modal.instance.isHidden = true;
         this.saved.emit(true);
+        this.cancel()
       }
     });
   }
 
   cancel(): void {
-    this.modal.instance.isHidden = true;
+    this.openedModel.dismiss();
   }
 }

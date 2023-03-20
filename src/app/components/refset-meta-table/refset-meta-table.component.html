@@ -10,31 +10,30 @@
                     <td class="rt2-refset-metadata-value">
                         {{refset?.refsetId}}
                         <mat-icon *ngIf="refset?.privateRefset" aria-hidden="false"
-                            class="rt2-table-action-icon refset-id-icons text-muted default-cursor breadcrumb-font" aria-label="Private Refset" title="Private Refset">
+                            class="rt2-table-action-icon text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
                             lock
                         </mat-icon>
-                        <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="rt2-table-action-icon refset-id-icons text-muted default-cursor breadcrumb-font" aria-label="Local Set"
+                        <mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="rt2-table-action-icon text-muted default-cursor" aria-label="Local Set"
                             title="Local Set">
                             my_location
-                        </mat-icon>                        
-                        </td>
+                        </mat-icon>
+                    </td>
                 </tr>
                 <tr>
                     <td class="rt2-refset-metadata-label" aria-label="Module ID">
                         Module ID:
                     </td>
                     <td class="rt2-refset-metadata-value">
-                      {{refset?.moduleId}}
+                      {{ refset?.moduleId + ' - ' + refset?.project?.edition?.moduleNames[refset?.moduleId] }}
                     </td>
                 </tr>
-
 
                 <tr>
                     <td class="rt2-refset-metadata-label" aria-label="Edition/Extension:">
                         Edition/Extension:
                     </td>
                     <td class="rt2-refset-metadata-value">
-                        <span *ngIf="!loggedIn">{{refset?.editionName}}</span> 
+                        <span *ngIf="!loggedIn">{{refset?.editionName}}</span>
                         <a *ngIf="loggedIn" href="{{getEditionUrl()}}">{{refset?.editionName}}</a>&nbsp;
                         <img *ngIf="refset?.flagIcon != null && showFlag"
                             (error)="showFlagIcon(false)" src="{{refset?.flagIcon}}"
@@ -44,9 +43,7 @@
                 </tr>
 
                 <tr>
-                    <td class="
-                                            rt2-refset-metadata-label
-                                        " aria-label="Type:">
+                    <td class="rt2-refset-metadata-label" aria-label="Type:">
                         Type:
                     </td>
                     <td class="rt2-refset-metadata-value text-capitalize">
@@ -103,7 +100,7 @@
                         Project:
                     </td>
                     <td class="rt2-refset-metadata-value">
-                        <span *ngIf="!loggedIn">{{refset?.project?.name}}</span> 
+                        <span *ngIf="!loggedIn">{{refset?.project?.name}}</span>
                         <a *ngIf="loggedIn" href="{{getProjectUrl()}}">{{refset?.project?.name}}</a>
                     </td>
                 </tr>
@@ -213,10 +210,10 @@
                     <td class="
                                             rt2-refset-metadata-value
                                         ">
-                        
-                        {{refset?.editionShortName}} 
-                        {{refset?.versionDate ? '(' + refset?.terminologyVersionDate + ')': 'In Development'}} 
-                        
+
+                        {{refset?.editionShortName}}
+                        {{refset?.versionDate ? '(' + refset?.terminologyVersionDate + ')': 'In Development'}}
+
                     </td>
                 </tr>
 

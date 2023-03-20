@@ -100,6 +100,22 @@ $red: #ff0000;
   width: 100%;
 }
 
+.w-72-pct {
+  width: 72%;
+}
+
+.w-80-pct {
+  width: 80%;
+}
+
+.w-53-pct {
+  width: 53%;
+}
+
+.w-46-pct {
+  width: 46%;
+}
+
 .mw-100-pct {
   max-width: 100%;
 }
@@ -308,6 +324,9 @@ $red: #ff0000;
 }
 .p-h-15 {
   padding: 0 15px;
+}
+.p-t-18 {
+  padding-top: 18px;
 }
 .p-20 {
   padding: 20px;
@@ -731,6 +750,10 @@ $red: #ff0000;
 
 .mr-15 {
   margin-right: 15px;
+}
+
+.mr-16 {
+  margin-right: 16px;
 }
 
 .mr-20 {

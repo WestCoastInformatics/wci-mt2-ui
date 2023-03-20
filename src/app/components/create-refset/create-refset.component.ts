@@ -52,7 +52,6 @@ export class CreateRefsetComponent implements OnInit {
     definitionClauses = [];
     type = '';
     selectedVersionNotes = '';
-    data = [];
     originalRefsetMembers = [];
     selectedUUID: string;
     referenceTypes = [Constants.EXTENSIONAL, Constants.INTENSIONAL, Constants.COMBINATION, Constants.EXTERNAL, Constants.COPY];
@@ -192,28 +191,6 @@ export class CreateRefsetComponent implements OnInit {
                 //filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
             };
 
-            this.refsetService.getRefsets({ ...restParams }).subscribe({
-                next: (results) => {
-
-                    for (const refset of results.items) {
-                        this.data.push({
-                            name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                            , refsetId: refset.refsetId
-                            , private: refset.privateRefset
-                            , workflowStatus: `${refset?.workflowStatus}`
-                            , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
-                            , versionDate: `${refset.versionDate}`
-                        });
-
-                    }
-                    this.data = this.sortRefsets(this.data);
-                },
-                error: (error) => {
-
-
-                }
-            });
-
             this.modalService.open(createNewRefsetDialog, {
                 windowClass: 'createNewRefsetDialog',
                 backdrop: 'static',
@@ -261,7 +238,6 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedNarrative = '';
         this.selectedVersionNotes = '';
         this.selectedTags = [];
-        this.data = [];
         this.definitionClauses = [{ value: '', negated: false }];
         this.selectedReferenceType = 'EXTENSIONAL';
         this.privateRefset = false;
@@ -328,16 +304,15 @@ export class CreateRefsetComponent implements OnInit {
             let refsetId = null;
             let parentConceptId = null;
 
-            if (this.selectedParentConcept) {
-                parentConceptId = this.selectedParentConcept;
-            }
-
-            if (this.selectedMetaDataConcept) {
+            if (this.selectedReferenceType !== Constants.EXTERNAL && this.isSelected == 1) {
 
                 name = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
                 refsetId = this.existingMetadataConcepts[this.selectedMetaDataConcept].code;
+                
             } else {
+
                 name = this.createdMetaDataConcept;
+                parentConceptId = this.selectedParentConcept;
             }
 
             let params: any = {
@@ -461,7 +436,9 @@ export class CreateRefsetComponent implements OnInit {
     }
 
     isComplete(): boolean {
+
         let typeCheck = false;
+        let conceptCheck = false;
 
         if (this.selectedReferenceType === Constants.EXTERNAL && this.selectedExternalUrl?.length > 0 && this.selectedExternalName?.length > 0) {
             return true;
@@ -475,7 +452,14 @@ export class CreateRefsetComponent implements OnInit {
             typeCheck = true;
         }
 
-        return ((typeCheck && ((this.createdMetaDataConcept && this.selectedParentConcept) || this.selectedMetaDataConcept) && this.isValidConceptName()) && this.selectedModuleId.length > 0)
+        if (this.isSelected == 1 && CodeUtility.hasValue(this.selectedMetaDataConcept)) {
+            conceptCheck = true;
+
+        } else if (this.isSelected == 2 && CodeUtility.hasValue(this.createdMetaDataConcept) && CodeUtility.hasValue(this.selectedParentConcept) && this.isValidConceptName()) {
+            conceptCheck = true;
+        }
+
+        return (typeCheck && conceptCheck && this.selectedModuleId.length > 0);
     }
 
     isValidConceptName(): boolean {
@@ -787,11 +771,15 @@ export class CreateRefsetComponent implements OnInit {
         this.selectedReferenceType = $event.value;
     }
 
+    setModuleIdOrder(moduleA, moduleB) {
+        return 1;
+    }
+
     getRefset(): void {
         var name = this.selectedCopyRefset?.name.substring(this.selectedCopyRefset?.name.lastIndexOf('/') + 1);
         this.createdMetaDataConcept = 'Copy of ' + name;
         this.refsetService.getRefset(this.selectedCopyRefset.refsetId,
-            this.copySelectedVersion?.date).subscribe({
+            this.copySelectedVersion.versionDate).subscribe({
             next: (results) => {
                 this.selectedNarrative = (results?.narrative) ? 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative : '';
                 this.selectedTags = results?.tags;

@@ -349,6 +349,14 @@ export class ProjectsConfigurationComponent implements OnInit {
     this.isValidEmail();
   }
 
+  isAnyFieldChanged() {
+    if (this.profileNameValue !== this.selectedProject.name || this.profileDescriptionValue !== this.selectedProject.description || this.isPrivate !== this.selectedProject.privateProject) {
+        return true
+    }
+
+    return false
+}
+
   updateProject(): void {
 
     this.selectedProject.name = this.profileNameValue;

@@ -101,7 +101,7 @@
 
             <div class="col rt2-download-column-field">
                 <div class="row delta-row">
-                    <div class="ml-3"><label class="in-form-label">From:</label></div>
+                    <div><label class="in-form-label">From:</label></div>
 
                     <mat-form-field floatLabel="never" appearance="legacy" class="delta-select">
                         <mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom" (selectionChange)="changeComparisonFrom(data)">
@@ -111,7 +111,7 @@
                         </mat-select>
                     </mat-form-field>
 
-                    <div><label class="in-form-label">To:</label></div>
+                    <div class="ml-3"><label class="in-form-label">To:</label></div>
                     <input class="delta-input-placeholder" placeholder="{{addSpaceAfterVersionDate(data.selectedComparisonTo)}}" name="name" disabled />
                 </div>
             </div>

@@ -28,16 +28,17 @@
 
   <app-sidebar [menuItems]="menu" [id]="teamId"></app-sidebar>
 
-  <div class='container-fluid mt-3'>
+  <page-container>
     <span class="teams-configuration">
 
-      <div class="section-header mb-3 form-title"> Team Configuration </div>
+      <heading-with-count title="Team Configuration" classname="mb-3" showcount="false"></heading-with-count>
+      <!-- <div class="section-header mb-3 form-title"> Team Configuration </div> -->
       <div class="teams-configuration-details">
         <div class="teams-configuration-blocks-1">
 
           <div class="teams-configuration-block main-block profile-block">
 
-            <div class="teams-profile-head section-header form-title">Profile</div>
+            <div class="teams-profile-head section-header head-section-title-font">Profile</div>
 
             <div class="teams-profile-mid">
               <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
@@ -73,7 +74,7 @@
 
             <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row team-permissions-block">
 
-              <div class="save-permissions-head section-header">Permissions</div>
+              <div class="save-permissions-head section-header head-section-title-font">Permissions</div>
 
               <div class="save-permissions-mid form-field-header">Choose the permission level or roles
                 for your team.
@@ -100,7 +101,7 @@
 
             <div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row remove-teams-block">
 
-              <div class="remove-team-head section-header form-title"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
+              <div class="remove-team-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg"> Remove this Team</div>
               <div class="remove-team-mid">Warning! This is a permanent operation and
                 cannot be undone. Please be certain before taking action.</div>
               <div class="remove-teams-button">
@@ -118,6 +119,6 @@
       </div>
 
     </span>
-  </div>
+  </page-container>
 
 </div>
