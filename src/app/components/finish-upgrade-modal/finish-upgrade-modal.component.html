@@ -1,7 +1,8 @@
 <button type="button" color="green"
     (click)="refsetDetails?.setWorkflowStatusByAction('', 'FINISH_UPGRADE'); openFinishUpgradeModal(finishUpgradeDialog)"
     aria-hidden="false" class="rt2-btn rt2-next-back-btn"
-    aria-label="Finish Upgrade" title="Finish Upgrade">
+    aria-label="Finish Upgrade" title="Finish Upgrade"
+    [disabled]="isLocked">
     Finish Upgrade
 </button>
 
