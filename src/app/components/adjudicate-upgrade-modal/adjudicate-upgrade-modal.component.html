@@ -182,28 +182,29 @@
             </div>
         </div>
         <div class="modal-footer rt2-modal-footer rt2-btn-group">
-            <button type="button" color="green" (click)="getFinishedChangeReport()" aria-hidden="false"
-              class="rt2-btn rt2-download-btn" aria-label="Download" title="Download">
+            <button type="button" color="green" (click)="isLocked || getFinishedChangeReport()" aria-hidden="false"
+              class="rt2-btn rt2-download-btn" aria-label="Download" title="Download" [disabled]="isLocked">
                 Download Change Report
                 <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
                     download
                 </mat-icon>
             </button>
-            <button type="button" color="green" (click)="getInactiveChangeReport()" aria-hidden="false"
-              class="rt2-btn rt2-download-btn" aria-label="Download" title="Download">
+            <button type="button" color="green" (click)="isLocked || getInactiveChangeReport()" aria-hidden="false"
+              class="rt2-btn rt2-download-btn" aria-label="Download" title="Download" [disabled]="isLocked">
                 Download Inactive Concept Report
                 <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
                     download
                 </mat-icon>
             </button>
-            <button type="button" color="green" aria-label="Pause" (click)="openPauseUpdate()"
-              class="rt2-btn rt2-next-back-btn" title="Pause">
+            <button type="button" color="green" aria-label="Pause" (click)="isLocked || openPauseUpdate()"
+              class="rt2-btn rt2-next-back-btn" [ngClass]="{'disabled' : isLocked}" title="Pause" [disabled]="isLocked">
                 Pause Upgrade
             </button>
             <finish-upgrade-modal [refsetData]="refsetData" [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon"
-              [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts"></finish-upgrade-modal>
-            <button type="button" color="red" (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
-              class="rt2-btn rt2-remove-btn" aria-label="Cancel Upgrade" title="Cancel Upgrade">
+              [membersInCommonForChangeReport]="membersInCommonForChangeReport" [inactiveConcepts]="inactiveConcepts" [isLocked]="isLocked">
+            </finish-upgrade-modal>
+            <button type="button" color="red" (click)="isLocked || openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false"
+              class="rt2-btn rt2-remove-btn" [ngClass]="{'disabled' : isLocked}" aria-label="Cancel Upgrade" title="Cancel Upgrade" [disabled]="isLocked">
                 Cancel Upgrade
             </button>
             </div>
@@ -223,12 +224,12 @@
     <ng-container *ngIf="!params?.data?.isHidden || replacementColumnSortFilter">
         <img
           *ngIf="(params?.data?.stillMember !== undefined && !params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember !== undefined && !params?.data?.stillMember && params?.data?.replaced)"
-          src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
-          class="ml-1 add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+          src="assets/add-symbol-icon.svg" (click)="isLocked || addRemoveConcept(params?.data, 'INACTIVE_ADDED')" width="18px" height="18px" title="Add {{actionText}}" aria-label="Add"
+          class="ml-1 add-symbol-icon" [ngClass]="{'disabled' : isLocked}" alt="Add symbol shown when you're able to add a concept" [disabled]="isLocked"/>
 
         <img *ngIf="(params?.data?.stillMember && !params?.data?.replaced) || (params?.data?.stillMember && params?.data?.replaced)" src="assets/subtract-symbol-icon.svg"
-          (click)="addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract"
-          class="ml-1 subtract-symbol-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+          (click)="isLocked || addRemoveConcept(params?.data, 'INACTIVE_REMOVED')" width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract"
+          class="ml-1 subtract-symbol-icon" [ngClass]="{'disabled' : isLocked}" alt="Subtract symbol shown when you're able to remove a concept" [disabled]="isLocked"/>
     </ng-container>
 </ng-template>
 
@@ -269,20 +270,21 @@
 
             </mat-select>
         </mat-form-field>
-        <img src="assets/add-symbol-icon.svg" (click)="addManualReplacement('NEW_MANUAL_REPLACEMENT');" width="18px" height="18px" aria-label="Add"
-          title="Add Manual Replacement" class="grey-add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+        <img src="assets/add-symbol-icon.svg" (click)="isLocked || addManualReplacement('NEW_MANUAL_REPLACEMENT');" width="18px" height="18px" aria-label="Add"
+          title="Add Manual Replacement" class="grey-add-symbol-icon" [ngClass]="{'disabled' : isLocked}" alt="Add symbol shown when you're able to add a concept" [disabled]="isLocked"/>
     </span>
 </ng-template>
 
 <!-- Replacement Concept Add Remove Templates -->
 <ng-template #replacementConceptCodeSection let-params>
     <ng-container *ngIf="!params?.data?.replacementConcepts[0]?.existingMember">
-        <img *ngIf="!params?.data?.replacementConcepts[0]?.added" src="assets/add-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')" width="18px"
-          height="18px" title="Add {{actionText}}" aria-label="Add" class="ml-1 add-symbol-icon" alt="Add symbol shown when you're able to add a concept" />
+        <img *ngIf="!params?.data?.replacementConcepts[0]?.added" src="assets/add-symbol-icon.svg" (click)="isLocked || addRemoveConcept(params?.data, 'REPLACEMENT_ADDED')"
+          width="18px" height="18px" title="Add {{actionText}}" aria-label="Add" class="ml-1 add-symbol-icon" [ngClass]="{'disabled' : isLocked}"
+          alt="Add symbol shown when you're able to add a concept" [disabled]="isLocked" />
 
-        <img *ngIf="params?.data?.replacementConcepts[0]?.added" src="assets/subtract-symbol-icon.svg" (click)="addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
-          width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract" class="ml-1 subtract-symbol-icon"
-          alt="Subtract symbol shown when you're able to remove a concept" />
+        <img *ngIf="params?.data?.replacementConcepts[0]?.added" src="assets/subtract-symbol-icon.svg" (click)="isLocked || addRemoveConcept(params?.data, 'REPLACEMENT_REMOVED')"
+          width="18px" height="18px" title="Remove {{actionText}}" aria-label="Subtract" class="ml-1 subtract-symbol-icon" [ngClass]="{'disabled' : isLocked}"
+          alt="Subtract symbol shown when you're able to remove a concept" [disabled]="isLocked" />
     </ng-container>
 
     <mat-icon *ngIf="params?.data?.replacementConcepts[0]?.existingMember" class="adjudicate-information-button"
@@ -307,16 +309,19 @@
 <!-- Action Section Templates -->
 <ng-template #actionSection let-params>
     <span *ngIf="params?.data?.replacementConcepts[0]?.reason.includes('MANUAL_REPLACEMENT')">
-        <img src="assets/grey-trash-bin.svg" (click)="removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')" width="18px" height="18px" title="Remove {{actionText}}"
-          aria-label="Remove {{actionText}}" class="grey-trash-bin-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+        <img src="assets/grey-trash-bin.svg" (click)="isLocked || removeManualReplacement('REMOVED_MANUAL_REPLACEMENT')" width="18px" height="18px" title="Remove {{actionText}}"
+          aria-label="Remove {{actionText}}" class="grey-trash-bin-icon"  [ngClass]="{'disabled' : isLocked}"
+          alt="Subtract symbol shown when you're able to remove a concept" [disabled]="isLocked" />
     </span>
     <span *ngIf="(!params?.data?.isHidden || replacementColumnSortFilter) && !params?.data?.isSearch">
-        <img src="assets/grey-add-symbol.svg" (click)="getSelectedRowData('add');" width="18px" height="18px" title="Add replacement concept by ID or FSN" aria-label="Add" class="grey-add-symbol-icon"
-          alt="Add symbol shown when you're able to add a concept" />
+        <img src="assets/grey-add-symbol.svg" (click)="isLocked || getSelectedRowData('add');" width="18px" height="18px"
+          title="Add replacement concept by ID or FSN" aria-label="Add" class="grey-add-symbol-icon"  [ngClass]="{'disabled' : isLocked}"
+          alt="Add symbol shown when you're able to add a concept" [disabled]="isLocked" />
     </span>
     <span *ngIf="params?.data?.isSearch">
-        <img src="assets/grey-close-icon.svg" (click)="getSelectedRowData('remove');" width="18px" height="18px" title="Remove {{actionText}}"
-          aria-label="Remove {{actionText}}" class="grey-close-icon" alt="Subtract symbol shown when you're able to remove a concept" />
+        <img src="assets/grey-close-icon.svg" (click)="isLocked || getSelectedRowData('remove');" width="18px" height="18px" title="Remove {{actionText}}"
+          aria-label="Remove {{actionText}}" class="grey-close-icon"  [ngClass]="{'disabled' : isLocked}"
+          alt="Subtract symbol shown when you're able to remove a concept" [disabled]="isLocked" />
     </span>
 </ng-template>
 

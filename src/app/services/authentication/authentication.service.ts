@@ -76,7 +76,7 @@ export class AuthenticationService {
             (data) => {
 
                 this.setSessionTimeout();
-                
+
                 sessionStorage.setItem('auth_token', data.authToken);
                 sessionStorage.setItem('refset_user', JSON.stringify(data));
 
@@ -92,8 +92,13 @@ export class AuthenticationService {
                 }
             },
             (err) => {
-                this.notificationService.show('Problem with login: ' + err.error.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
                 console.error(err);
+                if (err.status == 401) {
+                    this.notificationService.show(' ' + err?.error, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
+                    this.router.navigate(['/library']);
+                } else {
+                    this.notificationService.show('Problem with login: ' + err?.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+                }
             }
         );
     }

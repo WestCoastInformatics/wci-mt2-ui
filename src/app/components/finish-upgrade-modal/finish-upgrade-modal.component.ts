@@ -14,16 +14,12 @@ import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component'
 })
 export class FinishUpgradeModalComponent implements OnInit {
 
-  @Input()
-  refsetData: any;
-  @Input()
-  membersOfRefset: any;
-  @Input()
-  inactiveConcepts: any;
-  @Input()
-  membersInCommonForChangeReport: any;
-  @Input()
-  membersInCommon: any;
+  @Input() refsetData: any;
+  @Input() membersOfRefset: any;
+  @Input() inactiveConcepts: any;
+  @Input() membersInCommonForChangeReport: any;
+  @Input() membersInCommon: any;
+  @Input() isLocked: boolean;
 
   constructor(private readonly modalService: NgbModal,
     readonly refsetDetails: RefsetDetails,
@@ -156,7 +152,7 @@ export class FinishUpgradeModalComponent implements OnInit {
 		memberItems.forEach((item: any) => {
 			if (item.replaced === true || item.stillMember === false) {
 				// only add if not a duplicate
-				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {					
+				if (inactiveConcepts.filter(c => c.code==item.code).length == 0) {
 					inactiveConcepts.push(item);
 				}
 			}
@@ -184,7 +180,7 @@ export class FinishUpgradeModalComponent implements OnInit {
 				oldMembers.push(item);
 			}
 		}
-		
+
 		// Sort by referencedComponentId
 		oldMembers = oldMembers.sort((a, b) => (a.referencedComponentId > b.referencedComponentId) ? 1 : -1)
 
