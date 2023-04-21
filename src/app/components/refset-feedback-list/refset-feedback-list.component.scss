@@ -1,28 +1,28 @@
-@import "~src/variables.scss";
+@import "~src/assets/scss/variables.scss";
 
 .feedback-modal-header {
-    align-items: center !important;
-    border-bottom: none !important;
-    color: #9B9B9B;
-  
-    .modal-title {
-      flex-grow: 1;
-      color: inherit;
-      font-family: inherit;
-    }
+  align-items: center !important;
+  border-bottom: none !important;
+  color: #9B9B9B;
+
+  .modal-title {
+    flex-grow: 1;
+    color: inherit;
+    font-family: inherit;
+  }
 }
 
 .feedback-status {
   color: inherit;
   margin-right: 20px;
-  font-size: 1.2rem;
+  font-size: $standard_font_size;
   font-weight: 300;
   color: #fff;
   letter-spacing: .5px;
 }
 
 .feedback-modal-footer {
-    border-top: none !important;
+  border-top: none !important;
 }
 
 .discussion-icon-text {

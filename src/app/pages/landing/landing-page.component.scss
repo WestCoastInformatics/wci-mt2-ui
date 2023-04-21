@@ -1,15 +1,16 @@
 // landing-page
-@import "~src/variables.scss";
+@import "~src/assets/scss/variables.scss";
+
 @font-face {
   font-family: 'museo100';
-  src: url(/assets/landing/fonts/museo-100-webfont.woff2) format("woff2"),url(/assets/landing/fonts/museo-100-webfont.woff) format("woff");
+  src: url(/assets/landing/fonts/museo-100-webfont.woff2) format("woff2"), url(/assets/landing/fonts/museo-100-webfont.woff) format("woff");
   font-weight: normal;
   font-style: normal
 }
 
 @font-face {
   font-family: 'museo300';
-  src: url(/assets/landing/fonts/museo-300-webfont.woff2) format("woff2"),url(/assets/landing/fonts/museo-300-webfont.woff) format("woff");
+  src: url(/assets/landing/fonts/museo-300-webfont.woff2) format("woff2"), url(/assets/landing/fonts/museo-300-webfont.woff) format("woff");
   font-weight: normal;
   font-style: normal
 }
@@ -17,14 +18,17 @@
 body {
   line-height: 26px;
 }
+
 $main-color: #00a9e0;
 $secondary-color : #434a55;
-$heading-font: 'museo100',sans-serif;
+$heading-font: 'museo100', sans-serif;
 
-.heading{
+.heading {
   line-height: 36px;
+  font-size: $standard_font_size_h3;
 }
-.landing-page-container{
+
+.landing-page-container {
   position: relative;
   display: block;
   padding: 3rem;
@@ -32,6 +36,7 @@ $heading-font: 'museo100',sans-serif;
   background: #fff;
   margin: 0;
 }
+
 .landing-page-container:before {
   z-index: 0;
   content: " ";
@@ -47,15 +52,19 @@ $heading-font: 'museo100',sans-serif;
   background-position: 50% 50%;
   background-size: cover;
 }
-.landing-page-container > .container{
+
+.landing-page-container>.container {
   position: relative;
   z-index: 1;
   color: #000;
+  font-weight: $standard_font_weight_title;
 }
-.nav-bar{
+
+.nav-bar {
   background-color: #e6e9ee;
 }
-.main-nav{
+
+.main-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -64,72 +73,88 @@ $heading-font: 'museo100',sans-serif;
   padding-inline-start: 0;
   list-style: none;
 }
-.main-nav li{
+
+.main-nav li {
   display: inline-block;
 }
-.main-nav a{
+
+.main-nav a {
   color: $main-color;
   line-height: 23px;
   padding: 15px 10px;
   cursor: pointer;
   display: block;
 }
-.main-nav li:first-child a{
+
+.main-nav li:first-child a {
   padding-left: 0;
 }
-.main-nav a:hover{
+
+.main-nav a:hover {
   color: #006181;
 }
-.main-nav .search{
+
+.main-nav .search {
   flex-grow: 1;
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
   justify-content: center;
 }
-.main-nav .search .search-form{
+
+.main-nav .search .search-form {
   position: relative;
 }
-.main-nav .search input{
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+.main-nav .search input {
+  font-family: $standard_font_family;
   padding: 5px 25px 5px 5px;
   line-height: 1;
   border-radius: 5px;
   border: 1px solid darkgray;
   width: 420px;
 }
-.main-nav .search i{
+
+.main-nav .search i {
   margin-left: -20px;
   display: inline-block;
   color: darkgray;
 }
-.heading-3{
+
+.heading-3 {
   margin-top: 18px;
   margin-bottom: 18px;
+  font-size: $standard_font_size_h2 !important;
 }
-.heading-4{
+
+.heading-4 {
   color: $secondary-color;
   margin-bottom: 30px;
 }
-.text-main{
+
+.text-main {
   color: $main-color;
 }
-.text-secondary{
+
+.text-secondary {
   color: $secondary-color;
 }
-.panel{
+
+.panel {
   padding: 20px;
 }
-.panel-well{
+
+.panel-well {
   background-color: #f5f6fb;
 }
-.dotted{
+
+.dotted {
   border: 0;
   outline: 0;
   border-bottom: 2px dotted #646e78;
 }
 
-.panel-footer{
+.panel-footer {
   background-color: $main-color;
   padding: 10px;
   text-align: right;
@@ -138,31 +163,33 @@ $heading-font: 'museo100',sans-serif;
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 20px;
-  i{
-      margin-left: 15px;
+
+  i {
+    margin-left: 15px;
   }
 }
 
-.section{
+.section {
   padding-top: 30px;
   padding-bottom: 30px;
   line-height: 26px;
 }
 
-.page-section:nth-child(odd){
+.page-section:nth-child(odd) {
   background-color: #e6e9ee;
 }
 
-.panel.height-auto{
+.panel.height-auto {
   height: calc(100% - 46px);
 }
 
 .news-card {
-  img{
-      width: 100%;
+  img {
+    width: 100%;
   }
-  .position-absolute{
-      top: 0;
+
+  .position-absolute {
+    top: 0;
   }
 }
 
@@ -171,6 +198,10 @@ $heading-font: 'museo100',sans-serif;
 .landing-page-info-section {
   grid-area: landing-page-info-section;
   padding-top: 30px;
+
+  p {
+    font-weight: $standard_font_weight_title !important;
+  }
 }
 
 .landing-page-login-section {
@@ -217,15 +248,17 @@ $heading-font: 'museo100',sans-serif;
 
 @media (max-width: 575px) {
   .main-nav .search {
-      .search-form{
-          flex-grow: 1;
-          input{
-              width: 100%;
-          }
+    .search-form {
+      flex-grow: 1;
+
+      input {
+        width: 100%;
       }
+    }
   }
-  .videos-section{
-      margin-top: 20px;
+
+  .videos-section {
+    margin-top: 20px;
   }
 }
 
@@ -234,7 +267,7 @@ $heading-font: 'museo100',sans-serif;
 }
 
 .member-search-icon {
-  color:red; 
+  color: red;
 }
 
 .landing-page-container {
