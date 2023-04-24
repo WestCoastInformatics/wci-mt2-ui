@@ -335,6 +335,12 @@
   background: #f5f5f5;
 }
 
+.refsetDetailsPage>.refset-title-container>.detailsMemberSection>.row>.detailsMemberSection-container .ag-overlay-no-rows-center,
+.ag-overlay-loading-center {
+  position: absolute;
+  top: 0;
+}
+
 .refsetDetailsPage>.refset-title-container>.rt2-refset-details-title-name>.set-of-buttons {
   height: 33px;
   background-color: rgba(255, 255, 255, 1);

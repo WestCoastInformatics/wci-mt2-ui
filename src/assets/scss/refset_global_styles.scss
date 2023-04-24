@@ -42,11 +42,8 @@ textarea {
     outline: none !important;
   }
 
-
-
   &:hover {
     cursor: pointer;
-    color: $standard_button_color;
   }
 
   &.btn {
@@ -120,6 +117,7 @@ form-control {
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
+  min-height: 100%;
 }
 
 .rt2-flex-row {
@@ -455,13 +453,14 @@ tr.refset_tool_inactive_row {
   border-color: $concept_details_color;
   @extend .rt2-rounded-borders;
   margin-bottom: 5px;
-  height: 130px;
-  resize: vertical;
+  padding: 5px;
+  min-height: 100%;
   overflow: auto;
 }
 
 .children-section {
-  height: 623px;
+  height: fit-content;
+  max-height: 400px;
 }
 
 .rt2-concept-details-taxonomy-icon {
@@ -706,6 +705,12 @@ page-container {
 
 .rt2-refset-metadata-column:first-child {
   margin: 0 1.5rem 0 0;
+}
+
+.refsetDetailsPage>.refset-title-container>.detailsMemberSection>.row>.detailsMemberSection-container .ag-overlay-no-rows-center,
+.ag-overlay-loading-center {
+  position: absolute;
+  top: 0;
 }
 
 @media (min-width: 768px) {
@@ -1221,7 +1226,7 @@ page-container {
 }
 
 .add-remove-concept-hierarchy-modal-details-size {
-  height: 250px;
+  height: 100%;
   max-height: 250px;
   overflow: auto;
   overflow-x: hidden;
@@ -1246,8 +1251,8 @@ page-container {
 }
 
 .add-remove-concept-hierarchy-modal-parent-size {
-  height: 90px;
-  max-height: 90px;
+  max-height: 105px;
+  height: fit-content;
 
   &>.row>.rt2-concept-details-taxonomy-icon {
     display: flex;

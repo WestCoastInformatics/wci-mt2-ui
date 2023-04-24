@@ -5,13 +5,13 @@
         <p class="intro-title-font">Welcome to SNOMED International's New Reference Set
             Management Tool!</p>
         <br>
-        <p >SNOMED International's new Reference Set Management Tool
+        <p>SNOMED International's new Reference Set Management Tool
             builds upon the Reference Set and Translation Tool. It builds upon the existing tool by
             adding
             a modern interface, a better modeling user experience, richer capabilities, and
             integrates directly with Snowstorm.</p>
-        <p >Functionality Includes:</p>
-        <ul >
+        <p>Functionality Includes:</p>
+        <ul>
             <li>Full integration with SNOMED's Snowstorm Terminology Server</li>
             <li>Flexible content review workflow</li>
             <li>Enhanced in-tool communication</li>
@@ -30,7 +30,8 @@
             <li><a href="#watchSection">Watch</a></li>-->
             <li class="search">
                 <div class="search-form">
-                    <input type="text" placeholder="Search for reference sets by name, concept or tags" [(ngModel)]="searchInput" (input)="onSearchChange()">
+                    <input type="text" placeholder="Search for reference sets by name, concept or tags"
+                        [(ngModel)]="searchInput" (input)="onSearchChange()">
                     <i class="fa fa-search" *ngIf="!showResults"></i>
                     <i class="fa fa-times" *ngIf="showResults" (click)="clearSearch()"></i>
                 </div>
@@ -43,12 +44,14 @@
 
         <h3 class="heading heading-3 text-main">Search Results</h3>
 
-        <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638"
-            [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+        <ag-grid-angular #directoryTable *ngIf="showTable"
+            class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs"
+            [gridOptions]="refsetGridOptions">
         </ag-grid-angular>
 
-        <app-pagination #directoryPaging *ngIf="showTable" [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-          [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+        <app-pagination #directoryPaging *ngIf="showTable" [pageSize]="refsetGridPaging.pageSize"
+            [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+            [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
         </app-pagination>
 
     </div>
@@ -57,23 +60,26 @@
 <!-- START GRID TEMPLATES -->
 <!-- Information Templates -->
 <ng-template #directoryInfoSection let-params>
-    <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="rt2-table-action-icon w-30 h-30" aria-label="View All Reference Set Metadata"
-      title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
+    <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="rt2-table-action-icon w-30 h-30"
+        aria-label="View All Reference Set Metadata" title="View Reference Set Metadata"
+        (click)="openInformation(params.data.refsetId)">
         <mat-icon class="scale-70-pct">information</mat-icon>
     </button>
-    <span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
+    <span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member"
+        class="member-search-icon general-icon-font">M</span>
 </ng-template>
 
 <ng-template #directoryInfoDialog let-data>
     <div class="container-fluid overflow-auto w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
         <div class="row rt2-refset-details-title-name d-block" title="{{data.name}}" aria-label="{{data.name}}">
             <p class="fs-18 mb-0 ml-10">{{data.name}}</p>
-            <p class="fs-16 ml-10"><span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
-                  *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
+            <p class="fs-16 ml-10"><span
+                    *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
+                    *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
         </div>
 
-        <refset-meta  [refset]="data"></refset-meta>
-      </div>
+        <refset-meta [refset]="data"></refset-meta>
+    </div>
 </ng-template>
 
 <!-- Workflow Status Templates -->
@@ -86,11 +92,12 @@
 <ng-template #directoryNameSection let-params>
     {{ params?.value }}
 
-    <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="rt2-table-action-icon" aria-label="Private Reference Set"
-      title="Private Reference Set">
+    <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon
+        class="rt2-table-action-icon" aria-label="Private Reference Set" title="Private Reference Set">
         lock
     </mat-icon>
-    <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set">
+    <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set"
+        title="Local Set">
         my_location
     </mat-icon>
 
@@ -98,8 +105,9 @@
 
 <!-- Edition Templates -->
 <ng-template #directoryEditionSection let-params>
-    <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}" class="rt2-edition-flag"
-      title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag" />
+    <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}"
+        class="rt2-edition-flag" title="{{params?.data?.editionName}} Flag"
+        aria-label="{{params?.data?.editionName}} Flag" />
     {{params?.data?.edition?.name}}
 </ng-template>
 
@@ -107,13 +115,15 @@
 <ng-template #directoryActionSection let-params>
     <div class="d-flex rt2-wrap">
         <div class="col-2">
-            <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
+            <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable"
+                [disabled]="!params?.data?.downloadable" [refset]="params.data">
             </app-refset-download>
         </div>
 
         <div class="col-2">
-            <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
+            <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id"
+                [refsetId]="params.data.refsetId" [refsetName]="params.data.name" [roles]="params.data.roles"
+                [(discussionCount)]="params.data.openDiscussionCount">
             </app-refset-discussion-list>
         </div>
     </div>
@@ -131,32 +141,45 @@
 <ng-container *ngIf="!showResults">
     <div class="container section page-section" id="learnSection">
         <h3 class="heading heading-3 text-main mb-0 landing-page-center intro-title-font">Learn About RT2</h3>
-        <h4 class="heading-4 landing-page-center intro-text-font">Get up to speed with your Reference set Tool knowledge</h4>
+        <h4 class="heading-4 landing-page-center intro-text-font">Get up to speed with your Reference Set Tool knowledge
+        </h4>
         <div class="row">
             <div class="col-md-6 col-12">
                 <div class="panel panel-well height-auto">
-                    <p class="intro-header-font"><a href="https://confluence.ihtsdotools.org/display/RT2UG" target="_blank"><span class="text-main mr-3">Reference Set Tool User
-                                Guide.</span></a>Access the user guide to get the most out of the new Reference Set Tool.</p>
+                    <p class="intro-header-font"><a href="https://confluence.ihtsdotools.org/display/RT2UG"
+                            target="_blank"><span class="text-main mr-3">Reference Set Tool User
+                                Guide.</span></a>Access the user guide to get the most out of the new Reference Set
+                        Tool.</p>
                     <hr class="dotted" />
-                    <p class="intro-header-font"><a href="assets/1drv.ms/Organization UML.png" target="_blank"><span class="text-main mr-3">Organization Configuration.</span></a>View the ways Organizations, Projects, Teams, and Users connected.</p>
+                    <p class="intro-header-font"><a href="assets/1drv.ms/Organization UML.png" target="_blank"><span
+                                class="text-main mr-3">Organization Configuration.</span></a>View the ways
+                        Organizations, Projects, Teams, and Users are connected.</p>
                     <hr class="dotted" />
-                    <p class="intro-header-font"><a href="assets/1drv.ms/RT2 Workflow State Diagram 11-23-2022.pdf" target="_blank"><span class="text-main mr-3">Workflow Definition.</span></a>View
+                    <p class="intro-header-font"><a href="assets/1drv.ms/RT2 Workflow State Diagram 11-23-2022.pdf"
+                            target="_blank"><span class="text-main mr-3">Workflow Definition.</span></a>View
                         the workflow options diagram to better understand the workflow authoring/reviewing process.</p>
                     <hr class="dotted" />
                 </div>
             </div>
             <div class="clearfix visible-sm"></div>
             <div class="col-md-6 col-12 videos-section">
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/GiDEdWw6WO0" title="Reference Set 2.0: Tool Demo" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/vdgAYWOeC5I" title="Reference Set 2.0: Organization Setup" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/ddpEsJ3oUTo" title="Reference Set 2.0: Reading Content" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                <iframe width="100%" height="300" src="https://www.youtube.com/embed/FtQiRwGkFEM" title="Reference Set 2.0: Making Changes" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/GiDEdWw6WO0"
+                    title="Reference Set 2.0: Tool Demo" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/vdgAYWOeC5I"
+                    title="Reference Set 2.0: Organization Setup" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/ddpEsJ3oUTo"
+                    title="Reference Set 2.0: Reading Content" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/FtQiRwGkFEM"
+                    title="Reference Set 2.0: Making Changes" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
             </div>
         </div>
     </div>
 </ng-container>
-
