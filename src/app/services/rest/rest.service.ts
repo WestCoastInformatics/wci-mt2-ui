@@ -112,11 +112,13 @@ export class RestService {
 
         if (!ignoreErrors) {
 
-            let definedError = ' Error Status: ' + error?.status;
-
+            let definedError = '';
+            if (error?.status) {
+                definedError = ' Error Status: ' + error?.status;
+            }
             if (error?.error?.error) {
                 definedError = ' ' + error.error.error;
-            } else if (error?.error) {
+            } else if (error?.error && typeof (error?.error) != 'object') {
                 definedError = ' ' + error.error;
             }
 

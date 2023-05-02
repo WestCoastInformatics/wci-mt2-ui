@@ -94,6 +94,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ErrorHandlingService } from 'src/app/services/error-handling.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
@@ -217,6 +218,10 @@ const appRoutes: Routes = [
     {
         path: 'organization/0/edition/0/projects/0/refsets',
         component: LandingComponent,
+    },
+    {
+        path: '**',
+        component: LandingComponent
     }
 ];
 
@@ -352,6 +357,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsComponent,
         UsersService,
         NotificationService,
+        ErrorHandlingService,
         DomService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {
