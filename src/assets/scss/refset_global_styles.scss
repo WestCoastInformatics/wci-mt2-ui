@@ -53,6 +53,12 @@ textarea {
   }
 }
 
+input,
+textarea {
+  color: $standard_font_color;
+}
+
+
 table {
   width: 100%;
 }

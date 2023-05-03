@@ -106,6 +106,7 @@ import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-
 import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
+import { InviteComponent } from 'src/app/auth/invite/invite.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
@@ -129,6 +130,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
+    { path: 'invite/response', component: InviteComponent },
     { path: 'login', component: LoginComponent },
     { path: '', component: LandingComponent },
     { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Reference Set Library' } },
@@ -264,6 +266,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsIconsComponent,
         AddRemoveConceptGroupIconsComponent,
         LoginComponent,
+        InviteComponent,
         LandingComponent,
         DashboardComponent,
         SidebarComponent,
