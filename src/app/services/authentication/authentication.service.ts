@@ -16,7 +16,7 @@ export class AuthenticationService {
     public apiCalled: EventEmitter<null>;
 
     GUEST_USER = 'Guest';
-    LOCAL_IMS_URL = 'https://dev-ims.ihtsdotools.org/#/';
+    LOCAL_DEV = 'dev-rt2';
     IMS_COOKIE_NAME = 'ims-ihtsdo';
     userSubject = new Subject<User>();
     authCookie = { name: 'rt2-auth', path: '/' };
@@ -60,12 +60,15 @@ export class AuthenticationService {
     generateImsUrl(endpoint: string): string {
 
         let url = window.location.origin + '/login';
-
-        if (!window.location.origin.includes('local')) {
-            url = window.location.origin.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
-        } else {
-            url = this.LOCAL_IMS_URL + endpoint + '?serviceReferer=' + url;
+        let hostname = window.location.hostname;
+        
+        if(hostname.indexOf('rt2') < 0){
+            if(hostname.indexOf('local') > -1){
+                hostname = hostname.replace('local', this.LOCAL_DEV);
+            }
         }
+
+        url = 'https://'+hostname.replace('rt2', 'ims') + '/#/' + endpoint + '?serviceReferer=' + url;
 
         return url;
     }
