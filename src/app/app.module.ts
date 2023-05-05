@@ -86,7 +86,6 @@ import { PersonalConfigurationComponent } from './pages/personal/configuration/c
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { AuthoringService } from 'src/app/services/authoring/authoring.service';
 import { RestService } from 'src/app/services/rest/rest.service';
 import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -345,7 +344,6 @@ const appRoutes: Routes = [
     entryComponents: [NotificationComponent],
     providers: [
         AuthenticationService,
-        AuthoringService,
         ArtifactsService,
         AuditService,
         EnvServiceProvider,
