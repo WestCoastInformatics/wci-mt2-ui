@@ -32,7 +32,9 @@
                 <mat-label>Choose User(s) to Add</mat-label>
                 <mat-select multiple [(ngModel)]="emails" [disableOptionCentering]="true" class="team-member-select">
                     <mat-option class="team-member-select-option" *ngFor="let user of users" [value]="user.email" >
+                        <span class="text-lowercase">
                         {{ user.email }}
+                        </span>
                     </mat-option>
                 </mat-select>
             </mat-form-field>
