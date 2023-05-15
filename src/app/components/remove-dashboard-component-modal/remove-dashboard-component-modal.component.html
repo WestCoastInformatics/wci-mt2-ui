@@ -1,5 +1,5 @@
-<button class="rt2-btn rt2-remove-btn" title="Remove {{componentType}}"
-  [disabled]="disabled" (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
+<button class="rt2-btn rt2-remove-btn" title="Remove {{componentType}}" [disabled]="disabled"
+  (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
   Remove {{componentType | titlecase}}
 </button>
 
@@ -45,7 +45,7 @@
         <p>Type "remove {{componentType}}" to confirm:</p>
       </tr>
       <tr>
-        <input class="modal-input-field-border-bottom" #removeText
+        <input class="modal-input-field-border-bottom" #removeText (contextmenu)="false"
           placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />{{ removeText.focus()
         }}
       </tr>
@@ -54,14 +54,12 @@
   </div>
 
   <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-    <button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()"
-      color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn"
-      aria-label="Remove" title="Remove">
+    <button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()" color="red" aria-hidden="false"
+      class="rt2-btn rt2-remove-btn" aria-label="Remove" title="Remove">
       Remove
     </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" color="red"
-      aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="No, Cancel"
-      title="No, Cancel">
+    <button type="button" (click)="modal.dismiss('Cross click')" color="red" aria-hidden="false"
+      class="rt2-btn rt2-cancel-btn" aria-label="No, Cancel" title="No, Cancel">
       No, Cancel
     </button>
   </div>

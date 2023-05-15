@@ -258,6 +258,10 @@ export class RefsetFeedbackListComponent implements OnInit {
                 results.total = results.items.length;
                 results.totalKnown = true;
                 this.threadsData = results.items;
+                for (const thread of this.threadsData) {
+                    thread.originalPost = thread.posts[0];
+                    thread.posts = thread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')));
+                }
                 const pageNumber = 1;
 
                 if (results.items.length === 0) {
@@ -289,7 +293,6 @@ export class RefsetFeedbackListComponent implements OnInit {
         for (const thread of this.threadsData) {
             if (thread.id === event.data.id) {
                 this.selectedThread = thread;
-                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')));
             }
         }
 
@@ -312,15 +315,14 @@ export class RefsetFeedbackListComponent implements OnInit {
 
             this.isResolved = this.selectedThread.status == this.RESOLVED;
             this.postButtonText = 'Reply';
+            this.canEditThread = false;
+            this.canDeleteThread = false;
+            if (this.selectedThread.posts.length > 0) {
+                if ((this.roles.includes('ADMIN') || this.user.roles.includes('all-all-admin')) || this.selectedThread.posts[0].user.userName == this.user.userName) {
 
-            if ((this.roles.includes('ADMIN') || this.user.roles.includes('all-all-admin')) || this.selectedThread.posts[0].user.userName == this.user.userName) {
-
-                this.canEditThread = true;
-                this.canDeleteThread = true;
-            } else {
-
-                this.canEditThread = false;
-                this.canDeleteThread = false;
+                    this.canEditThread = true;
+                    this.canDeleteThread = true;
+                }
             }
         }
 

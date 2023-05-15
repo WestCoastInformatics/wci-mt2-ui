@@ -15,8 +15,10 @@ export class ErrorHandlingService {
 		if (
 			this.router.url.includes("/login")
 		) {
-			this.notificationService.show(error.message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-			return throwError(() => error);
+			if (error.status !== 403) {
+				this.notificationService.show(error.message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+			}
+			return;
 		}
 
 		if (error.status === 401) {

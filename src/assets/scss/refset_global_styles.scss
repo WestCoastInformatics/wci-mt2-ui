@@ -257,8 +257,8 @@ tr.refset_tool_inactive_row {
   }
 
   &.rt2-ag-grid-filter .ag-header {
-    height: 110px !important;
-    min-height: 110px !important;
+    height: 97px !important;
+    min-height: 97px !important;
   }
 
   .ag-header-row-floating-filter {
@@ -293,7 +293,7 @@ tr.refset_tool_inactive_row {
 }
 
 .ag-floating-filter-input {
-  padding-bottom: 12px;
+  padding-bottom: 2em;
 }
 
 /*******  General Page Styles *******/
@@ -564,7 +564,7 @@ tr.refset_tool_inactive_row {
 
 // Search & Refset Filter
 .mat-form-field-appearance-legacy .mat-form-field-infix {
-  padding: 0.6rem 0 0 0;
+  padding: 1.6rem 0 0 0;
   margin-top: 20px;
 }
 
@@ -572,6 +572,14 @@ tr.refset_tool_inactive_row {
   padding-right: 0;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+.projects-dropdown-block .mat-form-field-infix .mat-select-placeholder {
+  line-height: 3.5;
+}
+
+.mat-form-field-flex {
+  margin-top: -2em;
 }
 
 page-container {
@@ -627,7 +635,12 @@ page-container {
 }
 
 .mat-form-field .mat-form-field-wrapper {
-  padding-bottom: 1.4em;
+  padding-bottom: 2em;
+}
+
+.mat-form-field-label-wrapper {
+  top: -0.04375em;
+  padding-top: 0.84375em;
 }
 
 .mat-select-panel-wrap {
