@@ -95,7 +95,7 @@
                     class="medium-icon-image" />
 
                 <div class="topic-author">
-                    <div>{{ selectedThread.originalPost?.user.name }}</div>
+                    <div>{{ selectedThread.posts[0]?.user.name }}</div>
                     <div class="topic-time">
                         {{ formatDateTime(selectedThread.posts[0]?.created) }}
                         <span *ngIf="selectedThread.posts[0]?.created != selectedThread.posts[0]?.modified">
@@ -142,7 +142,7 @@
                 <div class="topic-title feedback-topic-title-font">
                     {{ selectedThread.subject }}
                 </div>
-                <div [innerHTML]="selectedThread.originalPost?.message"></div>
+                <div [innerHTML]="selectedThread.posts[0]?.message"></div>
             </div>
 
             <!-- LIST POSTS SECTION -->
