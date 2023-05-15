@@ -91,16 +91,16 @@
             <!-- ORIGINAL POST HEADER SECTION -->
             <div *ngIf="editMode != 'newThread' && !editMode.includes('edit')" class="topic-header">
 
-                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedThread.originalPost?.user.iconUri)"
+                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedThread.posts[0]?.user.iconUri)"
                     class="medium-icon-image" />
 
                 <div class="topic-author">
                     <div>{{ selectedThread.originalPost?.user.name }}</div>
                     <div class="topic-time">
-                        {{ formatDateTime(selectedThread.originalPost?.created) }}
-                        <span *ngIf="selectedThread.originalPost?.created != selectedThread.originalPost?.modified">
+                        {{ formatDateTime(selectedThread.posts[0]?.created) }}
+                        <span *ngIf="selectedThread.posts[0]?.created != selectedThread.posts[0]?.modified">
                             (Edited: {{
-                            formatDateTime(selectedThread.originalPost?.modified)
+                            formatDateTime(selectedThread.posts[0]?.modified)
                             }}
                             )</span>
                         <i *ngIf="selectedThread.privateThread"

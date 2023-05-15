@@ -53,6 +53,11 @@ textarea {
   }
 }
 
+.form-field-header {
+  top: -0.84375em;
+  padding-top: 0.84375em;
+}
+
 input,
 textarea {
   color: $standard_font_color;
@@ -578,6 +583,15 @@ tr.refset_tool_inactive_row {
   line-height: 3.5;
 }
 
+.mat-form-field-label{
+  top: 0.4em;
+}
+
+.mat-form-field-label-wrapper {
+  top: 0;
+  padding: 0;
+}
+
 .mat-form-field-flex {
   margin-top: -2em;
 }
@@ -636,11 +650,6 @@ page-container {
 
 .mat-form-field .mat-form-field-wrapper {
   padding-bottom: 2em;
-}
-
-.mat-form-field-label-wrapper {
-  top: -0.04375em;
-  padding-top: 0.84375em;
 }
 
 .mat-select-panel-wrap {
@@ -775,6 +784,7 @@ page-container {
 }
 
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  margin-top: 0.8em;
   padding: 0 !important;
   letter-spacing: 1.5px;
   line-height: 30px !important;
