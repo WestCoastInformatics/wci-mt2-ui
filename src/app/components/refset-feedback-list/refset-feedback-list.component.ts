@@ -260,7 +260,6 @@ export class RefsetFeedbackListComponent implements OnInit {
                 this.threadsData = results.items;
                 for (const thread of this.threadsData) {
                     thread.originalPost = thread.posts[0];
-                    thread.posts = thread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')));
                 }
                 const pageNumber = 1;
 
@@ -293,6 +292,7 @@ export class RefsetFeedbackListComponent implements OnInit {
         for (const thread of this.threadsData) {
             if (thread.id === event.data.id) {
                 this.selectedThread = thread;
+                this.selectedThread.posts = this.selectedThread.posts.filter(p => !p.privatePost || p.user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')));
             }
         }
 
