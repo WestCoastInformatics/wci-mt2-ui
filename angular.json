@@ -21,6 +21,7 @@
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "aot": true,
+                        "baseHref": "/",
                         "outputPath": "dist/angular-template",
                         "index": "src/index.html",
                         "main": "src/main.ts",
@@ -38,7 +39,7 @@
                         "styles": [
                             "./node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "./node_modules/@fortawesome/fontawesome-free/css/all.css",
-                            "src/styles.scss",
+                            "src/assets/scss/styles.scss",
                             "node_modules/ngx-toastr/toastr.css",
                             "./ecl-builder/styles.css"
                         ],
@@ -80,8 +81,7 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "browserTarget": "angular-template:build",
-                        "liveReload": false,
-                        "baseHref": "/"
+                        "liveReload": false
                     },
                     "configurations": {
                         "production": {

@@ -39,6 +39,11 @@ export class ProjectsConfigurationComponent implements OnInit {
   emailError = '';
   organizationId: any;
   showLoadingSpinner = false;
+  userMessages = {
+    updateProjectSuccess: 'Update process complete.',
+    preventRemoveTeam: 'Cannot remove this team as it would remove a required role from the project',
+    warnTeamRoleRequired: 'A project must have one or more teams supporting all three roles (author, reviewer, and admin) to save.'
+  }
 
   constructor(private readonly breadcrumbService: BreadcrumbService,
     private readonly titleService: Title,
@@ -379,7 +384,10 @@ export class ProjectsConfigurationComponent implements OnInit {
       next: (results) => {
 
         this.showLoadingSpinner = false;
-        this.notificationService.show('Update process complete.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+        this.teamList.map(function (team) {
+          return Object.assign(team, { saved: true });
+        })
+        this.notificationService.show(this.userMessages.updateProjectSuccess, null, 'success', { timeOut: 0, extendedTimeOut: 0 });
       },
       error: (error) => {
         this.showLoadingSpinner = false;
@@ -392,7 +400,9 @@ export class ProjectsConfigurationComponent implements OnInit {
     const query = 'organizationId:' + this.organizationId;
 
     this.refsetService.getTeams('hideOrganizationTeams=true&sort=name&sortAscending=true&query=' + query).subscribe((results) => {
-      this.teamList = results.items;
+      this.teamList = results.items.map(function (item) {
+        return Object.assign(item, { saved: true });
+      })
     });
   }
 
@@ -416,6 +426,9 @@ export class ProjectsConfigurationComponent implements OnInit {
   }
 
   addToTeamList(team: any): void {
+
+    //change saved state if the team has been added
+    team.saved = false;
     this.selectedTeams.push(team);
     this.selectedTeamIds?.push(team.id);
     this.checkIfTeamContainsRoles();
@@ -424,8 +437,14 @@ export class ProjectsConfigurationComponent implements OnInit {
   removeFromTeamList(team): void {
 
     if (this.selectedTeamIds?.includes(team.id) && this.selectedTeamIds?.length === 1) {
-      this.notificationService.show('Cannot remove this team as it would remove a required role from the project', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-      return
+      //if a project has only one team removed before the first team added has been saved then warn only 
+      //else after first team has been saved then prevent removal and show error before a user has selected another team with all required roles then the first team can be removed. 
+      if (team.saved === false) {
+        this.notificationService.show(this.userMessages.warnTeamRoleRequired, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+      } else {
+        this.notificationService.show(this.userMessages.preventRemoveTeam, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+        return
+      }
     }
 
     const idIndex = this.selectedTeamIds?.indexOf(team.id);
@@ -466,10 +485,15 @@ export class ProjectsConfigurationComponent implements OnInit {
 
     if (hasAdmin && hasAuthor && hasReviewer) {
       this.containsRole = true;
-      document.getElementById("save-teams-btn").title = "Save Teams";
+      document.getElementById("save-teams-btn").parentElement.title = "Save Teams";
     } else {
       this.containsRole = false;
-      document.getElementById("save-teams-btn").title = "A project must have one or more teams supporting all three roles (author, reviewer, and admin) to save.";
+      document.getElementById("save-teams-btn").parentElement.title = this.userMessages.warnTeamRoleRequired;
+      //if this is the first team added to the project show warning message
+      if (this.selectedTeams.length === 1) {
+        this.notificationService.show(this.userMessages.warnTeamRoleRequired, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+        return
+      }
     }
   }
 

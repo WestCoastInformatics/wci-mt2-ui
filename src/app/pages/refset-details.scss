@@ -1,43 +1,44 @@
-@import "~src/variables.scss";
-@import "~src/app/core-styles.scss";
+@import "~src/assets/scss/variables.scss";
+@import "~src/assets/scss/core-styles.scss";
 
 #detailsMembersTree .tree-children {
-    overflow: unset;
-    padding-left: 0;
+  overflow: unset;
+  padding-left: 0;
 }
 
 #detailsMembersTree tree-node {
-    position: relative;
+  position: relative;
 }
 
 #detailsMembersTree tree-node:nth-child(even) {
-    background-color: #f5f5f5;
-    display: block;
+  background-color: #f5f5f5;
+  display: block;
 }
 
 #detailsMembersTree tree-node:nth-child(odd) {
-    background-color: #fff;
-    display: block;
+  background-color: #fff;
+  display: block;
 }
 
 .rt2-details-member-status-field {
-    margin-left: 20px;
-    .mat-form-field-infix {
-      width: 153px;
-    }
+  margin-left: 20px;
+
+  .mat-form-field-infix {
+    width: 153px;
+  }
 }
 
 .head-title {
-  font-size: 18px !important;
-  font-family: Roboto, Helvetica, Arial, sans-serif !important;
+  font-size: $standard_font_size_h2 !important;
+  font-family: $standard_font_family !important;
   line-height: 1.5 !important;
   color: #555555 !important;
-  font-weight: 400 !important;
+  font-weight: $standard_font_weight !important;
 }
 
 .rt2-toggle-buttons-container {
-    padding-left: 20px;
-    padding-top: 8px;
+  padding-left: 20px;
+  padding-top: 8px;
 }
 
 .rt2-flex-wrap {
@@ -59,8 +60,8 @@
 
 .rt2-toggle-buttons {
   mat-button-toggle {
-    font-size: 14px;
-    font-weight: 400;
+    font-size: $standard_font_size;
+    font-weight: $standard_font_weight;
     white-space: nowrap;
     text-decoration: none;
     vertical-align: middle;
@@ -68,35 +69,36 @@
     line-height: 30px;
     letter-spacing: 1.5px;
   }
+
   margin-right: 15px;
   margin-bottom: 10px;
 }
 
 .rt2-details-member-taxonomy {
-    height: 800px;
+  height: 800px;
 }
 
 .rt2-details-member-taxonomy .details-section {
-    height: 968px;
-    overflow: auto;
+  height: 968px;
+  overflow: auto;
 }
 
 .refsetDetailsPage {
-    padding: 0px;
-  
-    .rt2-directory-column-information {
-      justify-content: center;
-      padding-left: 12px;
-    }
-  
-    .rt2-directory-column-information .rt2-table-action-icon {
-      left: 0px;
-    }
+  padding: 0px;
+
+  .rt2-directory-column-information {
+    justify-content: center;
+    padding-left: 12px;
+  }
+
+  .rt2-directory-column-information .rt2-table-action-icon {
+    left: 0px;
+  }
 
 }
 
 .refsetDetailsPage .page-title {
-    padding-left: 30px;
+  padding-left: 30px;
 }
 
 .refsetDetailsPage .row {
@@ -110,7 +112,7 @@
 
 .refsetDetailsPage .rt2-refset-details-title-name {
   display: flex;
-  font-weight: bold;
+  font-weight: $standard_font_weight_bold;
   max-width: 700px;
   color: #555555;
   align-items: center;
@@ -118,7 +120,7 @@
 
 .refsetDetailsPage {
   .refset-member-title {
-    font-weight: bold;
+    font-weight: $standard_font_weight_bold;
     padding-left: 0px;
   }
 }
@@ -254,8 +256,8 @@
 .mat-button-toggle-checked {
   background-color: #00a9e0;
   color: white;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: $standard_font_size;
+  font-weight: $standard_font_weight;
   white-space: nowrap;
   text-decoration: none;
   vertical-align: middle;
@@ -333,6 +335,12 @@
   background: #f5f5f5;
 }
 
+.refsetDetailsPage>.refset-title-container>.detailsMemberSection>.row>.detailsMemberSection-container .ag-overlay-no-rows-center,
+.ag-overlay-loading-center {
+  position: absolute;
+  top: 0;
+}
+
 .refsetDetailsPage>.refset-title-container>.rt2-refset-details-title-name>.set-of-buttons {
   height: 33px;
   background-color: rgba(255, 255, 255, 1);
@@ -361,7 +369,7 @@
 
 .refsetDetailsPage>.refset-title-container>.metadata-container>.refset-metadata-container>.metadata-name {
   display: flex;
-  font-weight: bold;
+  font-weight: $standard_font_weight_bold;
   margin-left: -15px;
 }
 

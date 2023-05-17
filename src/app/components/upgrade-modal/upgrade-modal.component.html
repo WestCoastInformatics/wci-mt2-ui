@@ -1,11 +1,9 @@
-<button *ngIf="isInitialUpgrade" aria-hidden="false"
-  #upgradeButton class="rt2-btn rt2-action-btn"
+<button *ngIf="isInitialUpgrade" aria-hidden="false" #upgradeButton class="rt2-btn rt2-action-btn"
   (click)="openVersionChoiceModal()" aria-label="Upgrade" title="Upgrade">
   Upgrade
 </button>
-<adjudicate-upgrade-modal *ngIf="!isInitialUpgrade" [refsetData]="refsetData"
-  [membersOfRefset]="membersOfRefset" [membersInCommon]="membersInCommon"
-  [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
+<adjudicate-upgrade-modal *ngIf="!isInitialUpgrade" [refsetData]="refsetData" [membersOfRefset]="membersOfRefset"
+  [membersInCommon]="membersInCommon" [inactiveConcepts]="inactiveConcepts"></adjudicate-upgrade-modal>
 <ng-template #upgradeDialog let-modal>
   <ng-container>
     <div class="modal-header rt2-modal-header">
@@ -34,8 +32,8 @@
                 {{latestDate(refsetData?.versionList)}}</td>
             </tr>
             <tr>
-              <td class="upgrade-modal-current-terminology-label"
-                aria-label="Current Terminology:">Current Terminology:</td>
+              <td class="upgrade-modal-current-terminology-label" aria-label="Current Terminology:">Current Terminology:
+              </td>
               <td class="upgrade-modal-current-terminology-term">{{refsetData?.editionShortName}}
               </td>
             </tr>
@@ -69,13 +67,11 @@
 
 
     <div class="modal-footer rt2-modal-footer rt2-btn-group">
-      <button type="button" color="green" aria-hidden="false"
-        class="rt2-btn rt2-next-back-btn" aria-label="Upgrade" title="Upgrade"
-        (click)="modal.dismiss('Cross click'); upgrade()">
+      <button type="button" color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Upgrade"
+        title="Upgrade" (click)="modal.dismiss('Cross click'); upgrade()">
         Start Upgrade
       </button>
-      <button type="button" (click)="modal.dismiss('Cross click')"
-        aria-hidden="false" class="rt2-btn rt2-cancel-btn"
+      <button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn"
         aria-label="Cancel" title="Cancel">
         Cancel
       </button>
@@ -85,22 +81,28 @@
 
 <!--Version Continue Modal-->
 <ng-template #versionContinueDialog let-modal>
-  <div class="modal-header review-modal-header">
-      <button ngbAutofocus class="unfocus-btn"></button>
-      <button type="button" class="close" aria-label="Close" (click)="setVersionContinueChoice(false)">
-          <span aria-hidden="true">&times;</span>
-      </button>
+  <div class="modal-header review-modal-header rt2-modal-header">
+    <h3 class="modal-title rt2-modal-title modal-header-font">
+      Upgrade Reference Set
+    </h3>
+    <button ngbAutofocus class="unfocus-btn"></button>
+    <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
+      (click)="setVersionContinueChoice(false)">
+      <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+    </button>
   </div>
   <div class="modal-body review-modal-body">
-      <div>This reference set is already based on the latest version of the edition. Are you sure you want to continue?
-      </div>
+    <div>This reference set is already based on the latest version of the edition. Are you sure you want to continue?
+    </div>
   </div>
   <div class="modal-footer ready-for-review-footer">
-      <button type="button" (click)="setVersionContinueChoice(true)" aria-hidden="false" class="rt2-btn rt2-action-btn m-r-20" aria-label="Yes" title="Yes">
-          Yes
-      </button>
-      <button type="button" (click)="setVersionContinueChoice(false)" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No" title="No">
-          No
-      </button>
+    <button type="button" (click)="setVersionContinueChoice(true)" aria-hidden="false"
+      class="rt2-btn rt2-action-btn m-r-20" aria-label="Yes" title="Yes">
+      Yes
+    </button>
+    <button type="button" (click)="setVersionContinueChoice(false)" aria-hidden="false" class="rt2-btn rt2-remove-btn"
+      aria-label="No" title="No">
+      No
+    </button>
   </div>
 </ng-template>

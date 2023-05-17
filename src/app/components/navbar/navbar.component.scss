@@ -1,165 +1,169 @@
-@import "~src/variables.scss";
+@import "~src/assets/scss/variables.scss";
 
 nav {
-    height: 50px !important;
-    padding: 5px;
-    position: fixed;
-    width:100%;
-    background-color: #434955 !important;
+  height: 50px !important;
+  padding: 5px;
+  position: fixed;
+  width: 100%;
+  background-color: #434955 !important;
 
-    a.logo {
-        height: 40px;
+  a.logo {
+    height: 40px;
 
-        span.nav-title {
-            font-weight: 300;
-            letter-spacing: 1.5px;
-            line-height: 4rem;
-            vertical-align: top;
+    span.nav-title {
+      font-weight: 300;
+      letter-spacing: 1.5px;
+      line-height: 4rem;
+      vertical-align: top;
+      cursor: pointer;
+    }
+
+    img.logo {
+      vertical-align: initial;
+      height: 4rem;
+    }
+  }
+
+  div.banner {
+    position: absolute;
+    top: 0.6rem;
+    left: -3rem;
+    transform: rotate(-45deg);
+    line-height: 1rem;
+    opacity: 0.8;
+  }
+
+  div.local::before {
+    content: "LOC";
+    padding: 0 3rem;
+    background-color: $river-bed;
+    border: 1px solid $sea-buckthorn;
+  }
+
+  div.dev::before {
+    content: "DEV";
+    padding: 0 3rem;
+    background-color: $mandy;
+    border: 1px solid $sea-buckthorn;
+  }
+
+  div.uat::before {
+    content: "UAT";
+    padding: 0 3rem;
+    background-color: $cerulean;
+    border: 1px solid $sea-buckthorn;
+  }
+
+  div.training::before {
+    content: "TRN";
+    padding: 0 3rem;
+    background-color: $fruit-salad;
+    border: 1px solid $sea-buckthorn;
+  }
+
+  div.user {
+    height: 3rem;
+
+    span {
+      line-height: 3rem;
+      font-weight: $standard_font_weight;
+      letter-spacing: 0.1rem;
+    }
+
+    img {
+      height: 3rem;
+      width: 3rem;
+    }
+  }
+
+  div.logout {
+    cursor: pointer;
+    height: 3rem;
+
+    span {
+      line-height: 3rem;
+      font-weight: $standard_font_weight;
+      letter-spacing: 0.1rem;
+
+      &:hover {
+        color: $cerulean;
+      }
+    }
+  }
+
+  ul.dropdown-nav {
+    list-style-type: none;
+    max-height: 3rem;
+
+    li {
+      display: inline-block;
+
+      a {
+        color: $white;
+        line-height: 2rem;
+        font-weight: $standard_font_weight;
+        letter-spacing: 0.2rem;
+      }
+
+      div.dropdown-menu {
+        background-color: $bootstrap-black;
+        z-index: auto;
+        min-width: auto;
+
+        &.show {
+          display: block;
+        }
+
+        a.dropdown-item {
+          font-weight: $standard_font_weight;
+          z-index: auto;
+
+          &:hover {
+            background-color: darken($bootstrap-black, 10%);
             cursor: pointer;
+          }
         }
+      }
+    }
+  }
 
-        img.logo {
-            vertical-align: initial;
-            height: 4rem;
-        }
+  #userDropdownMenu {
+    .user-img {
+      width: 3rem;
     }
 
-    div.banner {
-        position: absolute;
-        top: 0.6rem;
-        left: -3rem;
-        transform: rotate(-45deg);
-        line-height: 1rem;
-        opacity: 0.8;
+    .dropdown-menu {
+      background-color: #434955;
+      right: -7px;
+      top: calc(100% - 1px);
+      min-width: 200px;
+
+      .dropdown-item {
+        color: #fff;
+      }
+
+      .dropdown-item:hover {
+        color: $bootstrap-black;
+      }
+
+      .dropdown-divider {
+        border-top: 1px solid #797979;
+        margin-top: 0.5rem !important;
+      }
+
+      .profile-block {
+        flex-grow: 1;
+        padding: 0 10px;
+        display: inline-block;
+        font-size: $standard_font_size_h3;
+      }
     }
-
-    div.local::before {
-        content: "LOC";
-        padding: 0 3rem;
-        background-color: $river-bed;
-        border: 1px solid $sea-buckthorn;
-    }
-
-    div.dev::before {
-        content: "DEV";
-        padding: 0 3rem;
-        background-color: $mandy;
-        border: 1px solid $sea-buckthorn;
-    }
-
-    div.uat::before {
-        content: "UAT";
-        padding: 0 3rem;
-        background-color: $cerulean;
-        border: 1px solid $sea-buckthorn;
-    }
-
-    div.training::before {
-        content: "TRN";
-        padding: 0 3rem;
-        background-color: $fruit-salad;
-        border: 1px solid $sea-buckthorn;
-    }
-
-    div.user {
-        height: 3rem;
-
-        span {
-            line-height: 3rem;
-            font-weight: 400;
-            letter-spacing: 0.1rem;
-        }
-
-        img {
-            height: 3rem;
-            width: 3rem;
-        }
-    }
-
-    div.logout {
-        cursor: pointer;
-        height: 3rem;
-
-        span {
-            line-height: 3rem;
-            font-weight: 400;
-            letter-spacing: 0.1rem;
-
-            &:hover {
-                color: $cerulean;
-            }
-        }
-    }
-
-    ul.dropdown-nav {
-        list-style-type: none;
-        max-height: 3rem;
-
-        li {
-            display: inline-block;
-
-            a {
-                color: $white;
-                line-height: 2rem;
-                font-weight: 400;
-                letter-spacing: 0.2rem;
-            }
-
-            div.dropdown-menu {
-                background-color: $bootstrap-black;
-                z-index: auto;
-                min-width: auto;
-
-                &.show {
-                    display: block;
-                }
-
-                a.dropdown-item {
-                    font-weight: 400;
-                    z-index: auto;
-
-                    &:hover {
-                        background-color: darken($bootstrap-black, 10%);
-                        cursor: pointer;
-                    }
-                }
-            }
-        }
-    }
-    #userDropdownMenu{
-        .user-img{
-            width: 3rem;
-        }
-
-        .dropdown-menu{
-            background-color: #434955;
-            right: -7px;
-            top: calc(100% - 1px);
-            min-width: 200px;
-
-            .dropdown-item{
-                color: #fff;
-            }
-            .dropdown-item:hover{
-                color: $bootstrap-black;
-            }
-            .dropdown-divider{
-                border-top: 1px solid #797979;
-                margin-top: 0.5rem !important;
-            }
-
-            .profile-block{
-                flex-grow: 1;
-                padding: 0 10px;
-                display: inline-block;
-            }
-        }
-    }
+  }
 
 }
 
-.navbar  {
-  justify-content: center; 
+.navbar {
+  justify-content: center;
   padding-bottom: 5px !important;
 }
 
@@ -188,22 +192,25 @@ nav {
 .rt2-nav-logo-section {
   display: flex;
   align-items: center;
-  width: 350px;
+  width: 360px;
   text-decoration: none;
 }
 
 .rt2-nav-title {
   color: #eee;
-  white-space: nowrap; 
-  text-overflow: ellipsis; 
+  white-space: nowrap;
+  text-overflow: ellipsis;
   overflow: hidden;
+  font-size: $standard_font_size_h3;
+  padding: 0 0.5em 0 0.5em;
 }
+
 .rt2-nav-title:hover {
   color: #00a9e0;
 }
 
 .rt2-breadcrumb-bar> :first-child {
-  margin-left: 10px;
+  margin-left: 0;
 }
 
 .rt2-breadcrumb-bar> :not(:last-child)::after {
@@ -218,8 +225,8 @@ nav {
 
   .rt2-breadcrumb {
     color: #c8cfd6;
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-    font-weight: 300;
+    font-family: $standard_font_family;
+    font-weight: $standard_font_weight;
 
     &.rt2-breadcrumb-selectable {
       cursor: pointer;
@@ -301,13 +308,13 @@ nav {
 }
 
 .project-role {
-  padding-right: 30px;
+  padding-right: 10px;
   color: white;
   position: relative;
 }
 
 .project-assignee {
-  padding-right: 30px;
+  padding-right: 10px;
   color: white;
   position: relative;
 }

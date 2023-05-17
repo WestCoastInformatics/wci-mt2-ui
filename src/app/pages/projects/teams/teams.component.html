@@ -24,7 +24,7 @@
                 <span class="projects-dropdown-block">
                     <!-- <span class="title-label">Editions</span> -->
                     <mat-form-field floatLabel="never" appearance="legacy" class="projects-drop-down">
-                        <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Selecr Edition'" [(value)]="selectedEdition"
+                        <mat-select [disableOptionCentering]="true" [placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'" [(value)]="selectedEdition"
                         (selectionChange)="selectedEdition()">
                             <mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
                                 {{ edition.name }}

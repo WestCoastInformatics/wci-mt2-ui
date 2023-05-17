@@ -1,13 +1,14 @@
 // Main Layout Styles
 
-@import "~src/variables.scss";
-@import "~src/app/font-styles.scss";
+@import "~src/assets/scss/variables.scss";
+@import "~src/assets/scss/font-styles.scss";
 
 /********  Tag Styles *******/
 
 html,
 body,
 body.refset-tool.modal-open {
+  font-size: 62.5%;
   color: $standard_font_color;
   position: relative;
   min-height: 100%;
@@ -29,9 +30,12 @@ button,
 input,
 textarea {
   @extend .form-field-header;
+  font-size: $standard_font_size_text;
+  font-weight: $standard_font_weight;
   letter-spacing: 0.5px;
   border: none;
   resize: none;
+  color: $standard_button_color;
 
   &:focus,
   &:active {
@@ -43,10 +47,22 @@ textarea {
   }
 
   &.btn {
-    font-weight: 400;
+    font-size: $standard_font_size_btn;
+    font-weight: $standard_font_weight;
     letter-spacing: 1.5px;
   }
 }
+
+.form-field-header {
+  top: -0.84375em;
+  padding-top: 0.84375em;
+}
+
+input,
+textarea {
+  color: $standard_font_color;
+}
+
 
 table {
   width: 100%;
@@ -60,28 +76,59 @@ main {
 }
 
 editor {
-	height: 100%;
+  height: 100%;
 
-	.tox-tinymce{
-		height: 100%;
-	}
+  .tox-tinymce {
+    height: 100%;
+  }
 }
 
 b,
 strong {
-  font-weight: bold;
+  font-weight: $standard_font_weight_bold !important;
+}
+
+p {
+  font-size: $standard_font_size_p;
+}
+
+a {
+  font-size: $standard_font_size_a;
+  font-weight: $standard_font_weight_heavy;
+  color: $standard_link_color;
+
+  &:hover {
+    color: darken($standard_link_color, 20%);
+  }
 }
 
 select {
+  font-size: $standard_font_size_select;
+  font-weight: $standard_font_weight;
   -webkit-appearance: none;
   appearance: none;
+
+  &:focus,
+  &:active {
+    outline: none !important;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
+
+form-control {
+  font-size: $standard_font_size_form_control;
+}
+
 
 /********  Manual Flex Styles  *********/
 .rt2-flex-column {
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
+  min-height: 100%;
 }
 
 .rt2-flex-row {
@@ -104,7 +151,9 @@ select {
 
 /******** AG Grid Styles **********/
 
-.refset_tool_inactive_row, .refsetDetailsPage .refset-title.refset_tool_inactive_row, tr.refset_tool_inactive_row {
+.refset_tool_inactive_row,
+.refsetDetailsPage .refset-title.refset_tool_inactive_row,
+tr.refset_tool_inactive_row {
   background-color: $inactive_row_color;
 }
 
@@ -167,13 +216,14 @@ select {
 }
 
 .ag-overlay-no-rows-wrapper {
-    align-items: normal  !important;
+  align-items: normal !important;
 }
 
-.ag-overlay-no-rows-center, .ag-overlay-loading-center {
-    padding-top: 8rem;
-    margin-top: 20px;
-    height: 2rem;
+.ag-overlay-no-rows-center,
+.ag-overlay-loading-center {
+  padding-top: 8rem;
+  margin-top: 20px;
+  height: 2rem;
 }
 
 .ag-theme-alpine {
@@ -212,8 +262,8 @@ select {
   }
 
   &.rt2-ag-grid-filter .ag-header {
-    height: 110px !important;
-    min-height: 110px !important;
+    height: 97px !important;
+    min-height: 97px !important;
   }
 
   .ag-header-row-floating-filter {
@@ -227,11 +277,17 @@ select {
     border-bottom: 1px solid #aaa;
     background-color: transparent;
     border-radius: 0px;
+    margin-bottom: 0.25em;
   }
 
   .ag-ltr input[class^="ag-"][type="text"]:focus {
     border-bottom: 2px solid $cerulean;
     box-shadow: none;
+  }
+
+  .ag-overlay-loading-center {
+    height: 3rem;
+    padding: 0.5rem;
   }
 }
 
@@ -242,7 +298,7 @@ select {
 }
 
 .ag-floating-filter-input {
-  padding-bottom: 12px;
+  padding-bottom: 2em;
 }
 
 /*******  General Page Styles *******/
@@ -293,7 +349,7 @@ select {
 }
 
 .mat-select-arrow-wrapper {
-  padding-top: 10px;
+  padding-bottom: 5px;
 }
 
 .rt2-directory-column-actions {
@@ -346,6 +402,7 @@ select {
     width: 175px;
   }
 }
+
 .rt2-column-chooser-select {
   .mat-select-trigger {
     width: 190px;
@@ -407,13 +464,14 @@ select {
   border-color: $concept_details_color;
   @extend .rt2-rounded-borders;
   margin-bottom: 5px;
-  height: 130px;
-  resize: vertical;
+  padding: 5px;
+  min-height: 100%;
   overflow: auto;
 }
 
 .children-section {
-  height: 623px;
+  height: fit-content;
+  max-height: 400px;
 }
 
 .rt2-concept-details-taxonomy-icon {
@@ -454,7 +512,7 @@ select {
 }
 
 .rt2-concept-details-section-title {
-  font-weight: 400;
+  font-weight: $standard_font_weight;
 }
 
 .rt2-concept-details-concept-info-column {
@@ -511,8 +569,8 @@ select {
 
 // Search & Refset Filter
 .mat-form-field-appearance-legacy .mat-form-field-infix {
-  padding: 0.5em 0;
-  margin-top: 11px;
+  padding: 1.6rem 0 0 0;
+  margin-top: 20px;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-infix {
@@ -521,11 +579,31 @@ select {
   padding-bottom: 0.5em;
 }
 
+.projects-dropdown-block .mat-form-field-infix .mat-select-placeholder {
+  line-height: 3.5;
+}
+
+.mat-form-field-label {
+  top: 0.4em;
+}
+
+.mat-form-field-label-wrapper {
+  top: 0;
+  padding: 0;
+}
+
+.mat-form-field-flex {
+  margin-top: -2em;
+}
+
 page-container {
   width: 100%;
 }
 
-#downloadDialog, .projects-dropdown-block, .details-version-select, .dropdown-group {
+#downloadDialog,
+.projects-dropdown-block,
+.details-version-select,
+.dropdown-group {
   .mat-form-field-appearance-legacy .mat-form-field-infix {
     margin-top: 0;
     padding: 0;
@@ -571,13 +649,26 @@ page-container {
 }
 
 .mat-form-field .mat-form-field-wrapper {
-  padding-bottom: 1.4em;
+  padding-bottom: 2em;
 }
 
-.mat-select-panel-wrap{
-    position: relative;
-    top: 2rem;
-    padding-left: 3rem;
+.create-new-refset-field .mat-form-field .mat-form-field-wrapper {
+  padding-top: 1.5em;
+}
+
+.create-new-refset-field .mat-form-field-label-wrapper {
+  top: -1em;
+}
+
+.create-new-refset-field .mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 0;
+  margin: 0;
+}
+
+.mat-select-panel-wrap {
+  position: relative;
+  top: 2rem;
+  padding-left: 3rem;
 }
 
 .mat-select-panel .mat-option {
@@ -597,7 +688,7 @@ page-container {
 }
 
 .mat-input-element {
-  caret-color: $cerulean  !important;
+  caret-color: $cerulean !important;
 }
 
 .mat-input-element,
@@ -630,7 +721,7 @@ page-container {
 }
 
 .refset-tool .rt2-refset-metadata-label {
-  font-weight: bold !important;
+  font-weight: $standard_font_weight_bold !important;
   padding-left: 15px !important;
 }
 
@@ -639,7 +730,7 @@ page-container {
 }
 
 .rt2-refset-metadata-table td.rt2-refset-metadata-label {
-  font-weight: bold;
+  font-weight: $standard_font_weight_bold;
   padding-left: 10px;
   padding-right: 15px;
   width: 200px;
@@ -657,6 +748,12 @@ page-container {
   margin: 0 1.5rem 0 0;
 }
 
+.refsetDetailsPage>.refset-title-container>.detailsMemberSection>.row>.detailsMemberSection-container .ag-overlay-no-rows-center,
+.ag-overlay-loading-center {
+  position: absolute;
+  top: 0;
+}
+
 @media (min-width: 768px) {
   .rt2-refset-metadata-column:first-child.col-md-6 {
     max-width: calc(50% - 1.5rem);
@@ -668,7 +765,7 @@ page-container {
 }
 
 .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
-  color: $cerulean  !important;
+  color: $cerulean !important;
 }
 
 .mat-select-arrow {
@@ -677,7 +774,7 @@ page-container {
 
 .mat-primary .mat-pseudo-checkbox-checked,
 .mat-primary .mat-pseudo-checkbox-indeterminate {
-  background: $cerulean  !important;
+  background: $cerulean !important;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex:hover {
@@ -700,6 +797,7 @@ page-container {
 }
 
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  margin-top: 0.8em;
   padding: 0 !important;
   letter-spacing: 1.5px;
   line-height: 30px !important;
@@ -739,7 +837,7 @@ page-container {
   }
 
   .combination-chips {
-      transform: scale(1);
+    transform: scale(1);
   }
 
   .refset_tool_ecl_definition_field {
@@ -1054,7 +1152,7 @@ page-container {
 }
 
 .bold-if-member {
-  font-weight: bold;
+  font-weight: $standard_font_weight_bold;
 }
 
 .greyed-if-not-member {
@@ -1080,9 +1178,7 @@ page-container {
 
 .create-new-refset-form-field {
   display: flex;
-  align-items: normal;
   justify-content: space-between;
-  width: 100%;
   align-items: center;
 }
 
@@ -1105,6 +1201,22 @@ page-container {
 
 .create-new-refset-flex-weight {
   flex: 1;
+}
+
+.bulk-upgrade-list {
+  .mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  .mat-form-field-label-wrapper {
+    top: -1.54375em;
+  }
+  .mat-form-field-appearance-fill .mat-form-field-infix {
+    padding-top: 1em;
+    padding-bottom: 2em;
+  }
+  .select.mat-input-element {
+    margin-bottom: 0;
+  }
 }
 
 .import-from-container-fluid {
@@ -1170,7 +1282,7 @@ page-container {
 }
 
 .add-remove-concept-hierarchy-modal-details-size {
-  height: 250px;
+  height: 100%;
   max-height: 250px;
   overflow: auto;
   overflow-x: hidden;
@@ -1195,8 +1307,8 @@ page-container {
 }
 
 .add-remove-concept-hierarchy-modal-parent-size {
-  height: 90px;
-  max-height: 90px;
+  max-height: 105px;
+  height: fit-content;
 
   &>.row>.rt2-concept-details-taxonomy-icon {
     display: flex;
@@ -1395,7 +1507,7 @@ page-container {
 .metadata-collapsible-container-title {
   display: flex;
   align-items: center;
-  font-weight: bold;
+  font-weight: $standard_font_weight_bold;
 }
 
 .mandatory-field {
@@ -1551,7 +1663,7 @@ img.rt2-edition-flag {
   }
 
   .text-primary {
-    color: $main-color  !important;
+    color: $main-color !important;
   }
 
   .action-btn {
@@ -1743,17 +1855,19 @@ app-date-text-floating-filter {
 
 .text-main,
 .text-primary {
-  color: $main-color  !important;
+  color: $main-color !important;
 }
+
 .rt2-details-column-remove-icon {
-    padding: 0 0 0 17px !important;
+  padding: 0 0 0 17px !important;
 }
 
 .rt2-details-column-remove-icon img {
-    margin-bottom: 3px;
+  margin-bottom: 3px;
 }
+
 .mat-form-field-appearance-fill .mat-form-field-subscript-wrapper {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 * .ag-header-cell .ag-filter-icon {
@@ -1770,28 +1884,35 @@ app-date-text-floating-filter {
 .ag-theme-alpine.rt2-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-even {
   background-color: white;
 }
+
 .ag-theme-alpine.rt2-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
   background-color: #efefef;
 }
-.refset-radio .mat-radio-label{
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 0;
+
+.refset-radio .mat-radio-label {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0;
 }
+
 .placeholder-wrap .mat-form-field-label {
-    white-space: normal;
+  white-space: normal;
 }
+
 .placeholder-wrap .mat-input-placeholder {
-    white-space: normal;
+  white-space: normal;
 }
-.no-outline,.no-outline:focus{
-    outline: none !important;
-    box-shadow: none !important;
+
+.no-outline,
+.no-outline:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 
 // add-remove-by-concept-modal
-.add-all, .remove-all{
+.add-all,
+.remove-all {
   margin: 0 auto;
 }
 
@@ -1799,11 +1920,24 @@ app-date-text-floating-filter {
 
 @media (max-width: 575px) {
   .header-title {
-      letter-spacing: 1px;
-      font-size: 10px;
+    letter-spacing: 1px;
+    font-size: 10px;
   }
-  .panel.height-auto{
-      height: auto;
+
+  .panel.height-auto {
+    height: auto;
+  }
+}
+
+/*********** SNOMED Angular template */
+
+ngb-typeahead-window.dropdown-menu button {
+  max-width: 30vw;
+  font-size: 1.2rem;
+  overflow-y: hidden;
+
+  button.dropdown-item {
+    font-weight: 300;
   }
 }
 
@@ -1816,7 +1950,8 @@ app-date-text-floating-filter {
   padding-left: 0;
   padding-right: 0;
 
-  .taxonomy-loading, .nodata {
+  .taxonomy-loading,
+  .nodata {
     padding-left: 3px;
   }
 
@@ -1830,8 +1965,8 @@ app-date-text-floating-filter {
   }
 
   .tree-node.rt2-taxonomy-is-member>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
-    font-weight: bold !important;
-    color: $standard_font_color  !important;
+    font-weight: $standard_font_weight_bold !important;
+    color: $standard_font_color !important;
   }
 
   .tree-node.rt2-taxonomy-no-members-in-branch>tree-node-wrapper>.node-wrapper>.node-content-wrapper {
@@ -1932,9 +2067,9 @@ app-date-text-floating-filter {
 }
 
 .empty-value-checkbox {
-    mat-pseudo-checkbox {
-        display: none !important;
-      }
+  mat-pseudo-checkbox {
+    display: none !important;
+  }
 }
 
 .rt2-wrap {
@@ -1960,7 +2095,7 @@ app-date-text-floating-filter {
   width: 100%;
   align-items: stretch;
   min-height: calc(100vh - 158px);
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 heading-with-count {

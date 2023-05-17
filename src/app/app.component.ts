@@ -4,12 +4,9 @@ import {
 } from '@angular/core';
 import 'jquery';
 import { Title } from '@angular/platform-browser';
-import { AuthoringService } from './services/authoring/authoring.service';
 import { EnvService } from './services/environment/env.service';
 import { NavigationStart, Router, RoutesRecognized } from '@angular/router';
-import { Subject } from 'rxjs';
 import { AuthenticationService } from './services/authentication/authentication.service';
-import { BackendInterceptor } from './interceptors/backend.interceptor';
 import { filter } from 'rxjs/operators';
 @Component({
     selector: 'app-root',
@@ -21,7 +18,6 @@ export class AppComponent implements OnInit {
     environment: string;
 
     constructor(
-        private authoringService: AuthoringService,
         private authenticationService: AuthenticationService,
         private envService: EnvService,
         private titleService: Title,

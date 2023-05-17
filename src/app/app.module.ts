@@ -86,7 +86,6 @@ import { PersonalConfigurationComponent } from './pages/personal/configuration/c
 
 // SERVICE IMPORTS
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { AuthoringService } from 'src/app/services/authoring/authoring.service';
 import { RestService } from 'src/app/services/rest/rest.service';
 import { ConceptsService } from 'src/app/services/rest/concepts.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -94,6 +93,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ErrorHandlingService } from 'src/app/services/error-handling.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
@@ -105,6 +105,7 @@ import { WorkflowHistoryNotesModalComponent } from 'src/app/components/workflow-
 import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
 import { AuthGuardGuard } from 'src/app/services/authentication/auth-guard.guard';
 import { LoginComponent } from 'src/app/auth/login/login.component';
+import { InviteComponent } from 'src/app/auth/invite/invite.component';
 import { ReviewModalComponent } from 'src/app/components/review-modal/review-modal.component';
 import { UpgradeModalComponent } from './components/upgrade-modal/upgrade-modal.component';
 import { FinishUpgradeModalComponent } from './components/finish-upgrade-modal/finish-upgrade-modal.component';
@@ -128,6 +129,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 
 const appRoutes: Routes = [
     // { path: '', pathMatch: 'full', redirectTo: '' },
+    { path: 'invite/response', component: InviteComponent },
     { path: 'login', component: LoginComponent },
     { path: '', component: LandingComponent },
     { path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Reference Set Library' } },
@@ -217,6 +219,10 @@ const appRoutes: Routes = [
     {
         path: 'organization/0/edition/0/projects/0/refsets',
         component: LandingComponent,
+    },
+    {
+        path: '**',
+        component: LandingComponent
     }
 ];
 
@@ -259,6 +265,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsIconsComponent,
         AddRemoveConceptGroupIconsComponent,
         LoginComponent,
+        InviteComponent,
         LandingComponent,
         DashboardComponent,
         SidebarComponent,
@@ -337,7 +344,6 @@ const appRoutes: Routes = [
     entryComponents: [NotificationComponent],
     providers: [
         AuthenticationService,
-        AuthoringService,
         ArtifactsService,
         AuditService,
         EnvServiceProvider,
@@ -352,6 +358,7 @@ const appRoutes: Routes = [
         AddRemoveConceptsComponent,
         UsersService,
         NotificationService,
+        ErrorHandlingService,
         DomService,
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
         {
