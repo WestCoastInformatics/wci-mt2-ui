@@ -656,7 +656,9 @@ page-container {
   padding-top: 1.5em;
 }
 
-.create-new-refset-field .mat-form-field-flex {}
+.create-new-refset-field .mat-form-field-label-wrapper {
+  top: -1em;
+}
 
 .create-new-refset-field .mat-form-field-appearance-legacy .mat-form-field-infix {
   padding: 0;
