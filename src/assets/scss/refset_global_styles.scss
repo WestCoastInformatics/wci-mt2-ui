@@ -547,6 +547,8 @@ tr.refset_tool_inactive_row {
   width: 25px !important;
   height: 25px !important;
   color: #00a9e0;
+  font-size: 1.5em;
+  margin-left: 0.15em;
 }
 
 .rt2-concept-details-concept-section {
@@ -843,6 +845,9 @@ page-container {
   .refset_tool_ecl_definition_field {
     width: calc(100% - 120px);
     margin-right: 5px;
+  }
+  .mat-form-field-appearance-fill .mat-form-field-flex:hover{
+    border-bottom: none;
   }
 }
 
@@ -1180,6 +1185,7 @@ page-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: .15em;
 }
 
 .create-new-refset-assign-refset-field {
@@ -1216,6 +1222,9 @@ page-container {
   }
   .select.mat-input-element {
     margin-bottom: 0;
+  }
+  .mat-form-field-appearance-fill .mat-form-field-flex:hover{
+    border-bottom: none;
   }
 }
 
@@ -1574,6 +1583,10 @@ page-container {
 }
 
 // Material Overlay
+.cdk-global-scrollblock{
+  overflow-y: visible;
+}
+
 .cdk-global-overlay-wrapper,
 .cdk-overlay-container {
   z-index: 2000 !important;

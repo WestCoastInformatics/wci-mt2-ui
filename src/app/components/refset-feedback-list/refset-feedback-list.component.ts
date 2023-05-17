@@ -429,6 +429,7 @@ export class RefsetFeedbackListComponent implements OnInit {
                 next: (results) => {
 
                     post.user = this.user;
+                    results.originalPost = results.posts[0];
                     this.threadsData.push(results);
                     this.selectedThread = results;
                     this.selectedThread.lastPost = results.created;
