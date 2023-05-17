@@ -583,7 +583,7 @@ tr.refset_tool_inactive_row {
   line-height: 3.5;
 }
 
-.mat-form-field-label{
+.mat-form-field-label {
   top: 0.4em;
 }
 
@@ -650,6 +650,17 @@ page-container {
 
 .mat-form-field .mat-form-field-wrapper {
   padding-bottom: 2em;
+}
+
+.create-new-refset-field .mat-form-field .mat-form-field-wrapper {
+  padding-top: 1.5em;
+}
+
+.create-new-refset-field .mat-form-field-flex {}
+
+.create-new-refset-field .mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 0;
+  margin: 0;
 }
 
 .mat-select-panel-wrap {
@@ -1165,9 +1176,7 @@ page-container {
 
 .create-new-refset-form-field {
   display: flex;
-  align-items: normal;
   justify-content: space-between;
-  width: 100%;
   align-items: center;
 }
 
@@ -1190,6 +1199,22 @@ page-container {
 
 .create-new-refset-flex-weight {
   flex: 1;
+}
+
+.bulk-upgrade-list {
+  .mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  .mat-form-field-label-wrapper {
+    top: -1.54375em;
+  }
+  .mat-form-field-appearance-fill .mat-form-field-infix {
+    padding-top: 1em;
+    padding-bottom: 2em;
+  }
+  .select.mat-input-element {
+    margin-bottom: 0;
+  }
 }
 
 .import-from-container-fluid {
