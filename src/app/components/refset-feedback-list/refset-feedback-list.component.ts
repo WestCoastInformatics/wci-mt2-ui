@@ -246,17 +246,14 @@ export class RefsetFeedbackListComponent implements OnInit {
 
         this.gridApi = gridReadyParams.api;
 
-        // let conceptId = null;
-
-        // if (CodeUtility.hasValue(this.conceptId)) {
-        // 	conceptId = this.conceptId;
-        // }
-
         this.refsetService.getDiscussionThreads(this.type, this.refsetInternalId, this.conceptId).subscribe({
             next: (results) => {
+                results.totalKnown = true;
+                results.items = results.items.filter(r => !r.posts[0].privatePost || r.posts[0].user.userName === this.user.userName || (this.roles?.includes('ADMIN') || this.user?.roles?.includes('all-all-admin')));
                 this.privateCount = results.items.filter(t => t.privateThread).length;
                 results.total = results.items.length;
-                results.totalKnown = true;
+                this.discussionCount = results.total;
+                this.discussionCountChange.emit(this.discussionCount);
                 this.threadsData = results.items;
                 for (const thread of this.threadsData) {
                     thread.originalPost = thread.posts[0];
