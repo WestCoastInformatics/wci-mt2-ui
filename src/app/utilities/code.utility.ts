@@ -327,7 +327,7 @@ export class CodeUtility {
 		let param;
 
 		for (param in obj) {
-			if (obj.prototype.hasOwnProperty.call(param)) {
+			if (obj.hasOwnProperty(param)) {
 				const key = prefix ? prefix + '[' + param + ']' : param;
 				const value = obj[param];
 

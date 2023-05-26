@@ -30,7 +30,7 @@ export class CategoryFilterComponent implements IFloatingFilter, AgFrameworkComp
 		for (let i = 0; i < this.names?.length; i++) {
 			const entry = this.names[i];
 			// If this is a Type Key Value property
-			if (entry.prototype.hasOwnProperty.call('type') && (entry.prototype.hasOwnProperty.call('key') || entry.hasOwnProperty.call('name')) && entry.hasOwnProperty.call('value')) {
+			if (entry.hasOwnProperty('type') && (entry.hasOwnProperty('key') || entry.hasOwnProperty.call('name')) && entry.hasOwnProperty.call('value')) {
 				const option: SelectEntry = new SelectEntry(this.optionNum++, entry.value, entry.name);
 				this.options.push(option);
 			} else {

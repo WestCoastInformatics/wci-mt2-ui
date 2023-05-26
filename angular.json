@@ -34,11 +34,11 @@
             "inlineStyleLanguage": "scss",
             "extractLicenses": false,
             "assets": [
-              "src/favicon.ico",
-              "src/favicon_grey.ico",
-              "src/favicon_red.ico",
-              "src/favicon_green.ico",
-              "src/favicon_yellow.ico",
+              "src/assets/favicon/favicon.ico",
+              "src/assets/favicon/favicon_grey.ico",
+              "src/assets/favicon/favicon_red.ico",
+              "src/assets/favicon/favicon_green.ico",
+              "src/assets/favicon/favicon_yellow.ico",
               "src/assets",
               {
                 "glob": "**/*",

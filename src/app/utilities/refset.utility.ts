@@ -141,7 +141,7 @@ export class RefsetUtility {
 
 		// let the language priorities defined in the refset apply to the sort
 		for (const languageRefset of fullyQualifiedLanguageRefsets) {
-			if (!languagePriority.prototype.hasOwnProperty.call(languageRefset.languageCode)) {
+			if (!languagePriority.hasOwnProperty(languageRefset.languageCode)) {
 				languagePriority[languageRefset.languageCode] = i;
 				i++;
 			}

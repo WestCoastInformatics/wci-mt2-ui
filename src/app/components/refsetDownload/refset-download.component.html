@@ -1,15 +1,15 @@
 <button
-	*ngIf="isDetailPage && refset !== null && project === null && !disableDownload"
+	*ngIf="isDetailPage && refset != null && project == null && !disableDownload"
 	class="rt2-link-btn"
 	title="Download Reference Set"
 	aria-label="Download Reference Set"
 	(click)="openDownload(refset.refsetId)">
 	Download
 </button>
-<button *ngIf="isDetailPage && refset !== null && project === null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">Download</button>
+<button *ngIf="isDetailPage && refset != null && project == null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">Download</button>
 
 <button
-	*ngIf="!isDetailPage && refset !== null && project === null && !disableDownload"
+	*ngIf="!isDetailPage && refset != null && project == null && !disableDownload"
 	mat-icon-button
 	aria-hidden="false"
 	(click)="openDownload(refset.refsetId)"
@@ -26,7 +26,7 @@
 </button>
 
 <button
-	*ngIf="!isDetailPage && refset !== null && project === null && disableDownload"
+	*ngIf="!isDetailPage && refset != null && project == null && disableDownload"
 	mat-icon-button
 	aria-hidden="false"
 	[aria-label]="disableTitle"
@@ -42,7 +42,7 @@
 </button>
 
 <button
-	*ngIf="project !== null && refsets !== null"
+	*ngIf="project != null && refsets != null"
 	aria-hidden="false"
 	class="rt2-btn rt2-action-btn"
 	title="Download Latest Published Reference Sets for Project"
@@ -58,7 +58,7 @@
 				<label>Format:</label>
 			</div>
 			<div class="col rt2-download-column-field">
-				<mat-form-field floatLabel="never" appearance="fill">
+				<mat-form-field floatLabel="never" appearance="legacy">
 					<mat-select #downloadFormatField [(value)]="data.selectedFormat" (selectionChange)="changeFormat(data)">
 						<mat-option *ngFor="let option of data.formatOptions" [value]="option.value">
 							{{ option.display }}
@@ -73,7 +73,7 @@
 				<label>Content:</label>
 			</div>
 			<div class="col rt2-download-column-field">
-				<mat-form-field floatLabel="never" appearance="fill">
+				<mat-form-field floatLabel="never" appearance="legacy">
 					<mat-select #downloadContentField [(value)]="data.selectedContent" (selectionChange)="changeContent(data)">
 						<ng-container *ngFor="let option of data.contentOptions">
 							<mat-option *ngIf="checkContentValues(data, option)" [value]="option.value">
@@ -94,7 +94,7 @@
 				<label>Language Reference Set:</label>
 			</div>
 			<div class="col rt2-download-column-field">
-				<mat-form-field floatLabel="never" appearance="fill">
+				<mat-form-field floatLabel="never" appearance="legacy">
 					<mat-select #downloadLanguageField [(value)]="data.selectedLanguage">
 						<mat-option *ngFor="let option of data.languageOptions" [value]="option.value">
 							{{ option.display }}
@@ -122,7 +122,7 @@
 				<div class="row delta-row">
 					<div><label class="in-form-label">From:</label></div>
 
-					<mat-form-field floatLabel="never" appearance="fill" class="delta-select">
+					<mat-form-field floatLabel="never" appearance="legacy" class="delta-select">
 						<mat-select #downloadComparisonFromField [(value)]="data.selectedComparisonFrom" (selectionChange)="changeComparisonFrom(data)">
 							<mat-option *ngFor="let option of data.comparisonFromOptions" [value]="option.value">
 								{{ addSpaceAfterVersionDate(option.display) }}
