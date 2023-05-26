@@ -9,7 +9,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "snomed-refset-ui": {
+    "angular-template": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -25,7 +25,7 @@
           "options": {
             "aot": true,
             "baseHref": "/",
-            "outputPath": "dist/snomed-refset-ui",
+            "outputPath": "dist/angular-template",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -117,15 +117,15 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "snomed-refset-ui:build",
+            "browserTarget": "angular-template:build",
             "liveReload": false
           },
           "configurations": {
             "production": {
-              "browserTarget": "snomed-refset-ui:build:production"
+              "browserTarget": "angular-template:build:production"
             },
             "development": {
-              "browserTarget": "snomed-refset-ui:build:development"
+              "browserTarget": "angular-template:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -133,7 +133,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "snomed-refset-ui:build",
+            "browserTarget": "angular-template:build",
             "format": "xlf",
             "outputPath": "src/locale"
           }

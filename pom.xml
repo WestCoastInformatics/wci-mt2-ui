@@ -29,7 +29,7 @@
                             <signPackage>false</signPackage>
                             <dataSet>
                                 <data>
-                                    <src>${basedir}/dist/snomed-refset-ui</src>
+                                    <src>${basedir}/dist/angular-template</src>
                                     <type>directory</type>
                                     <mapper>
                                         <type>perm</type>
