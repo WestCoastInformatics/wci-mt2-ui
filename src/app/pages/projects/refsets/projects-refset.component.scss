@@ -1,30 +1,32 @@
 .container-toggled {
-    padding-left: 118px !important;
+	padding-left: 118px !important;
 }
 
 .projects-dropdown-block {
-    margin: auto 0;
+	margin: auto 0;
+	margin-top: 1.25em;
+	margin-left: -0.5em;
 }
 
 .projects-drop-down {
-    width: 250px;
+	width: 250px;
 }
 
 .projects-drop-down .mat-select-arrow-wrapper {
-    padding-top: 0 !important;
+	padding-top: 0 !important;
 }
 
 // no left margin for first child
 .rt2-select-group > :first-child {
-    margin-left: 0;
+	margin-left: 0;
 }
 
-  // no right margin for last child
+// no right margin for last child
 .rt2-select-group > :last-child {
-    margin-right: 0;
+	margin-right: 0;
 }
 
-  // margins for every child
+// margins for every child
 .rt2-select-group > span {
-    margin: 0 5px 5px;
+	margin: 0 5px 5px;
 }

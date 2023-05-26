@@ -5,7 +5,7 @@
 				<li [class.active]="item.isActive" (mouseenter)="onMouseEnter($event.target)" (mouseleave)="onMouseOut($event.target)">
 					<a [routerLink]="getLink(item.link)">
 						<i class="sidebar-icon-font" [class]="item.icon"></i>
-						<span class="nav-label sidebar-links-font">{{item.name}}</span>
+						<span class="nav-label sidebar-links-font">{{ item.name }}</span>
 					</a>
 				</li>
 			</ng-container>

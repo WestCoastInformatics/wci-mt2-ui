@@ -1,8 +1,7 @@
 <div class="date-selector">
-  <input type="text" pattern="\d{4}-\d{2}-\d{2}" (dblclick)="picker.open()" [(ngModel)]="value" (ngModelChange)="valueChanged(false)" class="date-filter-select"
-    placeholder="YYYY-MM-DD" />
-  <mat-form-field>
-    <input matInput [matDatepicker]="picker" (dateChange)="valueChanged(true, $event, picker)">
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+	<input type="text" pattern="\d{4}-\d{2}-\d{2}" (dblclick)="picker.open()" [(ngModel)]="value" (ngModelChange)="valueChanged(false)" class="date-filter-select" placeholder="YYYY-MM-DD" />
+	<mat-form-field>
+		<input matInput [matDatepicker]="picker" (dateChange)="valueChanged(true, $event, picker)" />
+		<mat-datepicker #picker></mat-datepicker>
+	</mat-form-field>
 </div>

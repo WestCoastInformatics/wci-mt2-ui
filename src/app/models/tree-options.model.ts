@@ -1,32 +1,30 @@
-import { TreeNode } from '@circlon/angular-tree-component';
-
 export interface TreeOptions {
-    idField?: string;
-    isExpandedField?: boolean;
-    allowDrop?: boolean;
-    nodeClass?: Function;
-    childrenField?: string;
-    hasChildrenField?: string;
-    language?: string;
-    onSelect?: Function;
-    useFsn?: boolean;
-    expandFirstNode?: boolean;
-    hasMultipleRootNodes?: boolean;
-    useVirtualScroll?: boolean;
-    nodeHeight?: any;
+	idField?: string;
+	isExpandedField?: boolean;
+	allowDrop?: boolean;
+	nodeClass?: Function;
+	childrenField?: string;
+	hasChildrenField?: string;
+	language?: string;
+	onSelect?: Function;
+	useFsn?: boolean;
+	expandFirstNode?: boolean;
+	hasMultipleRootNodes?: boolean;
+	useVirtualScroll?: boolean;
+	nodeHeight?: any;
 }
 
 export const TreeOptionDefaults: TreeOptions = {
-    idField: 'code',
-    isExpandedField: false,
-    allowDrop: false,
-    childrenField: 'children',
-    hasChildrenField: 'hasChildren',
-    language: '',
-    useFsn: false,
-    expandFirstNode: true,
-    hasMultipleRootNodes: false,
-    onSelect: function (event) { },
-    useVirtualScroll: false,
-    nodeHeight: 22
-}
+	idField: 'code',
+	isExpandedField: false,
+	allowDrop: false,
+	childrenField: 'children',
+	hasChildrenField: 'hasChildren',
+	language: '',
+	useFsn: false,
+	expandFirstNode: true,
+	hasMultipleRootNodes: false,
+	onSelect: function (event) {},
+	useVirtualScroll: false,
+	nodeHeight: 22,
+};

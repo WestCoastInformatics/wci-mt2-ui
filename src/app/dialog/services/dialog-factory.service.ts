@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { first } from 'rxjs/operators';
 
 // Components
@@ -13,29 +13,26 @@ import { DialogOptions, DialogOptionDefaults } from '../models/dialog-options.mo
 import { DialogService } from './dialog.service';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
-
 export class DialogFactoryService<T = undefined> {
+	constructor(private dialog: MatDialog) {}
 
-    constructor(private dialog: MatDialog) { }
+	open(dialogData: DialogData, options: DialogOptions = {}): DialogService<T> {
+		const configData = {
+			...DialogOptionDefaults,
+			...options,
+			data: {
+				...DialogDataDefaults,
+				...dialogData,
+			},
+		};
 
-    open(dialogData: DialogData, options: DialogOptions = {}): DialogService<T> {
+		// only items in configData.data get passed into the dialog constructor
+		const dialogRef = this.dialog.open<DialogComponent<T>, DialogData>(DialogComponent, configData);
 
-        const configData = {
-            ...DialogOptionDefaults,
-            ...options,
-            data: {
-                ...DialogDataDefaults,
-                ...dialogData
-            }
-        };
+		dialogRef.afterClosed().pipe(first());
 
-        // only items in configData.data get passed into the dialog constructor
-        const dialogRef = this.dialog.open<DialogComponent<T>, DialogData>(DialogComponent, configData);
-
-        dialogRef.afterClosed().pipe(first());
-
-        return new DialogService(dialogRef);
-    }
+		return new DialogService(dialogRef);
+	}
 }

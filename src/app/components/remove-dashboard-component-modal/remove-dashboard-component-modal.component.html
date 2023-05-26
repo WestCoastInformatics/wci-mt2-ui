@@ -1,67 +1,52 @@
-<button class="rt2-btn rt2-remove-btn" title="Remove {{componentType}}" [disabled]="disabled"
-  (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
-  Remove {{componentType | titlecase}}
+<button class="rt2-btn rt2-remove-btn" title="Remove {{ componentType }}" [disabled]="disabled" (click)="openRemoveDashboardComponentModal(removeDashboardComponentDialog)">
+	Remove {{ componentType | titlecase }}
 </button>
 
 <ng-template #removeDashboardComponentDialog let-modal>
+	<div class="modal-header rt2-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Remove {{ componentName }}?</h3>
 
-  <div class="modal-header rt2-modal-header">
-    <button ngbAutofocus class="unfocus-btn"></button>
-    <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-      Remove {{componentName}}?
-    </h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
 
-    <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
-      (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-    </button>
-  </div>
+	<div class="modal-body rt2-lockable">
+		<table>
+			<tr [hidden]="componentType !== 'organization'">
+				<p>Are you sure you want to remove Organization {{ componentName }}? <br />Once removed, it cannot be recovered.</p>
+				<p>You will lose access to all objects associated with this Organization:</p>
+				<li>{{ componentName }} Teams</li>
+				<li>{{ componentName }} Names</li>
+				<li>{{ componentName }} Reference Sets</li>
+				<ul></ul>
+			</tr>
+			<tr [hidden]="componentType !== 'project'">
+				<p>Are you sure you want to remove Project {{ componentName }}? <br />Once removed, it cannot be recovered.</p>
+				<p>You will lose access to all objects associated with this Project:</p>
+				<li>{{ componentName }} Reference Sets</li>
+				<ul></ul>
+			</tr>
+			<tr [hidden]="componentType !== 'team'">
+				<p>Are you sure you want to remove Team {{ componentName }}? <br />Once removed, it cannot be recovered.</p>
+				<ul></ul>
+			</tr>
+			<tr>
+				<p>Type "remove {{ componentType }}" to confirm:</p>
+			</tr>
+			<tr>
+				<input class="modal-input-field-border-bottom" #removeText (contextmenu)="(false)" placeholder="remove {{ componentType }}" [(ngModel)]="confirmString" />{{
+					removeText.focus()
+				}}
+			</tr>
+		</table>
+	</div>
 
-  <div class="modal-body rt2-lockable">
-
-    <table>
-      <tr [hidden]="componentType != 'organization'">
-        <p>Are you sure you want to remove Organization {{componentName}}? <br>Once removed, it
-          cannot be recovered.</p>
-        <p> You will lose access to all objects associated with this Organization:</p>
-        <li>{{componentName}} Teams</li>
-        <li>{{componentName}} Names</li>
-        <li>{{componentName}} Reference Sets</li>
-        <ul></ul>
-      </tr>
-      <tr [hidden]="componentType != 'project'">
-        <p>Are you sure you want to remove Project {{componentName}}? <br>Once removed, it cannot be
-          recovered.</p>
-        <p> You will lose access to all objects associated with this Project:</p>
-        <li>{{componentName}} Reference Sets</li>
-        <ul></ul>
-      </tr>
-      <tr [hidden]="componentType != 'team'">
-        <p>Are you sure you want to remove Team {{componentName}}? <br>Once removed, it cannot be
-          recovered.</p>
-        <ul></ul>
-      </tr>
-      <tr>
-        <p>Type "remove {{componentType}}" to confirm:</p>
-      </tr>
-      <tr>
-        <input class="modal-input-field-border-bottom" #removeText (contextmenu)="false"
-          placeholder="remove {{componentType}}" [(ngModel)]="confirmString" />{{ removeText.focus()
-        }}
-      </tr>
-    </table>
-
-  </div>
-
-  <div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-    <button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()" color="red" aria-hidden="false"
-      class="rt2-btn rt2-remove-btn" aria-label="Remove" title="Remove">
-      Remove
-    </button>
-    <button type="button" (click)="modal.dismiss('Cross click')" color="red" aria-hidden="false"
-      class="rt2-btn rt2-cancel-btn" aria-label="No, Cancel" title="No, Cancel">
-      No, Cancel
-    </button>
-  </div>
-
+	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<button type="button" [disabled]="isDisabled()" (click)="callMemberOperation()" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="Remove" title="Remove">
+			Remove
+		</button>
+		<button type="button" (click)="modal.dismiss('Cross click')" color="red" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="No, Cancel" title="No, Cancel">No, Cancel</button>
+	</div>
 </ng-template>

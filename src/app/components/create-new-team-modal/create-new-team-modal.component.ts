@@ -1,147 +1,130 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { RefsetService } from "src/app/services/rest/refset.service";
-import { TeamsService } from "src/app/services/rest/teams.service";
-import { UiUtility } from "src/app/utilities/ui.utility";
-import { NotificationService } from "src/app/services/notification.service";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { TeamsService } from 'src/app/services/rest/teams.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetDetails } from 'src/app/pages/refset-details';
-import { CodeUtility } from "src/app/utilities/code.utility";
-import { OrganizationsService } from "src/app/services/rest/organizations.service";
-import { ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from "src/app/services/authentication/authentication.service";
+import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
-  selector: "create-new-team-modal",
-  templateUrl: "./create-new-team-modal.component.html",
+	selector: 'create-new-team-modal',
+	templateUrl: './create-new-team-modal.component.html',
 })
 export class CreateNewTeamModalComponent {
+	name = '';
+	email = '';
+	description = '';
+	openedModel: NgbModalRef;
+	privateTeam: any;
+	selectedRoles: any;
+	members: any;
+	refsetUser: any;
+	roleOptions: any;
+	emailError = '';
+	param: any;
 
-  name = '';
-  email = '';
-  description = '';
-  openedModel: NgbModalRef;
-  privateTeam: any;
-  selectedRoles: any;
-  members: any;
-  refsetUser: any;
-  roleOptions: any;
-  emailError = '';
-  param: any;
+	@Input() organization: any;
+	@Output() changeLockedStatus = new EventEmitter<any>(true);
+	firstLoad = true;
 
-  @Input() organization: any;
-  @Output() changeLockedStatus = new EventEmitter<any>(true);
-  firstLoad = true;
+	constructor(private modalService: NgbModal, private teamsService: TeamsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
 
-  constructor(
-    private modalService: NgbModal,
-    private refsetService: RefsetService,
-    private teamsService: TeamsService,
-    private organizationsService: OrganizationsService,
-    private notificationService: NotificationService,
-    private readonly refsetDetails: RefsetDetails,
-    private readonly route: ActivatedRoute,
-    private readonly authenticationService: AuthenticationService
-  ) { }
+	ngOnInit() {
+		this.roleOptions = [
+			{ value: 'AUTHOR', display: 'Author' },
+			{ value: 'REVIEWER', display: 'Reviewer' },
+			{ value: 'ADMIN', display: 'Admin' },
+			{ value: 'VIEWER', display: 'Viewer' },
+		];
 
-  ngOnInit() {
-    this.roleOptions = [{ value: 'AUTHOR', display: 'Author' }, { value: 'REVIEWER', display: 'Reviewer' },
-    { value: 'ADMIN', display: 'Admin' }, { value: 'VIEWER', display: 'Viewer' }];
+		try {
+			this.refsetUser = JSON.parse(sessionStorage.getItem('refset_user'));
+		} catch (ex) {
+			return null;
+		}
+	}
 
-    try {
+	setAutoFocus(focusElement: any) {
+		if (this.firstLoad) {
+			focusElement.focus();
+			this.firstLoad = false;
+		}
+	}
 
-      this.refsetUser = JSON.parse(sessionStorage.getItem('refset_user'));
+	openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
+		this.firstLoad = true;
 
-    } catch (ex) {
-      return null;
-    }
-  }
+		this.selectedRoles = [];
+		this.description = '';
 
-  setAutoFocus(focusElement: any) {
-    if (this.firstLoad) {
-      focusElement.focus();
-      this.firstLoad = false;
-    }
-  }
+		this.openedModel = this.modalService.open(createNewTeamDialog, { backdrop: 'static', keyboard: false });
+	}
 
-  openCreateNewTeamModal(createNewTeamDialog: NgbModal) {
-    this.firstLoad = true;
+	callMemberOperation(): void {
+		if (!CodeUtility.hasValue(this.description)) {
+			return;
+		}
 
-    this.selectedRoles = [];
-    this.description = '';
+		this.changeLockedStatus.emit(true);
 
-    this.openedModel = this.modalService.open(createNewTeamDialog, { backdrop: 'static', keyboard: false });
-  }
+		this.createTeamObject();
 
-  callMemberOperation(): void {
+		//UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
+	}
 
-    if (!CodeUtility.hasValue(this.description)) {
-      return;
-    }
+	processOperationReturn = (data) => {
+		this.changeLockedStatus.emit(false);
 
-    this.changeLockedStatus.emit(true);
+		this.refsetDetails.ngOnInit();
 
-    this.createTeamObject();
+		this.description = '';
+	};
 
-    //UiUtility.manageNotifications(this.refsetInternalId, this.refsetId, messageModifier, this.processOperationReturn, this.notificationService, this.refsetService, this.router);
-  }
+	setRoles(): void {
+		console.log(this.selectedRoles);
+	}
 
-  processOperationReturn = (data) => {
+	isValidEmail(): boolean {
+		if (this.email.length == 0) {
+			return true;
+		}
+		const lower = this.email.toLowerCase();
+		const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
-    this.changeLockedStatus.emit(false);
+		if (flag == null) {
+			this.emailError = 'Email is invalid.';
+		} else {
+			this.emailError = '';
+		}
 
-    this.refsetDetails.ngOnInit();
+		return flag == null ? false : true;
+	}
 
-    this.description = '';
-  }
+	onKeyDownEvent(event: any) {
+		this.isValidEmail();
+	}
 
-  setRoles(): void {
-    console.log(this.selectedRoles);
-  }
+	createTeamObject(): void {
+		const params: any = {
+			active: true,
+			name: this.name,
+			description: this.description,
+			primaryContactEmail: this.email,
+			privateTeam: this.privateTeam,
+			roles: this.selectedRoles,
+			organization: this.organization,
+			members: this.members,
+		};
 
-  isValidEmail(): boolean {
-    if (this.email.length == 0) {
-      return true;
-    }
-    var lower = this.email.toLowerCase();
-    var flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
-    if (flag == null) {
-      this.emailError = "Email is invalid.";
-    } else {
-      this.emailError = "";
-    }
-
-    return flag == null ? false : true;
-  }
-
-  onKeyDownEvent(event: any) {
-    this.isValidEmail();
-  }
-
-  createTeamObject(): void {
-
-    let params: any = {
-      active: true,
-      name: this.name,
-      description: this.description,
-      primaryContactEmail: this.email,
-      privateTeam: this.privateTeam,
-      roles: this.selectedRoles,
-      organization: this.organization,
-      members: this.members
-    };
-
-    this.teamsService.createTeam(params).subscribe(
-      (data) => {
-
-        this.notificationService.show("The Team is created.", null, "success", { timeOut: 0, extendedTimeOut: 0 });
-        this.modalService.dismissAll();
-        this.changeLockedStatus.emit(false);
-        window.location.reload();
-      },
-      (err) => {
-        this.changeLockedStatus.emit(false);
-      }
-    );
-  }
+		this.teamsService.createTeam(params).subscribe(
+			(data) => {
+				this.notificationService.show('The Team is created.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+				this.modalService.dismissAll();
+				this.changeLockedStatus.emit(false);
+				window.location.reload();
+			},
+			(err) => {
+				this.changeLockedStatus.emit(false);
+			}
+		);
+	}
 }

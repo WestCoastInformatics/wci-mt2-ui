@@ -1,87 +1,80 @@
 <div class="content-header">
-    <div class="row header-title">
-        <span class="title-label">Organizations</span>
-        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
-              [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
-                    {{ organization.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+	<div class="row header-title">
+		<span class="title-label">Organizations</span>
+		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
+			<mat-select
+				#detailsVersionSelect
+				[disableOptionCentering]="true"
+				[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
+				[(value)]="selectedOrganization"
+				(selectionChange)="selectOrganization()">
+				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+					{{ organization.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
 </div>
 
 <div class="content-wrapper">
+	<app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+	<page-container>
+		<div *ngIf="showLoadingSpinner" class="loading"></div>
+		<section>
+			<div class="section-header mb-10 rt2-btn-group d-flex">
+				<heading-with-count title="Organization Users" [count]="dataCount"></heading-with-count>
+				<add-member-to-organization-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [id]="selectedOrganization?.id" [name]="selectedOrganization?.name">
+				</add-member-to-organization-modal>
+				<invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization"> </invite-people-modal>
+			</div>
 
-    <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <page-container>
-        <div *ngIf="showLoadingSpinner" class="loading"></div>
-        <section>
-            <div class='section-header mb-10 rt2-btn-group d-flex'>
-                <heading-with-count title="Organization Users" [count]="dataCount"></heading-with-count>
-                <add-member-to-organization-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')"
-                    [id]="selectedOrganization?.id"
-                    [name]="selectedOrganization?.name">
-                </add-member-to-organization-modal>
-                <invite-people-modal *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" [organization]="selectedOrganization">
-                </invite-people-modal>
-            </div>
+			<div class="dashboard-section">
+				<div class="ag-theme-alpine">
+					<ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
+					</ag-grid-angular>
 
-            <div class='dashboard-section'>
-                <div class="ag-theme-alpine">
+					<!-- Name Template -->
+					<ng-template #peopleNameSection let-params>
+						<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value }}
+					</ng-template>
 
-                    <ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
-                    </ag-grid-angular>
-
-                    <!-- Name Template -->
-                    <ng-template #peopleNameSection let-params>
-                        <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                    </ng-template>
-
-                    <!-- Teams Template -->
-                    <ng-template #peopleTeamsSection let-params>
-                        <div class="d-flex jc-space-between w-140">
-                            <span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)">
-                                {{getTeamsCount(params?.data)}} teams</span>
-                            <img *ngIf="selectedOrganization?.roles?.includes('ADMIN')"  src="assets/subtract-symbol-icon.svg" (click)="confirmRemoveUser(params?.data, $event)"
-                                width="20px" height="20px" title="Inactivate User" aria-label="Subtract" class="mt-15 subtract-symbol-icon"
-                                    alt="Subtract symbol shown when you're able to remove a user" />
-                        </div>
-                        </ng-template>
-
-                </div>
-            </div>
-
-            <!-- <div class='text-right'>
-                <a class='text-muted light'>show/hide admin</a>
-            </div> -->
-
-        </section>
-    </page-container>
+					<!-- Teams Template -->
+					<ng-template #peopleTeamsSection let-params>
+						<div class="d-flex jc-space-between w-140">
+							<span class="text-primary font-weight-bold pointer" [title]="getTeamsTitle(params?.data)"> {{ getTeamsCount(params?.data) }} teams</span>
+							<img
+								*ngIf="selectedOrganization?.roles?.includes('ADMIN')"
+								src="assets/subtract-symbol-icon.svg"
+								(click)="confirmRemoveUser(params?.data, $event)"
+								width="20px"
+								height="20px"
+								title="Inactivate User"
+								aria-label="Subtract"
+								class="mt-15 subtract-symbol-icon"
+								alt="Subtract symbol shown when you're able to remove a user" />
+						</div>
+					</ng-template>
+				</div>
+			</div>
+		</section>
+	</page-container>
 </div>
 
-
 <ng-template #confirmInactiveMemberModal let-modal>
+	<div class="modal-header rt2-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Remove User Confirmation</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
 
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Remove User Confirmation</h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
+	<div class="modal-body">
+		<div class="notes-title">Are you sure you want to remove "{{ selectedUser.name }}" from the organization?</div>
+	</div>
 
-    <div class="modal-body">
-        <div class="notes-title">Are you sure you want to remove "{{selectedUser.name}}" from the organization?
-        </div>
-    </div>
-
-    <div class="modal-footer rt2-modal-footer">
-        <button type="button" (click)="removeUser();" class="rt2-btn rt2-remove-btn mr-2">Remove User
-        </button>
-        <button (click)="modal.dismiss()" class="rt2-btn rt2-cancel-btn">Cancel
-        </button>
-    </div>
-
+	<div class="modal-footer rt2-modal-footer">
+		<button type="button" (click)="removeUser()" class="rt2-btn rt2-remove-btn mr-2">Remove User</button>
+		<button (click)="modal.dismiss()" class="rt2-btn rt2-cancel-btn">Cancel</button>
+	</div>
 </ng-template>

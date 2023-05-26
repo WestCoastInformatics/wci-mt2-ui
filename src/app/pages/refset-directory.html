@@ -2,120 +2,133 @@
 
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
-    <div class="row justify-content-end align-items-baseline">
-        <div class="page-title">Reference Set Library <span [hidden]="!numOfMembers">{{'(' +
-                numOfMembers + ')'}}</span></div>
-        <div class="dropdown-group">
-            <div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-                <app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog">
-                </app-column-chooser>
-            </div>
+	<div class="row justify-content-end align-items-baseline">
+		<div class="page-title">Reference Set Library <span [hidden]="!numOfMembers">{{'(' + numOfMembers + ')'}}</span></div>
+		<div class="dropdown-group">
+			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+			</div>
 
-            <div class="col-md-auto">
-                <div class="dropdown directoryInput">
-                    <mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
-                        <mat-label class="search-label">Search by name, concept or tags</mat-label>
-                        <input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-                    </mat-form-field>
-                    <span class="clear-search" (click)="clearSearch()">&#10005;</span>
-
-                </div>
-            </div>
-            <div class="col-md-auto p-l-5">
-                <mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="legacy">
-                    <mat-label></mat-label>
-                    <mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-                        <mat-option *ngFor="let option of viewOptions" [value]="option.value">
-                            {{option.display}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-    </div>
+			<div class="col-md-auto">
+				<div class="dropdown directoryInput">
+					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Critera">
+						<mat-label class="search-label">Search by name, concept or tags</mat-label>
+						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+					</mat-form-field>
+					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
+				</div>
+			</div>
+			<div class="col-md-auto p-l-5">
+				<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
+					<mat-label></mat-label>
+					<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
+						<mat-option *ngFor="let option of viewOptions" [value]="option.value"> {{option.display}} </mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
-    <!-- Page Title -->
-    <!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
+	<!-- Page Title -->
+	<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 
-    <!-- Reference Set Table -->
-    <ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638"
-        [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
-    </ag-grid-angular>
+	<!-- Reference Set Table -->
+	<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
+	</ag-grid-angular>
 
-    <app-pagination #directoryPaging *ngIf="showTable" [pageSize]="refsetGridPaging.pageSize" [gridOptions]="refsetGridOptions" [pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-        [totalKnown]="refsetGridPaging.totalKnown" [manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-    </app-pagination>
+	<app-pagination
+		#directoryPaging
+		*ngIf="showTable"
+		[pageSize]="refsetGridPaging.pageSize"
+		[gridOptions]="refsetGridOptions"
+		[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+		[totalKnown]="refsetGridPaging.totalKnown"
+		[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+	</app-pagination>
 
-    <!-- Information Templates -->
-    <ng-template #directoryInfoSection let-params>
-        <button mat-icon-button aria-hidden="false" #directoryInfoIcon class="rt2-table-action-icon w-30 h-30" aria-label="View All Reference Set Metadata"
-            title="View Reference Set Metadata" (click)="openInformation(params.data.refsetId)">
-            <mat-icon class="scale-70-pct">information</mat-icon>
-        </button>
-        <span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
-    </ng-template>
+	<!-- Information Templates -->
+	<ng-template #directoryInfoSection let-params>
+		<button
+			mat-icon-button
+			aria-hidden="false"
+			#directoryInfoIcon
+			class="rt2-table-action-icon w-30 h-30"
+			aria-label="View All Reference Set Metadata"
+			title="View Reference Set Metadata"
+			(click)="openInformation(params.data.refsetId)">
+			<mat-icon class="scale-70-pct">information</mat-icon>
+		</button>
+		<span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
+	</ng-template>
 
-    <ng-template #directoryInfoDialog let-data>
-        <div class="container-fluid overflow-auto w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-            <div class="row rt2-refset-details-title-name d-block" title="{{data.name}}" aria-label="{{data.name}}">
-                <p class="fs-18 mb-0 ml-10">{{data.name}}</p>
-                <p class="fs-16 ml-10"><span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span
-                        *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span></p>
-            </div>
-            <refset-meta  [refset]="data"></refset-meta>
-        </div>
-    </ng-template>
+	<ng-template #directoryInfoDialog let-data>
+		<div class="container-fluid overflow-auto w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+			<div class="row rt2-refset-details-title-name d-block" title="{{data.name}}" aria-label="{{data.name}}">
+				<p class="fs-18 mb-0 ml-10">{{data.name}}</p>
+				<p class="fs-16 ml-10">
+					<span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span>
+				</p>
+			</div>
+			<refset-meta [refset]="data"></refset-meta>
+		</div>
+	</ng-template>
 
-    <!-- Workflow Status Templates -->
-    <ng-template #directoryWorkflowStatusSection let-params>
-        <object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{ params?.value }}</object>
-    </ng-template>
+	<!-- Workflow Status Templates -->
+	<ng-template #directoryWorkflowStatusSection let-params>
+		<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
+	</ng-template>
 
-    <!-- Name Templates -->
-    <ng-template #directoryNameSection let-params>
-        {{ params?.value }}
+	<!-- Name Templates -->
+	<ng-template #directoryNameSection let-params>
+		{{ params?.value }}
 
-        <mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="rt2-table-action-icon" aria-label="Private Reference Set"
-            title="Private Reference Set">
-            lock
-        </mat-icon>
-        <mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set">
-            my_location
-        </mat-icon>
+		<mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="rt2-table-action-icon" aria-label="Private Reference Set" title="Private Reference Set">
+			lock
+		</mat-icon>
+		<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+	</ng-template>
 
-    </ng-template>
+	<!-- Edition Templates -->
+	<ng-template #directoryEditionSection let-params>
+		<img
+			(load)="showFlagIcon($event, true)"
+			(error)="showFlagIcon($event, false)"
+			src="{{params?.data?.flagIcon}}"
+			class="rt2-edition-flag"
+			title="{{params?.data?.editionName}} Flag"
+			aria-label="{{params?.data?.editionName}} Flag" />
+		{{params?.data?.edition?.name}}
+	</ng-template>
 
-    <!-- Edition Templates -->
-    <ng-template #directoryEditionSection let-params>
-        <img (load)="showFlagIcon($event, true)" (error)="showFlagIcon($event, false)" src="{{params?.data?.flagIcon}}" class="rt2-edition-flag"
-            title="{{params?.data?.editionName}} Flag" aria-label="{{params?.data?.editionName}} Flag" />
-        {{params?.data?.edition?.name}}
-    </ng-template>
+	<!-- Action Templates -->
+	<ng-template #directoryActionSection let-params>
+		<div class="d-flex rt2-wrap">
+			<div class="col-6">
+				<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data"> </app-refset-download>
+			</div>
 
-    <!-- Action Templates -->
-    <ng-template #directoryActionSection let-params>
-        <div class="d-flex rt2-wrap">
-            <div class="col-2">
-                <app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data">
-                </app-refset-download>
-            </div>
+			<div class="col-6">
+				<app-refset-discussion-list
+					*ngIf="params && params.data"
+					type="REFSET"
+					[refsetInternalId]="params.data.id"
+					[refsetId]="params.data.refsetId"
+					[refsetName]="params.data.name"
+					[roles]="params.data.roles"
+					[(discussionCount)]="params.data.openDiscussionCount">
+				</app-refset-discussion-list>
+			</div>
+		</div>
+	</ng-template>
 
-            <div class="col-2">
-                <app-refset-discussion-list *ngIf="params && params.data" type="REFSET" [refsetInternalId]="params.data.id" [refsetId]="params.data.refsetId"
-                    [refsetName]="params.data.name" [roles]="params.data.roles" [(discussionCount)]="params.data.openDiscussionCount">
-                </app-refset-discussion-list>
-            </div>
-        </div>
-    </ng-template>
-
-    <ng-template #directoryFeedbackDialog let-data>
-        This functionality will be implemented in subsequent phases.
-        <mat-form-field floatLabel="never" *ngIf="false">
-            <mat-label>Feedback</mat-label>
-            <input matInput [(ngModel)]="data.feedback" />
-        </mat-form-field>
-    </ng-template>
+	<ng-template #directoryFeedbackDialog let-data>
+		This functionality will be implemented in subsequent phases.
+		<mat-form-field floatLabel="never" *ngIf="false">
+			<mat-label>Feedback</mat-label>
+			<input matInput [(ngModel)]="data.feedback" />
+		</mat-form-field>
+	</ng-template>
 </div>
 <scroll-top></scroll-top>

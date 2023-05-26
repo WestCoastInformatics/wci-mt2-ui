@@ -8,21 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { PaginationComponent } from './pagination.component';
 
-
 @NgModule({
-    declarations: [
-        PaginationComponent
-    ],
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatMenuModule,
-        NgbModule,
-    ],
-    exports: [PaginationComponent]
+	declarations: [PaginationComponent],
+	imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule, NgbModule],
+	exports: [PaginationComponent],
 })
-export class PaginationModule {
-}
+export class PaginationModule {}

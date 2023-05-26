@@ -2,59 +2,47 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
-declare var toastr: any;
-
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html'
+	selector: 'app-login',
+	template: '<div class="login-main"></div>',
 })
 export class LoginComponent implements OnInit {
-    userName: any;
-    password = null;
-    userData: any;
+	userName: any;
+	password = null;
+	userData: any;
 
-    constructor(private router: Router, private authService: AuthenticationService) {
+	constructor(private router: Router, private authService: AuthenticationService) {
+		if (this.authService.isAuthenticated()) {
+			console.log('is authenticated');
+			this.router.navigate(['library']);
+		} else {
+			this.login();
+		}
+	}
 
-        if (this.authService.isAuthenticated()) {
+	onSubmit(): any {
+		this.authService.authenticateWithBackend(this.userData).subscribe(
+			(data) => {
+				sessionStorage.setItem('auth_token', data.authToken);
+				sessionStorage.setItem('refset_user', JSON.stringify(data));
+				this.router.navigate(['library']);
+			},
+			(err) => {
+				console.error(err);
+			}
+		);
+	}
 
-            console.log('is authenticated');
-            this.router.navigate(['library']);
-            //$('.logout').css('display', 'block');
+	login(): any {
+		// IMS login
+		this.authService.imsLogin();
+	}
 
-        } else {
+	logout(): any {
+		console.debug('logout user');
+		localStorage.removeItem('loginReferralUrl');
+		this.authService.notAuthenticated();
+	}
 
-            //$('.logout').css('display', 'none');
-            this.login();
-        }
-    }
-
-    onSubmit(): any {
-
-        this.authService.authenticateWithBackend(this.userData).subscribe(
-            (data) => {
-                sessionStorage.setItem('auth_token', data.authToken);
-                sessionStorage.setItem('refset_user', JSON.stringify(data));
-                this.router.navigate(['library']);
-            },
-            (err) => {
-                //toastr.error(err.error.error);
-                console.error(err);
-            }
-        );
-    }
-
-    login(): any {
-
-        // IMS login
-        this.authService.imsLogin();
-    }
-
-    logout(): any {
-
-        console.debug('logout user');
-        localStorage.removeItem('loginReferralUrl');
-        this.authService.notAuthenticated();
-    }
-
-    ngOnInit(): void { }
+	ngOnInit(): void {}
 }

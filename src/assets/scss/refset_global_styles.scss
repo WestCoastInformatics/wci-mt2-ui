@@ -1,7 +1,7 @@
 // Main Layout Styles
 
-@import "~src/assets/scss/variables.scss";
-@import "~src/assets/scss/font-styles.scss";
+@import "src/assets/scss/variables.scss";
+@import "src/assets/scss/font-styles.scss";
 
 /********  Tag Styles *******/
 
@@ -443,8 +443,15 @@ tr.refset_tool_inactive_row {
   margin-bottom: 15px;
 }
 
-.rt2-concept-details-title-name {
+.rt2-concept-details-title-name,
+.rt2-details-chooser-column,
+.rt2-concept-details-close-btn {
+	width: 20% !important;
   padding: 0px;
+}
+
+.rt2-details-chooser-column .mat-mdc-form-field-flex {
+	margin-top: -1.5em;
 }
 
 .add-remove-concept-hierarchy-modal-size>.modal-dialog {
@@ -617,8 +624,23 @@ page-container {
       top: -1.4em !important;
       padding-top: 4em !important;
     }
+	.mat-mdc-form-field-flex{
+		margin-top: -2.5em;
+	}
+	.mat-mdc-form-field-infix{
+		margin-top: 0 !important;
+		padding-bottom: 0 !important;
+	  }
+	  .mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label{
+		margin-top: 1em;
+	  }
   }
-
+  .mdc-text-field--filled:not(.mdc-text-field--disabled){
+	margin-bottom: 0;
+  }
+  .mat-mdc-form-field-infix{
+	margin-top: -2.5em;
+  }
   .mat-form-field-infix {
     border-top: none;
 
@@ -629,6 +651,13 @@ page-container {
         }
       }
     }
+  }
+
+  .mat-mdc-option .mat-pseudo-checkbox-minimal{
+	width: 0;
+	height: 0;
+
+	display: none !important;
   }
 
   .mat-select-arrow-wrapper {
@@ -691,6 +720,24 @@ page-container {
 
 .mat-input-element {
   caret-color: $cerulean !important;
+}
+
+.mat-mdc-select-trigger{
+	font-size: 1.4rem !important;
+    font-weight: 300;
+}
+.mat-mdc-form-field-infix{
+	padding-top: 2.5em !important;
+    padding-bottom: 0 !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+	background: none;
+	background-color: rgba(0,0,0,0);
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+	margin-bottom: 0.5em;
 }
 
 .mat-input-element,
@@ -777,6 +824,10 @@ page-container {
 .mat-primary .mat-pseudo-checkbox-checked,
 .mat-primary .mat-pseudo-checkbox-indeterminate {
   background: $cerulean !important;
+  width: 0;
+	height: 0;
+
+	display: none !important;
 }
 
 .mat-form-field-appearance-fill .mat-form-field-flex:hover {
@@ -818,6 +869,11 @@ page-container {
 .mat-button-toggle-group-appearance-standard {
   border-radius: 0px;
   height: 31px;
+}
+
+.mat-mdc-button.mat-unthemed, .mat-mdc-button:not(:disabled) {
+    color: $standard_link_color !important;
+	padding-top: 1.5em;
 }
 
 // Refset Download Styles
@@ -1108,7 +1164,7 @@ page-container {
 }
 
 .project-drop-down {
-  width: 320px;
+  width: 30%;
 }
 
 .projects-dropdown-block {
@@ -1172,7 +1228,7 @@ page-container {
 }
 
 .disable-menu-btn {
-  cursor: not-allowed !important;
+	cursor: not-allowed !important;
 }
 
 .create-new-refset-row {
@@ -1647,20 +1703,49 @@ img.rt2-edition-flag {
   .header-title {
     align-items: baseline;
     background-color: white;
-    min-height: 60px;
-    box-shadow: 0 5px 7px -2px grey;
+    min-height: 4.5em;
+	max-height: 4.5em;
+    margin-left: -1em;
+    box-shadow: 0 5px 7px -4px grey;
 
     .title-label {
       margin-right: 20px;
       color: black;
       padding-left: 30px;
+	  width: 10em;
       @extend .page-header-font;
     }
 
     .dashboard-title {
       margin: auto 0;
     }
+
+	.project-drop-down{
+		width: 25em;
+		margin-top: -1.5em;
+	}
   }
+}
+
+.file-input {
+	display: none;
+}
+
+.mdc-text-field{
+	padding: 0 !important;
+}
+.mat-mdc-unelevated-button>.mat-icon, .mat-mdc-raised-button>.mat-icon, .mat-mdc-outlined-button>.mat-icon{
+    font-size: 1.65em !important;
+    height: auto !important;
+    width: 1.8rem !important;
+}
+
+.mat-mdc-form-field-focus-overlay{
+	background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.mdc-text-field--disabled.mdc-text-field--filled{
+	background-color: rgba(0, 0, 0, 0) !important;
 }
 
 .dashboard-section {

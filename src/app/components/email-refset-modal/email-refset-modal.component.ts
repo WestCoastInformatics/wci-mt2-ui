@@ -1,102 +1,79 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { UiUtility } from 'src/app/utilities/ui.utility';
 import { NotificationService } from 'src/app/services/notification.service';
-import { Router } from '@angular/router';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { RefsetDetails } from 'src/app/pages/refset-details';
-import { OrganizationsService } from 'src/app/services/rest/organizations.service';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
-    selector: 'email-refset-modal',
-    templateUrl: './email-refset-modal.component.html',
+	selector: 'email-refset-modal',
+	templateUrl: './email-refset-modal.component.html',
 })
 export class EmailRefsetModalComponent {
+	email = '';
+	description = '';
+	openedModel: NgbModalRef;
+	emailError = '';
 
-    email = '';
-    description = '';
-    openedModel: NgbModalRef;
-    emailError = '';
+	@Input() refset: any;
+	@Input() refsetInternalId: string;
+	@Output() changeLockedStatus = new EventEmitter<any>(true);
 
-    @Input() refset: any;
-    @Input() refsetInternalId: string;
-    @Output() changeLockedStatus = new EventEmitter<any>(true);
+	constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
 
-    constructor(
-        private modalService: NgbModal,
-        private changeDetectorRef: ChangeDetectorRef,
-        private refsetService: RefsetService,
-        private organizationsService: OrganizationsService,
-        private notificationService: NotificationService,
-        private readonly refsetDetails: RefsetDetails,
-        private readonly router: Router,
-        private authenticationService: AuthenticationService
-    ) { }
+	ngOnInit() {}
 
-    ngOnInit() {
-    }
+	openEmailRefsetModal(emailRefsetDialog: NgbModal) {
+		this.description = '';
+		this.openedModel = this.modalService.open(emailRefsetDialog, { backdrop: 'static', keyboard: false });
+	}
 
-    openEmailRefsetModal(emailRefsetDialog: NgbModal) {
+	processOperationReturn = (data) => {
+		this.changeLockedStatus.emit(false);
 
-        this.description = '';
-        this.openedModel = this.modalService.open(emailRefsetDialog, { backdrop: 'static', keyboard: false });
+		this.refsetDetails.ngOnInit();
 
+		this.description = '';
+	};
 
-    }
+	isValidEmail(): boolean {
+		const lower = this.email.toLowerCase();
+		const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+		if (flag == null) {
+			this.emailError = 'Email is invalid.';
+		} else {
+			this.emailError = '';
+		}
+		return flag != null;
+	}
 
-    processOperationReturn = (data) => {
+	reset() {
+		this.description = '';
+		this.email = '';
+	}
 
-        this.changeLockedStatus.emit(false);
+	onKeyDownEvent(event: any) {
+		this.isValidEmail();
+	}
 
-        this.refsetDetails.ngOnInit();
+	emailRefsetObject(): void {
+		this.changeLockedStatus.emit(true);
 
-        this.description = '';
-    }
+		const params: any = {
+			additionalMessage: this.description,
+			recipient: this.email,
+		};
 
-    isValidEmail(): boolean {
-        const lower = this.email.toLowerCase();
-        const flag = lower.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-        if (flag == null) {
-            this.emailError = 'Email is invalid.';
-        } else {
-            this.emailError = '';
-        }
-        return flag != null;
-    }
-
-    reset() {
-        this.description = '';
-        this.email = '';
-    }
-
-    onKeyDownEvent(event: any) {
-        this.isValidEmail();
-    }
-
-    emailRefsetObject(): void {
-
-        this.changeLockedStatus.emit(true);
-
-        const params: any = {
-            additionalMessage: this.description,
-            recipient: this.email
-        };
-
-        this.refsetService.emailRefset(this.refsetInternalId, params).subscribe(
-            (data) => {
-                this.notificationService.show('The Reference Set was emailed.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-                this.modalService.dismissAll();
-                this.changeLockedStatus.emit(false);
-                window.location.reload();
-            },
-            (err) => {
-                this.changeLockedStatus.emit(false);
-                console.error(err);
-            }
-        );
-    }
+		this.refsetService.emailRefset(this.refsetInternalId, params).subscribe(
+			(data) => {
+				this.notificationService.show('The Reference Set was emailed.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+				this.modalService.dismissAll();
+				this.changeLockedStatus.emit(false);
+				window.location.reload();
+			},
+			(err) => {
+				this.changeLockedStatus.emit(false);
+				console.error(err);
+			}
+		);
+	}
 }

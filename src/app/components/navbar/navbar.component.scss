@@ -1,320 +1,307 @@
-@import "~src/assets/scss/variables.scss";
+@import 'src/assets/scss/variables.scss';
 
 nav {
-  height: 50px !important;
-  padding: 5px;
-  position: fixed;
-  width: 100%;
-  background-color: #434955 !important;
+	height: 50px !important;
+	padding: 5px;
+	position: fixed;
+	width: 100%;
+	background-color: #434955 !important;
 
-  a.logo {
-    height: 40px;
+	a.logo {
+		height: 40px;
 
-    span.nav-title {
-      font-weight: 300;
-      letter-spacing: 1.5px;
-      line-height: 4rem;
-      vertical-align: top;
-      cursor: pointer;
-    }
+		span.nav-title {
+			font-weight: 300;
+			letter-spacing: 1.5px;
+			line-height: 4rem;
+			vertical-align: top;
+			cursor: pointer;
+		}
 
-    img.logo {
-      vertical-align: initial;
-      height: 4rem;
-    }
-  }
+		img.logo {
+			vertical-align: initial;
+			height: 4rem;
+		}
+	}
 
-  div.banner {
-    position: absolute;
-    top: 0.6rem;
-    left: -3rem;
-    transform: rotate(-45deg);
-    line-height: 1rem;
-    opacity: 0.8;
-  }
+	div.banner {
+		position: absolute;
+		top: 0.6rem;
+		left: -3rem;
+		transform: rotate(-45deg);
+		line-height: 1rem;
+		opacity: 0.8;
+	}
 
-  div.local::before {
-    content: "LOC";
-    padding: 0 3rem;
-    background-color: $river-bed;
-    border: 1px solid $sea-buckthorn;
-  }
+	div.local::before {
+		content: 'LOC';
+		padding: 0 3rem;
+		background-color: $river-bed;
+		border: 1px solid $sea-buckthorn;
+	}
 
-  div.dev::before {
-    content: "DEV";
-    padding: 0 3rem;
-    background-color: $mandy;
-    border: 1px solid $sea-buckthorn;
-  }
+	div.dev::before {
+		content: 'DEV';
+		padding: 0 3rem;
+		background-color: $mandy;
+		border: 1px solid $sea-buckthorn;
+	}
 
-  div.uat::before {
-    content: "UAT";
-    padding: 0 3rem;
-    background-color: $cerulean;
-    border: 1px solid $sea-buckthorn;
-  }
+	div.uat::before {
+		content: 'UAT';
+		padding: 0 3rem;
+		background-color: $cerulean;
+		border: 1px solid $sea-buckthorn;
+	}
 
-  div.training::before {
-    content: "TRN";
-    padding: 0 3rem;
-    background-color: $fruit-salad;
-    border: 1px solid $sea-buckthorn;
-  }
+	div.training::before {
+		content: 'TRN';
+		padding: 0 3rem;
+		background-color: $fruit-salad;
+		border: 1px solid $sea-buckthorn;
+	}
 
-  div.user {
-    height: 3rem;
+	div.user {
+		height: 3rem;
 
-    span {
-      line-height: 3rem;
-      font-weight: $standard_font_weight;
-      letter-spacing: 0.1rem;
-    }
+		span {
+			line-height: 3rem;
+			font-weight: $standard_font_weight;
+			letter-spacing: 0.1rem;
+		}
 
-    img {
-      height: 3rem;
-      width: 3rem;
-    }
-  }
+		img {
+			height: 3rem;
+			width: 3rem;
+		}
+	}
 
-  div.logout {
-    cursor: pointer;
-    height: 3rem;
+	div.logout {
+		cursor: pointer;
+		height: 3rem;
 
-    span {
-      line-height: 3rem;
-      font-weight: $standard_font_weight;
-      letter-spacing: 0.1rem;
+		span {
+			line-height: 3rem;
+			font-weight: $standard_font_weight;
+			letter-spacing: 0.1rem;
 
-      &:hover {
-        color: $cerulean;
-      }
-    }
-  }
+			&:hover {
+				color: $cerulean;
+			}
+		}
+	}
 
-  ul.dropdown-nav {
-    list-style-type: none;
-    max-height: 3rem;
+	ul.dropdown-nav {
+		list-style-type: none;
+		max-height: 3rem;
 
-    li {
-      display: inline-block;
+		li {
+			display: inline-block;
 
-      a {
-        color: $white;
-        line-height: 2rem;
-        font-weight: $standard_font_weight;
-        letter-spacing: 0.2rem;
-      }
+			a {
+				color: $white;
+				line-height: 2rem;
+				font-weight: $standard_font_weight;
+				letter-spacing: 0.2rem;
+			}
 
-      div.dropdown-menu {
-        background-color: $bootstrap-black;
-        z-index: auto;
-        min-width: auto;
+			div.dropdown-menu {
+				background-color: $bootstrap-black;
+				z-index: auto;
+				min-width: auto;
 
-        &.show {
-          display: block;
-        }
+				&.show {
+					display: block;
+				}
 
-        a.dropdown-item {
-          font-weight: $standard_font_weight;
-          z-index: auto;
+				a.dropdown-item {
+					font-weight: $standard_font_weight;
+					z-index: auto;
 
-          &:hover {
-            background-color: darken($bootstrap-black, 10%);
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  }
+					&:hover {
+						background-color: darken($bootstrap-black, 10%);
+						cursor: pointer;
+					}
+				}
+			}
+		}
+	}
 
-  #userDropdownMenu {
-    .user-img {
-      width: 3rem;
-    }
+	#userDropdownMenu {
+		.user-img {
+			width: 3rem;
+		}
 
-    .dropdown-menu {
-      background-color: #434955;
-      right: -7px;
-      top: calc(100% - 1px);
-      min-width: 200px;
+		.dropdown-menu {
+			background-color: #434955;
+			right: -7px;
+			top: calc(100% - 1px);
+			left: -175px;
+			min-width: 175px;
 
-      .dropdown-item {
-        color: #fff;
-      }
+			.dropdown-item {
+				color: #fff;
+			}
 
-      .dropdown-item:hover {
-        color: $bootstrap-black;
-      }
+			.dropdown-item:hover {
+				color: $bootstrap-black;
+			}
 
-      .dropdown-divider {
-        border-top: 1px solid #797979;
-        margin-top: 0.5rem !important;
-      }
+			.dropdown-divider {
+				border-top: 1px solid #797979;
+				margin-top: 0.5rem !important;
+			}
 
-      .profile-block {
-        flex-grow: 1;
-        padding: 0 10px;
-        display: inline-block;
-        font-size: $standard_font_size_h3;
-      }
-    }
-  }
-
+			.profile-block {
+				flex-grow: 1;
+				padding: 0 10px;
+				display: inline-block;
+				font-size: $standard_font_size_h3;
+			}
+		}
+	}
 }
 
 .navbar {
-  justify-content: center;
-  padding-bottom: 5px !important;
+	justify-content: center;
+	padding-bottom: 5px !important;
 }
 
 .navbar.sticky-top.navbar-dark {
-  width: 100%;
-  width: -moz-available;
-  /* WebKit-based browsers will ignore this. */
-  width: -webkit-fill-available;
-  /* Mozilla-based browsers will ignore this. */
-  width: fill-available;
-  min-height: 50px;
-  height: fit-content;
-  position: sticky;
+	width: 100%;
+	width: -moz-available;
+	/* WebKit-based browsers will ignore this. */
+	width: -webkit-fill-available;
+	/* Mozilla-based browsers will ignore this. */
+	width: stretch;
+	min-height: 50px;
+	height: fit-content;
+	position: sticky;
 }
 
-
-.rt2-nav-item-row>* {
-  margin-left: 10px;
+.rt2-nav-item-row > * {
+	margin-left: 10px;
 }
 
 .rt2-nav-item-row {
-  display: flex;
-  flex: 1 1 auto;
+	display: flex;
+	flex: 1 1 auto;
+	width: 60%;
 }
 
 .rt2-nav-logo-section {
-  display: flex;
-  align-items: center;
-  width: 360px;
-  text-decoration: none;
+	display: flex;
+	align-items: center;
+	width: 360px;
+	text-decoration: none;
 }
 
 .rt2-nav-title {
-  color: #eee;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  font-size: $standard_font_size_h3;
-  padding: 0 0.5em 0 0.5em;
+	color: #eee;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: $standard_font_size_h3;
+	padding: 0 0.5em 0 0.5em;
 }
 
 .rt2-nav-title:hover {
-  color: #00a9e0;
+	color: #00a9e0;
 }
 
-.rt2-breadcrumb-bar> :first-child {
-  margin-left: 0;
+.rt2-breadcrumb-bar > :first-child {
+	margin-left: 0;
 }
 
-.rt2-breadcrumb-bar> :not(:last-child)::after {
-  content: "/";
-  color: $ghost-grey;
-  margin: 0px 10px;
+.rt2-breadcrumb-bar > :not(:last-child)::after {
+	content: '/';
+	color: $ghost-grey;
+	margin: 0px 10px;
 }
 
 .rt2-breadcrumb-bar {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 
-  .rt2-breadcrumb {
-    color: #c8cfd6;
-    font-family: $standard_font_family;
-    font-weight: $standard_font_weight;
+	.rt2-breadcrumb {
+		color: #c8cfd6;
+		font-family: $standard_font_family;
+		font-weight: $standard_font_weight;
 
-    &.rt2-breadcrumb-selectable {
-      cursor: pointer;
-      color: $standard_link_color;
-    }
-  }
+		&.rt2-breadcrumb-selectable {
+			cursor: pointer;
+			color: $standard_link_color;
+		}
+	}
 }
 
 .navbar-div {
-  width: 60px;
-  border-left: 1px solid #797979;
-  border-right: 1px solid #797979;
-  height: 40px;
-  cursor: pointer;
+	width: 60px;
+	border-left: 1px solid #797979;
+	border-right: 1px solid #797979;
+	height: 40px;
+	cursor: pointer;
 }
 
 .navbar-icon {
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 2px;
-  margin-top: 2px;
-  text-align: center;
-  height: 25px;
-  width: 25px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2px;
+	margin-top: 2px;
+	text-align: center;
+	height: 25px;
+	width: 25px;
 }
 
 .navbar-icon-label {
-  text-align: center;
-  color: #ffffff;
+	text-align: center;
+	color: #ffffff;
 }
 
 .nav-item {
-  width: 75px;
-  border-right: 1px solid #797979;
-  height: 50px;
-  cursor: pointer;
-  padding-top: 6px;
-  text-align: center;
+	width: 75px;
+	border-right: 1px solid #797979;
+	height: 50px;
+	cursor: pointer;
+	padding-top: 6px;
+	text-align: center;
 
-  img {
-    max-height: 25px;
-    margin-bottom: -5px;
-  }
+	img {
+		max-height: 25px;
+		margin-bottom: -5px;
+	}
 
-  .nav-label {
-    color: #ffffff;
-  }
+	.nav-label {
+		color: #ffffff;
+	}
 }
 
-// @media (max-width: 1450px) {
-//   .extended-breadcrumb {
-//     white-space: nowrap; 
-//     text-overflow: ellipsis; 
-//     overflow: hidden;
-//     max-width: calc(100vw - 1%)
-//   }
-//   .rt2-breadcrumb-ellipsis::before {
-//     content: '...';
-//     color: white;
-//   }
-// }
-
 .project-role-and-assignee-label {
-  display: grid;
+	display: grid;
 }
 
 @media (max-width: 1170px) {
-  .project-role-and-assignee-label {
-    display: none !important;
-  }
+	.project-role-and-assignee-label {
+		display: none !important;
+	}
 }
 
 .left-title-buttons {
-  display: contents;
+	display: contents;
 }
 
 .project-role-label {
-  height: 45px;
+	height: 45px;
 }
 
 .project-role {
-  padding-right: 10px;
-  color: white;
-  position: relative;
+	padding-right: 10px;
+	color: white;
+	position: relative;
 }
 
 .project-assignee {
-  padding-right: 10px;
-  color: white;
-  position: relative;
+	padding-right: 10px;
+	color: white;
+	position: relative;
 }

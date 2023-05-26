@@ -11,12 +11,11 @@ import { User } from 'src/app/models/user';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 
 @Component({
-    selector: 'app-refset-discussion-list',
-    templateUrl: './refset-feedback-list.component.html',
-    styleUrls: ['refset-feedback-list.component.scss']
+	selector: 'app-refset-discussion-list',
+	templateUrl: './refset-feedback-list.component.html',
+	styleUrls: ['refset-feedback-list.component.scss'],
 })
 export class RefsetFeedbackListComponent implements OnInit {
-
     user: User;
     isUserLoggedIn: boolean;
     canViewPrivateThreads = false;

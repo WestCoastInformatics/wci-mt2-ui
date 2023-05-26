@@ -1,58 +1,63 @@
 #directorySearchInputField {
-    width: 340px;
-  
-    // set this to 20px less than the field to leave room for the cancel 'X'
-    .mat-form-field-flex {
-      width: 320px;
-    }
+	width: 340px;
+
+	// set this to 20px less than the field to leave room for the cancel 'X'
+	.mat-form-field-flex {
+		width: 320px;
+	}
 }
 
 .directoryViewFilterField.mat-form-field {
-    width: 125px;
-    padding-left: 5px;
-  
-    .mat-form-field-flex {
-      width: 125px;
-    }
-  
-    .mat-form-field-underline {
-      width: 125px;
-    }
+	width: 125px;
+	padding-left: 5px;
+
+	.mat-form-field-flex {
+		width: 125px;
+	}
+
+	.mat-form-field-underline {
+		width: 125px;
+	}
 }
 
 .top-search-bar {
-    background-color: white;
-    box-shadow: 0 4px 2px -2px grey;
-    z-index: 1000 !important;
-    min-height: 60px;
-    padding: 12px 0;
+	background-color: white;
+	box-shadow: 0 4px 2px -2px grey;
+	z-index: 1000 !important;
+	min-height: 60px;
+	padding: 12px 0;
+	height: 4em;
 
-  
-    .page-title {
-      padding-left: 3rem;
-      color: #555555;
-    }
-  
-    .justify-content-end {
-      justify-content: space-between !important;
-    }
-  
-    .dropdown-group {
-      display: inline-flex !important;
-      padding-right: 3rem;
-    }
+	.page-title {
+		padding-left: 3rem;
+		color: #555555;
+		width: 33%;
+		margin-top: 0.5em;
+		margin-left: -0.5em;
+	}
+
+	.justify-content-end {
+		justify-content: space-between !important;
+	}
+
+	.dropdown-group {
+		display: inline-flex !important;
+		padding-right: 3rem;
+		width: 60%;
+	}
 }
 
 .rt2-directory-chooser-column {
-  padding-right: 20px;
+	padding-right: 20px;
+	margin-top: -1em;
 }
 
 .member-search-icon {
-  color:red; 
+	color: red;
 }
 
 .rt2-ag-cell {
-  width: 90px;
-  text-align: center;
-  align-items: center;
+	width: 90px;
+	text-align: center;
+	align-items: center;
 }

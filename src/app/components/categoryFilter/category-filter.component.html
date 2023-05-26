@@ -1,10 +1,7 @@
-<!-- <select type="number" [(ngModel)]="selectedOption" (ngModelChange)="valueChanged()" class="form-control">
-  <option *ngFor="let option of options" [ngValue]="option">{{option.label}}</option>
-</select> -->
-<mat-form-field floatLabel="never" appearance="legacy" class="category-filter-select">
-  <mat-select [(value)]="selectedOption" [placeholder]="placeholder" (selectionChange)="valueChanged()">
-    <mat-option *ngFor="let option of options" [value]="option">
-      {{option.label}}
-    </mat-option>
-  </mat-select>
+<mat-form-field floatLabel="never" appearance="fill" class="category-filter-select">
+	<mat-select [(value)]="selectedOption" [placeholder]="placeholder" (selectionChange)="valueChanged()">
+		<mat-option *ngFor="let option of options" [value]="option">
+			{{ option.label }}
+		</mat-option>
+	</mat-select>
 </mat-form-field>

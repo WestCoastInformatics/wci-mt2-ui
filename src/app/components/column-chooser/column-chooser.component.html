@@ -1,29 +1,32 @@
-<button *ngIf="useDialog" (click)="openColumnChooser()" aria-hidden="false"
-  class="rt2-btn rt2-action-btn outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser">
-    Choose Columns
+<button *ngIf="useDialog" (click)="openColumnChooser()" aria-hidden="false" class="rt2-btn rt2-action-btn outer-table-button" aria-label="Open Column Chooser" title="Open Column Chooser">
+	Choose Columns
 </button>
-<!-- JESSE -->
-<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="legacy" class="rt2-column-chooser-select-field form-field-header">
-    <mat-select #detailsLanguageSelect placeholder="Select Columns" [ngModel]="columns" [(value)]="selectedColumns" multiple [compareWith]="valueCompare" [disabled]="disabled"
-      (selectionChange)="applyColumns()" class="rt2-column-chooser-select" panelClass="rt2-column-chooser-select-panel">
 
-        <mat-select-trigger class="trigger">
-            Select Columns
-        </mat-select-trigger>
+<mat-form-field floatLabel="never" *ngIf="!useDialog" appearance="fill" class="rt2-column-chooser-select-field form-field-header">
+	<mat-select
+		#detailsLanguageSelect
+		placeholder="Select Columns"
+		[ngModel]="columns"
+		[(value)]="selectedColumns"
+		multiple
+		[compareWith]="valueCompare"
+		[disabled]="disabled"
+		(selectionChange)="applyColumns()"
+		class="rt2-column-chooser-select"
+		panelClass="rt2-column-chooser-select-panel">
+		<mat-select-trigger class="trigger"> Select Columns </mat-select-trigger>
 
-        <mat-option *ngFor="let column of columns" [value]="column">
-            {{column.name}}
-        </mat-option>
-    </mat-select>
+		<mat-option *ngFor="let column of columns" [value]="column">
+			{{ column.name }}
+		</mat-option>
+	</mat-select>
 </mat-form-field>
 
 <!-- Column Chooser Template -->
 <ng-template #columnChooserSection let-data>
-
-    <div class="rt2-column-chooser-dialog-container" *ngFor="let column of data">
-        <mat-checkbox class="rt2-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
-            {{column.name}}
-        </mat-checkbox>
-    </div>
-
+	<div class="rt2-column-chooser-dialog-container" *ngFor="let column of data">
+		<mat-checkbox class="rt2-column-chooser-dialog-checkbox" [(ngModel)]="column.show">
+			{{ column.name }}
+		</mat-checkbox>
+	</div>
 </ng-template>

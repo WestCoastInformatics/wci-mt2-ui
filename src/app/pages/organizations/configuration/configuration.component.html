@@ -1,97 +1,108 @@
 <div class="content-header">
-    <div class="row header-title">
-        <span class="title-label">Organizations</span>
-        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
-              [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
-                    {{ organization.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+	<div class="row header-title">
+		<span class="title-label">Organizations</span>
+		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
+			<mat-select
+				#detailsVersionSelect
+				[disableOptionCentering]="true"
+				[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
+				[(value)]="selectedOrganization"
+				(selectionChange)="selectOrganization()">
+				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+					{{ organization.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
 </div>
 
 <div class="content-wrapper">
-    <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <page-container>
-        <span class="organizations-configuration">
-            <heading-with-count title="Organization Configuration" classname="mb-3" showcount="false"></heading-with-count>
-            <!-- <div class="section-header mb-3 form-title"> Organization Configuration </div> -->
-            <div class="organizations-configuration-details">
-                <div class="organizations-configuration-blocks-1">
-                    <div class="organizations-configuration-block main-block profile-block">
-                        <div class="organization-profile-head section-header head-section-title-font">Profile</div>
-                        <div class="organization-profile-mid">
-                            <mat-form-field floatLabel="never" class="profile-name-field" appearance="none">
-                                <mat-label class="form-field-header">Name</mat-label>
-                                <input matInput type="text" [disabled]="true" name="name" [(ngModel)]="profileNameValue">
-                            </mat-form-field>
+	<app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+	<page-container>
+		<span class="organizations-configuration">
+			<heading-with-count title="Organization Configuration" classname="mb-3" showcount="false"></heading-with-count>
+			<!-- <div class="section-header mb-3 form-title"> Organization Configuration </div> -->
+			<div class="organizations-configuration-details">
+				<div class="organizations-configuration-blocks-1">
+					<div class="organizations-configuration-block main-block profile-block">
+						<div class="organization-profile-head section-header head-section-title-font">Profile</div>
+						<div class="organization-profile-mid">
+							<mat-form-field floatLabel="never" class="profile-name-field" appearance="fill">
+								<mat-label class="form-field-header">Name</mat-label>
+								<input matInput type="text" [disabled]="true" name="name" [(ngModel)]="profileNameValue" />
+							</mat-form-field>
 
-                            <mat-form-field floatLabel="never" class="profile-email-field" appearance="none">
-                                <mat-label class="form-field-header">Primary Contact Email</mat-label>
-                                <input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue">
-                                <div class="modal-error-message" [hidden]="!emailError">
-                                    {{emailError}}</div>
-                            </mat-form-field>
+							<mat-form-field floatLabel="never" class="profile-email-field" appearance="fill">
+								<mat-label class="form-field-header">Primary Contact Email</mat-label>
+								<input matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue" />
+								<div class="modal-error-message" [hidden]="!emailError">
+									{{ emailError }}
+								</div>
+							</mat-form-field>
 
-                            <mat-form-field floatLabel="never" class="profile-description-field" appearance="none">
-                                <mat-label class="form-field-header">Description</mat-label>
-                                <textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
-                            </mat-form-field>
-                        </div>
-                        <div class="section-btn section-font">
-                            <button *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="rt2-btn rt2-action-btn"
-                             [disabled]="!isEmailOrOrganizationChange() || !isValidEmail()" aria-label="Update Profile" title="Update Profile" 
-                             (click)="updateOrganization()">Update Profile</button>
-                        </div>
-                    </div>
+							<mat-form-field floatLabel="never" class="profile-description-field" appearance="fill">
+								<mat-label class="form-field-header">Description</mat-label>
+								<textarea matInput type="text" name="description" [(ngModel)]="profileDescriptionValue"></textarea>
+							</mat-form-field>
+						</div>
+						<div class="section-btn section-font">
+							<button
+								*ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+								class="rt2-btn rt2-action-btn"
+								[disabled]="!isEmailOrOrganizationChange() || !isValidEmail()"
+								aria-label="Update Profile"
+								title="Update Profile"
+								(click)="updateOrganization()">
+								Update Profile
+							</button>
+						</div>
+					</div>
 
-                    <div class="organizations-configuration-block main-block profile-pic-block">
-                        <div class="organization-profile-head section-header head-section-title-font">Profile Picture</div>
-                        <div class="organization-profile-mid organization-picture">
-                            <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
-                        </div>
-                        <div class="section-btn section-font">
-                            <label aria-label="Delete Picture" title="Delete Picture" *ngIf="selectedOrganization?.iconUri" class="rt2-btn rt2-action-btn mr-3"
-                             (click)="onPhotoDelete()">
-                                Delete Picture
-                            </label>
-                            <label *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" aria-label="Edit Picture" title="Edit Picture"
-                              class="rt2-btn rt2-action-btn">
-                                Edit Picture
-                                <input type="file" class="d-none" (change)="onPhotoChange($event)" />
-                            </label>
-                        </div>
-                    </div>
+					<div class="organizations-configuration-block main-block profile-pic-block">
+						<div class="organization-profile-head section-header head-section-title-font">Profile Picture</div>
+						<div class="organization-profile-mid organization-picture">
+							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
+						</div>
+						<div class="section-btn section-font">
+							<label aria-label="Delete Picture" title="Delete Picture" *ngIf="selectedOrganization?.iconUri" class="rt2-btn rt2-action-btn mr-3" (click)="onPhotoDelete()">
+								Delete Picture
+							</label>
 
-                    <div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="organizations-configuration-block main-block profile-pic-block">
-                        <div class="organization-profile-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg">
-                            Remove this Organization</div>
-                        <div class="organization-profile-mid">Warning! This is a permanent operation
-                            and cannot
-                            be
-                            undone. Please be certain before taking action.
-                            <br>
-                            <div class="rt2-config-spacing">
-                                <remove-dashboard-component-modal [componentType]="'organization'" [componentId]=getSelectedOrganizationId()
-                                  [componentName]=getSelectedOrganizationName()>
-                                </remove-dashboard-component-modal>
-                            </div>
-                        </div>
-                        <div class="organization-profile-head section-header head-section-title-font">
-                            Organizational Audit Trail</div>
-                        <div class="organization-profile-mid">View the administrative information associated with this organization (such as adding members or removing teams).
-                            <br>
-                            <div class="rt2-config-spacing">
-                                <audit-trail-modal [refsetInternalId]="organizationId" [isDetails]="false" *ngIf="organizationId">
-                                </audit-trail-modal>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+							<input type="file" class="file-input" (change)="onPhotoChange($event)" #fileUpload />
+							<div class="file-upload">
+								<button
+									*ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')"
+									aria-label="Edit Picture"
+									title="Edit Picture"
+									class="rt2-btn rt2-action-btn"
+									(click)="fileUpload.click()">
+									Edit Picture
+								</button>
+							</div>
+						</div>
+					</div>
 
-        </span>
-    </page-container>
+					<div *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="organizations-configuration-block main-block profile-pic-block">
+						<div class="organization-profile-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg" /> Remove this Organization</div>
+						<div class="organization-profile-mid">
+							Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.
+							<br />
+							<div class="rt2-config-spacing">
+								<remove-dashboard-component-modal [componentType]="'organization'" [componentId]="getSelectedOrganizationId()" [componentName]="getSelectedOrganizationName()">
+								</remove-dashboard-component-modal>
+							</div>
+						</div>
+						<div class="organization-profile-head section-header head-section-title-font">Organizational Audit Trail</div>
+						<div class="organization-profile-mid">
+							View the administrative information associated with this organization (such as adding members or removing teams).
+							<br />
+							<div class="rt2-config-spacing">
+								<audit-trail-modal [refsetInternalId]="organizationId" [isDetails]="false" *ngIf="organizationId"> </audit-trail-modal>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</span>
+	</page-container>
 </div>

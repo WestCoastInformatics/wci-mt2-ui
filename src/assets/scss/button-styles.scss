@@ -1,6 +1,6 @@
 /******************************** Buttons ********************************/
 
-/*** Material design and pagination button styles 
+/*** Material design and pagination button styles
 .mat-raised-button {
   background-color: $standard_default_button_color;
   color: white;
@@ -112,16 +112,16 @@
 
 /***** Action btn *****/
 .rt2-action-btn {
-  background-color: #00a9e0;
-  color: white;
+  background-color: $standard_primary_button_color;
+  color: $standard_button_color;
   font-size: 1.4rem !important;
   // border: 1px solid #00a9e0;
 }
 
 /***** Feedback btn *****/
 .rt2-feedback-btn {
-  background-color: #00a9e0;
-  color: white;
+  background-color: $standard_primary_button_color;
+  color: $standard_button_color;
   margin-top: 5px !important;
   margin-right: 5px !important;
   margin-bottom: 5px !important;
@@ -131,13 +131,13 @@
 .rt2-remove-btn,
 #refesetToolDialogCancel {
   background-color: #d23e3e;
-  color: white;
+  color: $standard_button_color;
 }
 
 /***** Link btn *****/
 .rt2-link-btn {
   font-family: $standard_font_family;
-  color: #00a9e0;
+  color: $standard_link_color;
   font-size: $standard_font_size;
   font-weight: 500;
   letter-spacing: 1px;
@@ -168,7 +168,8 @@
 /***** Download btn *****/
 .rt2-download-btn {
   background-color: #4ea24e;
-  color: white;
+  color: $standard_button_color;
+  margin-left: 1em;
 }
 
 
@@ -182,7 +183,7 @@
 /***** Next, Back, Green btn *****/
 .rt2-next-back-btn {
   background-color: #4ea24e;
-  color: white;
+  color: $standard_button_color;
 }
 
 

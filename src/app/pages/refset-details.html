@@ -1,306 +1,374 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div class="container-fluid refsetDetailsPage">
-    <!-- Page Title -->
-    <div class="row refset-title content-header workflow-stepper-bar" [class.refset_tool_inactive_row]="refsetData != undefined && !refsetData?.active">
-
-        <!-- Reference Set Name, action icons, and roles -->
-        <div class="col-4 rt2-refset-details-title-name-section">
-
-            <!-- <div class="rt2-refset-details-title-name refset-details-title">
+	<!-- Page Title -->
+	<div class="row refset-title content-header workflow-stepper-bar" [class.refset_tool_inactive_row]="refsetData !== undefined && !refsetData?.active">
+		<!-- Reference Set Name, action icons, and roles -->
+		<div class="col-4 rt2-refset-details-title-name-section">
+			<!-- <div class="rt2-refset-details-title-name refset-details-title">
                 Reference Set Details
             </div> -->
 
-            <div class="rt2-refset-details-title-name-section">
-                <div class="metadata-collapsible-container-title page-header-font">
-                    {{refsetData?.name}}
-                </div>
-                <app-refset-discussion-list *ngIf="refsetData" type="REFSET" [refsetInternalId]="id" [refsetId]="refsetId" [refsetName]="refsetData.name"
-                  [roles]="refsetData.roles" [(discussionCount)]="openDiscussionCount">
-                </app-refset-discussion-list>
-            </div>
+			<div class="rt2-refset-details-title-name-section">
+				<div class="metadata-collapsible-container-title page-header-font">{{refsetData?.name}}</div>
+				<app-refset-discussion-list
+					*ngIf="refsetData"
+					type="REFSET"
+					[refsetInternalId]="id"
+					[refsetId]="refsetId"
+					[refsetName]="refsetData.name"
+					[roles]="refsetData.roles"
+					[(discussionCount)]="openDiscussionCount">
+				</app-refset-discussion-list>
+			</div>
 
-            <div class="set-of-buttons">
+			<div class="set-of-buttons"></div>
+		</div>
 
-            </div>
+		<!-- Locked Reference Set bar -->
+		<div *ngIf="isLocked" class="col-5 refsetLockBanner banner-lock-font">This Reference Set is locked while edits are processing.</div>
 
-        </div>
+		<!-- Spacer Column if not in edit mode -->
+		<div *ngIf="!editMode" class="col-5">&nbsp;</div>
 
-        <!-- Locked Reference Set bar -->
-        <div *ngIf="isLocked" class="col-5 refsetLockBanner banner-lock-font">
-            This Reference Set is locked while edits are processing.
-        </div>
+		<!-- Status Stepper if in edit mode and Reference Set not locked -->
+		<mat-horizontal-stepper
+			*ngIf="!isLocked && editMode && refsetStatus !== 'IN_UPGRADE'"
+			class="col-5 details-page-stepper"
+			[linear]="true"
+			labelPosition="bottom"
+			[class.refset_tool_inactive_row]="refsetData !== undefined && !refsetData?.active"
+			#stepper>
+			<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
+				<ng-template matStepperIcon="number">
+					<mat-icon>done</mat-icon>
+				</ng-template>
+				<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready for Edit</span></ng-template>
+			</mat-step>
 
-        <!-- Spacer Column if not in edit mode -->
-        <div *ngIf="!editMode" class="col-5">&nbsp;</div>
+			<mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
+				<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In Edit</span></ng-template>
+			</mat-step>
 
-        <!-- Status Stepper if in edit mode and Reference Set not locked -->
-        <mat-horizontal-stepper *ngIf="!isLocked && editMode && refsetStatus != 'IN_UPGRADE'" class="col-5 details-page-stepper" [linear]="true" labelPosition="bottom"
-          [class.refset_tool_inactive_row]="refsetData != undefined && !refsetData?.active" #stepper>
+			<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
+				<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span> </ng-template>
+			</mat-step>
 
-            <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_EDIT_STARTED']">
-                <ng-template matStepperIcon="number">
-                    <mat-icon>done</mat-icon>
-                </ng-template>
-                <ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_EDIT_COLOR']">Ready
-                        for Edit</span></ng-template>
-            </mat-step>
+			<mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
+				<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In Review</span></ng-template>
+			</mat-step>
 
-            <mat-step [editable]="false" [completed]="stepperInfo['IN_EDIT_STARTED']">
-                <ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_EDIT_COLOR']">In
-                        Edit</span></ng-template>
-            </mat-step>
+			<mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
+				<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span> </ng-template>
+			</mat-step>
 
-            <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_REVIEW_STARTED']">
-                <ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_REVIEW_COLOR']">Ready for Review</span>
-                </ng-template>
-            </mat-step>
+			<mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
+				<ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for Publication</span></ng-template>
+			</mat-step>
 
-            <mat-step [editable]="false" [completed]="stepperInfo['IN_REVIEW_STARTED']">
-                <ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['IN_REVIEW_COLOR']">In
-                        Review</span></ng-template>
-            </mat-step>
+			<ng-template matStepperIcon="done">
+				<mat-icon>done</mat-icon>
+			</ng-template>
+		</mat-horizontal-stepper>
 
-            <mat-step [editable]="false" [completed]="stepperInfo['REVIEW_COMPLETED_STARTED']">
-                <ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['REVIEW_COMPLETED_COLOR']">Review Completed</span>
-                </ng-template>
-            </mat-step>
+		<!-- In Upgrade -->
+		<div *ngIf="refsetStatus === 'IN_UPGRADE'" class="rt2-refset-details-title-name refset-details-title">IN UPGRADE</div>
 
-            <mat-step [editable]="false" [completed]="stepperInfo['READY_FOR_PUBLICATION_STARTED']">
-                <ng-template matStepLabel><span class="fs-15 fw-bold" [class]="stepperInfo['READY_FOR_PUBLICATION_COLOR']">Ready for
-                        Publication</span></ng-template>
-            </mat-step>
+		<!-- Version Select -->
+		<div class="col-3 details-version-select">
+			<mat-form-field floatLabel="never" appearance="fill">
+				<mat-label></mat-label>
+				<mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion()" disableOptionCentering="true" [disabled]="isLocked">
+					<mat-option *ngFor="let option of versionOptions" [value]="option.value"> {{ addSpaceAfterVersionDate(option.display) }} </mat-option>
+				</mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+	<div class="container mt-3">
+		<ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
+			<div class="success-header">
+				<i class="fa fa-exclamation-triangle fa-2x"></i>
+				<div class="success-body">
+					<strong>Warning!</strong><br />This Reference Set is not based on the latest version of the Code System. <br />It is recommended to perform an Upgrade before doing other edits.
+				</div>
+			</div>
+		</ngb-alert>
+	</div>
 
-            <ng-template matStepperIcon="done">
-                <mat-icon>done</mat-icon>
-            </ng-template>
-
-        </mat-horizontal-stepper>
-
-        <!-- In Upgrade -->
-        <div *ngIf="refsetStatus == 'IN_UPGRADE'" class="rt2-refset-details-title-name refset-details-title">IN
-            UPGRADE</div>
-
-        <!-- Version Select -->
-        <div class="col-3 details-version-select">
-
-            <mat-form-field floatLabel="never" appearance="legacy">
-                <mat-label></mat-label>
-                <mat-select #detailsVersionSelect [(value)]="selectedVersion" (selectionChange)="changeVersion()" disableOptionCentering="true" [disabled]="isLocked">
-                    <mat-option *ngFor="let option of versionOptions" [value]="option.value">
-                        {{ addSpaceAfterVersionDate(option.display) }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-
-        </div>
-
-    </div>
-    <div class="container mt-3">
-        <ngb-alert [dismissible]="true" type="warning" *ngIf="displayOutdateWarning">
-            <div class="success-header">
-                <i class="fa fa-exclamation-triangle fa-2x"></i>
-                <div class="success-body">
-                    <strong>Warning!</strong><br />This Reference Set is not based on the latest
-                    version of
-                    the Code System.
-                    <br>It is recommended to perform an Upgrade before doing other edits.
-                </div>
-            </div>
-        </ngb-alert>
-    </div>
-
-    <!-- Reference Set Name Bar -->
-    <div class="refset-title-container rt2-lockable">
-
-        <!-- Metadata Section -->
-        <div class="metadata-container">
-            <div class="refset-metadata-container">
-
-                <div>
-                    <!--
+	<!-- Reference Set Name Bar -->
+	<div class="refset-title-container rt2-lockable">
+		<!-- Metadata Section -->
+		<div class="metadata-container">
+			<div class="refset-metadata-container">
+				<div>
+					<!--
                     <span *ngIf="editMode" class="rt2-roles"><b>Role(s): </b>{{
                         getRoleString() }}</span> -->
-                    
 
-                    <button *ngIf="allowedToEdit || allowedToReview" [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false"
-                      class="rt2-link-btn p-0">
-                        Manage Reference Set <span class="down-arrow-for-menu carret-up-down-icon-font">&#x25BC;</span>
-                    </button>
+					<button *ngIf="allowedToEdit || allowedToReview" [matMenuTriggerFor]="refsetMenu" [matMenuTriggerRestoreFocus]="false" class="rt2-link-btn p-0">
+						Manage Reference Set <span class="down-arrow-for-menu carret-up-down-icon-font">&#x25BC;</span>
+					</button>
 
-                    <mat-menu #refsetMenu="matMenu">
+					<mat-menu #refsetMenu="matMenu">
+						<create-new-refset
+							*ngIf="allowedToEdit"
+							[status]="refsetStatus"
+							[editMode]="editMode"
+							[isDetailsPage]="true"
+							[refsetId]="refsetId"
+							[refsetInternalId]="id"
+							[projectsRefsetComponent]="projectsRefsetComponent"
+							[inputProperties]="editMetadataProperties"
+							(processChangedMemberEffects)="processChangedMemberEffects($event)">
+						</create-new-refset>
 
-                        <create-new-refset *ngIf="allowedToEdit" [status]="refsetStatus" [editMode]="editMode" [isDetailsPage]="true" [refsetId]="refsetId"
-                          [refsetInternalId]="id" [projectsRefsetComponent]="projectsRefsetComponent" [inputProperties]="editMetadataProperties"
-                          (processChangedMemberEffects)="processChangedMemberEffects($event)">
-                        </create-new-refset>
+						<workflow-history-notes-modal
+							*ngIf="allowedToEdit || allowedToReview"
+							[refsetInternalId]="id"
+							[user]="refsetData?.modifiedBy"
+							(saved)="loadWorkflowHistoryData($event)"
+							[status]="refsetStatus"
+							[workflowHistoryNotes]="workflowHistoryNotes">
+						</workflow-history-notes-modal>
 
-                        <workflow-history-notes-modal *ngIf="allowedToEdit || allowedToReview" [refsetInternalId]="id" [user]="refsetData?.modifiedBy"
-                          (saved)="loadWorkflowHistoryData($event)" [status]="refsetStatus" [workflowHistoryNotes]="workflowHistoryNotes">
-                        </workflow-history-notes-modal>
+						<button class="rt2-picklist-btn" *ngIf="allowedToEdit && refsetData?.type === 'INTENSIONAL'" (click)="recalulateDefinition()">Recalulate Members</button>
 
-                        <button class="rt2-picklist-btn" *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="recalulateDefinition()">Recalulate Members</button>
+						<button class="rt2-picklist-btn" *ngIf="allowedToEdit && refsetData?.type === 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
 
-                        <button class="rt2-picklist-btn" *ngIf="allowedToEdit && refsetData?.type == 'INTENSIONAL'" (click)="openConvertRefset()">Make Extensional</button>
+						<button
+							*ngIf="allowedToEdit && this.refsetData?.versionStatus === 'IN DEVELOPMENT'"
+							(click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)"
+							aria-hidden="false"
+							class="rt2-picklist-btn"
+							aria-label="Removes in-development reference set leaving any prior published versions unchanged"
+							title="Removes in-development reference set leaving any prior published versions unchanged">
+							Delete In Development Version
+						</button>
 
-                        <button *ngIf="allowedToEdit && this.refsetData?.versionStatus == 'IN DEVELOPMENT'"
-                          (click)="openDeleteDevelopmentVersion(deleteDevelopmentVersionDialog)" aria-hidden="false" class="rt2-picklist-btn"
-                          aria-label="Removes in-development reference set leaving any prior published versions unchanged"
-                          title="Removes in-development reference set leaving any prior published versions unchanged">
-                            Delete In Development Version
-                        </button>
+						<button class="rt2-picklist-btn" *ngIf="allowedToEdit && this.refsetData?.versionList.length > 1" (click)="openChangeRefsetStatus()">
+							{{ changeRefsetStatusButtonText }} Reference Set
+						</button>
+					</mat-menu>
 
-                        <button class="rt2-picklist-btn" *ngIf="allowedToEdit && this.refsetData?.versionList.length > 1" (click)="openChangeRefsetStatus()">
-                            {{ changeRefsetStatusButtonText }} Reference Set
-                        </button>
+					<span *ngIf="allowedToEdit || allowedToReview" class="menu-spacer">&nbsp;</span>
 
-                    </mat-menu>
+					<app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData" (changeLockedStatus)="changeLockedStatus($event)">
+					</app-launch-comparison-modal>
 
-                    <span *ngIf="allowedToEdit || allowedToReview" class="menu-spacer">&nbsp;</span>
+					<span class="menu-spacer">&nbsp;</span>
 
-                    <app-launch-comparison-modal [isDetailPage]="true" [refsetBranchPath]="refsetBranchPath" [activeRefset]="refsetData"
-                      (changeLockedStatus)="changeLockedStatus($event)">
-                    </app-launch-comparison-modal>
+					<app-refset-download [hidden]="!refsetData?.downloadable" [isDetailPage]="true" [refset]="refsetData"></app-refset-download>
 
-                    <span class="menu-spacer">&nbsp;</span>
+					<span class="menu-spacer">&nbsp;</span>
 
-                    <app-refset-download [hidden]="!refsetData?.downloadable" [isDetailPage]="true" [refset]="refsetData"></app-refset-download>
+					<button [matMenuTriggerFor]="informationMenu" [matMenuTriggerRestoreFocus]="false" class="rt2-link-btn">Information <span class="down-arrow-for-menu">&#x25BC;</span></button>
 
-                    <span class="menu-spacer">&nbsp;</span>
+					<mat-menu #informationMenu="matMenu">
+						<artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData"> </artifacts-modal>
+						<audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id && user?.userName !== 'Guest'"></audit-trail-modal>
+						<button #snowmedBroswerButton class="rt2-picklist-btn" aria-label="SNOMED Browser" title="Open SNOMED Browser">
+							<a (click)="openInNewWindow(refsetId)">SNOMED Browser</a>
+						</button>
+					</mat-menu>
 
-                    <button [matMenuTriggerFor]="informationMenu" [matMenuTriggerRestoreFocus]="false" class="rt2-link-btn">Information
-                        <span class="down-arrow-for-menu">&#x25BC;</span></button>
+					<span class="menu-spacer">&nbsp;</span>
 
-                    <mat-menu #informationMenu="matMenu">
-                        <artifacts-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id" [refset]="refsetData">
-                        </artifacts-modal>
-                        <audit-trail-modal [refsetInternalId]="refsetData?.id" *ngIf="refsetData?.id && user?.userName !== 'Guest'"></audit-trail-modal>
-                        <button #snowmedBroswerButton class="rt2-picklist-btn" aria-label="SNOMED Browser" title="Open SNOMED Browser"><a (click)="openInNewWindow(refsetId)">SNOMED
-                                Browser</a>
-                        </button>
-                    </mat-menu>
+					<button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false" class="rt2-link-btn">
+						Communication
+						<span class="down-arrow-for-menu">&#x25BC;</span>
+					</button>
 
-                    <span class="menu-spacer">&nbsp;</span>
+					<mat-menu #communicationMenu="matMenu">
+						<email-refset-modal [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
+						<invite-people-modal [refset]="refsetData"></invite-people-modal>
+						<request-access-modal [refset]="refsetData"></request-access-modal>
+					</mat-menu>
+				</div>
 
-                    <button [matMenuTriggerFor]="communicationMenu" [matMenuTriggerRestoreFocus]="false" class="rt2-link-btn">
-                        Communication 
-                        <span class="down-arrow-for-menu">&#x25BC;</span>
-                    </button>
+				<div *ngIf="editMode" class="edit-button-group-right-below-sticky-header">
+					<span [class.disabled]="!membersReady" class="rt2-btn-group">
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('EDIT') && editMode"
+							color="primary"
+							aria-hidden="false"
+							#editButton
+							class="rt2-btn rt2-action-btn"
+							aria-label="Edit"
+							title="Edit"
+							(click)="setWorkflowStatusByAction('', 'EDIT')">
+							Edit
+						</button>
 
-                    <mat-menu #communicationMenu="matMenu">
-                        <email-refset-modal [refsetInternalId]="refsetData?.id" [refset]="refsetData"></email-refset-modal>
-                        <invite-people-modal [refset]="refsetData"></invite-people-modal>
-                        <request-access-modal [refset]="refsetData"></request-access-modal>
-                    </mat-menu>
+						<upgrade-modal
+							(loadingSpinner)="toggleLoadingSpinner($event)"
+							*ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
+							[refsetData]="refsetData"
+							[membersOfRefset]="membersGridData"
+							[refsetId]="refsetData.refsetId"
+							[refsetInternalId]="refsetData.id"
+							[refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
-                </div>
+						<button
+							(loadingSpinner)="toggleLoadingSpinner($event)"
+							type="button"
+							color="red"
+							*ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
+							(click)="openCancelUpgrade(cancelUpgradeDialog)"
+							aria-hidden="false"
+							class="rt2-btn rt2-action-btn"
+							aria-label="Cancel Upgrade"
+							title="Cancel Upgrade">
+							{{ adminOverrideText }} Cancel Upgrade
+						</button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')"
+							color="primary"
+							aria-hidden="false"
+							#cancelEditButton
+							class="rt2-btn rt2-action-btn"
+							aria-label="Undo all changes since last save"
+							title="Undo all changes since last save"
+							(click)="openUndoEditModal(undoEditDialog)">
+							{{ adminOverrideText }} Undo Changes
+						</button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')"
+							color="primary"
+							aria-hidden="false"
+							#finishEditButton
+							class="rt2-btn rt2-action-btn"
+							aria-label="Save changes and finish edit"
+							title="Save changes and finish edit"
+							(click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
+							{{ adminOverrideText }} Save Changes
+						</button>
 
-                <div *ngIf="editMode" class="edit-button-group-right-below-sticky-header">
-                    <span [class.disabled]="!membersReady" class="rt2-btn-group">
-                        <button *ngIf="this.refsetData?.availableActions?.includes('EDIT') && editMode" color="primary" aria-hidden="false" #editButton
-                          class="rt2-btn rt2-action-btn" aria-label="Edit" title="Edit"
-                          (click)="setWorkflowStatusByAction('', 'EDIT')">
-                            Edit
-                        </button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')"
+							#readyForReviewButton
+							(click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')"
+							color="primary"
+							aria-hidden="false"
+							class="rt2-btn rt2-action-btn"
+							attr.aria-label="{{inEditButtonPrefix}} Request Review"
+							title="{{inEditButtonPrefix}} Request Review">
+							{{inEditButtonPrefix}} Request Review
+						</button>
 
-                        <upgrade-modal (loadingSpinner)="toggleLoadingSpinner($event)"
-                          *ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus != 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
-                          [refsetData]="refsetData" [membersOfRefset]="membersGridData" [refsetId]="refsetData.refsetId" [refsetInternalId]="refsetData.id"
-                          [refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('REVIEW')"
+							#reviewButton
+							(click)="setWorkflowStatusByAction('', 'REVIEW')"
+							color="primary"
+							aria-hidden="false"
+							class="rt2-btn rt2-action-btn"
+							aria-label="Review"
+							title="Review">
+							Review
+						</button>
 
-                        <button (loadingSpinner)="toggleLoadingSpinner($event)" type="button" color="red"
-                          *ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
-                          (click)="openCancelUpgrade(cancelUpgradeDialog)" aria-hidden="false" class="rt2-btn rt2-action-btn"
-                          aria-label="Cancel Upgrade" title="Cancel Upgrade">
-                            {{ adminOverrideText }} Cancel Upgrade
-                        </button>
-                        <button *ngIf="this.refsetData?.availableActions?.includes('CANCEL_EDIT')" color="primary" aria-hidden="false" #cancelEditButton
-                          class="rt2-btn rt2-action-btn" aria-label="Undo all changes since last save" title="Undo all changes since last save"
-                        (click)="openUndoEditModal(undoEditDialog)">
-                            {{ adminOverrideText }} Undo Changes
-                        </button>
-                        <button *ngIf="this.refsetData?.availableActions?.includes('FINISH_EDIT')" color="primary" aria-hidden="false" #finishEditButton
-                          class="rt2-btn rt2-action-btn" aria-label="Save changes and finish edit" title="Save changes and finish edit"
-                          (click)="setWorkflowStatusByAction('', 'FINISH_EDIT')">
-                            {{ adminOverrideText }} Save Changes
-                        </button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')"
+							color="primary"
+							aria-hidden="false"
+							#finishEditButton
+							class="rt2-btn rt2-action-btn"
+							aria-label="Withdraw Review Request"
+							title="Withdraw Review Request"
+							(click)="setWorkflowStatusByAction('', 'WITHDRAW')">
+							Withdraw Request
+						</button>
 
-                        <button *ngIf="this.refsetData?.availableActions?.includes('REQUEST_REVIEW')" #readyForReviewButton
-                          (click)="setWorkflowStatusByAction('', 'REQUEST_REVIEW')" color="primary" aria-hidden="false"
-                          class="rt2-btn rt2-action-btn" attr.aria-label="{{inEditButtonPrefix}} Request Review"
-                          title="{{inEditButtonPrefix}} Request Review">
-                            {{inEditButtonPrefix}} Request Review
-                        </button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')"
+							#acceptRefsetButton
+							color="primary"
+							aria-hidden="false"
+							(click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')"
+							class="rt2-btn rt2-action-btn"
+							aria-label="Accept Reference Set"
+							title="Accept Reference Set">
+							Accept Reference Set
+						</button>
 
-                        <button *ngIf="this.refsetData?.availableActions?.includes('REVIEW')" #reviewButton (click)="setWorkflowStatusByAction('', 'REVIEW')"
-                          color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Review" title="Review">
-                            Review
-                        </button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && reviewNotesAdded"
+							color="primary"
+							aria-hidden="false"
+							#rejectRefsetButton
+							class="rt2-btn rt2-action-btn"
+							aria-label="Reject Reference Set"
+							title="Reject Reference Set"
+							(click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
+							Reject Reference Set
+						</button>
 
-                        <button *ngIf="this.refsetData?.availableActions?.includes('WITHDRAW')" color="primary" aria-hidden="false" #finishEditButton
-                          class="rt2-btn rt2-action-btn" aria-label="Withdraw Review Request" title="Withdraw Review Request"
-                          (click)="setWorkflowStatusByAction('', 'WITHDRAW')">
-                            Withdraw Request
-                        </button>
+						<review-modal
+							[refsetInternalId]="refsetData.id"
+							*ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
+							(setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
+						</review-modal>
 
-                        <button *ngIf="this.refsetData?.availableActions?.includes('ACCEPT_REVIEW')" #acceptRefsetButton color="primary" aria-hidden="false"
-                          (click)="setWorkflowStatusByAction('', 'ACCEPT_REVIEW')" class="rt2-btn rt2-action-btn" aria-label="Accept Reference Set"
-                          title="Accept Reference Set">
-                            Accept Reference Set
-                        </button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')"
+							#unassignButton
+							color="primary"
+							aria-hidden="false"
+							(click)="setWorkflowStatusByAction('', 'UNASSIGN')"
+							class="rt2-btn rt2-action-btn"
+							aria-label="Unassign"
+							title="Unassign">
+							{{ adminOverrideText }} Unassign
+						</button>
 
-                        <button *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && reviewNotesAdded" color="primary" aria-hidden="false"
-                          #rejectRefsetButton class="rt2-btn rt2-action-btn" aria-label="Reject Reference Set" title="Reject Reference Set"
-                          (click)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
-                            Reject Reference Set
-                        </button>
+						<ready-for-publication-modal
+							*ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')"
+							[refsetData]="refsetData"
+							[labelPrefix]="inEditButtonPrefix"
+							(setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')"
+							(reloadPage)="initializeDetailsPage()">
+						</ready-for-publication-modal>
 
-                        <review-modal [refsetInternalId]="refsetData.id" *ngIf="this.refsetData?.availableActions?.includes('REJECT_REVIEW') && !reviewNotesAdded"
-                          (setWorkflowStatus)="setWorkflowStatusByAction('', 'REJECT_REVIEW')">
-                        </review-modal>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')"
+							#withdrawPublicationRequest
+							color="primary"
+							aria-hidden="false"
+							(click)="setWorkflowStatusByAction('', 'FAILS_RVF')"
+							class="rt2-btn rt2-action-btn"
+							aria-label="Withdraw"
+							title="Withdraw Publication Request">
+							Withdraw Request
+						</button>
 
-                        <button *ngIf="this.refsetData?.availableActions?.includes('UNASSIGN')" #unassignButton color="primary" aria-hidden="false"
-                          (click)="setWorkflowStatusByAction('', 'UNASSIGN')" class="rt2-btn rt2-action-btn" aria-label="Unassign" title="Unassign">
-                            {{ adminOverrideText }} Unassign
-                        </button>
+						<button
+							*ngIf="this.refsetData?.availableActions?.includes('PUBLISH_REFSET')"
+							color="primary"
+							aria-hidden="false"
+							(click)="openPublishLocalsetModal()"
+							class="rt2-btn rt2-action-btn"
+							aria-label="Publish Local Set">
+							Publish Local Set
+						</button>
+					</span>
+				</div>
+			</div>
+		</div>
 
-                        <ready-for-publication-modal *ngIf="this.refsetData?.availableActions?.includes('REQUEST_PUBLICATION')" [refsetData]="refsetData"
-                          [labelPrefix]="inEditButtonPrefix" (setWorkflowStatus)="setWorkflowStatusByAction('', 'REQUEST_PUBLICATION')" (reloadPage)="initializeDetailsPage()">
-                        </ready-for-publication-modal>
-
-                        <button *ngIf="this.refsetData?.availableActions?.includes('FAILS_RVF')" #withdrawPublicationRequest color="primary"
-                          aria-hidden="false" (click)="setWorkflowStatusByAction('', 'FAILS_RVF')" class="rt2-btn rt2-action-btn" aria-label="Withdraw"
-                          title="Withdraw Publication Request">
-                            Withdraw Request
-                        </button>
-
-                        <button *ngIf="this.refsetData?.availableActions?.includes('PUBLISH_REFSET')" color="primary" aria-hidden="false"
-                          (click)="openPublishLocalsetModal()" class="rt2-btn rt2-action-btn" aria-label="Publish Local Set">
-                            Publish Local Set
-                        </button>
-                    </span>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="metadata-collapsible-container">
-            <div class="metadata-collapsible-container-group-header pointer" (click)="metadataCollapseTrigger()">
-                <div class="metadata-collapsible-container-title page-header-font">
-                    Reference Set Metadata
-
-                </div>
-                <img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable" alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button"
-                  class="caret-up-solid" />
-                <img src="assets/caret-down-solid.svg" *ngIf="hideMetadataTable" alt="Expand Button" title="Expand Metadata" aria-label="Expand Button"
-                  class="caret-down-solid" />
-            </div>
-            <div class="container-fluid detailsMetadataSection" [hidden]="hideMetadataTable">
-                <div class="row">
-                    <refset-meta [refset]="refsetData"></refset-meta>
-                    <!-- Rich Text Editor Dialog -->
-                    <ng-template #detailsRichTextDialog let-data>
-                        <editor [(ngModel)]="data.text" [init]="{
+		<div class="metadata-collapsible-container">
+			<div class="metadata-collapsible-container-group-header pointer" (click)="metadataCollapseTrigger()">
+				<div class="metadata-collapsible-container-title page-header-font">Reference Set Metadata</div>
+				<img src="assets/caret-up-solid.svg" *ngIf="!hideMetadataTable" alt="Collapse Button" title="Collapse Metadata" aria-label="Collapse Button" class="caret-up-solid" />
+				<img src="assets/caret-down-solid.svg" *ngIf="hideMetadataTable" alt="Expand Button" title="Expand Metadata" aria-label="Expand Button" class="caret-down-solid" />
+			</div>
+			<div class="container-fluid detailsMetadataSection" [hidden]="hideMetadataTable">
+				<div class="row">
+					<refset-meta [refset]="refsetData"></refset-meta>
+					<!-- Rich Text Editor Dialog -->
+					<ng-template #detailsRichTextDialog let-data>
+						<editor
+							[(ngModel)]="data.text"
+							[init]="{
                         base_url: '/tinymce',
                         suffix: '.min',
                         height: 200,
@@ -310,688 +378,691 @@
                         'lists advlist'
                         ],
                         toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
-                    }" id="refsetDetailsRichTextEditor"></editor>
-                    </ng-template>
-                </div>
+                    }"
+							id="refsetDetailsRichTextEditor"></editor>
+					</ng-template>
+				</div>
 
-                <ng-template #convertRefsetDialog let-data>
-                    This intensional Reference Set will be converted into an extensional refset.
-                </ng-template>
-            </div>
-        </div>
+				<ng-template #convertRefsetDialog let-data> This intensional Reference Set will be converted into an extensional refset. </ng-template>
+			</div>
+		</div>
 
-        <div class="metadata-collapsible-container" *ngIf="editMode">
-            <div class="metadata-collapsible-container-group-header pointer" (click)="workflowCollapseTrigger()">
-                <div class="metadata-collapsible-container-title page-header-font">
-                    Workflow History
-                    <!-- <div class="set-of-buttons-workflow-history"> -->
-                    <!-- TODO: Should download WF HX table contents, not the refset
+		<div class="metadata-collapsible-container" *ngIf="editMode">
+			<div class="metadata-collapsible-container-group-header pointer" (click)="workflowCollapseTrigger()">
+				<div class="metadata-collapsible-container-title page-header-font">
+					Workflow History
+					<!-- <div class="set-of-buttons-workflow-history"> -->
+					<!-- TODO: Should download WF HX table contents, not the refset
                         <app-refset-download
                             [isDetailPage]="true"
                             [refset]="refsetData"
                         ></app-refset-download>
 -->
-                    <!-- <workflow-history-notes-modal [refsetId]="id"
+					<!-- <workflow-history-notes-modal [refsetId]="id"
                                                       [user]="refsetData?.modifiedBy"
                                                       [disabled]="!allowedToEdit && !allowedToReview"
                                                       [status]="refsetStatus"
                                                       [workflowHistoryNotes]="workflowHistoryNotes"></workflow-history-notes-modal> -->
-                    <!-- </div> -->
-                </div>
-                <img src="assets/caret-up-solid.svg" *ngIf="!hideWorkflowTable" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button"
-                  class="caret-up-solid" />
-                <img src="assets/caret-down-solid.svg" *ngIf="hideWorkflowTable" alt="Expand Button" title="Expand Workflow History" aria-label="Expand Button"
-                  class="caret-down-solid" />
-            </div>
-            <div [hidden]="hideWorkflowTable">
-                <!-- <mat-form-field floatLabel="never" appearance="standard">
+					<!-- </div> -->
+				</div>
+				<img src="assets/caret-up-solid.svg" *ngIf="!hideWorkflowTable" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button" class="caret-up-solid" />
+				<img src="assets/caret-down-solid.svg" *ngIf="hideWorkflowTable" alt="Expand Button" title="Expand Workflow History" aria-label="Expand Button" class="caret-down-solid" />
+			</div>
+			<div [hidden]="hideWorkflowTable">
+				<!-- <mat-form-field floatLabel="never" appearance="standard">
                     <mat-label>Filter</mat-label>
                     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
                   </mat-form-field> -->
-                <div class="workflow-history-table-container">
-                    <div class="mat-elevation-z8">
-                        <table mat-table [dataSource]="workflowHistoryDataSource" matSort matSortActive="modified" matSortDirection="desc">
-                            <!-- ID Column -->
-                            <ng-container matColumnDef="modified">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Time Stamp
-                                </th>
-                                <td mat-cell *matCellDef="let row">
-                                    {{ setTimeFormat(row.modified)}}
-                                </td>
-                            </ng-container>
+				<div class="workflow-history-table-container">
+					<div class="mat-elevation-z8">
+						<table mat-table [dataSource]="workflowHistoryDataSource" matSort matSortActive="modified" matSortDirection="desc">
+							<!-- ID Column -->
+							<ng-container matColumnDef="modified">
+								<th mat-header-cell *matHeaderCellDef mat-sort-header>Time Stamp</th>
+								<td mat-cell *matCellDef="let row">{{ setTimeFormat(row.modified)}}</td>
+							</ng-container>
 
-                            <!-- Progress Column -->
-                            <ng-container matColumnDef="userName">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    User
-                                </th>
-                                <td mat-cell *matCellDef="let row">
-                                    {{row.userName}}
-                                </td>
-                            </ng-container>
+							<!-- Progress Column -->
+							<ng-container matColumnDef="userName">
+								<th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+								<td mat-cell *matCellDef="let row">{{row.userName}}</td>
+							</ng-container>
 
-                            <!-- Name Column -->
-                            <ng-container matColumnDef="workflowStatus">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Workflow Status
-                                </th>
-                                <td mat-cell *matCellDef="let row">
-                                    {{modifyStatusSyntax(row.workflowStatus)}}
-                                </td>
-                            </ng-container>
+							<!-- Name Column -->
+							<ng-container matColumnDef="workflowStatus">
+								<th mat-header-cell *matHeaderCellDef mat-sort-header>Workflow Status</th>
+								<td mat-cell *matCellDef="let row">{{modifyStatusSyntax(row.workflowStatus)}}</td>
+							</ng-container>
 
-                            <!-- Fruit Column -->
-                            <ng-container matColumnDef="notes">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    Notes
-                                </th>
-                                <td mat-cell *matCellDef="let row; let i = index;" class="pt-3">
-                                    <ng-container *ngIf="notesEditable(i, row)">
-                                        <workflow-history-notes-modal [refsetInternalId]="id" [user]="refsetData?.modifiedBy" (saved)="loadWorkflowHistoryData($event)"
-                                          [status]="refsetStatus" [workflowHistoryNotes]="row.notes" [edit]="true">
-                                        </workflow-history-notes-modal>
-                                    </ng-container>
-                                    <ng-container *ngIf="!notesEditable(i, row)">
-                                        <readonly-text-modal [shortText]="row.notes" [longText]="row.notes" [title]="'Notes'">
-                                        </readonly-text-modal>
-                                    </ng-container>
-                                </td>
-                            </ng-container>
+							<!-- Fruit Column -->
+							<ng-container matColumnDef="notes">
+								<th mat-header-cell *matHeaderCellDef mat-sort-header>Notes</th>
+								<td mat-cell *matCellDef="let row; let i = index;" class="pt-3">
+									<ng-container *ngIf="notesEditable(i, row)">
+										<workflow-history-notes-modal
+											[refsetInternalId]="id"
+											[user]="refsetData?.modifiedBy"
+											(saved)="loadWorkflowHistoryData($event)"
+											[status]="refsetStatus"
+											[workflowHistoryNotes]="row.notes"
+											[edit]="true">
+										</workflow-history-notes-modal>
+									</ng-container>
+									<ng-container *ngIf="!notesEditable(i, row)">
+										<readonly-text-modal [shortText]="row.notes" [longText]="row.notes" [title]="'Notes'"> </readonly-text-modal>
+									</ng-container>
+								</td>
+							</ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true">
-                            </tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+							<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-                            <!-- Row shown when there is no matching data. -->
-                            <tr class="mat-row" *matNoDataRow>
-                                <!-- <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td> -->
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+							<!-- Row shown when there is no matching data. -->
+							<tr class="mat-row" *matNoDataRow>
+								<!-- <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td> -->
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div *ngIf="!showMembersSection" class="container-fluid detailsMemberSection default-font">
-            <b>{{ noMemberSectionText }}</b>
-        </div>
+		<div *ngIf="!showMembersSection" class="container-fluid detailsMemberSection default-font">
+			<b>{{ noMemberSectionText }}</b>
+		</div>
 
-        <!-- Section Title -->
-        <div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title head-title">
-            <!-- <heading-with-count title="Reference Set Members" [count]="refsetData?.memberCount || ''"></heading-with-count> -->
-            Reference Set Members&nbsp;<span class="default-cursor" title="Total member count">({{refsetData?.memberCount}})</span>
-            <button *ngIf="showTable && membersReady && refsetData?.memberCount>0" color="primary" aria-hidden="false"
-              class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
-                Download Members Table
-                <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true"
-                    data-mat-icon-type="font">
-                    download
-                </mat-icon>
-            </button>
-        </div>
+		<!-- Section Title -->
+		<div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title head-title">
+			<!-- <heading-with-count title="Reference Set Members" [count]="refsetData?.memberCount || ''"></heading-with-count> -->
+			Reference Set Members&nbsp;<span class="default-cursor" title="Total member count">({{refsetData?.memberCount}})</span>
+			<button *ngIf="showTable && membersReady && refsetData?.memberCount>0" color="primary" aria-hidden="false" class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
+				Download Members Table
+				<mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font"> download </mat-icon>
+			</button>
+		</div>
 
-        <!--<br *ngIf="allowedToEdit && showMembersSection" />-->
-        <div *ngIf="showMembersSection" class="mb-10 mt-10">
-            <span [class.disabled]="!membersReady">
-                <import-from-file-modal *ngIf="allowedToEdit && !isIntensional"  [refsetInternalId]="id" [refsetId]="refsetId" (changeLockedStatus)="changeLockedStatus($event)"
-                    [processChangedMemberFunction]="processChangedMemberEffects">
-                </import-from-file-modal>
+		<div *ngIf="showMembersSection" class="mb-10 mt-10">
+			<span [class.disabled]="!membersReady">
+				<import-from-file-modal
+					*ngIf="allowedToEdit && !isIntensional"
+					[refsetInternalId]="id"
+					[refsetId]="refsetId"
+					(changeLockedStatus)="changeLockedStatus($event)"
+					[processChangedMemberFunction]="processChangedMemberEffects">
+				</import-from-file-modal>
 
-                <import-from-list-modal class="ml-20" *ngIf="allowedToEdit && !isIntensional" [refsetInternalId]="id" [refsetId]="refsetId"
-                    [processChangedMemberFunction]="processChangedMemberEffects" (changeLockedStatus)="changeLockedStatus($event)">
-                </import-from-list-modal>
+				<import-from-list-modal
+					class="ml-20"
+					*ngIf="allowedToEdit && !isIntensional"
+					[refsetInternalId]="id"
+					[refsetId]="refsetId"
+					[processChangedMemberFunction]="processChangedMemberEffects"
+					(changeLockedStatus)="changeLockedStatus($event)">
+				</import-from-list-modal>
 
-                <add-remove-by-concept-modal class="ml-20" *ngIf="allowedToEdit" [refset]="refsetData" (loadingSpinner)="toggleLoadingSpinner($event)"
-                    (changeLockedStatus)="changeLockedStatus($event)" [processChangedMemberFunction]="processChangedMemberEffects">
-                </add-remove-by-concept-modal>
-            </span>
-        </div>
-        <!-- Member Concepts Section -->
-        <div *ngIf="showMembersSection" class="container-fluid detailsMemberSection default-font">
-            <div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
+				<add-remove-by-concept-modal
+					class="ml-20"
+					*ngIf="allowedToEdit"
+					[refset]="refsetData"
+					(loadingSpinner)="toggleLoadingSpinner($event)"
+					(changeLockedStatus)="changeLockedStatus($event)"
+					[processChangedMemberFunction]="processChangedMemberEffects">
+				</add-remove-by-concept-modal>
+			</span>
+		</div>
+		<!-- Member Concepts Section -->
+		<div *ngIf="showMembersSection" class="container-fluid detailsMemberSection default-font">
+			<div class="row" [style.margin-right]="isConceptDetailsLoading || conceptDetail ? '0 !important' : '-15px !important'">
+				<div class="detailsMemberSection-container">
+					<as-split direction="horizontal" gutterSize="4">
+						<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
+							<div class="rt2-details-members-column default-font">
+								<!-- Search Bar -->
+								<div class="d-flex jc-space-between">
+									<div class="rt2-flex-wrap rt2-custom-width">
+										<div class="d-flex rt2-custom-width-fields">
+											<div class="rt2-details-chooser-column filter-font p-l-5" [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
+												<app-column-chooser
+													title="Select Columns to Display"
+													[gridColumnApi]="membersGridColumnApi"
+													[useDialog]="useDialog"
+													[disabled]="isLocked"
+													[manualStateRefresh]="membersGridChooserManualStateRefresh">
+												</app-column-chooser>
+											</div>
 
-                <div class="detailsMemberSection-container">
-                    <as-split direction="horizontal" gutterSize="4">
-                        <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
+											<div class="rt2-details-chooser-column filter-font" [style.display]="membersTaxonomyDisplay">
+												<mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down">
+													<mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
+														<mat-option *ngFor="let option of languageOptions" [value]="option.value"> {{option.display}} </mat-option>
+													</mat-select>
+												</mat-form-field>
+											</div>
 
-                            <div class="rt2-details-members-column default-font">
+											<div class="rt2-details-member-status-field filter-font" [style.display]="membersTableDisplay">
+												<mat-form-field appearance="fill">
+													<mat-label>Show by Concept Status</mat-label>
+													<mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus" (selectionChange)="changeActiveInactiveStatus()">
+														<mat-option value="both">Active and Inactive</mat-option>
+														<mat-option value="active">Active Only</mat-option>
+														<mat-option value="inactive">Inactive Only</mat-option>
+													</mat-select>
+												</mat-form-field>
+											</div>
+										</div>
 
-                                <!-- Search Bar -->
-                                <div class="d-flex jc-space-between">
+										<div class="d-flex rt2-custom-width-fields-btn">
+											<div class="rt2-flex-wrap w-100-pct" [style.display]="membersTableDisplay">
+												<mat-form-field floatLabel="never" class="rt2-details-search-field default-font">
+													<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
+													<input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
+												</mat-form-field>
+												<span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
+												<button color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn" unfocus (click)="openEclBuilder('detailsTableSearchInput')">
+													ECL Builder
+												</button>
+											</div>
 
-                                    <div class="rt2-flex-wrap rt2-custom-width">
-                                        <div class="d-flex rt2-custom-width-fields">
-                                            <div class="rt2-details-chooser-column filter-font p-l-5"
-                                                [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
-                                                <app-column-chooser title="Select Columns to Display" [gridColumnApi]="membersGridColumnApi" [useDialog]="useDialog"
-                                                    [disabled]="isLocked" [manualStateRefresh]="membersGridChooserManualStateRefresh">
-                                                </app-column-chooser>
-                                            </div>
+											<div class="rt2-flex-wrap w-100-pct" [style.display]="membersTaxonomyDisplay">
+												<mat-form-field floatLabel="never" class="rt2-details-search-field" *ngIf="showMembersSearchBar()">
+													<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
+													<input
+														matInput
+														id="detailsTaxonomySearchInput"
+														[(ngModel)]="taxonomySearchInput"
+														(input)="onTaxonomySearchChange()"
+														[disabled]="!showMembersSearchBar()" />
+												</mat-form-field>
+												<span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
+												<button aria-hidden="false" class="rt2-btn rt2-action-btn" (click)="openEclBuilder('detailsTaxonomySearchInput')" unfocus>ECL Builder</button>
+											</div>
+										</div>
+									</div>
 
-                                            <div class="rt2-details-chooser-column filter-font" [style.display]="membersTaxonomyDisplay">
-                                                <mat-form-field floatLabel="never" appearance="legacy" class="format-option-drop-down">
-                                                    <mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
-                                                        <mat-option *ngFor="let option of languageOptions" [value]="option.value">
-                                                            {{option.display}}
-                                                        </mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
+									<div class="rt2-toggle-buttons-container pos-relative">
+										<mat-button-toggle-group
+											class="rt2-toggle-buttons tabs-font"
+											name="membersListMode"
+											aria-label="Members List Mode"
+											(change)="onChangeMembersListMode()"
+											[(ngModel)]="selectedMembersListMode">
+											<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
+											<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
+												{{taxonomyButtonLabel}}
+											</mat-button-toggle>
+										</mat-button-toggle-group>
+									</div>
+								</div>
 
-                                            <div class="rt2-details-member-status-field filter-font" [style.display]="membersTableDisplay">
-                                                <mat-form-field appearance="legacy">
-                                                    <mat-label>Show by Concept Status</mat-label>
-                                                    <mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus"
-                                                    (selectionChange)="changeActiveInactiveStatus()">
-                                                        <mat-option value="both">Active and Inactive</mat-option>
-                                                        <mat-option value="active">Active Only</mat-option>
-                                                        <mat-option value="inactive">Inactive Only</mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                        
+								<!-- Members Table -->
+								<div class="container-fluid" [style.display]="membersTableDisplay">
+									<ag-grid-angular
+										#detailsMembersTable
+										*ngIf="showTable"
+										class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter mh-622"
+										[ngClass]="getMembersGridPageSize() === 10 ? 'ten-rows' : 'more-than-ten-rows'"
+										[columnDefs]="membersColumnDefs"
+										[gridOptions]="membersGridOptions">
+									</ag-grid-angular>
 
-                                        <div class="d-flex rt2-custom-width-fields-btn">
-                                            <div class="rt2-flex-wrap w-100-pct" [style.display]="membersTableDisplay">
-                                                <mat-form-field floatLabel="never" class="rt2-details-search-field default-font">
-                                                    <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
-                                                    <input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
-                                                </mat-form-field>
-                                                <span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
-                                                <button color="primary" aria-hidden="false"
-                                                    class="rt2-btn rt2-action-btn" unfocus
-                                                    (click)="openEclBuilder('detailsTableSearchInput')">ECL Builder</button>
-                                            </div>
+									<app-pagination
+										#detailsMembersPaging
+										*ngIf="showTable"
+										[pageSize]="membersGridPaging.pageSize"
+										[gridOptions]="membersGridOptions"
+										[pageSizeOptions]="membersGridPaging.pageSizeOptions"
+										[totalKnown]="membersGridPaging.totalKnown"
+										[manualStateRefresh]="membersGridPaging.manualStateRefresh"
+										[isDetailPage]="true"
+										[refsetId]="refsetId">
+									</app-pagination>
 
-                                            <div class="rt2-flex-wrap w-100-pct" [style.display]="membersTaxonomyDisplay">
-                                                <mat-form-field floatLabel="never" class="rt2-details-search-field" *ngIf="showMembersSearchBar()">
-                                                    <mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
-                                                    <input matInput id="detailsTaxonomySearchInput" [(ngModel)]="taxonomySearchInput" (input)="onTaxonomySearchChange()"
-                                                        [disabled]="!showMembersSearchBar()" />
-                                                </mat-form-field>
-                                                <span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
-                                                <button aria-hidden="false"
-                                                    class="rt2-btn rt2-action-btn"
-                                                    (click)="openEclBuilder('detailsTaxonomySearchInput')" unfocus>ECL Builder</button>
-                                            </div>
-                                        </div>
+									<!-- Concept Code Templates -->
+									<ng-template #conceptCodeSection let-params>
+										<add-remove-concepts-icons
+											class="mb--2"
+											[concept]="params?.data"
+											[hidden]="!allowedToEdit"
+											[isParentConcept]="false"
+											[refsetType]="refsetData?.type"
+											(processSelection)="addRemoveConcept($event)">
+										</add-remove-concepts-icons>
+									</ng-template>
 
-                                    </div>
+									<!-- Action Templates -->
+									<ng-template #detailsActionSection let-params>
+										<div class="d-flex rt2-wrap">
+											<div class="col-6">
+												<button
+													mat-icon-button
+													*ngIf="params?.data?.historyVisible && params.data.released"
+													(click)="openMemberHistory(params.data.code)"
+													aria-hidden="false"
+													#detailsDownloadIcon
+													class="rt2-table-action-icon"
+													aria-label="Open History"
+													title="Open Membership History">
+													<mat-icon>history</mat-icon>
+												</button>
+											</div>
 
-                                    <div class="rt2-toggle-buttons-container pos-relative">
-                                        <mat-button-toggle-group class="rt2-toggle-buttons tabs-font" name="membersListMode" aria-label="Members List Mode"
-                                            (change)="onChangeMembersListMode()" [(ngModel)]="selectedMembersListMode">
-                                            <mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
-                                            <mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy"
-                                                [disabled]="!showTaxonomySearchTable">
-                                                {{taxonomyButtonLabel}}
-                                            </mat-button-toggle>
-                                        </mat-button-toggle-group>
-                                    </div>
+											<div class="col-6">
+												<app-refset-discussion-list
+													*ngIf="refsetData && params && params.data"
+													type="REFSET_MEMBER"
+													[refsetInternalId]="id"
+													[refsetName]="refsetData.name"
+													[roles]="refsetData.roles"
+													[refsetId]="refsetId"
+													[conceptId]="params.data.code"
+													[conceptName]="params.data.name"
+													[(discussionCount)]="params.data.openDiscussionCount">
+												</app-refset-discussion-list>
+											</div>
+										</div>
+									</ng-template>
 
-                                </div>
+									<ng-template #memberHistoryDialog let-data>
+										<div class="container-fluid">
+											<div class="rt2-dialog-name">{{data.name}}</div>
 
-                                <!-- Members Table -->
-                                <div class="container-fluid" [style.display]="membersTableDisplay">
-                                    <ag-grid-angular #detailsMembersTable *ngIf="showTable"
-                                      class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter mh-622"
-                                      [ngClass]="getMembersGridPageSize() == 10 ? 'ten-rows' : 'more-than-ten-rows'" [columnDefs]="membersColumnDefs"
-                                      [gridOptions]="membersGridOptions">
-                                    </ag-grid-angular>
+											<ag-grid-angular #memberHistoryTable class="ag-theme-alpine rt2-ag-grid memberHistoryGrid" [columnDefs]="data.columnDefs" [gridOptions]="data.gridOptions">
+											</ag-grid-angular>
+										</div>
+									</ng-template>
+								</div>
 
-                                    <app-pagination #detailsMembersPaging *ngIf="showTable" [pageSize]="membersGridPaging.pageSize" [gridOptions]="membersGridOptions"
-                                      [pageSizeOptions]="membersGridPaging.pageSizeOptions" [totalKnown]="membersGridPaging.totalKnown"
-                                      [manualStateRefresh]="membersGridPaging.manualStateRefresh" [isDetailPage]="true" [refsetId]="refsetId">
-                                    </app-pagination>
+								<!-- Members Taxonomy Tree -->
+								<div class="container-fluid rt2-details-member-taxonomy" [style.display]="membersTaxonomyDisplay">
+									<div #memberTaxonomySearchResults class="container-fluid" [style.display]="taxonomySearchDisplay">
+										<!-- Taxonomy Search Results Grid -->
+										<ag-grid-angular
+											#taxonomySearchTable
+											*ngIf="showTaxonomySearchTable"
+											class="ag-theme-alpine rt2-ag-grid taxonomySearchTable"
+											[columnDefs]="taxonomySearchColumnDefs"
+											[gridOptions]="taxonomySearchGridOptions">
+										</ag-grid-angular>
 
-                                    <!-- Concept Code Templates -->
-                                    <ng-template #conceptCodeSection let-params>
-                                        <add-remove-concepts-icons class="mb--2" [concept]="params?.data" [hidden]="!allowedToEdit" [isParentConcept]="false"
-                                          [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)">
-                                        </add-remove-concepts-icons>
-                                    </ng-template>
+										<app-pagination
+											#taxonomySearchPaginationComponent
+											*ngIf="showTaxonomySearchTable"
+											[pageSize]="taxonomySearchGridPaging.pageSize"
+											[gridOptions]="taxonomySearchGridOptions"
+											[pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
+											[totalKnown]="taxonomySearchGridPaging.totalKnown"
+											[manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
+											[refsetId]="refsetId">
+										</app-pagination>
 
-                                    <!-- Action Templates -->
-                                    <ng-template #detailsActionSection let-params>
-                                        <div class="d-flex rt2-wrap">
-                                            <div class="col-2">
-                                                <button mat-icon-button *ngIf="params?.data?.historyVisible && params.data.released"
-                                                    (click)="openMemberHistory(params.data.code)" aria-hidden="false" #detailsDownloadIcon class="
-                                                        rt2-table-action-icon
-                                                    " aria-label="Open History" title="Open Membership History">
-                                                    <mat-icon>history</mat-icon>
-                                                </button>
-                                            </div>
+										<!-- Result Template -->
+										<ng-template #taxonomyResultSection let-params> {{params?.value}} </ng-template>
 
-                                            <div class="col-2">
-                                                <app-refset-discussion-list *ngIf="refsetData && params && params.data" type="REFSET_MEMBER" [refsetInternalId]="id"
-                                                        [refsetName]="refsetData.name" [roles]="refsetData.roles" [refsetId]="refsetId" [conceptId]="params.data.code"
-                                                        [conceptName]="params.data.name" [(discussionCount)]="params.data.openDiscussionCount">
-                                                </app-refset-discussion-list>
-                                            </div>
-                                        </div>
-                                    </ng-template>
+										<!-- Path Template -->
+										<ng-template #taxonomyPathSection let-params> {{params?.value}} </ng-template>
+									</div>
 
-                                    <ng-template #memberHistoryDialog let-data>
-                                        <div class="container-fluid">
-                                            <div class="rt2-dialog-name">
-                                                {{data.name}}
-                                            </div>
+									<div class="details-section">
+										<app-taxonomy-tree
+											#detailsMembersTaxonomy
+											treeId="detailsMembersTree"
+											[refset]="refsetData"
+											[rootNode]="membersTaxonomyRoot"
+											[editMode]="allowedToEdit"
+											[selectedConcept]="selectedConcept"
+											[options]="taxonomyOptions"
+											[manualStateRefresh]="taxonomyManualStateRefresh"
+											[processChangedMemberFunction]="processChangedMemberEffects"
+											(loadConceptDetail)="loadConceptDetail($event)"
+											(changeLockedStatus)="changeLockedStatus($event)"
+											(numOfChildren)="numOfChildren = $event">
+										</app-taxonomy-tree>
+									</div>
+								</div>
+							</div>
+						</as-split-area>
+						<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0" [minSize]="isConceptDetailsLoading || conceptDetail ? 25 : 0">
+							<div class="rt2-concept-details-column default-font" *ngIf="isConceptDetailsLoading || conceptDetail">
+								<div class="row" *ngIf="isConceptDetailsLoading">
+									<div>Loading...</div>
+								</div>
 
-                                            <ag-grid-angular #memberHistoryTable class="
-                                                    ag-theme-alpine
-                                                    rt2-ag-grid memberHistoryGrid
-                                                " [columnDefs]="data.columnDefs" [gridOptions]="data.gridOptions">
-                                            </ag-grid-angular>
-                                        </div>
-                                    </ng-template>
+								<div *ngIf="conceptDetail">
+									<div class="row align-items-center no-gutters">
+										<div class="col rt2-concept-details-title-name refset-details-title concept-details-header">Concept Details</div>
+										<div class="rt2-details-chooser-column">
+											<mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down concept-details-header">
+												<mat-select [(value)]="selectedConceptDetailLanguage" (selectionChange)="changeConceptDetailsLanguage()" [disabled]="isLocked">
+													<mat-option *ngFor="let option of languageOptions" [value]="option.value"> {{option.display}} </mat-option>
+												</mat-select>
+											</mat-form-field>
+										</div>
+										<div class="text-right close-button rt2-concept-details-close-btn">
+											<button
+												mat-icon-button
+												(click)="closeConceptDetails()"
+												aria-hidden="false"
+												class="rt2-table-action-icon concept-details-header"
+												aria-label="Close Concept Details"
+												title="Close Concept Details">
+												<mat-icon>close</mat-icon>
+											</button>
+										</div>
+									</div>
 
-                                </div>
+									<!-- Parents Section -->
+									<div class="rt2-concept-details-taxonomy-section">
+										<div class="row">
+											<div class="rt2-concept-details-section-title">Parents</div>
+										</div>
 
-                                <!-- Members Taxonomy Tree -->
-                                <div class="container-fluid rt2-details-member-taxonomy" [style.display]="membersTaxonomyDisplay">
+										<div class="row">
+											<div class="rt2-concept-details-no-relationships" *ngIf="conceptDetailParents.length === 0">No Parents</div>
+										</div>
 
-                                    <div #memberTaxonomySearchResults class="container-fluid" [style.display]="taxonomySearchDisplay">
+										<div *ngFor="let parent of conceptDetailParents">
+											<span class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+												<add-remove-concepts-icons
+													[concept]="parent"
+													[hidden]="!allowedToEdit"
+													[isParentConcept]="true"
+													[refsetType]="refsetData?.type"
+													(processSelection)="addRemoveConcept($event)">
+												</add-remove-concepts-icons>
 
-                                        <!-- Taxonomy Search Results Grid -->
-                                        <ag-grid-angular #taxonomySearchTable *ngIf="showTaxonomySearchTable"
-                                          class="ag-theme-alpine rt2-ag-grid taxonomySearchTable" [columnDefs]="taxonomySearchColumnDefs" [gridOptions]="taxonomySearchGridOptions">
-                                        </ag-grid-angular>
+												<img *ngIf="parent.defined" title="Fully Defined" aria-label="Fully Defined" class="rt2-logo mr-2 p-0" src="/assets/linedTaxonomyIcon.png" />
 
-                                        <app-pagination #taxonomySearchPaginationComponent *ngIf="showTaxonomySearchTable" [pageSize]="taxonomySearchGridPaging.pageSize"
-                                          [gridOptions]="taxonomySearchGridOptions" [pageSizeOptions]="taxonomySearchGridPaging.pageSizeOptions"
-                                          [totalKnown]="taxonomySearchGridPaging.totalKnown" [manualStateRefresh]="taxonomySearchGridPaging.manualStateRefresh"
-                                          [refsetId]="refsetId">
-                                        </app-pagination>
+												<img *ngIf="!parent.defined" title="Primitive" aria-label="Primitive" class="rt2-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
+											</span>
 
-                                        <!-- Result Template -->
-                                        <ng-template #taxonomyResultSection let-params>
-                                            {{params?.value}}
-                                        </ng-template>
+											<span [class.bold-if-member]="parent?.memberOfRefset" [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
+												<span
+													*ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
+													title="{{parent.fsn}}"
+													aria-label="{{parent.fsn}}"
+													>{{parent.fsn}}</span
+												>
 
-                                        <!-- Path Template -->
-                                        <ng-template #taxonomyPathSection let-params>
-                                            {{params?.value}}
-                                        </ng-template>
-                                    </div>
+												<span
+													*ngIf="(!this.taxonomyOptions.useFsn && !this.conceptDetailsOptions.useFsn) || !this.conceptDetailsOptions.useFsn"
+													title="{{parent.name}}"
+													aria-label="{{parent.name}}"
+													>{{parent.name}}</span
+												>
+											</span>
+										</div>
+									</div>
 
-                                    <div class="details-section">
-                                        <app-taxonomy-tree #detailsMembersTaxonomy treeId="detailsMembersTree" [refset]="refsetData" [rootNode]="membersTaxonomyRoot"
-                                          [editMode]="allowedToEdit" [selectedConcept]="selectedConcept" [options]="taxonomyOptions"
-                                          [manualStateRefresh]="taxonomyManualStateRefresh" [processChangedMemberFunction]="processChangedMemberEffects"
-                                          (loadConceptDetail)="loadConceptDetail($event)" (changeLockedStatus)="changeLockedStatus($event)"
-                                          (numOfChildren)="numOfChildren = $event">
-                                        </app-taxonomy-tree>
-                                    </div>
-                                </div>
-                            </div>
-                        </as-split-area>
-                        <as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0" [minSize]="isConceptDetailsLoading || conceptDetail ? 25 : 0">
-                            <div class="rt2-concept-details-column default-font" *ngIf="isConceptDetailsLoading || conceptDetail">
-                                <div class="row" *ngIf="isConceptDetailsLoading">
-                                    <div>Loading...</div>
-                                </div>
+									<!-- Details Section -->
+									<div class="container-fluid rt2-concept-details-concept-section">
+										<div class="row">
+											<!-- Info Section -->
+											<div
+												class="col rt2-concept-details-concept-info-column default-font"
+												[class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active">
+												<div>
+													<!-- Name -->
+													<div class="row details-row">
+														<table class="rt2-concept-details-concept-info-column-title">
+															<tr>
+																<td class="text-left">
+																	<div class="rt2-concept-details-taxonomy-icon status-icon-container">
+																		<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+																		<img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
+																	</div>
+																</td>
+																<td class="text-center">
+																	<div
+																		class="rt2-concept-details-concept-name default-font"
+																		title="{{conceptDescriptionTerm}}"
+																		aria-label="{{conceptDescriptionTerm}}">
+																		{{getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptionTerm}}
+																	</div>
+																</td>
+																<td class="text-right">
+																	<div class="open-container">
+																		<button
+																			mat-icon-button
+																			(click)="openInNewWindow(conceptDetail.code)"
+																			aria-hidden="false"
+																			class="rt2-concept-details-action-icon"
+																			aria-label="Open Concept in New SNOMED Browser Window"
+																			title="Open Concept in SNOMED Browser Window">
+																			<mat-icon>open_in_new </mat-icon>
+																		</button>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+													<br />
 
-                                <div *ngIf="conceptDetail">
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col rt2-concept-details-title-name refset-details-title concept-details-header">
-                                            Concept Details
-                                        </div>
-                                        <div class="rt2-details-chooser-column">
-                                            <mat-form-field floatLabel="never" appearance="legacy" class="format-option-drop-down concept-details-header">
-                                                <mat-select [(value)]="selectedConceptDetailLanguage" (selectionChange)="changeConceptDetailsLanguage()" [disabled]="isLocked">
-                                                    <mat-option *ngFor="let option of languageOptions" [value]="option.value">
-                                                        {{option.display}}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="text-right close-button">
-                                            <button mat-icon-button (click)="closeConceptDetails()" aria-hidden="false"
-                                              class="rt2-table-action-icon concept-details-header" aria-label="Close Concept Details" title="Close Concept Details">
-                                                <mat-icon>close</mat-icon>
-                                            </button>
-                                        </div>
-                                    </div>
+													<!-- ID -->
+													<div class="row rt2-concept-details-concept-row">
+														<div class="rt2-concept-details-concept-id-label">SCTID</div>
 
-                                    <!-- Parents Section -->
-                                    <div class="rt2-concept-details-taxonomy-section">
-                                        <div class="row">
-                                            <div class="rt2-concept-details-section-title">
-                                                Parents
-                                            </div>
-                                        </div>
+														<div class="col rt2-concept-details-concept-id-text" title="{{conceptDetail.code}}" aria-label="{{conceptDetail.code}}">
+															{{conceptDetail.code}}
+														</div>
+													</div>
+													<br />
+													<!-- ECL -->
+													<div class="row rt2-concept-details-concept-row">
+														<div class="col rt2-concept-details-concept-ecl">{{conceptDetail.code}} | {{conceptDescriptionTerm}} |</div>
+													</div>
+													<br />
 
-                                        <div class="row">
-                                            <div class="
-                                                    rt2-concept-details-no-relationships
-                                                " *ngIf="conceptDetailParents.length == 0">
-                                                No Parents
-                                            </div>
-                                        </div>
+													<!-- Descriptions -->
+													<!-- FSN -->
+													<div class="row rt2-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
+														<div class="rt2-concept-details-concept-description" title="{{description.languageName}}" aria-label="{{description.languageName}}">
+															<span class="rt2-concept-details-concept-description-language"
+																>{{description.languageName.substr(0, description.languageName.indexOf('(')).toLowerCase()}}
+															</span>
+															{{description.term}}
+														</div>
+													</div>
+												</div>
+											</div>
 
-                                        <div *ngFor="let parent of conceptDetailParents">
-                                            <span class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+											<!-- Roles Section -->
+											<div
+												class="col rt2-concept-details-concept-roles-column p-2"
+												[class.rt2-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length">
+												<div *ngIf="true">
+													<span class="no-attributes" *ngIf="!conceptDetail.numRoleGroups">No attributes</span>
+													<div class="row rt2-concept-details-role-row default-font" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
+														<div class="row rt2-concept-details-role-details" *ngFor="let detail of role.value">{{detail}}</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 
-                                                <add-remove-concepts-icons [concept]="parent" [hidden]="!allowedToEdit" [isParentConcept]="true"
-                                                  [refsetType]="refsetData?.type" (processSelection)="addRemoveConcept($event)">
-                                                </add-remove-concepts-icons>
+									<!-- Children Section -->
+									<div class="rt2-concept-details-taxonomy-section children-section">
+										<div class="row">
+											<div class="rt2-concept-details-section-title">
+												Children
+												<span [hidden]="!numOfChildren">{{'(' + numOfChildren + ')'}}</span>
+											</div>
+										</div>
 
-                                                <img *ngIf="parent.defined" title="Fully Defined" aria-label="Fully Defined" class="rt2-logo mr-2 p-0"
-                                                  src="/assets/linedTaxonomyIcon.png" />
-
-                                                <img *ngIf="!parent.defined" title="Primitive" aria-label="Primitive" class="rt2-logo mr-2 p-0"
-                                                  src="/assets/unlinedTaxonomyIcon.png" />
-                                            </span>
-
-                                            <span [class.bold-if-member]="parent?.memberOfRefset" [class.greyed-if-not-member]="!parent?.memberOfRefset"
-                                              (click)="loadConceptDetail(parent)">
-
-                                                <span *ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
-                                                  title="{{parent.fsn}}" aria-label="{{parent.fsn}}">{{parent.fsn}}</span>
-
-                                                <span *ngIf="(!this.taxonomyOptions.useFsn && !this.conceptDetailsOptions.useFsn) || !this.conceptDetailsOptions.useFsn"
-                                                  title="{{parent.name}}" aria-label="{{parent.name}}">{{parent.name}}</span>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Details Section -->
-                                    <div class="container-fluid rt2-concept-details-concept-section">
-                                        <div class="row">
-                                            <!-- Info Section -->
-                                            <div class="col rt2-concept-details-concept-info-column default-font"
-                                              [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail.active">
-                                                <div>
-                                                    <!-- Name -->
-                                                    <div class="row details-row">
-                                                        <table class="rt2-concept-details-concept-info-column-title">
-                                                            <tr>
-                                                                <td class="text-left">
-                                                                    <div class="rt2-concept-details-taxonomy-icon status-icon-container">
-                                                                        <img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined"
-                                                                          src="/assets/linedTaxonomyIcon.png" />
-                                                                        <img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive"
-                                                                          src="/assets/unlinedTaxonomyIcon.png" />
-                                                                    </div>
-                                                                </td>
-                                                                <td class="text-center">
-                                                                    <div class="rt2-concept-details-concept-name default-font" title="{{conceptDescriptionTerm}}"
-                                                                      aria-label="{{conceptDescriptionTerm}}">
-                                                                        {{getFsn(conceptDescriptions)
-                                                                        ?
-                                                                        getFsn(conceptDescriptions)
-                                                                        :
-                                                                        conceptDescriptionTerm}}
-                                                                    </div>
-                                                                </td>
-                                                                <td class="text-right">
-                                                                    <div class="open-container">
-                                                                        <button mat-icon-button (click)="openInNewWindow(conceptDetail.code)" aria-hidden="false"
-                                                                          class="rt2-concept-details-action-icon"
-                                                                          aria-label="Open Concept in New SNOMED Browser Window" title="Open Concept in SNOMED Browser Window">
-                                                                            <mat-icon>open_in_new
-                                                                            </mat-icon>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                                    <br>
-
-                                                    <!-- ID -->
-                                                    <div class="row rt2-concept-details-concept-row">
-                                                        <div class="rt2-concept-details-concept-id-label">
-                                                            SCTID
-                                                        </div>
-
-                                                        <div class="col rt2-concept-details-concept-id-text" title="{{conceptDetail.code}}"
-                                                          aria-label="{{conceptDetail.code}}">
-                                                            {{conceptDetail.code}}
-                                                        </div>
-                                                    </div>
-                                                    <br />
-                                                    <!-- ECL -->
-                                                    <div class="row rt2-concept-details-concept-row">
-                                                        <div class="col rt2-concept-details-concept-ecl">
-                                                            {{conceptDetail.code}} |
-                                                            {{conceptDescriptionTerm}} |
-                                                        </div>
-                                                    </div>
-                                                    <br />
-
-                                                    <!-- Descriptions -->
-                                                    <!-- FSN -->
-                                                    <div class="row rt2-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
-                                                        <div class="rt2-concept-details-concept-description" title="{{description.languageName}}"
-                                                          aria-label="{{description.languageName}}">
-                                                            <span class="rt2-concept-details-concept-description-language">{{description.languageName.substr(0,
-                                                                description.languageName.indexOf('(')).toLowerCase()}}
-                                                            </span>
-                                                            {{description.term}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Roles Section -->
-                                            <div class="col rt2-concept-details-concept-roles-column p-2"
-                                              [class.rt2-concept-details-concept-roles-column-no-attributes]="!conceptDetail.roleGroups.length">
-                                                <div *ngIf="true">
-                                                    <span class="no-attributes" *ngIf="!conceptDetail.numRoleGroups">No
-                                                        attributes</span>
-                                                    <div class="row rt2-concept-details-role-row default-font" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
-                                                        <div class="row rt2-concept-details-role-details" *ngFor="let detail of role.value">
-                                                            {{detail}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Children Section -->
-                                    <div class="
-                                            rt2-concept-details-taxonomy-section
-                                            children-section
-                                        ">
-                                        <div class="row">
-                                            <div class="
-                                                    rt2-concept-details-section-title
-                                                ">
-                                                Children
-                                                <span [hidden]="!numOfChildren">{{'(' +
-                                                    numOfChildren +
-                                                    ')'}}</span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Children Taxonomy Tree -->
-                                        <div class="">
-                                            <app-taxonomy-tree #childrenMembersTaxonomy treeId="childrenMembersTree" [refset]="refsetData" [rootNode]="conceptDetail"
-                                              [selectedConcept]="selectedConcept" [options]="conceptDetailsOptions" hasMultipleRootNodes="false" [editMode]="allowedToEdit"
-                                              [processChangedMemberFunction]="processChangedMemberEffects" (changeLockedStatus)="changeLockedStatus($event)"
-                                              (loadConceptDetail)="loadConceptDetail($event)" (numOfChildren)="numOfChildren = $event">
-                                            </app-taxonomy-tree>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </as-split-area>
-                    </as-split>
-                </div>
-            </div>
-        </div>
-    </div>
+										<!-- Children Taxonomy Tree -->
+										<div class="">
+											<app-taxonomy-tree
+												#childrenMembersTaxonomy
+												treeId="childrenMembersTree"
+												[refset]="refsetData"
+												[rootNode]="conceptDetail"
+												[selectedConcept]="selectedConcept"
+												[options]="conceptDetailsOptions"
+												hasMultipleRootNodes="false"
+												[editMode]="allowedToEdit"
+												[processChangedMemberFunction]="processChangedMemberEffects"
+												(changeLockedStatus)="changeLockedStatus($event)"
+												(loadConceptDetail)="loadConceptDetail($event)"
+												(numOfChildren)="numOfChildren = $event">
+											</app-taxonomy-tree>
+										</div>
+									</div>
+								</div>
+							</div>
+						</as-split-area>
+					</as-split>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<add-remove-concepts [isAdd]="isConceptBeingAdded" [conceptCode]="conceptForAddRemove?.code" [conceptName]="conceptForAddRemove?.name"
-  [conceptHasChildren]="conceptForAddRemove?.hasChildren" [refset]="refsetData" [definitionExceptionType]="addRemoveDefinitionExceptionType"
-  [definitionExceptionId]="conceptForAddRemove?.definitionExceptionId" (changeLockedStatus)="changeLockedStatus($event)"
-  [processChangedMemberFunction]="processChangedMemberEffects"
-  (onMembersGridReady)="onMembersGridReady(originalGridParams); onTaxonomySearchGridReady(taxonomyGridParams); loadRefset()">
+<add-remove-concepts
+	[isAdd]="isConceptBeingAdded"
+	[conceptCode]="conceptForAddRemove?.code"
+	[conceptName]="conceptForAddRemove?.name"
+	[conceptHasChildren]="conceptForAddRemove?.hasChildren"
+	[refset]="refsetData"
+	[definitionExceptionType]="addRemoveDefinitionExceptionType"
+	[definitionExceptionId]="conceptForAddRemove?.definitionExceptionId"
+	(changeLockedStatus)="changeLockedStatus($event)"
+	[processChangedMemberFunction]="processChangedMemberEffects"
+	(onMembersGridReady)="onMembersGridReady(originalGridParams); onTaxonomySearchGridReady(taxonomyGridParams); loadRefset()">
 </add-remove-concepts>
 <scroll-top></scroll-top>
 
 <!--Undo Edit Modal-->
 <ng-template #undoEditDialog let-modal>
-    <div class="modal-header review-modal-header rt2-modal-header">
-        <h3 class="modal-title rt2-modal-title modal-header-font">
-            Undo Changes
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
-        (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body review-modal-body">
-        <div>Are you sure you want to undo the changes?</div>
-    </div>
-    <div class="modal-footer ready-for-review-footer rt2-btn-group">
-        <button type="button" (click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');" color="primary" aria-hidden="false"
-          class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes">
-            Yes
-        </button>
-        <button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn p-tb-1-lr-16" aria-label="No"
-          title="No">
-            No
-        </button>
-    </div>
+	<div class="modal-header review-modal-header rt2-modal-header">
+		<h3 class="modal-title rt2-modal-title modal-header-font">Undo Changes</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body review-modal-body">
+		<div>Are you sure you want to undo the changes?</div>
+	</div>
+	<div class="modal-footer ready-for-review-footer rt2-btn-group">
+		<button
+			type="button"
+			(click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
+			color="primary"
+			aria-hidden="false"
+			class="rt2-btn rt2-action-btn"
+			aria-label="Yes"
+			title="Yes">
+			Yes
+		</button>
+		<button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn p-tb-1-lr-16" aria-label="No" title="No">No</button>
+	</div>
 </ng-template>
 
 <!--Cancel Upgrade Modal-->
 <ng-template #cancelUpgradeDialog let-modal>
-    <div class="modal-header review-modal-header rt2-modal-header">
-        <h3 class="modal-title rt2-modal-title modal-header-font">
-            Cancel Upgrade
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close Dialog" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body review-modal-body">
-        <div>You are about to undo your work. Are you sure you want to cancel your changes?
-        </div>
-    </div>
-    <div class="modal-footer ready-for-review-footer rt2-btn-group">
-        <button type="button" (click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click');" color="primary" aria-hidden="false"
-          class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes">
-            Yes
-        </button>
-        <button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No"
-          title="No">
-            No
-        </button>
-    </div>
+	<div class="modal-header review-modal-header rt2-modal-header">
+		<h3 class="modal-title rt2-modal-title modal-header-font">Cancel Upgrade</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close Dialog" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body review-modal-body">
+		<div>You are about to undo your work. Are you sure you want to cancel your changes?</div>
+	</div>
+	<div class="modal-footer ready-for-review-footer rt2-btn-group">
+		<button
+			type="button"
+			(click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click');"
+			color="primary"
+			aria-hidden="false"
+			class="rt2-btn rt2-action-btn"
+			aria-label="Yes"
+			title="Yes">
+			Yes
+		</button>
+		<button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No" title="No">No</button>
+	</div>
 </ng-template>
 
 <!--Publish Localset Modal-->
 <ng-template #publishLocalsetDialog let-modal>
+	<div class="modal-header rt2-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Publish Local Reference Set</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
 
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            Publish Local Reference Set
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
+	<div class="modal-body ready-for-publication-modal-body">
+		<div class="row mb-3">
+			You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version date past the year 2000.
+		</div>
 
-    <div class="modal-body ready-for-publication-modal-body">
+		<div class="row">
+			<div class="col">
+				<div *ngIf="!localsetPublishValid">The version date must be a valid date after 01-01-2000</div>
+				<label
+					>Version Date:
 
-        <div class="row mb-3">
-            You are about to publish this local reference set and create a static version of it. This change can not be undone. If you wish to continue enter a new version
-            date past the year 2000.
-        </div>
+					<mat-form-field floatLabel="never" title="Enter Search Critera">
+						<mat-label class="search-label">mm/dd/yyyy</mat-label>
+						<input type="date" matInput #publishVersionDate id="publishVersionDate" min="2000-01-01" />
+					</mat-form-field>
+				</label>
+			</div>
+		</div>
+	</div>
 
-        <div class="row">
-            <div class="col">
-
-                <div *ngIf="!localsetPublishValid">The version date must be a valid date after 01-01-2000</div>
-                <label>Version Date:
-
-                    <mat-form-field floatLabel="never" title="Enter Search Critera">
-                        <mat-label class="search-label">mm/dd/yyyy</mat-label>
-                        <input type="date" matInput #publishVersionDate id="publishVersionDate" min="2000-01-01" />
-                    </mat-form-field>
-                </label>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="modal-footer rt2-modal-footer">
-        <button [disabled]="!validatePublishDate(publishVersionDate.value)" type="button" (click)="publishLocalset(publishVersionDate.value);" 
-          aria-hidden="false" class="rt2-btn rt2-action-btn mr-20" aria-label="Publish">
-            Publish
-        </button>
-        <button type="button" (click)="modal.dismiss('No click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel">
-            Cancel
-        </button>
-    </div>
-
+	<div class="modal-footer rt2-modal-footer">
+		<button
+			[disabled]="!validatePublishDate(publishVersionDate.value)"
+			type="button"
+			(click)="publishLocalset(publishVersionDate.value);"
+			aria-hidden="false"
+			class="rt2-btn rt2-action-btn mr-20"
+			aria-label="Publish">
+			Publish
+		</button>
+		<button type="button" (click)="modal.dismiss('No click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel">Cancel</button>
+	</div>
 </ng-template>
 
 <!--Delete In Development Version Modal-->
 <ng-template #deleteDevelopmentVersionDialog let-modal>
-    <div class="modal-header review-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            Delete In Development Reference Set Version
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close"
-        (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body review-modal-body">
-        <div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of
-            the refset?
-        </div>
-    </div>
-    <div class="modal-footer ready-for-review-footer rt2-btn-group">
-        <button type="button" (click)="deleteDevelopmentVersion(); modal.dismiss('Yes click');" color="primary" aria-hidden="false"
-          class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes">
-            Yes
-        </button>
-        <button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No"
-          title="No">
-            No
-        </button>
-    </div>
+	<div class="modal-header review-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Delete In Development Reference Set Version</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body review-modal-body">
+		<div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of the refset?</div>
+	</div>
+	<div class="modal-footer ready-for-review-footer rt2-btn-group">
+		<button type="button" (click)="deleteDevelopmentVersion(); modal.dismiss('Yes click');" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes">
+			Yes
+		</button>
+		<button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No" title="No">No</button>
+	</div>
 </ng-template>
 
 <!--Change Refset Status Modal-->
 
 <ng-template #changeRefsetStatusDialog let-modal>
+	<div class="modal-header rt2-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">{{ changeRefsetStatusButtonText }} Reference Set</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
 
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            {{ changeRefsetStatusButtonText }} Reference Set
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
+	<div class="modal-body ready-for-publication-modal-body">
+		<div class="row">{{ changeRefsetStatusText }} Are you sure you want to continue?</div>
+	</div>
 
-    <div class="modal-body ready-for-publication-modal-body">
-        <div class="row">
-            {{ changeRefsetStatusText }} Are you sure you want to continue?
-        </div>
-    </div>
-
-    <div class="modal-footer rt2-modal-footer rt2-btn-group">
-        <button type="button" (click)="changeRefsetStatus();" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn">
-            {{ changeRefsetStatusButtonText }}
-        </button>
-        <button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-cancel-btn">
-            Cancel
-        </button>
-    </div>
-
+	<div class="modal-footer rt2-modal-footer rt2-btn-group">
+		<button type="button" (click)="changeRefsetStatus();" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn">{{ changeRefsetStatusButtonText }}</button>
+		<button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-cancel-btn">Cancel</button>
+	</div>
 </ng-template>

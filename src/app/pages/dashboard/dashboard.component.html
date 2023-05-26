@@ -1,73 +1,73 @@
 <div class="content-header">
-    <div class="row header-title">
-        <span class="title-label dashboard-title">My Dashboard</span>
-    </div>
+	<div class="row header-title">
+		<span class="title-label dashboard-title">My Dashboard</span>
+	</div>
 </div>
 <div class="rt2-container">
-    <div class='row'>
-        <div class='col-md-4 col-12'>
-            <section>
-                <heading-with-count title="My Organizations" [count]="organizationList.length"></heading-with-count>
-                <div class='dashboard-section'>
-                    <div class="dashboard-section-mid">
-                        <ng-container *ngFor="let organization of organizationList">
-                            <div class='section-list' *ngIf="organization.name">
-                                <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value}}
-                                <span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"><a>{{
-                                        organization.name }}</a></span>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <div *ngIf="false && currentUser?.roles?.includes('all-all-admin')">
-                        <create-new-organization-modal></create-new-organization-modal>
-                    </div>
-                </div>
-            </section>
+	<div class="row">
+		<div class="col-md-4 col-12">
+			<section>
+				<heading-with-count title="My Organizations" [count]="organizationList.length"></heading-with-count>
+				<div class="dashboard-section">
+					<div class="dashboard-section-mid">
+						<ng-container *ngFor="let organization of organizationList">
+							<div class="section-list" *ngIf="organization.name">
+								<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, organization.iconUri)" class="medium-icon-image" /> {{ params?.value }}
+								<span [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']"
+									><a>{{ organization.name }}</a></span
+								>
+							</div>
+						</ng-container>
+					</div>
+					<div *ngIf="false && currentUser?.roles?.includes('all-all-admin')">
+						<create-new-organization-modal></create-new-organization-modal>
+					</div>
+				</div>
+			</section>
 
-            <section>
-                <heading-with-count title="My Projects" [count]="projectList.length"></heading-with-count>
-                <div class='dashboard-section'>
-                    <div class="dashboard-section-mid">
-                        <ng-container *ngFor="let project of projectList">
-                            <div class='section-list' *ngIf="project.name">
-                                <span
-                                    [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id +'/refsets']"><a>{{
-                                        project.edition.organization.name }}/{{
-                                        project.name }}</a><i *ngIf="project.privateProject" class='fa fa-lock ml-2 text-muted'></i></span>
-                            </div>
-                        </ng-container>
-                    </div>
-                </div>
-            </section>
+			<section>
+				<heading-with-count title="My Projects" [count]="projectList.length"></heading-with-count>
+				<div class="dashboard-section">
+					<div class="dashboard-section-mid">
+						<ng-container *ngFor="let project of projectList">
+							<div class="section-list" *ngIf="project.name">
+								<span [routerLink]="['/organization/' + project.edition.organization.id + '/edition/' + project.edition.id + '/projects/' + project.id + '/refsets']"
+									><a>{{ project.edition.organization.name }}/{{ project.name }}</a
+									><i *ngIf="project.privateProject" class="fa fa-lock ml-2 text-muted"></i
+								></span>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</section>
 
-            <section>
-                <heading-with-count title="My Teams" [count]="teamList.length"></heading-with-count>
-                <div class='dashboard-section'>
-                    <div class="dashboard-section-mid">
-                        <ng-container *ngFor="let team of teamList">
-                            <div class='section-list' *ngIf="team.name">
-                                <span [routerLink]="['/organization/' + team.organizationId + '/teams/' + team.id +'/people']"><a>{{
-                                        team.organization?.name }}/{{ team?.name}}</a></span>
-                            </div>
-                        </ng-container>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class='col-md-8 col-12'>
-            <section>
-                <heading-with-count title="Recent Reference Sets" [count]="data.length"></heading-with-count>
-                <div class="ag-theme-alpine">
-                    <ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100-pct">
-                    </ag-grid-angular>
+			<section>
+				<heading-with-count title="My Teams" [count]="teamList.length"></heading-with-count>
+				<div class="dashboard-section">
+					<div class="dashboard-section-mid">
+						<ng-container *ngFor="let team of teamList">
+							<div class="section-list" *ngIf="team.name">
+								<span [routerLink]="['/organization/' + team.organizationId + '/teams/' + team.id + '/people']"
+									><a>{{ team.organization?.name }}/{{ team?.name }}</a></span
+								>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div class="col-md-8 col-12">
+			<section>
+				<heading-with-count title="Recent Reference Sets" [count]="data.length"></heading-with-count>
+				<div class="ag-theme-alpine">
+					<ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100-pct"> </ag-grid-angular>
 
-                    <!-- Workflow Status Templates -->
-                    <ng-template #dashboardWorkflowStatusSection let-params>
-                        <workflow-status-badge [status]="params?.data?.workflowStatus">
-                        </workflow-status-badge>
-                    </ng-template>
-                </div>
-            </section>
-        </div>
-    </div>
+					<!-- Workflow Status Templates -->
+					<ng-template #dashboardWorkflowStatusSection let-params>
+						<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
+					</ng-template>
+				</div>
+			</section>
+		</div>
+	</div>
 </div>

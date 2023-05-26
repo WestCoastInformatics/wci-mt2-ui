@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AgFrameworkComponent } from 'ag-grid-angular';
 import { IFloatingFilter, IFloatingFilterParams, TextFilter, TextFilterModel } from 'ag-grid-community';
 import * as moment from 'moment';
@@ -11,34 +11,29 @@ export interface DateTextFloatingFilterParams extends IFloatingFilterParams {
 @Component({
 	selector: 'app-date-text-floating-filter',
 	templateUrl: 'date-text-filter.component.html',
-	styleUrls: ['./date-text-filter.component.scss']
+	styleUrls: ['./date-text-filter.component.scss'],
 })
 export class DateTextFilterComponent implements IFloatingFilter, AgFrameworkComponent<DateTextFloatingFilterParams> {
-
 	params: DateTextFloatingFilterParams;
-	value = "";
-	currentValue = ""
+	value = '';
+	currentValue = '';
 
 	agInit(params: DateTextFloatingFilterParams): void {
-
 		this.params = params;
 		this.value = this.params.value;
 	}
 
 	valueChanged(isSelector: boolean, event?: any, picker?: any) {
 		if (isSelector) {
-			picker._model.selection = ''
-			this.value = moment(new Date(event.value)).format('YYYY-MM-DD')
+			picker._model.selection = '';
+			this.value = moment(new Date(event.value)).format('YYYY-MM-DD');
 		}
 		let valueToUse;
 
-		if (this.currentValue != "" && this.value == "") {
-
+		if (this.currentValue != '' && this.value == '') {
 			valueToUse = null;
-			this.currentValue = "";
-
+			this.currentValue = '';
 		} else if (CodeUtility.isDateValid(this.value)) {
-
 			valueToUse = this.value;
 			this.currentValue = this.value;
 		}
@@ -49,11 +44,9 @@ export class DateTextFilterComponent implements IFloatingFilter, AgFrameworkComp
 	}
 
 	onParentModelChanged(parentModel: TextFilterModel): void {
-
 		if (!parentModel) {
-			this.value = "";
-		}
-		else {
+			this.value = '';
+		} else {
 			this.value = parentModel.filter;
 		}
 	}

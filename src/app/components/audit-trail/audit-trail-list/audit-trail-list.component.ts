@@ -9,262 +9,251 @@ import { AuditService } from 'src/app/services/rest/audit.service';
 import { DateTextFilterComponent } from '../../dateTextFilter/date-text-filter.component';
 
 @Component({
-  selector: 'audit-trail-list',
-  templateUrl: './audit-trail-list.component.html'
+	selector: 'audit-trail-list',
+	templateUrl: './audit-trail-list.component.html',
 })
 export class AuditTrailListComponent implements OnInit, AfterViewInit {
+	columnDefs = [];
+	data: any;
+	gridApi: any;
+	gridColumnDefs = [];
+	gridOptions: any;
+	gridPaging = {
+		pageSize: 10,
+		pageSizeOptions: [10, 25, 50, 100],
+		totalKnown: false,
+		totalRows: null,
+		manualStateRefresh: Boolean(true),
+	};
+	gridColumnApi: any;
+	gridLastFilter = '';
+	gridLastSort = '';
+	showTable = false;
+	showPaging = false;
 
-  columnDefs = [];
-  data: any;
-  gridApi: any;
-  gridColumnDefs = [];
-  gridOptions: any;
-  gridPaging = {
-    pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null,
-    manualStateRefresh: Boolean(true)
-  };
-  gridColumnApi: any;
-  gridLastFilter = '';
-  gridLastSort = '';
-  showTable = false;
-  showPaging = false;
+	@Input() refsetInternalId: string;
+	@ViewChild('detailsSection') detailsSection: TemplateRef<any>;
+	@ViewChild('pagination') paginationComponent: PaginationComponent;
+	@Output() recordsLoaded = new EventEmitter<any>(true);
 
-  @Input() refsetInternalId: string;
-  @ViewChild('detailsSection') detailsSection: TemplateRef<any>;
-  @ViewChild('pagination') paginationComponent: PaginationComponent;
-    @Output() recordsLoaded = new EventEmitter<any>(true);
+	constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private auditService: AuditService, private changeDetectorRef: ChangeDetectorRef) {}
 
-  constructor(private route: ActivatedRoute, private readonly modalService: NgbModal, private auditService: AuditService,
-    private changeDetectorRef: ChangeDetectorRef) {
-  }
+	ngOnInit(): void {
+		this.columnDefs = [
+			{
+				field: 'created',
+				headerName: 'Date',
+				tooltipValueGetter: UiUtility.gridDateValueGetter,
+				flex: 1,
+				unSortIcon: true,
+				sortable: true,
+				sortingOrder: ['desc', 'asc', null],
+				filterParams: { debounceMs: 2000 },
+				floatingFilterComponentParams: { debounceMs: 2000 },
+				valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME,
+				valueGetter: UiUtility.gridDateValueGetter,
+				floatingFilterComponent: 'dateTextFilterComponent',
+				minWidth: 65,
+				resizable: true,
+			},
+			{ field: 'modifiedBy', headerName: 'Modified By', tooltipField: 'modifiedBy', flex: 1, unSortIcon: true, minWidth: 65, sortable: true, sort: 'desc', resizable: true },
+			{ field: 'message', headerName: 'Message', tooltipField: 'message', flex: 1, unSortIcon: true, minWidth: 65, sortable: true, resizable: true },
+			{ field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 65, sortable: false, resizable: false },
+		];
 
-  ngOnInit(): void {
-    this.columnDefs = [
-      {
-        field: 'created', headerName: 'Date', tooltipValueGetter: UiUtility.gridDateValueGetter, flex: 1, unSortIcon: true, sortable: true, sortingOrder: ['desc', 'asc', null],
-        filterParams: { debounceMs: 2000 }, floatingFilterComponentParams: { debounceMs: 2000 },
-        valueFormat: CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME, valueGetter: UiUtility.gridDateValueGetter, floatingFilterComponent: 'dateTextFilterComponent',
-        minWidth: 65, resizable: true
-      },
-      { field: 'modifiedBy', headerName: 'Modified By', tooltipField: 'modifiedBy', flex: 1, unSortIcon: true, minWidth: 65, sortable: true, sort: 'desc', resizable: true },
-      { field: 'message', headerName: 'Message', tooltipField: 'message', flex: 1, unSortIcon: true, minWidth: 65, sortable: true, resizable: true },
-      { field: 'details', headerName: 'Details', tooltipField: 'details', flex: 4, minWidth: 65, sortable: false, resizable: false }];
+		this.gridOptions = {
+			context: { componentParent: this },
+			pagination: true,
+			// need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressColumnVirtualisation: true,
+			suppressPaginationPanel: true,
+			cacheBlockSize: this.gridPaging.pageSize,
+			maxBlocksInCache: 1,
+			rowModelType: 'infinite',
+			enableCellTextSelection: true,
+			// need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			paginationPageSize: this.gridPaging.pageSize,
+			onGridReady: this.onGridReady,
+			onFilterChanged: function () {
+				if (this.api.getDisplayedRowCount() === 0) {
+					this.api.showNoRowsOverlay();
+				} else {
+					this.api.hideOverlay();
+				}
+			},
+			frameworkComponents: {
+				'templateRenderer': TemplateRenderer,
+				dateTextFilterComponent: DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: true,
+				resizable: true,
+				suppressMenu: true,
+				sortingOrder: ['asc', 'desc'],
+				flex: 1,
+				filter: true,
+				floatingFilter: true,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true, debounceMs: 100 },
+			},
+			enableBrowserTooltips: true,
+			rowClassRules: {
+				refset_tool_grid_inactive_row: function (params) {
+					let inactivatedRow = false;
 
-    this.gridOptions = {
-      context: { componentParent: this },
-      pagination: true,
-      // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-      suppressColumnVirtualisation: true,
-      suppressPaginationPanel: true,
-      cacheBlockSize: this.gridPaging.pageSize,
-      maxBlocksInCache: 1,
-      rowModelType: 'infinite',
-      enableCellTextSelection: true,
-      // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-      paginationPageSize: this.gridPaging.pageSize,
-      onGridReady: this.onGridReady,
-      onFilterChanged: function () {
-        if (this.api.getDisplayedRowCount() === 0) {
-          this.api.showNoRowsOverlay();
-        } else {
-          this.api.hideOverlay();
-        }
-      },
-      frameworkComponents: {
-        'templateRenderer': TemplateRenderer,
-        dateTextFilterComponent: DateTextFilterComponent
-      },
-      defaultColDef: {
-        sortable: true,
-        resizable: true,
-        suppressMenu: true,
-        sortingOrder: ['asc', 'desc'],
-        flex: 1,
-        filter: true,
-        floatingFilter: true,
-        floatingFilterComponentParams: { placeholder: '', suppressFilterButton: true, debounceMs: 100 },
-      },
-      enableBrowserTooltips: true,
-      rowClassRules: {
-        refset_tool_grid_inactive_row: function (params) {
+					if (params.data) {
+						inactivatedRow = params.data.active == false;
+					}
 
-          let inactivatedRow = false;
+					return inactivatedRow;
+				},
+			},
+		};
+	}
 
-          if (params.data) {
-            inactivatedRow = params.data.active == false;
-          }
+	ngAfterViewInit(): void {
+		this.showTable = true;
 
-          return inactivatedRow;
-        },
-      },
-    };
-  }
+		this.gridColumnDefs = [];
+	}
 
-  ngAfterViewInit(): void {
-    this.showTable = true;
+	onGridReady = (gridReadyParams) => {
+		this.gridApi = gridReadyParams.api;
+		this.gridColumnApi = gridReadyParams.columnApi;
+		const sortModel = [{ colId: 'created', sort: 'desc' }];
+		this.gridApi.setSortModel(sortModel);
+		this.onResize(undefined);
+		const dataSource = {
+			rowCount: null,
+			getRows: (rowParams) => {
+				this.gridApi.showLoadingOverlay();
 
+				let pageNumber = rowParams.endRow / this.gridApi.paginationGetPageSize();
+				let query = UiUtility.formatFilterData(rowParams.filterModel);
+				const sort = UiUtility.formatSortData(rowParams.sortModel);
 
-    this.gridColumnDefs = [];
-  }
+				const newFilterString = query;
+				const newSortString = JSON.stringify(sort);
 
-  onGridReady = (gridReadyParams) => {
+				// if the filters or sort have changed then move to the first page
+				if (newFilterString !== this.gridLastFilter || newSortString !== this.gridLastSort) {
+					pageNumber = 1;
+					this.gridApi?.api?.paginationGoToPage(0);
+				}
 
-    this.gridApi = gridReadyParams.api;
-    this.gridColumnApi = gridReadyParams.columnApi;
-    const sortModel = [
-      { colId: 'created', sort: 'desc' }
-    ];
-    this.gridApi.setSortModel(sortModel);
-    this.onResize(undefined);
-    const dataSource = {
-      rowCount: null,
-      getRows: (rowParams) => {
+				// if the filters have changed then reset the total row variables
+				if (newFilterString !== this.gridLastFilter) {
+					this.gridPaging.totalRows = null;
+					this.gridPaging.totalKnown = false;
+				}
 
-        this.gridApi.showLoadingOverlay();
+				this.gridLastFilter = newFilterString;
+				this.gridLastSort = newSortString;
 
-        let pageNumber = rowParams.endRow / this.gridApi.paginationGetPageSize();
-        let query = UiUtility.formatFilterData(rowParams.filterModel);
-        const sort = UiUtility.formatSortData(rowParams.sortModel);
+				const restParams: any = {
+					limit: this.gridApi.paginationGetPageSize(),
+					offset: (pageNumber - 1) * this.gridApi.paginationGetPageSize(),
+					sortModel: rowParams.sortModel, // not needed once we get rid of mocking the backend
+					filterModel: rowParams.filterModel, // not needed once we get rid of mocking the backend
+				};
+				query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+				restParams.query = query;
+				if (window.location.href.includes('organizations')) {
+					this.auditService.getOrgAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
+						next: (results) => {
+							this.setUpAuditTable(results, pageNumber, rowParams);
+							if (results?.items.length > 0) {
+								this.recordsLoaded.emit(true);
+							}
+						},
+						error: (error) => {
+							this.gridApi.showNoRowsOverlay();
+							rowParams.successCallback([], 0);
+						},
+					});
+				} else if (window.location.href.includes('details')) {
+					this.auditService.getRefsetAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
+						next: (results) => {
+							this.setUpAuditTable(results, pageNumber, rowParams);
+							localStorage.setItem('audit_report', JSON.stringify(this.data));
+							if (results?.items.length > 0) {
+								this.recordsLoaded.emit(true);
+							}
+						},
+						error: (error) => {
+							this.gridApi.showNoRowsOverlay();
+							rowParams.successCallback([], 0);
+						},
+					});
+				}
+			},
+		};
 
-        const newFilterString = query;
-        const newSortString = JSON.stringify(sort);
+		gridReadyParams.api.setDatasource(dataSource);
 
-        // if the filters or sort have changed then move to the first page
-        if (newFilterString !== this.gridLastFilter || newSortString !== this.gridLastSort) {
+		// set placeholders on the grid floating filter fields
+		Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+			if (obj.attributes['disabled']) {
+				// skip columns with disabled filter
+				return;
+			}
 
-          pageNumber = 1;
-          this.gridApi?.api?.paginationGoToPage(0);
-        }
+			const label = obj.getAttribute('aria-label');
+			const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+			obj.setAttribute('placeholder', value);
+		});
+	};
 
-        // if the filters have changed then reset the total row variables
-        if (newFilterString !== this.gridLastFilter) {
+	setUpAuditTable(results, pageNumber, rowParams) {
+		this.showPaging = results.total > 0;
+		if (results.items.length === 0 && pageNumber > 1) {
+			this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
+			this.gridPaging.totalKnown = true;
+			this.paginationComponent.goToPage(pageNumber - 1);
 
-          this.gridPaging.totalRows = null;
-          this.gridPaging.totalKnown = false;
-        }
+			return;
+		}
 
-        this.gridLastFilter = newFilterString;
-        this.gridLastSort = newSortString;
+		const data = results.items;
+		this.data = data;
+		if (results.total) {
+			results.totalKnown = true;
+		}
+		if (data?.length > 0) {
+			this.gridApi.hideOverlay();
+			let currentRowCount = null;
+			let lastRow = -1;
 
-        const restParams: any = {
-          limit: this.gridApi.paginationGetPageSize(),
-          offset: (pageNumber - 1) * this.gridApi.paginationGetPageSize(),
-          sortModel: rowParams.sortModel, // not needed once we get rid of mocking the backend
-          filterModel: rowParams.filterModel, // not needed once we get rid of mocking the backend
-        };
-        query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
-        restParams.query = query;
-        if (window.location.href.includes("organizations")) {
-          this.auditService.getOrgAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
-            next: (results) => {
-              this.setUpAuditTable(results, pageNumber, rowParams);
-                            if (results?.items.length > 0) {
-                                this.recordsLoaded.emit(true);
-                            }
-            },
-            error: (error) => {
+			if (results.totalKnown || data.length < this.gridApi.paginationGetPageSize() || this.gridPaging.totalKnown) {
+				if (results.totalKnown) {
+					lastRow = results.total;
+				} else if (this.gridPaging.totalKnown) {
+					lastRow = this.gridPaging.totalRows;
+				} else {
+					currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+					lastRow = currentRowCount;
+				}
 
-                            this.gridApi.showNoRowsOverlay();
-                            rowParams.successCallback([], 0);
-                        }
-                    });
-                }
-                else if (window.location.href.includes("details")) {
-                    this.auditService.getRefsetAuditTrial(this.refsetInternalId, { ...restParams, ...sort }).subscribe({
-                        next: (results) => {
-                            this.setUpAuditTable(results, pageNumber, rowParams);
-                            localStorage.setItem('audit_report', JSON.stringify(this.data));
-                            if (results?.items.length > 0) {
-                                this.recordsLoaded.emit(true);
-                            }
-                        },
-                        error: (error) => {
+				this.gridPaging.totalRows = lastRow;
+				this.gridPaging.totalKnown = true;
+			} else {
+				currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
+			}
 
-              this.gridApi.showNoRowsOverlay();
-              rowParams.successCallback([], 0);
-            }
-          });
-        }
-      }
-    };
+			rowParams.successCallback(data, lastRow);
+		} else {
+			this.gridApi.showNoRowsOverlay();
+			rowParams.successCallback([], 0);
+		}
 
-    gridReadyParams.api.setDatasource(dataSource);
+		this.gridPaging.manualStateRefresh = Boolean(true);
+	}
 
-    // set placeholders on the grid floating filter fields
-    Array.from(document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input')).forEach((obj: any) => {
+	onResize(event) {
+		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
+		document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
+	}
 
-      if (obj.attributes['disabled']) {
-        // skip columns with disabled filter
-        return;
-      }
-
-      const label = obj.getAttribute('aria-label');
-      const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-      obj.setAttribute('placeholder', value);
-    });
-  }
-
-  setUpAuditTable(results, pageNumber, rowParams) {
-    this.showPaging = results.total > 0;
-    if (results.items.length === 0 && pageNumber > 1) {
-
-      this.gridPaging.totalRows = this.gridApi.paginationGetPageSize() * (pageNumber - 1);
-      this.gridPaging.totalKnown = true;
-      this.paginationComponent.goToPage(pageNumber - 1);
-
-      return;
-    }
-
-    const data = results.items;
-    this.data = data;
-    if (results.total) {
-      results.totalKnown = true;
-    }
-    if (data?.length > 0) {
-
-      this.gridApi.hideOverlay();
-      let currentRowCount = null;
-      let lastRow = -1;
-
-      if (results.totalKnown || data.length < this.gridApi.paginationGetPageSize() || this.gridPaging.totalKnown) {
-
-        if (results.totalKnown) {
-          lastRow = results.total;
-
-        } else if (this.gridPaging.totalKnown) {
-          lastRow = this.gridPaging.totalRows;
-
-        } else {
-
-          currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
-          lastRow = currentRowCount;
-        }
-
-        this.gridPaging.totalRows = lastRow;
-        this.gridPaging.totalKnown = true;
-
-      } else {
-        currentRowCount = data.length + (pageNumber - 1) * this.gridApi.paginationGetPageSize();
-      }
-
-
-      rowParams.successCallback(data, lastRow);
-
-    } else {
-
-      this.gridApi.showNoRowsOverlay();
-      rowParams.successCallback([], 0);
-    }
-
-    this.gridPaging.manualStateRefresh = Boolean(true);
-  }
-
-  onResize(event) {
-    const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
-    document.getElementsByClassName('ag-header')[0].setAttribute('style', `width: ${gridWidth}px;`);
-  }
-
-  formatDate(date) {
-    return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME);
-  }
+	formatDate(date) {
+		return CodeUtility.formatJsonDate(date, CodeUtility.DATE_FORMAT_REVERSE_WITH_TIME);
+	}
 }

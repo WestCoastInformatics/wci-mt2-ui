@@ -12,279 +12,258 @@ import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html'
+	selector: 'app-dashboard',
+	templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
+	@ViewChild('dashboardWorkflowStatusSection') workflowStatus: TemplateRef<any>;
 
-  @ViewChild('dashboardWorkflowStatusSection') workflowStatus: TemplateRef<any>;
+	// Dashboard Variables
+	searchText = '';
+	organizationList = [];
+	projectList = [];
+	teamList = [];
+	currentUser: any;
+	uiUtility = UiUtility;
 
-  // Dashboard Variables
-  searchText = '';
-  organizationList = [];
-  projectList = [];
-  teamList = [];
-  currentUser: any;
-  uiUtility = UiUtility;
+	// Table Variables
+	defaultColDef: any;
+	columnDefs = [];
+	data = [];
+	api: any;
+	columnApi: any;
+	searchInput: string;
+	selectedView = 'all';
+	refsetGridApi: any;
+	refsetGridColumnApi: any;
+	refsetGridOptions: any;
+	refsetGridLastFilter = '';
+	refsetGridLastSort = '';
+	numOfResults: any;
+	numOfMembers: any;
+	showLoadingSpinner = false;
 
-  // Table Variables
-  defaultColDef: any;
-  columnDefs = [];
-  data = [];
-  api: any;
-  columnApi: any;
-  searchInput: string;
-  selectedView = 'all';
-  refsetGridApi: any;
-  refsetGridColumnApi: any;
-  refsetGridOptions: any;
-  refsetGridLastFilter = '';
-  refsetGridLastSort = '';
-  numOfResults: any;
-  numOfMembers: any;
-  showLoadingSpinner = false;
+	constructor(
+		private router: Router,
+		private readonly breadcrumbService: BreadcrumbService,
+		private readonly titleService: Title,
+		private readonly refsetService: RefsetService,
+		private changeDetectorRef: ChangeDetectorRef,
+		private readonly authService: AuthenticationService
+	) {
+		document.body.scrollTop = 0;
+	}
 
-  constructor(
-    private router: Router,
-    private readonly breadcrumbService: BreadcrumbService,
-    private readonly titleService: Title,
-    private readonly refsetService: RefsetService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private readonly authService: AuthenticationService) {
-    document.body.scrollTop = 0;
-  }
+	ngOnInit(): void {
+		this.titleService.setTitle('Reference Set Tool - Dashboard');
+		this.breadcrumbService.setBreadcrumbs([{ path: '/dashboard', label: 'Dashboard' }]);
 
-  ngOnInit(): void {
+		this.currentUser = this.authService.getUser();
+		this.refsetGridOptions = {
+			context: { componentParent: this },
+			rowModelType: 'infinite',
+			onCellClicked: this.onGridCellClick,
+			onGridReady: this.onGridReady,
+			frameworkComponents: {
+				'templateRenderer': TemplateRenderer,
+				'categoryFilterComponent': CategoryFilterComponent,
+				'dateTextFilterComponent': DateTextFilterComponent,
+			},
+			defaultColDef: {
+				sortable: true,
+				filter: true,
+				floatingFilter: true,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
+				suppressMenu: true,
+				sortingOrder: ['asc', 'desc'],
+				menuTabs: ['columnsMenuTab'],
+				resizable: true,
+			},
+		};
+		this.getOrganizations();
+		this.getProjects();
+		this.getTeams();
+	}
 
-    this.titleService.setTitle('Reference Set Tool - Dashboard');
-    this.breadcrumbService.setBreadcrumbs([
-      { path: '/dashboard', label: 'Dashboard' }
-    ]);
+	ngAfterViewInit() {
+		this.columnDefs = [
+			{
+				field: 'name',
+				headerName: 'Reference Name',
+				flex: 2,
+				width: 550,
+				minWidth: 65,
+				tooltipField: 'name',
+				unSortIcon: true,
+				sortable: true,
+				cellRenderer: (params) => {
+					return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
+				},
+				cellClass: 'pointer',
+				resizable: true,
+			},
+			{
+				field: 'workflowStatus',
+				tooltipField: 'workflowStatus',
+				headerName: 'Workflow Status',
+				unSortIcon: true,
+				cellClass: '',
+				cellRenderer: 'templateRenderer',
+				cellRendererParams: { template: this.workflowStatus },
+				sortable: true,
+				flex: 1,
+				minWidth: 65,
+				width: 200,
+				floatingFilterComponent: 'categoryFilterComponent',
+				floatingFilterComponentParams: {
+					suppressFilterButton: true,
+					names: [
+						{ type: 'status', name: 'In Edit', value: 'IN_EDIT' },
+						{ type: 'status', name: 'In Review', value: 'IN_REVIEW' },
+						{ type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
+						{ type: 'status', name: 'Published', value: 'PUBLISHED' },
+						{ type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
+						{ type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
+						{ type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
+						{ type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' },
+					],
+				},
+				resizable: true,
+			},
+			{
+				field: 'modified',
+				tooltipValueGetter: UiUtility.gridDateValueGetter,
+				headerName: 'Last Modified Date',
+				flex: 1,
+				width: 220,
+				minWidth: 65,
+				unSortIcon: true,
+				sortable: true,
+				sort: 'desc',
+				floatingFilterComponent: 'dateTextFilterComponent',
+				floatingFilterComponentParams: { suppressFilterButton: true },
+				valueGetter: UiUtility.gridDateValueGetter,
+				resizable: false,
+			},
+		];
 
-    this.currentUser = this.authService.getUser();
-    this.refsetGridOptions = {
-      context: { componentParent: this },
-      rowModelType: 'infinite',
-      onCellClicked: this.onGridCellClick,
-      onGridReady: this.onGridReady,
-      frameworkComponents: {
-        'templateRenderer': TemplateRenderer,
-        'categoryFilterComponent': CategoryFilterComponent,
-        'dateTextFilterComponent': DateTextFilterComponent
-      },
-      defaultColDef: {
-        sortable: true,
-        filter: true,
-        floatingFilter: true,
-        floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
-        suppressMenu: true,
-        sortingOrder: ['asc', 'desc'],
-        menuTabs: ['columnsMenuTab'],
-        resizable: true
-      }
-    };
-    this.getOrganizations();
-    this.getProjects();
-    this.getTeams();
-  }
+		this.changeDetectorRef.detectChanges();
+	}
 
-  ngAfterViewInit() {
+	onGridReady = (gridReadyParams) => {
+		this.refsetGridApi = gridReadyParams.api;
+		this.refsetGridColumnApi = gridReadyParams.columnApi;
+		const sortModel = [{ colId: 'modified', sort: 'desc' }];
+		this.refsetGridApi.setSortModel(sortModel);
+		const dataSource = {
+			rowCount: null,
+			getRows: (rowParams) => {
+				this.refsetGridApi.showLoadingOverlay();
 
-    this.columnDefs = [
-      {
-        field: 'name',
-        headerName: 'Reference Name',
-        flex: 2,
-        width: 550,
-        minWidth: 65,
-        tooltipField: 'name',
-        unSortIcon: true,
-        sortable: true,
-        cellRenderer: params => {
-          return params.data ? `${params.data.name}` + (params.data.private ? '<i class="ml-3 text-muted fa fa-lock"></i>' : '') : '';
-        },
-        cellClass: 'pointer', resizable: true
-      },
-      {
-        field: 'workflowStatus',
-        tooltipField: 'workflowStatus',
-        headerName: 'Workflow Status',
-        unSortIcon: true,
-        cellClass: '',
-        cellRenderer: 'templateRenderer',
-        cellRendererParams: { template: this.workflowStatus },
-        sortable: true,
-        flex: 1,
-        minWidth: 65,
-        width: 200,
-        floatingFilterComponent: 'categoryFilterComponent',
-        floatingFilterComponentParams: {
-          suppressFilterButton: true, names: [
-            { type: 'status', name: 'In Edit', value: 'IN_EDIT' },
-            { type: 'status', name: 'In Review', value: 'IN_REVIEW' },
-            { type: 'status', name: 'In Upgrade', value: 'IN_UPGRADE' },
-            { type: 'status', name: 'Published', value: 'PUBLISHED' },
-            { type: 'status', name: 'Ready For Edit', value: 'READY_FOR_EDIT' },
-            { type: 'status', name: 'Ready For Publication', value: 'READY_FOR_PUBLICATION' },
-            { type: 'status', name: 'Ready For Review', value: 'READY_FOR_REVIEW' },
-            { type: 'status', name: 'Review Completed', value: 'REVIEW_COMPLETED' }
-          ]
-        }, resizable: true
-      },
-      {
-        field: 'modified',
-        tooltipValueGetter: UiUtility.gridDateValueGetter,
-        headerName: 'Last Modified Date',
-        flex: 1,
-        width: 220,
-        minWidth: 65,
-        unSortIcon: true,
-        sortable: true,
-        sort: 'desc',
-        floatingFilterComponent: 'dateTextFilterComponent',
-        floatingFilterComponentParams: { suppressFilterButton: true },
-        valueGetter: UiUtility.gridDateValueGetter,
-        resizable: false
-      }
-    ];
+				let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+				let query = UiUtility.formatFilterData(rowParams.filterModel);
+				const sort = UiUtility.formatSortData(rowParams.sortModel);
 
-    this.changeDetectorRef.detectChanges();
-  }
+				const newFilterString = query;
+				const newSortString = JSON.stringify(sort);
 
-  onGridReady = (gridReadyParams) => {
-    this.refsetGridApi = gridReadyParams.api;
-    this.refsetGridColumnApi = gridReadyParams.columnApi;
-    const sortModel = [
-      { colId: 'modified', sort: 'desc' }
-    ];
-    this.refsetGridApi.setSortModel(sortModel);
-    const dataSource = {
-      rowCount: null,
-      getRows: (rowParams) => {
+				// if the filters or sort have changed then move to the first page
+				if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+					pageNumber = 1;
+					this.refsetGridApi?.api?.paginationGoToPage(0);
+				}
 
-        this.refsetGridApi.showLoadingOverlay();
+				this.refsetGridLastFilter = newFilterString;
+				this.refsetGridLastSort = newSortString;
 
-        let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
-        let query = UiUtility.formatFilterData(rowParams.filterModel);
-        const sort = UiUtility.formatSortData(rowParams.sortModel);
+				const restParams: any = {
+					limit: 10,
+					offset: 0,
+					searchConcepts: true,
+					showInDevelopment: true,
+					showOnlyPermitted: true,
+					sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
+					filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
+				};
 
-        const newFilterString = query;
-        const newSortString = JSON.stringify(sort);
+				if (CodeUtility.hasValue(query)) {
+					query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+					restParams.query = query;
+				}
+				this.data = [];
+				this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
+					next: (results) => {
+						for (const refset of results.items) {
+							this.data.push({
+								name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`,
+								refsetId: refset.refsetId,
+								private: refset.privateRefset,
+								workflowStatus: `${refset?.workflowStatus}`,
+								modified: `${refset?.modified}`,
+								versionStatus: `${refset.versionStatus}`,
+								versionDate: `${refset.versionDate}`,
+							});
+						}
 
-        // if the filters or sort have changed then move to the first page
-        if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+						const data = this.data;
 
-          pageNumber = 1;
-          this.refsetGridApi?.api?.paginationGoToPage(0);
-        }
+						if (data?.length > 0) {
+							this.refsetGridApi.hideOverlay();
 
+							rowParams.successCallback(data, data.length);
+						} else {
+							this.refsetGridApi.showNoRowsOverlay();
+							rowParams.successCallback([], 0);
+						}
+					},
+					error: (error) => {
+						this.refsetGridApi.showNoRowsOverlay();
+						rowParams.successCallback([], 0);
+					},
+				});
+			},
+		};
 
-        this.refsetGridLastFilter = newFilterString;
-        this.refsetGridLastSort = newSortString;
+		gridReadyParams.api.setDatasource(dataSource);
 
-        const restParams: any = {
-          limit: 10,
-          offset: 0,
-          searchConcepts: true,
-          showInDevelopment: true,
-          showOnlyPermitted: true,
-          sortModel: rowParams.sortModel, //not needed once we get rid of mocking the backend
-          filterModel: rowParams.filterModel, //not needed once we get rid of mocking the backend
-        };
+		// set placeholders on the grid floating filter fields
+		UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
+	};
 
-        if (CodeUtility.hasValue(query)) {
+	toTitleCase(str) {
+		return str.replace(/\w\S*/g, function (txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
+	}
 
-          query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
-          restParams.query = query;
-        }
-        this.data = [];
-        this.refsetService.getRefsets({ ...restParams, ...sort }).subscribe({
-          next: (results) => {
+	onGridCellClick = (event) => {
+		if (event.column.colId === 'name') {
+			const refsetId = event.data.refsetId;
+			const versionDate = RefsetUtility.getVersionDateForRefsetApiCall(event.data);
 
-            for (const refset of results.items) {
-              this.data.push({
-                name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`
-                , refsetId: refset.refsetId
-                , private: refset.privateRefset
-                , workflowStatus: `${refset?.workflowStatus}`
-                , modified: `${refset?.modified}`, versionStatus: `${refset.versionStatus}`
-                , versionDate: `${refset.versionDate}`
-              });
+			this.goToDetailsPage(refsetId, versionDate);
+		}
+	};
 
-            }
+	goToDetailsPage(refsetId, versionDate) {
+		this.router.navigate(['/details', refsetId, versionDate]);
+	}
 
-            const data = this.data;
+	getOrganizations(): void {
+		this.refsetService.getOrganizations().subscribe((results) => {
+			this.organizationList = results.items;
+		});
+	}
 
-            if (data?.length > 0) {
+	getProjects(): void {
+		this.refsetService.getProjects('offset=0&sort=name&sortAscending=true').subscribe((results) => {
+			this.projectList = results.items;
+		});
+	}
 
-              this.refsetGridApi.hideOverlay();
-
-
-              rowParams.successCallback(data, data.length);
-
-            } else {
-
-              this.refsetGridApi.showNoRowsOverlay();
-              rowParams.successCallback([], 0);
-            }
-
-          },
-          error: (error) => {
-
-            this.refsetGridApi.showNoRowsOverlay();
-            rowParams.successCallback([], 0);
-          }
-        });
-      }
-    };
-
-    gridReadyParams.api.setDatasource(dataSource);
-
-    // set placeholders on the grid floating filter fields
-    UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
-
-  }
-
-  toTitleCase(str) {
-    return str.replace(
-      /\w\S*/g,
-      function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      }
-    );
-  }
-
-  onGridCellClick = (event) => {
-    if (event.column.colId === 'name') {
-      const refsetId = event.data.refsetId;
-      const versionDate = RefsetUtility.getVersionDateForRefsetApiCall(event.data);
-
-      this.goToDetailsPage(refsetId, versionDate);
-
-    }
-  }
-
-  goToDetailsPage(refsetId, versionDate) {
-    this.router.navigate(['/details', refsetId, versionDate]);
-  }
-
-  getOrganizations(): void {
-    this.refsetService.getOrganizations().subscribe((results) => {
-      this.organizationList = results.items;
-    });
-  }
-
-    getProjects(): void {
-        this.refsetService.getProjects('offset=0&sort=name&sortAscending=true').subscribe((results) => {
-            this.projectList = results.items;
-        });
-    }
-
-  getTeams(): void {
-
-        this.refsetService.getTeams('onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-            this.teamList = results.items;
-        });
-    }
-
+	getTeams(): void {
+		this.refsetService.getTeams('onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+			this.teamList = results.items;
+		});
+	}
 }

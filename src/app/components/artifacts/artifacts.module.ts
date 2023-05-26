@@ -15,25 +15,21 @@ import { PaginationModule } from '../pagination/pagination.module';
 import { FormsModule } from '@angular/forms';
 import { DirectivesModule } from '../../directives/directives.module';
 
-
 @NgModule({
-    declarations: [
-        ArtifactsModalComponent, ArtifactsListComponent, ArtifactFormComponent
-    ],
-    imports: [
-        CommonModule,
-        AgGridModule.withComponents([TemplateRenderer]),
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatMenuModule,
-        NgbModule,
-        PaginationModule,
-        FormsModule,
-        DirectivesModule
-    ],
-    exports: [ArtifactsModalComponent]
+	declarations: [ArtifactsModalComponent, ArtifactsListComponent, ArtifactFormComponent],
+	imports: [
+		CommonModule,
+		AgGridModule.withComponents([TemplateRenderer]),
+		MatButtonModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatIconModule,
+		MatMenuModule,
+		NgbModule,
+		PaginationModule,
+		FormsModule,
+		DirectivesModule,
+	],
+	exports: [ArtifactsModalComponent],
 })
-export class ArtifactsModule {
-}
+export class ArtifactsModule {}

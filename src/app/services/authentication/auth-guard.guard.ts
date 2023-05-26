@@ -5,23 +5,20 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root',
 })
 export class AuthGuardGuard implements CanActivate {
+	constructor(private authService: AuthenticationService, private router: Router) {}
 
-  constructor(private authService: AuthenticationService, private router: Router) { }
+	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+		const token = sessionStorage.getItem('auth_token');
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-    const token = sessionStorage.getItem('auth_token');
-
-    if (this.authService.isAuthenticated()) {
-      return true;
-    } else {
-
-      this.authService.notAuthenticated();
-      this.router.navigate(['/']);
-      return false;
-    }
-  }
+		if (this.authService.isAuthenticated()) {
+			return true;
+		} else {
+			this.authService.notAuthenticated();
+			this.router.navigate(['/']);
+			return false;
+		}
+	}
 }

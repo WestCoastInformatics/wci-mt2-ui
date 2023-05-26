@@ -7,41 +7,39 @@ import { environment } from 'src/environments/environment';
 import { NotificationService } from '../notification.service';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
 export class ArtifactsService extends RestService {
+	contextPath = '/refsetservice/';
+	assignedUser: string;
+	baseUrl: string;
 
-    contextPath = '/refsetservice/';
-    assignedUser: string;
-    baseUrl: string;
+	constructor(http: HttpClient, notificationService: NotificationService) {
+		super(http, notificationService);
 
-    constructor(http: HttpClient, notificationService: NotificationService) {
+		if (CodeUtility.hasValue(environment.restContextPath)) {
+			this.contextPath = environment.restContextPath;
+		}
+		this.baseUrl = `${this.contextPath}artifact`;
+	}
 
-        super(http, notificationService);
+	getArtifact(artifactId: string): Observable<any> {
+		return this.get(`${this.baseUrl}/${artifactId}`);
+	}
 
-        if (CodeUtility.hasValue(environment.restContextPath)) {
-            this.contextPath = environment.restContextPath;
-        }
-        this.baseUrl = `${this.contextPath}artifact`;
-    }
+	getArtifacts(params: any, parseParams = true): Observable<any> {
+		return this.get(this.baseUrl, params, parseParams);
+	}
 
-    getArtifact(artifactId: string): Observable<any> {
-        return this.get(`${this.baseUrl}/${artifactId}`);
-    }
+	createArtifact(params: any): Observable<any> {
+		return this.postWithFile(this.baseUrl, params);
+	}
 
-    getArtifacts(params: any, parseParams = true): Observable<any> {
-        return this.get(this.baseUrl, params, parseParams);
-    }
+	updateArtifact(artifactId: any, params: any): Observable<any> {
+		return this.put(`${this.baseUrl}/${artifactId}`, params);
+	}
 
-    createArtifact(params: any): Observable<any> {
-        return this.postWithFile(this.baseUrl, params);
-    }
-
-    updateArtifact(artifactId: any, params: any): Observable<any> {
-        return this.put(`${this.baseUrl}/${artifactId}`, params);
-    }
-
-    deleteArtifact(artifactId: string): Observable<any> {
-        return this.delete(`${this.baseUrl}/${artifactId}`);
-    }
+	deleteArtifact(artifactId: string): Observable<any> {
+		return this.delete(`${this.baseUrl}/${artifactId}`);
+	}
 }
