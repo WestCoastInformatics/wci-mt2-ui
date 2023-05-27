@@ -38,7 +38,7 @@ export class ColumnChooserComponent {
 
 			for (const column of this.gridColumnApi?.columnController?.columnDefs) {
 				// Avoid these coluns (they are icon columns without titles)
-				if (column.headerName === '' || !column.headerName) {
+				if (column.headerName == '' || !column.headerName) {
 					continue;
 				}
 
@@ -65,7 +65,7 @@ export class ColumnChooserComponent {
 					if (columnData.show) {
 						this.selectedColumns.push(columnData);
 					}
-				} else if (!column.hasOwnProperty('hide') || column.hide === false) {
+				} else if (!column.hasOwnProperty('hide') || column.hide == false) {
 					columnData.show = true;
 				} else {
 					columnData.show = false;
@@ -77,6 +77,7 @@ export class ColumnChooserComponent {
 	}
 
 	openColumnChooser() {
+		console.log('open col choose');
 		const dialogId = 'columnChooserDialog';
 
 		const dialogData = {
@@ -107,7 +108,7 @@ export class ColumnChooserComponent {
 	}
 
 	valueCompare(column1, column2) {
-		return column1 && column2 ? column1.colId === column2.colId : column1 === column2;
+		return column1 && column2 ? column1.colId == column2.colId : column1 == column2;
 	}
 
 	applyColumns() {

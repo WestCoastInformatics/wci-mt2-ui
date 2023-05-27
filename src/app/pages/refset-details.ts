@@ -63,7 +63,7 @@ export class RefsetDetails implements OnInit {
 	selectedTaxonomyLanguageIndex = 0;
 	selectedConceptDetailLanguage: string = Constants.DEFAULT_ACCEPT_LANGUAGE + ':' + Constants.DEFAULT_LANGUAGE_TYPE;
 	selectedConceptDetailLanguageIndex = 0;
-	membersGridChooserManualStateRefresh = Boolean(true);
+	membersGridChooserManualStateRefresh: Boolean = Boolean(true);
 	useDialog = false;
 	selectedMembersListMode = 'table'; // taxonomy
 	membersTableDisplay = 'inline-block';
@@ -93,7 +93,7 @@ export class RefsetDetails implements OnInit {
 	conceptDescriptions: any = [];
 	isConceptDetailsLoading = false;
 	membersTaxonomyRoot: any[] = [];
-	taxonomyManualStateRefresh = Boolean(false);
+	taxonomyManualStateRefresh: Boolean = Boolean(false);
 	taxonomyOptions: TreeOptions = {
 		useFsn: false,
 		language: Constants.DEFAULT_ACCEPT_LANGUAGE,
@@ -565,8 +565,8 @@ export class RefsetDetails implements OnInit {
 		forkJoin(allObservables)
 			.pipe(take(1))
 			.subscribe(({ refsetLoaded, memberCacheLoaded }) => {
-				console.log('refsetLoaded: ' + refsetLoaded);
-				console.log('memberCacheLoaded: ' + memberCacheLoaded);
+				//console.log('refsetLoaded: ' + refsetLoaded);
+				//console.log('memberCacheLoaded: ' + memberCacheLoaded);
 
 				this.loadTaxonomyRoot();
 				this.taxonomySearchColumnDefs = [
@@ -888,7 +888,7 @@ export class RefsetDetails implements OnInit {
 	}
 
 	reloadTaxonomyTree() {
-		this.taxonomyManualStateRefresh = Boolean('true');
+		this.taxonomyManualStateRefresh = new Boolean('true');
 		this.loadTaxonomyRoot();
 	}
 
@@ -1076,7 +1076,7 @@ export class RefsetDetails implements OnInit {
 	}
 
 	onMembersColumnsLoaded() {
-		this.membersGridChooserManualStateRefresh = Boolean(true);
+		this.membersGridChooserManualStateRefresh = new Boolean(true);
 		UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
 	}
 
@@ -1091,9 +1091,7 @@ export class RefsetDetails implements OnInit {
 	};
 
 	onMembersGridCellClick = (event) => {
-		if (event.column.colId === 'actions') {
-			//
-		} else {
+		if (event.column.colId !== 'actions') {
 			const selectedRows = this.membersGridApi.getSelectedRows();
 			let selectedId: string;
 
@@ -1286,7 +1284,7 @@ export class RefsetDetails implements OnInit {
 
 	processChangedMemberEffects = (conceptStatusArray?: any) => {
 		this.changeLockedStatus(false);
-		this.taxonomyManualStateRefresh = Boolean('true');
+		this.taxonomyManualStateRefresh = new Boolean('true');
 
 		if (this.refsetData.type == Constants.INTENSIONAL) {
 			this.initializeDetailsPage();

@@ -10,7 +10,7 @@
 				[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
 				[(value)]="selectedOrganization"
 				(selectionChange)="selectOrganization()">
-				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
 					{{ organization.name }}
 				</mat-option>
 			</mat-select>

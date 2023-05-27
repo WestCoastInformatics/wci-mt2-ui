@@ -20,7 +20,7 @@
 							"
 							[(value)]="selectedOrganization"
 							(selectionChange)="selectOrganization()">
-							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3">
+							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox">
 								{{ organization.name }}
 							</mat-option>
 						</mat-select>
@@ -34,7 +34,7 @@
 							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
 							[(value)]="selectedEdition"
 							(selectionChange)="selectedEdition()">
-							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
 								{{ edition.name }}
 							</mat-option>
 						</mat-select>
@@ -49,7 +49,7 @@
 							[disableOptionCentering]="true"
 							[(value)]="selectedProject"
 							(selectionChange)="selectProject()">
-							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3">
+							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3 no-checkbox">
 								{{ project.name }}
 							</mat-option>
 						</mat-select>

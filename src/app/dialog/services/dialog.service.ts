@@ -9,7 +9,7 @@ import { DialogComponent } from '../components/dialog.component';
 type DialogRef<T> = MatDialogRef<DialogComponent<T>>;
 
 export class DialogService<T = undefined> {
-	opened$ = this.dialogRef.afterOpened().pipe(first());
+	//opened$ = this.dialogRef.afterOpened().pipe(first());
 
 	constructor(private dialogRef: DialogRef<T>) {}
 

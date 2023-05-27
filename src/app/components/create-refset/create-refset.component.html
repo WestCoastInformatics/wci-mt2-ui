@@ -11,161 +11,171 @@
 </button>
 
 <ng-template #createNewRefsetDialog let-modal>
-    <div *ngIf="showLoadingSpinner" class="loading"></div>
-    <div class="modal-header rt2-modal-header">
-        <h3 *ngIf="!editMode" class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            Create New Reference Set
-        </h3>
-        <h3 *ngIf="editMode" class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            Edit Reference Set Metadata
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body create-new-refset-modal-body default-font">
-        <div class="row create-new-refset-row">
-            <!-- Meta Labels -->
-            <div class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">Organization:</label>
-                </div>
+	<div *ngIf="showLoadingSpinner" class="loading"></div>
+	<div class="modal-header rt2-modal-header">
+		<h3 *ngIf="!editMode" class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Create New Reference Set</h3>
+		<h3 *ngIf="editMode" class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Edit Reference Set Metadata</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body create-new-refset-modal-body default-font">
+		<div class="row create-new-refset-row">
+			<!-- Meta Labels -->
+			<div class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">Organization:</label>
+				</div>
 
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" disabled [(ngModel)]="inputProperties.project.edition.organization.name" />
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">Edition:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">Project:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.name" disabled />
-                    </mat-form-field>
-                </div>
-            </div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" disabled [(ngModel)]="inputProperties.project.edition.organization.name" />
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">Edition:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">Project:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.name" disabled />
+					</mat-form-field>
+				</div>
+			</div>
 
-            <div *ngIf="step > 1" class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">Type:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor text-capitalize" matInput type="text" [ngModel]="selectedReferenceType.toLowerCase()" disabled />
-                    </mat-form-field>
-                </div>
-            </div>
-            <div *ngIf="step > 1" class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">Module Id:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [value]="selectedModuleId + ' - ' + inputProperties.project.edition.moduleNames[selectedModuleId]" disabled>
-                    </mat-form-field>
-                </div>
-            </div>
+			<div *ngIf="step > 1" class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">Type:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor text-capitalize" matInput type="text" [ngModel]="selectedReferenceType.toLowerCase()" disabled />
+					</mat-form-field>
+				</div>
+			</div>
+			<div *ngIf="step > 1" class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">Module Id:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" [value]="selectedModuleId + ' - ' + inputProperties.project.edition.moduleNames[selectedModuleId]" disabled />
+					</mat-form-field>
+				</div>
+			</div>
 
-            <div *ngIf="step > 2 && showECL" class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">ECL Definition:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [(ngModel)]="definitionClauses[0].value" disabled />
-                    </mat-form-field>
-                </div>
-            </div>
+			<div *ngIf="step > 2 && showECL" class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">ECL Definition:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" [(ngModel)]="definitionClauses[0].value" disabled />
+					</mat-form-field>
+				</div>
+			</div>
 
-            <div *ngIf="step > 2 && selectedExternalUrl" class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">Reference Set Name:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [(ngModel)]="selectedExternalName" disabled />
-                    </mat-form-field>
-                </div>
-            </div>
+			<div *ngIf="step > 2 && selectedExternalUrl" class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">Reference Set Name:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" [(ngModel)]="selectedExternalName" disabled />
+					</mat-form-field>
+				</div>
+			</div>
 
-            <div *ngIf="step > 2 && selectedExternalUrl" class="create-new-refset-form-field create-new-refset-row-spacing">
-                <div class="col create-new-refset-label create-new-refset-flex-weight">
-                    <label class="mb-7em">External URL:</label>
-                </div>
-                <div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-                    <mat-form-field appearance="none">
-                        <input class="default-cursor" matInput type="text" [(ngModel)]="selectedExternalUrl" disabled />
-                    </mat-form-field>
-                </div>
-            </div>
+			<div *ngIf="step > 2 && selectedExternalUrl" class="create-new-refset-form-field create-new-refset-row-spacing">
+				<div class="col create-new-refset-label create-new-refset-flex-weight">
+					<label class="mb-7em">External URL:</label>
+				</div>
+				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
+					<mat-form-field appearance="none">
+						<input class="default-cursor" matInput type="text" [(ngModel)]="selectedExternalUrl" disabled />
+					</mat-form-field>
+				</div>
+			</div>
 
-            <!-- End Meta Labels -->
-            <div class="wizard">
-                <div *ngIf="step == 1">
-                    <!-- Refset Type for new refset-->
-                    <div class="create-new-refset-form-field create-new-refset-row-spacing wizard-types">
-                        <div class="col create-new-refset-label create-new-refset-flex-weight">
-                            <label class="mb-0">Type:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
-                        </div>
-                        <div class="col create-new-refset-field create-new-refset-flex-weight">
-                            <div class="d-inline-flex align-items-center mr-4" *ngFor="let referenceType of referenceTypes">
-                                <mat-radio-button class="refset-radio create-refset-radio-button default-font" (change)="changeType($event)"
-                                    [checked]="referenceType == selectedReferenceType" [value]="referenceType">
-                                    {{referenceType.toLowerCase()}}
-                                </mat-radio-button>
-                                <mat-icon aria-label="Click to Open Type Information Dialog" title="Click to Open Type Information Dialog"
-                                    class="pointer rt2-new-refset-info-icon" (click)="openInfoDialog(referenceType)">info_icon</mat-icon>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="create-new-refset-form-field create-new-refset-row-spacing">
-                        <div class="col create-new-refset-label create-new-refset-flex-weight">
-                            <label class="mb-7em">Module Id
-                                <span *ngIf="inputProperties.project.edition.modules.length>1">({{inputProperties.project.edition.modules.length}})</span>
-                                <span *ngIf="!editMode" class="mandatory-field">*</span>:
-                            </label>
-                        </div>
-                        <div class="col create-new-refset-field create-new-refset-flex-weight">
-                            <mat-form-field floatLabel="never" appearance="legacy">
-                                <mat-label>Choose Module Id</mat-label>
-                                <select matNativeControl [(ngModel)]="selectedModuleId">
-                                    <option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue: setModuleIdOrder" [value]="module.key">
-                                        {{ module.key }} - {{ module.value }}
-                                    </option>
-                                </select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-                <div *ngIf="step == 2">
-                    <!-- ECL Definintion Declaration -->
-                    <div class="create-new-refset-form-field" *ngIf="showECL">
-                        <div class="col create-new-refset-label create-new-refset-flex-weight">
-                            <label class="mb-0">ECL Definition:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
-                        </div>
-                        <div class="col create-new-refset-field create-new-refset-flex-weight">
-                            <div *ngFor="let clause of definitionClauses; index as i">
-                                <span *ngIf="i == 0">
-                                    <mat-form-field class="refset_tool_ecl_definition_field">
-                                        <input class="default-cursor" matInput [(ngModel)]="clause.value" (ngModelChange)="eclDefinitionChanged($event)"
-                                            id="createRefsetDefinitionClausesInput" #createRefsetDefinitionClausesInput />
-                                    </mat-form-field>
-                                    <input type="hidden" [(ngModel)]="clause.negated" value="false">
-                                    <button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="rt2-btn rt2-action-btn">ECL Builder</button>
-								                  </span>
+			<!-- End Meta Labels -->
+			<div class="wizard">
+				<div *ngIf="step == 1">
+					<!-- Refset Type for new refset-->
+					<div class="create-new-refset-form-field create-new-refset-row-spacing wizard-types">
+						<div class="col create-new-refset-label create-new-refset-flex-weight">
+							<label class="mb-0">Type:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
+						</div>
+						<div class="col create-new-refset-field create-new-refset-flex-weight">
+							<div class="d-inline-flex align-items-center mr-4" *ngFor="let referenceType of referenceTypes">
+								<mat-radio-button
+									class="refset-radio create-refset-radio-button default-font"
+									(change)="changeType($event)"
+									[checked]="referenceType == selectedReferenceType"
+									[value]="referenceType">
+									{{ referenceType.toLowerCase() }}
+								</mat-radio-button>
+								<mat-icon
+									aria-label="Click to Open Type Information Dialog"
+									title="Click to Open Type Information Dialog"
+									class="pointer rt2-new-refset-info-icon"
+									(click)="openInfoDialog(referenceType)"
+									>info_icon</mat-icon
+								>
+							</div>
+						</div>
+					</div>
+					<div class="create-new-refset-form-field create-new-refset-row-spacing">
+						<div class="col create-new-refset-label create-new-refset-flex-weight">
+							<label class="mb-7em"
+								>Module Id
+								<span *ngIf="inputProperties.project.edition.modules.length > 1">({{ inputProperties.project.edition.modules.length }})</span>
+								<span *ngIf="!editMode" class="mandatory-field">*</span>:
+							</label>
+						</div>
+						<div class="col create-new-refset-field create-new-refset-flex-weight">
+							<mat-form-field floatLabel="never" appearance="fill">
+								<mat-label>Choose Module Id</mat-label>
+								<select matNativeControl [(ngModel)]="selectedModuleId">
+									<option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue : setModuleIdOrder" [value]="module.key">
+										{{ module.key }} - {{ module.value }}
+									</option>
+								</select>
+							</mat-form-field>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="step == 2">
+					<!-- ECL Definintion Declaration -->
+					<div class="create-new-refset-form-field" *ngIf="showECL">
+						<div class="col create-new-refset-label create-new-refset-flex-weight">
+							<label class="mb-0">ECL Definition:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
+						</div>
+						<div class="col create-new-refset-field create-new-refset-flex-weight">
+							<div *ngFor="let clause of definitionClauses; index as i">
+								<span *ngIf="i == 0">
+									<mat-form-field class="refset_tool_ecl_definition_field">
+										<input
+											class="default-cursor"
+											matInput
+											[(ngModel)]="clause.value"
+											(ngModelChange)="eclDefinitionChanged($event)"
+											id="createRefsetDefinitionClausesInput"
+											#createRefsetDefinitionClausesInput />
+									</mat-form-field>
+									<input type="hidden" [(ngModel)]="clause.negated" value="false" />
+									<button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="rt2-btn rt2-action-btn">ECL Builder</button>
+								</span>
 
 								<span *ngIf="i > 0" class="rt2-flex-row">
 									<div class="refset_tool_ecl_definition_field">

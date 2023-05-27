@@ -4,7 +4,7 @@
 		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
 			<mat-label>Choose Organization</mat-label>
 			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
 					{{ organization.name }}
 				</mat-option>
 			</mat-select>
@@ -15,7 +15,7 @@
 			<mat-label>Choose Team</mat-label>
 			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam()">
 				<mat-option *ngIf="teamList === null || teamList.length === 0">No Teams</mat-option>
-				<mat-option *ngFor="let team of teamList" [value]="team" class="z-index-3" [title]="team.name">
+				<mat-option *ngFor="let team of teamList" [value]="team" class="z-index-3 no-checkbox" [title]="team.name">
 					{{ team.name }}
 				</mat-option>
 			</mat-select>
