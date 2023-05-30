@@ -37,7 +37,7 @@
 					<label class="mb-7em">Project Name:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Project Nam">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.name" disabled />
 					</mat-form-field>
 				</div>
@@ -49,7 +49,7 @@
 				</div>
 
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Owner/Organization">
 						<input class="default-cursor" matInput type="text" disabled [(ngModel)]="inputProperties.project.edition.organization.name" />
 					</mat-form-field>
 				</div>
@@ -60,7 +60,7 @@
 					<label class="mb-7em">Edition/Extension:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Edition/Extension">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
 					</mat-form-field>
 				</div>
@@ -71,8 +71,7 @@
 					<label class="mb-7em">Module Id:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
-						<mat-label>Choose Module Id</mat-label>
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Choose Module Id">
 						<select matNativeControl [(ngModel)]="moduleId">
 							<option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue : setModuleIdOrder" [value]="module.key">{{ module.key }} - {{ module.value }}</option>
 						</select>
@@ -95,7 +94,7 @@
 					<label>Assigned Reference Set Concept:</label>
 				</div>
 				<div *ngIf="editMode && !canEditName" class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Assigned Reference Set Concept">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="refsetConcept" disabled />
 					</mat-form-field>
 				</div>
@@ -119,7 +118,7 @@
 
 						<mat-radio-button value="2" (change)="checkRadioButtonValue($event)"> Create a new concept </mat-radio-button>
 
-						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected === 2 || isSelected === 0">
+						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected === 2 || isSelected === 0" placeholder="Choose existing metadata concept">
 							<mat-label>Choose existing metadata concept</mat-label>
 							<select matNativeControl [(ngModel)]="selectedMetaDataConcept">
 								<option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
@@ -128,7 +127,7 @@
 							</select>
 						</mat-form-field>
 
-						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected === 1 || isSelected === 0">
+						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected === 1 || isSelected === 0" placeholder="Choose parent concept">
 							<mat-label>Choose parent concept</mat-label>
 							<select matNativeControl [(ngModel)]="selectedParentConcept">
 								<option *ngFor="let parentConcept of parentConcepts" [value]="parentConcept?.code">
@@ -239,8 +238,8 @@
 					<label>Reference Set Type:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
-						<mat-label class="mt-0">Select Reference Set Type </mat-label>
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Select Reference Set Type">
+						<mat-label class="mt-0">Select Reference Set Type:</mat-label>
 						<select matNativeControl [(ngModel)]="selectedReferenceType">
 							<option *ngFor="let referenceType of referenceTypes" [value]="referenceType">
 								{{ referenceType }}
@@ -256,7 +255,7 @@
 					<label class="mb-2em">Reference Set Type:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Reference Set Type">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="referenceType" disabled />
 					</mat-form-field>
 				</div>
@@ -321,7 +320,7 @@
 					<label>Publishing:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
-					<mat-form-field floatLabel="never" appearance="fill">
+					<mat-form-field floatLabel="never" appearance="fill" placeholder="Publishing">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="publication" disabled />
 					</mat-form-field>
 				</div>

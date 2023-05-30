@@ -28,7 +28,7 @@
 				</div>
 
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" disabled [(ngModel)]="inputProperties.project.edition.organization.name" />
 					</mat-form-field>
 				</div>
@@ -38,7 +38,7 @@
 					<label class="mb-7em">Edition:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.edition.name" disabled />
 					</mat-form-field>
 				</div>
@@ -48,7 +48,7 @@
 					<label class="mb-7em">Project:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="inputProperties.project.name" disabled />
 					</mat-form-field>
 				</div>
@@ -59,17 +59,17 @@
 					<label class="mb-7em">Type:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor text-capitalize" matInput type="text" [ngModel]="selectedReferenceType.toLowerCase()" disabled />
 					</mat-form-field>
 				</div>
 			</div>
 			<div *ngIf="step > 1" class="create-new-refset-form-field create-new-refset-row-spacing">
 				<div class="col create-new-refset-label create-new-refset-flex-weight">
-					<label class="mb-7em">Module Id:</label>
+					<label class="mb-7em">:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" [value]="selectedModuleId + ' - ' + inputProperties.project.edition.moduleNames[selectedModuleId]" disabled />
 					</mat-form-field>
 				</div>
@@ -80,7 +80,7 @@
 					<label class="mb-7em">ECL Definition:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="definitionClauses[0].value" disabled />
 					</mat-form-field>
 				</div>
@@ -91,7 +91,7 @@
 					<label class="mb-7em">Reference Set Name:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="selectedExternalName" disabled />
 					</mat-form-field>
 				</div>
@@ -102,7 +102,7 @@
 					<label class="mb-7em">External URL:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
-					<mat-form-field appearance="none">
+					<mat-form-field appearance="fill">
 						<input class="default-cursor" matInput type="text" [(ngModel)]="selectedExternalUrl" disabled />
 					</mat-form-field>
 				</div>
@@ -144,8 +144,7 @@
 							</label>
 						</div>
 						<div class="col create-new-refset-field create-new-refset-flex-weight">
-							<mat-form-field floatLabel="never" appearance="fill">
-								<mat-label>Choose Module Id</mat-label>
+							<mat-form-field floatLabel="never" appearance="fill" placeholder="Choose Module Id">
 								<select matNativeControl [(ngModel)]="selectedModuleId">
 									<option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue : setModuleIdOrder" [value]="module.key">
 										{{ module.key }} - {{ module.value }}
@@ -583,8 +582,8 @@
 </ng-template>
 
 <ng-template #combinationInfoDialog let-data>
-	A reference set whose contents will be initialized from the contents of two or more existing reference sets. They must be from this edition and must be published. This not reflect changes in a
-	published reference set that is currently in development. This will create a new intensional reference set.
+	A reference set whose contents will be initialized from the contents of two or more existing reference sets. They must be from this edition and must be published. This will not reflect changes in
+	a published reference set that is currently in development. This will create a new intensional reference set.
 </ng-template>
 
 <ng-template #externalInfoDialog let-data> A reference set whose contents are stored strictly outside of tool. </ng-template>
