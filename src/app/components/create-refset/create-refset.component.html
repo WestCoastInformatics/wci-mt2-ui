@@ -66,7 +66,7 @@
 			</div>
 			<div *ngIf="step > 1" class="create-new-refset-form-field create-new-refset-row-spacing">
 				<div class="col create-new-refset-label create-new-refset-flex-weight">
-					<label class="mb-7em">:</label>
+					<label class="mb-7em">Module Id:</label>
 				</div>
 				<div class="col create-new-refset-field create-new-refset-flex-weight field-text">
 					<mat-form-field appearance="fill">
@@ -144,7 +144,8 @@
 							</label>
 						</div>
 						<div class="col create-new-refset-field create-new-refset-flex-weight">
-							<mat-form-field floatLabel="never" appearance="fill" placeholder="Choose Module Id">
+							<mat-form-field floatLabel="never" appearance="fill">
+								<mat-label>Choose Module Id</mat-label>
 								<select matNativeControl [(ngModel)]="selectedModuleId">
 									<option *ngFor="let module of inputProperties.project.edition.moduleNames | keyvalue : setModuleIdOrder" [value]="module.key">
 										{{ module.key }} - {{ module.value }}
@@ -160,6 +161,7 @@
 						<div class="col create-new-refset-label create-new-refset-flex-weight">
 							<label class="mb-0">ECL Definition:<span *ngIf="!editMode" class="mandatory-field">*</span></label>
 						</div>
+
 						<div class="col create-new-refset-field create-new-refset-flex-weight">
 							<div *ngFor="let clause of definitionClauses; index as i">
 								<span *ngIf="i == 0">
@@ -173,7 +175,12 @@
 											#createRefsetDefinitionClausesInput />
 									</mat-form-field>
 									<input type="hidden" [(ngModel)]="clause.negated" value="false" />
-									<button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="rt2-btn rt2-action-btn">ECL Builder</button>
+
+									<button (click)="openEclBuilder('createRefsetDefinitionClausesInput')" class="rt2-btn rt2-action-btn">
+										ECL Builder
+										<!-- <img src="assets/wrench-icon.svg" alt="wrench icon"
+                                aria-label="ECL Builder" title="Open ECL Builder" /> -->
+									</button>
 								</span>
 
 								<span *ngIf="i > 0" class="rt2-flex-row">
@@ -248,7 +255,7 @@
 										(keydown)="handleInput($event)"
 										autofocus />
 
-									<mat-option [disabled]="true" *ngIf="refsetOptions.length === 0 && !refsetOptionsLoading">
+									<mat-option [disabled]="true" *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading">
 										<span *ngIf="copySearchInput.length > 0">No Reference Sets matching your criteria</span>
 									</mat-option>
 									<mat-option *ngIf="refsetOptionsLoading" [disabled]="true">Loading...</mat-option>
@@ -266,7 +273,7 @@
 								</mat-select>
 							</mat-form-field>
 
-							<mat-form-field [hidden]="copyRefsetVersionOptions.length === 0" appearance="fill">
+							<mat-form-field [hidden]="copyRefsetVersionOptions.length == 0" appearance="fill">
 								<mat-select [(ngModel)]="copySelectedVersion" (selectionChange)="(copyCheckComplete)">
 									<mat-option *ngFor="let option of copyRefsetVersionOptions" [value]="option">{{ option.display }}</mat-option>
 								</mat-select>
@@ -293,7 +300,7 @@
 										(keydown)="handleInput($event)"
 										[(ngModel)]="comboSearchInput" />
 
-									<mat-option [disabled]="true" *ngIf="refsetOptions.length === 0 && !refsetOptionsLoading" class="empty-value-checkbox">
+									<mat-option [disabled]="true" *ngIf="refsetOptions.length == 0 && !refsetOptionsLoading" class="empty-value-checkbox">
 										<span *ngIf="comboSearchInput.length > 0">No Reference Sets matching your criteria</span>
 									</mat-option>
 									<mat-option *ngIf="refsetOptionsLoading" class="empty-value-checkbox" [disabled]="true">Loading...</mat-option>
@@ -328,7 +335,7 @@
 					<!-- End Combination -->
 				</div>
 
-				<div *ngIf="step === 3">
+				<div *ngIf="step == 3">
 					<!-- Contributing Refsets - for COMBINATION  -->
 					<div class="create-new-refset-form-field align-normal" *ngIf="showCombination">
 						<div class="col create-new-refset-label create-new-refset-flex-weight">
@@ -372,9 +379,9 @@
 									</mat-icon>
 								</span>
 
-								<mat-form-field appearance="fill" [hidden]="isSelected === 2">
+								<mat-form-field appearance="fill" [hidden]="isSelected == 2">
 									<mat-label *ngIf="existingMetadataConcepts?.length > 0">Choose an existing reference set concept</mat-label>
-									<mat-label *ngIf="existingMetadataConcepts?.length === 0">There are no existing metadata concepts available</mat-label>
+									<mat-label *ngIf="existingMetadataConcepts?.length == 0">There are no existing metadata concepts available</mat-label>
 									<select matNativeControl [(ngModel)]="selectedMetaDataConcept">
 										<option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
 											{{ existingMetadataConcept?.name }}
@@ -382,7 +389,7 @@
 									</select>
 								</mat-form-field>
 
-								<mat-form-field appearance="fill" [hidden]="isSelected === 1 || isSelected === 0">
+								<mat-form-field appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
 									<mat-label>Choose parent concept</mat-label>
 									<select matNativeControl [(ngModel)]="selectedParentConcept">
 										<option *ngFor="let parentConcept of parentConcepts" [value]="parentConcept?.code">
@@ -391,7 +398,7 @@
 									</select>
 								</mat-form-field>
 
-								<mat-form-field class="example-form-field" appearance="fill" [hidden]="isSelected === 1 || isSelected === 0">
+								<mat-form-field class="example-form-field" appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
 									<input
 										matInput
 										type="text"
@@ -458,35 +465,42 @@
 						<!-- Tags for new refset-->
 						<div *ngIf="!editMode" class="col create-new-refset-field create-new-refset-flex-weight">
 							<mat-form-field class="example-chip-list">
-								<input
-									placeholder="Add a tag to categorize the reference set"
-									[matChipInputFor]="chipList"
-									[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-									[matChipInputAddOnBlur]="addOnBlur"
-									(matChipInputTokenEnd)="add($event)" />
-								<mat-chip-list #chipList> </mat-chip-list>
+								<mat-chip-grid #chipList>
+									<mat-chip-row *ngFor="let selectedTag of selectedTags" [selectable]="selectable" [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
+										{{ selectedTag }}
+										<button matChipRemove *ngIf="removable" [attr.aria-label]="'remove ' + selectedTag" class="remove-tag-btn">
+											<mat-icon>cancel</mat-icon>
+										</button>
+									</mat-chip-row>
+									<input
+										placeholder="Add a tag to categorize the reference set"
+										[matChipInputFor]="chipList"
+										[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+										[matChipInputAddOnBlur]="addOnBlur"
+										(matChipInputTokenEnd)="add($event)" />
+								</mat-chip-grid>
 							</mat-form-field>
-							<mat-chip *ngFor="let selectedTag of selectedTags" [selectable]="selectable" [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
-								{{ selectedTag }}
-								<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-							</mat-chip>
 						</div>
 
 						<!-- Tags for update metadata-->
 						<div *ngIf="editMode" class="col create-new-refset-field create-new-refset-flex-weight">
 							<mat-form-field class="example-chip-list">
-								<input
-									placeholder="Add a tag to categorize the reference set"
-									[matChipInputFor]="chipList"
-									[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-									[matChipInputAddOnBlur]="addOnBlur"
-									(matChipInputTokenEnd)="add($event)" />
-								<mat-chip-list #chipList> </mat-chip-list>
+								<mat-chip-grid #chipList>
+									<mat-chip-row *ngFor="let selectedTag of tags" [selectable]="selectable" [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
+										{{ selectedTag }}
+										<button matChipRemove *ngIf="removable" [attr.aria-label]="'remove ' + selectedTag" class="remove-tag-btn">
+											<mat-icon>cancel</mat-icon>
+										</button>
+									</mat-chip-row>
+
+									<input
+										placeholder="Add a tag to categorize the reference set"
+										[matChipInputFor]="chipList"
+										[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+										[matChipInputAddOnBlur]="addOnBlur"
+										(matChipInputTokenEnd)="add($event)" />
+								</mat-chip-grid>
 							</mat-form-field>
-							<mat-chip *ngFor="let selectedTag of tags" [selectable]="selectable" [removable]="removable" (removed)="remove(selectedTag)" class="mat-elevation-z5">
-								{{ selectedTag }}
-								<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-							</mat-chip>
 						</div>
 					</div>
 					<!-- End Tags -->
@@ -511,7 +525,7 @@
 					</div>
 					<!-- End Availability -->
 					<!-- Publishability -->
-					<div *ngIf="selectedReferenceType !== 'EXTERNAL'" class="create-new-refset-form-field">
+					<div *ngIf="selectedReferenceType != 'EXTERNAL'" class="create-new-refset-form-field">
 						<div class="col create-new-refset-label create-new-refset-flex-weight">
 							<label>Publishing:</label>
 						</div>
@@ -542,7 +556,7 @@
 		<button *ngIf="step > 1" type="button" (click)="goBack()" aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Back" title="Back" color="accent">Back</button>
 		<button *ngIf="step < 3" [disabled]="nextDisabled" type="button" (click)="goNext()" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Next" title="Next">Next</button>
 		<button
-			*ngIf="step === 3"
+			*ngIf="step == 3"
 			[disabled]="!isComplete()"
 			type="button"
 			(click)="createRefsetObject()"
