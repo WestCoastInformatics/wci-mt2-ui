@@ -231,8 +231,10 @@ export class TeamsPeopleComponent implements OnInit {
 		this.organizationsService.getOrgUsers(organizationId, false).subscribe({
 			next: (results) => {
 				this.userList = results?.items.filter((teamMember) => !this.data.filter((orgMember) => teamMember.id === orgMember.id).length);
+				this.userList.sort((a, b) => (a.email > b.email ? 1 : -1));
 			},
 		});
+
 	}
 
 	showTeamMembers() {
