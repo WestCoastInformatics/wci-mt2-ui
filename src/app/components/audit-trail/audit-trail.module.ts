@@ -12,23 +12,9 @@ import { AuditTrailModalComponent } from './audit-trail-modal/audit-trail-modal.
 import { AuditTrailListComponent } from './audit-trail-list/audit-trail-list.component';
 import { PaginationModule } from '../pagination/pagination.module';
 
-
 @NgModule({
-    declarations: [
-        AuditTrailModalComponent, AuditTrailListComponent
-    ],
-    imports: [
-        CommonModule,
-        AgGridModule.withComponents([TemplateRenderer]),
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatMenuModule,
-        NgbModule,
-        PaginationModule
-    ],
-    exports: [AuditTrailModalComponent]
+	declarations: [AuditTrailModalComponent, AuditTrailListComponent],
+	imports: [CommonModule, AgGridModule.withComponents([TemplateRenderer]), MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule, NgbModule, PaginationModule],
+	exports: [AuditTrailModalComponent],
 })
-export class AuditTrailModule {
-}
+export class AuditTrailModule {}

@@ -7,25 +7,22 @@ import { environment } from 'src/environments/environment';
 import { NotificationService } from '../notification.service';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
 export class EditionsService extends RestService {
+	taxonomyRootNode: any = null;
+	contextPath = '/refsetservice/';
+	assignedUser: string;
 
-    taxonomyRootNode: any = null;
-    contextPath = '/refsetservice/';
-    assignedUser: string;
+	constructor(http: HttpClient, notificationService: NotificationService) {
+		super(http, notificationService);
 
-    constructor(http: HttpClient, notificationService: NotificationService) {
+		if (CodeUtility.hasValue(environment.restContextPath)) {
+			this.contextPath = environment.restContextPath;
+		}
+	}
 
-        super(http, notificationService);
-
-        if (CodeUtility.hasValue(environment.restContextPath)) {
-            this.contextPath = environment.restContextPath;
-        }
-    }
-
-    getEdition(editionId: string): Observable<any> {
-        return this.get(this.contextPath + 'edition/' + editionId);
-    }
-
+	getEdition(editionId: string): Observable<any> {
+		return this.get(this.contextPath + 'edition/' + editionId);
+	}
 }

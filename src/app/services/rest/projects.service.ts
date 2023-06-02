@@ -7,44 +7,42 @@ import { environment } from 'src/environments/environment';
 import { NotificationService } from '../notification.service';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
 export class ProjectsService extends RestService {
+	taxonomyRootNode: any = null;
+	contextPath = '/refsetservice/';
+	assignedUser: string;
 
-    taxonomyRootNode: any = null;
-    contextPath = '/refsetservice/';
-    assignedUser: string;
+	constructor(http: HttpClient, notificationService: NotificationService) {
+		super(http, notificationService);
 
-    constructor(http: HttpClient, notificationService: NotificationService) {
+		if (CodeUtility.hasValue(environment.restContextPath)) {
+			this.contextPath = environment.restContextPath;
+		}
+	}
 
-        super(http, notificationService);
+	createProject(params: any): Observable<any> {
+		return this.post(this.contextPath + 'project/', params);
+	}
 
-        if (CodeUtility.hasValue(environment.restContextPath)) {
-            this.contextPath = environment.restContextPath;
-        }
-    }
+	updateProject(projectId: any, params: any): Observable<any> {
+		return this.put(this.contextPath + 'project/' + projectId, params);
+	}
 
-    createProject(params: any): Observable<any> {
-        return this.post(this.contextPath + 'project/', params);
-    }
+	getProject(projectId: string): Observable<any> {
+		return this.get(this.contextPath + 'project/' + projectId);
+	}
 
-    updateProject(projectId: any, params: any): Observable<any> {
-        return this.put(this.contextPath + 'project/' + projectId, params);
-    }
+	getProjectTeams(projectId: string): Observable<any> {
+		return this.get(this.contextPath + 'project/' + projectId + '/teams');
+	}
 
-    getProject(projectId: string): Observable<any> {
-        return this.get(this.contextPath + 'project/' + projectId);
-    }
+	getProjectUsers(projectId: string): Observable<any> {
+		return this.get(this.contextPath + 'project/' + projectId + '/users');
+	}
 
-    getProjectTeams(projectId: string): Observable<any> {
-        return this.get(this.contextPath + 'project/' + projectId + "/teams");
-    }
-
-    getProjectUsers(projectId: string): Observable<any> {
-        return this.get(this.contextPath + 'project/' + projectId + '/users');
-    }
-
-    deleteProject(projectId: string): Observable<any> {
-        return this.delete(this.contextPath + 'project/' + projectId);
-    }
+	deleteProject(projectId: string): Observable<any> {
+		return this.delete(this.contextPath + 'project/' + projectId);
+	}
 }

@@ -1,47 +1,46 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
 
 <div class="content-header">
-    <div class="row header-title">
-        <span class="title-label">Organizations</span>
-        <mat-form-field floatLabel="never" appearance="legacy" class="project-drop-down">
-            <mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
-              [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-                <mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
-                    {{ organization.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+	<div class="row header-title">
+		<span class="title-label">Organizations</span>
+		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
+			<mat-select
+				#detailsVersionSelect
+				[disableOptionCentering]="true"
+				[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Choose Organization'"
+				[(value)]="selectedOrganization"
+				(selectionChange)="selectOrganization()">
+				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
+					{{ organization.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
 </div>
 <div class="content-wrapper">
-    <app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-    <page-container>
-        <div *ngIf="showLoadingSpinner" class="loading"></div>
-        <section>
-            <div class='section-header mb-10 d-flex'>
-                <heading-with-count title="Organization Teams" [count]="dataCount"></heading-with-count>
-                <create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organization]="selectedOrganization">
-                </create-new-team-modal>
-            </div>
-            <div class='dashboard-section'>
-                <div class="ag-theme-alpine">
-                    <ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
-                    </ag-grid-angular>
-                    <!-- description template -->
-                    <ng-template #descriptionSection let-params>
-                        <label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
-                            {{ params?.data.description }}
-                        </label>
-                    </ng-template>
-                    <!-- people template-->
-                    <ng-template #peopleSection let-params>
-                        <span class="text-primary font-weight-bold pointer">{{params?.data?.members}} Users</span>
-                    </ng-template>
-                </div>
-            </div>
-            <!-- <div class='text-right'>
-                <a class='text-muted light'>show/hide admin</a>
-            </div> -->
-        </section>
-    </page-container>
+	<app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+	<page-container>
+		<div *ngIf="showLoadingSpinner" class="loading"></div>
+		<section>
+			<div class="section-header mb-10 d-flex">
+				<heading-with-count title="Organization Teams" [count]="dataCount"></heading-with-count>
+				<create-new-team-modal *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" [organization]="selectedOrganization"> </create-new-team-modal>
+			</div>
+			<div class="dashboard-section">
+				<div class="ag-theme-alpine">
+					<ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct"> </ag-grid-angular>
+					<!-- description template -->
+					<ng-template #descriptionSection let-params>
+						<label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
+							{{ params?.data.description }}
+						</label>
+					</ng-template>
+					<!-- people template-->
+					<ng-template #peopleSection let-params>
+						<span class="text-primary font-weight-bold pointer">{{ params?.data?.members }} Users</span>
+					</ng-template>
+				</div>
+			</div>
+		</section>
+	</page-container>
 </div>

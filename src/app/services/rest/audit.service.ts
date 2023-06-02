@@ -7,33 +7,30 @@ import { environment } from 'src/environments/environment';
 import { NotificationService } from '../notification.service';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
 export class AuditService extends RestService {
+	contextPath = '/refsetservice/';
+	assignedUser: string;
 
-    contextPath = '/refsetservice/';
-    assignedUser: string;
+	constructor(http: HttpClient, notificationService: NotificationService) {
+		super(http, notificationService);
 
-    constructor(http: HttpClient, notificationService: NotificationService) {
+		if (CodeUtility.hasValue(environment.restContextPath)) {
+			this.contextPath = environment.restContextPath;
+		}
+	}
 
-        super(http, notificationService);
+	getAuditTrial(params: any, parseParams = true): Observable<any> {
+		return this.get(this.contextPath + 'audit', params, parseParams);
+	}
 
-        if (CodeUtility.hasValue(environment.restContextPath)) {
-            this.contextPath = environment.restContextPath;
-        }
-    }
+	getRefsetAuditTrial(refsetId: string, params: any, parseParams = true): Observable<any> {
+		return this.get(this.contextPath + `audit/REFSET/${refsetId}`, params, parseParams);
+	}
 
-    getAuditTrial(params: any, parseParams = true): Observable<any> {
-        return this.get(this.contextPath + 'audit', params, parseParams);
-    }
-
-    getRefsetAuditTrial(refsetId: string, params: any, parseParams = true): Observable<any> {
-        return this.get(this.contextPath + `audit/REFSET/${refsetId}`, params, parseParams);
-    }
-
-    getOrgAuditTrial(orgId: string, params: any, parseParams = true): Observable<any> {
-        params["expand"] = true;
-        return this.get(this.contextPath + `audit/ORGANIZATION/${orgId}`, params, parseParams);
-    }
-
+	getOrgAuditTrial(orgId: string, params: any, parseParams = true): Observable<any> {
+		params['expand'] = true;
+		return this.get(this.contextPath + `audit/ORGANIZATION/${orgId}`, params, parseParams);
+	}
 }

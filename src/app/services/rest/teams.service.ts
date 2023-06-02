@@ -7,56 +7,54 @@ import { environment } from 'src/environments/environment';
 import { NotificationService } from '../notification.service';
 
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
 export class TeamsService extends RestService {
+	taxonomyRootNode: any = null;
+	contextPath = '/refsetservice/';
+	assignedUser: string;
 
-    taxonomyRootNode: any = null;
-    contextPath = '/refsetservice/';
-    assignedUser: string;
+	constructor(http: HttpClient, notificationService: NotificationService) {
+		super(http, notificationService);
 
-    constructor(http: HttpClient, notificationService: NotificationService) {
+		if (CodeUtility.hasValue(environment.restContextPath)) {
+			this.contextPath = environment.restContextPath;
+		}
+	}
 
-        super(http, notificationService);
+	createTeam(params: any): Observable<any> {
+		return this.post(this.contextPath + 'team/', params);
+	}
 
-        if (CodeUtility.hasValue(environment.restContextPath)) {
-            this.contextPath = environment.restContextPath;
-        }
-    }
+	getTeam(teamId: string): Observable<any> {
+		return this.get(this.contextPath + 'team/' + teamId + '?includeMembers=true');
+	}
 
-    createTeam(params: any): Observable<any> {
-        return this.post(this.contextPath + 'team/', params);
-    }
+	getTeamUsers(teamId: string): Observable<any> {
+		return this.get(this.contextPath + 'team/' + teamId + '/users');
+	}
 
-    getTeam(teamId: string): Observable<any> {
-        return this.get(this.contextPath + 'team/' + teamId + '?includeMembers=true');
-    }
+	updateTeam(teamId: any, params: any): Observable<any> {
+		return this.put(this.contextPath + 'team/' + teamId, params);
+	}
 
-    getTeamUsers(teamId: string): Observable<any> {
-        return this.get(this.contextPath + 'team/' + teamId + '/users');
-    }
+	addRole(teamId: any, role: any): Observable<any> {
+		return this.post(this.contextPath + 'team/' + teamId + '/role/' + role, '');
+	}
 
-    updateTeam(teamId: any, params: any): Observable<any> {
-        return this.put(this.contextPath + 'team/' + teamId, params);
-    }
+	removeRole(teamId: any, role: any): Observable<any> {
+		return this.delete(this.contextPath + 'team/' + teamId + '/role/' + role);
+	}
 
-    addRole(teamId: any, role: any): Observable<any> {
-        return this.post(this.contextPath + 'team/' + teamId + '/role/' + role, '');
-    }
+	addUsers(teamId: any, emails: any): Observable<any> {
+		return this.post(this.contextPath + 'team/' + teamId + '/member?emails=' + emails, '');
+	}
 
-    removeRole(teamId: any, role: any): Observable<any> {
-        return this.delete(this.contextPath + 'team/' + teamId + '/role/' + role);
-    }
+	removeUser(teamId: any, userId: any): Observable<any> {
+		return this.delete(this.contextPath + 'team/' + teamId + '/member/' + userId);
+	}
 
-    addUsers(teamId: any, emails: any): Observable<any> {
-        return this.post(this.contextPath + 'team/' + teamId + '/member?emails=' + emails, '');
-    }
-
-    removeUser(teamId: any, userId: any): Observable<any> {
-        return this.delete(this.contextPath + 'team/' + teamId + '/member/' + userId);
-    }
-
-    deleteTeam(teamId: string): Observable<any> {
-        return this.delete(this.contextPath + 'team/' + teamId);
-    }
+	deleteTeam(teamId: string): Observable<any> {
+		return this.delete(this.contextPath + 'team/' + teamId);
+	}
 }

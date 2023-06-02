@@ -1,82 +1,77 @@
 <div class="section-list text-right" title="Create New Organization" aria-label="Create New Organization">
-    <a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class="rt2-btn rt2-action-btn">Create New Organization</a>
+	<a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class="rt2-btn rt2-action-btn">Create New Organization</a>
 </div>
 
 <ng-template #createNewOrganizationDialog let-modal>
+	<div class="modal-header rt2-modal-header">
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Create New Organization</h3>
 
-    <div class="modal-header rt2-modal-header">
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
 
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            Create New Organization
-        </h3>
-
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-body rt2-lockable">
-
-        <table>
-            <tr>
-                <td>
-                    <label class="modal-label-edition">Edition: <span class="mandatory-field">*</span></label>
-                </td>
-                <td>
-                    <div class="row">
-                        <div>
-                            <mat-form-field floatLabel="never" appearance="legacy" class="col default-font">
-                                <mat-select class="rt2-modal-select" [(value)]="selectedEdition">
-                                    <mat-option *ngIf="editionsList.length == 0">No Editions Avaialable</mat-option>
-                                    <mat-option *ngFor="let edition of editionsList" [value]="edition">
-                                        {{ edition.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label">Name: <span class="mandatory-field">*</span></label>
-                </td>
-                <td>
-                    <input class="modal-input-field w-250 p-b-7" placeholder="Organization Name" autofocus #orgName [(ngModel)]="name" />{{
-                    setAutoFocus(orgName) }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label">Email: <span class="mandatory-field">*</span></label>
-                </td>
-                <td>
-                    <input class="modal-input-field w-250 p-b-9" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email" />
-
-                </td>
-            </tr>
-            <tr class="modal-error-message" [hidden]="!emailError">
-                <div>{{emailError}}</div>
-            </tr>
-            <tr>
-                <td>
-                    <label class="modal-label-description">Description:</label>
-                </td>
-                <td>
-                    <mat-form-field floatLabel="never" class="import-from-list-field" appearance="legacy">
-                        <textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
-                    </mat-form-field>
-
-                </td>
-            </tr>
-        </table>
-
-    </div>
-    <div class="modal-footer rt2-modal-footer rt2-lockable">
-        <button ngbAutofocus type="button" [disabled]="name === ''  || !selectedEdition || email === '' || !isValidEmail()" (click)="createOrganizationObject()"
-           aria-hidden="false" class="rt2-btn rt2-acttion-btn" aria-label="Create Organization" title="Create Organization">
-            Create Organization
-        </button>
-    </div>
-
+	<div class="modal-body rt2-lockable">
+		<table>
+			<tr>
+				<td>
+					<label class="modal-label-edition">Edition: <span class="mandatory-field">*</span></label>
+				</td>
+				<td>
+					<div class="row">
+						<div>
+							<mat-form-field floatLabel="never" appearance="fill" class="col default-font">
+								<mat-select class="rt2-modal-select" [(value)]="selectedEdition">
+									<mat-option *ngIf="editionsList.length === 0">No Editions Avaialable</mat-option>
+									<mat-option *ngFor="let edition of editionsList" [value]="edition">
+										{{ edition.name }}
+									</mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="modal-label">Name: <span class="mandatory-field">*</span></label>
+				</td>
+				<td><input class="modal-input-field w-250 p-b-7" placeholder="Organization Name" autofocus #orgName [(ngModel)]="name" />{{ setAutoFocus(orgName) }}</td>
+			</tr>
+			<tr>
+				<td>
+					<label class="modal-label">Email: <span class="mandatory-field">*</span></label>
+				</td>
+				<td>
+					<input class="modal-input-field w-250 p-b-9" (keydown.tab)="onKeyDownEvent($event)" placeholder="primarycontactemail@orgname.org" [(ngModel)]="email" />
+				</td>
+			</tr>
+			<tr class="modal-error-message" [hidden]="!emailError">
+				<div>{{ emailError }}</div>
+			</tr>
+			<tr>
+				<td>
+					<label class="modal-label-description">Description:</label>
+				</td>
+				<td>
+					<mat-form-field floatLabel="never" class="import-from-list-field" appearance="fill">
+						<textarea matInput class="import-from-list-text-area" [(ngModel)]="description">test</textarea>
+					</mat-form-field>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-lockable">
+		<button
+			ngbAutofocus
+			type="button"
+			[disabled]="name === '' || !selectedEdition || email === '' || !isValidEmail()"
+			(click)="createOrganizationObject()"
+			aria-hidden="false"
+			class="rt2-btn rt2-acttion-btn"
+			aria-label="Create Organization"
+			title="Create Organization">
+			Create Organization
+		</button>
+	</div>
 </ng-template>

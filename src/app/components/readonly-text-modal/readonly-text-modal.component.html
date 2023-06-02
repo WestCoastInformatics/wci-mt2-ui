@@ -1,25 +1,22 @@
 <div class="limit-text-container">
-    <span *ngIf="shortText" class="limit-text-30" [innerHTML]="shortText" (click)="openCreateRefsetModal(refsetVersionNotes)">
-    </span>
+	<span *ngIf="shortText" class="limit-text-30" [innerHTML]="shortText" (click)="openCreateRefsetModal(refsetVersionNotes)"> </span>
 </div>
 
 <ng-template #refsetVersionNotes let-modal>
-    <div class="modal-header rt2-modal-header">
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            {{ title }}
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div class="row text-break" [innerHTML]="longText"></div>
-    </div>
-    <div class="modal-footer rt2-modal-footer">
-        <!-- JESSE -->
-        <button type="button" (click)="modal.close('Read Only Text Modal')" aria-hidden="false" class="rt2-btn rt2-close-btn"
-          aria-label="Read Only Text Modal" title="Read Only Text Modal">
-            Close
-        </button>
-    </div>
+	<div class="modal-header rt2-modal-header">
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
+			{{ title }}
+		</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="row text-break" [innerHTML]="longText"></div>
+	</div>
+	<div class="modal-footer rt2-modal-footer">
+		<button type="button" (click)="modal.close('Read Only Text Modal')" aria-hidden="false" class="rt2-btn rt2-close-btn" aria-label="Read Only Text Modal" title="Read Only Text Modal">
+			Close
+		</button>
+	</div>
 </ng-template>

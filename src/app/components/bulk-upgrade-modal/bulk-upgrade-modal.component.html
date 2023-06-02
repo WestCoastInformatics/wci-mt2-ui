@@ -1,15 +1,9 @@
-
-<button aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Bulk Upgrade"  (click)="openUpgradeModal(bulkUpgradeDialog)">
-	Bulk Upgrade
-</button>
+<button aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Bulk Upgrade" (click)="openUpgradeModal(bulkUpgradeDialog)">Bulk Upgrade</button>
 
 <ng-template #bulkUpgradeDialog let-modal>
-
 	<div class="modal-header rt2-modal-header">
 		<button ngbAutofocus class="unfocus-btn"></button>
-		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-			Bulk Upgrade for {{project?.edition?.organizationName}} Project {{project?.name}}
-		</h3>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Bulk Upgrade for {{ project?.edition?.organizationName }} Project {{ project?.name }}</h3>
 
 		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
 			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
@@ -17,37 +11,26 @@
 	</div>
 
 	<div class="modal-body rt2-lockable rt2-modal-body form-field-header">
-
 		<div class="create-new-refset-form-field align-normal">
-
 			<div class="col create-new-refset-field create-new-refset-flex-weight bulk-upgrade-list">
 				<mat-form-field appearance="fill">
 					<mat-label>Refsets to Upgrade (use Ctrl-click to select more than one)</mat-label>
-					<label *ngIf="refsetsForUpgrade.length == 0">There are currently no refsets ready to upgrade</label>
-					<select matNativeControl autofocus [multiple]=true [(ngModel)]="selectedRefsets" [size]="refsetsForUpgrade.length" class="mh-300">
+					<label *ngIf="refsetsForUpgrade.length === 0">There are currently no refsets ready to upgrade</label>
+					<select matNativeControl autofocus [multiple]="true" [(ngModel)]="selectedRefsets" [size]="refsetsForUpgrade.length" class="mh-300">
 						<option *ngFor="let refset of refsetsForUpgrade" [ngValue]="refset">
 							{{ refset.name }}
 						</option>
 					</select>
 				</mat-form-field>
 			</div>
-
 		</div>
 	</div>
 
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-
-		<button [disabled]="selectedRefsets.length == 0" type="button" (click)="upgradeRefsets()"
-			color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Upgrade">
+		<button [disabled]="selectedRefsets.length === 0" type="button" (click)="upgradeRefsets()" color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Upgrade">
 			Upgrade
 		</button>
 
-		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false"
-			class="rt2-btn rt2-cancel-btn" aria-label="Cancel"
-			title="Cancel">
-			Cancel
-		</button>
-
+		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">Cancel</button>
 	</div>
-
 </ng-template>

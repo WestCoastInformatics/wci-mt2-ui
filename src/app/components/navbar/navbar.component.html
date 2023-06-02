@@ -1,113 +1,96 @@
 <nav *ngIf="isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp">
+	<div class="rt2-nav-item-row">
+		<a class="rt2-nav-logo-section" routerLink="/" title="SNOMED CT Reference Set Tool 2.0 Home" aria-label="SNOMED CT Reference Set Tool 2.0 home">
+			<img class="rt2-logo mr-2 p-0" src="/assets/small_logo.png" />
+			<span class="text-ghost-grey header-font rt2-nav-title">SNOMED CT Reference Set Tool 2.0</span>
+		</a>
 
-    <div class="rt2-nav-item-row">
+		<div
+			class="rt2-breadcrumb-bar text-ghost-grey"
+			[class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-breadcrumb-and-roles' : breadcrumbs.length > 2 ? 'extended-breadcrumb' : 'display: flex'">
+			<div *ngFor="let breadcrumb of breadcrumbs" title="{{ breadcrumb.label }}" aria-label="{{ breadcrumb.label }}" [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
+				{{ breadcrumb.label }}
+			</div>
+		</div>
 
-        <a class="rt2-nav-logo-section" routerLink="/" title="SNOMED CT Reference Set Tool 2.0 Home"
-            aria-label="SNOMED CT Reference Set Tool 2.0 home">
-            <img class="rt2-logo mr-2 p-0" src="/assets/small_logo.png">
-            <span class="text-ghost-grey header-font rt2-nav-title">SNOMED CT Reference Set Tool 2.0</span>
-        </a>
+		<ng-container [ngSwitch]="environment">
+			<div *ngSwitchCase="'local'" class="banner text-white local page-h1-font"></div>
+			<div *ngSwitchCase="'dev'" class="banner text-white dev page-h1-font"></div>
+			<div *ngSwitchCase="'uat'" class="banner text-white uat page-h1-font"></div>
+			<div *ngSwitchCase="'training'" class="banner text-white training page-h1-font"></div>
+			<div *ngSwitchDefault class="banner text-white d-none page-h1-font"></div>
+		</ng-container>
+	</div>
 
-        <div class="rt2-breadcrumb-bar text-ghost-grey"
-            [class]="breadcrumbs.length > 1 && projectRole.length > 8 ? 'extended-breadcrumb-and-roles' : breadcrumbs.length > 2 ? 'extended-breadcrumb' : 'display: flex'">
-            <div *ngFor="let breadcrumb of breadcrumbs" title="{{breadcrumb.label}}" aria-label="{{breadcrumb.label}}"
-                [class]="breadcrumb.class" (click)="navigate(breadcrumb.id)">
-                {{breadcrumb.label}}
-            </div>
-        </div>
+	<div class="left-title-buttons">
+		<div class="project-role-and-assignee-label project-role project-role-font" *ngIf="showProjectRoleAndAssignee()">
+			<span class="project-role project-role-font" *ngIf="showProjectRole()">Project Role: {{ projectRole }}</span>
+			<span class="project-role project-role-font" *ngIf="showRefsetRole()">Role: {{ refsetRole }}</span>
+			<span class="project-assignee" *ngIf="assignedUser() !== 'Unassigned'">Assignee: {{ assignedUser() }}</span>
+		</div>
 
-        <ng-container [ngSwitch]="environment">
-            <div *ngSwitchCase="'local'" class="banner text-white local page-h1-font"></div>
-            <div *ngSwitchCase="'dev'" class="banner text-white dev page-h1-font"></div>
-            <div *ngSwitchCase="'uat'" class="banner text-white uat page-h1-font"></div>
-            <div *ngSwitchCase="'training'" class="banner text-white training page-h1-font"></div>
-            <div *ngSwitchDefault class="banner text-white d-none page-h1-font"></div>
-        </ng-container>
+		<div class="navbar-div" (click)="navigateToRoute('/library')">
+			<div class="navbar-icon"><img class="navbar-icon" src="/assets/directory-icon.svg" /></div>
+			<div class="navbar-icon-label header-icon-font">Library</div>
+		</div>
 
-    </div>
+		<div *ngIf="isUserLoggedIn" class="navbar-div" (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
+			<div class="navbar-icon"><img class="navbar-icon" src="/assets/projects-icon.svg" /></div>
+			<div class="navbar-icon-label header-icon-font">Projects</div>
+		</div>
 
-    <div class="left-title-buttons">
-        <div class="project-role-and-assignee-label project-role project-role-font"
-            *ngIf="showProjectRoleAndAssignee()">
-            <span class="project-role project-role-font" *ngIf="showProjectRole()">Project Role:
-                {{projectRole}}</span>
-            <span class="project-role project-role-font" *ngIf="showRefsetRole()">Role: {{refsetRole}}</span>
-            <span class="project-assignee" *ngIf="assignedUser() != 'Unassigned'">Assignee: {{
-                assignedUser() }}</span>
-        </div>
+		<div *ngIf="isUserLoggedIn" class="navbar-div" (click)="navigateToRoute('/dashboard')">
+			<div class="navbar-icon"><img class="navbar-icon" src="/assets/dashboard-icon.svg" /></div>
+			<div class="navbar-icon-label header-icon-font">Dashboard</div>
+		</div>
 
-        <div class="navbar-div" (click)="navigateToRoute('/library')">
-            <div class="navbar-icon"><img class="navbar-icon" src="/assets/directory-icon.svg"></div>
-            <div class="navbar-icon-label header-icon-font">Library</div>
-        </div>
+		<div *ngIf="isUserLoggedIn" class="float-right mr-2">
+			<div class="dropdown" id="userDropdownMenu">
+				<label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
+				</label>
 
-        <div *ngIf="isUserLoggedIn" class="navbar-div"
-            (click)="navigateToRoute('/organization/0/edition/0/projects/0/refsets')">
-            <div class="navbar-icon"><img class="navbar-icon" src="/assets/projects-icon.svg"></div>
-            <div class="navbar-icon-label header-icon-font">Projects</div>
-        </div>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+					<div class="dropdown-item pl-3" routerLink="/personal/{{ user?.id }}/landing">
+						<div class="d-flex pointer">
+							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
 
-        <div *ngIf="isUserLoggedIn" class="navbar-div" (click)="navigateToRoute('/dashboard')">
-            <div class="navbar-icon"><img class="navbar-icon" src="/assets/dashboard-icon.svg"></div>
-            <div class="navbar-icon-label header-icon-font">Dashboard</div>
-        </div>
-
-        <div *ngIf="isUserLoggedIn" class="float-right mr-2">
-            <div class="dropdown" id="userDropdownMenu">
-
-                <label class="dropdown-toggle pointer text-ghost-grey btn-sm mb-0" id="userDropdown"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)"
-                        class="medium-icon-image mr-2" />
-                </label>
-
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <div class="dropdown-item pl-3" routerLink="/personal/{{user?.id}}/landing">
-                        <div class="d-flex pointer">
-                            <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)"
-                                class="medium-icon-image mr-2" />
-
-                            <div class="profile-block">
-                                <strong>{{user.userName}}</strong>
-                                <div class="text-sm-left">{{user.company}}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center pointer" (click)="resources()">Resources</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center" href="#" (click)="logoutUser()">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+							<div class="profile-block">
+								<strong>{{ user.userName }}</strong>
+								<div class="text-sm-left">{{ user.company }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item text-center pointer" (click)="resources()">Resources</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item text-center" href="#" (click)="logoutUser()">Logout</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </nav>
-<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp"
-    id="bg-landing-header">
-    <div class="rt2-nav-item-row">
+<nav *ngIf="!isUserLoggedIn" class="navbar sticky-top navbar-dark bg-dark pt-0 pr-2 row jc-center p-b-5-imp" id="bg-landing-header">
+	<div class="rt2-nav-item-row">
+		<a class="rt2-nav-logo-section" routerLink="/" title="Reference Set Tool Home" aria-label="Reference set tool home">
+			<img class="rt2-logo mr-2 p-0" src="/assets/small_logo.png" />
+			<span class="text-ghost-grey rt2-nav-title">SNOMED CT Reference Set Tool 2.0</span>
+		</a>
 
-        <a class="rt2-nav-logo-section" routerLink="/" title="Reference Set Tool Home"
-            aria-label="Reference set tool home">
-            <img class="rt2-logo mr-2 p-0" src="/assets/small_logo.png">
-            <span class="text-ghost-grey rt2-nav-title">SNOMED CT Reference Set Tool 2.0</span>
-        </a>
+		<ng-container [ngSwitch]="environment">
+			<div *ngSwitchCase="'local'" class="banner text-white local"></div>
+			<div *ngSwitchCase="'dev'" class="banner text-white dev"></div>
+			<div *ngSwitchCase="'uat'" class="banner text-white uat"></div>
+			<div *ngSwitchCase="'training'" class="banner text-white training"></div>
+			<div *ngSwitchDefault class="banner text-white d-none"></div>
+		</ng-container>
+	</div>
+	<div class="left-title-buttons">
+		<div class="navbar-div no-m-r m-l-auto" (click)="navigateToRoute('/library')">
+			<div class="navbar-icon"><img class="navbar-icon" src="/assets/directory-icon.svg" /></div>
+			<div class="navbar-icon-label header-icon-font">Library</div>
+		</div>
 
-        <ng-container [ngSwitch]="environment">
-            <div *ngSwitchCase="'local'" class="banner text-white local"></div>
-            <div *ngSwitchCase="'dev'" class="banner text-white dev"></div>
-            <div *ngSwitchCase="'uat'" class="banner text-white uat"></div>
-            <div *ngSwitchCase="'training'" class="banner text-white training"></div>
-            <div *ngSwitchDefault class="banner text-white d-none"></div>
-        </ng-container>
-
-    </div>
-    <div class="left-title-buttons">
-        <div class="navbar-div no-m-r m-l-auto" (click)="navigateToRoute('/library')">
-            <div class="navbar-icon"><img class="navbar-icon" src="/assets/directory-icon.svg"></div>
-            <div class="navbar-icon-label header-icon-font">Library</div>
-        </div>
-
-        <a class="btn btn-link text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a>
-    </div>
-
+		<a class="btn btn-link text-white m-r-10 rt2-nav-title" (click)="login()">Log In</a>
+	</div>
 </nav>

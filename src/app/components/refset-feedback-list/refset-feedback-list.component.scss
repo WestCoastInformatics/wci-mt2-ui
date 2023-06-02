@@ -1,69 +1,70 @@
-@import "~src/assets/scss/variables.scss";
+@import 'src/assets/scss/variables.scss';
 
 .feedback-modal-header {
-  align-items: center !important;
-  border-bottom: none !important;
-  color: #9B9B9B;
+	align-items: center !important;
+	border-bottom: none !important;
+	color: #9b9b9b;
 
-  .modal-title {
-    flex-grow: 1;
-    color: inherit;
-    font-family: inherit;
-  }
+	.modal-title {
+		flex-grow: 1;
+		color: inherit;
+		font-family: inherit;
+	}
 }
 
 .feedback-status {
-  color: inherit;
-  margin-right: 20px;
-  font-size: $standard_font_size;
-  font-weight: 300;
-  color: #fff;
-  letter-spacing: .5px;
+	color: inherit;
+	margin-right: 20px;
+	font-size: $standard_font_size;
+	font-weight: 300;
+	color: #fff;
+	letter-spacing: 0.5px;
 }
 
 .feedback-modal-footer {
-  border-top: none !important;
+	border-top: none !important;
 }
 
 .discussion-icon-text {
-  display: flex;
-  color: white;
-  background-color: red;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  margin-top: 2px;
-  margin-left: 8px;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	color: white;
+	background-color: red;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	margin-top: 0.75em;
+	margin-left: 8px;
+	align-items: center;
+	justify-content: center;
 }
 
 .discussion-icon {
-  width: 24px;
-  height: 24px;
-  filter: invert(49%) sepia(23%) saturate(4194%) hue-rotate(165deg) brightness(95%) contrast(102%); // to get text-main color
+	width: 24px;
+	height: 24px;
+	margin-top: 1em;
+	filter: invert(49%) sepia(23%) saturate(4194%) hue-rotate(165deg) brightness(95%) contrast(102%); // to get text-main color
 }
 
 .text-main {
-  color: $main-color;
+	color: $main-color;
 }
 
 .topic-title {
-  color: #555555;
-  margin: 10px 0 5px;
+	color: #555555;
+	margin: 10px 0 5px;
 }
 
 .topic-header {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 
-  .topic-author {
-    flex-grow: 1;
-    margin: 0 20px;
-    color: #555555;
-  }
+	.topic-author {
+		flex-grow: 1;
+		margin: 0 20px;
+		color: #555555;
+	}
 
-  .topic-action {
-    display: inline-block;
-  }
+	.topic-action {
+		display: inline-block;
+	}
 }

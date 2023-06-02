@@ -1,73 +1,65 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RefsetUtility } from '../../utilities/refset.utility';
 import { Constants } from '../../utilities/constants.utility';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
-
 @Component({
-    selector: 'refset-meta',
-    templateUrl: './refset-meta-table.component.html',
-    styleUrls: ['refset-meta-table.component.scss']
+	selector: 'refset-meta',
+	templateUrl: './refset-meta-table.component.html',
+	styleUrls: ['refset-meta-table.component.scss'],
 })
-
 export class RefsetMetaTableComponent implements OnInit {
-    showFlag = true;
-    @Input() refset: any;
-    loggedIn = false;
+	showFlag = true;
+	@Input() refset: any;
+	loggedIn = false;
 
-    constructor(private router: Router,        
-        private authenticationService: AuthenticationService) {
-    }
+	constructor(private router: Router, private authenticationService: AuthenticationService) {}
 
-    get directUrl(): string {
-        return this.refset?.refsetId ? (window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/'
-            + RefsetUtility.getVersionDateForRefsetApiCall(this.refset)) : '';
-    }
+	get directUrl(): string {
+		return this.refset?.refsetId
+			? window.location.protocol + '//' + window.location.host + '/details/' + this.refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(this.refset)
+			: '';
+	}
 
-    ngOnInit(): void {
-        this.loggedIn = this.authenticationService.isAuthenticated();
-    }
+	ngOnInit(): void {
+		this.loggedIn = this.authenticationService.isAuthenticated();
+	}
 
-    getEditionUrl() {
-        return `${window.location.origin}/organizations/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects`
-    }
+	getEditionUrl() {
+		return `${window.location.origin}/organizations/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects`;
+	}
 
-    getProjectUrl() {
-        return `${window.location.origin}/organization/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects/${this.refset?.projectId}/refsets`
-    }
+	getProjectUrl() {
+		return `${window.location.origin}/organization/${this.refset?.edition.organizationId}/edition/${this.refset?.editionId}/projects/${this.refset?.projectId}/refsets`;
+	}
 
-    setDescriptions(refsetData: any): Array<string> {
-        return refsetData?.descriptions;
-    }
+	setDescriptions(refsetData: any): Array<string> {
+		return refsetData?.descriptions;
+	}
 
-    showFlagIcon(showFlag: boolean) {
-        this.showFlag = showFlag;
-    }
+	showFlagIcon(showFlag: boolean) {
+		this.showFlag = showFlag;
+	}
 
-    capitalizeFirstLetterOfString(stringValue: string): string {
-        if (stringValue) {
-            return stringValue.replace(/(?:^|\s|[-"'([{])+\S/g, (c) =>
-                c.toUpperCase()
-            );
-        }
+	capitalizeFirstLetterOfString(stringValue: string): string {
+		if (stringValue) {
+			return stringValue.replace(/(?:^|\s|[-"'([{])+\S/g, (c) => c.toUpperCase());
+		}
 
-        return stringValue;
-    }
+		return stringValue;
+	}
 
-    toTitleCase(str) {
-        return str?.replace(
-            /\w\S*/g,
-            function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            }
-        );
-    }
+	toTitleCase(str) {
+		return str?.replace(/\w\S*/g, function (txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
+	}
 
-    latestDate(versionList: any[]): string {
-        if (this.refset?.versionStatus === Constants.IN_DEVELOPMENT) {
-            return 'Latest';
-        }
-        return versionList && versionList[0] ? `${versionList[0].date}` : '';
-    }
+	latestDate(versionList: any[]): string {
+		if (this.refset?.versionStatus === Constants.IN_DEVELOPMENT) {
+			return 'Latest';
+		}
+		return versionList && versionList[0] ? `${versionList[0].date}` : '';
+	}
 }

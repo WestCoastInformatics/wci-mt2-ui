@@ -1,114 +1,160 @@
 {
-    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-    "cli": {
-      "analytics": false
-    },
-    "version": 1,
-    "newProjectRoot": "projects",
-    "projects": {
-        "angular-template": {
-            "root": "",
-            "sourceRoot": "src",
-            "projectType": "application",
-            "prefix": "app",
-            "schematics": {
-                "@schematics/angular:component": {
-                    "style": "scss"
-                }
-            },
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "aot": true,
-                        "baseHref": "/",
-                        "outputPath": "dist/angular-template",
-                        "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": "src/polyfills.ts",
-                        "tsConfig": "src/tsconfig.app.json",
-                        "assets": [
-                            "src/favicon.ico",
-                            "src/favicon_grey.ico",
-                            "src/favicon_red.ico",
-                            "src/favicon_green.ico",
-                            "src/favicon_yellow.ico",
-                            "src/assets",
-                            { "glob": "**/*", "input": "./node_modules/tinymce", "output": "/tinymce/" }
-                        ],
-                        "styles": [
-                            "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-                            "./node_modules/@fortawesome/fontawesome-free/css/all.css",
-                            "src/assets/scss/styles.scss",
-                            "node_modules/ngx-toastr/toastr.css",
-                            "./ecl-builder/styles.css"
-                        ],
-                        "scripts": [
-                            "./node_modules/jquery/dist/jquery.min.js",
-                            "./node_modules/popper.js/dist/umd/popper.min.js",
-                            "./node_modules/bootstrap/dist/js/bootstrap.min.js",
-                            "./node_modules/tinymce/tinymce.min.js",
-                            "./ecl-builder/ecl-builder.js"
-                        ]
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "replace": "src/environments/environment.ts",
-                                    "with": "src/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": false,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "extractCss": true,
-                            "namedChunks": false,
-                            "aot": true,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "browserTarget": "angular-template:build",
-                        "liveReload": false
-                    },
-                    "configurations": {
-                        "production": {
-                            "browserTarget": "angular-template:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "browserTarget": "angular-template:build"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "src/tsconfig.app.json",
-                            "src/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
-                    }
-                }
-            }
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "angular-template": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
         }
-    },
-    "defaultProject": "angular-template"
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "aot": true,
+            "baseHref": "/",
+            "outputPath": "dist/angular-template",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "i18nMissingTranslation": "warning",
+            "inlineStyleLanguage": "scss",
+            "extractLicenses": false,
+            "assets": [
+              "src/assets/favicon/favicon.ico",
+              "src/assets/favicon/favicon_grey.ico",
+              "src/assets/favicon/favicon_red.ico",
+              "src/assets/favicon/favicon_green.ico",
+              "src/assets/favicon/favicon_yellow.ico",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/tinymce",
+                "output": "/tinymce/"
+              }
+            ],
+            "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "src/assets/scss/styles.scss",
+              "node_modules/ngx-toastr/toastr.css",
+              "./ecl-builder/styles.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./node_modules",
+                "src/app/styles/scss"
+              ]
+            },
+            "allowedCommonJsDependencies": [
+              "validator",
+              "ag-grid-community",
+              "mobx",
+              "jquery",
+              "moment"
+            ],
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/@popperjs/core/dist/umd/popper.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/tinymce/tinymce.min.js",
+              "./ecl-builder/ecl-builder.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "20kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "angular-template:build",
+            "liveReload": false
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-template:build:production"
+            },
+            "development": {
+              "browserTarget": "angular-template:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "angular-template:build",
+            "format": "xlf",
+            "outputPath": "src/locale"
+          }
+        },
+        "i18n": {
+          "sourceLocale": {
+            "code": "en",
+            "baseHref": "/"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "angular-template"
 }

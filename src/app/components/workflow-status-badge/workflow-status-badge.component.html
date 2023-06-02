@@ -1,25 +1,23 @@
 <!--<object  [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)"> {{ params?.value}}</object>-->
-<ng-container *ngIf="status == 'PUBLISHED'">
-    Published
+<ng-container *ngIf="status === 'PUBLISHED'"> Published </ng-container>
+<ng-container *ngIf="status === 'READY_FOR_EDIT'">
+	<div class="ready-for-edit-projects-button">Ready For Edit</div>
 </ng-container>
-<ng-container *ngIf="status == 'READY_FOR_EDIT'">
-    <div class="ready-for-edit-projects-button">Ready For Edit</div>
+<ng-container *ngIf="status === 'IN_EDIT'">
+	<div class="in-edit-projects-button">In Edit</div>
 </ng-container>
-<ng-container *ngIf="status == 'IN_EDIT'">
-    <div class="in-edit-projects-button">In Edit</div>
+<ng-container *ngIf="status === 'IN_UPGRADE'">
+	<div class="in-upgrade-projects-button">In Upgrade</div>
 </ng-container>
-<ng-container *ngIf="status == 'IN_UPGRADE'">
-    <div class="in-upgrade-projects-button">In Upgrade</div>
+<ng-container *ngIf="status === 'READY_FOR_REVIEW'">
+	<div class="ready-for-review-projects-button">Ready For Review</div>
 </ng-container>
-<ng-container *ngIf="status == 'READY_FOR_REVIEW'">
-    <div class="ready-for-review-projects-button">Ready For Review</div>
+<ng-container *ngIf="status === 'IN_REVIEW'">
+	<div class="in-review-projects-button">In Review</div>
 </ng-container>
-<ng-container *ngIf="status == 'IN_REVIEW'">
-    <div class="in-review-projects-button">In Review</div>
+<ng-container *ngIf="status === 'REVIEW_COMPLETED'">
+	<div class="review-completed-projects-button">Review Completed</div>
 </ng-container>
-<ng-container *ngIf="status == 'REVIEW_COMPLETED'">
-    <div class="review-completed-projects-button">Review Completed</div>
-</ng-container>
-<ng-container *ngIf="status == 'READY_FOR_PUBLICATION'">
-    <div class="ready-for-publication-projects-button">Ready For Publication</div>
+<ng-container *ngIf="status === 'READY_FOR_PUBLICATION'">
+	<div class="ready-for-publication-projects-button">Ready For Publication</div>
 </ng-container>

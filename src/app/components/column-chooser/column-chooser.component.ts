@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ICellRendererParams } from "ag-grid-community";
+import { Component, Input, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -8,161 +7,143 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
  * @title Tree with nested nodes
  */
 @Component({
-    selector: 'app-column-chooser',
-    templateUrl: './column-chooser.component.html',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['column-chooser.component.scss']
+	selector: 'app-column-chooser',
+	templateUrl: './column-chooser.component.html',
+	encapsulation: ViewEncapsulation.None,
 })
-
 export class ColumnChooserComponent {
+	dialog: DialogService;
 
-    dialog: DialogService;
+	columns = [];
+	selectedColumns = [];
+	@Input() gridColumnApi;
+	@Input() disabled = false;
+	@Input() useDialog = true;
+	@Input() manualStateRefresh = false;
+	@ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;
 
-    columns = [];
-    selectedColumns = [];
-    @Input() gridColumnApi;
-    @Input() disabled: boolean = false;
-    @Input() useDialog: boolean = true;
-    @Input() manualStateRefresh = false;
-    @ViewChild('columnChooserSection') columnChooserDialog: TemplateRef<any>;
+	constructor(private dialogFactoryService: DialogFactoryService) {}
 
-    constructor(
-        private dialogFactoryService: DialogFactoryService,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
-    }
+	ngOnChanges() {
+		if (this.gridColumnApi?.columnController?.columnDefs) {
+			// make sure not to lose previous column selections
+			const previousColumns = this.columns;
+			this.columns = [];
 
-    ngOnChanges() {
+			if (this.columns.length > 0) {
+				this.selectedColumns = [];
+			}
 
-        if (this.gridColumnApi?.columnController?.columnDefs) {
+			const detectChanges = false;
 
-            // make sure not to lose previous column selections
-            let previousColumns = this.columns;
-            this.columns = [];
+			for (const column of this.gridColumnApi?.columnController?.columnDefs) {
+				// Avoid these coluns (they are icon columns without titles)
+				if (column.headerName == '' || !column.headerName) {
+					continue;
+				}
 
-            if (this.columns.length > 0) {
-                this.selectedColumns = [];
-            }
+				const columnData: any = {};
 
-            let detectChanges = false;
+				if (!column.colId) {
+					columnData.colId = column.field;
+				} else {
+					columnData.colId = column.colId;
+				}
 
-            for (let column of this.gridColumnApi?.columnController?.columnDefs) {
+				if (CodeUtility.hasValue(column.headerName)) {
+					columnData.name = column.headerName;
+				} else {
+					columnData.name = columnData.colId;
+				}
 
-                // Avoid these coluns (they are icon columns without titles)
-                if (column.headerName === '' || !column.headerName) {
-                    continue;
-                }
+				const previousColumn = previousColumns.find((element) => element.colId == columnData.colId);
 
-                let columnData: any = {};
+				// apply previous column selections if there were any
+				if (previousColumn) {
+					columnData.show = previousColumn.show;
 
-                if (!column.colId) {
-                    columnData.colId = column.field;
-                } else {
-                    columnData.colId = column.colId;
-                }
+					if (columnData.show) {
+						this.selectedColumns.push(columnData);
+					}
+				} else if (!column.hasOwnProperty('hide') || column.hide == false) {
+					columnData.show = true;
+				} else {
+					columnData.show = false;
+				}
 
-                if (CodeUtility.hasValue(column.headerName)) {
-                    columnData.name = column.headerName;
-                } else {
-                    columnData.name = columnData.colId;
-                }
+				this.columns.push(columnData);
+			}
+		}
+	}
 
-                let previousColumn = previousColumns.find(element => element.colId == columnData.colId);
+	openColumnChooser() {
+		console.log('open col choose');
+		const dialogId = 'columnChooserDialog';
 
-                // apply previous column selections if there were any
-                if (previousColumn) {
+		const dialogData = {
+			dialogId: dialogId,
+			showCancel: false,
+			confirmText: 'Okay',
+			headerText: 'Select which columns to display:',
+			template: this.columnChooserDialog,
+			data: this.columns,
+			showCloseIcon: false,
+		};
 
-                    columnData.show = previousColumn.show;
+		const dialogOptions = {
+			id: dialogId,
+			width: '500px',
+			disableClose: false,
+		};
 
-                    if (columnData.show) {
-                        this.selectedColumns.push(columnData);
-                    }
+		this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 
-                } else if (!column.hasOwnProperty('hide') || column.hide === false) {
-                    columnData.show = true;
-                } else {
-                    columnData.show = false;
-                }
+		this.dialog.confirmed().subscribe((data) => {
+			this.columns = data;
 
-                this.columns.push(columnData);
-            }
-        }
-    }
+			if (data) {
+				this.applyColumns();
+			}
+		});
+	}
 
-    openColumnChooser() {
+	valueCompare(column1, column2) {
+		return column1 && column2 ? column1.colId == column2.colId : column1 == column2;
+	}
 
-        const dialogId = 'columnChooserDialog';
+	applyColumns() {
+		const state: any = [];
+		this.selectedColumns;
+		this.columns;
 
-        const dialogData = {
-            dialogId: dialogId,
-            showCancel: false,
-            confirmText: 'Okay',
-            headerText: 'Select which columns to display:',
-            template: this.columnChooserDialog,
-            data: this.columns,
-            showCloseIcon: false
-        }
+		for (const column of this.columns) {
+			if (!this.useDialog) {
+				let found = false;
 
-        const dialogOptions = {
-            id: dialogId,
-            width: '500px',
-            disableClose: false
-        }
+				for (const selectedColumn of this.selectedColumns) {
+					if (column.colId === selectedColumn.colId) {
+						found = true;
+						break;
+					}
+				}
 
-        this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+				column.show = found;
+			}
 
-        this.dialog.confirmed().subscribe(data => {
+			state.push({ colId: column.colId, hide: !column.show });
+		}
 
-            this.columns = data;
+		this.gridColumnApi.applyColumnState({ state: state });
+		// set placeholders on the grid floating filter fields
+		Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+			if (obj.attributes['disabled']) {
+				// skip columns with disabled filter
+				return;
+			}
 
-            if (data) {
-                this.applyColumns();
-            }
-        });
-    }
-
-    valueCompare(column1, column2) {
-        return column1 && column2 ? column1.colId === column2.colId : column1 === column2;
-    }
-
-    applyColumns() {
-
-        let state: any = [];
-        this.selectedColumns;
-        this.columns;
-
-        for (let column of this.columns) {
-
-            if (!this.useDialog) {
-
-                let found = false;
-
-                for (let selectedColumn of this.selectedColumns) {
-
-                    if (column.colId === selectedColumn.colId) {
-
-                        found = true;
-                        break;
-                    }
-                }
-
-                column.show = found;
-            }
-
-            state.push({ colId: column.colId, hide: !column.show });
-        }
-
-        this.gridColumnApi.applyColumnState({ state: state });
-        // set placeholders on the grid floating filter fields
-        Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
-            if (obj.attributes['disabled']) {
-                // skip columns with disabled filter
-                return;
-            }
-
-            const label = obj.getAttribute('aria-label');
-            const value = label.substring(0, label.indexOf('Filter Input')) + '...';
-            obj.setAttribute('placeholder', value);
-        });
-    }
+			const label = obj.getAttribute('aria-label');
+			const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+			obj.setAttribute('placeholder', value);
+		});
+	}
 }

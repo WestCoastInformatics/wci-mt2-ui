@@ -1,43 +1,36 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root',
 })
 export class BreadcrumbService {
+	breadcrumbs = new BehaviorSubject<any>([]);
+	observable$: Observable<any> = this.breadcrumbs.asObservable();
 
-  breadcrumbs = new BehaviorSubject<any>([]);
-  observable$: Observable<any> = this.breadcrumbs.asObservable();
+	constructor() {}
 
-  constructor() {
-  }
+	getBreadcrumbs() {
+		return this.observable$;
+	}
 
-  getBreadcrumbs() {
+	setBreadcrumbs(breadcrumbs) {
+		const breadcrumbNav = [];
+		let i = 0;
 
-    return this.observable$;
-  }
+		for (const breadcrumb of breadcrumbs) {
+			breadcrumb.id = i;
+			breadcrumb.class = 'rt2-breadcrumb';
 
-  setBreadcrumbs(breadcrumbs) {
+			if (breadcrumb.path != undefined) {
+				breadcrumb.selectable = true;
+				breadcrumb.class += ' rt2-breadcrumb-selectable';
+			}
 
-    let breadcrumbNav = [];
-    let i = 0;
+			breadcrumbNav.push(breadcrumb);
+			i++;
+		}
 
-    for (let breadcrumb of breadcrumbs) {
-
-      breadcrumb.id = i;
-      breadcrumb.class = 'rt2-breadcrumb';
-
-      if (breadcrumb.path != undefined) {
-
-        breadcrumb.selectable = true;
-        breadcrumb.class += ' rt2-breadcrumb-selectable';
-      }
-
-      breadcrumbNav.push(breadcrumb);
-      i++;
-    }
-
-    this.breadcrumbs.next(breadcrumbNav);
-  }
-
+		this.breadcrumbs.next(breadcrumbNav);
+	}
 }

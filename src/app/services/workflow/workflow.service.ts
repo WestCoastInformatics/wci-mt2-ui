@@ -3,27 +3,16 @@ import { Observable } from 'rxjs';
 import { RefsetService } from '../rest/refset.service';
 
 @Injectable({
-    providedIn: 'root',
+	providedIn: 'root',
 })
 export class WorkflowService {
-    constructor(private readonly refsetService: RefsetService) { }
+	constructor(private readonly refsetService: RefsetService) {}
 
-    saveNotes(refsetInternalId: string, workflowHistoryNotes: string): Observable<any> {
-        return this.refsetService
-            .updateWorkflowStatus(refsetInternalId, workflowHistoryNotes);
-    }
+	saveNotes(refsetInternalId: string, workflowHistoryNotes: string): Observable<any> {
+		return this.refsetService.updateWorkflowStatus(refsetInternalId, workflowHistoryNotes);
+	}
 
-    setWorkflowStatusByAction(
-        refsetInternalId: string,
-        user: string,
-        action: string,
-        workflowHistoryNotes: string
-    ): Observable<any> {
-        return this.refsetService.setWorkflowStatusByAction(
-            refsetInternalId,
-            action,
-            user,
-            workflowHistoryNotes
-        );
-    }
+	setWorkflowStatusByAction(refsetInternalId: string, user: string, action: string, workflowHistoryNotes: string): Observable<any> {
+		return this.refsetService.setWorkflowStatusByAction(refsetInternalId, action, user, workflowHistoryNotes);
+	}
 }

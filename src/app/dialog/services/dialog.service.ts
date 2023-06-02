@@ -9,10 +9,9 @@ import { DialogComponent } from '../components/dialog.component';
 type DialogRef<T> = MatDialogRef<DialogComponent<T>>;
 
 export class DialogService<T = undefined> {
+	//opened$ = this.dialogRef.afterOpened().pipe(first());
 
-	opened$ = this.dialogRef.afterOpened().pipe(first());
-
-	constructor(private dialogRef: DialogRef<T>) { }
+	constructor(private dialogRef: DialogRef<T>) {}
 
 	get context() {
 		return this.dialogRef.componentInstance.config.context;
@@ -23,11 +22,12 @@ export class DialogService<T = undefined> {
 	}
 
 	public confirmed(): Observable<any> {
-
-		return this.dialogRef.afterClosed().pipe(take(1), map(data => {
-			return data;
-		}
-		));
+		return this.dialogRef.afterClosed().pipe(
+			take(1),
+			map((data) => {
+				return data;
+			})
+		);
 	}
 
 	setHeaderText(headerText: string): void {

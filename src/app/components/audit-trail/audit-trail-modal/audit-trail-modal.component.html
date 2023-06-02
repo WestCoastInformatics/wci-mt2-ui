@@ -1,34 +1,24 @@
-<button *ngIf="!isDetails" #artifactsButton aria-hidden="false" (click)="openTrailModal(trailDialog)" class="rt2-btn rt2-action-btn" aria-label="Audit Trail"
-  title="Audit Trail">
-    Organizational Audit Trail
+<button *ngIf="!isDetails" #artifactsButton aria-hidden="false" (click)="openTrailModal(trailDialog)" class="rt2-btn rt2-action-btn" aria-label="Audit Trail" title="Audit Trail">
+	Organizational Audit Trail
 </button>
 <button class="rt2-picklist-btn" *ngIf="isDetails" (click)="openTrailModal(trailDialog)" title="Open Audit Trail List" aria-label="Audit Trail" id="audit-button">Audit Trail</button>
 
 <ng-template #trailDialog let-modal>
-    <div class="modal-header rt2-modal-header">
-        <button ngbAutofocus class="unfocus-btn"></button>
-        <h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">
-            Audit Trail
-        </h3>
-        <button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <audit-trail-list [refsetInternalId]="refsetInternalId"
-            (recordsLoaded)="dataLoadedStatus($event)"></audit-trail-list>
-    </div>
-    <div class="modal-footer rt2-modal-footer rt2-btn-group">
-        <button [disabled]="downloadDisabled" type="button" (click)="getAuditReport()" aria-hidden="false"
-          class="rt2-btn rt2-download-btn" aria-label="Download" title="Download">
-            Download Audit Trail
-            <mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font">
-              download
-            </mat-icon>
-
-        </button>
-        <button aria-hidden="false" class="rt2-btn rt2-close-btn" (click)="modal.dismiss('Cross click');">
-            Close
-        </button>
-    </div>
+	<div class="modal-header rt2-modal-header">
+		<button ngbAutofocus class="unfocus-btn"></button>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Audit Trail</h3>
+		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<audit-trail-list [refsetInternalId]="refsetInternalId" (recordsLoaded)="dataLoadedStatus($event)"></audit-trail-list>
+	</div>
+	<div class="modal-footer rt2-modal-footer rt2-btn-group">
+		<button [disabled]="downloadDisabled" type="button" (click)="getAuditReport()" aria-hidden="false" class="rt2-btn rt2-download-btn" aria-label="Download" title="Download">
+			Download Audit Trail
+			<mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font"> download </mat-icon>
+		</button>
+		<button aria-hidden="false" class="rt2-btn rt2-close-btn" (click)="modal.dismiss('Cross click')">Close</button>
+	</div>
 </ng-template>

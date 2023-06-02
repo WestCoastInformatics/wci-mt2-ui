@@ -7,159 +7,150 @@ import { catchError } from 'rxjs/operators';
 import { NotificationService } from '../notification.service';
 
 export class RestWrapper<T> {
-    totalResults: number;
-    totalKnown: boolean;
-    error?: string;
-    data: T[];
+	totalResults: number;
+	totalKnown: boolean;
+	error?: string;
+	data: T[];
 }
 
-
 @Injectable({
-    providedIn: 'root'
+	providedIn: 'root',
 })
 export class RestService {
+	restUrl = environment.restUrl;
 
-    restUrl = environment.restUrl;
+	constructor(private http: HttpClient, private readonly notificationService: NotificationService) {}
 
-    constructor(private http: HttpClient, private readonly notificationService: NotificationService) { }
+	makeCall(url: string, method = 'get'): Observable<any> {
+		return this.http[method]<any>(url);
+	}
 
-    makeCall(url: string, method: string = 'get'): Observable<any> {
-        return this.http[method]<any>(url);
-    }
+	get(url: string, params: any = {}, parseParams = true, ignoreErrors = false, returnErrorOnIgnore = false): Observable<any> {
+		let queryString: string;
+		// if parseParams is true then build the query string, else use the params argument as is
+		if (parseParams) {
+			queryString = CodeUtility.serialize(params);
+		} else {
+			if (typeof params === 'string') {
+				queryString = params;
+			} else {
+				queryString = '';
+			}
+		}
 
-    get(url: string, params: any = {}, parseParams: boolean = true, ignoreErrors: boolean = false, returnErrorOnIgnore: boolean = false): Observable<any> {
+		queryString = CodeUtility.addIfNotEmpty(queryString, '?', false);
 
-        let queryString: string;
-        // if parseParams is true then build the query string, else use the params argument as is
-        if (parseParams) {
-            queryString = CodeUtility.serialize(params);
-        } else {
+		return this.http.get<any>(this.restUrl + url + queryString).pipe(
+			catchError((err) => {
+				return this.giveErrorNotification(err, ignoreErrors, returnErrorOnIgnore);
+			})
+		);
+	}
 
-            if (typeof params === 'string') {
-                queryString = params;
-            } else {
-                queryString = '';
-            }
-        }
+	post(url: string, params: any, ignoreErrors = false, errorHandler: Function = null): Observable<any> {
+		return this.http.post<any>(this.restUrl + url, params).pipe(
+			catchError((err) => {
+				if (errorHandler) {
+					return errorHandler(err);
+				}
+				return this.giveErrorNotification(err, ignoreErrors);
+			})
+		);
+	}
 
-        queryString = CodeUtility.addIfNotEmpty(queryString, '?', false);
+	postWithFile(url: string, params: any, ignoreErrors = false): Observable<any> {
+		return this.http
+			.post<any>(this.restUrl + url, params, {
+				'headers': new HttpHeaders({
+					'Accept': 'application/json',
+					'enctype': 'multipart/form-data',
+				}),
+			})
+			.pipe(
+				catchError((err) => {
+					return this.giveErrorNotification(err, ignoreErrors);
+				})
+			);
+	}
 
-        return this.http.get<any>(this.restUrl + url + queryString).pipe(
-            catchError((err) => {
-                return this.giveErrorNotification(err, ignoreErrors, returnErrorOnIgnore);
-            })
-        );
-    }
+	put(url: string, params: any, ignoreErrors = false): Observable<any> {
+		return this.http.put<any>(this.restUrl + url, params).pipe(
+			catchError((err) => {
+				return this.giveErrorNotification(err, ignoreErrors);
+			})
+		);
+	}
 
-    post(url: string, params: any, ignoreErrors: boolean = false, errorHandler: Function = null): Observable<any> {
+	putWithFile(url: string, params: any, ignoreErrors = false): Observable<any> {
+		return this.http
+			.put<any>(this.restUrl + url, params, {
+				'headers': new HttpHeaders({
+					'Accept': 'application/json',
+					'enctype': 'multipart/form-data',
+				}),
+			})
+			.pipe(
+				catchError((err) => {
+					return this.giveErrorNotification(err, ignoreErrors);
+				})
+			);
+	}
 
-        return this.http.post<any>(this.restUrl + url, params).pipe(
-            catchError((err) => {
-                if (errorHandler) {
-                    return errorHandler(err);
-                }
-                return this.giveErrorNotification(err, ignoreErrors);
-            })
-        );
-    }
+	delete(url: string, ignoreErrors = false): Observable<any> {
+		return this.http.delete<any>(this.restUrl + url).pipe(
+			catchError((err) => {
+				return this.giveErrorNotification(err, ignoreErrors);
+			})
+		);
+	}
 
-    postWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
-        return this.http.post<any>(this.restUrl + url, params, {
-            'headers': new HttpHeaders({
-                'Accept': 'application/json',
-                'enctype': 'multipart/form-data'
-            })
-        }).pipe(
-            catchError((err) => {
-                return this.giveErrorNotification(err, ignoreErrors);
-            })
-        );
-    }
+	giveErrorNotification(error: any, ignoreErrors = false, returnErrorOnIgnore = false) {
+		if (!ignoreErrors) {
+			let definedError = '';
+			if (error?.status) {
+				definedError = ' Error Status: ' + error?.status;
+			}
+			if (error?.error?.error) {
+				definedError = ' ' + error.error.error;
+			} else if (error?.error && typeof error?.error != 'object') {
+				definedError = ' ' + error.error;
+			}
 
-    put(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+			const message = 'There was a problem with the request, please try again!' + definedError;
+			this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+			this.notificationService.handleDuplicates('error', message);
 
-        return this.http.put<any>(this.restUrl + url, params).pipe(
-            catchError((err) => {
-                return this.giveErrorNotification(err, ignoreErrors);
-            })
-        );
-    }
+			return error;
+		} else {
+			if (returnErrorOnIgnore) {
+				return error;
+			} else {
+				return EMPTY;
+			}
+		}
+	}
 
-    putWithFile(url: string, params: any, ignoreErrors: boolean = false): Observable<any> {
+	giveWarningNotification(error: any, ignoreErrors = false) {
+		if (!ignoreErrors) {
+			let definedWarning = ' Error Status: ' + error?.status;
 
-        return this.http.put<any>(this.restUrl + url, params, {
-            'headers': new HttpHeaders({
-                'Accept': 'application/json',
-                'enctype': 'multipart/form-data'
-            })
-        }).pipe(
-            catchError((err) => {
-                return this.giveErrorNotification(err, ignoreErrors);
-            })
-        );
-    }
+			if (error?.error?.error) {
+				definedWarning = ' ' + error.error.error;
+			} else if (error?.error) {
+				definedWarning = ' ' + error.error;
+			}
 
-    delete(url: string, ignoreErrors: boolean = false): Observable<any> {
-        const self = this;
-        return this.http.delete<any>(this.restUrl + url).pipe(
-            catchError((err) => {
-                return this.giveErrorNotification(err, ignoreErrors);
-            })
-        );
-    }
+			const message = 'Warning: ' + definedWarning;
+			this.notificationService.show(message, null, 'warning', { timeOut: 0, extendedTimeOut: 0 });
+			this.notificationService.handleDuplicates('warning', message);
 
-    giveErrorNotification(error: any, ignoreErrors: boolean = false, returnErrorOnIgnore: boolean = false) {
+			return error;
+		} else {
+			return EMPTY;
+		}
+	}
 
-        if (!ignoreErrors) {
-
-            let definedError = '';
-            if (error?.status) {
-                definedError = ' Error Status: ' + error?.status;
-            }
-            if (error?.error?.error) {
-                definedError = ' ' + error.error.error;
-            } else if (error?.error && typeof (error?.error) != 'object') {
-                definedError = ' ' + error.error;
-            }
-
-            let message = 'There was a problem with the request, please try again!' + definedError;
-            this.notificationService.show(message, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
-            this.notificationService.handleDuplicates('error', message);
-
-            return error;
-        } else {
-
-            if (returnErrorOnIgnore) {
-                return error;
-            } else {
-                return EMPTY;
-            }
-        }
-    }
-
-    giveWarningNotification(error: any, ignoreErrors: boolean = false) {
-
-        if (!ignoreErrors) {
-
-            let definedWarning = ' Error Status: ' + error?.status;
-
-            if (error?.error?.error) {
-                definedWarning = ' ' + error.error.error;
-            } else if (error?.error) {
-                definedWarning = ' ' + error.error;
-            }
-
-            let message = 'Warning: ' + definedWarning;
-            this.notificationService.show(message, null, 'warning', { timeOut: 0, extendedTimeOut: 0 });
-            this.notificationService.handleDuplicates('warning', message);
-
-            return error;
-        } else {
-            return EMPTY;
-        }
-    }
-
-    getHttpClient(): HttpClient {
-        return this.http;
-    }
+	getHttpClient(): HttpClient {
+		return this.http;
+	}
 }

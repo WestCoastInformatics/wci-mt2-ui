@@ -1,575 +1,666 @@
-import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpResponse
-} from '@angular/common/http';
-import { EventEmitter, Injectable, Injector } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { Concept } from 'src/app/models/concept';
 import { User } from 'src/app/models/user';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { environment } from 'src/environments/environment';
-import { RefsetService } from '../services/rest/refset.service';
 import { UiUtility } from '../utilities/ui.utility';
 
 const userData: User[] = [
-    { firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', userName: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith' },
-    { firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', userName: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' }
+	{ firstName: 'Joe', lastName: 'Smith', email: 'jsmith@email.com', userName: 'jsmith', langKey: 'en', roles: ['editor', 'admin'], password: 'jsmith' },
+	{ firstName: 'Nancy', lastName: 'Drew', email: 'ndrew@email.com', userName: 'ndrew', langKey: 'en', roles: ['read', 'review'], password: 'ndrew' },
 ];
 
 const taxonomySearchResults: any[] = [
-    {
-        code: '80631005',
-        descriptions: [
-            { descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-            { descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-        ],
-        parents: [
-            {
-                code: '138875005',
-                descriptions: [
-                    { descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-                    { descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-                ]
-            },
-            {
-                code: '404684003',
-                descriptions: [
-                    { descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-                    { descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-                ]
-            },
-        ]
-    },
-    {
-        code: '13104003',
-        descriptions: [
-            { descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-            { descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-        ],
-        parents: [
-            {
-                code: '138875005',
-                descriptions: [
-                    { descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-                    { descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-                ]
-            },
-            {
-                code: '404684003',
-                descriptions: [
-                    { descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-                    { descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-                ]
-            },
-            {
-                code: '80631005',
-                descriptions: [
-                    { descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
-                    { descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
-                ]
-            },
-        ]
-    },
+	{
+		code: '80631005',
+		descriptions: [
+			{ descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+			{ descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+		],
+		parents: [
+			{
+				code: '138875005',
+				descriptions: [
+					{ descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+					{ descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+				],
+			},
+			{
+				code: '404684003',
+				descriptions: [
+					{ descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+					{ descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+				],
+			},
+		],
+	},
+	{
+		code: '13104003',
+		descriptions: [
+			{ descriptionId: '220309016', term: 'Clinical stage I', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+			{ descriptionId: '220309015', term: 'Clinical stage I (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+		],
+		parents: [
+			{
+				code: '138875005',
+				descriptions: [
+					{ descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+					{ descriptionId: '220309015', term: 'SNOMED CT Concept (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+				],
+			},
+			{
+				code: '404684003',
+				descriptions: [
+					{ descriptionId: '220309016', term: 'Clinical finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+					{ descriptionId: '220309015', term: 'Clinical finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+				],
+			},
+			{
+				code: '80631005',
+				descriptions: [
+					{ descriptionId: '220309016', term: 'Clinical stage finding', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+					{ descriptionId: '220309015', term: 'Clinical stage finding (FSN)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+				],
+			},
+		],
+	},
 ];
 
 const conceptDescriptions = [];
 
 for (let i = 1; i < 5; i++) {
+	let term;
+	let languageId;
+	let languageName;
 
-    let term;
-    let languageId;
-    let languageName;
+	if (i == 1) {
+		languageId = '101PT';
+		languageName = 'EN (PT)';
+		term = 'Generic Concept';
+	} else if (i == 2) {
+		languageId = '101FSN';
+		languageName = 'EN (FSN)';
+		term = 'Generic Concept (Finding)';
+	} else if (i == 3) {
+		languageId = '102PT';
+		languageName = 'FR (PT)';
+		term = 'Concept générique';
+	} else {
+		languageId = '103PT';
+		languageName = 'NL (PT)';
+		term = 'Generiek concept';
+	}
 
-    if (i == 1) {
-
-        languageId = '101PT';
-        languageName = 'EN (PT)';
-        term = 'Generic Concept';
-
-    } else if (i == 2) {
-
-        languageId = '101FSN';
-        languageName = 'EN (FSN)';
-        term = 'Generic Concept (Finding)';
-
-    } else if (i == 3) {
-
-        languageId = '102PT';
-        languageName = 'FR (PT)';
-        term = 'Concept générique';
-    } else {
-
-        languageId = '103PT';
-        languageName = 'NL (PT)';
-        term = 'Generiek concept';
-    }
-
-    conceptDescriptions.push(
-        { descriptionId: i.toString(), term: term, languageId: languageId, languageName: languageName, type: 'PT' }
-    );
+	conceptDescriptions.push({ descriptionId: i.toString(), term: term, languageId: languageId, languageName: languageName, type: 'PT' });
 }
 
 const conceptRoles = {};
 
 for (let i = 1; i < 5; i++) {
-    conceptRoles[i + ''] =
-        [
-            'Occurrence  >  Congenital',
-            'Pathological process   >  Pathological developmental process',
-            'Finding site  >  Pulmonary valve structure',
-            'Associated morphology  >  Stenosis'
-        ];
+	conceptRoles[i + ''] = [
+		'Occurrence  >  Congenital',
+		'Pathological process   >  Pathological developmental process',
+		'Finding site  >  Pulmonary valve structure',
+		'Associated morphology  >  Stenosis',
+	];
 }
 
-const taxonomyRootNode = { name: 'SNOMED CT Concept', code: '138875005', roleGroups: conceptRoles, parents: [], children: [], descriptions: [{ descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' }, { descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' }], root: true, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', defined: true, memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: false, memberOfRefset: false, hasChildren: true };
+const taxonomyRootNode = {
+	name: 'SNOMED CT Concept',
+	code: '138875005',
+	roleGroups: conceptRoles,
+	parents: [],
+	children: [],
+	descriptions: [
+		{ descriptionId: '220309016', term: 'SNOMED CT Concept', languageId: '900000000000509007PT', languageName: 'EN (PT)', type: 'PT' },
+		{ descriptionId: '517382016', term: 'SNOMED CT Concept (SNOMED RT+CTV3)', languageId: '900000000000509007FSN', languageName: 'EN (FSN)', type: 'FSN' },
+	],
+	root: true,
+	status: 'Active',
+	historyVisible: true,
+	feedbackVisible: true,
+	feedback: '',
+	defined: true,
+	memberEffectiveTime: '2020-01-15',
+	hasChildrenRefsetMembers: true,
+	hasParentsRefsetMembers: false,
+	memberOfRefset: false,
+	hasChildren: true,
+};
 taxonomyRootNode.children = populateChildren(taxonomyRootNode);
 
 function populateChildren(concept, level = 1) {
+	const children = [];
+	const randomNotMember = Math.floor(Math.random() * 5) + 1;
+	let randomNotMemberButChildrenAre;
 
-    let children = [];
-    let randomNotMember = Math.floor(Math.random() * 5) + 1;
-    let randomNotMemberButChildrenAre;
+	do {
+		randomNotMemberButChildrenAre = Math.floor(Math.random() * 5) + 1;
+	} while (randomNotMember == randomNotMemberButChildrenAre);
 
-    do {
-        randomNotMemberButChildrenAre = Math.floor(Math.random() * 5) + 1;
+	for (let i = 1; i < 6; i++) {
+		let parentCode = concept.code;
 
-    } while (randomNotMember == randomNotMemberButChildrenAre);
+		if (concept.root) {
+			parentCode = '';
+		}
 
-    for (let i = 1; i < 6; i++) {
+		const thisConcept: any = {
+			name: 'Level ' + level + ': Concept ' + level + parentCode + i,
+			code: level + parentCode + i,
+			roleGroups: conceptRoles,
+			parents: getTaxonomyFlatParentList(concept),
+			children: [],
+			descriptions: conceptDescriptions,
+			status: 'Active',
+			historyVisible: true,
+			feedbackVisible: true,
+			feedback: '',
+			memberEffectiveTime: '2020-01-15',
+			hasChildrenRefsetMembers: true,
+			hasParentsRefsetMembers: true,
+			memberOfRefset: true,
+			hasChildren: true,
+		};
 
-        let parentCode = concept.code;
+		if (level == 1 && (i == 2 || i == 4)) {
+			thisConcept.hasChildrenRefsetMembers = false;
+			thisConcept.memberOfRefset = false;
+		} else if (level > 1 && concept.hasChildrenRefsetMembers == false) {
+			thisConcept.hasChildrenRefsetMembers = false;
+			thisConcept.memberOfRefset = false;
+		} else if (level > 1 && i == randomNotMember) {
+			thisConcept.hasChildrenRefsetMembers = false;
+			thisConcept.memberOfRefset = false;
+			thisConcept.defined = true;
+		} else if (level > 1 && i == randomNotMemberButChildrenAre) {
+			thisConcept.memberOfRefset = false;
+		}
 
-        if (concept.root) {
-            parentCode = '';
-        }
+		if (level < 3) {
+			thisConcept.children = populateChildren(thisConcept, level + 1);
+		}
 
-        let thisConcept: any = { name: 'Level ' + level + ': Concept ' + level + parentCode + i, code: level + parentCode + i, roleGroups: conceptRoles, parents: getTaxonomyFlatParentList(concept), children: [], descriptions: conceptDescriptions, status: 'Active', historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15', hasChildrenRefsetMembers: true, hasParentsRefsetMembers: true, memberOfRefset: true, hasChildren: true };
+		if (!CodeUtility.hasValue(thisConcept.children)) {
+			thisConcept.hasChildren = false;
+			thisConcept.children = null;
+			thisConcept.hasChildrenRefsetMembers = false;
+		}
 
-        if (level == 1 && (i == 2 || i == 4)) {
+		thisConcept.name = 'Level ' + level + ': Concept ' + level + parentCode + i + '; Member: ' + thisConcept.memberOfRefset + '; Member Children: ' + thisConcept.hasChildrenRefsetMembers;
 
-            thisConcept.hasChildrenRefsetMembers = false;
-            thisConcept.memberOfRefset = false;
+		children.push(thisConcept);
+	}
 
-        } else if (level > 1 && concept.hasChildrenRefsetMembers == false) {
-
-            thisConcept.hasChildrenRefsetMembers = false;
-            thisConcept.memberOfRefset = false;
-
-        } else if (level > 1 && i == randomNotMember) {
-
-            thisConcept.hasChildrenRefsetMembers = false;
-            thisConcept.memberOfRefset = false;
-            thisConcept.defined = true;
-
-        } else if (level > 1 && i == randomNotMemberButChildrenAre) {
-
-            thisConcept.memberOfRefset = false;
-        }
-
-        if (level < 3) {
-            thisConcept.children = populateChildren(thisConcept, level + 1);
-        }
-
-        if (!CodeUtility.hasValue(thisConcept.children)) {
-
-            thisConcept.hasChildren = false;
-            thisConcept.children = null;
-            thisConcept.hasChildrenRefsetMembers = false;
-        }
-
-        thisConcept.name = 'Level ' + level + ': Concept ' + level + parentCode + i + '; Member: ' + thisConcept.memberOfRefset + '; Member Children: ' + thisConcept.hasChildrenRefsetMembers;
-
-        children.push(thisConcept);
-    }
-
-    return children;
+	return children;
 }
 
 function getTaxonomyConceptChildren(conceptId, level = 1) {
+	let children = null;
+	const concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
 
-    let children = null;
-    let concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
+	if (concept != null) {
+		if (CodeUtility.hasValue(concept.children)) {
+			children = [];
+		}
 
-    if (concept != null) {
+		for (const child of concept.children) {
+			const newChild = CodeUtility.clone(child);
+			newChild.children = null;
 
-        if (CodeUtility.hasValue(concept.children)) {
-            children = [];
-        }
+			if (level > 1) {
+				newChild.children = getNestedChildren(child, level - 1);
+			}
 
-        for (let child of concept.children) {
+			children.push(newChild);
+		}
+	}
 
-            let newChild = CodeUtility.clone(child);
-            newChild.children = null;
+	function getNestedChildren(node, level) {
+		let newTaxonomy = null;
 
-            if (level > 1) {
-                newChild.children = getNestedChildren(child, level - 1);
-            }
+		if (CodeUtility.hasValue(node.children)) {
+			newTaxonomy = [];
+		}
 
-            children.push(newChild);
-        }
-    }
+		for (const childNode of node.children) {
+			const newChild = CodeUtility.clone(childNode);
+			newChild.children = null;
 
-    function getNestedChildren(node, level) {
+			if (level > 1) {
+				newChild.children = getNestedChildren(childNode, level - 1);
+			}
 
-        let newTaxonomy = null;
+			newTaxonomy.push(newChild);
+		}
 
-        if (CodeUtility.hasValue(node.children)) {
-            newTaxonomy = [];
-        }
+		return newTaxonomy;
+	}
 
-        for (let childNode of node.children) {
-
-            let newChild = CodeUtility.clone(childNode);
-            newChild.children = null;
-
-            if (level > 1) {
-                newChild.children = getNestedChildren(childNode, level - 1);
-            }
-
-            newTaxonomy.push(newChild);
-        }
-
-        return newTaxonomy;
-    }
-
-    return children;
+	return children;
 }
 
 function findTaxonomyConcept(conceptId, nodes) {
+	for (const node of nodes) {
+		if (node.code === conceptId) {
+			return node;
+		} else if (CodeUtility.hasValue(node.children)) {
+			const foundNode = findTaxonomyConcept(conceptId, node.children);
 
-    for (let node of nodes) {
+			if (foundNode != null) {
+				return foundNode;
+			}
+		}
+	}
 
-        if (node.code === conceptId) {
-            return node;
-
-        } else if (CodeUtility.hasValue(node.children)) {
-
-            let foundNode = findTaxonomyConcept(conceptId, node.children);
-
-            if (foundNode != null) {
-                return foundNode;
-            }
-        }
-    }
-
-    return null;
+	return null;
 }
 
 function getTaxonomyFlatParentList(concept) {
+	let parentList = [];
 
-    let parentList = [];
+	for (const parent of concept.parents) {
+		if (parent.parents.length > 0) {
+			parentList = getTaxonomyFlatParentList(parent.parents[0]);
+		}
 
-    for (let parent of concept.parents) {
+		parentList.push(parent);
+	}
 
-        if (parent.parents.length > 0) {
-            parentList = getTaxonomyFlatParentList(parent.parents[0]);
-        }
-
-        parentList.push(parent);
-    }
-
-    return parentList;
+	return parentList;
 }
 
 const conceptParents = [];
 const conceptChildren = [];
 
 for (let i = 1; i < 6; i++) {
-    conceptParents.push(
-        { name: 'Parent ' + i, code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberEffectiveTime: '2020-01-15' },
-    );
+	conceptParents.push({
+		name: 'Parent ' + i,
+		code: '49727002',
+		roleGroups: conceptRoles,
+		parents: conceptParents,
+		children: conceptChildren,
+		descriptions: conceptDescriptions,
+		active: true,
+		historyVisible: true,
+		feedbackVisible: true,
+		feedback: '',
+		memberEffectiveTime: '2020-01-15',
+	});
 }
 
-
 for (let i = 1; i < 6; i++) {
-    conceptChildren.push(
-        { name: 'Child ' + i, type: '' }
-    );
+	conceptChildren.push({ name: 'Child ' + i, type: '' });
 }
 
 const conceptData = [
-    { code: '49727002', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' },
-    { code: '84229001', roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: conceptDescriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' },
+	{
+		code: '49727002',
+		roleGroups: conceptRoles,
+		parents: conceptParents,
+		children: conceptChildren,
+		descriptions: conceptDescriptions,
+		active: true,
+		historyVisible: true,
+		feedbackVisible: true,
+		feedback: '',
+		memberOfRefset: true,
+		memberEffectiveTime: '2020-01-15',
+	},
+	{
+		code: '84229001',
+		roleGroups: conceptRoles,
+		parents: conceptParents,
+		children: conceptChildren,
+		descriptions: conceptDescriptions,
+		active: true,
+		historyVisible: true,
+		feedbackVisible: true,
+		feedback: '',
+		memberOfRefset: true,
+		memberEffectiveTime: '2020-01-15',
+	},
 ];
 
 for (let i = 0; i < 300; i++) {
+	const descriptions = JSON.parse(JSON.stringify(conceptDescriptions));
 
-    const descriptions = JSON.parse(JSON.stringify(conceptDescriptions));
+	descriptions.forEach((description) => {
+		description.term += ' ' + i.toString();
+	});
 
-    descriptions.forEach(description => {
-        description.term += ' ' + i.toString();
-    });
+	const newConcept = {
+		code: i.toString(),
+		roleGroups: conceptRoles,
+		parents: conceptParents,
+		children: conceptChildren,
+		descriptions: descriptions,
+		active: true,
+		historyVisible: true,
+		feedbackVisible: true,
+		feedback: '',
+		memberOfRefset: true,
+		memberEffectiveTime: '2020-01-15',
+	};
 
-    let newConcept = { code: i.toString(), roleGroups: conceptRoles, parents: conceptParents, children: conceptChildren, descriptions: descriptions, active: true, historyVisible: true, feedbackVisible: true, feedback: '', memberOfRefset: true, memberEffectiveTime: '2020-01-15' };
+	if (i == 4 || i == 6) {
+		newConcept.memberOfRefset = false;
+	}
 
-    if (i == 4 || i == 6) {
-        newConcept.memberOfRefset = false;
-    }
-
-    conceptData.push(newConcept);
+	conceptData.push(newConcept);
 }
 
-let fullyQualifiedLanguageRefsets = [
-    { default: true, qualifiedLanguageRefset: '101PT', qualifiedLanguageCode: 'EN (PT)' },
-    { default: false, qualifiedLanguageRefset: '101FSN', qualifiedLanguageCode: 'EN (FSN)' },
-    { default: false, qualifiedLanguageRefset: '102PT', qualifiedLanguageCode: 'FR (PT)' },
-    { default: false, qualifiedLanguageRefset: '103PT', qualifiedLanguageCode: 'NL (PT)' },
-]
+const fullyQualifiedLanguageRefsets = [
+	{ default: true, qualifiedLanguageRefset: '101PT', qualifiedLanguageCode: 'EN (PT)' },
+	{ default: false, qualifiedLanguageRefset: '101FSN', qualifiedLanguageCode: 'EN (FSN)' },
+	{ default: false, qualifiedLanguageRefset: '102PT', qualifiedLanguageCode: 'FR (PT)' },
+	{ default: false, qualifiedLanguageRefset: '103PT', qualifiedLanguageCode: 'NL (PT)' },
+];
 
-let versionList = [{ date: '2021-02-21', status: 'In Development' }, { date: '2021-01-31', status: 'Published' }, { date: '2020-07-31', status: 'Beta' }];
+const versionList = [
+	{ date: '2021-02-21', status: 'In Development' },
+	{ date: '2021-01-31', status: 'Published' },
+	{ date: '2020-07-31', status: 'Beta' },
+];
 
 const refsetData = [
-    { id: '1001', refsetId: '723264001', name: 'Lateralizable body structure reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets }, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on reference set 1 version', narrative: 'Narrative text on reference set 1.', tags: ['blood', 'findings'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'EXTENSIONAL', privateRefset: false, downloadable: true, feedbackVisible: true, feedback: '', versionList: versionList },
-    { id: '1002', refsetId: '723563008', name: 'MRCM module scope reference set', editionName: 'US English', organizationName: 'SNOMED CT US', edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets.slice(0, -2) }, organization: 'SNOMED INT', versionStatus: 'Published', versionNotes: 'Notes on reference set 2 version', narrative: 'Narrative text on reference set 2.', tags: ['disease', 'procedures'], url: 'to be implemented', definition: [{ value: '< 12345', negated: false }, { clause: '< 98765', negated: true }], versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'INTENSIONAL', privateRefset: false, downloadable: false, feedbackVisible: true, feedback: '', versionList: versionList }
+	{
+		id: '1001',
+		refsetId: '723264001',
+		name: 'Lateralizable body structure reference set',
+		editionName: 'US English',
+		organizationName: 'SNOMED CT US',
+		edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets },
+		organization: 'SNOMED INT',
+		versionStatus: 'Published',
+		versionNotes: 'Notes on reference set 1 version',
+		narrative: 'Narrative text on reference set 1.',
+		tags: ['blood', 'findings'],
+		url: 'to be implemented',
+		definition: '',
+		versionDate: '2021-01-31',
+		modified: '2020-01-15',
+		active: true,
+		type: 'EXTENSIONAL',
+		privateRefset: false,
+		downloadable: true,
+		feedbackVisible: true,
+		feedback: '',
+		versionList: versionList,
+	},
+	{
+		id: '1002',
+		refsetId: '723563008',
+		name: 'MRCM module scope reference set',
+		editionName: 'US English',
+		organizationName: 'SNOMED CT US',
+		edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets.slice(0, -2) },
+		organization: 'SNOMED INT',
+		versionStatus: 'Published',
+		versionNotes: 'Notes on reference set 2 version',
+		narrative: 'Narrative text on reference set 2.',
+		tags: ['disease', 'procedures'],
+		url: 'to be implemented',
+		definition: [
+			{ value: '< 12345', negated: false },
+			{ clause: '< 98765', negated: true },
+		],
+		versionDate: '2021-01-31',
+		modified: '2020-01-15',
+		active: true,
+		type: 'INTENSIONAL',
+		privateRefset: false,
+		downloadable: false,
+		feedbackVisible: true,
+		feedback: '',
+		versionList: versionList,
+	},
 ];
 
 for (let i = 3; i < 306; i++) {
+	const newRefset = {
+		id: (1000 + i).toString(),
+		refsetId: (1000 + i).toString(),
+		name: 'Reference Set ' + (1000 + i),
+		editionName: 'US English',
+		organizationName: 'SNOMED CT US',
+		edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets },
+		organization: 'SNOMED INT',
+		versionStatus: 'In Development',
+		versionNotes: 'Notes on reference set ' + (1000 + i) + ' version',
+		narrative: 'Narrative text on reference set ' + (1000 + i) + '.',
+		tags: ['general surgery', 'outpatient'],
+		url: 'to be implemented',
+		definition: '',
+		versionDate: '2021-01-31',
+		modified: '2020-01-15',
+		active: true,
+		type: 'EXTENSIONAL',
+		privateRefset: true,
+		downloadable: true,
+		feedbackVisible: true,
+		feedback: '',
+		versionList: versionList,
+	};
 
-    let newRefset = { id: (1000 + i).toString(), refsetId: (1000 + i).toString(), name: 'Reference Set ' + (1000 + i), editionName: 'US English', organizationName: 'SNOMED CT US', edition: { branch: 'MAIN', name: 'US', country: 'US', fullyQualifiedLanguageRefsets: fullyQualifiedLanguageRefsets }, organization: 'SNOMED INT', versionStatus: 'In Development', versionNotes: 'Notes on reference set ' + (1000 + i) + ' version', narrative: 'Narrative text on reference set ' + (1000 + i) + '.', tags: ['general surgery', 'outpatient'], url: 'to be implemented', definition: '', versionDate: '2021-01-31', modified: '2020-01-15', active: true, type: 'EXTENSIONAL', privateRefset: true, downloadable: true, feedbackVisible: true, feedback: '', versionList: versionList };
+	if (i == 4 || i == 6) {
+		newRefset.active = false;
+	}
 
-    if (i == 4 || i == 6) {
-        newRefset.active = false;
-    }
-
-    refsetData.push(newRefset);
+	refsetData.push(newRefset);
 }
 
 @Injectable()
 export class BackendInterceptor implements HttpInterceptor {
+	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+		const { url, method, headers, body } = request;
+		let totalResults = 0;
+		const params: any = CodeUtility.getParamsAsObject(request.url);
+		// wrap in delayed observable to simulate server api call
+		return of(null)
+			.pipe(mergeMap(handleRoute))
+			.pipe(materialize()) // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+			.pipe(delay(500))
+			.pipe(dematerialize());
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+		function handleRoute() {
+			if (environment.hasOwnProperty('mockRestData') && environment['mockRestData']) {
+				switch (true) {
+					case url.endsWith('/auth') && method === 'POST':
+						return authenticate();
+					case url.endsWith('/concepts') && method === 'GET':
+						return concepts();
+					case url.includes('/concept/') && method === 'GET':
+						return memberDetails();
+					case url.includes('/refset/search') && method === 'GET':
+						return refsets();
+					case url.includes('/members') && method === 'GET':
+						return concepts();
+					case url.includes('/taxonomySearch') && method === 'GET':
+						return taxonomySearch();
+					case url.includes('/refset/') && method === 'GET':
+						return refset();
+					case url.includes('/taxonomyRoot') && method === 'GET':
+						return rootNode();
+					case url.match(/\/users\/\d+$/) && method === 'GET':
+						return getUserById();
+					default:
+						// pass through any requests not handled above
+						return next.handle(request);
+				}
+			} else {
+				switch (true) {
+					case url.includes('/taxonomyRoot') && method === 'GET':
+						return rootNode();
+					default:
+						// pass through any requests not handled above
+						return next.handle(request);
+				}
+			}
+		}
 
-        const { url, method, headers, body } = request;
-        let totalResults = 0;
-        let params: any = CodeUtility.getParamsAsObject(request.url);
-        // wrap in delayed observable to simulate server api call
-        return of(null)
-            .pipe(mergeMap(handleRoute))
-            .pipe(materialize()) // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
-            .pipe(delay(500))
-            .pipe(dematerialize());
+		// route functions
+		function authenticate() {
+			const { username, password } = body;
+			const user = userData.find((u) => u.userName === username && u.password === password);
 
-        function handleRoute() {
+			if (!user) {
+				return error('Username or password is incorrect');
+			}
 
-            if (environment.hasOwnProperty('mockRestData') && environment['mockRestData']) {
+			return ok({
+				...user,
+				token: 'fake-jwt-token',
+			});
+		}
 
-                switch (true) {
-                    case url.endsWith('/auth') && method === 'POST':
-                        return authenticate();
-                    case url.endsWith('/concepts') && method === 'GET':
-                        return concepts();
-                    case url.includes('/concept/') && method === 'GET':
-                        return memberDetails();
-                    case url.includes('/refset/search') && method === 'GET':
-                        return refsets();
-                    case url.includes('/members') && method === 'GET':
-                        return concepts();
-                    case url.includes('/taxonomySearch') && method === 'GET':
-                        return taxonomySearch();
-                    case url.includes('/refset/') && method === 'GET':
-                        return refset();
-                    case url.includes('/taxonomyRoot') && method === 'GET':
-                        return rootNode();
-                    case url.match(/\/users\/\d+$/) && method === 'GET':
-                        return getUserById();
-                    default:
-                        // pass through any requests not handled above
-                        return next.handle(request);
-                }
-            } else {
+		function concepts() {
+			let rowsThisPage;
 
-                switch (true) {
-                    case url.includes('/taxonomyRoot') && method === 'GET':
-                        return rootNode();
-                    default:
-                        // pass through any requests not handled above
-                        return next.handle(request);
-                }
-            }
-        }
+			if (params.displayType && params.displayType == 'taxonomy') {
+				rowsThisPage = getTaxonomyConceptChildren(params.startingConceptId, params.depth);
+			} else {
+				rowsThisPage = sortAndFilter(conceptData);
+			}
 
-        // route functions
-        function authenticate() {
+			return ok({
+				totalKnown: true,
+				total: totalResults,
+				items: rowsThisPage,
+			});
+		}
 
-            const { username, password } = body;
-            const user = userData.find(u => u.userName === username && u.password === password);
+		function taxonomySearch() {
+			taxonomySearchResults;
 
-            if (!user) {
-                return error('Username or password is incorrect');
-            }
+			return ok({
+				totalKnown: true,
+				total: taxonomySearchResults.length,
+				items: taxonomySearchResults,
+			});
+		}
 
-            return ok({
-                ...user,
-                token: 'fake-jwt-token'
-            })
-        }
+		function rootNode() {
+			return ok(taxonomyRootNode);
+		}
 
-        function concepts() {
+		function refset() {
+			const refsetId = Number.parseInt(request.url.substr(request.url.indexOf('/refset/') + 8)) - 1001;
 
-            let rowsThisPage;
+			return ok(refsetData[refsetId]);
+		}
 
-            if (params.displayType && params.displayType == 'taxonomy') {
+		function memberDetails() {
+			const conceptId = request.url.substring(request.url.indexOf('/concept/') + 9, request.url.indexOf('?refsetInternalId'));
+			let concept = null;
 
-                rowsThisPage = getTaxonomyConceptChildren(params.startingConceptId, params.depth);
-            } else {
-                rowsThisPage = sortAndFilter(conceptData);
-            }
+			for (const element of conceptData) {
+				if (element.code === conceptId) {
+					concept = element;
+					break;
+				}
+			}
 
-            return ok({
-                totalKnown: true,
-                total: totalResults,
-                items: rowsThisPage
-            });
-        }
+			if (!CodeUtility.hasValue(concept)) {
+				concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
+			}
 
-        function taxonomySearch() {
+			const conceptParents = [];
+			const conceptChildren = [];
 
-            taxonomySearchResults
+			for (let i = 1; i < 6; i++) {
+				conceptParents.push({ name: 'Parent ' + i, type: '' });
+			}
 
-            return ok({
-                totalKnown: true,
-                total: taxonomySearchResults.length,
-                items: taxonomySearchResults
-            });
-        }
+			for (let i = 1; i < 6; i++) {
+				conceptChildren.push({ name: 'Child ' + i, type: '' });
+			}
 
-        function rootNode() {
-            return ok(taxonomyRootNode);
-        }
+			concept.parents = conceptParents;
+			concept.children = conceptChildren;
 
-        function refset() {
+			return ok(concept);
+		}
 
-            let refsetId = Number.parseInt(request.url.substr(request.url.indexOf('/refset/') + 8)) - 1001;
+		function refsets(numberToReturn = 0) {
+			const viewFilter = params.viewFilter;
 
-            return ok(refsetData[refsetId]);
-        }
+			params.offset = params.offset / params.limit;
 
-        function memberDetails() {
+			const dataAfterViewFilter = refsetData.filter((row) => {
+				let rowValid = true;
 
-            let conceptId = request.url.substring(request.url.indexOf('/concept/') + 9, request.url.indexOf('?refsetInternalId'));
-            let concept = null;
+				if ((viewFilter && viewFilter !== 'all' && viewFilter === 'public' && row.privateRefset == true) || (viewFilter === 'private' && row.privateRefset == false)) {
+					rowValid = false;
+				}
 
-            for (let element of conceptData) {
+				return rowValid;
+			});
 
-                if (element.code === conceptId) {
+			let rowsThisPage = sortAndFilter(dataAfterViewFilter);
 
-                    concept = element;
-                    break;
-                }
-            };
+			if (numberToReturn > 0) {
+				rowsThisPage = rowsThisPage[0];
+			}
 
-            if (!CodeUtility.hasValue(concept)) {
-                concept = findTaxonomyConcept(conceptId, [taxonomyRootNode]);
-            }
+			return ok({
+				totalKnown: true,
+				total: totalResults,
+				items: rowsThisPage,
+			});
+		}
 
-            const conceptParents = [];
-            const conceptChildren = [];
+		function getUserById() {
+			if (!isLoggedIn()) return unauthorized();
 
-            for (let i = 1; i < 6; i++) {
-                conceptParents.push(
-                    { name: 'Parent ' + i, type: '' }
-                );
-            }
+			const user = userData.find((u) => u.id === idFromUrl());
+			return ok(user);
+		}
 
-            for (let i = 1; i < 6; i++) {
-                conceptChildren.push(
-                    { name: 'Child ' + i, type: '' }
-                );
-            }
+		//***** Sort and Filter Function *****/
+		function sortAndFilter(allOfTheData) {
+			const pageNumber = params.offset ? Number.parseInt(params.offset) : 0;
+			const rowsPerPage = params.limit ? Number.parseInt(params.limit) : 100;
+			let sortModel = params.sortModel;
+			const filterModel = params.filterModel;
+			const startRow = pageNumber * rowsPerPage;
+			const endRow = startRow + rowsPerPage;
 
-            concept.parents = conceptParents;
-            concept.children = conceptChildren;
+			if (sortModel) {
+				sortModel = Object.values(sortModel);
+			}
 
-            return ok(concept);
-        }
+			const dataAfterSortingAndFiltering = UiUtility.sortData(sortModel, UiUtility.filterData(filterModel, allOfTheData));
 
-        function refsets(numberToReturn: number = 0) {
+			const rowsThisPage = dataAfterSortingAndFiltering.slice(startRow, endRow);
 
-            let viewFilter = params.viewFilter;
+			totalResults = dataAfterSortingAndFiltering.length;
 
-            params.offset = params.offset / params.limit;
+			return rowsThisPage;
+		}
 
-            let dataAfterViewFilter = refsetData.filter(row => {
+		//***** Helper Function *****/
+		function ok(body?) {
+			return of(new HttpResponse({ status: 200, body }));
+		}
 
-                let rowValid = true;
+		function error(message) {
+			return throwError({ error: { message } });
+		}
 
-                if (viewFilter && viewFilter !== 'all' && (viewFilter === 'public' && row.privateRefset == true) || (viewFilter === 'private' && row.privateRefset == false)) {
-                    rowValid = false;
-                }
+		function unauthorized() {
+			return throwError({ status: 401, error: { message: 'Unauthorised' } });
+		}
 
-                return rowValid;
-            });
+		function isLoggedIn() {
+			return headers.get('Authorization') === 'Bearer fake-jwt-token';
+		}
 
-            let rowsThisPage = sortAndFilter(dataAfterViewFilter);
-
-            if (numberToReturn > 0) {
-                rowsThisPage = rowsThisPage[0];
-            }
-
-            return ok({
-                totalKnown: true,
-                total: totalResults,
-                items: rowsThisPage
-            });
-        }
-
-        function getUserById() {
-            if (!isLoggedIn()) return unauthorized();
-
-            const user = userData.find(u => u.id === idFromUrl());
-            return ok(user);
-        }
-
-        //***** Sort and Filter Function *****/
-        function sortAndFilter(allOfTheData) {
-
-            let pageNumber = params.offset ? Number.parseInt(params.offset) : 0;
-            let rowsPerPage = params.limit ? Number.parseInt(params.limit) : 100;
-            let sortModel = params.sortModel;
-            let filterModel = params.filterModel;
-            let startRow = (pageNumber) * rowsPerPage;
-            let endRow = startRow + rowsPerPage;
-
-            if (sortModel) {
-                sortModel = Object.values(sortModel);
-            }
-
-            let dataAfterSortingAndFiltering = UiUtility.sortData(sortModel, UiUtility.filterData(filterModel, allOfTheData));
-
-            let rowsThisPage = dataAfterSortingAndFiltering.slice(
-                startRow,
-                endRow
-            );
-
-            totalResults = dataAfterSortingAndFiltering.length;
-
-            return rowsThisPage;
-        }
-
-        //***** Helper Function *****/
-        function ok(body?) {
-            return of(new HttpResponse({ status: 200, body }))
-        }
-
-        function error(message) {
-            return throwError({ error: { message } });
-        }
-
-        function unauthorized() {
-            return throwError({ status: 401, error: { message: 'Unauthorised' } });
-        }
-
-        function isLoggedIn() {
-            return headers.get('Authorization') === 'Bearer fake-jwt-token';
-        }
-
-        function idFromUrl() {
-            const urlParts = url.split('/');
-            return parseInt(urlParts[urlParts.length - 1]);
-        }
-    }
+		function idFromUrl() {
+			const urlParts = url.split('/');
+			return parseInt(urlParts[urlParts.length - 1]);
+		}
+	}
 }
