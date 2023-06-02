@@ -127,7 +127,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit, OnInit {
 		this.showAll = showAll;
 
 		if (this.activeGridOptions) {
-			if (this.activeGridOptions.api.gridCore.rowModel?.cacheParams) {
+			if (this.activeGridOptions.api.gridCore?.rowModel) {
 				this.activeGridOptions.api.gridCore.rowModel.cacheParams.blockSize = pageSize;
 				this.activeGridOptions.api.gridOptionsWrapper.setProperty('cacheBlockSize', pageSize);
 				this.activeGridOptions.api.paginationSetPageSize(pageSize);

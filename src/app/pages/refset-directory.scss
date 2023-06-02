@@ -1,5 +1,6 @@
 #directorySearchInputField {
 	width: 340px;
+	margin-top: 0.25em;
 
 	// set this to 20px less than the field to leave room for the cancel 'X'
 	.mat-form-field-flex {
@@ -43,7 +44,7 @@
 	.dropdown-group {
 		display: inline-flex !important;
 		padding-right: 3rem;
-		width: 60%;
+		width: 53%;
 	}
 }
 
