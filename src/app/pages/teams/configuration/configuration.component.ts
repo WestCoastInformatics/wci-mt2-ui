@@ -253,4 +253,8 @@ export class TeamsConfigurationComponent implements OnInit {
 	getSelectedTeamName(): string {
 		return this.selectedTeam?.name;
 	}
+
+	getSelectedTeamTypeEnabled(): boolean {
+		return this.selectedTeam?.type === 'O' ? false : true;
+	}
 }

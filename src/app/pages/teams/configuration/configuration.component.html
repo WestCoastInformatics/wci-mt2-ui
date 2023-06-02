@@ -74,7 +74,7 @@
 					</div>
 
 					<div class="secondary-block">
-						<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row team-permissions-block">
+						<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()" class="teams-configuration-block-row team-permissions-block">
 							<div class="save-permissions-head section-header head-section-title-font">Permissions</div>
 
 							<div class="save-permissions-mid form-field-header">
@@ -103,7 +103,7 @@
 							</div>
 						</div>
 
-						<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="teams-configuration-block-row remove-teams-block">
+						<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()" class="teams-configuration-block-row remove-teams-block">
 							<div class="remove-team-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg" /> Remove this Team</div>
 							<div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
 							<div class="remove-teams-button">
