@@ -57,6 +57,8 @@ export class AddMemberToOrganizationModalComponent {
 
 	addUserToOrganization(): void {
 		let userToAdd = '';
+		let userList = [];
+		let alreadyAdded = false;
 		if (CodeUtility.hasValue(this.email)) {
 			userToAdd = this.email;
 		}
@@ -64,24 +66,42 @@ export class AddMemberToOrganizationModalComponent {
 			return;
 		}
 
-		this.changeLockedStatus.emit(true);
-		this.showLoadingSpinner = true;
+		this.organizationsService.getOrgUsers(this.id, false).subscribe({
+			next: (results) => {
+				userList = results?.items;
+				userList.map((user) => {
+					if (user?.email === userToAdd) {
+						alreadyAdded = true;
+					}
+				});
+				if (alreadyAdded) {
+					this.notificationService.show('The user is already a member of the Organization.', null, 'error', {
+						timeOut: 0,
+						extendedTimeOut: 0,
+					});
+					this.validEmail = false;
+				} else {
+					this.changeLockedStatus.emit(true);
+					this.showLoadingSpinner = true;
 
-		const operation = this.organizationsService.addUsers.bind(this.organizationsService);
+					const operation = this.organizationsService.addUsers.bind(this.organizationsService);
 
-		operation(this.id, userToAdd).subscribe(
-			(data) => {
-				this.notificationService.show('The user is added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
-				this.openedModel.dismiss();
-				this.changeLockedStatus.emit(false);
-				this.showLoadingSpinner = false;
-				window.location.reload();
+					operation(this.id, userToAdd).subscribe(
+						(data) => {
+							this.notificationService.show('The user is added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+							this.openedModel.dismiss();
+							this.changeLockedStatus.emit(false);
+							this.showLoadingSpinner = false;
+							window.location.reload();
+						},
+						(err) => {
+							this.changeLockedStatus.emit(false);
+							this.showLoadingSpinner = false;
+							console.error(err);
+						}
+					);
+				}
 			},
-			(err) => {
-				this.changeLockedStatus.emit(false);
-				this.showLoadingSpinner = false;
-				console.error(err);
-			}
-		);
+		});
 	}
 }
