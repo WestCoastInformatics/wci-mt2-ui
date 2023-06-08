@@ -73,7 +73,7 @@
 					<div [hidden]="refsetData?.length < 1">
 						<app-refset-download [isDetailPage]="true" [refsets]="refsetData" [project]="selectedProject"></app-refset-download>
 					</div>
-					<div [hidden]="!selectedProject?.roles?.includes('AUTHOR')">
+					<div [hidden]="!selectedProject?.roles?.includes('AUTHOR') || refsetData?.length < 1">
 						<bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
 					</div>
 				</div>

@@ -13,24 +13,59 @@
 	<div class="modal-body rt2-lockable rt2-modal-body form-field-header">
 		<div class="create-new-refset-form-field align-normal">
 			<div class="col create-new-refset-field create-new-refset-flex-weight bulk-upgrade-list">
-				<mat-form-field appearance="fill">
-					<mat-label>Refsets to Upgrade (use Ctrl-click to select more than one)</mat-label>
-					<label *ngIf="refsetsForUpgrade.length === 0">There are currently no refsets ready to upgrade</label>
-					<select matNativeControl autofocus [multiple]="true" [(ngModel)]="selectedRefsets" [size]="refsetsForUpgrade.length" class="mh-300">
-						<option *ngFor="let refset of refsetsForUpgrade" [ngValue]="refset">
-							{{ refset.name }}
-						</option>
-					</select>
-				</mat-form-field>
+				<mat-label>Refsets to Upgrade (Hold Shift down and click to select a range of checkboxes.)</mat-label>
+				<div class="container-fluid" [style.display]="resultsDisplay">
+					<div class="bulk-upgrade-modal-table">
+						<ag-grid-angular #bulkUpgradeSearch class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter mh-350" [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions"> </ag-grid-angular>
+					</div>
+
+					<app-pagination
+						#refsetBulkUpgradePaging
+						[pageSize]="gridPaging.pageSize"
+						[gridOptions]="gridOptions"
+						[pageSizeOptions]="gridPaging.pageSizeOptions"
+						[totalKnown]="gridPaging.totalKnown"
+						[manualStateRefresh]="gridPaging.manualStateRefresh"
+						[isDetailPage]="false"
+						[refsetId]="refset?.refsetId">
+					</app-pagination>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+		<div class="col-8 text-center">
+			<mat-label *ngIf="refsetsForUpgrade.length > 0"
+				><span *ngIf="selectedRefsets.length > 0">Selected {{ selectedRefsets.length }} of {{ refsetsForUpgrade.length }} to Upgrade</span></mat-label
+			>
+			<mat-label *ngIf="refsetsForUpgrade.length === 0">There are currently no reference sets ready to upgrade.</mat-label>
+		</div>
 		<button [disabled]="selectedRefsets.length === 0" type="button" (click)="upgradeRefsets()" color="green" aria-hidden="false" class="rt2-btn rt2-next-back-btn" aria-label="Upgrade">
 			Upgrade
 		</button>
 
 		<button type="button" (click)="modal.dismiss('Cross click')" aria-hidden="false" class="rt2-btn rt2-cancel-btn" aria-label="Cancel" title="Cancel">Cancel</button>
 	</div>
+</ng-template>
+
+<!-- refsetIdSection Templates -->
+<ng-template #refsetIDSection let-params>
+	<span>
+		{{ params?.data?.refsetId }}
+	</span>
+</ng-template>
+
+<!-- refsetNameSection Templates -->
+<ng-template #refsetNameSection let-params>
+	<span>
+		{{ params?.data?.name }}
+	</span>
+</ng-template>
+
+<!-- refsetTypeSection Templates -->
+<ng-template #refsetTypeSection let-params>
+	<span>
+		{{ params?.data?.type }}
+	</span>
 </ng-template>
