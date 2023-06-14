@@ -257,13 +257,50 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	getProjects(): void {
 		this.refsetService.getProjects('offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.projectList = results.items;
+
+			if (results.items != null && results.items.length > 1)
+			{
+				const sortedJson = results.items.sort((a, b) => {
+					const orgA = a.edition.organization.name;
+					const orgB = b.edition.organization.name;
+					if (orgA < orgB) return -1;
+					if (orgA > orgB) return 1;
+					const projectA = a.name;
+					const projectB = b.name;
+					if (projectA < projectB) return -1;
+					if (projectA > projectB) return 1;
+					return 0;
+				});
+				this.projectList = sortedJson;
+			}
+			else {
+				this.projectList = results.items;
+			}
+
 		});
 	}
 
 	getTeams(): void {
 		this.refsetService.getTeams('onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-			this.teamList = results.items;
+
+			if (results.items != null && results.items.length > 1)
+			{
+				const sortedJson = results.items.sort((a, b) => {
+					const orgA = a.organization.name;
+					const orgB = b.organization.name;
+					if (orgA < orgB) return -1;
+					if (orgA > orgB) return 1;
+					const teamA = a.name;
+					const teamB = b.name;
+					if (teamA < teamB) return -1;
+					if (teamA > teamB) return 1;
+					return 0;
+				});
+				this.teamList = sortedJson;
+			}
+			else {
+				this.teamList = results.items;
+			}
 		});
 	}
 }
