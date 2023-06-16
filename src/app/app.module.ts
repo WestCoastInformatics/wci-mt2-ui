@@ -49,6 +49,7 @@ import { LaunchComparisonModalComponent } from 'src/app/components/comparison/la
 import { NotificationComponent } from 'src/app/components/notification/notification.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
 import { CreateNewRefsetComponent } from './components/create-new-refset/create-new-refset.component';
 import { ImportFromFileModalComponent } from 'src/app/components/import-from-file-modal/import-from-file-modal.component';
 import { ImportFromListModalComponent } from 'src/app/components/import-from-list-modal/import-from-list-modal.component';
@@ -244,6 +245,7 @@ const appRoutes: Routes = [
 		RefsetDetails,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
+		GridHeaderFilterComponent,
 		CreateNewRefsetComponent,
 		CreateRefsetComponent,
 		ProjectsRefsetComponent,

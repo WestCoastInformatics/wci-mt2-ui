@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -68,6 +69,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				'templateRenderer': TemplateRenderer,
 				'categoryFilterComponent': CategoryFilterComponent,
 				'dateTextFilterComponent': DateTextFilterComponent,
+				'gridHeaderFilterComponent': GridHeaderFilterComponent,
 			},
 			defaultColDef: {
 				sortable: true,
@@ -89,7 +91,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.columnDefs = [
 			{
 				field: 'name',
-				headerName: 'Reference Name',
+				headerName: 'Project / Reference Set Name',
 				flex: 2,
 				width: 550,
 				minWidth: 65,
@@ -101,6 +103,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				},
 				cellClass: 'pointer',
 				resizable: true,
+				floatingFilterComponent: 'gridHeaderFilterComponent',
+				floatingFilterComponentParams: { suppressFilterButton: true, placeholder: 'Search by Project or Reference Set Name' },
 			},
 			{
 				field: 'workflowStatus',
@@ -195,7 +199,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					next: (results) => {
 						for (const refset of results.items) {
 							this.data.push({
-								name: `${refset?.organizationName}/${refset?.project?.name}/${refset.name}`,
+								name: `${refset?.project?.name}/${refset.name}`,
 								refsetId: refset.refsetId,
 								private: refset.privateRefset,
 								workflowStatus: `${refset?.workflowStatus}`,
@@ -257,9 +261,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	getProjects(): void {
 		this.refsetService.getProjects('offset=0&sort=name&sortAscending=true').subscribe((results) => {
-
-			if (results.items != null && results.items.length > 1)
-			{
+			if (results.items != null && results.items.length > 1) {
 				const sortedJson = results.items.sort((a, b) => {
 					const orgA = a.edition.organization.name;
 					const orgB = b.edition.organization.name;
@@ -272,19 +274,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					return 0;
 				});
 				this.projectList = sortedJson;
-			}
-			else {
+			} else {
 				this.projectList = results.items;
 			}
-
 		});
 	}
 
 	getTeams(): void {
 		this.refsetService.getTeams('onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
-
-			if (results.items != null && results.items.length > 1)
-			{
+			if (results.items != null && results.items.length > 1) {
 				const sortedJson = results.items.sort((a, b) => {
 					const orgA = a.organization.name;
 					const orgB = b.organization.name;
@@ -297,8 +295,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					return 0;
 				});
 				this.teamList = sortedJson;
-			}
-			else {
+			} else {
 				this.teamList = results.items;
 			}
 		});
