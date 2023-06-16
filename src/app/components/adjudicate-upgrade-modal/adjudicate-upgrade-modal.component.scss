@@ -9,9 +9,7 @@
 .adjudicate-upgrade-modal-body-header {
 	display: flex;
 	height: 50px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: 15px;
+	padding: 1em 1em 1.5em 0;
 }
 
 .adjudicate-format-option-drop-down {
@@ -37,5 +35,7 @@
 
 .adjudicate-information-button {
 	color: #00a9e0;
-	padding-top: 20px;
+	cursor: pointer;
+	margin-top: 0.75em;
+	margin-left: -0.05em;
 }
