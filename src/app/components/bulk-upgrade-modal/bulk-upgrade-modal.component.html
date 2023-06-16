@@ -13,7 +13,7 @@
 	<div class="modal-body rt2-lockable rt2-modal-body form-field-header">
 		<div class="create-new-refset-form-field align-normal">
 			<div class="col create-new-refset-field create-new-refset-flex-weight bulk-upgrade-list">
-				<mat-label>Refsets to Upgrade (Hold Shift down and click to select a range of checkboxes.)</mat-label>
+				<mat-label>Reference Sets to Upgrade <span *ngIf="selectedRefsets.length > 0">(Hold Shift down and click to select a range of checkboxes.)</span></mat-label>
 				<div class="container-fluid" [style.display]="resultsDisplay">
 					<div class="bulk-upgrade-modal-table">
 						<ag-grid-angular #bulkUpgradeSearch class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter mh-350" [columnDefs]="gridColumnDefs" [gridOptions]="gridOptions"> </ag-grid-angular>

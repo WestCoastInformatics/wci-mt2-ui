@@ -82,7 +82,8 @@ export class BulkUpgradeModalComponent {
 				field: 'refsetId',
 				colId: 'refsetId',
 				flex: 1,
-				headerName: 'Reference ID',
+				headerName: 'Reference Set ID',
+				headerTooltip: 'Select to Upgrade all',
 				cellClass: 'rt2-bulk-upgrade-id',
 				tooltipField: 'refsetId',
 				resizable: true,
@@ -99,7 +100,8 @@ export class BulkUpgradeModalComponent {
 				field: 'name',
 				colId: 'type',
 				flex: 2,
-				headerName: 'Reference Name',
+				headerName: 'Reference Set Name',
+				headerTooltip: 'Reference Set Name',
 				cellClass: 'rt2-directory-column-name',
 				tooltipField: 'name',
 				resizable: true,
@@ -108,12 +110,14 @@ export class BulkUpgradeModalComponent {
 				cellRendererParams: { template: this.refsetNameSection },
 				sort: 'asc',
 				unSortIcon: true,
+				filter: true,
 			},
 			{
 				field: 'type',
 				colId: 'type',
 				flex: 1,
 				headerName: 'Type',
+				headerTooltip: 'Type',
 				cellClass: 'rt2-bulk-upgrade-type',
 				tooltipField: 'type',
 				resizable: true,
@@ -138,13 +142,15 @@ export class BulkUpgradeModalComponent {
 			next: (results) => {
 				const pageNumber = 1;
 				for (const refset of results.items) {
-					this.refsetsForUpgrade.push({
-						checked: false,
-						id: refset.id,
-						name: refset.name,
-						type: refset.type,
-						refsetId: refset.refsetId,
-					});
+					if (refset.type !== 'EXTERNAL') {
+						this.refsetsForUpgrade.push({
+							checked: false,
+							id: refset.id,
+							name: refset.name,
+							type: refset.type,
+							refsetId: refset.refsetId,
+						});
+					}
 				}
 
 				this.refsetsForUpgrade = this.sortRefsets(this.refsetsForUpgrade);
@@ -153,9 +159,7 @@ export class BulkUpgradeModalComponent {
 				UiUtility.applyServerPagedGridResults(results, this.gridApi, this.gridPaging, pageNumber, null, false);
 				UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
 
-				if (this.refsetsForUpgrade.length) {
-					this.changeModalSize();
-				}
+				this.changeModalSize();
 
 				this.loadingSpinner.emit(false);
 			},
