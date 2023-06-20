@@ -214,23 +214,25 @@ export class OrganizationTeamsComponent implements OnInit {
 		if (this.selectedOrganization?.id) {
 			this.showLoadingSpinner = true;
 
-			this.refsetService.getTeams('sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
+			let queryString = 'sort=name&sortAscending=true&includeMembers=true';
+			if (this.selectedOrganization?.id) {
+				queryString = queryString + "&query=organizationId:" + this.selectedOrganization.id;
+			}
+			this.refsetService.getTeams(queryString).subscribe((results) => {
 				this.data = [];
-				this.teamList = results.items;
+				this.teamList = results.items?.filter((team) => team.organizationId === this.selectedOrganization?.id);
 
 				for (const team of this.teamList) {
-					if (team?.organization?.id === this.selectedOrganization?.id) {
-						roles = roles.concat(team.roles);
-						this.data.push({
-							id: team.id,
-							name: team.name,
-							description: team.description,
-							role: team.roles.sort().join(', ').toLowerCase(),
-							email: team.primaryContactEmail,
-							members: team.members ? team.members.length : '0',
-							memberList: team.memberList,
-						});
-					}
+					roles = roles.concat(team.roles);
+					this.data.push({
+						id: team.id,
+						name: team.name,
+						description: team.description,
+						role: team.roles.sort().join(', ').toLowerCase(),
+						email: team.primaryContactEmail,
+						members: team.members ? team.memberList.length: '0',
+						memberList: team.memberList,
+					});
 				}
 
 				roles = [...new Set(roles)].sort();
