@@ -32,7 +32,9 @@
 							<ng-container *ngFor="let organization of organizationList">
 								<div class="section-list" *ngIf="organization.name">
 									<img [src]="organization.iconUri" *ngIf="organization.iconUri" />
-									<a [routerLink]="['/organizations/' + organization.id + '/edition/0/projects']" class="section-list pointer">{{ organization.name }}</a>
+									<a [routerLink]="" (click)="navigateToPage('/organizations/' + organization.id + '/edition/0/projects')" class="section-list pointer" routerLinkActive="active">{{
+										organization.name
+									}}</a>
 								</div>
 							</ng-container>
 						</div>

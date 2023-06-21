@@ -73,6 +73,7 @@ import { RefsetDirectory } from 'src/app/pages/refset-directory';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
+import { OrganizationsComponent } from './pages/organizations/organizations.component';
 import { OrganizationProjectsComponent } from './pages/organizations/projects/projects.component';
 import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.component';
 import { OrganizationPeopleComponent } from './pages/organizations/people/people.component';
@@ -95,6 +96,7 @@ import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ErrorHandlingService } from 'src/app/services/error-handling.service';
+import { OrganizationsComponentService } from './pages/organizations/organizations-component.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
@@ -136,32 +138,77 @@ const appRoutes: Routes = [
 	{ path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Reference Set Library' } },
 	{ path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
+	/*
+	{ path: 'organizations/:organizationId/edition/:editionId/projects', loadChildren: './dashboard/dashboard.module#DashboardModule' },
+	{ path: 'organizations/:organizationId/teams', loadChildren: './users/users.module#UsersModule' },
+	{ path: 'organizations/:organizationId/people', loadChildren: './account-settings/account-settings.module#AccountSettingsModule' },
+	{ path: 'organizations/:organizationId/configuration', loadChildren: './account-settings/account-settings.module#AccountSettingsModule' },
+	*/
+	{
+		path: 'organizations',
+		component: OrganizationsComponent,
+		children: [
+			{
+				path: ':organizationId/edition/:editionId/projects',
+				component: OrganizationProjectsComponent,
+				data: { breadcrumbLabel: 'Projects' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/teams',
+				component: OrganizationTeamsComponent,
+				data: { breadcrumbLabel: 'Teams' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/users',
+				component: OrganizationPeopleComponent,
+				data: { breadcrumbLabel: 'Users' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/configuration',
+				component: OrganizationConfigurationComponent,
+				data: { breadcrumbLabel: 'Configuration' },
+				canActivate: [AuthGuardGuard],
+			},
+		],
+	},
+	/*
+	{
+		path: 'organizations',
+		pathMatch: 'full',
+		component: OrganizationsComponent,
+		data: { breadcrumbLabel: 'Organizations' },
+		canActivate: [AuthGuardGuard],
+		children: [
+			{
+				path: 'organizations/:organizationId/edition/:editionId/projects',
 
-	{
-		path: 'organizations/:organizationId/edition/:editionId/projects',
-		component: OrganizationProjectsComponent,
-		data: { breadcrumbLabel: 'Projects' },
-		canActivate: [AuthGuardGuard],
-	},
-	{
-		path: 'organizations/:organizationId/teams',
-		component: OrganizationTeamsComponent,
-		data: { breadcrumbLabel: 'Teams' },
-		canActivate: [AuthGuardGuard],
-	},
-	{
-		path: 'organizations/:organizationId/people',
-		component: OrganizationPeopleComponent,
-		data: { breadcrumbLabel: 'Users' },
-		canActivate: [AuthGuardGuard],
-	},
-	{
-		path: 'organizations/:organizationId/configuration',
-		component: OrganizationConfigurationComponent,
-		data: { breadcrumbLabel: 'Configuration' },
-		canActivate: [AuthGuardGuard],
-	},
-
+				component: OrganizationProjectsComponent,
+				data: { breadcrumbLabel: 'Projects' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: 'organizations/:organizationId/teams',
+				component: OrganizationTeamsComponent,
+				data: { breadcrumbLabel: 'Teams' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: 'organizations/:organizationId/people',
+				component: OrganizationPeopleComponent,
+				data: { breadcrumbLabel: 'Users' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: 'organizations/:organizationId/configuration',
+				component: OrganizationConfigurationComponent,
+				data: { breadcrumbLabel: 'Configuration' },
+				canActivate: [AuthGuardGuard],
+			},
+		],
+	},*/
 	{
 		path: 'organization/:organizationId/edition/:editionId/projects/:projectId/refsets',
 		component: ProjectsRefsetComponent,
@@ -271,6 +318,7 @@ const appRoutes: Routes = [
 		LandingComponent,
 		DashboardComponent,
 		SidebarComponent,
+		OrganizationsComponent,
 		OrganizationProjectsComponent,
 		OrganizationTeamsComponent,
 		OrganizationPeopleComponent,
@@ -295,6 +343,7 @@ const appRoutes: Routes = [
 		RequestAccessModalComponent,
 	],
 	imports: [
+		RouterModule.forChild(appRoutes),
 		RouterModule.forRoot(
 			appRoutes,
 			{
@@ -361,6 +410,7 @@ const appRoutes: Routes = [
 		UsersService,
 		NotificationService,
 		ErrorHandlingService,
+		OrganizationsComponentService,
 		DomService,
 		{ provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
 		{
@@ -377,5 +427,6 @@ const appRoutes: Routes = [
 	],
 	bootstrap: [AppComponent],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+	exports: [RouterModule],
 })
 export class AppModule {}

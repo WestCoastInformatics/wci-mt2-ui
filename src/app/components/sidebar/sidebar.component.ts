@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
 	selector: 'app-sidebar',
@@ -12,7 +12,7 @@ export class SidebarComponent implements OnInit {
 	@Input() menuItems;
 	@Input() id;
 
-	constructor(private readonly route: ActivatedRoute) {}
+	constructor(private readonly route: ActivatedRoute, private readonly router: Router) {}
 
 	ngOnInit() {
 		this.route.params.subscribe((params) => {
@@ -20,8 +20,8 @@ export class SidebarComponent implements OnInit {
 		});
 	}
 
-	getLink(itemLink) {
-		return [itemLink];
+	goToLink(link) {
+		this.router.navigate([link]);
 	}
 
 	onMouseEnter(e: any) {
