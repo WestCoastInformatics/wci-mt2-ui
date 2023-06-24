@@ -84,6 +84,10 @@ export class NavbarComponent implements OnInit {
 		this.authenticationService.logoutUser();
 	}
 
+	landing() {
+		this.router.navigate(['']);
+	}
+
 	resources() {
 		this.router.navigate(['']);
 	}

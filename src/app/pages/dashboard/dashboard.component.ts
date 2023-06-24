@@ -249,6 +249,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		}
 	};
 
+	navigateToPage(path) {
+		this.router.navigate([path]);
+	}
+
 	goToDetailsPage(refsetId, versionDate) {
 		this.router.navigate(['/details', refsetId, versionDate]);
 	}

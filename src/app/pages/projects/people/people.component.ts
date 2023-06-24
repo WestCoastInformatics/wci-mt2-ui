@@ -66,7 +66,7 @@ export class ProjectsPeopleComponent implements OnInit {
 			this.setNavigation();
 		});
 
-		this.showLoadingSpinner = true;
+		//this.showLoadingSpinner = true;
 		this.data = [];
 		this.getOrganizations();
 	}
@@ -198,7 +198,9 @@ export class ProjectsPeopleComponent implements OnInit {
 	}
 
 	selectOrganization(): void {
-		this.showLoadingSpinner = true;
+		if (this.gridApi) {
+			this.gridApi.showLoadingOverlay();
+		}
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedEdition = null;
 		this.editionList = [];
@@ -234,7 +236,9 @@ export class ProjectsPeopleComponent implements OnInit {
 	}
 
 	selectEdition(): void {
-		this.showLoadingSpinner = true;
+		if (this.gridApi) {
+			this.gridApi.showLoadingOverlay();
+		}
 		this.editionId = this.selectedEdition.id;
 		this.selectedProject = null;
 		this.projectList = [];
@@ -315,7 +319,9 @@ export class ProjectsPeopleComponent implements OnInit {
 	}
 
 	selectProject(): void {
-		this.showLoadingSpinner = true;
+		if (this.gridApi) {
+			this.gridApi.showLoadingOverlay();
+		}
 		this.projectId = this.selectedProject.id;
 		this.showProjectData();
 	}

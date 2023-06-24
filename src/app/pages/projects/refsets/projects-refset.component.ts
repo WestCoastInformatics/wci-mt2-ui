@@ -327,7 +327,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	selectOrganization(): void {
-		this.showLoadingSpinner = true;
+		if (this.refsetGridApi) {
+			this.refsetGridApi.showLoadingOverlay();
+		}
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedEdition = null;
 		this.editionList = [];
@@ -372,7 +374,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	selectEdition(): void {
-		this.showLoadingSpinner = true;
+		if (this.refsetGridApi) {
+			this.refsetGridApi.showLoadingOverlay();
+		}
 		this.editionId = this.selectedEdition.id;
 		this.selectedProject = null;
 		this.projectList = [];
@@ -406,7 +410,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	selectProject(): void {
-		this.showLoadingSpinner = true;
+		if (this.refsetGridApi) {
+			this.refsetGridApi.showLoadingOverlay();
+		}
 		this.projectId = this.selectedProject.id;
 		this.showRefsetData();
 	}
