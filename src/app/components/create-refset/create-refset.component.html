@@ -531,11 +531,11 @@
 						</div>
 						<div class="col create-new-refset-field create-new-refset-flex-weight">
 							<mat-radio-group>
-								<mat-radio-button class="refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="false" [checked]="!localSet"
+								<mat-radio-button class="refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="false" [checked]="!localSet" [disabled]="isAffiliate"
 									>Within Edition</mat-radio-button
 								>
 
-								<mat-radio-button class="ml-15 refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="true">Local Set </mat-radio-button>
+								<mat-radio-button class="ml-15 refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="true" [checked]="isAffiliate">Local Set </mat-radio-button>
 								<mat-icon
 									class="pointer rt2-new-refset-info-icon"
 									(click)="openInfoDialog('publication')"
