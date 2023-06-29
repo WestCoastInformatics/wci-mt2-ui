@@ -194,17 +194,17 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 				this.api.redrawRows();
 				return;
 			}
-			this.refsetService.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true').subscribe({
+			this.refsetService.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true&includeTeamDetails=true').subscribe({
 				next: async (results) => {
 					this.data = [];
 					this.projectList = results.items;
 
 					for (const project of this.projectList) {
 						this.data.push({
+							id: project.id,
 							name: `${project?.name}`,
 							locked: project?.privateProject,
 							description: `${project?.description}`,
-							id: project.id,
 						});
 					}
 
@@ -215,11 +215,11 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					const teamData = [];
 					for (const project of this.projectList) {
 						teamData.push({
+							id: project.id,
 							name: `${project?.name}`,
 							locked: project?.privateProject,
 							description: `${project?.description}`,
-							teams: `${await this.getTeams(project?.teams)}`,
-							id: project.id,
+							teams: project?.teamDetails,
 						});
 					}
 					this.data = teamData;
@@ -235,33 +235,14 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	async getTeams(teams: any): Promise<any> {
-		const teamObject = { teams: [] };
-
-		if (teams === 'undefined' || teams === undefined) {
-			return JSON.stringify(teamObject);
-		} else {
-			for (const team of teams) {
-				teamObject.teams.push(await lastValueFrom(this.teamService.getTeam(team)));
-			}
-
-			return JSON.stringify(teamObject);
-		}
-	}
-
 	getTeamCount(data: any): number {
-		if (data && data.teams) {
-			const teams = JSON.parse(data.teams).teams;
-			return teams.length;
-		}
-		return 0;
+		return (data && data.teams) ? data.teams.length : 0;
 	}
 
 	getTeamsTitle(data: any): string {
 		if (data && data.teams) {
-			const teams = JSON.parse(data.teams).teams;
-			if (teams.length > 0) {
-				return 'Organization Teams:\n' + teams.map((t) => t.name).join(', \n');
+			if (data.teams.length > 0) {
+				return 'Organization Teams:\n' + data.teams.map((team) => team.name).join(', \n');
 			}
 			return 'No Organization Teams';
 		}
