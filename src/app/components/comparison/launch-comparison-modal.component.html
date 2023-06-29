@@ -2,7 +2,7 @@
 <button *ngIf="disableCompare" [title]="disableTitle" mat-button class="rt2-link-btn disable-menu-btn">Compare</button>
 
 <ng-template #comparisonLaunchDialog let-modal>
-	<div class="modal-header rt2-modal-header">
+	<div class="modal-header rt2-modal-header compare-modal-header">
 		<button ngbAutofocus class="unfocus-btn"></button>
 		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Set</h3>
 
@@ -24,11 +24,11 @@
 			</div>
 
 			<div class="dialog-form-field-row boxed-row top-aligned">
-				<div class="col dialog-form-label">
+				<div class="col-md-auto dialog-form-label">
 					<label>Comparison Reference Set:<span class="mandatory-field">*</span></label>
 				</div>
 
-				<div class="col dialog-form-field">
+				<div class="col dialog-form-field launch-comparison-dialog-form-fields">
 					<mat-radio-group>
 						<mat-radio-button
 							class="dialog-form-radio-option-padding"

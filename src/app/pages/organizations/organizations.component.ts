@@ -29,6 +29,8 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	currentURL: string;
 	currentMenu = 'projects';
 	previouslyLoadedOrganizationId: string;
+	previouslyLoadedEditionOrgId: string;
+
 	previouslyLoadedEditionId: string;
 
 	constructor(
@@ -51,7 +53,6 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				this.organizationId = params['organizationId'];
 				this.editionId = params['editionId'];
 				this.getOrganizations();
-				this.setNavigation();
 			}
 		});
 
@@ -84,10 +85,6 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				}
 			}
 
-			if (this.organizationId) {
-				this.getOrganizations();
-			}
-
 			let paramMenu = '';
 			if (url.includes('projects')) {
 				paramMenu = 'projects';
@@ -110,7 +107,10 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 
 			if (this.currentMenu != paramMenu) {
 				this.currentMenu = paramMenu;
-				this.setNavigation();
+
+			}
+			if (this.organizationId) {
+				this.getOrganizations();
 			}
 		}
 	}
@@ -209,7 +209,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	}
 
 	changeOrganization(): void {
-		this.setOrganizationData(this.selectedOrganization);
+
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedEdition = null;
 		this.editionList = null;
@@ -217,8 +217,11 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 		this.editionId = '0';
 		this.selectOrganization();
 	}
+
 	selectOrganization(): void {
-		this.setOrganizationData(this.selectedOrganization);
+    
+		this.setOrganizationData();
+
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedEdition = null;
 		this.editionList = [];
@@ -247,11 +250,9 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setOrganizationData(organization: any) {
-		this.selectedOrganization = organization;
+	setOrganizationData() {
 
 		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-
 		this.setNavigation();
 	}
 
@@ -273,7 +274,9 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	}
 
 	getEditions(): void {
-		if (this.previouslyLoadedEditionId == this.editionId) {
+
+		if (this.previouslyLoadedEditionOrgId == this.organizationId) {
+
 			this.editionSubscription = this.organizationsComponentService.getEditions().subscribe({
 				next: (results) => {
 					this.editionList = <any>results;
@@ -285,10 +288,16 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				next: (results) => {
 					this.editionList = results?.items;
 					this.organizationsComponentService.setEditions(this.editionList);
+					this.previouslyLoadedEditionOrgId = this.organizationId;
 					this.getSelectedEdition();
 				},
 			});
 		}
+	}
+
+	changeEdition(): void {
+		this.editionId = this.selectedEdition.id;
+		this.selectEdition();
 	}
 
 	getSelectedEdition(): void {
@@ -300,7 +309,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		if (!this.editionId) {
+		if (!this.selectedEdition && !this.editionId && this.editionId !== '0') {
 			this.getStoredEditionId();
 		}
 
@@ -312,7 +321,9 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				this.editionId = this.selectedEdition.id;
 				this.selectEdition();
 			} else {
-				this.editionId = undefined;
+
+				this.editionId = 0;
+
 				if (this.editionList.length === 0) {
 					this.notificationService.show('No editions', null, 'error', {
 						timeOut: 1000,
@@ -325,11 +336,11 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	}
 
 	selectEdition(): void {
-		this.showEditionData();
 
 		if (this.currentMenu == 'projects') {
 			if (this.previouslyLoadedEditionId != this.editionId) {
 				this.previouslyLoadedEditionId = this.editionId;
+				this.showEditionData();
 				const currentRoute = '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects';
 				if (this.currentURL != currentRoute) {
 					this.router.navigate([currentRoute]);
@@ -341,8 +352,6 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	showEditionData() {
 		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.organizationId));
 		localStorage.setItem('selectedEditionId', JSON.stringify(this.editionId));
-
-		this.setNavigation();
 	}
 
 	getStoredEditionId(): void {

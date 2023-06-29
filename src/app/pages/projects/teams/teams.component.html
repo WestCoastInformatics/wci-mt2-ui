@@ -16,7 +16,7 @@
 							[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'"
 							[(value)]="selectedOrganization"
 							(selectionChange)="selectOrganization()">
-							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3">
+							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox">
 								{{ organization.name }}
 							</mat-option>
 						</mat-select>
@@ -31,7 +31,7 @@
 							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
 							[(value)]="selectedEdition"
 							(selectionChange)="selectedEdition()">
-							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
 								{{ edition.name }}
 							</mat-option>
 						</mat-select>
@@ -47,7 +47,7 @@
 							[disableOptionCentering]="true"
 							[(value)]="selectedProject"
 							(selectionChange)="selectProject()">
-							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3">
+							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3 no-checkbox">
 								{{ project.name }}
 							</mat-option>
 						</mat-select>
@@ -64,7 +64,7 @@
 		<section>
 			<div class="d-flex mb-10">
 				<heading-with-count title="Project Teams" [count]="numberOfTeams"></heading-with-count>
-				<span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="w-53-pct float-right">
+				<span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="col-md-auto float-right">
 					<div>
 						<span>
 							To create a new team, first go to the

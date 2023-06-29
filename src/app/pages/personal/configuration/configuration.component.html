@@ -1,18 +1,18 @@
 <div class="content-header">
 	<div class="row header-title">
-		<span class="title-label">{{ this.user?.name }}</span>
+		<span class="title-label heading-label">{{ this.user?.name }}</span>
 	</div>
 </div>
 
 <div class="content-wrapper">
 	<app-sidebar [menuItems]="menu"></app-sidebar>
-	<div class="container-fluid mt-3">
+	<div class="rt2-container">
 		<span class="account-configuration">
-			<div class="section-header mb-3 form-title">Account Configuration</div>
+			<div class="head-title mb-3 form-title head-section-title-font">Account Configuration</div>
 			<div class="account-configuration-details">
 				<div class="account-configuration-blocks-1">
-					<div class="account-configuration-block main-block profile-block">
-						<div class="account-profile-head section-header form-title">Profile</div>
+					<div class="account-configuration-block main-block profile-block dashboard-section">
+						<div class="account-profile-head section-header head-section-title-font">Profile</div>
 						<div class="account-profile-mid">
 							<mat-form-field floatLabel="never" class="profile-name-field" appearance="fill">
 								<mat-label class="form-field-header">Name <span class="mandatory-field">*</span></mat-label>
@@ -42,8 +42,8 @@
 						</div>
 					</div>
 
-					<div class="account-configuration-block main-block profile-pic-block">
-						<div class="account-profile-head section-header form-title">Profile Picture</div>
+					<div class="account-configuration-block main-block profile-pic-block dashboard-section">
+						<div class="account-profile-head section-header head-section-title-font">Profile Picture</div>
 						<div class="account-profile-mid"><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
 						<div class="section-btn section-font">
 							<label aria-label="Delete Picture" title="Delete Picture" *ngIf="user?.iconUri" class="rt2-btn rt2-action-btn m-r-25em" (click)="onPhotoDelete()"> Delete Picture </label>

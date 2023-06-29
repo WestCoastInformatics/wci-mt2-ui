@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { lastValueFrom, Subscription } from 'rxjs';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
+
+import { ProjectsService } from 'src/app/services/rest/projects.service';
+
 import { NotificationService } from 'src/app/services/notification.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
@@ -42,6 +45,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
 		private readonly teamService: TeamsService,
+		private readonly projectsService: ProjectsService,
 		private readonly notificationService: NotificationService,
 		private readonly organizationsComponentService: OrganizationsComponentService
 	) {
@@ -181,7 +185,8 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	getProjects(): void {
 		if (this.editionId != this.previouslyLoadedId) {
 			this.previouslyLoadedId = this.editionId;
-			this.showLoadingSpinner = true;
+			this.showLoadingSpinner = false;
+
 			if (this.api) {
 				this.api.showLoadingOverlay();
 			}
@@ -194,38 +199,25 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 				this.api.redrawRows();
 				return;
 			}
-			this.refsetService.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true&includeTeamDetails=true').subscribe({
+
+			this.showLoadingSpinner = false;
+			this.refsetService.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true').subscribe({
 				next: async (results) => {
 					this.data = [];
 					this.projectList = results.items;
 
 					for (const project of this.projectList) {
 						this.data.push({
-							id: project.id,
 							name: `${project?.name}`,
 							locked: project?.privateProject,
 							description: `${project?.description}`,
-						});
-					}
-
-					this.api.setRowData(this.data);
-					this.api.redrawRows();
-					this.showLoadingSpinner = false;
-
-					const teamData = [];
-					for (const project of this.projectList) {
-						teamData.push({
+							teamlist: `${await this.getTeams(project?.id)}`,
 							id: project.id,
-							name: `${project?.name}`,
-							locked: project?.privateProject,
-							description: `${project?.description}`,
-							teams: project?.teamDetails,
 						});
+						this.api.setRowData(this.data);
+						this.api.redrawRows();
 					}
-					this.data = teamData;
-					this.projectList = teamData;
-					this.api.setRowData(this.data);
-					this.api.redrawRows();
+
 					this.showLoadingSpinner = false;
 				},
 				error: (error) => {
@@ -235,14 +227,32 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	async getTeams(projectId: any): Promise<any> {
+		const teamObject = { teams: [] };
+
+		if (projectId === 'undefined' || projectId === undefined) {
+			return JSON.stringify(teamObject);
+		} else {
+			teamObject.teams.push(await lastValueFrom(this.projectsService.getProjectTeams(projectId)));
+			return JSON.stringify(teamObject);
+		}
+	}
+
 	getTeamCount(data: any): number {
-		return (data && data.teams) ? data.teams.length : 0;
+		if (data && data.teamlist) {
+			const teams = JSON.parse(data.teamlist).teams[0];
+			return teams.total;
+		} else {
+			return 0;
+		}
 	}
 
 	getTeamsTitle(data: any): string {
-		if (data && data.teams) {
-			if (data.teams.length > 0) {
-				return 'Organization Teams:\n' + data.teams.map((team) => team.name).join(', \n');
+		if (data && data.teamlist) {
+			const teamData = JSON.parse(data.teamlist).teams[0];
+			const teams = teamData.items;
+			if (teams.length > 0) {
+				return 'Organization Teams:\n' + teams.map((t) => t.name).join(', \n');
 			}
 			return 'No Organization Teams';
 		}
@@ -260,16 +270,13 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					return;
 				}
 			}
-
-			if (!this.organizationId) {
-				this.getStoredOrganizationId();
-				this.showLoadingSpinner = false;
-			}
 		});
 	}
 
 	selectOrganization(): void {
-		this.setOrganizationData(this.selectedOrganization);
+
+		this.organizationId = this.selectedOrganization.id;
+
 		this.selectedEdition = null;
 		this.editionList = [];
 		this.getEditions();
@@ -310,10 +317,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					}
 				}
 
-				if (!this.editionId) {
-					this.getStoredEditionId();
-				}
-
 				if (!this.selectedEdition) {
 					// Pick the first one if nothing is working out
 					if (this.editionList[0] != undefined) {
@@ -321,8 +324,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 						this.selectedEdition.id = this.editionList[0].id;
 						this.selectEdition();
 					} else {
-						this.editionId = undefined;
-						this.showEditionData();
+						this.editionId = 0;
 					}
 				}
 			},
@@ -334,38 +336,9 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 
 	selectEdition(): void {
 		this.editionId = this.selectedEdition.id;
-		this.showEditionData();
-	}
 
-	showEditionData() {
-		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.organizationId));
 		if (this.editionId !== undefined) {
-			localStorage.setItem('selectedEditionId', JSON.stringify(this.editionId));
 			this.getProjects();
-		}
-	}
-
-	getStoredEditionId(): void {
-		if (localStorage.getItem('selectedEditionId') != 'undefined' && localStorage.getItem('selectedEditionId') != null) {
-			const storedEditionId = JSON.parse(localStorage.getItem('selectedEditionId'));
-			for (const edition of this.editionList) {
-				if (edition.id == storedEditionId) {
-					this.selectedEdition = edition;
-					this.selectEdition();
-					return;
-				}
-			}
-
-			// if the stored edition ID doesn't match anything remove it
-			localStorage.removeItem('selectedEditionId');
-
-			if (this.editionList && this.editionList.length > 0) {
-				this.selectedEdition = this.editionList[0];
-				this.selectEdition();
-			}
-		} else if (this.editionList && this.editionList.length > 0) {
-			this.selectedEdition = this.editionList[0];
-			this.selectEdition();
 		}
 	}
 
@@ -379,6 +352,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		if (this.organizationSubscription) {
 			this.organizationSubscription.unsubscribe();
 		}
+
 		if (this.editionSubscription) {
 			this.editionSubscription.unsubscribe();
 		}

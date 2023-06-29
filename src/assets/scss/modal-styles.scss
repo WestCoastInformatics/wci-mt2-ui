@@ -71,14 +71,17 @@
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: space-between;
-	padding: 1rem;
+	padding: 0.5rem;
 	border-bottom: 1px solid #dee2e6;
+	min-height: 2.5em;
 }
 
 .rt2-modal-title {
 	color: white;
 	letter-spacing: 1.5px;
 	padding-left: 0.25em;
+	position: absolute;
+	width: 93%;
 }
 
 .dialog-close-x {
@@ -88,6 +91,14 @@
 	background: none;
 	background-color: rgba(0, 0, 0, 0);
 	padding-bottom: 0.5em;
+	position: absolute;
+	right: 0.4em;
+	top: 0.4em;
+}
+
+.dialog-close-x-dark {
+	color: black !important;
+	font-size: 2em;
 }
 
 .rt2-modal-footer {
@@ -218,7 +229,7 @@
 	border-top-right-radius: 0.5rem;
 
 	h3 {
-		font-size: 1.2rem;
+		font-size: 1.2rem !important;
 		font-weight: 300;
 		color: #fff;
 		letter-spacing: 0.5px;
@@ -228,6 +239,15 @@
 .modal-body {
 	padding: 1rem;
 	background-color: white;
+
+	button {
+		font-size: 1em !important;
+	}
+
+	h3 {
+		font-size: 1.6rem !important;
+		letter-spacing: 0.5px;
+	}
 }
 
 .modal-footer {
@@ -238,4 +258,73 @@
 	justify-content: flex-end;
 	padding: 0.75rem;
 	border-top: 1px solid #dee2e6;
+
+	button {
+		font-size: 1em !important;
+		margin: 0.5em !important;
+		padding: 0 16px !important;
+	}
+}
+
+ecl-builder .modal-dialog {
+	margin: 1.75rem auto;
+	// align-items: center;
+}
+
+ecl-builder .modal-header {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem;
+	border-bottom: 1px solid #dee2e6;
+	background-color: #343a40;
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
+
+	h3 {
+		font-size: 1.4rem !important;
+		font-weight: 300;
+		color: #fff;
+		letter-spacing: 0.5px;
+	}
+	button {
+		margin-top: 1em;
+	}
+}
+
+ecl-builder .modal-body {
+	padding: 1rem;
+	background-color: white;
+
+	button {
+		font-size: 1em !important;
+	}
+
+	h3 {
+		font-size: 1.6rem !important;
+		letter-spacing: 0.5px;
+	}
+}
+
+ecl-builder .modal-footer {
+	display: flex;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0.75rem;
+	border-top: 1px solid #dee2e6;
+	height: 3.5em !important;
+
+	button {
+		font-size: 1.2em !important;
+		padding: 0.05em !important;
+		margin: 0.5em !important;
+	}
+}
+
+ecl-builder .circle-red,
+ecl-builder .circle-green {
+	padding: 0.25em;
 }
