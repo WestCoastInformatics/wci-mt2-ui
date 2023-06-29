@@ -331,16 +331,4 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.organizationSubscription.unsubscribe();
 		}
 	}
-
-	ngOnDestroy() {
-		if (this.routerParamsSubscription) {
-			this.routerParamsSubscription.unsubscribe();
-		}
-		if (this.routerEventSubscription) {
-			this.routerEventSubscription.unsubscribe();
-		}
-		if (this.organizationSubscription) {
-			this.organizationSubscription.unsubscribe();
-		}
-	}
 }
