@@ -77,7 +77,6 @@ export class ColumnChooserComponent {
 	}
 
 	openColumnChooser() {
-		console.log('open col choose');
 		const dialogId = 'columnChooserDialog';
 
 		const dialogData = {

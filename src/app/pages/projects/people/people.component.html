@@ -17,7 +17,7 @@
 							[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'"
 							[(value)]="selectedOrganization"
 							(selectionChange)="selectOrganization()">
-							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3" [title]="organization.name">
+							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
 								{{ organization.name }}
 							</mat-option>
 						</mat-select>
@@ -32,7 +32,7 @@
 							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
 							[(value)]="selectedEdition"
 							(selectionChange)="selectedEdition()">
-							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3">
+							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
 								{{ edition.name }}
 							</mat-option>
 						</mat-select>
@@ -49,7 +49,7 @@
 							[disableOptionCentering]="true"
 							[(value)]="selectedProject"
 							(selectionChange)="selectProject()">
-							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3" [title]="project.name">
+							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3 no-checkbox" [title]="project.name">
 								{{ project.name }}
 							</mat-option>
 						</mat-select>
@@ -67,7 +67,7 @@
 			<div class="d-flex mb-10">
 				<heading-with-count title="Project Users" [count]="dataCount"></heading-with-count>
 				<!-- <span class='section-header'>Project Users ({{dataCount}})</span> -->
-				<span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="w-80-pct float-right">
+				<span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="col-md-auto float-right">
 					<div>
 						To add a new user to this project, first go to the
 						<span class="pointer" title="Click add a new user to this project, first go to the organization users page">

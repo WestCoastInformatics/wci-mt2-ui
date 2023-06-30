@@ -1,19 +1,17 @@
 <div class="content-header">
 	<div class="row header-title">
-		<span class="title-label">Organizations</span>
+		<div class="col-md-auto"><div class="title-label heading-label">Organizations</div></div>
 		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
-			<mat-label>Choose Organization</mat-label>
-			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="'Choose Organization'" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
 				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
 					{{ organization.name }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<span class="title-label">Teams</span>
+		<div class="col-md-auto"><div class="title-label heading-label">Teams</div></div>
 		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
-			<mat-label>Choose Team</mat-label>
-			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
+			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="'Choose Team'" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
 				<mat-option *ngFor="let team of teamList" [value]="team" class="z-index-3 no-checkbox" [title]="team.name">
 					{{ team.name }}
 				</mat-option>
@@ -31,7 +29,7 @@
 			<!-- <div class="section-header mb-3 form-title"> Team Configuration </div> -->
 			<div class="teams-configuration-details">
 				<div class="teams-configuration-blocks-1">
-					<div class="teams-configuration-block main-block profile-block">
+					<div class="teams-configuration-block main-block profile-block dashboard-section">
 						<div class="teams-profile-head section-header head-section-title-font">Profile</div>
 
 						<div class="teams-profile-mid">
@@ -74,7 +72,9 @@
 					</div>
 
 					<div class="secondary-block">
-						<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()" class="teams-configuration-block-row team-permissions-block">
+						<div
+							*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()"
+							class="teams-configuration-block-row team-permissions-block dashboard-section">
 							<div class="save-permissions-head section-header head-section-title-font">Permissions</div>
 
 							<div class="save-permissions-mid form-field-header">
@@ -103,7 +103,9 @@
 							</div>
 						</div>
 
-						<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()" class="teams-configuration-block-row remove-teams-block">
+						<div
+							*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()"
+							class="teams-configuration-block-row remove-teams-block dashboard-section">
 							<div class="remove-team-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg" /> Remove this Team</div>
 							<div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
 							<div class="remove-teams-button">

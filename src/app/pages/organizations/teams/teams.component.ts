@@ -229,7 +229,9 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.previouslyLoadedId = this.organizationId;
 			let roles = [];
 			if (this.organizationId) {
-				this.showLoadingSpinner = true;
+
+				this.showLoadingSpinner = false;
+
 				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
 				if (this.selectedOrganization?.id) {
 					queryString = queryString + '&query=organizationId:' + this.selectedOrganization.id;
@@ -285,11 +287,6 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 					return;
 				}
 			}
-
-			if (!this.organizationId) {
-				this.getStoredOrganizationId();
-				this.showLoadingSpinner = false;
-			}
 		});
 	}
 
@@ -323,20 +320,15 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
-				}
-			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.organizationSubscription) {
+			this.organizationSubscription.unsubscribe();
 		}
 	}
 

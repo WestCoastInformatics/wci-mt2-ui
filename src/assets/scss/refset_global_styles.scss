@@ -354,6 +354,7 @@ tr.refset_tool_inactive_row {
 
 .format-option-drop-down {
 	width: 140px;
+	margin-top: 0.75em;
 }
 
 /*********  Styles for specific components by id ********/
@@ -433,7 +434,6 @@ tr.refset_tool_inactive_row {
 .rt2-concept-details-modal-column {
 	background-color: white;
 	border-radius: 3px;
-	margin-top: 20px;
 	margin-bottom: 15px;
 }
 
@@ -779,8 +779,17 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	top: 28px !important;
 }
 
+.directoryViewFilterField .mat-mdc-select-arrow,
+.rt2-custom-width-fields .mat-mdc-select-arrow {
+	margin-top: 1.2em;
+}
+
+.discussion-topic-field {
+	width: 25em;
+}
+
 .rt2-details-members-column .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
-	top: 40px !important;
+	top: 46px !important;
 }
 
 .rt2-refset-metadata-table {
@@ -800,12 +809,12 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 
 .rt2-refset-metadata-table .rt2-refset-metadata-value {
 	word-wrap: break-word;
+	padding-left: 1em;
 }
 
 .rt2-refset-metadata-table td.rt2-refset-metadata-label {
 	font-weight: $standard_font_weight_bold;
 	padding-left: 10px;
-	padding-right: 15px;
 	width: 200px;
 }
 
@@ -855,10 +864,10 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 }
 
 .clear-search {
-	color: #666666;
+	color: #444;
 	position: relative;
-	left: -13px;
-	top: -6px;
+	left: -10px;
+	top: 0.05em;
 	cursor: pointer;
 }
 
@@ -928,8 +937,13 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	}
 }
 
+.mat-mdc-chip-set .mdc-evolution-chip-set__chips {
+	margin-left: 0.01em !important;
+}
 .mat-mdc-standard-chip {
-	transform: scale(0.8);
+	height: 1.5em !important;
+	font-size: 0.95em !important;
+	margin-left: 0.25em;
 	margin-bottom: 5px;
 	border-radius: 8px;
 
@@ -1726,28 +1740,32 @@ img.rt2-edition-flag {
 	top: 50px;
 
 	.header-title {
-		align-items: baseline;
 		background-color: white;
-		min-height: 4.5em;
-		max-height: 4.5em;
-		margin-left: -1em;
-		box-shadow: 0 5px 7px -4px grey;
+		box-shadow: 0 4px 2px -2px grey;
+		z-index: 1000 !important;
+		min-height: 60px;
+		padding: 12px 0;
+		height: 4em;
 
 		.title-label {
-			margin-right: 20px;
+			line-height: 25px;
 			color: black;
-			padding-left: 30px;
-			width: 10em;
+			width: 100%;
+			margin-left: 1.25em !important;
 			@extend .page-header-font;
 		}
-
+		.heading-label {
+			margin-top: 0.3em;
+			margin-left: 0.8em !important;
+		}
 		.dashboard-title {
 			margin: auto 0;
+			margin-left: 0.8em !important;
 		}
 
 		.project-drop-down {
 			width: 25em;
-			margin-top: -1.5em;
+			margin-top: -2em;
 		}
 	}
 }
@@ -1805,10 +1823,13 @@ img.rt2-edition-flag {
 }
 
 .dashboard-section-mid {
-	height: 180px;
+	height: 165px;
 	overflow-y: scroll;
 }
 
+.text-muted {
+	margin-left: 0.25em;
+}
 .section-header,
 .section-btn {
 	color: $main-color;
@@ -1940,6 +1961,10 @@ app-date-text-floating-filter {
 
 .modal-label {
 	margin-bottom: 0.25rem;
+}
+
+.add-remove-descendants-modal-header {
+	height: 2.5em;
 }
 
 .add-all.disabled img,

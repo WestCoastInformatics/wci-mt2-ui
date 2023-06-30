@@ -3,7 +3,9 @@
 	<!-- <div class="section-header mb-3 form-title"> Organization Configuration </div> -->
 	<div class="organizations-configuration-details">
 		<div class="organizations-configuration-blocks-1">
-			<div class="organizations-configuration-block main-block profile-block">
+      
+			<div class="organizations-configuration-block main-block profile-block dashboard-section">
+
 				<div class="organization-profile-head section-header head-section-title-font">Profile</div>
 				<div class="organization-profile-mid">
 					<mat-form-field floatLabel="never" class="profile-name-field" appearance="fill">
@@ -37,7 +39,8 @@
 				</div>
 			</div>
 
-			<div class="organizations-configuration-block main-block profile-pic-block">
+			<div class="organizations-configuration-block main-block profile-pic-block dashboard-section">
+
 				<div class="organization-profile-head section-header head-section-title-font">Profile Picture</div>
 				<div class="organization-profile-mid organization-picture">
 					<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, selectedOrganization?.iconUri, 'organization')" class="large-icon-image" />
@@ -61,7 +64,8 @@
 				</div>
 			</div>
 
-			<div *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" class="organizations-configuration-block main-block profile-pic-block">
+			<div *ngIf="selectedOrganization && selectedOrganization.roles?.includes('ADMIN')" class="organizations-configuration-block main-block profile-pic-block dashboard-section">
+
 				<div class="organization-profile-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg" /> Remove this Organization</div>
 				<div class="organization-profile-mid">
 					Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.

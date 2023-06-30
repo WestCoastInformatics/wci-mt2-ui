@@ -174,41 +174,6 @@ const appRoutes: Routes = [
 			},
 		],
 	},
-	/*
-	{
-		path: 'organizations',
-		pathMatch: 'full',
-		component: OrganizationsComponent,
-		data: { breadcrumbLabel: 'Organizations' },
-		canActivate: [AuthGuardGuard],
-		children: [
-			{
-				path: 'organizations/:organizationId/edition/:editionId/projects',
-
-				component: OrganizationProjectsComponent,
-				data: { breadcrumbLabel: 'Projects' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: 'organizations/:organizationId/teams',
-				component: OrganizationTeamsComponent,
-				data: { breadcrumbLabel: 'Teams' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: 'organizations/:organizationId/people',
-				component: OrganizationPeopleComponent,
-				data: { breadcrumbLabel: 'Users' },
-				canActivate: [AuthGuardGuard],
-			},
-			{
-				path: 'organizations/:organizationId/configuration',
-				component: OrganizationConfigurationComponent,
-				data: { breadcrumbLabel: 'Configuration' },
-				canActivate: [AuthGuardGuard],
-			},
-		],
-	},*/
 	{
 		path: 'organization/:organizationId/edition/:editionId/projects/:projectId/refsets',
 		component: ProjectsRefsetComponent,

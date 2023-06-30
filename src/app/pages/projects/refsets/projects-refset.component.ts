@@ -356,7 +356,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 				for (const edition of this.editionList) {
 					if (this.editionId == edition.id) {
 						this.selectedEdition = edition;
-						this.getProjects();
+						this.selectEdition();
 						return;
 					}
 				}
@@ -392,7 +392,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 				for (const project of this.projectList) {
 					if (this.projectId == project.id) {
 						this.selectedProject = project;
-						this.showRefsetData();
+						this.selectProject();
 						return;
 					}
 				}

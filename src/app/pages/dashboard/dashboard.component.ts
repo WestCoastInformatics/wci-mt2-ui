@@ -285,7 +285,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 	getTeams(): void {
-		this.refsetService.getTeams('onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
+		this.refsetService.getTeams('members=' + this.currentUser.id + '&onlyUsersTeams=true&offset=0&sort=name&sortAscending=true').subscribe((results) => {
 			if (results.items != null && results.items.length > 1) {
 				const sortedJson = results.items.sort((a, b) => {
 					const orgA = a.organization.name;
@@ -304,4 +304,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+
+	toggleLoadingSpinner = (showSpinner = true) => {
+		this.showLoadingSpinner = showSpinner;
+	};
 }

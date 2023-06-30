@@ -29,7 +29,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 	gridParams: any;
 	gridApi: any;
 	gridColumnDefs = [];
-	showLoadingSpinner = true;
+	showLoadingSpinner = false;
 	uiUtility = UiUtility;
 	openedConfirmModal: any;
 	selectedUser: any;
@@ -185,7 +185,8 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		if (this.organizationId != this.previouslyLoadedId) {
 			this.previouslyLoadedId = this.organizationId;
 
-			this.showLoadingSpinner = true;
+			this.showLoadingSpinner = false;
+
 			this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 				this.data = results.items;
 				this.showLoadingSpinner = false;
@@ -203,11 +204,6 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 					this.selectOrganization();
 					return;
 				}
-			}
-
-			if (!this.organizationId) {
-				this.getStoredOrganizationId();
-				this.showLoadingSpinner = false;
 			}
 		});
 	}
@@ -257,20 +253,15 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
-				}
-			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.organizationSubscription) {
+			this.organizationSubscription.unsubscribe();
 		}
 	}
 	ngOnDestroy() {

@@ -1,3 +1,4 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
 <div class="content-header">
 	<div class="row header-title">
 		<span class="title-label dashboard-title">My Dashboard</span>
@@ -19,8 +20,8 @@
 							</div>
 						</ng-container>
 					</div>
-					<div *ngIf="false && currentUser?.roles?.includes('all-all-admin')">
-						<create-new-organization-modal></create-new-organization-modal>
+					<div>
+						<create-new-organization-modal (loadingSpinner)="toggleLoadingSpinner($event)"></create-new-organization-modal>
 					</div>
 				</div>
 			</section>

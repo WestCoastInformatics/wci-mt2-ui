@@ -7,7 +7,7 @@
 			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
 		</button>
 	</div>
-	<div class="modal-body rt2-lockable">
+	<div class="modal-body rt2-lockable add-remove-concept-modal-body">
 		<div class="rt2-flex-wrap">
 			<div class="add-remove-concept-hierarchy-modal-Section-container">
 				<as-split direction="horizontal" gutterSize="4">
@@ -83,7 +83,7 @@
 
 					<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 50 : 0" [minSize]="isConceptDetailsLoading || conceptDetail ? 37 : 0">
 						<div class="rt2-concept-details-modal-column" *ngIf="isConceptDetailsLoading || conceptDetail">
-							<div class="row" *ngIf="isConceptDetailsLoading">
+							<div class="row loading-details" *ngIf="isConceptDetailsLoading">
 								<div>Loading...</div>
 							</div>
 
