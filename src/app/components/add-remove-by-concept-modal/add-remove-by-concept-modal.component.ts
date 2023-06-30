@@ -412,7 +412,13 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 		this.showLoadingSpinner = true;
 
 		for (let i = 0; i < this.data.items.length; i++) {
-			this.conceptIdArray.push(this.data.items[i].code);
+			if (this.showActiveConceptsOnly) {
+				if (this.data.items[i].active) {
+					this.conceptIdArray.push(this.data.items[i].code);
+				}
+			} else {
+				this.conceptIdArray.push(this.data.items[i].code);
+			}
 		}
 
 		RefsetUtility.addRemoveMembersByList(

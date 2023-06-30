@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetDetails } from 'src/app/pages/refset-details';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
@@ -18,13 +17,8 @@ export class CreateNewOrganizationModalComponent {
 	firstLoad = true;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(false);
-	
-	constructor(
-		private modalService: NgbModal,
-		private organizationsService: OrganizationsService,
-		private notificationService: NotificationService,
-		private readonly refsetDetails: RefsetDetails
-	) {}
+
+	constructor(private modalService: NgbModal, private organizationsService: OrganizationsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
 
 	ngOnInit() {}
 
@@ -36,14 +30,12 @@ export class CreateNewOrganizationModalComponent {
 	}
 
 	openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
-
 		this.firstLoad = true;
 		this.description = '';
 		this.openedModel = this.modalService.open(createNewOrganizationDialog, { backdrop: 'static', keyboard: false });
 	}
 
 	processOperationReturn = (data) => {
-
 		this.loadingSpinner.emit(false);
 		this.refsetDetails.ngOnInit();
 		this.description = '';
@@ -65,7 +57,6 @@ export class CreateNewOrganizationModalComponent {
 	}
 
 	createOrganizationObject(): void {
-		
 		this.loadingSpinner.emit(true);
 
 		const params: any = {
@@ -73,7 +64,7 @@ export class CreateNewOrganizationModalComponent {
 			name: this.name,
 			description: this.description,
 			primaryContactEmail: this.email,
-			affiliate: true
+			affiliate: true,
 		};
 
 		this.organizationsService.createOrganization(params).subscribe(

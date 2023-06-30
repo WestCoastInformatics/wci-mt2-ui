@@ -229,7 +229,6 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.previouslyLoadedId = this.organizationId;
 			let roles = [];
 			if (this.organizationId) {
-
 				this.showLoadingSpinner = false;
 
 				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
@@ -317,18 +316,6 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			} else {
 				return 'No User Teams';
 			}
-		}
-	}
-
-	ngOnDestroy() {
-		if (this.routerParamsSubscription) {
-			this.routerParamsSubscription.unsubscribe();
-		}
-		if (this.routerEventSubscription) {
-			this.routerEventSubscription.unsubscribe();
-		}
-		if (this.organizationSubscription) {
-			this.organizationSubscription.unsubscribe();
 		}
 	}
 
