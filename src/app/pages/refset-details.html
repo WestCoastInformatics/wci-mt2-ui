@@ -11,15 +11,17 @@
 
 			<div class="rt2-refset-details-title-name-section">
 				<div class="metadata-collapsible-container-title page-header-font">{{refsetData?.name}}</div>
-				<app-refset-discussion-list
-					*ngIf="refsetData"
-					type="REFSET"
-					[refsetInternalId]="id"
-					[refsetId]="refsetId"
-					[refsetName]="refsetData.name"
-					[roles]="refsetData.roles"
-					[(discussionCount)]="openDiscussionCount">
-				</app-refset-discussion-list>
+				<div class="header-app-refset-discussion-list">
+					<app-refset-discussion-list
+						*ngIf="refsetData"
+						type="REFSET"
+						[refsetInternalId]="id"
+						[refsetId]="refsetId"
+						[refsetName]="refsetData.name"
+						[roles]="refsetData.roles"
+						[(discussionCount)]="openDiscussionCount">
+					</app-refset-discussion-list>
+				</div>
 			</div>
 
 			<div class="set-of-buttons"></div>
@@ -749,12 +751,12 @@
 											<div class="text-right close-button rt2-concept-details-close-btn">
 												<button
 													type="button"
-													class="close dialog-close-x dialog-close-x-dark close-icon-font"
+													class="close dialog-close-x-dark"
 													(click)="closeConceptDetails()"
 													aria-hidden="false"
 													aria-label="Close Concept Details"
 													title="Close Concept Details">
-													<span aria-hidden="true" class="dialog-close-x dialog-close-x-dark close-icon-font">&times;</span>
+													<span aria-hidden="true" class="close-icon-font">&times;</span>
 												</button>
 											</div>
 										</div>

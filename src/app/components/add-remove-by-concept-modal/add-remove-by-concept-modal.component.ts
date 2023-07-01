@@ -410,17 +410,29 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	addRemoveAllMembers(type) {
 		this.sendChangeLockedStatus(true);
 		this.showLoadingSpinner = true;
+		this.conceptIdArray = [];
 
 		for (let i = 0; i < this.data.items.length; i++) {
-			if (this.showActiveConceptsOnly) {
-				if (this.data.items[i].active) {
-					this.conceptIdArray.push(this.data.items[i].code);
+			if (this.showActiveConceptsOnly === true) {
+				if (this.data.items[i].active === true) {
+					if (type == 'remove') {
+						if (this.data.items[i].memberOfRefset === true) {
+							this.conceptIdArray.push(this.data.items[i].code);
+						}
+					} else {
+						this.conceptIdArray.push(this.data.items[i].code);
+					}
 				}
 			} else {
-				this.conceptIdArray.push(this.data.items[i].code);
+				if (type == 'remove') {
+					if (this.data.items[i].memberOfRefset === true) {
+						this.conceptIdArray.push(this.data.items[i].code);
+					}
+				} else {
+					this.conceptIdArray.push(this.data.items[i].code);
+				}
 			}
 		}
-
 		RefsetUtility.addRemoveMembersByList(
 			this.refset.id,
 			this.refset.refsetId,
