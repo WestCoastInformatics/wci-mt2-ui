@@ -73,6 +73,7 @@ export class CreateRefsetComponent implements OnInit {
 	conceptError = '';
 	dialog: DialogService;
 	selectedCombinationRefsetsForm = new FormControl();
+	isAffiliate: boolean = false;
 
 	@Input() existingBranchVersions: any;
 	@Input() isDetailsPage = false;
@@ -159,6 +160,11 @@ export class CreateRefsetComponent implements OnInit {
 		this.resetModal();
 
 		this.selectedModuleId = this.inputProperties.project.edition.modules[0];
+		this.isAffiliate = this.inputProperties.project.edition.organization.affiliate;
+
+		if (this.isAffiliate) {
+			this.localSet = true;
+		}
 
 		if (this.editMode) {
 			this.setupEditMode();
@@ -246,6 +252,7 @@ export class CreateRefsetComponent implements OnInit {
 		this.selectedCopyRefset = '';
 		this.selectedUUID = '';
 		this.copySelectedVersion = '';
+		this.isAffiliate = false;
 	}
 
 	setupEditMode(): void {
@@ -267,6 +274,7 @@ export class CreateRefsetComponent implements OnInit {
 		this.versionNotes = inputs.versionNotes;
 		this.selectedReferenceType = inputs.referenceType;
 		this.definitionClauses = inputs.definitionClauses;
+		this.isAffiliate = inputs.project.edition.organization.affiliate;
 		//this.detectChanges.detectChanges();
 	}
 
@@ -757,12 +765,17 @@ export class CreateRefsetComponent implements OnInit {
 				this.selectedNarrative = results?.narrative ? 'Narrative is copied from <i>' + name + '</i>:<br/><br/>' + results?.narrative : '';
 				this.selectedTags = results?.tags;
 				this.privateRefset = results?.privateRefset;
-				this.localSet = results?.localSet;
 				this.comboRefset = results?.comboRefset;
 				//this.selectedParentConcept = results?.parentConceptId;
 				this.definitionClauses[0].value = results?.definitionClauses[0]?.value;
 				this.type = results?.type;
 				this.selectedUUID = results?.id;
+
+				if (this.isAffiliate) {
+					this.localSet = true;
+				} else {
+					this.localSet = results?.localSet;
+				}
 			},
 		});
 	}

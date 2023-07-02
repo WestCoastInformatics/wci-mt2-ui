@@ -83,4 +83,8 @@ export class PersonalLandingComponent implements OnInit {
 	goToTeam(teamId: string, organizationId: string): void {
 		this.router.navigate([`/organization/${organizationId}/teams/${teamId}/people`]);
 	}
+
+	navigateToPage(path) {
+		this.router.navigate([path]);
+	}
 }

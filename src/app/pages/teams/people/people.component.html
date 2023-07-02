@@ -1,19 +1,17 @@
 <div class="content-header">
 	<div class="row header-title">
-		<span class="title-label">Organizations</span>
+		<div class="col-md-auto"><div class="title-label heading-label">Organizations</div></div>
 		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
-			<mat-label>Choose Organization</mat-label>
-			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
+			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="'Choose Organization'" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
 				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
 					{{ organization.name }}
 				</mat-option>
 			</mat-select>
 		</mat-form-field>
 
-		<span class="title-label">Teams</span>
+		<div class="col-md-auto"><div class="title-label heading-label">Teams</div></div>
 		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
-			<mat-label>Choose Team</mat-label>
-			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam()">
+			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="'Choose Team'" [(value)]="selectedTeam" (selectionChange)="selectTeam()">
 				<mat-option *ngIf="teamList === null || teamList.length === 0">No Teams</mat-option>
 				<mat-option *ngFor="let team of teamList" [value]="team" class="z-index-3 no-checkbox" [title]="team.name">
 					{{ team.name }}
@@ -32,16 +30,17 @@
 			<section>
 				<div class="mb-10 d-flex">
 					<heading-with-count title="Team Users" [count]="dataCount"></heading-with-count>
-					<span *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="float-right">
+					<span *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')" class="col-md-auto float-right">
 						<table>
 							<tr>
 								<td class="pr-20">
 									To add a new user to this team, first go to the
 									<span class="pointer" title="Click to add a new user to this team in the organization users page">
-										<a href="{{ '/organizations/' + selectedOrganization?.id + '/people' }}">organization users page</a>
+										<a href="{{ '/organizations/' + selectedOrganization?.id + '/users' }}">organization users page</a>
 									</span>
-									and add the user there.
 								</td>
+							</tr>
+							<tr>
 								<td>
 									<add-member-to-team-modal [id]="selectedTeam?.id" [name]="selectedTeam?.name" [users]="userList"> </add-member-to-team-modal>
 								</td>

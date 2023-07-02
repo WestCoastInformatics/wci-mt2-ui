@@ -2,7 +2,7 @@
 <button *ngIf="disableCompare" [title]="disableTitle" mat-button class="rt2-link-btn disable-menu-btn">Compare</button>
 
 <ng-template #comparisonLaunchDialog let-modal>
-	<div class="modal-header rt2-modal-header">
+	<div class="modal-header rt2-modal-header compare-modal-header">
 		<button ngbAutofocus class="unfocus-btn"></button>
 		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Set</h3>
 
@@ -24,11 +24,11 @@
 			</div>
 
 			<div class="dialog-form-field-row boxed-row top-aligned">
-				<div class="col dialog-form-label">
+				<div class="col-md-auto dialog-form-label">
 					<label>Comparison Reference Set:<span class="mandatory-field">*</span></label>
 				</div>
 
-				<div class="col dialog-form-field">
+				<div class="col dialog-form-field launch-comparison-dialog-form-fields">
 					<mat-radio-group>
 						<mat-radio-button
 							class="dialog-form-radio-option-padding"
@@ -215,18 +215,17 @@
 					<div id="comparisonGridSection" class="container-fluid py-0 px-2">
 						<div *ngIf="isConceptDetailsLoading || conceptDetail" class="metadata-collapsible-container white rt2-flex-column">
 							<div>
-								<div *ngIf="isConceptDetailsLoading">
+								<div class="row" *ngIf="isConceptDetailsLoading">
 									<div>Loading...</div>
 								</div>
 
 								<div *ngIf="conceptDetail">
 									<div class="row align-items-center no-gutters">
 										<div class="col rt2-concept-details-title-name">Concept Details</div>
-
-										<div class="text-right close-button">
-											<button mat-icon-button (click)="closeConceptDetails()" aria-hidden="false" class="rt2-table-action-icon">
-												<mat-icon aria-label="Close Concept Details" title="Close Concept Details">close </mat-icon>
-											</button>
+										<div class="col-md-auto">
+											<div type="button" class="close dialog-close-x-dark" aria-label="Close" (click)="closeConceptDetails()">
+												<span aria-hidden="true" class="close-icon-font">&times;</span>
+											</div>
 										</div>
 									</div>
 
@@ -273,38 +272,47 @@
 									<div class="rt2-concept-details-concept-section add-remove-concept-hierarchy-modal-details-size h-fit-content">
 										<div class="row m-0">
 											<!-- Info Section -->
-											<div class="rt2-concept-details-concept-info-column" [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
-												<div class="container-fluid">
+											<div class="col rt2-concept-details-concept-info-column" [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
+												<div class="row">
 													<!-- Name -->
-													<div class="row rt2-concept-details-concept-title-row">
-														<div class="text-left">
-															<div class="rt2-concept-details-taxonomy-icon status-icon-container">
-																<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-																<img
-																	*ngIf="!conceptDetail.defined"
-																	title="Primitive"
-																	aria-label="Primitive"
-																	class="rt2-logo mr-2 p-0"
-																	src="/assets/unlinedTaxonomyIcon.png" />
-															</div>
-														</div>
-														<div class="col rt2-concept-details-concept-name">
-															{{ conceptDetail?.name }}
-														</div>
-														<div class="text-right">
-															<div class="open-container">
-																<button
-																	mat-icon-button
-																	(click)="openInNewWindow(conceptDetail.code)"
-																	class="rt2-concept-details-action-icon"
-																	aria-hidden="false"
-																	aria-label="Open Concept in New SNOMED Browser Window"
-																	title="Open Concept in SNOMED Browser Window">
-																	<mat-icon>open_in_new </mat-icon>
-																</button>
-															</div>
-														</div>
-													</div>
+													<table class="row rt2-concept-details-concept-title-row">
+														<tr>
+															<td class="text-left">
+																<div class="rt2-concept-details-taxonomy-icon status-icon-container">
+																	<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+																	<img
+																		*ngIf="!conceptDetail.defined"
+																		title="Primitive"
+																		aria-label="Primitive"
+																		class="rt2-logo mr-2 p-0"
+																		src="/assets/unlinedTaxonomyIcon.png" />
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<td class="text-center">
+																<div class="col rt2-concept-details-concept-name">
+																	{{ conceptDetail?.name }}
+																</div>
+															</td>
+														</tr>
+
+														<tr>
+															<td class="text-right">
+																<div class="open-container">
+																	<button
+																		mat-icon-button
+																		(click)="openInNewWindow(conceptDetail.code)"
+																		class="rt2-concept-details-action-icon"
+																		aria-hidden="false"
+																		aria-label="Open Concept in New SNOMED Browser Window"
+																		title="Open Concept in SNOMED Browser Window">
+																		<mat-icon>open_in_new </mat-icon>
+																	</button>
+																</div>
+															</td>
+														</tr>
+													</table>
 
 													<!-- ID -->
 													<div class="row rt2-concept-details-concept-row">

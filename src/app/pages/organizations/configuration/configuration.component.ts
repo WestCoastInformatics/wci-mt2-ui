@@ -1,22 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
-import { RefsetService } from 'src/app/services/rest/refset.service';
+import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
 	selector: 'organization-configuration',
 	templateUrl: './configuration.component.html',
 	styleUrls: ['configuration.component.scss'],
 })
-export class OrganizationConfigurationComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class OrganizationConfigurationComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	organization: any = {};
 	profileNameValue = '';
 	profileEmailValue = '';
@@ -24,20 +22,20 @@ export class OrganizationConfigurationComponent implements OnInit {
 	selectedOrganization: any;
 	organizationId: any;
 	organizationList = [];
+	organizationSubscription: Subscription;
 	emailError = '';
 	showLoadingSpinner = false;
 	uiUtility = UiUtility;
+	currentURL: string;
+	previouslyLoadedId: string;
 
 	constructor(
-		private readonly breadcrumbService: BreadcrumbService,
 		private readonly notificationService: NotificationService,
 		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
 		private readonly organizationsService: OrganizationsService,
-		private authenticationService: AuthenticationService,
+		private readonly organizationsComponentService: OrganizationsComponentService,
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
-		private location: Location
+		private readonly router: Router
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -45,11 +43,22 @@ export class OrganizationConfigurationComponent implements OnInit {
 	ngOnInit(): void {
 		this.titleService.setTitle('Reference Set Tool - Organizations');
 
-		this.route.params.subscribe((params) => {
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			this.organizationId = params['organizationId'];
-			this.setNavigation();
 		});
 
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('configuration')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
+		});
+
+		this.profileNameValue = '';
+		this.profileEmailValue = '';
+		this.profileDescriptionValue = '';
+		this.selectedOrganization = {};
 		this.getOrganizations();
 	}
 
@@ -59,34 +68,39 @@ export class OrganizationConfigurationComponent implements OnInit {
 		}
 	}
 
-	setNavigation() {
-		this.breadcrumbService.setBreadcrumbs([{ path: '/dashboard', label: 'Dashboard' }, { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Configuration' : '' }]);
-
-		this.menu = [
-			{ name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
-			{ name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-			{ name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
-			{ name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs', isActive: true },
-		];
-
-		this.location.replaceState('/organizations/' + this.organizationId + '/configuration');
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			if (url.includes('organizations') || url.includes('organization')) {
+				const parts = url.split('/');
+				for (let p = 0; p < parts.length; p++) {
+					if (parts[p].includes('organizations') || parts[p].includes('organization')) {
+						if (parts[p + 1] != undefined) {
+							this.organizationId = parts[p + 1];
+						}
+					}
+				}
+			}
+			if (this.organizationId) {
+				this.profileNameValue = '';
+				this.profileEmailValue = '';
+				this.profileDescriptionValue = '';
+				this.selectedOrganization = {};
+				this.getOrganizations();
+			}
+		}
 	}
 
 	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe((results) => {
-			this.organizationList = results.items;
+		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
+			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
 				if (this.organizationId === organization.id) {
-					this.setOrganizationData(organization);
+					this.selectedOrganization = organization;
+					this.selectOrganization();
 					return;
 				}
-			}
-
-			this.getStoredOrganizationId();
-
-			if (!this.selectedOrganization) {
-				this.showLoadingSpinner = false;
 			}
 		});
 	}
@@ -105,8 +119,6 @@ export class OrganizationConfigurationComponent implements OnInit {
 		this.profileDescriptionValue = organization.description;
 
 		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-
-		this.setNavigation();
 	}
 
 	isEmailOrOrganizationChange() {
@@ -188,20 +200,15 @@ export class OrganizationConfigurationComponent implements OnInit {
 		}
 	}
 
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
-				}
-			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.organizationSubscription) {
+			this.organizationSubscription.unsubscribe();
 		}
 	}
 }

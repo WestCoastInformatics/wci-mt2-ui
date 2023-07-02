@@ -4,20 +4,15 @@
 	<div class="row header-title">
 		<div class="d-flex jc-space-between w-100-pct projects-dropdown-block">
 			<div>
-				<span class="title-label">Projects</span>
+				<div class="title-label">Projects</div>
 			</div>
 
-			<div class="d-flex rt2-select-group m-r-25">
+			<div class="d-flex rt2-select-group m-r-10">
 				<span class="projects-dropdown-block">
 					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
 						<mat-select
 							[disableOptionCentering]="true"
-							[placeholder]="
-								selectedOrganization?.name
-									? selectedOrganization?.name
-									: 'Select
-                                Organization'
-							"
+							[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'"
 							[(value)]="selectedOrganization"
 							(selectionChange)="selectOrganization()">
 							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox">
@@ -73,7 +68,7 @@
 					<div [hidden]="refsetData?.length < 1">
 						<app-refset-download [isDetailPage]="true" [refsets]="refsetData" [project]="selectedProject"></app-refset-download>
 					</div>
-					<div [hidden]="!selectedProject?.roles?.includes('AUTHOR')">
+					<div [hidden]="!selectedProject?.roles?.includes('AUTHOR') || refsetData?.length < 1">
 						<bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
 					</div>
 				</div>

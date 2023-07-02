@@ -31,10 +31,10 @@
 
 	.page-title {
 		padding-left: 3rem;
-		color: #555555;
-		width: 33%;
-		margin-top: 0.5em;
+		color: #000;
+		margin-top: 0.25em;
 		margin-left: -0.5em;
+		font-size: 1.8rem !important;
 	}
 
 	.justify-content-end {
@@ -44,13 +44,12 @@
 	.dropdown-group {
 		display: inline-flex !important;
 		padding-right: 3rem;
-		width: 53%;
 	}
 }
 
 .rt2-directory-chooser-column {
 	padding-right: 20px;
-	margin-top: -1em;
+	margin-top: -0.8em;
 }
 
 .member-search-icon {

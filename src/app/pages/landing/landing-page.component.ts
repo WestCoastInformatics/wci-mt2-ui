@@ -6,7 +6,6 @@ import { TemplateRenderer } from 'src/app/components/cellRenderers/template.rend
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
@@ -67,7 +66,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	searchCallArray = [];
 	uiUtility = UiUtility;
 
-	@Output() loadingSpinner = new EventEmitter<boolean>(true);
+	@Output() loadingSpinner = new EventEmitter<boolean>(false);
 
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
@@ -81,7 +80,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
 	constructor(
 		private router: Router,
-		private titleService: Title,
 		private dialogFactoryService: DialogFactoryService,
 		private refsetService: RefsetService,
 		private changeDetectorRef: ChangeDetectorRef,
@@ -268,7 +266,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 				this.changeDetectorRef.detectChanges();
 			},
 			error: (error) => {
-				this.showLoadingSpinner = true;
+				this.showLoadingSpinner = false;
 			},
 		});
 	}
@@ -377,8 +375,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	};
 
 	onGridCellClick = (event) => {
-		if (event.column.colId === 'information' || event.column.colId === 'actions') {
-		} else {
+		if (event.column.colId !== 'information' || event.column.colId !== 'actions') {
 			const selectedRows = this.refsetGridApi.getSelectedRows();
 			let selectedId: string;
 			let selectedVersionDate: string;
@@ -437,8 +434,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
 	openInformation(refsetId: string) {
 		if (this.showLoadingSpinner == false) {
-			this.showLoadingSpinner = true;
-			this.loadingSpinner.emit(true);
+			this.showLoadingSpinner = false;
+			this.loadingSpinner.emit(false);
 		} else {
 			return;
 		}

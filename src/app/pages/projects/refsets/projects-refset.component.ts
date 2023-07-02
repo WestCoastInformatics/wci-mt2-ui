@@ -327,7 +327,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	selectOrganization(): void {
-		this.showLoadingSpinner = true;
+		if (this.refsetGridApi) {
+			this.refsetGridApi.showLoadingOverlay();
+		}
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedEdition = null;
 		this.editionList = [];
@@ -354,7 +356,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 				for (const edition of this.editionList) {
 					if (this.editionId == edition.id) {
 						this.selectedEdition = edition;
-						this.getProjects();
+						this.selectEdition();
 						return;
 					}
 				}
@@ -372,7 +374,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	selectEdition(): void {
-		this.showLoadingSpinner = true;
+		if (this.refsetGridApi) {
+			this.refsetGridApi.showLoadingOverlay();
+		}
 		this.editionId = this.selectedEdition.id;
 		this.selectedProject = null;
 		this.projectList = [];
@@ -381,14 +385,14 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	getProjects(): void {
-		this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&offset=0&sort=name&sortAscending=true&includeModuleNames=true').subscribe({
+		this.refsetService.getProjects('includeMembers=false&query=editionId:' + this.selectedEdition.id + '&offset=0&sort=name&sortAscending=true&includeModuleNames=true').subscribe({
 			next: (results) => {
 				this.projectList = results.items;
 
 				for (const project of this.projectList) {
 					if (this.projectId == project.id) {
 						this.selectedProject = project;
-						this.showRefsetData();
+						this.selectProject();
 						return;
 					}
 				}
@@ -406,7 +410,9 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	}
 
 	selectProject(): void {
-		this.showLoadingSpinner = true;
+		if (this.refsetGridApi) {
+			this.refsetGridApi.showLoadingOverlay();
+		}
 		this.projectId = this.selectedProject.id;
 		this.showRefsetData();
 	}

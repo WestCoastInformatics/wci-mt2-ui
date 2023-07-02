@@ -21,9 +21,9 @@
 }
 
 .rt2-details-member-status-field {
-	margin-left: 11em;
+	margin-left: 6em;
 	padding: 0;
-	margin-top: -0.5em;
+	margin-top: -0.2em;
 
 	.mat-form-field-infix {
 		width: 153px;
@@ -48,11 +48,12 @@
 }
 
 .rt2-custom-width-fields {
-	width: 35em;
+	margin-top: 0.85em;
 }
 
 .rt2-custom-width-fields-btn {
 	width: 45em;
+	margin-top: 1em;
 }
 
 .rt2-toggle-buttons {
@@ -69,6 +70,10 @@
 
 	margin-right: 15px;
 	margin-bottom: 10px;
+
+	box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12) !important;
+	border-color: #00a9e0;
+	border-style: groove;
 }
 
 .rt2-details-member-taxonomy {
@@ -170,6 +175,7 @@
 
 .rt2-details-search-field {
 	width: 85%;
+	padding-bottom: 0.4em;
 
 	// set this to 20px less than the field to leave room for the cancel 'X'
 	.mat-form-field-flex {
@@ -236,7 +242,19 @@
 }
 
 app-refset-discussion-list {
-	margin-top: -1.5em;
+	margin-top: -1em;
+	margin-left: 0.5em;
+}
+.rt2-refset-metadata-header {
+	padding-left: 0 !important;
+	margin-left: 0.5em;
+}
+.rt2-refset-members-header {
+	margin-left: 0.5em;
+}
+
+.header-app-refset-discussion-list {
+	margin-top: 0;
 }
 
 .no-attributes {
@@ -304,7 +322,7 @@ app-refset-discussion-list {
 }
 
 .metadata-collapsible-container-group-header {
-	padding-left: 30px;
+	padding-left: 10px;
 	padding-right: 30px;
 	padding-top: 15px;
 	padding-bottom: 15px;

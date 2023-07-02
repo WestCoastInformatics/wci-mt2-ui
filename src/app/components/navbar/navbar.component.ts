@@ -84,6 +84,13 @@ export class NavbarComponent implements OnInit {
 		this.authenticationService.logoutUser();
 	}
 
+	landing() {
+
+		const breadcrumbs = [];
+		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
+		this.router.navigate(['']);
+	}
+
 	resources() {
 		this.router.navigate(['']);
 	}

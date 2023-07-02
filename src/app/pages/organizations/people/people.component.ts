@@ -1,14 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit, AfterViewInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { Subscription } from 'rxjs';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
-import { RefsetService } from 'src/app/services/rest/refset.service';
-import { TeamsService } from 'src/app/services/rest/teams.service';
+import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -16,39 +13,41 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 	selector: 'organization-people',
 	templateUrl: './people.component.html',
 })
-export class OrganizationPeopleComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class OrganizationPeopleComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
+	frameworkComponents: any;
 	data = [];
-	showTable = false;
 	defaultColDef = {};
 	peopleList = [];
 	selectedOrganization: any;
 	organizationId: any;
 	organizationList = [];
+	organizationSubscription: Subscription;
 	gridOptions: any;
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
 	gridParams: any;
 	gridApi: any;
 	gridColumnDefs = [];
-	showLoadingSpinner = true;
+	showLoadingSpinner = false;
 	uiUtility = UiUtility;
 	openedConfirmModal: any;
 	selectedUser: any;
+	currentURL: string;
+	previouslyLoadedId: string;
+	gridInterval: any;
 
 	@ViewChild('peopleNameSection') peopleNameSection: TemplateRef<any>;
 	@ViewChild('peopleTeamsSection') peopleTeamsSection: TemplateRef<any>;
 	@ViewChild('confirmInactiveMemberModal') confirmInactiveMemberModal: NgbModal;
 
 	constructor(
-		private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
 		private readonly organizationsService: OrganizationsService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
-		private readonly teamService: TeamsService,
-		private readonly modalService: NgbModal,
-		private location: Location
+		private readonly organizationsComponentService: OrganizationsComponentService,
+		private readonly modalService: NgbModal
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -56,15 +55,51 @@ export class OrganizationPeopleComponent implements OnInit {
 	ngOnInit(): void {
 		this.titleService.setTitle('Reference Set Tool - Organizations - Users');
 
-		this.route.params.subscribe((params) => {
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			this.organizationId = params['organizationId'];
-			this.setNavigation();
 		});
 
-		this.getOrganizations();
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('users')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
+		});
+
+		this.gridOptions = {
+			context: { componentParent: this },
+			pagination: false,
+			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+			suppressPaginationPanel: true,
+			paginationPageSize: this.gridPaging.pageSize,
+			rowSelection: 'single',
+			enableCellTextSelection: true,
+			onCellClicked: this.onGridCellClick,
+			onGridReady: this.onGridReady,
+			frameworkComponents: {
+				'templateRenderer': TemplateRenderer,
+				'categoryFilterComponent': CategoryFilterComponent,
+			},
+			defaultColDef: {
+				sortable: true,
+				resizable: true,
+				suppressMenu: true,
+				filter: true,
+				floatingFilter: true,
+				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
+				unSortIcon: true,
+			},
+			enableBrowserTooltips: true,
+		};
+
+		this.gridInterval = setInterval(() => {
+			this.loadGridColumns();
+			clearInterval(this.gridInterval);
+		}, 5);
 	}
 
-	ngAfterViewInit() {
+	loadGridColumns() {
 		this.gridColumnDefs = [
 			{
 				field: 'name',
@@ -92,57 +127,40 @@ export class OrganizationPeopleComponent implements OnInit {
 			},
 		];
 
-		this.gridOptions = {
-			context: { componentParent: this },
-			pagination: false,
-			suppressColumnVirtualisation: false, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-			suppressPaginationPanel: true,
-			paginationPageSize: this.gridPaging.pageSize,
-			rowSelection: 'single',
-			enableCellTextSelection: true,
-			onCellClicked: this.onGridCellClick,
-			onGridReady: this.onGridReady,
-			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
-				'categoryFilterComponent': CategoryFilterComponent,
-			},
-			defaultColDef: {
-				sortable: true,
-				resizable: true,
-				suppressMenu: true,
-				filter: true,
-				floatingFilter: true,
-				floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false, suppressAndOrCondition: true },
-				unSortIcon: true,
-			},
-			enableBrowserTooltips: true,
-		};
-
 		this.data = [];
 	}
 
-	setNavigation() {
-		this.breadcrumbService.setBreadcrumbs([{ path: '/dashboard', label: 'Dashboard' }, { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Users' : '' }]);
-
-		this.menu = [
-			{ name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
-			{ name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users' },
-			{ name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user', isActive: true },
-		];
-
-		const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-		if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
-			this.menu.push({ name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs' });
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			if (url.includes('organizations') || url.includes('organization')) {
+				const parts = url.split('/');
+				for (let p = 0; p < parts.length; p++) {
+					if (parts[p].includes('organizations') || parts[p].includes('organization')) {
+						if (parts[p + 1] != undefined) {
+							this.organizationId = parts[p + 1];
+						}
+					}
+				}
+			}
+			if (this.organizationId) {
+				this.peopleList = [];
+				this.data = [];
+				if (this.gridParams?.api) {
+					this.onGridReady(this.gridParams);
+				}
+			}
 		}
-
-		this.location.replaceState('organizations/' + this.organizationId + '/people');
 	}
 
 	onGridReady = (params) => {
 		this.gridParams = params;
-		this.gridApi = params.api;
-		this.gridApi.setRowData(this.data);
+		if (params?.api) {
+			this.gridApi = params.api;
+			this.gridApi.showLoadingOverlay();
+			this.gridApi.setRowData(this.data);
+		}
+		this.getOrganizations();
 	};
 
 	onGridCellClick = (event) => {
@@ -164,29 +182,28 @@ export class OrganizationPeopleComponent implements OnInit {
 	}
 
 	getPeople(): void {
-		this.showLoadingSpinner = true;
-		this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
-			this.data = results.items;
-			this.showTable = true;
+		if (this.organizationId != this.previouslyLoadedId) {
+			this.previouslyLoadedId = this.organizationId;
+
 			this.showLoadingSpinner = false;
-		});
+
+			this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
+				this.data = results.items;
+				this.showLoadingSpinner = false;
+			});
+		}
 	}
 
 	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe((results) => {
-			this.organizationList = results.items;
+		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
+			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
 				if (this.organizationId === organization.id) {
-					this.setOrganizationData(organization);
+					this.selectedOrganization = organization;
+					this.selectOrganization();
 					return;
 				}
-			}
-
-			this.getStoredOrganizationId();
-
-			if (!this.selectedOrganization) {
-				this.showLoadingSpinner = false;
 			}
 		});
 	}
@@ -202,7 +219,6 @@ export class OrganizationPeopleComponent implements OnInit {
 
 		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
-		this.setNavigation();
 		this.getPeople();
 	}
 
@@ -237,20 +253,15 @@ export class OrganizationPeopleComponent implements OnInit {
 		}
 	}
 
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
-				}
-			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.organizationSubscription) {
+			this.organizationSubscription.unsubscribe();
 		}
 	}
 }

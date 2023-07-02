@@ -1,10 +1,12 @@
-<div class="section-list text-right" title="Create New Organization" aria-label="Create New Organization">
-	<a (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class="rt2-btn rt2-action-btn">Create New Organization</a>
+<div class="section-list text-right hide">
+	<div (click)="openCreateNewOrganizationModal(createNewOrganizationDialog)" class="rt2-btn rt2-action-btn" title="Create Affiliate Organization" aria-label="Create Affiliate Organization">
+		Create Affiliate Organization
+	</div>
 </div>
 
 <ng-template #createNewOrganizationDialog let-modal>
 	<div class="modal-header rt2-modal-header">
-		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Create New Organization</h3>
+		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Create Affiliate Organization</h3>
 
 		<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="modal.dismiss('Cross click')">
 			<span aria-hidden="true" class="dialog-close-x close-icon-font">&times;</span>
@@ -13,25 +15,6 @@
 
 	<div class="modal-body rt2-lockable">
 		<table>
-			<tr>
-				<td>
-					<label class="modal-label-edition">Edition: <span class="mandatory-field">*</span></label>
-				</td>
-				<td>
-					<div class="row">
-						<div>
-							<mat-form-field floatLabel="never" appearance="fill" class="col default-font">
-								<mat-select class="rt2-modal-select" [(value)]="selectedEdition">
-									<mat-option *ngIf="editionsList.length === 0">No Editions Avaialable</mat-option>
-									<mat-option *ngFor="let edition of editionsList" [value]="edition">
-										{{ edition.name }}
-									</mat-option>
-								</mat-select>
-							</mat-form-field>
-						</div>
-					</div>
-				</td>
-			</tr>
 			<tr>
 				<td>
 					<label class="modal-label">Name: <span class="mandatory-field">*</span></label>
@@ -65,13 +48,13 @@
 		<button
 			ngbAutofocus
 			type="button"
-			[disabled]="name === '' || !selectedEdition || email === '' || !isValidEmail()"
+			[disabled]="name === '' || email === '' || !isValidEmail()"
 			(click)="createOrganizationObject()"
 			aria-hidden="false"
-			class="rt2-btn rt2-acttion-btn"
-			aria-label="Create Organization"
-			title="Create Organization">
-			Create Organization
+			class="rt2-btn rt2-action-btn"
+			aria-label="Create Affiliate Organization"
+			title="Create Affiliate Organization">
+			Create Affiliate Organization
 		</button>
 	</div>
 </ng-template>

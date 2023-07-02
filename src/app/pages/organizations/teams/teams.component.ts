@@ -1,42 +1,45 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { Subscription } from 'rxjs';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
 	selector: 'organization-teams',
 	templateUrl: './teams.component.html',
 })
-export class OrganizationTeamsComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class OrganizationTeamsComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	data = [];
 	defaultColDef = {};
 	teamList = [];
 	selectedOrganization: any;
 	organizationId: string;
 	organizationList: any;
-	showLoadingSpinner = true;
+	organizationSubscription: Subscription;
+	editionId: string;
+	showLoadingSpinner = false;
 	gridParams: any;
 	gridApi: any;
 	gridColumnDefs = [];
 	gridOptions: any;
 	gridPaging = { pageSize: 10, pageSizeOptions: [10, 25, 50, 100], totalKnown: false, totalRows: null, manualStateRefresh: new Boolean(true) };
+	currentURL: string;
+	previouslyLoadedId: string;
 
 	@ViewChild('descriptionSection') descriptionSection: TemplateRef<any>;
 	@ViewChild('peopleSection') peopleSection: TemplateRef<any>;
 
 	constructor(
-		private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
 		private readonly refsetService: RefsetService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router,
-		private location: Location
+		private readonly organizationsComponentService: OrganizationsComponentService
 	) {
 		document.body.scrollTop = 0;
 	}
@@ -44,12 +47,17 @@ export class OrganizationTeamsComponent implements OnInit {
 	ngOnInit(): void {
 		this.titleService.setTitle('Reference Set Tool - Organizations');
 
-		this.route.params.subscribe((params) => {
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			this.organizationId = params['organizationId'];
-			this.setNavigation();
 		});
 
-		this.getOrganizations();
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('teams')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
+		});
 
 		this.gridColumnDefs = [
 			{ field: 'id', hide: true },
@@ -174,24 +182,29 @@ export class OrganizationTeamsComponent implements OnInit {
 		};
 
 		this.data = [];
+		this.getOrganizations();
 	}
 
-	setNavigation() {
-		this.breadcrumbService.setBreadcrumbs([{ path: '/dashboard', label: 'Dashboard' }, { label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' }]);
-
-		this.menu = [
-			{ name: 'Projects', link: '/organizations/' + this.organizationId + '/edition/0/projects', icon: 'fa fa-folder-open' },
-			{ name: 'Teams', link: '/organizations/' + this.organizationId + '/teams', icon: 'fa fa-users', isActive: true },
-			{ name: 'Users', link: '/organizations/' + this.organizationId + '/people', icon: 'fa fa-user' },
-		];
-
-		const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-		if (!configShowing && this.selectedOrganization && this.selectedOrganization.roles.includes('ADMIN')) {
-			this.menu.push({ name: 'Configuration', link: '/organizations/' + this.organizationId + '/configuration', icon: 'fa fa-cogs' });
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			if (url.includes('organizations') || url.includes('organization')) {
+				const parts = url.split('/');
+				for (let p = 0; p < parts.length; p++) {
+					if (parts[p].includes('organizations') || parts[p].includes('organization')) {
+						if (parts[p + 1] != undefined) {
+							this.organizationId = parts[p + 1];
+						}
+					}
+				}
+			}
+			if (this.organizationId) {
+				this.teamList = [];
+				this.data = [];
+				this.onGridReady(this.gridParams);
+				this.getOrganizations();
+			}
 		}
-
-		this.location.replaceState('/organizations/' + this.organizationId + '/teams');
 	}
 
 	get dataCount() {
@@ -200,26 +213,33 @@ export class OrganizationTeamsComponent implements OnInit {
 
 	onGridReady = (params) => {
 		this.gridParams = params;
-		this.gridApi = params.api;
-		// BAC: are these here because the view children arn't ready yet in ngOnInit?
-		this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
-		this.gridColumnDefs[5].cellRendererParams = { template: this.peopleSection };
-		this.gridApi.setColumnDefs(this.gridColumnDefs);
-		this.getTeams();
+		if (params?.api) {
+			this.gridApi = params.api;
+			this.gridApi.showLoadingOverlay();
+
+			// BAC: are these here because the view children arn't ready yet in ngOnInit?
+			this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
+			this.gridColumnDefs[5].cellRendererParams = { template: this.peopleSection };
+			this.gridApi.setColumnDefs(this.gridColumnDefs);
+		}
 	};
 
 	getTeams(): void {
-		let roles = [];
+		if (this.organizationId != this.previouslyLoadedId) {
+			this.previouslyLoadedId = this.organizationId;
+			let roles = [];
+			if (this.organizationId) {
+				this.showLoadingSpinner = false;
 
-		if (this.selectedOrganization?.id) {
-			this.showLoadingSpinner = true;
+				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
+				if (this.selectedOrganization?.id) {
+					queryString = queryString + '&query=organizationId:' + this.selectedOrganization.id;
+				}
+				this.refsetService.getTeams(queryString).subscribe((results) => {
+					this.data = [];
+					this.teamList = results.items?.filter((team) => team.organizationId === this.selectedOrganization?.id);
 
-			this.refsetService.getTeams('sort=name&sortAscending=true&includeMembers=true').subscribe((results) => {
-				this.data = [];
-				this.teamList = results.items;
-
-				for (const team of this.teamList) {
-					if (team?.organization?.id === this.selectedOrganization?.id) {
+					for (const team of this.teamList) {
 						roles = roles.concat(team.roles);
 						this.data.push({
 							id: team.id,
@@ -227,38 +247,44 @@ export class OrganizationTeamsComponent implements OnInit {
 							description: team.description,
 							role: team.roles.sort().join(', ').toLowerCase(),
 							email: team.primaryContactEmail,
-							members: team.members ? team.members.length : '0',
+							members: team.members ? team.memberList.length : '0',
 							memberList: team.memberList,
 						});
 					}
-				}
 
-				roles = [...new Set(roles)].sort();
+					roles = [...new Set(roles)].sort();
+					this.gridApi.setRowData(this.data);
+					this.showLoadingSpinner = false;
+				});
+			} else {
+				this.data = [];
 				this.gridApi.setRowData(this.data);
 				this.showLoadingSpinner = false;
-			});
-		} else {
-			this.data = [];
-			this.gridApi.setRowData(this.data);
-			this.showLoadingSpinner = false;
+			}
 		}
 	}
 
+	onGridCellClick = (event) => {
+		const selectedRows = this.gridApi.getSelectedRows();
+		let selectedId: string;
+
+		selectedRows.forEach(function (selectedRow, index) {
+			selectedId = selectedRow.id;
+		});
+
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
+	};
+
 	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe((results) => {
-			this.organizationList = results.items;
+		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
+			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
 				if (this.organizationId === organization.id) {
-					this.setOrganizationData(organization);
+					this.selectedOrganization = organization;
+					this.selectOrganization();
 					return;
 				}
-			}
-
-			this.getStoredOrganizationId();
-
-			if (!this.selectedOrganization) {
-				this.showLoadingSpinner = false;
 			}
 		});
 	}
@@ -274,35 +300,34 @@ export class OrganizationTeamsComponent implements OnInit {
 
 		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 
-		this.setNavigation();
-		this.onGridReady(this.gridParams);
+		this.getTeams();
 	}
 
-	onGridCellClick = (event) => {
-		const selectedRows = this.gridApi.getSelectedRows();
-		let selectedId: string;
+	getTeamsCount(data: any): number {
+		if (data) {
+			return data.teams.length;
+		}
+	}
 
-		selectedRows.forEach(function (selectedRow, index) {
-			selectedId = selectedRow.id;
-		});
-
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
-	};
-
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
-				}
+	getTeamsTitle(data: any): string {
+		if (data) {
+			if (data.teams) {
+				return 'User Teams:\n' + data?.teams.map((t) => t.name).join(', \n');
+			} else {
+				return 'No User Teams';
 			}
+		}
+	}
 
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.organizationSubscription) {
+			this.organizationSubscription.unsubscribe();
 		}
 	}
 }

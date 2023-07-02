@@ -3,8 +3,8 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="row justify-content-end align-items-baseline">
-		<div class="page-title">Reference Set Library <span [hidden]="!numOfMembers">{{'(' + numOfMembers + ')'}}</span></div>
-		<div class="dropdown-group">
+		<div class="col page-title">Reference Set Library <span [hidden]="!numOfMembers">{{'(' + numOfMembers + ')'}}</span></div>
+		<div class="col-md-auto dropdown-group">
 			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
 			</div>
