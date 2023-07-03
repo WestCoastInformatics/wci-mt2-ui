@@ -116,19 +116,23 @@
 <ng-template #directoryActionSection let-params>
 	<div class="d-flex rt2-wrap">
 		<div class="col-2">
-			<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data"> </app-refset-download>
+			<div class="library-app-refset-download">
+				<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data"> </app-refset-download>
+			</div>
 		</div>
 
 		<div class="col-2">
-			<app-refset-discussion-list
-				*ngIf="params && params.data"
-				type="REFSET"
-				[refsetInternalId]="params.data.id"
-				[refsetId]="params.data.refsetId"
-				[refsetName]="params.data.name"
-				[roles]="params.data.roles"
-				[(discussionCount)]="params.data.openDiscussionCount">
-			</app-refset-discussion-list>
+			<div class="library-app-refset-discussion-list">
+				<app-refset-discussion-list
+					*ngIf="params && params.data"
+					type="REFSET"
+					[refsetInternalId]="params.data.id"
+					[refsetId]="params.data.refsetId"
+					[refsetName]="params.data.name"
+					[roles]="params.data.roles"
+					[(discussionCount)]="params.data.openDiscussionCount">
+				</app-refset-discussion-list>
+			</div>
 		</div>
 	</div>
 </ng-template>
