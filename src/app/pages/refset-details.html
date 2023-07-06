@@ -203,7 +203,7 @@
 
 						<upgrade-modal
 							(loadingSpinner)="toggleLoadingSpinner($event)"
-							*ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
+							*ngIf="(this.showMembersSection && ((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0)"
 							[refsetData]="refsetData"
 							[membersOfRefset]="membersGridData"
 							[refsetId]="refsetData.refsetId"
@@ -214,7 +214,7 @@
 							(loadingSpinner)="toggleLoadingSpinner($event)"
 							type="button"
 							color="red"
-							*ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
+							*ngIf="(this.showMembersSection && (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')))"
 							(click)="openCancelUpgrade(cancelUpgradeDialog)"
 							aria-hidden="false"
 							class="rt2-btn rt2-action-btn"
