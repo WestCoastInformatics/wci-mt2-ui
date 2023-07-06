@@ -22,12 +22,17 @@ export class ErrorHandlingService {
 			this.notificationService.show('Logged out, please log in again.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 			localStorage.clear();
 			this.router.navigate(['/login']);
+
 		} else if (error.status === 403) {
 			this.notificationService.show('The user is not allowed to perform this action.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+
 		} else if (error.status >= 400 && error.status < 500) {
-			console.log(error);
-			const errorMessage = error.message || `Error ${error.status}`;
-			this.notificationService.show(errorMessage, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+
+			if (!error.url.includes('refsetservice/concept/')) {
+				const errorMessage = error.error || `Error ${error.status}`;
+				this.notificationService.show(errorMessage, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
+			}
+
 		} else if (error.status >= 500 && error.status < 600) {
 			this.notificationService.show('Unexpected application error.', null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 		}
