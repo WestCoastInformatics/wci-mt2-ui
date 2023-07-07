@@ -179,9 +179,11 @@ export class LaunchComparisonModalComponent {
 
 	comparisonRefsetSelected(event) {
 		const comparisonRefset = event.value;
-		this.comparisonRefsetVersionOptions = RefsetUtility.getVersionOptions(comparisonRefset);
-		this.comparisonRefsetName = comparisonRefset.name;
-		this.comparisonRefsetInternalId = this.comparisonRefsetVersionOptions[0]?.value;
+		if (comparisonRefset !== undefined) {
+			this.comparisonRefsetVersionOptions = RefsetUtility.getVersionOptions(comparisonRefset);
+			this.comparisonRefsetName = comparisonRefset.name;
+			this.comparisonRefsetInternalId = this.comparisonRefsetVersionOptions[0]?.value;
+		}
 	}
 
 	checkComplete() {

@@ -229,9 +229,7 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.previouslyLoadedId = this.organizationId;
 			let roles = [];
 			if (this.organizationId) {
-
-				this.showLoadingSpinner = false;
-
+				this.showLoadingSpinner = true;
 				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
 				if (this.selectedOrganization?.id) {
 					queryString = queryString + '&query=organizationId:' + this.selectedOrganization.id;
@@ -317,6 +315,23 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			} else {
 				return 'No User Teams';
 			}
+		}
+	}
+
+	getStoredOrganizationId(): void {
+		if (localStorage.getItem('selectedOrganizationId')) {
+			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
+
+			for (const organization of this.organizationList) {
+				if (organization.id == storedOrganizationId) {
+					this.selectedOrganization = organization;
+					this.selectOrganization();
+					return;
+				}
+			}
+
+			// if the stored organization ID doesn't match anything remove it
+			localStorage.removeItem('selectedOrganizationId');
 		}
 	}
 

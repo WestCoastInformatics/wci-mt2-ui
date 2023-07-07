@@ -472,7 +472,8 @@ tr.refset_tool_inactive_row {
 	}
 }
 
-.createNewRefsetDialog > .modal-dialog {
+.createNewRefsetDialog > .modal-dialog,
+.launch-comparison-dialog > .modal-dialog {
 	max-width: 1200px;
 }
 
@@ -1798,7 +1799,7 @@ img.rt2-edition-flag {
 	background-color: #f8f9fa;
 	border: none;
 	border-radius: 0.25rem;
-	margin-bottom: 30px;
+	margin-bottom: 1.5em;
 
 	.ag-row,
 	.ag-header-cell-text {
@@ -1823,7 +1824,7 @@ img.rt2-edition-flag {
 }
 
 .dashboard-section-mid {
-	height: 165px;
+	height: 171px;
 	overflow-y: scroll;
 }
 
@@ -2244,4 +2245,8 @@ ngb-typeahead-window.dropdown-menu button {
 
 heading-with-count {
 	width: 100%;
+}
+
+.hide {
+	display: none !important;
 }
