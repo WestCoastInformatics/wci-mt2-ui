@@ -276,7 +276,7 @@
 												<div class="row">
 													<!-- Name -->
 													<table class="row rt2-concept-details-concept-title-row">
-														<tr>
+														<tr class="col-2">
 															<td class="text-left">
 																<div class="rt2-concept-details-taxonomy-icon status-icon-container">
 																	<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
@@ -289,7 +289,7 @@
 																</div>
 															</td>
 														</tr>
-														<tr>
+														<tr class="col">
 															<td class="text-center">
 																<div class="col rt2-concept-details-concept-name">
 																	{{ conceptDetail?.name }}
@@ -297,7 +297,7 @@
 															</td>
 														</tr>
 
-														<tr>
+														<tr class="col-1 mr-10">
 															<td class="text-right">
 																<div class="open-container">
 																	<button
@@ -315,7 +315,7 @@
 													</table>
 
 													<!-- ID -->
-													<div class="row rt2-concept-details-concept-row">
+													<div class="m-l-10 mb-7em rt2-concept-details-concept-row">
 														<div class="rt2-concept-details-concept-id-label">SCTID</div>
 														<div class="col rt2-concept-details-concept-id-text">
 															{{ conceptDetail?.code }}
@@ -323,18 +323,18 @@
 													</div>
 
 													<!-- ECL -->
-													<div class="row rt2-concept-details-concept-row">
-														<div class="col rt2-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |</div>
+													<div class="rt2-concept-details-concept-row">
+														<div class="mb-10 mt-10 rt2-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |</div>
 													</div>
 
 													<!-- Descriptions -->
-													<div *ngFor="let description of conceptDetail?.descriptions" class="row rt2-concept-details-concept-row">
-														<div class="rt2-concept-details-concept-description-language">
+													<div *ngFor="let description of conceptDetail?.descriptions" class="m-l-10 m-r-10 mt-10 rt2-concept-details-concept-row">
+														<span class="rt2-concept-details-concept-description-language">
 															{{ description?.language }}
-														</div>
-														<div class="col rt2-concept-details-concept-description-text">
+														</span>
+														<span class="rt2-concept-details-concept-description-text">
 															{{ description?.term }}
-														</div>
+														</span>
 													</div>
 												</div>
 											</div>
