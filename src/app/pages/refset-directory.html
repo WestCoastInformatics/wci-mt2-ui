@@ -58,13 +58,13 @@
 			aria-label="View All Reference Set Metadata"
 			title="View Reference Set Metadata"
 			(click)="openInformation(params.data.refsetId)">
-			<mat-icon class="scale-70-pct">information</mat-icon>
+			<mat-icon class="scale-85-pct">information</mat-icon>
 		</button>
 		<span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
 	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>
-		<div class="container-fluid overflow-auto w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
+		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
 			<div class="row rt2-refset-details-title-name d-block" title="{{data.name}}" aria-label="{{data.name}}">
 				<p class="fs-18 mb-0 ml-10">{{data.name}}</p>
 				<p class="fs-16 ml-10">

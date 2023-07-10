@@ -627,8 +627,8 @@ export class LaunchComparisonModalComponent {
 	changeModalSize(): void {
 		const modalDialog = <HTMLElement>document.getElementsByClassName('modal-dialog')[0];
 		if (modalDialog) {
-			modalDialog.style.width = '1240px';
-			modalDialog.style.maxWidth = '1380px';
+			modalDialog.style.width = '1380px';
+			modalDialog.style.maxWidth = '2560px';
 		}
 
 		const modalContent = <HTMLElement>document.getElementsByClassName('modal-content')[0];
