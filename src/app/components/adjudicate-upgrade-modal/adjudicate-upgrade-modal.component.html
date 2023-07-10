@@ -282,7 +282,7 @@
 		{{ formatReason(params?.data?.replacementConcepts[0]?.reason) }}
 	</span>
 	<span *ngIf="params.data.isSearch">
-		<mat-form-field floatLabel="never" appearance="fill" class="w-400 mt-10 directoryViewFilterField rt2-details-members-column">
+		<mat-form-field floatLabel="never" appearance="fill" class="w-400">
 			<mat-label>Add Concept by ID or FSN</mat-label>
 			<mat-select (selectionChange)="selectedConceptChanged($event)">
 				<input class="h-50 w-300" placeholder="Type here..." (keydown)="handleInput($event)" (input)="onSearchChange($event.target.value)" (mouseover)="$event.target.focus()" />
@@ -300,7 +300,7 @@
 			height="18px"
 			aria-label="Add"
 			title="Add Manual Replacement"
-			class="m-l-10 grey-add-symbol-icon"
+			class="grey-add-symbol-icon"
 			[ngClass]="{ 'disabled': isLocked }"
 			alt="Add symbol shown when you're able to add a concept"
 			[disabled]="isLocked" />

@@ -117,23 +117,19 @@
 					<div class="d-flex rt2-wrap">
 						<div class="row">
 							<div class="col-6">
-								<div class="library-app-refset-download">
-									<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)"> </app-refset-download>
-								</div>
+								<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)"> </app-refset-download>
 							</div>
 
 							<div class="col-6">
-								<div class="library-app-refset-discussion-list">
-									<app-refset-discussion-list
-										*ngIf="params && params.data"
-										type="REFSET"
-										[refsetInternalId]="params.data.id"
-										[refsetId]="params.data.refsetId"
-										[refsetName]="params.data.name"
-										[roles]="params.data.roles"
-										[(discussionCount)]="params.data.openDiscussionCount">
-									</app-refset-discussion-list>
-								</div>
+								<app-refset-discussion-list
+									*ngIf="params && params.data"
+									type="REFSET"
+									[refsetInternalId]="params.data.id"
+									[refsetId]="params.data.refsetId"
+									[refsetName]="params.data.name"
+									[roles]="params.data.roles"
+									[(discussionCount)]="params.data.openDiscussionCount">
+								</app-refset-discussion-list>
 							</div>
 						</div>
 					</div>

@@ -1,4 +1,11 @@
+.launch-comparison-dialog > .modal-dialog {
+	max-width: 1000px;
+}
+
 .show-comparison-dialog > .modal-dialog {
+	width: 1240px;
+	max-width: 1380px;
+
 	.children-section {
 		height: 525px;
 	}

@@ -358,7 +358,7 @@ export class AdjudicateUpgradeModalComponent {
 		const replacementColumns = ['reason', 'replacementCode', 'replacementId', 'replacementEnPtSection'];
 		let replacementSort = false;
 		let replacementFilter = false;
-		const sorts = this.refsetGridColumnApi.getColumnState();
+		const sorts = this.refsetGridApi.getSortModel();
 		const filters = this.refsetGridApi.getFilterModel();
 
 		for (const sort of sorts) {
@@ -391,7 +391,7 @@ export class AdjudicateUpgradeModalComponent {
 		}
 
 		const replacementColumns = ['reason', 'replacementCode', 'replacementId', 'replacementEnPtSection'];
-		const sorts = this.refsetGridColumnApi.getColumnState();
+		const sorts = this.refsetGridApi.getSortModel();
 		const rowNodes = params;
 
 		for (const sort of sorts) {
@@ -517,7 +517,7 @@ export class AdjudicateUpgradeModalComponent {
 				this.concept ? this.concept.code : this.selectedRow['data'].replacementConcepts[0].code
 			)
 			.subscribe((x) => {
-				this.getUpgradeData();
+				this.onGridReady(this.originalGridParams);
 				this.refsetDetails.toggleLoadingSpinner(false);
 			});
 		this.selectedConcepts = undefined;
@@ -531,7 +531,7 @@ export class AdjudicateUpgradeModalComponent {
 			this.refsetService.modifyMembersForUpgrade(this.refsetData.id, this.chosenConceptCode, changeMethod, this.concept.code, JSON.stringify(body)).subscribe((x) => {
 				// force auto-add of the replacement concept to the refset
 				this.addReplacementFlag = true;
-				this.getUpgradeData();
+				this.onGridReady(this.originalGridParams);
 				this.refsetDetails.toggleLoadingSpinner(false);
 				this.disableAddRemove = true;
 			});
@@ -548,14 +548,14 @@ export class AdjudicateUpgradeModalComponent {
 	processChangedMemberEffects = (conceptStatusArray) => {
 		this.refsetDetails.showLoadingSpinner = true;
 
-		this.getUpgradeData();
+		this.onGridReady(this.originalGridParams);
 		this.refsetDetails.showLoadingSpinner = false;
 		this.disableAddRemove = false;
 	};
 
 	hideIncludedReplacements(toggle: any): void {
 		this.hideReplacements = toggle.checked;
-		this.getUpgradeData();
+		this.onGridReady(this.originalGridParams);
 	}
 
 	formatReason(reason: string): string {
@@ -632,7 +632,7 @@ export class AdjudicateUpgradeModalComponent {
 	}
 
 	changeLanguage($event: any) {
-		this.getUpgradeData();
+		this.onGridReady(this.originalGridParams);
 	}
 
 	onGridReady = (gridReadyParams) => {
@@ -640,62 +640,12 @@ export class AdjudicateUpgradeModalComponent {
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridColumnApi = gridReadyParams.columnApi;
 
+		this.refsetDetails.showLoadingSpinner = true;
+
+		const pageNumber = this.refsetGridApi.paginationGetPageSize();
 		const filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
 		const newFilterString = filter;
 		this.refsetGridLastFilter = newFilterString;
-		//this.refsetDetails.showLoadingSpinner = true;
-
-		this.getUpgradeData();
-
-		//set placeholders on the grid floating filter fields
-		document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
-			const label = obj.getAttribute('aria-label');
-			let title = label.substring(0, label.indexOf('Filter Input'));
-			if ((title.includes('Inactive') || title.includes('Replacement')) && !title.includes('ID')) {
-				title = label.split(' ')[0] + ' ' + this.selectedLanguage + ' ';
-			}
-			obj.setAttribute('placeholder', title + '...');
-		});
-
-		const self = this;
-		document.querySelectorAll('.add-all, .remove-all').forEach((obj: HTMLElement) => {
-			obj.addEventListener('click', function (e) {
-				if (!obj.classList.contains('disabled')) {
-					const memberItems = self.membersInCommon.items;
-					const isAdd = obj.classList.contains('add-all');
-					const inactiveConcepts = memberItems.filter((items: any) => {
-						return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
-					});
-					if (inactiveConcepts.length > 0) {
-						self.changeLockedStatus(true);
-						self.refsetDetails.showLoadingSpinner = true;
-						self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
-							self.processChangedMemberEffects(null);
-						});
-					}
-				}
-			});
-		});
-
-		this.changeDetection.detectChanges();
-	};
-
-	addRemoveAllConcepts(isAdd) {
-		const memberItems = this.membersInCommon.items;
-		const inactiveConcepts = memberItems.filter((items: any) => {
-			return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
-		});
-		if (inactiveConcepts.length > 0) {
-			this.changeLockedStatus(true);
-			this.refsetDetails.showLoadingSpinner = true;
-			this.refsetService.addRemoveAllInactiveRefsetMembers(this.refsetData.id, isAdd).subscribe(() => {
-				this.processChangedMemberEffects(null);
-			});
-		}
-	}
-
-	getUpgradeData() {
-		const pageNumber = this.refsetGridApi.paginationGetPageSize();
 
 		const restParams: any = {
 			displayType: 'list',
@@ -805,7 +755,38 @@ export class AdjudicateUpgradeModalComponent {
 				this.changeLockedStatus(false);
 			}
 		);
-	}
+
+		//set placeholders on the grid floating filter fields
+		document.querySelectorAll('.ag-floating-filter-full-body .ag-input-field-input').forEach((obj: any) => {
+			const label = obj.getAttribute('aria-label');
+			let title = label.substring(0, label.indexOf('Filter Input'));
+			if ((title.includes('Inactive') || title.includes('Replacement')) && !title.includes('ID')) {
+				title = label.split(' ')[0] + ' ' + this.selectedLanguage + ' ';
+			}
+			obj.setAttribute('placeholder', title + '...');
+		});
+
+		const self = this;
+		document.querySelectorAll('.add-all, .remove-all').forEach((obj: HTMLElement) => {
+			obj.addEventListener('click', function (e) {
+				if (!obj.classList.contains('disabled')) {
+					const memberItems = self.membersInCommon.items;
+					const isAdd = obj.classList.contains('add-all');
+					const inactiveConcepts = memberItems.filter((items: any) => {
+						return items?.active == false && (!isAdd || !items.replacementConcepts[0]?.existingMember);
+					});
+					if (inactiveConcepts.length > 0) {
+						self.changeLockedStatus(true);
+						self.refsetDetails.showLoadingSpinner = true;
+						self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
+							self.processChangedMemberEffects(null);
+						});
+					}
+				}
+			});
+		});
+		this.changeDetection.detectChanges();
+	};
 
 	getConceptName(descriptionsString) {
 		let conceptName: any = '';

@@ -1,7 +1,7 @@
 <button *ngIf="!disableCompare" class="rt2-link-btn" (click)="openLaunchModal(comparisonLaunchDialog)">Compare</button>
 <button *ngIf="disableCompare" [title]="disableTitle" mat-button class="rt2-link-btn disable-menu-btn">Compare</button>
 
-<ng-template #comparisonLaunchDialog class="launch-comparison-dialog" let-modal>
+<ng-template #comparisonLaunchDialog let-modal>
 	<div class="modal-header rt2-modal-header compare-modal-header">
 		<button ngbAutofocus class="unfocus-btn"></button>
 		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Set</h3>
@@ -68,7 +68,7 @@
 								<mat-option *ngIf="refsetOptions.length === 0 && !refsetOptionsLoading"> None</mat-option>
 								<mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
 
-								<mat-option *ngFor="let refset of refsetOptions" [value]="refset" class="no-checkbox">
+								<mat-option *ngFor="let refset of refsetOptions" [value]="refset">
 									<img
 										(load)="showFlagIcon($event, true)"
 										(error)="showFlagIcon($event, false)"
@@ -84,7 +84,7 @@
 						<mat-form-field [hidden]="comparisonTypeSelected === 'same_refset' || comparisonRefsetVersionOptions.length === 0" appearance="fill">
 							<mat-label>Select version for comparison</mat-label>
 							<mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
-								<mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value" class="no-checkbox">{{ option.display }}</mat-option>
+								<mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value">{{ option.display }}</mat-option>
 							</mat-select>
 						</mat-form-field>
 					</mat-radio-group>
@@ -116,7 +116,7 @@
 			<!-- SPLITTER -->
 			<as-split direction="horizontal" gutterSize="4" [class.unset-gutter-height]="isConceptDetailsLoading || conceptDetail">
 				<!-- MEMBERS SECTION -->
-				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
+				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 70 : 100" [minSize]="65">
 					<div class="container-fluid p-0 comparisonGridSection">
 						<!-- HEADER STATISTIC TABLE -->
 						<div class="metadata-collapsible-container white">
@@ -211,7 +211,7 @@
 				</as-split-area>
 
 				<!-- CONCEPT DETAILS SECTION -->
-				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0" [minSize]="25">
+				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 30 : 0" [minSize]="25">
 					<div id="comparisonGridSection" class="container-fluid py-0 px-2">
 						<div *ngIf="isConceptDetailsLoading || conceptDetail" class="metadata-collapsible-container white rt2-flex-column">
 							<div>
@@ -243,7 +243,7 @@
 											</div>
 
 											<div *ngFor="let parent of conceptDetailParents" class="row rt2-concept-details-taxonomy-item">
-												<div class="rt2-concept-details-taxonomy-icon mr-10" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+												<div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
 													<add-remove-concepts-icons
 														*ngIf="allowedToEdit"
 														[concept]="parent"
@@ -257,7 +257,7 @@
 												</div>
 
 												<div
-													class="rt2-concept-details-taxonomy-description pointer"
+													class="rt2-concept-details-taxonomy-description"
 													[class.bold-if-member]="parent?.memberOfRefset"
 													[class.greyed-if-not-member]="!parent?.memberOfRefset"
 													(click)="loadConceptDetail(parent)">
@@ -276,7 +276,7 @@
 												<div class="row">
 													<!-- Name -->
 													<table class="row rt2-concept-details-concept-title-row">
-														<tr class="col-2">
+														<tr>
 															<td class="text-left">
 																<div class="rt2-concept-details-taxonomy-icon status-icon-container">
 																	<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
@@ -289,7 +289,7 @@
 																</div>
 															</td>
 														</tr>
-														<tr class="col">
+														<tr>
 															<td class="text-center">
 																<div class="col rt2-concept-details-concept-name">
 																	{{ conceptDetail?.name }}
@@ -297,7 +297,7 @@
 															</td>
 														</tr>
 
-														<tr class="col-1">
+														<tr>
 															<td class="text-right">
 																<div class="open-container">
 																	<button
@@ -315,7 +315,7 @@
 													</table>
 
 													<!-- ID -->
-													<div class="m-l-10 mb-7em rt2-concept-details-concept-row">
+													<div class="row rt2-concept-details-concept-row">
 														<div class="rt2-concept-details-concept-id-label">SCTID</div>
 														<div class="col rt2-concept-details-concept-id-text">
 															{{ conceptDetail?.code }}
@@ -323,18 +323,18 @@
 													</div>
 
 													<!-- ECL -->
-													<div class="rt2-concept-details-concept-row">
-														<div class="mb-10 mt-10 rt2-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |</div>
+													<div class="row rt2-concept-details-concept-row">
+														<div class="col rt2-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |</div>
 													</div>
 
 													<!-- Descriptions -->
-													<div *ngFor="let description of conceptDetail?.descriptions" class="m-l-10 m-r-10 mt-10 rt2-concept-details-concept-row">
-														<span class="rt2-concept-details-concept-description-language">
+													<div *ngFor="let description of conceptDetail?.descriptions" class="row rt2-concept-details-concept-row">
+														<div class="rt2-concept-details-concept-description-language">
 															{{ description?.language }}
-														</span>
-														<span class="rt2-concept-details-concept-description-text">
+														</div>
+														<div class="col rt2-concept-details-concept-description-text">
 															{{ description?.term }}
-														</span>
+														</div>
 													</div>
 												</div>
 											</div>

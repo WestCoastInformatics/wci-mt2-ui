@@ -174,7 +174,7 @@ tr.refset_tool_inactive_row {
 }
 
 .ag-theme-alpine .ag-header {
-	border: 0 solid $ghost-grey;
+	border: 0px solid $ghost-grey;
 }
 
 .ag-theme-alpine .ag-icon {
@@ -272,7 +272,7 @@ tr.refset_tool_inactive_row {
 		border: 0;
 		border-bottom: 1px solid #aaa;
 		background-color: transparent;
-		border-radius: 0;
+		border-radius: 0px;
 		margin-bottom: 0.25em;
 	}
 
@@ -288,7 +288,7 @@ tr.refset_tool_inactive_row {
 }
 
 .ag-floating-filter-full-body app-category-floating-filter select {
-	padding: 0;
+	padding: 0px;
 	text-transform: capitalize;
 	appearance: none;
 }
@@ -326,11 +326,11 @@ tr.refset_tool_inactive_row {
 }
 
 .rt2-concept-details-concept-ecl {
-	padding-left: 0 !important;
+	padding-left: 0px !important;
 }
 
 .rt2-concept-details-concept-id-label {
-	padding-left: 0;
+	padding-left: 0px;
 }
 
 .rt2-concept-details-taxonomy-icon {
@@ -359,7 +359,7 @@ tr.refset_tool_inactive_row {
 
 /*********  Styles for specific components by id ********/
 .refsetDirectoryPage {
-	padding: 0;
+	padding: 0px;
 
 	.rt2-directory-column-information {
 		justify-content: center;
@@ -367,8 +367,7 @@ tr.refset_tool_inactive_row {
 	}
 
 	.rt2-directory-column-information .rt2-table-action-icon {
-		left: 0;
-		top: -0.5em;
+		left: 0px;
 	}
 }
 
@@ -407,13 +406,13 @@ tr.refset_tool_inactive_row {
 
 /***** Taxonomy styles ******/
 .node-content-wrapper {
-	padding-top: 0 !important;
-	padding-bottom: 0 !important;
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
 	width: 100%;
 }
 
 .node-wrapper {
-	line-height: 0 !important;
+	line-height: 0px !important;
 }
 
 .edit-member-section {
@@ -442,7 +441,7 @@ tr.refset_tool_inactive_row {
 .rt2-details-chooser-column,
 .rt2-concept-details-close-btn {
 	width: 20% !important;
-	padding: 0;
+	padding: 0px;
 }
 
 .rt2-details-chooser-column .mat-mdc-form-field-flex {
@@ -473,11 +472,9 @@ tr.refset_tool_inactive_row {
 	}
 }
 
-.createNewRefsetDialog > .modal-dialog {
-	max-width: 1200px;
-}
+.createNewRefsetDialog > .modal-dialog,
 .launch-comparison-dialog > .modal-dialog {
-	width: 60%;
+	max-width: 1200px;
 }
 
 .rt2-concept-details-taxonomy-section {
@@ -495,7 +492,7 @@ tr.refset_tool_inactive_row {
 }
 
 .rt2-concept-details-taxonomy-icon {
-	max-width: 10px !important;
+	max-width: 30px;
 
 	img {
 		width: 13px;
@@ -528,7 +525,7 @@ tr.refset_tool_inactive_row {
 }
 
 .rt2-concept-details-concept-name {
-	padding-left: 0 !important;
+	padding-left: 0px !important;
 }
 
 .rt2-concept-details-section-title {
@@ -573,14 +570,14 @@ tr.refset_tool_inactive_row {
 
 .rt2-concept-details-concept-section {
 	margin-bottom: 5px;
-	padding: 0;
-	padding-right: 0 !important;
-	padding-left: 0 !important;
+	padding: 0px;
+	padding-right: 0px !important;
+	padding-left: 0px !important;
 }
 
 .rt2-concept-details-concept-description {
-	padding-left: 0;
-	padding-right: 0;
+	padding-left: 0px;
+	padding-right: 0px;
 }
 
 .rt2-concept-details-concept-description-language {
@@ -712,11 +709,6 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	margin: 0;
 }
 
-.rt2-details-search-field .mdc-floating-label,
-.mat-mdc-floating-label {
-	width: 95%;
-}
-
 .mat-select-panel-wrap {
 	position: relative;
 	top: 2rem;
@@ -773,15 +765,15 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 
 .mat-form-field-flex .ng-tns-c109-2 {
 	width: 130px;
-	padding-left: 0;
+	padding-left: 0px;
 }
 
 .mat-form-field-flex .ng-tns-c109-1 {
-	padding-right: 0 !important;
+	padding-right: 0px !important;
 }
 
 .mat-form-field-flex .ng-tns-c109-1 {
-	padding-right: 0 !important;
+	padding-right: 0px !important;
 }
 
 .directoryInput .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
@@ -860,7 +852,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 }
 
 .mat-select-arrow {
-	transform: translate(0, 3px) !important;
+	transform: translate(0px, 3px) !important;
 }
 
 .mat-primary .mat-pseudo-checkbox-checked,
@@ -901,11 +893,11 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 }
 
 .mat-horizontal-content-container {
-	padding: 0 !important;
+	padding: 0px !important;
 }
 
 .mat-button-toggle-group-appearance-standard {
-	border-radius: 0;
+	border-radius: 0px;
 	height: 31px;
 }
 
@@ -1178,7 +1170,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	}
 
 	20% {
-		transform: translate(-3px, 0) rotate(1deg);
+		transform: translate(-3px, 0px) rotate(1deg);
 	}
 
 	30% {
@@ -1256,8 +1248,8 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 
 .create-new-refset-container-fluid {
 	padding: 30px !important;
-	padding-bottom: 0;
-	padding-top: 0;
+	padding-bottom: 0px;
+	padding-top: 0px;
 	max-height: calc(100vh - 55px - 52px - (1.75rem * 2) - 2px); // 100% height - header - footer - margin
 	overflow: auto;
 }
@@ -1273,7 +1265,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 .create-new-refset-modal-body {
 	background-color: rgba(245, 245, 246, 1);
 	padding: 28px !important;
-	padding-top: 0 !important;
+	padding-top: 0px !important;
 	border-radius: 3px;
 }
 
@@ -1336,8 +1328,8 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 
 .import-from-container-fluid {
 	padding: 30px !important;
-	padding-bottom: 0 !important;
-	padding-top: 0 !important;
+	padding-bottom: 0px !important;
+	padding-top: 0px !important;
 }
 
 .import-from-modal-body {
@@ -1422,7 +1414,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 }
 
 .add-remove-concept-hierarchy-modal-parent-size {
-	min-height: 100%;
+	max-height: 105px;
 	height: fit-content;
 
 	& > .row > .rt2-concept-details-taxonomy-icon {
@@ -1570,7 +1562,7 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 }
 
 .manage-refset-menu {
-	padding: 0 !important;
+	padding: 0px !important;
 	color: #00a9e0;
 	font-weight: 500;
 	cursor: pointer;
@@ -1902,10 +1894,6 @@ img.rt2-edition-flag {
 	cursor: pointer;
 }
 
-.grey-add-symbol-icon {
-	scale: 85%;
-}
-
 .large-icon-image {
 	width: 120px;
 	height: 120px;
@@ -1961,7 +1949,7 @@ app-date-text-floating-filter {
 }
 
 .modal-dialog.modal-dialog-centered {
-	margin: 0 auto;
+	margin: 0px auto;
 }
 
 .modal-label-description {
@@ -2176,7 +2164,7 @@ ngb-typeahead-window.dropdown-menu button {
 
 	// Tree Component Overrides
 	.toggle-children-wrapper {
-		padding: 0;
+		padding: 0px;
 	}
 
 	.toggle-children {
