@@ -409,7 +409,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 	addRemoveAllMembers(type) {
 		this.sendChangeLockedStatus(true);
-		this.showLoadingSpinner = true;
 		this.conceptIdArray = [];
 
 		for (let i = 0; i < this.data.items.length; i++) {
@@ -420,7 +419,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 							this.conceptIdArray.push(this.data.items[i].code);
 						}
 					} else {
-						this.conceptIdArray.push(this.data.items[i].code);
+						if (this.data.items[i].memberOfRefset === false) {
+							this.conceptIdArray.push(this.data.items[i].code);
+						}
 					}
 				}
 			} else {
@@ -429,20 +430,31 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 						this.conceptIdArray.push(this.data.items[i].code);
 					}
 				} else {
-					this.conceptIdArray.push(this.data.items[i].code);
+					if (this.data.items[i].memberOfRefset === false) {
+						this.conceptIdArray.push(this.data.items[i].code);
+					}
 				}
 			}
 		}
-		RefsetUtility.addRemoveMembersByList(
-			this.refset.id,
-			this.refset.refsetId,
-			this.conceptIdArray.join(),
-			type,
-			this.processChangedMemberEffects,
-			this.notificationService,
-			this.refsetService,
-			this.router
-		);
+		if (this.conceptIdArray.length > 0) {
+			RefsetUtility.addRemoveMembersByList(
+				this.refset.id,
+				this.refset.refsetId,
+				this.conceptIdArray.join(),
+				type,
+				this.processChangedMemberEffects,
+				this.notificationService,
+				this.refsetService,
+				this.router
+			);
+		} else {
+			this.sendChangeLockedStatus(false);
+			let past = 'ed to';
+			if (type === 'remove') {
+				past = 'd from';
+			}
+			this.notificationService.show('No action to perfrom, already ' + type + past + ' Reference Set.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+		}
 		//this.closeModal();
 	}
 

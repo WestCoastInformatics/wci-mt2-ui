@@ -27,8 +27,8 @@
 						<a *ngIf="loggedIn" href="{{ getEditionUrl() }}">{{ refset?.editionName }}</a
 						>&nbsp;
 						<img
-							*ngIf="refset?.flagIcon !== null && showFlag"
-							(error)="showFlagIcon(false)"
+							*ngIf="refset?.flagIcon !== null"
+							(error)="showFlagIcon($event)"
 							src="{{ refset?.flagIcon }}"
 							class="rt2-edition-flag"
 							title="{{ refset?.editionName }} Flag"
@@ -85,7 +85,7 @@
 							{{ description?.term }} {{ description?.languageName }}
 							<img
 								*ngIf="description?.flagIcon !== null"
-								(error)="showFlagIcon(false)"
+								(error)="showFlagIcon($event)"
 								src="{{ description?.flagIcon }}"
 								class="rt2-edition-flag"
 								title="{{ description?.editionName }} Flag"
@@ -122,8 +122,8 @@
 					<td class="rt2-refset-metadata-value">
 						{{ refset?.organizationName }}
 						<img
-							*ngIf="refset?.flagIcon !== null && showFlag"
-							(error)="showFlagIcon(false)"
+							*ngIf="refset?.flagIcon !== null"
+							(error)="showFlagIcon($event)"
 							src="{{ refset?.flagIcon }}"
 							class="rt2-edition-flag"
 							title="{{ refset?.editionName }} Flag"

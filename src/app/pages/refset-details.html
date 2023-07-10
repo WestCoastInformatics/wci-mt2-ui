@@ -203,7 +203,7 @@
 
 						<upgrade-modal
 							(loadingSpinner)="toggleLoadingSpinner($event)"
-							*ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
+							*ngIf="(this.showMembersSection && ((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0)"
 							[refsetData]="refsetData"
 							[membersOfRefset]="membersGridData"
 							[refsetId]="refsetData.refsetId"
@@ -214,7 +214,7 @@
 							(loadingSpinner)="toggleLoadingSpinner($event)"
 							type="button"
 							color="red"
-							*ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
+							*ngIf="(this.showMembersSection && (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')))"
 							(click)="openCancelUpgrade(cancelUpgradeDialog)"
 							aria-hidden="false"
 							class="rt2-btn rt2-action-btn"
@@ -520,9 +520,9 @@
 						<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
 							<div class="rt2-details-members-column default-font">
 								<!-- Search Bar -->
-								<div class="d-flex jc-space-between">
+								<div class="col">
 									<div class="rt2-flex-wrap rt2-custom-width">
-										<div class="d-flex col-md-4">
+										<div class="row col-md-6">
 											<div class="col-sm-6 filter-font" [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
 												<app-column-chooser
 													title="Select Columns to Display"
@@ -575,8 +575,8 @@
 											</div>
 										</div>
 
-										<div class="d-flex rt2-custom-width-fields-btn">
-											<div class="rt2-flex-wrap w-100-pct detailsSearchInput" [style.display]="membersTableDisplay">
+										<div class="row col-md-6">
+											<div class="rt2-flex-wrap w-100-pct detailsSearchInput mt-15" [style.display]="membersTableDisplay">
 												<mat-form-field floatLabel="never" class="rt2-details-search-field default-font">
 													<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
 													<input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
@@ -587,7 +587,7 @@
 												</button>
 											</div>
 
-											<div class="rt2-flex-wrap w-100-pct" [style.display]="membersTaxonomyDisplay">
+											<div class="rt2-flex-wrap w-100-pct mt-15" [style.display]="membersTaxonomyDisplay">
 												<mat-form-field floatLabel="never" class="rt2-details-search-field" *ngIf="showMembersSearchBar()">
 													<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
 													<input
@@ -643,31 +643,37 @@
 									<ng-template #detailsActionSection let-params>
 										<div class="d-flex rt2-wrap">
 											<div class="col-6">
-												<button
-													mat-icon-button
-													*ngIf="params?.data?.historyVisible && params.data.released"
-													(click)="openMemberHistory(params.data.code)"
-													aria-hidden="false"
-													#detailsDownloadIcon
-													class="rt2-table-action-icon"
-													aria-label="Open History"
-													title="Open Membership History">
-													<mat-icon>history</mat-icon>
-												</button>
+												<div class="library-app-refset-download">
+													<button
+														mat-icon-button
+														*ngIf="params?.data?.historyVisible && params.data.released"
+														(click)="openMemberHistory(params.data.code)"
+														aria-hidden="false"
+														#detailsDownloadIcon
+														class="rt2-table-action-icon"
+														aria-label="Open History"
+														title="Open Membership History">
+														<mat-icon>history</mat-icon>
+													</button>
+												</div>
 											</div>
 
 											<div class="col-6">
-												<app-refset-discussion-list
-													*ngIf="refsetData && params && params.data"
-													type="REFSET_MEMBER"
-													[refsetInternalId]="id"
-													[refsetName]="refsetData.name"
-													[roles]="refsetData.roles"
-													[refsetId]="refsetId"
-													[conceptId]="params.data.code"
-													[conceptName]="params.data.name"
-													[(discussionCount)]="params.data.openDiscussionCount">
-												</app-refset-discussion-list>
+												<div
+													class="library-app-refset-discussion-list"
+													[ngClass]="{'library-app-refset-discussion-list-alt':params?.data?.historyVisible && params.data.released}">
+													<app-refset-discussion-list
+														*ngIf="refsetData && params && params.data"
+														type="REFSET_MEMBER"
+														[refsetInternalId]="id"
+														[refsetName]="refsetData.name"
+														[roles]="refsetData.roles"
+														[refsetId]="refsetId"
+														[conceptId]="params.data.code"
+														[conceptName]="params.data.name"
+														[(discussionCount)]="params.data.openDiscussionCount">
+													</app-refset-discussion-list>
+												</div>
 											</div>
 										</div>
 									</ng-template>
@@ -787,7 +793,11 @@
 												<img *ngIf="!parent.defined" title="Primitive" aria-label="Primitive" class="rt2-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
 											</span>
 
-											<span [class.bold-if-member]="parent?.memberOfRefset" [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
+											<span
+												class="pointer"
+												[class.bold-if-member]="parent?.memberOfRefset"
+												[class.greyed-if-not-member]="!parent?.memberOfRefset"
+												(click)="loadConceptDetail(parent)">
 												<span
 													*ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
 													title="{{parent.fsn}}"
