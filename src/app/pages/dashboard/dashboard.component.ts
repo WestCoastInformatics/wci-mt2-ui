@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	refsetGridOptions: any;
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
-	numOfResults: any;
+	numOfResults = 0;
 	numOfMembers: any;
 	showLoadingSpinner = false;
 

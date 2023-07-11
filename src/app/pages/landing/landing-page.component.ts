@@ -58,7 +58,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	showFullNotesText = false;
 	showLoadingSpinner = false;
 	toggleDropdown = false;
-	numOfResults: any;
+	numOfResults = 0;
 	directUrl: string;
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');

@@ -77,7 +77,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 	context: Context;
 	originalGridParams: any;
 	existingBranchVersions: any;
-	numOfResults: number;
+	numOfResults = 0;
 	projectIsUat: boolean;
 	projectId: any;
 	uiUtility = UiUtility;
@@ -388,6 +388,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 		this.refsetService.getProjects('includeMembers=false&query=editionId:' + this.selectedEdition.id + '&offset=0&sort=name&sortAscending=true&includeModuleNames=true').subscribe({
 			next: (results) => {
 				this.projectList = results.items;
+				console.log('herehr3 ' + this.projectList.length);
 
 				for (const project of this.projectList) {
 					if (this.projectId == project.id) {
@@ -399,7 +400,13 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 
 				this.getStoredProjectId();
 
-				if (!this.selectedProject) {
+				if (!this.selectedProject || this.projectList.length === 0) {
+					this.showTable = true;
+					if (this.refsetGridApi) {
+						this.refsetGridApi.showNoRowsOverlay();
+					} else {
+						this.onGridReady(this.originalGridParams);
+					}
 					this.showLoadingSpinner = false;
 				}
 			},

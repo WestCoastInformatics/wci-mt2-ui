@@ -1,12 +1,9 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { lastValueFrom, Subscription, concatMap } from 'rxjs';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { TeamsService } from 'src/app/services/rest/teams.service';
-
 import { ProjectsService } from 'src/app/services/rest/projects.service';
-
 import { NotificationService } from 'src/app/services/notification.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
@@ -44,7 +41,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		private readonly refsetService: RefsetService,
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
-		private readonly teamService: TeamsService,
 		private readonly projectsService: ProjectsService,
 		private readonly notificationService: NotificationService,
 		private readonly organizationsComponentService: OrganizationsComponentService
@@ -144,13 +140,13 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					}
 				}
 			}
-
 			if (this.organizationId) {
 				if (this.api) {
 					this.api.showLoadingOverlay();
 					this.data = [];
 					this.editionList = [];
 					this.projectList = [];
+					this.getOrganizations();
 				}
 			}
 		}
@@ -185,7 +181,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	getProjects(): void {
 		if (this.editionId != this.previouslyLoadedId) {
 			this.previouslyLoadedId = this.editionId;
-			this.showLoadingSpinner = false;
 
 			if (this.api) {
 				this.api.showLoadingOverlay();
@@ -195,35 +190,40 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					timeOut: 1500,
 					extendedTimeOut: 0,
 				});
+				this.showLoadingSpinner = false;
 				this.api.setRowData([]);
 				this.api.redrawRows();
 				return;
 			}
 
-			this.showLoadingSpinner = false;
-			this.refsetService.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true').subscribe({
-				next: async (results) => {
-					this.data = [];
-					this.projectList = results.items;
+			// find why only the first edition is being selected ??
+			this.showLoadingSpinner = true;
+			this.refsetService
+				.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true')
+				.pipe(
+					concatMap(async (results) => {
+						this.data = [];
+						const loadData = [];
+						this.projectList = results.items;
 
-					for (const project of this.projectList) {
-						this.data.push({
-							name: `${project?.name}`,
-							locked: project?.privateProject,
-							description: `${project?.description}`,
-							teamlist: `${await this.getTeams(project?.id)}`,
-							id: project.id,
-						});
+						for (const project of this.projectList) {
+							loadData.push({
+								name: `${project?.name}`,
+								locked: project?.privateProject,
+								description: `${project?.description}`,
+								teamlist: `${await this.getTeams(project?.id)}`,
+								id: project.id,
+							});
+						}
+						this.data = loadData;
 						this.api.setRowData(this.data);
 						this.api.redrawRows();
-					}
-
+						this.showLoadingSpinner = false;
+					})
+				)
+				.subscribe((error) => {
 					this.showLoadingSpinner = false;
-				},
-				error: (error) => {
-					this.showLoadingSpinner = false;
-				},
-			});
+				});
 		}
 	}
 
@@ -274,7 +274,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	}
 
 	selectOrganization(): void {
-
 		this.organizationId = this.selectedOrganization.id;
 
 		this.selectedEdition = null;
@@ -316,7 +315,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 						return;
 					}
 				}
-
 				if (!this.selectedEdition) {
 					// Pick the first one if nothing is working out
 					if (this.editionList[0] != undefined) {

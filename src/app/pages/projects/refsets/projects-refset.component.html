@@ -28,7 +28,7 @@
 							[disableOptionCentering]="true"
 							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
 							[(value)]="selectedEdition"
-							(selectionChange)="selectedEdition()">
+							(selectionChange)="selectEdition()">
 							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
 								{{ edition.name }}
 							</mat-option>

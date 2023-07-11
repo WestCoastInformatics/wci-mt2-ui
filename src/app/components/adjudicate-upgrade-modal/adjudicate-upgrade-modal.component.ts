@@ -27,7 +27,7 @@ export class AdjudicateUpgradeModalComponent {
 	inactiveConcepts: any;
 	@Input()
 	membersInCommon: any;
-	numOfResults: any;
+	numOfResults = 0;
 	numOfMembers: any;
 	selectedLanguage = '';
 	languageOptions = [];
