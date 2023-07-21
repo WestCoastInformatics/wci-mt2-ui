@@ -275,7 +275,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 
 	selectOrganization(): void {
 		this.organizationId = this.selectedOrganization.id;
-
+		this.setOrganizationData(this.selectedOrganization);
 		this.selectedEdition = null;
 		this.editionList = [];
 		this.getEditions();
@@ -304,12 +304,13 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		}
 	}
 	getEditions(): void {
+		const edition_id = this.editionId;
 		this.editionSubscription = this.organizationsComponentService.getEditions().subscribe({
 			next: (results) => {
 				this.editionList = <any>results;
 
 				for (const edition of this.editionList) {
-					if (this.editionId == edition.id) {
+					if (edition_id == edition.id) {
 						this.selectedEdition = edition;
 						this.selectEdition();
 						return;

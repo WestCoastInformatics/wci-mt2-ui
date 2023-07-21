@@ -20,7 +20,7 @@ export class OrganizationsComponentService {
 		return <any>this.editionList;
 	}
 
-	setEditions(list) {
+	public setEditions(list) {
 		this.editionList.next(list);
 	}
 }

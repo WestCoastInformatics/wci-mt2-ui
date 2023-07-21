@@ -388,7 +388,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit {
 		this.refsetService.getProjects('includeMembers=false&query=editionId:' + this.selectedEdition.id + '&offset=0&sort=name&sortAscending=true&includeModuleNames=true').subscribe({
 			next: (results) => {
 				this.projectList = results.items;
-				console.log('herehr3 ' + this.projectList.length);
 
 				for (const project of this.projectList) {
 					if (this.projectId == project.id) {
