@@ -82,7 +82,7 @@ export class AddMemberToOrganizationModalComponent {
 					this.validEmail = false;
 				} else {
 					this.changeLockedStatus.emit(true);
-					this.showLoadingSpinner = true;
+					this.showLoadingSpinner = false;
 
 					const operation = this.organizationsService.addUsers.bind(this.organizationsService);
 

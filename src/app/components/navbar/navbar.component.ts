@@ -85,7 +85,6 @@ export class NavbarComponent implements OnInit {
 	}
 
 	landing() {
-
 		const breadcrumbs = [];
 		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
 		this.router.navigate(['']);

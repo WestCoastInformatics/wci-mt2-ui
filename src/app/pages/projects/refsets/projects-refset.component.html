@@ -1,157 +1,89 @@
-<div *ngIf="showLoadingSpinner" class="loading"></div>
-
-<div class="content-header">
-	<div class="row header-title">
-		<div class="d-flex jc-space-between w-100-pct projects-dropdown-block">
-			<div>
-				<div class="title-label">Projects</div>
+<div class="rt2-container">
+	<!-- Page Title -->
+	<div *ngIf="selectedProject" class="w-100-pct jc-space-between d-flex align-center mb-10" [class.container-toggled]="toggleService.isToggled">
+		<heading-with-count title="Reference Sets" [count]="numOfResults"></heading-with-count>
+		<div class="d-flex w-100-pct jc-flex-e rt2-btn-group">
+			<create-refset [disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject" [inputProperties]="createRefsetProperties" [existingBranchVersions]="existingBranchVersions">
+			</create-refset>
+			<div [hidden]="refsetData?.length < 1">
+				<app-refset-download [isDetailPage]="true" [refsets]="refsetData" [project]="selectedProject"></app-refset-download>
 			</div>
-
-			<div class="d-flex rt2-select-group m-r-10">
-				<span class="projects-dropdown-block">
-					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
-						<mat-select
-							[disableOptionCentering]="true"
-							[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'"
-							[(value)]="selectedOrganization"
-							(selectionChange)="selectOrganization()">
-							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox">
-								{{ organization.name }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</span>
-
-				<span class="projects-dropdown-block">
-					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
-						<mat-select
-							[disableOptionCentering]="true"
-							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
-							[(value)]="selectedEdition"
-							(selectionChange)="selectEdition()">
-							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
-								{{ edition.name }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</span>
-
-				<span class="projects-dropdown-block">
-					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
-						<mat-select
-							[disabled]="organizationId === '0'"
-							[placeholder]="selectedProject?.name ? selectedProject?.name : 'Select Project'"
-							[disableOptionCentering]="true"
-							[(value)]="selectedProject"
-							(selectionChange)="selectProject()">
-							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3 no-checkbox">
-								{{ project.name }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</span>
+			<div [hidden]="!selectedProject?.roles?.includes('AUTHOR') || refsetData?.length < 1">
+				<bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
 			</div>
 		</div>
 	</div>
-	<div class="content-wrapper">
-		<app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-		<div class="rt2-container">
-			<!-- Page Title -->
-			<div *ngIf="selectedProject" class="w-100-pct jc-space-between d-flex align-center mb-10" [class.container-toggled]="toggleService.isToggled">
-				<heading-with-count title="Reference Sets" [count]="numOfResults"></heading-with-count>
-				<div class="d-flex w-100-pct jc-flex-e rt2-btn-group">
-					<create-refset
-						[disabled]="!selectedProject?.roles?.includes('AUTHOR') || !selectedProject"
-						[inputProperties]="createRefsetProperties"
-						[existingBranchVersions]="existingBranchVersions">
-					</create-refset>
-					<div [hidden]="refsetData?.length < 1">
-						<app-refset-download [isDetailPage]="true" [refsets]="refsetData" [project]="selectedProject"></app-refset-download>
+
+	<!-- Reference Set Table -->
+	<div [class.container-toggled]="toggleService.isToggled">
+		<ag-grid-angular #projectTable class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions"> </ag-grid-angular>
+
+		<app-pagination
+			#projectPaging
+			[pageSize]="refsetGridPaging.pageSize"
+			[gridOptions]="refsetGridOptions"
+			[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+			[totalKnown]="refsetGridPaging.totalKnown"
+			[manualStateRefresh]="refsetGridPaging.manualStateRefresh"
+			[isProjectsPage]="true">
+		</app-pagination>
+
+		<!-- Name Templates -->
+		<ng-template #projectNameSection let-params>
+			<div class="project-refset-name">
+				{{ params?.value }}
+
+				<mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="rt2-table-action-icon" aria-label="Private Reference Set" title="Private Reference Set">
+					lock
+				</mat-icon>
+				<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+			</div>
+		</ng-template>
+
+		<!-- Workflow Status Templates -->
+		<ng-template #projectWorkflowStatusSection let-params>
+			<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
+		</ng-template>
+
+		<!-- Action Templates -->
+		<ng-template #projectActionSection let-params>
+			<div class="d-flex rt2-wrap">
+				<div class="row">
+					<div class="col-6">
+						<div class="library-app-refset-download">
+							<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)"> </app-refset-download>
+						</div>
 					</div>
-					<div [hidden]="!selectedProject?.roles?.includes('AUTHOR') || refsetData?.length < 1">
-						<bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
+
+					<div class="col-6">
+						<div class="library-app-refset-discussion-list">
+							<app-refset-discussion-list
+								*ngIf="params && params.data"
+								type="REFSET"
+								[refsetInternalId]="params.data.id"
+								[refsetId]="params.data.refsetId"
+								[refsetName]="params.data.name"
+								[roles]="params.data.roles"
+								[(discussionCount)]="params.data.openDiscussionCount">
+							</app-refset-discussion-list>
+						</div>
 					</div>
 				</div>
 			</div>
-
-			<!-- Reference Set Table -->
-			<div [class.container-toggled]="toggleService.isToggled">
-				<ag-grid-angular *ngIf="showTable" #projectTable class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
-				</ag-grid-angular>
-
-				<app-pagination
-					*ngIf="showTable"
-					#projectPaging
-					[pageSize]="refsetGridPaging.pageSize"
-					[gridOptions]="refsetGridOptions"
-					[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-					[totalKnown]="refsetGridPaging.totalKnown"
-					[manualStateRefresh]="refsetGridPaging.manualStateRefresh"
-					[isSelectedProject]="isSelectedProject"
-					[isProjectsPage]="true">
-				</app-pagination>
-
-				<!-- Name Templates -->
-				<ng-template #projectNameSection let-params>
-					{{ params?.value }}
-
-					<mat-icon
-						*ngIf="params?.data?.privateRefset"
-						aria-hidden="false"
-						#directoryPrivateIcon
-						class="rt2-table-action-icon"
-						aria-label="Private Reference Set"
-						title="Private Reference Set">
-						lock
-					</mat-icon>
-					<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
-				</ng-template>
-
-				<!-- Workflow Status Templates -->
-				<ng-template #projectWorkflowStatusSection let-params>
-					<workflow-status-badge [status]="params?.data?.workflowStatus"> </workflow-status-badge>
-				</ng-template>
-
-				<!-- Action Templates -->
-				<ng-template #projectActionSection let-params>
-					<div class="d-flex rt2-wrap">
-						<div class="row">
-							<div class="col-6">
-								<div class="library-app-refset-download">
-									<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [refset]="getRefsetRow(params.data.refsetId)"> </app-refset-download>
-								</div>
-							</div>
-
-							<div class="col-6">
-								<div class="library-app-refset-discussion-list">
-									<app-refset-discussion-list
-										*ngIf="params && params.data"
-										type="REFSET"
-										[refsetInternalId]="params.data.id"
-										[refsetId]="params.data.refsetId"
-										[refsetName]="params.data.name"
-										[roles]="params.data.roles"
-										[(discussionCount)]="params.data.openDiscussionCount">
-									</app-refset-discussion-list>
-								</div>
-							</div>
-						</div>
-					</div>
-				</ng-template>
-			</div>
-		</div>
+		</ng-template>
 	</div>
-	<scroll-top></scroll-top>
-
-	<ng-template #workflowDiagramDialog let-modal>
-		<div class="modal-header review-modal-header">
-			<h3 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">Workflow Diagram</h3>
-			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		<div class="modal-body review-modal-body">
-			<img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram" class="mw-100-pct mh-100-pct" />
-		</div>
-	</ng-template>
 </div>
+
+<scroll-top></scroll-top>
+
+<ng-template #workflowDiagramDialog let-modal>
+	<div class="modal-header review-modal-header">
+		<h3 class="modal-title review-modal-title modal-header-font" id="modal-basic-title">Workflow Diagram</h3>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body review-modal-body">
+		<img src="assets/wf-table.png" alt="Workflow Diagram" title="Workflow Diagram" aria-label="Workflow Diagram" class="mw-100-pct mh-100-pct" />
+	</div>
+</ng-template>

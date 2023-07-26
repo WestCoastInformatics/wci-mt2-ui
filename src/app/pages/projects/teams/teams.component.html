@@ -1,110 +1,44 @@
-<div *ngIf="showLoadingSpinner" class="loading"></div>
+<page-container class="page-container">
+	<section>
+		<div class="d-flex mb-10">
+			<heading-with-count title="Project Teams" [count]="numberOfTeams"></heading-with-count>
+			<span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="col-md-auto float-right">
+				<div>
+					<span>
+						To create a new team, first go to the
+						<span class="pointer" title="Click create a new team, first go to the organization team page">
+							<a href="{{ '/organizations/' + organizationId + '/teams' }}">organization team page</a>
+						</span>
+					</span>
+				</div>
+				<div>
+					<span>
+						To add an existing team to this project go to the
+						<span class="pointer" title="Click add an existing team to this project go to the project configuration page">
+							<a href="{{ '/organization/' + organizationId + '/edition/' + editionId + '/projects/' + projectId + '/configuration' }}">project configuration page</a>
+						</span>
+					</span>
+				</div>
+			</span>
+		</div>
 
-<div class="content-header">
-	<div class="row header-title">
-		<div class="d-flex jc-space-between w-100-pct projects-dropdown-block">
-			<div>
-				<span class="title-label">Projects</span>
-			</div>
-
-			<div class="d-flex rt2-select-group m-r-25">
-				<span class="projects-dropdown-block">
-					<!-- <span class="title-label">Organizations</span> -->
-					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
-						<mat-select
-							[disableOptionCentering]="true"
-							[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'"
-							[(value)]="selectedOrganization"
-							(selectionChange)="selectOrganization()">
-							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox">
-								{{ organization.name }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</span>
-
-				<span class="projects-dropdown-block">
-					<!-- <span class="title-label">Editions</span> -->
-					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
-						<mat-select
-							[disableOptionCentering]="true"
-							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
-							[(value)]="selectedEdition"
-							(selectionChange)="selectEdition()">
-							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
-								{{ edition.name }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</span>
-
-				<span class="projects-dropdown-block">
-					<!-- <span class="title-label">Projects</span> -->
-					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
-						<mat-select
-							[disabled]="organizationId === '0'"
-							[placeholder]="selectedProject?.name ? selectedProject?.name : 'Select Project'"
-							[disableOptionCentering]="true"
-							[(value)]="selectedProject"
-							(selectionChange)="selectProject()">
-							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3 no-checkbox">
-								{{ project.name }}
-							</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</span>
+		<div class="dashboard-section">
+			<div class="ag-theme-alpine">
+				<ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="teamData" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct"> </ag-grid-angular>
+				<!-- description template -->
+				<ng-template #descriptionSection let-params>
+					<label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
+						{{ params?.data?.description }}
+					</label>
+				</ng-template>
+				<!-- people template-->
+				<ng-template #peopleSection let-params>
+					<div class="text-primary font-weight-bold pointer">{{ params?.data?.members }} Users</div>
+				</ng-template>
 			</div>
 		</div>
-	</div>
-</div>
-
-<div class="content-wrapper">
-	<app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
-	<page-container class="rt2-container">
-		<section>
-			<div class="d-flex mb-10">
-				<heading-with-count title="Project Teams" [count]="numberOfTeams"></heading-with-count>
-				<span *ngIf="selectedOrganization && selectedOrganization.roles.includes('ADMIN')" class="col-md-auto float-right">
-					<div>
-						<span>
-							To create a new team, first go to the
-							<span class="pointer" title="Click create a new team, first go to the organization team page">
-								<a href="{{ '/organizations/' + selectedOrganization?.id + '/teams' }}">organization team page</a>
-							</span>
-						</span>
-					</div>
-					<div>
-						<span>
-							To add an existing team to this project go to the
-							<span class="pointer" title="Click add an existing team to this project go to the project configuration page">
-								<a href="{{ '/organization/' + selectedOrganization?.id + '/edition/' + selectedEdition?.id + '/projects/' + selectedProject?.id + '/configuration' }}"
-									>project configuration page</a
-								>
-							</span>
-						</span>
-					</div>
-				</span>
-			</div>
-
-			<div class="dashboard-section">
-				<div class="ag-theme-alpine">
-					<ag-grid-angular *ngIf="showTable" [columnDefs]="gridColumnDefs" [rowData]="teamData" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct">
-					</ag-grid-angular>
-					<!-- description template -->
-					<ng-template #descriptionSection let-params>
-						<label class="ellipsed-label" container="body" placement="top" popoverTitle="Description">
-							{{ params?.data?.description }}
-						</label>
-					</ng-template>
-					<!-- people template-->
-					<ng-template #peopleSection let-params>
-						<span class="text-primary font-weight-bold pointer">{{ params?.data?.members }} Users</span>
-					</ng-template>
-				</div>
-			</div>
-		</section>
-	</page-container>
-</div>
+	</section>
+</page-container>
 <scroll-top></scroll-top>
 
 <ng-template #workflowDiagramDialog let-modal>

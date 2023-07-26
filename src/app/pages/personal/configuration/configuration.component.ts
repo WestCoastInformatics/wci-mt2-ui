@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { UsersService } from 'src/app/services/rest/users.service';
+import { PersonalComponentService } from 'src/app/pages/personal/personal-component.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { Location } from '@angular/common';
 
 @Component({
 	selector: 'personal-configuration',
 	templateUrl: './configuration.component.html',
 	styleUrls: ['configuration.component.scss'],
 })
-export class PersonalConfigurationComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class PersonalConfigurationComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	userId: any;
 	profileNameValue = '';
 	profileCompanyValue = '';
@@ -23,46 +24,70 @@ export class PersonalConfigurationComponent implements OnInit {
 	currentUserId: any;
 	user: any;
 	uiUtility = UiUtility;
+	currentURL: string;
+	personalSubscription: Subscription;
 
 	constructor(
 		private authService: AuthenticationService,
 		private notificationService: NotificationService,
 		private userService: UsersService,
+		private readonly personalComponentService: PersonalComponentService,
 		private readonly route: ActivatedRoute,
-		private location: Location
+		private readonly router: Router
 	) {}
 
 	ngOnInit(): void {
 		this.currentUserId = this.authService.getUser().id;
 
-		this.route.params.subscribe((params) => {
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			if (params['userId']) {
 				this.userId = params['userId'];
 			} else {
 				this.userId = this.authService.getUser().id;
 			}
+		});
 
-			this.setNavigation();
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('personal')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
 		});
 
 		this.getUser();
 	}
 
-	setNavigation() {
-		this.menu = [
-			{ name: 'About', link: '/personal/' + this.userId + '/landing', icon: 'fa fa-user' },
-			{ name: 'Configuration', link: '/personal/' + this.userId + '/configuration', icon: 'fa fa-cogs', isActive: true },
-		];
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			const parts = url.split('/');
+			for (let p = 0; p < parts.length; p++) {
+				if (parts[p].includes('personal')) {
+					if (parts[p + 1] != undefined) {
+						this.userId = parts[p + 1];
+					}
+				}
+			}
 
-		this.location.replaceState('personal/' + this.userId + '/configuration');
+			if (this.userId) {
+				this.user = '';
+				this.profileNameValue = '';
+				this.profileCompanyValue = '';
+				this.profileEmailValue = '';
+				this.getUser();
+			}
+		}
 	}
 
 	getUser(): void {
-		this.userService.getUser(this.currentUserId).subscribe((x) => {
-			this.user = x;
-			this.profileNameValue = this.user?.name;
-			this.profileCompanyValue = this.user?.company;
-			this.profileEmailValue = this.user?.email;
+		this.personalSubscription = this.personalComponentService.getUser().subscribe({
+			next: (result) => {
+				this.user = result;
+				this.profileNameValue = this.user?.name;
+				this.profileCompanyValue = this.user?.company;
+				this.profileEmailValue = this.user?.email;
+			},
 		});
 	}
 
@@ -123,5 +148,17 @@ export class PersonalConfigurationComponent implements OnInit {
 
 	onKeyDownEvent(event: any) {
 		this.isValidEmail();
+	}
+
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.personalSubscription) {
+			this.personalSubscription.unsubscribe();
+		}
 	}
 }

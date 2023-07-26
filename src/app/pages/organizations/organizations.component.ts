@@ -58,7 +58,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 
 		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
 			if (event instanceof Scroll) {
-				if (this.router.url.includes('organizations') || this.router.url.includes('organization')) {
+				if (this.router.url.includes('organizations')) {
 					this.checkLocationPath(this.router.url);
 				} else {
 					this.ngOnDestroy();
@@ -73,7 +73,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 
 			const parts = url.split('/');
 			for (let p = 0; p < parts.length; p++) {
-				if (parts[p].includes('organizations') || parts[p].includes('organization')) {
+				if (parts[p].includes('organizations')) {
 					if (parts[p + 1] != undefined) {
 						this.organizationId = parts[p + 1];
 					}

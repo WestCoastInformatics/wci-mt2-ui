@@ -1,0 +1,36 @@
+<div class="content-header">
+	<div class="row header-title">
+		<div class="col-md-auto"><div class="title-label heading-label">Organizations</div></div>
+
+		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
+			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedOrganization" (selectionChange)="changeOrganization()" [placeholder]="'Choose Organization'">
+				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
+					{{ organization.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<div class="col-md-auto"><div class="title-label heading-label">Teams</div></div>
+		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
+			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [(value)]="selectedTeam" (selectionChange)="selectTeam()" [placeholder]="'Choose Team'">
+				<mat-option *ngIf="teamList === null || teamList.length === 0">No Teams</mat-option>
+				<mat-option *ngFor="let team of teamList" [value]="team" class="z-index-3 no-checkbox" [title]="team.name">
+					{{ team.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</div>
+</div>
+
+<div class="content-wrapper">
+	<app-sidebar [menuItems]="menu" [id]="teamId"></app-sidebar>
+
+	<div class="rt2-container">
+		<div class="rt2-flex-wrap">
+			<div *ngIf="showLoadingSpinner" class="loading"></div>
+			<section>
+				<router-outlet></router-outlet>
+			</section>
+		</div>
+	</div>
+</div>

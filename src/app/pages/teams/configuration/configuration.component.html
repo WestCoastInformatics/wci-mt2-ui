@@ -1,123 +1,94 @@
-<div class="content-header">
-	<div class="row header-title">
-		<div class="col-md-auto"><div class="title-label heading-label">Organizations</div></div>
-		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
-			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="'Choose Organization'" [(value)]="selectedOrganization" (selectionChange)="selectOrganization()">
-				<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox" [title]="organization.name">
-					{{ organization.name }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
+<page-container>
+	<span class="teams-configuration">
+		<heading-with-count title="Team Configuration" classname="mb-3" showcount="false"></heading-with-count>
+		<!-- <div class="section-header mb-3 form-title"> Team Configuration </div> -->
+		<div class="teams-configuration-details">
+			<div class="teams-configuration-blocks-1">
+				<div class="teams-configuration-block main-block profile-block dashboard-section">
+					<div class="teams-profile-head section-header head-section-title-font">Profile</div>
 
-		<div class="col-md-auto"><div class="title-label heading-label">Teams</div></div>
-		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
-			<mat-select #detailsVersionSelect [disableOptionCentering]="true" [placeholder]="'Choose Team'" [(value)]="selectedTeam" (selectionChange)="selectTeam($event)">
-				<mat-option *ngFor="let team of teamList" [value]="team" class="z-index-3 no-checkbox" [title]="team.name">
-					{{ team.name }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-	</div>
-</div>
+					<div class="teams-profile-mid">
+						<mat-form-field floatLabel="never" class="profile-name-field" appearance="fill">
+							<mat-label class="form-field-header">Name</mat-label>
+							<input class="form-field-value" matInput type="text" name="name" [(ngModel)]="profileNameValue" />
+						</mat-form-field>
 
-<div class="content-wrapper">
-	<app-sidebar [menuItems]="menu" [id]="teamId"></app-sidebar>
+						<mat-form-field floatLabel="never" class="profile-email-field" appearance="fill">
+							<mat-label class="form-field-header">Primary Contact Email</mat-label>
+							<input class="form-field-value" matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue" />
+							<div class="modal-error-message" [hidden]="!emailError">
+								{{ emailError }}
+							</div>
+						</mat-form-field>
 
-	<page-container>
-		<span class="teams-configuration">
-			<heading-with-count title="Team Configuration" classname="mb-3" showcount="false"></heading-with-count>
-			<!-- <div class="section-header mb-3 form-title"> Team Configuration </div> -->
-			<div class="teams-configuration-details">
-				<div class="teams-configuration-blocks-1">
-					<div class="teams-configuration-block main-block profile-block dashboard-section">
-						<div class="teams-profile-head section-header head-section-title-font">Profile</div>
+						<mat-form-field floatLabel="never" class="profile-description-field" appearance="fill">
+							<mat-label class="form-field-header">Description</mat-label>
+							<textarea
+								class="form-field-value"
+								matInput
+								type="text"
+								name="description"
+								placeholder="The full description of the purpose of the project"
+								[(ngModel)]="profileDescriptionValue"></textarea>
+						</mat-form-field>
+					</div>
 
-						<div class="teams-profile-mid">
-							<mat-form-field floatLabel="never" class="profile-name-field" appearance="fill">
-								<mat-label class="form-field-header">Name</mat-label>
-								<input class="form-field-value" matInput type="text" name="name" [(ngModel)]="profileNameValue" />
-							</mat-form-field>
+					<div class="update-profile-button">
+						<div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
+							<button
+								*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
+								class="rt2-btn rt2-action-btn"
+								[disabled]="(!isNameChanged() && !isEmailChanged() && !isDescriptionChanged()) || (profileEmailValue && !isValidEmail())"
+								(click)="updateTeam()">
+								Update Profile
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="secondary-block">
+					<div
+						*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()"
+						class="teams-configuration-block-row team-permissions-block dashboard-section">
+						<div class="save-permissions-head section-header head-section-title-font">Permissions</div>
 
-							<mat-form-field floatLabel="never" class="profile-email-field" appearance="fill">
-								<mat-label class="form-field-header">Primary Contact Email</mat-label>
-								<input class="form-field-value" matInput type="text" name="email" (keydown.tab)="onKeyDownEvent($event)" [(ngModel)]="profileEmailValue" />
-								<div class="modal-error-message" [hidden]="!emailError">
-									{{ emailError }}
-								</div>
-							</mat-form-field>
-
-							<mat-form-field floatLabel="never" class="profile-description-field" appearance="fill">
-								<mat-label class="form-field-header">Description</mat-label>
-								<textarea
-									class="form-field-value"
-									matInput
-									type="text"
-									name="description"
-									placeholder="The full description of the purpose of the project"
-									[(ngModel)]="profileDescriptionValue"></textarea>
+						<div class="save-permissions-mid form-field-header">
+							Choose the permission level or roles for your team. <br /><br />
+							<mat-form-field floatLabel="never" appearance="fill" class="default-font">
+								<mat-select
+									#detailsRoleSelect
+									placeholder="Choose role(s) to apply to this team"
+									[(ngModel)]="selectedRoles"
+									multiple
+									class="rt2-modal-select"
+									panelClass="rt2-modal-panel">
+									<mat-option *ngFor="let role of roleOptions" [value]="role.value">
+										{{ role.display }}
+									</mat-option>
+								</mat-select>
 							</mat-form-field>
 						</div>
 
-						<div class="update-profile-button">
-							<div class="section-list text-right" aria-label="Update Profile" title="Update Profile">
-								<button
-									*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN')"
-									class="rt2-btn rt2-action-btn"
-									[disabled]="(!isNameChanged() && !isEmailChanged() && !isDescriptionChanged()) || (profileEmailValue && !isValidEmail())"
-									(click)="updateTeam()">
-									Update Profile
+						<div class="save-permissions-button">
+							<div class="section-list text-right" aria-label="Save Permissions" title="Save Permissions">
+								<button class="rt2-btn rt2-action-btn" [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles" (click)="updateTeamRoles()">
+									Save Permissions
 								</button>
 							</div>
 						</div>
 					</div>
 
-					<div class="secondary-block">
-						<div
-							*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()"
-							class="teams-configuration-block-row team-permissions-block dashboard-section">
-							<div class="save-permissions-head section-header head-section-title-font">Permissions</div>
-
-							<div class="save-permissions-mid form-field-header">
-								Choose the permission level or roles for your team. <br /><br />
-								<mat-form-field floatLabel="never" appearance="fill" class="default-font">
-									<mat-select
-										#detailsRoleSelect
-										placeholder="Choose role(s) to apply to this team"
-										[(ngModel)]="selectedRoles"
-										multiple
-										class="rt2-modal-select"
-										panelClass="rt2-modal-panel">
-										<mat-option *ngFor="let role of roleOptions" [value]="role.value">
-											{{ role.display }}
-										</mat-option>
-									</mat-select>
-								</mat-form-field>
-							</div>
-
-							<div class="save-permissions-button">
-								<div class="section-list text-right" aria-label="Save Permissions" title="Save Permissions">
-									<button class="rt2-btn rt2-action-btn" [disabled]="!selectedRoles?.length || selectedRoles === selectedTeam?.roles" (click)="updateTeamRoles()">
-										Save Permissions
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div
-							*ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()"
-							class="teams-configuration-block-row remove-teams-block dashboard-section">
-							<div class="remove-team-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg" /> Remove this Team</div>
-							<div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
-							<div class="remove-teams-button">
-								<div class="section-list text-right" aria-label="Remove Team" title="Remove Team">
-									<remove-dashboard-component-modal [componentType]="'team'" [componentId]="teamId" [componentName]="getSelectedTeamName()" [disabled]="!teamId">
-									</remove-dashboard-component-modal>
-								</div>
+					<div *ngIf="selectedTeam && selectedTeam.userRoles?.includes('ADMIN') && getSelectedTeamTypeEnabled()" class="teams-configuration-block-row remove-teams-block dashboard-section">
+						<div class="remove-team-head section-header head-section-title-font"><img class="red-x" src="assets/red-x.svg" /> Remove this Team</div>
+						<div class="remove-team-mid">Warning! This is a permanent operation and cannot be undone. Please be certain before taking action.</div>
+						<div class="remove-teams-button">
+							<div class="section-list text-right" aria-label="Remove Team" title="Remove Team">
+								<remove-dashboard-component-modal [componentType]="'team'" [componentId]="teamId" [componentName]="getSelectedTeamName()" [disabled]="!teamId">
+								</remove-dashboard-component-modal>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</span>
-	</page-container>
-</div>
+		</div>
+	</span>
+</page-container>

@@ -260,11 +260,12 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	}
 
 	getOrganizations(): void {
+		const organization_id = this.organizationId;
 		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
 			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
+				if (organization_id === organization.id) {
 					this.selectedOrganization = organization;
 					this.selectOrganization();
 					return;

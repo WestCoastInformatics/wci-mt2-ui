@@ -50,7 +50,7 @@
 					<div class="dashboard-section-mid">
 						<ng-container *ngFor="let team of teamList">
 							<div class="section-list" *ngIf="team.name">
-								<span [routerLink]="" (click)="navigateToPage('/organization/' + team.organizationId + '/teams/' + team.id + '/people')"
+								<span [routerLink]="" (click)="navigateToPage('/organization/' + team.organizationId + '/teams/' + team.id + '/users')"
 									><a>{{ team.organization?.name }}/{{ team?.name }}</a></span
 								>
 							</div>

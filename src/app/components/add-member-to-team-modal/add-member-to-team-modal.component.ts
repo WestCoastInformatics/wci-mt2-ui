@@ -39,7 +39,7 @@ export class AddMemberToTeamModalComponent {
 		}
 
 		this.changeLockedStatus.emit(true);
-		this.showLoadingSpinner = true;
+		this.showLoadingSpinner = false;
 
 		const operation = this.teamsService.addUsers.bind(this.teamsService);
 

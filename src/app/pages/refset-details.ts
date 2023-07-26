@@ -565,9 +565,6 @@ export class RefsetDetails implements OnInit {
 		forkJoin(allObservables)
 			.pipe(take(1))
 			.subscribe(({ refsetLoaded, memberCacheLoaded }) => {
-				//console.log('refsetLoaded: ' + refsetLoaded);
-				//console.log('memberCacheLoaded: ' + memberCacheLoaded);
-
 				this.loadTaxonomyRoot();
 				this.taxonomySearchColumnDefs = [
 					{

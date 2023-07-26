@@ -1218,8 +1218,16 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	width: 30%;
 }
 
+.projects-dropdown-block-title {
+	display: block;
+	margin: auto 0;
+	margin-top: 0.5em !important;
+	margin-left: -0.5em !important;
+}
+
 .projects-dropdown-block {
 	display: block;
+	margin: auto 0;
 }
 
 .project-drop-down .mat-select-arrow-wrapper {
@@ -1860,11 +1868,12 @@ img.rt2-edition-flag {
 .section-list {
 	padding: 10px;
 	//border-bottom: 1px solid rgba(0, 0, 0, .1);
-	font-weight: 700;
+	font-weight: $standard_font_weight_heavy;
 	color: $main-color;
 
 	a {
 		cursor: pointer;
+		text-decoration: none;
 	}
 
 	img {
@@ -2255,10 +2264,38 @@ ngb-typeahead-window.dropdown-menu button {
 	padding: 1.5rem;
 }
 
+// no left margin for first child
+.rt2-select-group > :first-child {
+	margin-left: 0;
+}
+
+// no right margin for last child
+.rt2-select-group > :last-child {
+	margin-right: 0;
+}
+
+// margins for every child
+.rt2-select-group > span,
+.rt2-select-group > mat-form-field {
+	margin: 0 5px 5px;
+}
+
+.rt2-select-group {
+	margin-right: 0.25em !important;
+}
+
 heading-with-count {
 	width: 100%;
 }
 
 .hide {
 	display: none !important;
+}
+
+.projects-drop-down {
+	width: 250px;
+}
+
+.projects-drop-down .mat-select-arrow-wrapper {
+	padding-top: 0 !important;
 }

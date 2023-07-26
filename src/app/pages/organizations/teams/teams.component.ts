@@ -52,7 +52,7 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('teams')) {
+			if (this.router.url.includes('organizations') && this.router.url.includes('teams') && !this.router.url.includes('users')) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
@@ -229,7 +229,7 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.previouslyLoadedId = this.organizationId;
 			let roles = [];
 			if (this.organizationId) {
-				this.showLoadingSpinner = true;
+				this.showLoadingSpinner = false;
 				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
 				if (this.selectedOrganization?.id) {
 					queryString = queryString + '&query=organizationId:' + this.selectedOrganization.id;
@@ -271,15 +271,16 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			selectedId = selectedRow.id;
 		});
 
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users']);
 	};
 
 	getOrganizations(): void {
+		const organization_id = this.organizationId;
 		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
 			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
+				if (organization_id === organization.id) {
 					this.selectedOrganization = organization;
 					this.selectOrganization();
 					return;

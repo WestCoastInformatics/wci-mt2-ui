@@ -84,10 +84,16 @@
 	<ng-template #directoryNameSection let-params>
 		{{ params?.value }}
 
-		<mat-icon *ngIf="params?.data?.privateRefset" aria-hidden="false" #directoryPrivateIcon class="rt2-table-action-icon" aria-label="Private Reference Set" title="Private Reference Set">
+		<mat-icon
+			*ngIf="params?.data?.privateRefset"
+			aria-hidden="false"
+			#directoryPrivateIcon
+			class="rt2-table-action-icon rt2-table-action-form-icon"
+			aria-label="Private Reference Set"
+			title="Private Reference Set">
 			lock
 		</mat-icon>
-		<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+		<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon rt2-table-action-form-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
 	</ng-template>
 
 	<!-- Edition Templates -->

@@ -326,7 +326,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	loadConceptDetail(concept) {
 		this.conceptDetail = null;
 		this.isConceptDetailsLoading = true;
-		this.showLoadingSpinner = true;
+		this.showLoadingSpinner = false;
 		this.loadConceptDetailParents(concept);
 
 		this.refsetService

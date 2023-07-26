@@ -7,10 +7,22 @@
 					<td class="rt2-refset-metadata-label" aria-label="Reference ID:">Reference ID:</td>
 					<td class="rt2-refset-metadata-value">
 						{{ refset?.refsetId }}
-						<mat-icon *ngIf="refset?.privateRefset" aria-hidden="false" class="rt2-table-action-icon text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
+						<mat-icon
+							*ngIf="refset?.privateRefset"
+							aria-hidden="false"
+							class="rt2-table-action-icon rt2-table-action-form-icon text-muted default-cursor"
+							aria-label="Private Refset"
+							title="Private Refset">
 							lock
 						</mat-icon>
-						<mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="rt2-table-action-icon text-muted default-cursor" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+						<mat-icon
+							*ngIf="refset?.localSet"
+							aria-hidden="false"
+							class="rt2-table-action-icon rt2-table-action-form-icon text-muted default-cursor"
+							aria-label="Local Set"
+							title="Local Set">
+							my_location
+						</mat-icon>
 					</td>
 				</tr>
 				<tr>
