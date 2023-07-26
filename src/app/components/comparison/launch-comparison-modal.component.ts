@@ -292,9 +292,13 @@ export class LaunchComparisonModalComponent {
 
 		this.activeRefsetName = this.activeRefset.name;
 		this.activeRefsetCodeSystem =
-			this.activeRefset.organizationName + ' / ' + this.activeRefset.editionName
-			+ ((this.activeRefset.versionDate) ? ' / ' + this.activeRefset.versionDate : '')
-			+ ' (' + this.getStatus(this.activeRefset.versionStatus) + ')';
+			this.activeRefset.organizationName +
+			' / ' +
+			this.activeRefset.editionName +
+			(this.activeRefset.versionDate ? ' / ' + this.activeRefset.versionDate : '') +
+			' (' +
+			this.getStatus(this.activeRefset.versionStatus) +
+			')';
 
 		if (this.comparisonTypeSelected == 'same_refset') {
 			const comparisonVersionInfo = this.activeRefset.versionList.find((element) => {
@@ -428,7 +432,7 @@ export class LaunchComparisonModalComponent {
 	loadConceptDetailParents(concept, language = Constants.DEFAULT_ACCEPT_LANGUAGE) {
 		this.conceptDetailParents = [];
 
-		if (!CodeUtility.testBoolean(concept?.active) || !CodeUtility.testBoolean(concept?.memberOfRefset)) {
+		if (!CodeUtility.testBoolean(concept?.active)) {
 			return;
 		}
 
