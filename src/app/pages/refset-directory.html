@@ -31,6 +31,9 @@
 </div>
 
 <div class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
+	<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
+		<div>Loading...</div>
+	</div>
 	<!-- Page Title -->
 	<!-- <div class="container-fluid page-title">Reference Set Directory <span [hidden]="!numOfResults">{{'(' + numOfResults + ')'}}</span></div> -->
 

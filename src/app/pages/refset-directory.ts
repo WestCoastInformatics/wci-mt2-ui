@@ -70,6 +70,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 	originalGridParams: any;
 	searchCallArray = [];
 	uiUtility = UiUtility;
+	showLoadingSearch = true;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -325,6 +326,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
 		this.refsetService.getRefsets({ ...restParams }).subscribe({
 			next: (results) => {
+				this.showLoadingSearch = false;
 				// if this is not the latest search call then do not apply the results
 				if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
 					return;
@@ -392,6 +394,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
 	onGridCellClick = (event) => {
 		if (event.column.colId === 'information' || event.column.colId === 'actions') {
+			//
 		} else {
 			const selectedRows = this.refsetGridApi.getSelectedRows();
 			let selectedId: string;
@@ -408,10 +411,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 
 	@Debounce()
 	changedViewFilter() {
+		this.showLoadingSearch = true;
 		this.onGridReady(this.originalGridParams);
 	}
 
 	clearSearch() {
+		this.showLoadingSearch = false;
 		if (this.searchInput) {
 			this.searchInput = '';
 			this.onSearchChange();
@@ -423,6 +428,7 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+			this.showLoadingSearch = true;
 			this.onGridReady(this.originalGridParams);
 		}
 	}
