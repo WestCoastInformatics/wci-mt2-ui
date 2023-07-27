@@ -326,12 +326,12 @@ export class CreateNewRefsetComponent implements OnInit {
 	}
 
 	checkRadioButtonValue(event: any): void {
-		this.isSelected = event.value;
+		this.isSelected = Number(event.value);
 
-		if (event.value === '1') {
+		if (event.value === 1) {
 			this.createdMetaDataConcept = '';
 			this.selectedParentConcept = '';
-		} else if (event.value === '2') {
+		} else if (event.value === 2) {
 			this.selectedMetaDataConcept = '';
 		}
 

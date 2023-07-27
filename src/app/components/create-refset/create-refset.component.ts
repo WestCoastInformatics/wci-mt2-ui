@@ -312,7 +312,7 @@ export class CreateRefsetComponent implements OnInit {
 			let refsetId = null;
 			let parentConceptId = null;
 
-			if (this.selectedReferenceType !== Constants.EXTERNAL && this.isSelected == 1) {
+			if (this.selectedReferenceType !== Constants.EXTERNAL && this.isSelected === 1) {
 				name = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
 				refsetId = this.existingMetadataConcepts[this.selectedMetaDataConcept].code;
 			} else {
@@ -447,9 +447,9 @@ export class CreateRefsetComponent implements OnInit {
 			typeCheck = true;
 		}
 
-		if (this.isSelected == 1 && CodeUtility.hasValue(this.selectedMetaDataConcept)) {
+		if (this.isSelected === 1 && CodeUtility.hasValue(this.selectedMetaDataConcept)) {
 			conceptCheck = true;
-		} else if (this.isSelected == 2 && CodeUtility.hasValue(this.createdMetaDataConcept) && CodeUtility.hasValue(this.selectedParentConcept) && this.isValidConceptName()) {
+		} else if (this.isSelected === 2 && CodeUtility.hasValue(this.createdMetaDataConcept) && CodeUtility.hasValue(this.selectedParentConcept) && this.isValidConceptName()) {
 			conceptCheck = true;
 		}
 
@@ -479,7 +479,7 @@ export class CreateRefsetComponent implements OnInit {
 	}
 
 	checkRadioButtonValue(event: any): void {
-		this.isSelected = event.value;
+		this.isSelected = Number(event.value);
 		this.detectChanges.detectChanges();
 	}
 
