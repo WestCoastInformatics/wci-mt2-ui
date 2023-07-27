@@ -53,17 +53,23 @@
 
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
-		<button
-			mat-icon-button
-			aria-hidden="false"
-			#directoryInfoIcon
-			class="rt2-table-action-icon w-30 h-30"
-			aria-label="View All Reference Set Metadata"
-			title="View Reference Set Metadata"
-			(click)="openInformation(params.data.refsetId)">
-			<mat-icon class="scale-85-pct">information</mat-icon>
-		</button>
-		<span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
+		<div class="d-flex rt2-wrap">
+			<div class="col-6">
+				<button
+					mat-icon-button
+					aria-hidden="false"
+					#directoryInfoIcon
+					class="rt2-table-action-icon w-30 h-30"
+					aria-label="View All Reference Set Metadata"
+					title="View Reference Set Metadata"
+					(click)="openInformation(params.data.refsetId)">
+					<mat-icon class="scale-85-pct">information</mat-icon>
+				</button>
+			</div>
+			<div class="col-6">
+				<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</div>
+			</div>
+		</div>
 	</ng-template>
 
 	<ng-template #directoryInfoDialog let-data>

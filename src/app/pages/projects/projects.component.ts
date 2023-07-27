@@ -448,6 +448,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			for (const organization of this.organizationList) {
 				if (organization.id == storedOrganizationId) {
 					this.selectedOrganization = organization;
+					this.organizationId = this.selectedOrganization.id;
 					this.selectOrganization();
 					return;
 				}
@@ -458,11 +459,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
 			if (!this.selectedOrganization) {
 				this.selectedOrganization = this.organizationList[0];
+				this.organizationId = this.selectedOrganization.id;
 				this.selectOrganization();
 			}
 		} else {
 			if (!this.selectedOrganization) {
 				this.selectedOrganization = this.organizationList[0];
+				this.organizationId = this.selectedOrganization.id;
 				this.selectOrganization();
 			}
 		}
@@ -475,6 +478,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			for (const edition of this.editionList) {
 				if (edition.id == storedEditionId) {
 					this.selectedEdition = edition;
+					this.editionId = this.selectedEdition.id;
 					this.selectEdition();
 					return;
 				}
@@ -484,11 +488,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			localStorage.removeItem('selectedEditionId');
 			if (!this.selectedEdition) {
 				this.selectedEdition = this.editionList[0];
+				this.editionId = this.selectedEdition.id;
 				this.selectEdition();
 			}
 		} else {
 			if (!this.selectedEdition) {
 				this.selectedEdition = this.editionList[0];
+				this.editionId = this.selectedEdition.id;
 				this.selectEdition();
 			}
 		}
@@ -501,6 +507,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			for (const project of this.projectList) {
 				if (project.id == storedProjectId) {
 					this.selectedProject = project;
+					this.projectId = this.selectedProject.id;
 					this.selectProject();
 					return;
 				}
@@ -511,11 +518,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
 			if (!this.selectedProject) {
 				this.selectedProject = this.projectList[0];
+				this.projectId = this.selectedProject.id;
 				this.selectProject();
 			}
 		} else {
 			if (!this.selectedProject) {
 				this.selectedProject = this.projectList[0];
+				this.projectId = this.selectedProject.id;
 				this.selectProject();
 			}
 		}

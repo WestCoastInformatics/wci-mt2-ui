@@ -174,7 +174,7 @@
 }
 
 .rt2-details-search-field {
-	width: 85%;
+	width: 70%;
 	padding-bottom: 0.4em;
 
 	// set this to 20px less than the field to leave room for the cancel 'X'
@@ -194,6 +194,10 @@
 
 .memberHistoryGrid {
 	height: 400px;
+}
+
+.ecl-button {
+	margin-top: -0.7em;
 }
 
 .rt2-concept-details-concept-info-column-title table {
