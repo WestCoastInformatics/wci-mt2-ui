@@ -82,7 +82,6 @@ export class AddMemberToOrganizationModalComponent {
 					this.validEmail = false;
 				} else {
 					this.changeLockedStatus.emit(true);
-					this.showLoadingSpinner = false;
 
 					const operation = this.organizationsService.addUsers.bind(this.organizationsService);
 
@@ -91,12 +90,10 @@ export class AddMemberToOrganizationModalComponent {
 							this.notificationService.show('The user is added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 							this.openedModel.dismiss();
 							this.changeLockedStatus.emit(false);
-							this.showLoadingSpinner = false;
 							window.location.reload();
 						},
 						(err) => {
 							this.changeLockedStatus.emit(false);
-							this.showLoadingSpinner = false;
 							console.error(err);
 						}
 					);

@@ -481,10 +481,6 @@ export class LaunchComparisonModalComponent {
 		this.selectedConcept = null;
 	}
 
-	sendLoadingSpinnerTrigger = (value: any) => {
-		this.loadingSpinner.emit(value);
-	};
-
 	sendChangeLockedStatus = (value: boolean) => {
 		this.changeLockedStatus.emit(value);
 	};

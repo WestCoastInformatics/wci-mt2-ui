@@ -63,8 +63,6 @@ export class UpgradeModalComponent implements OnInit {
 	}
 
 	openUpgradeModal() {
-		this.sendLoadingSpinnerTrigger(true);
-
 		this.refsetService.isRefsetLocked(this.refsetData?.id).subscribe(async (x) => {
 			if (!x) {
 				await this.getUpgradeData(this.upgradeDialog);
@@ -116,14 +114,8 @@ export class UpgradeModalComponent implements OnInit {
 
 			members.items = finalResults;
 			this.membersInCommon = members;
-
-			this.sendLoadingSpinnerTrigger(false);
 		});
 	}
-
-	sendLoadingSpinnerTrigger = (value: any) => {
-		this.loadingSpinner.emit(value);
-	};
 
 	latestDate(versionList: any[]): string {
 		return `${versionList[0].date} (${versionList[0].status})`;

@@ -196,7 +196,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 				return;
 			}
 
-			// find why only the first edition is being selected ??
 			this.showLoadingSpinner = true;
 			this.refsetService
 				.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true')

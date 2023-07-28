@@ -104,10 +104,6 @@ export class ProjectsConfigurationComponent implements OnInit, OnDestroy {
 					return;
 				}
 			}
-
-			if (!this.selectedProject) {
-				this.showLoadingSpinner = false;
-			}
 		});
 	}
 
@@ -174,18 +170,15 @@ export class ProjectsConfigurationComponent implements OnInit, OnDestroy {
 	}
 
 	saveProject() {
-		this.showLoadingSpinner = false;
-
 		this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe({
 			next: (results) => {
-				this.showLoadingSpinner = false;
 				this.teamList.map(function (team) {
 					return Object.assign(team, { saved: true });
 				});
 				this.notificationService.show(this.userMessages.updateProjectSuccess, null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 			},
 			error: (error) => {
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}

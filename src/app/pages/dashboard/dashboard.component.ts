@@ -304,8 +304,4 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-
-	toggleLoadingSpinner = (showSpinner = true) => {
-		this.showLoadingSpinner = showSpinner;
-	};
 }

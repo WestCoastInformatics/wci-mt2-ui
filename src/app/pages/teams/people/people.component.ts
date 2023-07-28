@@ -186,7 +186,6 @@ export class TeamsPeopleComponent implements OnInit, OnDestroy {
 	getTeams(): void {
 		this.teamsSubscription = this.teamsComponentService.getTeams().subscribe((results) => {
 			this.teamList = <any>results;
-			this.showLoadingSpinner = false;
 			this.showTable = true;
 
 			for (const team of this.teamList) {

@@ -84,8 +84,6 @@ export class TaxonomyTreeComponent {
 				this.changeDetectorRef.detectChanges();
 			} else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
 				if (!this.rootNode.active) {
-					this.isLoading = false;
-					this.showLoadingSpinner = false;
 					this.noData = true;
 					return;
 				}
@@ -96,21 +94,15 @@ export class TaxonomyTreeComponent {
 				if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].name)) {
 					this.getTreeData();
 				} else {
-					this.isLoading = true;
-					this.showLoadingSpinner = true;
 					this.prepareData(this.rootNode.children);
 				}
 			} else if (propertyName === 'manualStateRefresh') {
-				this.isLoading = true;
-				this.showLoadingSpinner = true;
 				this.nodes = [];
 			}
 		}
 	}
 
 	getTreeData() {
-		this.isLoading = true;
-		this.showLoadingSpinner = true;
 		const restParams = {
 			displayType: 'taxonomy',
 			depth: 1,
@@ -126,9 +118,7 @@ export class TaxonomyTreeComponent {
 				this.sendnumOfChildrenTrigger(results?.items?.length);
 			},
 			error: (error) => {
-				this.isLoading = false;
-				this.showLoadingSpinner = false;
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}
@@ -152,9 +142,6 @@ export class TaxonomyTreeComponent {
 		} else {
 			this.noData = true;
 		}
-
-		this.isLoading = false;
-		this.showLoadingSpinner = false;
 	}
 
 	onInitTree(event) {

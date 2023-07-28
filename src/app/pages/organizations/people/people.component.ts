@@ -185,11 +185,8 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		if (this.organizationId != this.previouslyLoadedId) {
 			this.previouslyLoadedId = this.organizationId;
 
-			this.showLoadingSpinner = false;
-
 			this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 				this.data = results.items;
-				this.showLoadingSpinner = false;
 			});
 		}
 	}

@@ -165,7 +165,6 @@ export class CreateNewRefsetComponent implements OnInit {
 	}
 
 	createRefsetObject(): void {
-		this.showLoadingSpinner = true;
 		let name = '';
 		let refsetId = null;
 		let parentConceptId = null;
@@ -202,8 +201,6 @@ export class CreateNewRefsetComponent implements OnInit {
 		}
 		this.refsetService.createRefset(params).subscribe(
 			(status) => {
-				this.showLoadingSpinner = false;
-
 				if (status.error) {
 					this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 						timeOut: 0,
@@ -216,7 +213,7 @@ export class CreateNewRefsetComponent implements OnInit {
 				this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
 			},
 			(error) => {
-				this.showLoadingSpinner = false;
+				//
 			}
 		);
 	}
@@ -240,7 +237,6 @@ export class CreateNewRefsetComponent implements OnInit {
 	}
 
 	editRefsetObject(): void {
-		this.showLoadingSpinner = true;
 		let tagsToPersist: string[];
 
 		if (this.tags) {
@@ -270,8 +266,6 @@ export class CreateNewRefsetComponent implements OnInit {
 
 		this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe({
 			next: (status) => {
-				this.showLoadingSpinner = false;
-
 				if (status.error) {
 					this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 						timeOut: 0,
@@ -285,7 +279,7 @@ export class CreateNewRefsetComponent implements OnInit {
 				this.refsetDetails.initializeDetailsPage();
 			},
 			error: (error) => {
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}

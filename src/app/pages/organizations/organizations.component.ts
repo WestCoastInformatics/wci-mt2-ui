@@ -201,10 +201,6 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 		if (!this.organizationId) {
 			this.getStoredOrganizationId();
 		}
-
-		if (!this.selectedOrganization) {
-			this.showLoadingSpinner = false;
-		}
 	}
 
 	changeOrganization(): void {

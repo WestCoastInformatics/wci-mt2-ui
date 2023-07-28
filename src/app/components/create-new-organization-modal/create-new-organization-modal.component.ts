@@ -17,13 +17,8 @@ export class CreateNewOrganizationModalComponent {
 	firstLoad = true;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(false);
-	
-	constructor(
-		private modalService: NgbModal,
-		private organizationsService: OrganizationsService,
-		private notificationService: NotificationService,
-		private readonly refsetDetails: RefsetDetails
-	) {}
+
+	constructor(private modalService: NgbModal, private organizationsService: OrganizationsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
 
 	ngOnInit() {}
 
@@ -35,15 +30,12 @@ export class CreateNewOrganizationModalComponent {
 	}
 
 	openCreateNewOrganizationModal(createNewOrganizationDialog: NgbModal) {
-
 		this.firstLoad = true;
 		this.description = '';
 		this.openedModel = this.modalService.open(createNewOrganizationDialog, { backdrop: 'static', keyboard: false });
 	}
 
 	processOperationReturn = (data) => {
-
-		this.loadingSpinner.emit(false);
 		this.refsetDetails.ngOnInit();
 		this.description = '';
 	};
@@ -64,26 +56,21 @@ export class CreateNewOrganizationModalComponent {
 	}
 
 	createOrganizationObject(): void {
-		
-		this.loadingSpinner.emit(true);
-
 		const params: any = {
 			active: true,
 			name: this.name,
 			description: this.description,
 			primaryContactEmail: this.email,
-			affiliate: true
+			affiliate: true,
 		};
 
 		this.organizationsService.createOrganization(params).subscribe(
 			(data) => {
 				this.notificationService.show('The Organization is created.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 				this.modalService.dismissAll();
-				this.loadingSpinner.emit(false);
 				window.location.reload();
 			},
 			(err) => {
-				this.loadingSpinner.emit(false);
 				console.error(err);
 			}
 		);

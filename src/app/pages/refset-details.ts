@@ -248,7 +248,6 @@ export class RefsetDetails implements OnInit {
 		this.refsetLoaded$ = this.refsetLoaded.asObservable();
 		this.memberCacheLoaded = new Subject<boolean>();
 		this.memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
-		this.showLoadingSpinner = true;
 		this.inEditButtonPrefix = '';
 		this.directUrl = window.location.protocol + '//' + window.location.host + this.router.url;
 		const prevUrl = this.routerExtentionService.getPreviousUrl();
@@ -321,7 +320,6 @@ export class RefsetDetails implements OnInit {
 				},
 			};
 
-			this.showLoadingSpinner = false;
 			this.showTable = true;
 			// If the member grid data is present manually reload the grid or it won't update
 			if (CodeUtility.hasValue(this.originalGridParams)) {
@@ -460,11 +458,9 @@ export class RefsetDetails implements OnInit {
 				}
 
 				this.loadWorkflowHistoryData();
-
-				this.showLoadingSpinner = false;
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -643,7 +639,7 @@ export class RefsetDetails implements OnInit {
 				this.memberCacheLoaded.complete();
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -667,7 +663,7 @@ export class RefsetDetails implements OnInit {
 				this.showTaxonomySearchTable = true;
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -795,7 +791,6 @@ export class RefsetDetails implements OnInit {
 				this.taxonomySearchResults = [];
 				this.taxonomySearchGridApi?.showNoRowsOverlay();
 				this.taxonomySearchGridApi?.setRowData([]);
-				//this.toggleLoadingSpinner(false);
 			},
 		});
 	};
@@ -839,7 +834,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	onTaxonomySearchGridCellClick = (event) => {
-		//this.toggleLoadingSpinner(true);
 		this.taxonomySearchGridApi.showLoadingOverlay();
 		const selectedRows = this.taxonomySearchGridApi?.getSelectedRows();
 		let selectedConcept;
@@ -856,7 +850,6 @@ export class RefsetDetails implements OnInit {
 			});
 		} catch {
 			this.taxonomySearchGridApi.hideLoadingOverlay();
-			//this.toggleLoadingSpinner(false)
 		}
 	};
 
@@ -881,7 +874,6 @@ export class RefsetDetails implements OnInit {
 		};
 
 		this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, afterNodeFound, true, true);
-		this.toggleLoadingSpinner(false);
 	}
 
 	reloadTaxonomyTree() {
@@ -1052,7 +1044,6 @@ export class RefsetDetails implements OnInit {
 			error: (error) => {
 				this.membersGridApi.showNoRowsOverlay();
 				this.membersGridApi.setRowData([]);
-				this.toggleLoadingSpinner(false);
 				this.membersReady = true;
 			},
 		});
@@ -1119,8 +1110,6 @@ export class RefsetDetails implements OnInit {
 
 	// ***** General Functions *****/
 	setWorkflowStatusByAction(notes: string, action: string): void {
-		this.toggleLoadingSpinner(true);
-
 		this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({
 			next: (results) => {
 				if (results) {
@@ -1141,7 +1130,7 @@ export class RefsetDetails implements OnInit {
 				}
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -1162,8 +1151,6 @@ export class RefsetDetails implements OnInit {
 			return;
 		}
 
-		this.toggleLoadingSpinner(true);
-
 		this.refsetService.publishLocalset(this.refsetData.id, versionDate).subscribe({
 			next: (results) => {
 				if (results) {
@@ -1171,7 +1158,7 @@ export class RefsetDetails implements OnInit {
 				}
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 
@@ -1199,8 +1186,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	deleteDevelopmentVersion() {
-		this.toggleLoadingSpinner(true);
-
 		this.refsetService.deleteDevelopmentVersion(this.refsetData.id).subscribe({
 			next: (results) => {
 				this.notificationService.show(
@@ -1217,7 +1202,7 @@ export class RefsetDetails implements OnInit {
 				this.router.navigate([link]);
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -1242,9 +1227,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	loadWorkflowHistoryData(showLoading = false): void {
-		if (showLoading) {
-			this.toggleLoadingSpinner(true);
-		}
 		this.refsetService.getWorkflowHistory(this.id, '?sort=modified&sortAscending=false').subscribe((results) => {
 			this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
 			this.workflowHistoryDataSource.sort = this.sort;
@@ -1253,9 +1235,6 @@ export class RefsetDetails implements OnInit {
 			const source = this.workflowHistoryDataSource?.data[0];
 			if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
 				this.reviewNotesAdded = true;
-			}
-			if (showLoading) {
-				this.toggleLoadingSpinner(false);
 			}
 		});
 	}
@@ -1274,7 +1253,6 @@ export class RefsetDetails implements OnInit {
 
 	changeLockedStatus(lock: boolean) {
 		this.isLocked = lock;
-		this.toggleLoadingSpinner(false);
 		UiUtility.toggleLockedSections(lock);
 		console.timeEnd('reference set detail changeLockedStatus');
 	}
@@ -1366,7 +1344,6 @@ export class RefsetDetails implements OnInit {
 			},
 			error: (error) => {
 				this.isConceptDetailsLoading = false;
-				this.toggleLoadingSpinner(false);
 			},
 		});
 
@@ -1396,10 +1373,6 @@ export class RefsetDetails implements OnInit {
 		});
 	}
 
-	toggleLoadingSpinner = (showSpinner = true) => {
-		this.showLoadingSpinner = showSpinner;
-	};
-
 	closeConceptDetails() {
 		this.conceptDetail = null;
 		this.selectedConcept = null;
@@ -1420,15 +1393,13 @@ export class RefsetDetails implements OnInit {
 	}
 
 	changeRefsetStatus = () => {
-		this.toggleLoadingSpinner(true);
-
 		this.refsetService.changeRefsetStatus(this.refsetData.id, !this.refsetData.active).subscribe({
 			next: (results) => {
 				this.notificationService.show('The Reference Set has been ' + results.status + '.', null, 'success');
 				this.loadRefset();
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 
@@ -1483,7 +1454,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	openMemberHistory(conceptId) {
-		this.showLoadingSpinner = true;
 		const concept = this.getMemberRow(conceptId);
 		this.refsetService.getMemberHistory(this.refsetData?.id, conceptId, null).subscribe((results) => {
 			const historyData: any = {};
@@ -1527,8 +1497,6 @@ export class RefsetDetails implements OnInit {
 				template: this.memberHistoryDialog,
 				data: historyData,
 			};
-
-			this.showLoadingSpinner = false;
 
 			this.dialog = this.dialogFactoryService.open(dialogData);
 		});

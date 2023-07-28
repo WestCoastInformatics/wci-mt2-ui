@@ -100,7 +100,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	}
 
 	addRemoveConcept(params: any): void {
-		//this.showLoadingSpinner = true;
 		this.isConceptBeingAdded = Boolean(params.addConcept);
 
 		// if this is coming from the parents section than the concept has children
@@ -113,7 +112,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	}
 
 	public processChangedMemberEffects = (conceptStatusArray) => {
-		this.showLoadingSpinner = false;
 		this.sendChangeLockedStatus(false);
 
 		// if this modal is closed and the same refset is still open then refsesh the page
@@ -245,9 +243,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			return;
 		}
 
-		// Enable spinner (turn of when search errors or completes)
-		this.loadingSpinner.emit(true);
-
 		this.refsetService.getConceptSearch(this.refsetInternalId, `limit=200&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({
 			next: (results) => {
 				this.data = results;
@@ -274,11 +269,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 				}
 
 				this.filterActiveConcepts();
-
-				this.loadingSpinner.emit(false);
 			},
 			error: (error) => {
-				this.loadingSpinner.emit(false);
+				//
 			},
 		});
 	};
@@ -326,7 +319,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	loadConceptDetail(concept) {
 		this.conceptDetail = null;
 		this.isConceptDetailsLoading = true;
-		this.showLoadingSpinner = false;
 		this.loadConceptDetailParents(concept);
 
 		this.refsetService
@@ -335,7 +327,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			})
 			.subscribe((results) => {
 				this.isConceptDetailsLoading = false;
-				this.showLoadingSpinner = false;
 				this.conceptDetail = results;
 				this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
 					return description != null;

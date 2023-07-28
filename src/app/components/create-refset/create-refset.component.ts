@@ -73,7 +73,7 @@ export class CreateRefsetComponent implements OnInit {
 	conceptError = '';
 	dialog: DialogService;
 	selectedCombinationRefsetsForm = new FormControl();
-	isAffiliate: boolean = false;
+	isAffiliate = false;
 
 	@Input() existingBranchVersions: any;
 	@Input() isDetailsPage = false;
@@ -279,8 +279,6 @@ export class CreateRefsetComponent implements OnInit {
 	}
 
 	createRefsetObject(): void {
-		this.showLoadingSpinner = true;
-
 		if (this.selectedReferenceType === Constants.COPY) {
 			const existingCpt = this.existingMetadataConcepts[this.selectedMetaDataConcept]?.code;
 			this.refsetService
@@ -298,13 +296,12 @@ export class CreateRefsetComponent implements OnInit {
 				)
 				.subscribe(
 					(results) => {
-						this.showLoadingSpinner = false;
 						this.modalService.dismissAll();
 						this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT]);
 						return;
 					},
 					(error) => {
-						this.showLoadingSpinner = false;
+						//
 					}
 				);
 		} else {
@@ -348,8 +345,6 @@ export class CreateRefsetComponent implements OnInit {
 			}
 			this.refsetService.createRefset(params).subscribe(
 				(status) => {
-					this.showLoadingSpinner = false;
-
 					if (status.error) {
 						this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 							timeOut: 0,
@@ -363,7 +358,6 @@ export class CreateRefsetComponent implements OnInit {
 				},
 				(error) => {
 					this.modalService.dismissAll();
-					this.showLoadingSpinner = false;
 				}
 			);
 		}
@@ -388,7 +382,6 @@ export class CreateRefsetComponent implements OnInit {
 	}
 
 	editRefsetObject(): void {
-		this.showLoadingSpinner = true;
 		let tagsToPersist: string[];
 
 		if (this.tags) {
@@ -411,8 +404,6 @@ export class CreateRefsetComponent implements OnInit {
 
 		this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe(
 			(status) => {
-				this.showLoadingSpinner = false;
-
 				if (status.error) {
 					this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 						timeOut: 0,
@@ -426,7 +417,7 @@ export class CreateRefsetComponent implements OnInit {
 				this.refsetDetails.initializeDetailsPage();
 			},
 			(error) => {
-				this.showLoadingSpinner = false;
+				//
 			}
 		);
 	}
@@ -618,7 +609,6 @@ export class CreateRefsetComponent implements OnInit {
 		};
 
 		if (query.length > 2) {
-			this.showLoadingSpinner = true;
 			this.refsetService.getRefsets({ ...restParams }).subscribe({
 				next: (results) => {
 					this.refsetOptions = this.sortRefsets(results.items);
@@ -627,12 +617,10 @@ export class CreateRefsetComponent implements OnInit {
 						option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
 					}
 
-					this.showLoadingSpinner = false;
-
 					this.refsetOptionsLoading = false;
 				},
 				error: (error) => {
-					this.showLoadingSpinner = false;
+					//
 				},
 			});
 		} else {

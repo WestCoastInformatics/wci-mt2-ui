@@ -164,10 +164,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
 		if (!this.organizationId) {
 			this.getStoredOrganizationId();
 		}
-
-		if (!this.selectedOrganization) {
-			this.showLoadingSpinner = false;
-		}
 	}
 
 	changeOrganization(): void {
@@ -176,7 +172,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
 	}
 
 	selectOrganization(): void {
-		this.showLoadingSpinner = false;
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedTeam = null;
 		this.teamList = [];
@@ -241,13 +236,11 @@ export class TeamsComponent implements OnInit, OnDestroy {
 		this.teamList = [];
 		if (this.previouslyLoadedOrganizationId == this.organizationId) {
 			this.teamsSubscription = this.teamsComponentService.getTeams().subscribe((results) => {
-				this.showLoadingSpinner = false;
 				this.teamList = <any>results;
 				this.getSelectedTeam();
 			});
 		} else {
 			this.refsetService.getTeams('includeMembers=true&query=organizationId:' + this.organizationId + '&sort=name&sortAscending=true').subscribe((results) => {
-				this.showLoadingSpinner = false;
 				this.teamList = results.items;
 				this.teamsComponentService.setTeams(this.teamList);
 				this.getSelectedTeam();

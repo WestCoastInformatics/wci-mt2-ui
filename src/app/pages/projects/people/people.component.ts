@@ -211,10 +211,6 @@ export class ProjectsPeopleComponent implements OnInit, OnDestroy {
 					return;
 				}
 			}
-
-			if (!this.selectedProject) {
-				this.showLoadingSpinner = false;
-			}
 		});
 	}
 
@@ -229,10 +225,6 @@ export class ProjectsPeopleComponent implements OnInit, OnDestroy {
 					this.showProjectData();
 					return;
 				}
-			}
-
-			if (!this.selectedProject) {
-				this.showLoadingSpinner = false;
 			}
 		});
 	}

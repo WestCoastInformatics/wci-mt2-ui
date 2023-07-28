@@ -229,7 +229,6 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.previouslyLoadedId = this.organizationId;
 			let roles = [];
 			if (this.organizationId) {
-				this.showLoadingSpinner = false;
 				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
 				if (this.selectedOrganization?.id) {
 					queryString = queryString + '&query=organizationId:' + this.selectedOrganization.id;
@@ -253,12 +252,10 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 
 					roles = [...new Set(roles)].sort();
 					this.gridApi.setRowData(this.data);
-					this.showLoadingSpinner = false;
 				});
 			} else {
 				this.data = [];
 				this.gridApi.setRowData(this.data);
-				this.showLoadingSpinner = false;
 			}
 		}
 	}

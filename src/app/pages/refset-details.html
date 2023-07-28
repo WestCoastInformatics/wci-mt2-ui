@@ -202,7 +202,6 @@
 						</button>
 
 						<upgrade-modal
-							(loadingSpinner)="toggleLoadingSpinner($event)"
 							*ngIf="(this.showMembersSection && ((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0)"
 							[refsetData]="refsetData"
 							[membersOfRefset]="membersGridData"
@@ -211,7 +210,6 @@
 							[refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
 						<button
-							(loadingSpinner)="toggleLoadingSpinner($event)"
 							type="button"
 							color="red"
 							*ngIf="(this.showMembersSection && (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')))"
@@ -506,7 +504,6 @@
 					class="ml-20"
 					*ngIf="allowedToEdit"
 					[refset]="refsetData"
-					(loadingSpinner)="toggleLoadingSpinner($event)"
 					(changeLockedStatus)="changeLockedStatus($event)"
 					[processChangedMemberFunction]="processChangedMemberEffects">
 				</add-remove-by-concept-modal>

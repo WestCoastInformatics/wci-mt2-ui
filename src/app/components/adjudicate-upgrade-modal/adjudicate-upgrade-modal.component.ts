@@ -508,7 +508,6 @@ export class AdjudicateUpgradeModalComponent {
 	}
 
 	removeManualReplacement(changeMethod: string): void {
-		this.refsetDetails.toggleLoadingSpinner(true);
 		this.refsetService
 			.modifyMembersForUpgrade(
 				this.refsetData.id,
@@ -518,7 +517,6 @@ export class AdjudicateUpgradeModalComponent {
 			)
 			.subscribe((x) => {
 				this.getUpgradeData();
-				this.refsetDetails.toggleLoadingSpinner(false);
 			});
 		this.selectedConcepts = undefined;
 		this.concept = '';
@@ -532,7 +530,6 @@ export class AdjudicateUpgradeModalComponent {
 				// force auto-add of the replacement concept to the refset
 				this.addReplacementFlag = true;
 				this.getUpgradeData();
-				this.refsetDetails.toggleLoadingSpinner(false);
 				this.disableAddRemove = true;
 			});
 		}
@@ -541,15 +538,11 @@ export class AdjudicateUpgradeModalComponent {
 
 	changeLockedStatus(lock: boolean) {
 		this.isLocked = lock;
-		this.refsetDetails.toggleLoadingSpinner(false);
 		UiUtility.toggleLockedSections(lock);
 	}
 
 	processChangedMemberEffects = (conceptStatusArray) => {
-		this.refsetDetails.showLoadingSpinner = true;
-
 		this.getUpgradeData();
-		this.refsetDetails.showLoadingSpinner = false;
 		this.disableAddRemove = false;
 	};
 
@@ -643,7 +636,6 @@ export class AdjudicateUpgradeModalComponent {
 		const filter = UiUtility.formatFilterData(gridReadyParams.filterModel);
 		const newFilterString = filter;
 		this.refsetGridLastFilter = newFilterString;
-		//this.refsetDetails.showLoadingSpinner = true;
 
 		this.getUpgradeData();
 
@@ -668,7 +660,6 @@ export class AdjudicateUpgradeModalComponent {
 					});
 					if (inactiveConcepts.length > 0) {
 						self.changeLockedStatus(true);
-						self.refsetDetails.showLoadingSpinner = true;
 						self.refsetService.addRemoveAllInactiveRefsetMembers(self.refsetData.id, isAdd).subscribe(() => {
 							self.processChangedMemberEffects(null);
 						});
@@ -687,7 +678,6 @@ export class AdjudicateUpgradeModalComponent {
 		});
 		if (inactiveConcepts.length > 0) {
 			this.changeLockedStatus(true);
-			this.refsetDetails.showLoadingSpinner = true;
 			this.refsetService.addRemoveAllInactiveRefsetMembers(this.refsetData.id, isAdd).subscribe(() => {
 				this.processChangedMemberEffects(null);
 			});
@@ -784,8 +774,6 @@ export class AdjudicateUpgradeModalComponent {
 						this.paginationComponent?.goToPage(pageNumber - 1);
 					}
 
-					this.refsetDetails.showLoadingSpinner = false;
-
 					return;
 				} else {
 					addRemoveAllBtns.forEach((element: HTMLElement) => {
@@ -794,14 +782,13 @@ export class AdjudicateUpgradeModalComponent {
 				}
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
-				this.refsetDetails.showLoadingSpinner = false;
+
 				// finally, set locked back off
 				this.changeLockedStatus(false);
 			},
 			(error) => {
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setRowData([]);
-				this.refsetDetails.toggleLoadingSpinner(false);
 				this.changeLockedStatus(false);
 			}
 		);

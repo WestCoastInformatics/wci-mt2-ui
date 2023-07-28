@@ -266,7 +266,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 				this.changeDetectorRef.detectChanges();
 			},
 			error: (error) => {
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}
@@ -328,15 +328,12 @@ export class LandingComponent implements OnInit, AfterViewInit {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
 						this.refsetGridPaging.totalKnown = true;
 						this.paginationComponent.goToPage(pageNumber - 1);
-						this.showLoadingSpinner = false;
 					}
 
 					return;
 				}
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
-
-				this.showLoadingSpinner = false;
 			},
 			error: (error) => {
 				this.refsetGridApi.showNoRowsOverlay();
@@ -433,13 +430,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	}
 
 	openInformation(refsetId: string) {
-		if (this.showLoadingSpinner == false) {
-			this.showLoadingSpinner = false;
-			this.loadingSpinner.emit(false);
-		} else {
-			return;
-		}
-
 		const refsetDirectoryData = this.getRefsetRow(refsetId);
 
 		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
@@ -484,11 +474,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 				width: '1000px',
 				disableClose: false,
 			};
-
-			if (this.showLoadingSpinner) {
-				this.showLoadingSpinner = false;
-				this.loadingSpinner.emit(false);
-			}
 
 			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 

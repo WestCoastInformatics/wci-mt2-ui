@@ -256,10 +256,6 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 					return;
 				}
 			}
-
-			if (!this.selectedProject) {
-				this.showLoadingSpinner = false;
-			}
 		});
 	}
 
@@ -297,7 +293,6 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 
 				this.numberOfTeams = this.teamData.length;
 				this.gridApi.setRowData(this.teamData);
-				this.showLoadingSpinner = false;
 			},
 			(err) => {
 				console.error(err);

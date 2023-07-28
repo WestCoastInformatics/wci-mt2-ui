@@ -102,8 +102,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 		this.titleService.setTitle('Reference Set Tool - Projects - Reference Sets');
 		this.user = this.authService.getUser();
 
-		this.showLoadingSpinner = false;
-
 		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			this.organizationId = params['organizationId'];
 			this.projectId = params['projectId'];
@@ -290,10 +288,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 					return;
 				}
 			}
-
-			if (!this.selectedProject) {
-				this.showLoadingSpinner = false;
-			}
 		});
 	}
 
@@ -367,7 +361,6 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 								this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
 								this.refsetGridPaging.totalKnown = true;
 								this.paginationComponent.goToPage(pageNumber - 1);
-								this.showLoadingSpinner = false;
 
 								return;
 							}
@@ -403,13 +396,11 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 							}
 
 							this.refsetGridPaging.manualStateRefresh = new Boolean(true);
-							this.showLoadingSpinner = false;
 							UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
 						},
 						(error) => {
 							this.refsetGridApi.showNoRowsOverlay();
 							rowParams.successCallback([], 0);
-							this.showLoadingSpinner = false;
 						}
 					);
 				} else {
