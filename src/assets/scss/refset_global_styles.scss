@@ -512,11 +512,11 @@ tr.refset_tool_inactive_row {
 }
 
 .rt2-concept-details-taxonomy-icon.taxonomy-icon-edit-mode {
-	max-width: 50px;
+	max-width: 60px !important;
 }
 
 .rt2-concept-details-taxonomy-description {
-	margin-left: 10px;
+	margin-left: -0.5em;
 }
 
 .rt2-concept-details-taxonomy-icon + .rt2-concept-details-taxonomy-description {
@@ -2057,6 +2057,10 @@ app-date-text-floating-filter {
 
 .ag-theme-alpine.rt2-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
 	background-color: #efefef;
+}
+
+app-grid-header-floating-filter {
+	width: 100%;
 }
 
 .refset-radio .mat-radio-label {

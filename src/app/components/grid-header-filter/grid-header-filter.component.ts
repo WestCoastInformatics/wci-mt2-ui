@@ -43,6 +43,11 @@ export class GridHeaderFilterComponent implements IFloatingFilter, AgFrameworkCo
 		}
 	}
 
+	clearValue() {
+		this.value = '';
+		this.valueChanged();
+	}
+
 	onParentModelChanged(parentModel: TextFilterModel): void {
 		if (!parentModel) {
 			this.value = '';

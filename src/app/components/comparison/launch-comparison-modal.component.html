@@ -243,7 +243,7 @@
 											</div>
 
 											<div *ngFor="let parent of conceptDetailParents" class="row rt2-concept-details-taxonomy-item">
-												<div class="rt2-concept-details-taxonomy-icon mr-10" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+												<div class="col-md-auto rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
 													<add-remove-concepts-icons
 														*ngIf="allowedToEdit"
 														[concept]="parent"
@@ -253,11 +253,11 @@
 													</add-remove-concepts-icons>
 
 													<img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-													<img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0" src="/assets/unlinedTaxonomyIcon.png" />
+													<img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
 												</div>
 
 												<div
-													class="rt2-concept-details-taxonomy-description pointer"
+													class="col rt2-concept-details-taxonomy-description pointer"
 													[class.bold-if-member]="parent?.memberOfRefset"
 													[class.greyed-if-not-member]="!parent?.memberOfRefset"
 													(click)="loadConceptDetail(parent)">
@@ -315,8 +315,8 @@
 													</table>
 
 													<!-- ID -->
-													<div class="m-l-10 mb-7em rt2-concept-details-concept-row">
-														<div class="rt2-concept-details-concept-id-label">SCTID</div>
+													<div class="row m-l-10 mb-7em rt2-concept-details-concept-row">
+														<div class="col-md-auto rt2-concept-details-concept-id-label">SCTID</div>
 														<div class="col rt2-concept-details-concept-id-text">
 															{{ conceptDetail?.code }}
 														</div>
