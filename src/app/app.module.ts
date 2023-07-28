@@ -69,8 +69,8 @@ import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // PAGE IMPORTS
-import { RefsetDirectory } from 'src/app/pages/refset-directory';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDirectoryComponent } from 'src/app/pages/refset-directory';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
@@ -141,8 +141,8 @@ const appRoutes: Routes = [
 	{ path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
-	{ path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Reference Set Library' } },
-	{ path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
+	{ path: 'library', component: RefsetDirectoryComponent, data: { breadcrumbLabel: 'Reference Set Library' } },
+	{ path: 'details/:refsetId/:versionDate', component: RefsetDetailsComponent, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
 	{
@@ -270,8 +270,8 @@ const appRoutes: Routes = [
 		FinishUpgradeModalComponent,
 		AdjudicateUpgradeModalComponent,
 		SafeUrlPipe,
-		RefsetDirectory,
-		RefsetDetails,
+		RefsetDirectoryComponent,
+		RefsetDetailsComponent,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
@@ -386,7 +386,7 @@ const appRoutes: Routes = [
 		RestService,
 		ConceptsService,
 		RefsetService,
-		RefsetDetails,
+		RefsetDetailsComponent,
 		PaginationService,
 		BreadcrumbService,
 		RouterExtentionService,

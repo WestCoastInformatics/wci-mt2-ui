@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
@@ -18,7 +18,7 @@ export class FinishUpgradeModalComponent implements OnInit {
 	@Input() membersInCommon: any;
 	@Input() isLocked: boolean;
 
-	constructor(private readonly modalService: NgbModal, readonly refsetDetails: RefsetDetails, readonly upgradeModalComponent: UpgradeModalComponent) {}
+	constructor(private readonly modalService: NgbModal, readonly refsetDetails: RefsetDetailsComponent, readonly upgradeModalComponent: UpgradeModalComponent) {}
 
 	ngOnInit(): void {}
 

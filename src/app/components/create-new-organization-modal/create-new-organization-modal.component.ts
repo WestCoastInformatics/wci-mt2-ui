@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
@@ -18,7 +18,12 @@ export class CreateNewOrganizationModalComponent {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(false);
 
-	constructor(private modalService: NgbModal, private organizationsService: OrganizationsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
+	constructor(
+		private modalService: NgbModal,
+		private organizationsService: OrganizationsService,
+		private notificationService: NotificationService,
+		private readonly refsetDetails: RefsetDetailsComponent
+	) {}
 
 	ngOnInit() {}
 

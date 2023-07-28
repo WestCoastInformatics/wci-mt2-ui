@@ -37,7 +37,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 	templateUrl: 'refset-details.html',
 	styleUrls: ['./refset-details.scss'],
 })
-export class RefsetDetails implements OnInit {
+export class RefsetDetailsComponent implements OnInit {
 	id: string;
 	user: User;
 	refsetId = '';

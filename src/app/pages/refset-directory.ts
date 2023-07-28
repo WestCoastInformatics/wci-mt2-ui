@@ -26,7 +26,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	templateUrl: 'refset-directory.html',
 	styleUrls: ['refset-directory.scss'],
 })
-export class RefsetDirectory implements OnInit, AfterViewInit {
+export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 	user: User;
 	searchInput: string;
 	viewOptions = [
@@ -107,7 +107,12 @@ export class RefsetDirectory implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('sort=name'), this.refsetService.getOrganizationsKeyValue()).subscribe({
+		forkJoin(
+			this.refsetService.getVersionStatuses(),
+			this.refsetService.getVersions(),
+			this.refsetService.getEditions('sort=name&query=maintainerType:Managed Service'),
+			this.refsetService.getOrganizationsKeyValue()
+		).subscribe({
 			next: ([results, versionResults, editionResults, organizationResults]) => {
 				this.versionStatuses = results;
 				const versionStatusArray = this.versionStatuses?.items;
