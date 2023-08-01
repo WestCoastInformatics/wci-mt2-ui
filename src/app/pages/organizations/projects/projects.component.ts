@@ -168,9 +168,9 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	onGridCellClick = (event) => {
 		// If clicking on teams, go to teams page
 		if (event.column.colId === 'teams') {
-			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams']);
+			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams'], { replaceUrl: false, skipLocationChange: false });
 		} else {
-			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets']);
+			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets'], { replaceUrl: false, skipLocationChange: false });
 		}
 	};
 

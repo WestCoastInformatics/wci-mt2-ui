@@ -100,11 +100,11 @@ export class PersonalLandingComponent implements OnInit, OnDestroy {
 	}
 
 	goToTeam(teamId: string, organizationId: string): void {
-		this.router.navigate([`/organization/${organizationId}/teams/${teamId}/users`]);
+		this.router.navigate([`/organization/${organizationId}/teams/${teamId}/users`], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	navigateToPage(path) {
-		this.router.navigate([path]);
+		this.router.navigate([path], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	ngOnDestroy() {

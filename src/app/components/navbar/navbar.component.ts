@@ -76,7 +76,7 @@ export class NavbarComponent implements OnInit {
 		const breadcrumb = this.breadcrumbs[breadcrumbId];
 
 		if (breadcrumb.selectable) {
-			this.router.navigate([breadcrumb.path]);
+			this.router.navigate([breadcrumb.path], { replaceUrl: false, skipLocationChange: false });
 		}
 	}
 
@@ -87,16 +87,16 @@ export class NavbarComponent implements OnInit {
 	landing() {
 		const breadcrumbs = [];
 		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
-		this.router.navigate(['']);
+		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	resources() {
-		this.router.navigate(['']);
+		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	login() {
 		localStorage.removeItem('loginReferralUrl');
-		this.router.navigate(['/login']);
+		this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	assignedUser(): string {
@@ -117,7 +117,7 @@ export class NavbarComponent implements OnInit {
 		if (this.router.url.includes(route) || (this.router.url.includes('projects') && route.includes('projects'))) {
 			window.location.reload();
 		} else {
-			this.router.navigate([route]);
+			this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
 		}
 	}
 }

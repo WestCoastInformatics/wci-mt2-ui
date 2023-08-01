@@ -232,7 +232,7 @@ export class TeamsPeopleComponent implements OnInit, OnDestroy {
 		const selectedRows = this.gridApi.getSelectedRows();
 		const router = this.router;
 		selectedRows.forEach(function (selectedRow) {
-			router.navigate(['/personal/' + selectedRow.id + '/landing']);
+			router.navigate(['/personal/' + selectedRow.id + '/landing'], { replaceUrl: false, skipLocationChange: false });
 			return;
 		});
 	};

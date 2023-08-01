@@ -84,16 +84,16 @@ export class AuthenticationService {
 				this.userSubject.next(userData);
 
 				if (CodeUtility.hasValue(referralUrl)) {
-					window.location.href = referralUrl;
+					this.router.navigateByUrl(referralUrl, { replaceUrl: true, skipLocationChange: false });
 				} else {
-					this.router.navigate(['/dashboard']);
+					this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
 				}
 			},
 			(err) => {
 				console.error(err);
 				if (err.status == 401) {
 					this.notificationService.show(' ' + err?.error, null, 'info', { timeOut: 0, extendedTimeOut: 0 });
-					this.router.navigate(['/library']);
+					this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false });
 				} else {
 					this.notificationService.show('Problem with login: ' + err?.error, null, 'error', { timeOut: 0, extendedTimeOut: 0 });
 				}

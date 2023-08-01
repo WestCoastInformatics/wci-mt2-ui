@@ -210,7 +210,7 @@ export class CreateNewRefsetComponent implements OnInit {
 				}
 
 				this.modalService.dismissAll();
-				this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
+				this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 			},
 			(error) => {
 				//
@@ -275,7 +275,7 @@ export class CreateNewRefsetComponent implements OnInit {
 				}
 
 				this.modalService.dismissAll();
-				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT]);
+				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				this.refsetDetails.initializeDetailsPage();
 			},
 			error: (error) => {

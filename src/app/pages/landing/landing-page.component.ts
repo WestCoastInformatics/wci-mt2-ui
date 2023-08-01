@@ -418,7 +418,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {

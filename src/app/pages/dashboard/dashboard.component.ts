@@ -250,11 +250,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	};
 
 	navigateToPage(path) {
-		this.router.navigate([path]);
+		this.router.navigate([path], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToDetailsPage(refsetId, versionDate) {
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getOrganizations(): void {

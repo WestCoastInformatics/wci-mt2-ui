@@ -14,7 +14,7 @@ export class InviteComponent implements OnInit {
 
 	inviteRequest(): any {
 		this.refsetService.inviteRequest(this.requestId, this.accepted).subscribe();
-		this.router.navigate(['']);
+		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	ngOnInit(): void {

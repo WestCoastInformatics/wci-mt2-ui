@@ -185,14 +185,14 @@ export class ProjectsPeopleComponent implements OnInit, OnDestroy {
 		const selectedRows = this.gridApi.getSelectedRows();
 		const router = this.router;
 		selectedRows.forEach(function (selectedRow, index) {
-			router.navigate(['/personal/' + selectedRow.id + '/landing']);
+			router.navigate(['/personal/' + selectedRow.id + '/landing'], { replaceUrl: false, skipLocationChange: false });
 			return;
 		});
 	};
 
 	clickTeams = (event) => {
 		//if (event.column.colId === 'name') {
-		this.router.navigate(['organizations', this.organizationId, 'teams']);
+		this.router.navigate(['organizations', this.organizationId, 'teams'], { replaceUrl: false, skipLocationChange: false });
 		event.stopPropagation();
 		//}
 	};

@@ -172,7 +172,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		const selectedRows = this.gridApi.getSelectedRows();
 		const router = this.router;
 		selectedRows.forEach(function (selectedRow, index) {
-			router.navigate(['/personal/' + selectedRow.id + '/landing']);
+			router.navigate(['/personal/' + selectedRow.id + '/landing'], { replaceUrl: false, skipLocationChange: false });
 			return;
 		});
 	};

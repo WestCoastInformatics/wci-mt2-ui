@@ -700,7 +700,7 @@ export class UiUtility {
 		if (!versionDate) {
 			versionDate = Constants.IN_DEVELOPMENT;
 		}
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	static toggleLockedSections(lock: boolean) {

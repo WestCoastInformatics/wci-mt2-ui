@@ -297,7 +297,7 @@ export class CreateRefsetComponent implements OnInit {
 				.subscribe(
 					(results) => {
 						this.modalService.dismissAll();
-						this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT]);
+						this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 						return;
 					},
 					(error) => {
@@ -354,7 +354,7 @@ export class CreateRefsetComponent implements OnInit {
 					}
 
 					this.modalService.dismissAll();
-					this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
+					this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				},
 				(error) => {
 					this.modalService.dismissAll();
@@ -413,7 +413,7 @@ export class CreateRefsetComponent implements OnInit {
 				}
 
 				this.modalService.dismissAll();
-				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT]);
+				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				this.refsetDetails.initializeDetailsPage();
 			},
 			(error) => {

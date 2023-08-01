@@ -239,7 +239,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				currentRoute = '/organizations/' + this.organizationId + '/configuration';
 			}
 			if (this.currentURL != currentRoute) {
-				this.router.navigate([currentRoute]);
+				this.router.navigate([currentRoute], { replaceUrl: false, skipLocationChange: false });
 			}
 		}
 	}
@@ -330,7 +330,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				this.showEditionData();
 				const currentRoute = '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects';
 				if (this.currentURL != currentRoute) {
-					this.router.navigate([currentRoute]);
+					this.router.navigate([currentRoute], { replaceUrl: false, skipLocationChange: false });
 				}
 			}
 		}

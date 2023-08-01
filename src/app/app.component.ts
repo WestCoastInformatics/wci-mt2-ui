@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import 'jquery';
 import { Title } from '@angular/platform-browser';
 import { EnvService } from './services/environment/env.service';
-import { NavigationStart, Router } from '@angular/router';
+import { NavigationStart, NavigationError, Router } from '@angular/router';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { filter } from 'rxjs/operators';
 @Component({
@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
 			.subscribe((event: NavigationStart) => {
 				location.reload();
 			});
+
+		router.events.pipe(filter((event) => event instanceof NavigationError)).subscribe(() => router.navigate(['/dashboard'], { skipLocationChange: true }));
 	}
 
 	// ***** Framework Functions *****/

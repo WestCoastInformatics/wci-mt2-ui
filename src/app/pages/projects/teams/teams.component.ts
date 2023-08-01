@@ -241,7 +241,7 @@ export class ProjectsTeamsComponent implements OnInit, OnDestroy {
 			selectedId = selectedRow.id;
 		});
 
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users']);
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], { replaceUrl: false, skipLocationChange: false });
 	};
 
 	getOrganizations(): void {

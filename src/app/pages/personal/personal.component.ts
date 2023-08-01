@@ -141,7 +141,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
 				currentRoute = '/personal/' + this.userId + '/configuration';
 			}
 			if (this.currentURL != currentRoute) {
-				this.router.navigate([currentRoute]);
+				this.router.navigate([currentRoute], { replaceUrl: false, skipLocationChange: false });
 			}
 		} else {
 			this.personalSubscription = this.personalComponentService.getUser().subscribe({

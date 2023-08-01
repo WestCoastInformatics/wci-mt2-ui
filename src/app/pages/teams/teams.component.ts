@@ -189,7 +189,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
 			currentRoute = '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration';
 		}
 		if (this.currentURL != currentRoute) {
-			this.router.navigate([currentRoute]);
+			this.router.navigate([currentRoute], { replaceUrl: false, skipLocationChange: false });
 		}
 	}
 

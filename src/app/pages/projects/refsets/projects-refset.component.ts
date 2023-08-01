@@ -438,7 +438,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 	}
 
 	goToDetailsPage(refsetId, versionDate) {
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
