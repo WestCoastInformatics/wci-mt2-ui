@@ -845,6 +845,17 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	top: 0;
 }
 
+.loading-message {
+	position: absolute;
+	z-index: 100;
+	background: white !important;
+	border: 0.5px solid #666 !important;
+	border-radius: 0 !important;
+	margin-left: 45% !important;
+	margin-top: 1% !important;
+	padding: 0.25em;
+}
+
 @media (min-width: 768px) {
 	.rt2-refset-metadata-column:first-child.col-md-6 {
 		max-width: calc(50% - 1.5rem);

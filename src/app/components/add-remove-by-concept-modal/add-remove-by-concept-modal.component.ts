@@ -113,7 +113,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 	public processChangedMemberEffects = (conceptStatusArray) => {
 		this.sendChangeLockedStatus(false);
-
 		// if this modal is closed and the same refset is still open then refsesh the page
 		if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refset.refsetId)) {
 			this.processChangedMemberFunction(conceptStatusArray);
@@ -122,6 +121,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 		// reload the search results if the window is still open
 		if (this.modalService.hasOpenModals()) {
 			this.onTableSearchChange();
+			if (this.conceptSelected) {
+				this.loadConceptDetail(this.selectedConcept);
+			}
 		}
 	};
 
@@ -285,8 +287,8 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			selectedId = selectedRow.code;
 		});
 
-		const selectedConcept = this.getGridRow(selectedId);
-		this.loadConceptDetail(selectedConcept);
+		this.selectedConcept = this.getGridRow(selectedId);
+		this.loadConceptDetail(this.selectedConcept);
 	};
 
 	getGridRow(conceptId: string) {
@@ -444,7 +446,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			if (type === 'remove') {
 				past = 'd from';
 			}
-			this.notificationService.show('No action to perfrom, already ' + type + past + ' Reference Set.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+			this.notificationService.show('No action to perform, already ' + type + past + ' Reference Set.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 		}
 		//this.closeModal();
 	}
@@ -458,6 +460,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	onTableSearchChange() {
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 			this.resultsDisplay = 'block';
+			if (this.gridApi) {
+				this.gridApi.showLoadingOverlay();
+			}
 			this.onGridReady(this.originalGridParams);
 		}
 	}

@@ -7,7 +7,7 @@
 
 <div class="dashboard-section">
 	<div class="ag-theme-alpine">
-		<ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct"> </ag-grid-angular>
+		<ag-grid-angular [columnDefs]="gridColumnDefs" [rowData]="data" (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" class="w-100-pct h-638"> </ag-grid-angular>
 
 		<!-- Name Template -->
 		<ng-template #peopleNameSection let-params> <img #iconImg [src]="uiUtility.prepareIconImage(iconImg, params?.data?.iconUri)" class="medium-icon-image" /> {{ params?.value }} </ng-template>

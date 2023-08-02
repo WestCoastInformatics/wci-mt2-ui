@@ -316,7 +316,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 		this.dataSource = {
 			rowCount: null,
 			getRows: (rowParams) => {
-				let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+				let pageNumber = Math.floor(rowParams.endRow / this.refsetGridApi.paginationGetPageSize());
+				if (pageNumber < 1) {
+					pageNumber = 1;
+				}
 				let query = UiUtility.formatFilterData(rowParams.filterModel);
 				const sort = UiUtility.formatSortData(rowParams.sortModel);
 
@@ -344,7 +347,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 
 				const restParams: any = {
 					limit: this.refsetGridApi.paginationGetPageSize(),
-					offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(),
+					offset: pageNumber - 1,
 					searchConcepts: this.metadataAndConcepts,
 					showInDevelopment: true,
 					countComments: true,

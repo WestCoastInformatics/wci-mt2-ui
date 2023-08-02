@@ -26,6 +26,7 @@ export class TaxonomyTreeComponent {
 	loadNodeChildrenProcess = (event) => {};
 	refsetUtility = RefsetUtility;
 	isLoading = false;
+	isTableLoading = true;
 	noData = false;
 	showLoadingSpinner = false;
 	loadedChildren: any;
@@ -60,6 +61,7 @@ export class TaxonomyTreeComponent {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
+		this.isTableLoading = true;
 		for (const propertyName in changes) {
 			if (propertyName === 'options') {
 				this.configOptions = {
@@ -117,13 +119,12 @@ export class TaxonomyTreeComponent {
 				this.prepareData(results.items);
 				this.sendnumOfChildrenTrigger(results?.items?.length);
 			},
-			error: (error) => {
-				//
-			},
+			error: (error) => {},
 		});
 	}
 
 	prepareData(data) {
+		this.isTableLoading = false;
 		RefsetUtility.setEmptyChildrenNull(data);
 
 		if (this.hasMultipleRootNodes) {
