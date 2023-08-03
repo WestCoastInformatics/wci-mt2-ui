@@ -39,7 +39,9 @@
 <div *ngIf="showResults" class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
 	<div class="container-fluid m-t-19">
 		<h3 class="heading heading-3 text-main">Search Results</h3>
-
+		<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
+			<div>Loading...</div>
+		</div>
 		<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
 		</ag-grid-angular>
 

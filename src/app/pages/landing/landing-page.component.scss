@@ -288,3 +288,13 @@ $heading-font: 'museo100', sans-serif;
 .library-app-refset-discussion-list {
 	margin-top: 1.5em;
 }
+
+.loading-details {
+	position: absolute;
+	z-index: 100;
+	background: white;
+	border: 0.5px solid #333;
+	border-radius: 0;
+	margin-left: 45%;
+	margin-top: 10%;
+}

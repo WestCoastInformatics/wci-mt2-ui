@@ -64,6 +64,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	searchCallArray = [];
+	showLoadingSearch = true;
 	uiUtility = UiUtility;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(false);
@@ -288,6 +289,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
 		this.onResize(undefined);
 
 		this.refsetGridApi.showLoadingOverlay();
+		this.showLoadingSearch = true;
+
 		let query = '';
 
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -314,6 +317,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
 		this.refsetService.getRefsets({ ...restParams }).subscribe({
 			next: (results) => {
+				this.showLoadingSearch = false;
 				// if this is not the latest search call then do not apply the results
 				if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
 					return;
@@ -341,6 +345,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 			},
 			error: (error) => {
+				this.showLoadingSearch = false;
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setRowData([]);
 			},
