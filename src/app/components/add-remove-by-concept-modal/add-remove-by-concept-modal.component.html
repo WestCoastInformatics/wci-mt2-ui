@@ -137,34 +137,26 @@
 										<div class="col rt2-concept-details-concept-info-column" [class.rt2-concept-details-concept-info-column-status]="conceptDetail && !conceptDetail?.active">
 											<!-- Name -->
 											<div class="row details-row">
-												<table class="rt2-concept-details-concept-info-column-title">
-													<tr>
-														<td class="ta-left">
-															<div class="rt2-concept-details-taxonomy-icon status-icon-container">
-																<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-																<img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
-															</div>
-														</td>
-														<td class="text-center">
-															<div class="rt2-concept-details-concept-name" title="{{ conceptDescriptionTerm }}" aria-label="{{ conceptDescriptionTerm }}">
-																{{ conceptDescriptions?.length ? conceptDescriptions[0]?.term : null }}
-															</div>
-														</td>
-														<td class="ta-right">
-															<div class="open-container">
-																<button
-																	mat-icon-button
-																	(click)="openInNewWindow(conceptDetail.code)"
-																	aria-hidden="false"
-																	class="rt2-concept-details-action-icon"
-																	aria-label="Open Concept in New SNOMED Browser Window"
-																	title="Open Concept in SNOMED Browser Window">
-																	<mat-icon>open_in_new</mat-icon>
-																</button>
-															</div>
-														</td>
-													</tr>
-												</table>
+												<div class="col-md-1 status-icon-container ml-10">
+													<div class="rt2-concept-details-taxonomy-icon rt2-concept-details-panel-taxonomy-icon">
+														<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
+														<img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
+													</div>
+												</div>
+												<div class="col-md-9 rt2-concept-details-concept-name" title="{{ conceptDescriptionTerm }}" aria-label="{{ conceptDescriptionTerm }}">
+													{{ conceptDescriptions?.length ? conceptDescriptions[0]?.term : null }}
+												</div>
+												<div class="col open-container no-p-l">
+													<button
+														mat-icon-button
+														(click)="openInNewWindow(conceptDetail.code)"
+														aria-hidden="false"
+														class="rt2-concept-details-action-icon"
+														aria-label="Open Concept in New SNOMED Browser Window"
+														title="Open Concept in SNOMED Browser Window">
+														<mat-icon>open_in_new</mat-icon>
+													</button>
+												</div>
 											</div>
 											<br />
 

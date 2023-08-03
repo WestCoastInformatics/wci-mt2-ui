@@ -1079,7 +1079,7 @@ export class RefsetDetailsComponent implements OnInit {
 	};
 
 	onMembersGridCellClick = (event) => {
-		if (event.column.colId !== 'actions') {
+		if (event.column.colId !== 'active') {
 			const selectedRows = this.membersGridApi.getSelectedRows();
 			let selectedId: string;
 
@@ -1199,7 +1199,7 @@ export class RefsetDetailsComponent implements OnInit {
 				);
 
 				const link = '/organization/' + this.refsetData.project.organizationId + '/edition/' + this.refsetData.editionId + '/projects/' + this.refsetData.projectId + '/refsets';
-				this.router.navigate([link], { replaceUrl: false, skipLocationChange: false });
+				this.router.navigate([link]);
 			},
 			error: (error) => {
 				//
@@ -1379,7 +1379,7 @@ export class RefsetDetailsComponent implements OnInit {
 	}
 
 	changeVersion() {
-		this.router.navigate(['/details', this.refsetId, this.selectedVersion], { replaceUrl: false, skipLocationChange: false }).then((page) => {
+		this.router.navigate(['/details', this.refsetId, this.selectedVersion]).then((page) => {
 			window.location.reload();
 		});
 	}

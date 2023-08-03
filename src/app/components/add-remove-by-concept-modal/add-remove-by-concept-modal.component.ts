@@ -279,16 +279,18 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	};
 
 	onGridCellClick = (event) => {
-		this.conceptSelected = true;
-		const selectedRows = this.gridApi.getSelectedRows();
-		let selectedId: string;
+		if (event.column.colId !== 'active') {
+			this.conceptSelected = true;
+			const selectedRows = this.gridApi.getSelectedRows();
+			let selectedId: string;
 
-		selectedRows.forEach(function (selectedRow, index) {
-			selectedId = selectedRow.code;
-		});
+			selectedRows.forEach(function (selectedRow, index) {
+				selectedId = selectedRow.code;
+			});
 
-		this.selectedConcept = this.getGridRow(selectedId);
-		this.loadConceptDetail(this.selectedConcept);
+			const selectedConcept = this.getGridRow(selectedId);
+			this.loadConceptDetail(selectedConcept);
+		}
 	};
 
 	getGridRow(conceptId: string) {

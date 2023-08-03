@@ -511,6 +511,11 @@ tr.refset_tool_inactive_row {
 	}
 }
 
+.rt2-concept-details-panel-taxonomy-icon {
+	margin-left: -0.75em;
+	margin-top: -0.15em;
+}
+
 .rt2-concept-details-taxonomy-icon.taxonomy-icon-edit-mode {
 	max-width: 60px !important;
 }
@@ -843,17 +848,6 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 .ag-overlay-loading-center {
 	position: absolute;
 	top: 0;
-}
-
-.loading-message {
-	position: absolute;
-	z-index: 100;
-	background: white !important;
-	border: 0.5px solid #666 !important;
-	border-radius: 0 !important;
-	margin-left: 45% !important;
-	margin-top: 1% !important;
-	padding: 0.25em;
 }
 
 @media (min-width: 768px) {
@@ -2126,6 +2120,15 @@ ngb-typeahead-window.dropdown-menu button {
 }
 
 /* Taxonomy Tree */
+.taxonomy-loading {
+	background: white !important;
+	border: 0.2px groove #999 !important;
+	border-radius: 0 !important;
+	margin-left: 45% !important;
+	margin-top: 1% !important;
+	padding: 0.25em;
+	width: 5.5em;
+}
 
 .rt2-taxonomy {
 	margin-bottom: 15px;
@@ -2133,7 +2136,6 @@ ngb-typeahead-window.dropdown-menu button {
 	padding-left: 0;
 	padding-right: 0;
 
-	.taxonomy-loading,
 	.nodata {
 		padding-left: 3px;
 	}

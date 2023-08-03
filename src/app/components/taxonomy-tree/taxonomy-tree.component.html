@@ -1,10 +1,6 @@
-<div class="row loading-message dashboard-section" *ngIf="isTableLoading">
-	<div>Loading...</div>
-</div>
+<div class="taxonomy-loading" *ngIf="nodes.length === 0 && !noData">Loading...</div>
 <div class="rt2-taxonomy">
-	<div class="taxonomy-loading" *ngIf="isLoading">Loading...</div>
-
-	<div class="nodata" *ngIf="noData">No children</div>
+	<div class="nodata ml-10 mt-10" *ngIf="noData">No children</div>
 
 	<tree-root [id]="treeId" [nodes]="nodes" [options]="configOptions" (activate)="configOptions.onSelect($event)" (updateData)="onInitTree($event)" (loadNodeChildren)="onLoadNodeChildren($event)">
 		<ng-template #treeNodeTemplate let-node let-index="index">
