@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { PersonalComponentService } from 'src/app/pages/personal/personal-component.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { UsersService } from 'src/app/services/rest/users.service';
@@ -35,7 +34,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 		private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
 		private readonly userService: UsersService,
-		private readonly notificationService: NotificationService,
 		private readonly personalComponentService: PersonalComponentService,
 		private readonly route: ActivatedRoute,
 		private readonly router: Router
@@ -49,10 +47,8 @@ export class PersonalComponent implements OnInit, OnDestroy {
 		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			if (params['userId']) {
 				this.userId = params['userId'];
-			} else {
-				this.userId = this.authService.getUser().id;
+				this.getUser();
 			}
-			this.getUser();
 			this.setNavigation();
 		});
 

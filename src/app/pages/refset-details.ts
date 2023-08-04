@@ -340,6 +340,7 @@ export class RefsetDetailsComponent implements OnInit {
 	loadRefset(): void {
 		this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
 			next: (results) => {
+				this.changeLockedStatus(false);
 				this.refsetStatus = results?.workflowStatus;
 				this.id = results?.id;
 				this.isIntensional = results?.type == Constants.INTENSIONAL;
@@ -460,7 +461,7 @@ export class RefsetDetailsComponent implements OnInit {
 				this.loadWorkflowHistoryData();
 			},
 			error: (error) => {
-				//
+				this.changeLockedStatus(false);
 			},
 		});
 	}
@@ -1110,8 +1111,10 @@ export class RefsetDetailsComponent implements OnInit {
 
 	// ***** General Functions *****/
 	setWorkflowStatusByAction(notes: string, action: string): void {
+		this.changeLockedStatus(true);
 		this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({
 			next: (results) => {
+				this.changeLockedStatus(false);
 				if (results) {
 					if (action.includes('UNASSIGN')) {
 						this.loadRefset();
@@ -1130,7 +1133,7 @@ export class RefsetDetailsComponent implements OnInit {
 				}
 			},
 			error: (error) => {
-				//
+				this.changeLockedStatus(false);
 			},
 		});
 	}

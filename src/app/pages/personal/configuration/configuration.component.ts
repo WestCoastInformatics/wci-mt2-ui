@@ -42,20 +42,17 @@ export class PersonalConfigurationComponent implements OnInit, OnDestroy {
 		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			if (params['userId']) {
 				this.userId = params['userId'];
-			} else {
-				this.userId = this.authService.getUser().id;
+				this.getUser();
 			}
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('personal')) {
+			if (this.router.url.includes('personal') && this.router.url.includes('configuration')) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
 			}
 		});
-
-		this.getUser();
 	}
 
 	checkLocationPath(url) {

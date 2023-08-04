@@ -310,7 +310,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				this.editionId = this.selectedEdition.id;
 				this.selectEdition();
 			} else {
-				this.editionId = 0;
+				this.editionId = '0';
 
 				if (this.editionList.length === 0) {
 					this.notificationService.show('No editions', null, 'error', {

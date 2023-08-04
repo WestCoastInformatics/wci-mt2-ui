@@ -280,8 +280,28 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		if (!this.selectedOrganization && this.organizationList.length > 0) {
+		if (!this.selectedOrganization && this.organizationList.length > 0 && this.organizationId !== '0') {
 			this.getStoredOrganizationId();
+		}
+
+		if (!this.selectedOrganization) {
+			// Pick the first one if nothing is working out
+			if (this.organizationList[0] != undefined) {
+				this.selectedOrganization = this.organizationList[0];
+				this.selectedOrganization.id = this.organizationList[0].id;
+				this.organizationId = this.selectedOrganization.id;
+				this.selectOrganization();
+			} else {
+				this.organizationId = '0';
+
+				if (this.organizationList.length === 0) {
+					this.notificationService.show('No organizations', null, 'error', {
+						timeOut: 1000,
+						extendedTimeOut: 0,
+					});
+				}
+				this.selectOrganization();
+			}
 		}
 	}
 
@@ -359,8 +379,29 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 				}
 			}
 		}
-		if (!this.selectedEdition && this.editionList.length > 0) {
+
+		if (!this.selectedEdition && !this.editionId && this.editionId !== '0') {
 			this.getStoredEditionId();
+		}
+
+		if (!this.selectedEdition) {
+			// Pick the first one if nothing is working out
+			if (this.editionList[0] != undefined) {
+				this.selectedEdition = this.editionList[0];
+				this.selectedEdition.id = this.editionList[0].id;
+				this.editionId = this.selectedEdition.id;
+				this.selectEdition();
+			} else {
+				this.editionId = '0';
+
+				if (this.editionList.length === 0) {
+					this.notificationService.show('No editions', null, 'error', {
+						timeOut: 1000,
+						extendedTimeOut: 0,
+					});
+				}
+				this.selectEdition();
+			}
 		}
 	}
 
@@ -413,8 +454,29 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 				}
 			}
 		}
-		if (!this.selectedProject && this.projectList.length > 0) {
+
+		if (!this.selectedProject && this.projectList.length > 0 && this.projectId !== '0') {
 			this.getStoredProjectId();
+		}
+
+		if (!this.selectedProject) {
+			// Pick the first one if nothing is working out
+			if (this.projectList[0] != undefined) {
+				this.selectedProject = this.projectList[0];
+				this.selectedProject.id = this.projectList[0].id;
+				this.projectId = this.selectedProject.id;
+				this.selectProject();
+			} else {
+				this.projectId = '0';
+
+				if (this.projectList.length === 0) {
+					this.notificationService.show('No projects', null, 'error', {
+						timeOut: 1000,
+						extendedTimeOut: 0,
+					});
+				}
+				this.selectProject();
+			}
 		}
 	}
 

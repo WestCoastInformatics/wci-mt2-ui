@@ -23,6 +23,7 @@ export class PersonalLandingComponent implements OnInit, OnDestroy {
 	uiUtility = UiUtility;
 	loggedUserId: string;
 	currentURL: string;
+	currentUser: string;
 	personalSubscription: Subscription;
 
 	constructor(
@@ -45,7 +46,7 @@ export class PersonalLandingComponent implements OnInit, OnDestroy {
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('personal')) {
+			if (this.router.url.includes('personal') && this.router.url.includes('landing')) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
@@ -76,13 +77,16 @@ export class PersonalLandingComponent implements OnInit, OnDestroy {
 	}
 
 	getUser(): void {
-		this.personalSubscription = this.personalComponentService.getUser().subscribe({
-			next: (results) => {
-				this.user = results;
-				this.getTeams();
-				this.getOrganizations();
-			},
-		});
+		if (this.currentUser != this.userId) {
+			this.currentUser = this.userId;
+			this.personalSubscription = this.personalComponentService.getUser().subscribe({
+				next: (results) => {
+					this.user = results;
+					this.getTeams();
+					this.getOrganizations();
+				},
+			});
+		}
 	}
 
 	getOrganizations(): void {
