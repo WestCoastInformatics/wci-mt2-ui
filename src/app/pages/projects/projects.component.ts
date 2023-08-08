@@ -449,6 +449,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			for (const project of this.projectList) {
 				if (this.projectId == project.id) {
 					this.selectedProject = project;
+					this.projectId = this.selectedProject.id;
 					this.selectProject();
 					return;
 				}
@@ -486,20 +487,22 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 	}
 
 	selectProject(): void {
-		this.projectId = this.selectedProject.id;
 		if (this.previouslyLoadedProjectId != this.projectId) {
 			this.previouslyLoadedProjectId = this.projectId;
-			const channel = new BroadcastChannel('projectChannel');
-			channel.postMessage(UiUtility.getRoleString(this.selectedProject.roles));
+			if (this.selectedProject) {
+				const channel = new BroadcastChannel('projectChannel');
 
-			this.projectIsUat = this.selectedProject.name.includes('UAT');
+				channel.postMessage(UiUtility.getRoleString(this.selectedProject.roles));
 
-			this.changeLocationRoute();
-			this.setNavigation();
+				this.projectIsUat = this.selectedProject.name.includes('UAT');
 
-			localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-			localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
-			localStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+				this.changeLocationRoute();
+				this.setNavigation();
+
+				localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
+				localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
+				localStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
+			}
 		}
 	}
 
@@ -563,6 +566,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 			for (const project of this.projectList) {
 				if (project.id == storedProjectId) {
 					this.selectedProject = project;
+					this.projectId = this.selectedProject.id;
 					this.selectProject();
 					return;
 				}
@@ -573,11 +577,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
 			if (!this.selectedProject) {
 				this.selectedProject = this.projectList[0];
+				this.projectId = this.selectedProject.id;
 				this.selectProject();
 			}
 		} else {
 			if (!this.selectedProject) {
 				this.selectedProject = this.projectList[0];
+				this.projectId = this.selectedProject.id;
 				this.selectProject();
 			}
 		}

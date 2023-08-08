@@ -114,10 +114,32 @@ export class NavbarComponent implements OnInit {
 	}
 
 	navigateToRoute(route: string): void {
-		if (this.router.url.includes(route) || (this.router.url.includes('projects') && route.includes('projects'))) {
-			window.location.reload();
+		if (!this.router.url.includes(route)) {
+			if (this.router.url.includes('projects') && route.includes('refsets')) {
+				const parts = this.router.url.split('/');
+				let organizationId = '';
+				let editionId = '';
+				for (let p = 0; p < parts.length; p++) {
+					if (parts[p].includes('organization')) {
+						if (parts[p + 1] != undefined) {
+							organizationId = parts[p + 1];
+						}
+					}
+					if (parts[p].includes('edition')) {
+						if (parts[p + 1] != undefined) {
+							editionId = parts[p + 1];
+						}
+					}
+				}
+				if (organizationId != '' && editionId != '') {
+					route = '/organization/' + organizationId + '/edition/' + editionId + '/projects/0/refsets';
+					this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
+				}
+			} else {
+				this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
+			}
 		} else {
-			this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
+			window.location.reload();
 		}
 	}
 }
