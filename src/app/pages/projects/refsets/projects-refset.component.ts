@@ -306,6 +306,10 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 		this.getProjects();
 	}
 
+	projectRefsetReload() {
+		window.location.reload();
+	}
+
 	onGridReady = (gridReadyParams) => {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams?.api;

@@ -9,7 +9,7 @@
 				<app-refset-download [isDetailPage]="true" [refsets]="refsetData" [project]="selectedProject"></app-refset-download>
 			</div>
 			<div [hidden]="!selectedProject?.roles?.includes('AUTHOR') || refsetData?.length < 1">
-				<bulk-upgrade-modal [project]="selectedProject" (processComplete)="onGridReady(originalGridParams)"></bulk-upgrade-modal>
+				<bulk-upgrade-modal [project]="selectedProject" (processComplete)="projectRefsetReload()"></bulk-upgrade-modal>
 			</div>
 		</div>
 	</div>
