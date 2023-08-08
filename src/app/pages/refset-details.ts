@@ -427,7 +427,7 @@ export class RefsetDetailsComponent implements OnInit {
 						this.selectedTaxonomyLanguage = languageValue;
 					}
 
-					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageCode });
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + " (" + type + ")" });
 				}
 
 				if (languageRefsetOptions.length > 0) {
