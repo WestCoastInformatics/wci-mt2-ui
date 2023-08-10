@@ -13,6 +13,7 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
+import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
 import { environment } from 'src/environments/environment';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -74,6 +75,7 @@ export class LaunchComparisonModalComponent {
 	@Output() changeLockedStatus = new EventEmitter<boolean>(true);
 
 	@ViewChild('comparisonCodeSection') codeSection: TemplateRef<any>;
+	@ViewChild('comparisonActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('comparisonGridPaging') paginationComponent: PaginationComponent;
 	@ViewChild('showComparisonDialog') showComparisonDialog: NgbModal;
 
@@ -83,7 +85,8 @@ export class LaunchComparisonModalComponent {
 		private readonly router: Router,
 		private readonly notificationService: NotificationService,
 		private readonly authService: AuthenticationService,
-		readonly refsetDetails: RefsetDetailsComponent
+		readonly refsetDetails: RefsetDetailsComponent,
+		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent
 	) {}
 
 	ngOnInit(): void {
@@ -254,6 +257,20 @@ export class LaunchComparisonModalComponent {
 
 		this.gridColumnDefs = [
 			{
+				field: 'action',
+				colId: 'action',
+				flex: 1,
+				headerName: '',
+				maxWidth: 40,
+				cellClass: 'rt2-details-column-remove-icon',
+				tooltipField: 'Add/Remove',
+				resizable: false,
+				cellRenderer: 'templateRenderer',
+				cellRendererParams: { template: this.actionSection },
+				unSortIcon: false,
+				filter: false,
+			},
+			{
 				field: 'code',
 				colId: 'code',
 				flex: 1,
@@ -368,15 +385,17 @@ export class LaunchComparisonModalComponent {
 	};
 
 	onGridCellClick = (event) => {
-		const selectedRows = this.gridApi.getSelectedRows();
-		let selectedId: string;
+		if (event.column.colId !== 'action') {
+			const selectedRows = this.gridApi.getSelectedRows();
+			let selectedId: string;
 
-		selectedRows.forEach(function (selectedRow, index) {
-			selectedId = selectedRow.code;
-		});
+			selectedRows.forEach(function (selectedRow, index) {
+				selectedId = selectedRow.code;
+			});
 
-		const selectedConcept = this.getGridRow(selectedId);
-		this.loadConceptDetail(selectedConcept);
+			const selectedConcept = this.getGridRow(selectedId);
+			this.loadConceptDetail(selectedConcept);
+		}
 	};
 
 	getGridRow(conceptId: string) {
@@ -504,6 +523,21 @@ export class LaunchComparisonModalComponent {
 
 		console.timeEnd('comparison addRemoveConcept');
 		this.indicateChanges(null);
+
+		this.addRemoveConceptsComponent.isAdd = this.isConceptBeingAdded;
+		this.addRemoveConceptsComponent.conceptCode = params.concept.code;
+		this.addRemoveConceptsComponent.conceptName = params.concept.name;
+		this.addRemoveConceptsComponent.conceptHasChildren = params.concept.children;
+		this.addRemoveConceptsComponent.definitionExceptionType = params.concept.definitionExceptionType;
+		this.addRemoveConceptsComponent.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.refset = this.activeRefset;
+		this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+		this.addRemoveConceptsComponent.refsetInternalId = this.activeRefset.id;
+		this.conceptForAddRemove.conceptCode = params.concept.code;
+		this.conceptForAddRemove.conceptName = params.concept.name;
+		this.conceptForAddRemove.conceptHasChildren = params.concept.conceptHasChildren;
+		this.conceptForAddRemove.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.addRemoveConcept();
 	}
 
 	addRemoveConceptGroup(params: any): void {

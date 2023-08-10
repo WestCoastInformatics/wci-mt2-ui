@@ -964,7 +964,6 @@ export class AdjudicateUpgradeModalComponent {
 			return !memberItems?.includes(x.id);
 		});
 
-		console.log(commonConcepts);
 		let membersInCommon = [];
 		for (let i = 0; i < commonConcepts?.length; i++) {
 			const item = {

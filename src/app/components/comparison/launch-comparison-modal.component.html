@@ -391,9 +391,12 @@
 </ng-template>
 
 <!-- Concept Code Templates -->
-<ng-template #comparisonCodeSection let-params>
+<ng-template #comparisonActionSection let-params>
 	<add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="params?.data" [isParentConcept]="false" [refsetType]="activeRefset.type" (processSelection)="addRemoveConcept($event)">
 	</add-remove-concepts-icons>
+</ng-template>
+
+<ng-template #comparisonCodeSection let-params>
 	{{ params?.value }}
 </ng-template>
 

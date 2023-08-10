@@ -3,6 +3,7 @@ import { TreeComponent, TreeNode } from '@circlon/angular-tree-component';
 import { lastValueFrom, Observable } from 'rxjs';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
@@ -49,7 +50,7 @@ export class TaxonomyTreeComponent {
 
 	@ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-	constructor(private changeDetectorRef: ChangeDetectorRef, private refsetService: RefsetService) {
+	constructor(private changeDetectorRef: ChangeDetectorRef, private refsetService: RefsetService, private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) {
 		this.configOptions = {
 			...this.staticOptions,
 			...TreeOptionDefaults,
@@ -387,6 +388,24 @@ export class TaxonomyTreeComponent {
 		this.isAdd = new Boolean(params.addConcept) as boolean;
 		this.conceptForAddRemove = params.concept;
 		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+		this.conceptForAddRemove = params.concept;
+		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+		this.addRemoveConceptsComponent.isAdd = this.isAdd;
+		this.addRemoveConceptsComponent.conceptCode = params.concept.code;
+		this.addRemoveConceptsComponent.conceptName = params.concept.name;
+		this.addRemoveConceptsComponent.conceptHasChildren = params.concept.children;
+		this.addRemoveConceptsComponent.definitionExceptionType = params.concept.definitionExceptionType;
+		this.addRemoveConceptsComponent.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.refset = this.refset;
+		this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberFunction;
+		this.addRemoveConceptsComponent.refsetInternalId = this.refset.id;
+		this.conceptForAddRemove.conceptCode = params.concept.code;
+		this.conceptForAddRemove.conceptName = params.concept.name;
+		this.conceptForAddRemove.conceptHasChildren = params.concept.conceptHasChildren;
+		this.conceptForAddRemove.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.addRemoveConcept();
 	}
 
 	selectNode(node, suppressChangeEvent) {

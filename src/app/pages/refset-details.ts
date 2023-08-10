@@ -23,6 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
 import { take } from 'rxjs/operators';
 import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 import { NotificationService } from '../services/notification.service';
@@ -210,7 +211,8 @@ export class RefsetDetailsComponent implements OnInit {
 		private routerExtentionService: RouterExtentionService,
 		readonly projectsRefsetComponent: ProjectsRefsetComponent,
 		private location: Location,
-		private authenticationService: AuthenticationService
+		private authenticationService: AuthenticationService,
+		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -427,7 +429,7 @@ export class RefsetDetailsComponent implements OnInit {
 						this.selectedTaxonomyLanguage = languageValue;
 					}
 
-					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + " (" + type + ")" });
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
 				}
 
 				if (languageRefsetOptions.length > 0) {
@@ -1252,6 +1254,25 @@ export class RefsetDetailsComponent implements OnInit {
 
 		this.conceptForAddRemove = params.concept;
 		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+		this.addRemoveConceptsComponent.isAdd = this.isConceptBeingAdded;
+		this.addRemoveConceptsComponent.conceptCode = params.concept.code;
+		this.addRemoveConceptsComponent.conceptName = params.concept.name;
+		this.addRemoveConceptsComponent.conceptHasChildren = params.concept.children;
+		this.addRemoveConceptsComponent.definitionExceptionType = params.concept.definitionExceptionType;
+		this.addRemoveConceptsComponent.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.refset = this.refsetData;
+		this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+		this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+		this.conceptForAddRemove.conceptCode = params.concept.code;
+		this.conceptForAddRemove.conceptName = params.concept.name;
+		this.conceptForAddRemove.conceptHasChildren = params.concept.conceptHasChildren;
+		this.conceptForAddRemove.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.addRemoveConcept();
+
+		if (this.isConceptBeingAdded == false) {
+			this.closeConceptDetails();
+		}
 	}
 
 	changeLockedStatus(lock: boolean) {
