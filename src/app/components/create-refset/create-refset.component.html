@@ -528,11 +528,18 @@
 						</div>
 						<div class="col create-new-refset-field create-new-refset-flex-weight">
 							<mat-radio-group>
-								<mat-radio-button class="refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="false" [checked]="!localSet" [disabled]="isAffiliate"
+								<mat-radio-button
+									class="refset-radio create-refset-radio-button default-font"
+									(change)="checkPublishability($event)"
+									value="false"
+									[checked]="!localSet"
+									[disabled]="isAffiliate"
 									>Within Edition</mat-radio-button
 								>
 
-								<mat-radio-button class="ml-15 refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="true" [checked]="isAffiliate">Local Set </mat-radio-button>
+								<mat-radio-button class="ml-15 refset-radio create-refset-radio-button default-font" (change)="checkPublishability($event)" value="true" [checked]="isAffiliate"
+									>Local Set
+								</mat-radio-button>
 								<mat-icon
 									class="pointer rt2-new-refset-info-icon"
 									(click)="openInfoDialog('publication')"
@@ -607,4 +614,4 @@
 
 <ng-template #availabilityDialog let-data> If Private, only authorized users and teams of the project may access the reference set. </ng-template>
 
-<ng-template #publicationDialog let-data> If Local Set selected, the reference set is published by the tool and independently from the edition. </ng-template>
+<ng-template #publicationDialog let-data> If Local Set selected, the reference set and the reference set concept is published within the tool only and independently from the edition. </ng-template>
