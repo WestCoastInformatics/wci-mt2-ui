@@ -349,6 +349,12 @@ export class LaunchComparisonModalComponent {
 
 	onGridReady = (gridReadyParams) => {
 		this.gridApi = gridReadyParams.api;
+		this.gridApi.showLoadingOverlay();
+
+		const pageNumber = 1;
+		this.gridPaging.totalRows = null;
+		this.gridPaging.totalKnown = false;
+		this.gridApi?.api?.paginationGoToPage(0);
 
 		this.refsetService.getComparisonData(this.activeRefset.id).subscribe({
 			next: (results) => {
@@ -358,6 +364,7 @@ export class LaunchComparisonModalComponent {
 				const pageNumber = 1;
 
 				if (results.items.length == 0) {
+					this.gridPaging.totalKnown = true;
 					this.gridApi.showNoRowsOverlay();
 					this.gridApi.setRowData([]);
 
