@@ -23,7 +23,6 @@ export const environment = {
 	restUrl: '',
 	restContextPath: '/refsetservice/',
 	snomedBrowserUrl: 'https://browser.ihtsdotools.org/?perspective=full',
-	snowstormApiUrl: 'https://snowstorm.ihtsdotools.org/snowstorm/snomed-ct',
 	mockRestData: false,
 	refsetsExportableAsFreeset: '787778008',
 	freesetUrl: 'https://gps.snomed.org',
@@ -34,7 +33,7 @@ For local installs configure the URL to the java backend application using the "
 single sign on as described below.
 
 ## Backend Application
-The backend Java application is its own GitHub project. There are additional configuration steps outlined there: 
+The backend Java application is its own GitHub project. There are additional configuration steps outlined there:
 * https://github.com/IHTSDO/snomed-refset-service/tree/main
 
 ##  Application Authentication
