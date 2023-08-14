@@ -961,8 +961,10 @@ export class RefsetDetailsComponent implements OnInit {
 					// This column is an exception to resizable, it's the +/- icon column
 					{
 						field: 'active',
-						headerName: '',
+						colId: 'active',
+						headerName: 'Active',
 						maxWidth: 40,
+						height: 0,
 						resizable: true,
 						sort: false,
 						cellClass: 'rt2-details-column-remove-icon',
@@ -1684,7 +1686,7 @@ export class RefsetDetailsComponent implements OnInit {
 					if (this.user.userName == this.authenticationService.GUEST_USER) {
 						return value.colId == 'code' || value.colId == 'modified';
 					} else {
-						return value.colId !== 'actions' && value.colId !== 'active';
+						return value.colId !== 'actions';
 					}
 				})
 				.map((value) => value.colId),

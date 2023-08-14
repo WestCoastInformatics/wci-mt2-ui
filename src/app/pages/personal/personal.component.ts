@@ -49,7 +49,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 				this.userId = params['userId'];
 				this.getUser();
 			}
-			this.setNavigation();
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
@@ -92,7 +91,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
 			if (this.currentMenu != paramMenu) {
 				this.currentMenu = paramMenu;
-				this.setNavigation();
 			}
 		}
 	}
@@ -121,6 +119,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
 	}
 
 	getUser(): void {
+		console.log('get user ' + this.userId);
 		if (this.userId != this.previouslyLoadedUserId) {
 			this.previouslyLoadedUserId = this.userId;
 			this.userService.getUser(this.userId).subscribe((x) => {
@@ -146,6 +145,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
 				},
 			});
 		}
+		this.setNavigation();
 	}
 
 	ngOnDestroy() {
