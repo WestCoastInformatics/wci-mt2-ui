@@ -279,6 +279,7 @@ export class CreateRefsetComponent implements OnInit {
 	}
 
 	createRefsetObject(): void {
+		this.showLoadingSpinner = true;
 		if (this.selectedReferenceType === Constants.COPY) {
 			const existingCpt = this.existingMetadataConcepts[this.selectedMetaDataConcept]?.code;
 			this.refsetService
@@ -296,12 +297,14 @@ export class CreateRefsetComponent implements OnInit {
 				)
 				.subscribe(
 					(results) => {
+						this.showLoadingSpinner = false;
 						this.modalService.dismissAll();
 						this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 						return;
 					},
 					(error) => {
-						//
+						this.showLoadingSpinner = false;
+						this.modalService.dismissAll();
 					}
 				);
 		} else {
@@ -352,11 +355,12 @@ export class CreateRefsetComponent implements OnInit {
 						});
 						return;
 					}
-
+					this.showLoadingSpinner = false;
 					this.modalService.dismissAll();
 					this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				},
 				(error) => {
+					this.showLoadingSpinner = false;
 					this.modalService.dismissAll();
 				}
 			);
