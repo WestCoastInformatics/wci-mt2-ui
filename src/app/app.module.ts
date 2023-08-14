@@ -334,6 +334,7 @@ const appRoutes: Routes = [
 			{
 				onSameUrlNavigation: 'reload',
 				scrollPositionRestoration: 'top',
+				canceledNavigationResolution: 'computed',
 			}
 			//{ enableTracing: true } // <-- debugging purposes only
 		),
