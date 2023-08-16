@@ -164,6 +164,7 @@ export class CreateRefsetComponent implements OnInit {
 
 		if (this.isAffiliate) {
 			this.localSet = true;
+			this.isSelected = 2;
 		}
 
 		if (this.editMode) {

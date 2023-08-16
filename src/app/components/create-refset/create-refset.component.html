@@ -352,8 +352,8 @@
 						</div>
 
 						<div *ngIf="!editMode && !showExternal" class="col create-new-refset-field create-new-refset-flex-weight create-new-refset-concept-radio">
-							<mat-radio-group>
-								<span class="pr-20" *ngIf="!isAffiliate">
+							<mat-radio-group *ngIf="!isAffiliate">
+								<span class="pr-20">
 									<mat-radio-button value="1" [checked]="true" (change)="checkRadioButtonValue($event)"> Choose an existing reference set concept </mat-radio-button>
 									<mat-icon
 										class="pointer rt2-new-refset-info-icon"
@@ -396,6 +396,29 @@
 								</mat-form-field>
 
 								<mat-form-field class="example-form-field" appearance="fill" [hidden]="isSelected === 1 || isSelected === 0">
+									<input
+										matInput
+										type="text"
+										placeholder="Enter the name of the new reference set concept"
+										[(ngModel)]="createdMetaDataConcept"
+										(keyup)="this.isValidConceptName()" />
+									<button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear" (click)="value2a = ''">
+										<mat-icon>close</mat-icon>
+									</button>
+								</mat-form-field>
+								<div class="modal-error-message" [hidden]="!conceptError">{{ conceptError }}</div>
+							</mat-radio-group>
+							<mat-radio-group *ngIf="isAffiliate">
+								<mat-form-field appearance="fill">
+									<mat-label>Choose parent concept</mat-label>
+									<select matNativeControl [(ngModel)]="selectedParentConcept">
+										<option *ngFor="let parentConcept of parentConcepts" [value]="parentConcept?.code">
+											{{ parentConcept?.name }}
+										</option>
+									</select>
+								</mat-form-field>
+
+								<mat-form-field class="example-form-field" appearance="fill">
 									<input
 										matInput
 										type="text"
