@@ -353,7 +353,7 @@
 
 						<div *ngIf="!editMode && !showExternal" class="col create-new-refset-field create-new-refset-flex-weight create-new-refset-concept-radio">
 							<mat-radio-group>
-								<span class="pr-20">
+								<span class="pr-20" *ngIf="!isAffiliate">
 									<mat-radio-button value="1" [checked]="true" (change)="checkRadioButtonValue($event)"> Choose an existing reference set concept </mat-radio-button>
 									<mat-icon
 										class="pointer rt2-new-refset-info-icon"
