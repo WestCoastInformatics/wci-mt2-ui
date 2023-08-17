@@ -129,7 +129,7 @@ export class RefsetDetailsComponent implements OnInit {
 	showFullNotesText = false;
 	editMode = false;
 	taxonomyGridParams: any;
-	showLoadingSpinner = false;
+	showLoadingSpinner = true;
 	selectedConcept: any;
 	editMetadataProperties: any;
 	directUrl: string;
@@ -894,6 +894,7 @@ export class RefsetDetailsComponent implements OnInit {
 		this.membersGridColumnApi = gridReadyParams.columnApi;
 
 		this.membersGridApi.showLoadingOverlay();
+		this.showLoadingSpinner = false;
 
 		let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
 		let query = '';
