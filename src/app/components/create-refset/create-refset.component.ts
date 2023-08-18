@@ -610,7 +610,7 @@ export class CreateRefsetComponent implements OnInit {
 			searchConcepts: false,
 			showInDevelopment: false,
 			countComments: false,
-			query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND ${queryField}`,
+			query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND localSet:false AND ${queryField}`,
 		};
 
 		if (query.length > 2) {
