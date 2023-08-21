@@ -39,7 +39,6 @@ export class AddMemberToTeamModalComponent {
 		}
 
 		this.changeLockedStatus.emit(true);
-		this.showLoadingSpinner = true;
 
 		const operation = this.teamsService.addUsers.bind(this.teamsService);
 
@@ -48,12 +47,10 @@ export class AddMemberToTeamModalComponent {
 				this.notificationService.show('The user(s) added.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 				this.openedModel.dismiss();
 				this.changeLockedStatus.emit(false);
-				this.showLoadingSpinner = false;
 				window.location.reload();
 			},
 			(err) => {
 				this.changeLockedStatus.emit(false);
-				this.showLoadingSpinner = false;
 				console.error(err);
 			}
 		);

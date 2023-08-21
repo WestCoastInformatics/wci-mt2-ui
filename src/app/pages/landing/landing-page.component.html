@@ -39,7 +39,9 @@
 <div *ngIf="showResults" class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
 	<div class="container-fluid m-t-19">
 		<h3 class="heading heading-3 text-main">Search Results</h3>
-
+		<div class="row loading-details dashboard-section" *ngIf="showLoadingSearch">
+			<div>Loading...</div>
+		</div>
 		<ag-grid-angular #directoryTable *ngIf="showTable" class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638" [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions">
 		</ag-grid-angular>
 
@@ -58,17 +60,23 @@
 <!-- START GRID TEMPLATES -->
 <!-- Information Templates -->
 <ng-template #directoryInfoSection let-params>
-	<button
-		mat-icon-button
-		aria-hidden="false"
-		#directoryInfoIcon
-		class="rt2-table-action-icon w-30 h-30"
-		aria-label="View All Reference Set Metadata"
-		title="View Reference Set Metadata"
-		(click)="openInformation(params.data.refsetId)">
-		<mat-icon class="scale-70-pct">information</mat-icon>
-	</button>
-	<span *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</span>
+	<div class="d-flex rt2-wrap">
+		<div class="col-6">
+			<button
+				mat-icon-button
+				aria-hidden="false"
+				#directoryInfoIcon
+				class="rt2-table-action-icon w-30 h-30"
+				aria-label="View All Reference Set Metadata"
+				title="View Reference Set Metadata"
+				(click)="openInformation(params.data.refsetId)">
+				<mat-icon class="scale-85-pct">information</mat-icon>
+			</button>
+		</div>
+		<div class="col-6">
+			<div *ngIf="params.data.memberSearchMatch" title="Search matches reference set member" class="member-search-icon general-icon-font">M</div>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #directoryInfoDialog let-data>
@@ -116,19 +124,23 @@
 <ng-template #directoryActionSection let-params>
 	<div class="d-flex rt2-wrap">
 		<div class="col-2">
-			<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data"> </app-refset-download>
+			<div class="library-app-refset-download">
+				<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data"> </app-refset-download>
+			</div>
 		</div>
 
 		<div class="col-2">
-			<app-refset-discussion-list
-				*ngIf="params && params.data"
-				type="REFSET"
-				[refsetInternalId]="params.data.id"
-				[refsetId]="params.data.refsetId"
-				[refsetName]="params.data.name"
-				[roles]="params.data.roles"
-				[(discussionCount)]="params.data.openDiscussionCount">
-			</app-refset-discussion-list>
+			<div class="library-app-refset-discussion-list">
+				<app-refset-discussion-list
+					*ngIf="params && params.data"
+					type="REFSET"
+					[refsetInternalId]="params.data.id"
+					[refsetId]="params.data.refsetId"
+					[refsetName]="params.data.name"
+					[roles]="params.data.roles"
+					[(discussionCount)]="params.data.openDiscussionCount">
+				</app-refset-discussion-list>
+			</div>
 		</div>
 	</div>
 </ng-template>
@@ -150,18 +162,23 @@
 			<div class="col-md-6 col-12">
 				<div class="panel panel-well height-auto">
 					<p class="intro-header-font">
-						<a href="https://confluence.ihtsdotools.org/display/RT2UG" target="_blank"><span class="text-main mr-3">Reference Set Tool User Guide.</span></a
-						>Access the user guide to get the most out of the new Reference Set Tool.
+						<a href="https://confluence.ihtsdotools.org/display/RT2UG" target="_blank"><span class="text-main mr-3">Reference Set Tool User Guide.</span></a>
+						Access the user guide to get the most out of the new Reference Set Tool.
 					</p>
 					<hr class="dotted" />
 					<p class="intro-header-font">
-						<a href="assets/1drv.ms/Organization UML.png" target="_blank"><span class="text-main mr-3">Organization Configuration.</span></a
-						>View the ways Organizations, Projects, Teams, and Users are connected.
+						<a href="https://confluence.ihtsdotools.org/display/RT2UG/FAQs" target="_blank"><span class="text-main mr-3">Link to User Guide FAQs.</span></a>
+						Access the frequently asked questions to get the most out of the new Reference Set Tool.
 					</p>
 					<hr class="dotted" />
 					<p class="intro-header-font">
-						<a href="assets/1drv.ms/RT2 Workflow State Diagram 11-23-2022.pdf" target="_blank"><span class="text-main mr-3">Workflow Definition.</span></a
-						>View the workflow options diagram to better understand the workflow authoring/reviewing process.
+						<a href="assets/1drv.ms/Organization UML.png" target="_blank"><span class="text-main mr-3">Organization Configuration.</span></a>
+						View the ways Organizations, Projects, Teams, and Users are connected.
+					</p>
+					<hr class="dotted" />
+					<p class="intro-header-font">
+						<a href="assets/1drv.ms/RT2 Workflow State Diagram 11-23-2022.pdf" target="_blank"><span class="text-main mr-3">Workflow Definition.</span></a>
+						View the workflow options diagram to better understand the workflow authoring/reviewing process.
 					</p>
 					<hr class="dotted" />
 				</div>

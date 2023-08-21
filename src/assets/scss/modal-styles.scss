@@ -4,7 +4,7 @@
 
 .mat-dialog-actions.rt2-dialog-actions {
 	justify-content: flex-end;
-	margin-bottom: 0px;
+	margin-bottom: 0;
 	padding: 8px 8px;
 }
 
@@ -27,7 +27,7 @@
 	height: 100%;
 	max-width: 100%;
 	max-height: 100%;
-	padding: 0px !important;
+	padding: 0 !important;
 }
 
 .dialog-header {
@@ -44,9 +44,13 @@
 
 .mat-dialog-content.rt2-dialog-content {
 	color: black;
-	margin: 0px;
+	margin: 0;
 	padding-top: 8px;
 	overflow: hidden;
+}
+
+.mdc-dialog__content {
+	overflow-x: hidden !important;
 }
 
 .rt2-modal-select {
@@ -73,7 +77,7 @@
 	justify-content: space-between;
 	padding: 0.5rem;
 	border-bottom: 1px solid #dee2e6;
-	min-height: 2.5em;
+	min-height: 2.75em;
 }
 
 .rt2-modal-title {
@@ -104,6 +108,7 @@
 
 .rt2-modal-footer {
 	border-top: 1px solid #dee2e6;
+	background-color: white !important;
 	align-self: right;
 }
 
@@ -167,7 +172,7 @@
 		cursor: move;
 
 		span {
-			margin: 0px 6px;
+			margin: 0 6px;
 		}
 
 		i {
@@ -325,7 +330,6 @@ ecl-builder .modal-footer {
 	}
 }
 
-ecl-builder .circle-red,
-ecl-builder .circle-green {
-	padding: 0.25em;
+ecl-builder .circle {
+	padding: 0.25em !important;
 }

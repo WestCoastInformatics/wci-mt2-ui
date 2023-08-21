@@ -58,7 +58,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 
 		this.routerEventSubscription = this.router.events.subscribe((event: RouterEvent) => {
 			if (event instanceof Scroll) {
-				if (this.router.url.includes('organizations') || this.router.url.includes('organization')) {
+				if (this.router.url.includes('organizations')) {
 					this.checkLocationPath(this.router.url);
 				} else {
 					this.ngOnDestroy();
@@ -73,7 +73,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 
 			const parts = url.split('/');
 			for (let p = 0; p < parts.length; p++) {
-				if (parts[p].includes('organizations') || parts[p].includes('organization')) {
+				if (parts[p].includes('organizations')) {
 					if (parts[p + 1] != undefined) {
 						this.organizationId = parts[p + 1];
 					}
@@ -107,7 +107,6 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 
 			if (this.currentMenu != paramMenu) {
 				this.currentMenu = paramMenu;
-
 			}
 			if (this.organizationId) {
 				this.getOrganizations();
@@ -202,14 +201,9 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 		if (!this.organizationId) {
 			this.getStoredOrganizationId();
 		}
-
-		if (!this.selectedOrganization) {
-			this.showLoadingSpinner = false;
-		}
 	}
 
 	changeOrganization(): void {
-
 		this.organizationId = this.selectedOrganization.id;
 		this.selectedEdition = null;
 		this.editionList = null;
@@ -219,7 +213,6 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	}
 
 	selectOrganization(): void {
-    
 		this.setOrganizationData();
 
 		this.organizationId = this.selectedOrganization.id;
@@ -228,6 +221,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 		if (this.currentMenu == 'projects') {
 			this.getEditions();
 		}
+
 		if (this.previouslyLoadedOrganizationId != this.organizationId) {
 			this.previouslyLoadedOrganizationId = this.organizationId;
 			let currentRoute = this.currentURL;
@@ -245,13 +239,12 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				currentRoute = '/organizations/' + this.organizationId + '/configuration';
 			}
 			if (this.currentURL != currentRoute) {
-				this.router.navigate([currentRoute]);
+				this.router.navigate([currentRoute], { replaceUrl: false, skipLocationChange: false });
 			}
 		}
 	}
 
 	setOrganizationData() {
-
 		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
 		this.setNavigation();
 	}
@@ -274,9 +267,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	}
 
 	getEditions(): void {
-
 		if (this.previouslyLoadedEditionOrgId == this.organizationId) {
-
 			this.editionSubscription = this.organizationsComponentService.getEditions().subscribe({
 				next: (results) => {
 					this.editionList = <any>results;
@@ -308,11 +299,9 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				return;
 			}
 		}
-
 		if (!this.selectedEdition && !this.editionId && this.editionId !== '0') {
 			this.getStoredEditionId();
 		}
-
 		if (!this.selectedEdition) {
 			// Pick the first one if nothing is working out
 			if (this.editionList[0] != undefined) {
@@ -321,8 +310,7 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 				this.editionId = this.selectedEdition.id;
 				this.selectEdition();
 			} else {
-
-				this.editionId = 0;
+				this.editionId = '0';
 
 				if (this.editionList.length === 0) {
 					this.notificationService.show('No editions', null, 'error', {
@@ -336,14 +324,13 @@ export class OrganizationsComponent implements OnInit, OnDestroy {
 	}
 
 	selectEdition(): void {
-
 		if (this.currentMenu == 'projects') {
 			if (this.previouslyLoadedEditionId != this.editionId) {
 				this.previouslyLoadedEditionId = this.editionId;
 				this.showEditionData();
 				const currentRoute = '/organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects';
 				if (this.currentURL != currentRoute) {
-					this.router.navigate([currentRoute]);
+					this.router.navigate([currentRoute], { replaceUrl: false, skipLocationChange: false });
 				}
 			}
 		}

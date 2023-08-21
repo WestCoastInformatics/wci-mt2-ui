@@ -4,7 +4,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Router } from '@angular/router';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -81,7 +81,7 @@ export class CreateNewRefsetComponent implements OnInit {
 		private detectChanges: ChangeDetectorRef,
 		private router: Router,
 		private refsetService: RefsetService,
-		private readonly refsetDetails: RefsetDetails,
+		private readonly refsetDetails: RefsetDetailsComponent,
 		private dialogFactoryService: DialogFactoryService,
 		private readonly notificationService: NotificationService,
 		private readonly projectsRefsetComponent: ProjectsRefsetComponent
@@ -165,7 +165,6 @@ export class CreateNewRefsetComponent implements OnInit {
 	}
 
 	createRefsetObject(): void {
-		this.showLoadingSpinner = true;
 		let name = '';
 		let refsetId = null;
 		let parentConceptId = null;
@@ -202,8 +201,6 @@ export class CreateNewRefsetComponent implements OnInit {
 		}
 		this.refsetService.createRefset(params).subscribe(
 			(status) => {
-				this.showLoadingSpinner = false;
-
 				if (status.error) {
 					this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 						timeOut: 0,
@@ -213,10 +210,10 @@ export class CreateNewRefsetComponent implements OnInit {
 				}
 
 				this.modalService.dismissAll();
-				this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
+				this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 			},
 			(error) => {
-				this.showLoadingSpinner = false;
+				//
 			}
 		);
 	}
@@ -240,7 +237,6 @@ export class CreateNewRefsetComponent implements OnInit {
 	}
 
 	editRefsetObject(): void {
-		this.showLoadingSpinner = true;
 		let tagsToPersist: string[];
 
 		if (this.tags) {
@@ -270,8 +266,6 @@ export class CreateNewRefsetComponent implements OnInit {
 
 		this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe({
 			next: (status) => {
-				this.showLoadingSpinner = false;
-
 				if (status.error) {
 					this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 						timeOut: 0,
@@ -281,11 +275,11 @@ export class CreateNewRefsetComponent implements OnInit {
 				}
 
 				this.modalService.dismissAll();
-				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT]);
+				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				this.refsetDetails.initializeDetailsPage();
 			},
 			error: (error) => {
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}
@@ -326,12 +320,12 @@ export class CreateNewRefsetComponent implements OnInit {
 	}
 
 	checkRadioButtonValue(event: any): void {
-		this.isSelected = event.value;
+		this.isSelected = Number(event.value);
 
-		if (event.value === '1') {
+		if (event.value === 1) {
 			this.createdMetaDataConcept = '';
 			this.selectedParentConcept = '';
-		} else if (event.value === '2') {
+		} else if (event.value === 2) {
 			this.selectedMetaDataConcept = '';
 		}
 

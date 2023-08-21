@@ -38,15 +38,15 @@ export class RemoveDashboardComponentModalComponent {
 	removeComponent(): void {
 		if (this.componentType.toLowerCase() === 'organization') {
 			this.organizationsService.deleteOrganization(this.componentId).subscribe((x) => {
-				this.router.navigate(['/dashboard']);
+				this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
 			});
 		} else if (this.componentType.toLowerCase() === 'project') {
 			this.projectsService.deleteProject(this.componentId).subscribe((x) => {
-				this.router.navigate(['/dashboard']);
+				this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
 			});
 		} else if (this.componentType.toLowerCase() === 'team') {
 			this.teamsService.deleteTeam(this.componentId).subscribe((x) => {
-				this.router.navigate(['/dashboard']);
+				this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
 			});
 		}
 		this.modalService.dismissAll();

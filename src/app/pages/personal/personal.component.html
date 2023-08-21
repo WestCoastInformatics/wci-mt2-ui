@@ -1,0 +1,15 @@
+<div class="content-header">
+	<div class="row header-title">
+		<span class="title-label">{{ this.user?.name }}</span>
+	</div>
+</div>
+
+<div class="content-wrapper">
+	<app-sidebar [menuItems]="menu"></app-sidebar>
+	<page-container>
+		<div *ngIf="showLoadingSpinner" class="loading"></div>
+		<section>
+			<router-outlet></router-outlet>
+		</section>
+	</page-container>
+</div>

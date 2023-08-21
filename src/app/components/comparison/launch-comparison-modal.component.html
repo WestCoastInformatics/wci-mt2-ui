@@ -1,7 +1,7 @@
 <button *ngIf="!disableCompare" class="rt2-link-btn" (click)="openLaunchModal(comparisonLaunchDialog)">Compare</button>
 <button *ngIf="disableCompare" [title]="disableTitle" mat-button class="rt2-link-btn disable-menu-btn">Compare</button>
 
-<ng-template #comparisonLaunchDialog let-modal>
+<ng-template #comparisonLaunchDialog class="launch-comparison-dialog" let-modal>
 	<div class="modal-header rt2-modal-header compare-modal-header">
 		<button ngbAutofocus class="unfocus-btn"></button>
 		<h3 class="modal-title rt2-modal-title modal-header-font" id="modal-basic-title">Compare Reference Set</h3>
@@ -68,7 +68,7 @@
 								<mat-option *ngIf="refsetOptions.length === 0 && !refsetOptionsLoading"> None</mat-option>
 								<mat-option *ngIf="refsetOptionsLoading">Loading...</mat-option>
 
-								<mat-option *ngFor="let refset of refsetOptions" [value]="refset">
+								<mat-option *ngFor="let refset of refsetOptions" [value]="refset" class="no-checkbox">
 									<img
 										(load)="showFlagIcon($event, true)"
 										(error)="showFlagIcon($event, false)"
@@ -84,7 +84,7 @@
 						<mat-form-field [hidden]="comparisonTypeSelected === 'same_refset' || comparisonRefsetVersionOptions.length === 0" appearance="fill">
 							<mat-label>Select version for comparison</mat-label>
 							<mat-select [(ngModel)]="comparisonRefsetInternalId" (selectionChange)="checkComplete()">
-								<mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value">{{ option.display }}</mat-option>
+								<mat-option *ngFor="let option of comparisonRefsetVersionOptions" [value]="option.value" class="no-checkbox">{{ option.display }}</mat-option>
 							</mat-select>
 						</mat-form-field>
 					</mat-radio-group>
@@ -116,7 +116,7 @@
 			<!-- SPLITTER -->
 			<as-split direction="horizontal" gutterSize="4" [class.unset-gutter-height]="isConceptDetailsLoading || conceptDetail">
 				<!-- MEMBERS SECTION -->
-				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 70 : 100" [minSize]="65">
+				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
 					<div class="container-fluid p-0 comparisonGridSection">
 						<!-- HEADER STATISTIC TABLE -->
 						<div class="metadata-collapsible-container white">
@@ -211,7 +211,7 @@
 				</as-split-area>
 
 				<!-- CONCEPT DETAILS SECTION -->
-				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 30 : 0" [minSize]="25">
+				<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 40 : 0" [minSize]="25">
 					<div id="comparisonGridSection" class="container-fluid py-0 px-2">
 						<div *ngIf="isConceptDetailsLoading || conceptDetail" class="metadata-collapsible-container white rt2-flex-column">
 							<div>
@@ -243,7 +243,7 @@
 											</div>
 
 											<div *ngFor="let parent of conceptDetailParents" class="row rt2-concept-details-taxonomy-item">
-												<div class="rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
+												<div class="col-md-auto rt2-concept-details-taxonomy-icon" [class.taxonomy-icon-edit-mode]="allowedToEdit">
 													<add-remove-concepts-icons
 														*ngIf="allowedToEdit"
 														[concept]="parent"
@@ -253,11 +253,11 @@
 													</add-remove-concepts-icons>
 
 													<img *ngIf="parent?.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-													<img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" class="rt2-logo p-0" src="/assets/unlinedTaxonomyIcon.png" />
+													<img *ngIf="!parent?.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
 												</div>
 
 												<div
-													class="rt2-concept-details-taxonomy-description"
+													class="col rt2-concept-details-taxonomy-description-comparison pointer"
 													[class.bold-if-member]="parent?.memberOfRefset"
 													[class.greyed-if-not-member]="!parent?.memberOfRefset"
 													(click)="loadConceptDetail(parent)">
@@ -276,7 +276,7 @@
 												<div class="row">
 													<!-- Name -->
 													<table class="row rt2-concept-details-concept-title-row">
-														<tr>
+														<tr class="col-2">
 															<td class="text-left">
 																<div class="rt2-concept-details-taxonomy-icon status-icon-container">
 																	<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
@@ -289,7 +289,7 @@
 																</div>
 															</td>
 														</tr>
-														<tr>
+														<tr class="col">
 															<td class="text-center">
 																<div class="col rt2-concept-details-concept-name">
 																	{{ conceptDetail?.name }}
@@ -297,7 +297,7 @@
 															</td>
 														</tr>
 
-														<tr>
+														<tr class="col-1">
 															<td class="text-right">
 																<div class="open-container">
 																	<button
@@ -315,26 +315,26 @@
 													</table>
 
 													<!-- ID -->
-													<div class="row rt2-concept-details-concept-row">
-														<div class="rt2-concept-details-concept-id-label">SCTID</div>
+													<div class="row m-l-10 mb-7em rt2-concept-details-concept-row">
+														<div class="col-md-auto rt2-concept-details-concept-id-label">SCTID</div>
 														<div class="col rt2-concept-details-concept-id-text">
 															{{ conceptDetail?.code }}
 														</div>
 													</div>
 
 													<!-- ECL -->
-													<div class="row rt2-concept-details-concept-row">
-														<div class="col rt2-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |</div>
+													<div class="rt2-concept-details-concept-row">
+														<div class="mb-10 mt-10 rt2-concept-details-concept-ecl">{{ conceptDetail?.code }} | {{ conceptDetail?.name }} |</div>
 													</div>
 
 													<!-- Descriptions -->
-													<div *ngFor="let description of conceptDetail?.descriptions" class="row rt2-concept-details-concept-row">
-														<div class="rt2-concept-details-concept-description-language">
+													<div *ngFor="let description of conceptDetail?.descriptions" class="m-l-10 m-r-10 mt-10 rt2-concept-details-concept-row">
+														<span class="rt2-concept-details-concept-description-language">
 															{{ description?.language }}
-														</div>
-														<div class="col rt2-concept-details-concept-description-text">
+														</span>
+														<span class="rt2-concept-details-concept-description-text">
 															{{ description?.term }}
-														</div>
+														</span>
 													</div>
 												</div>
 											</div>
@@ -391,9 +391,12 @@
 </ng-template>
 
 <!-- Concept Code Templates -->
-<ng-template #comparisonCodeSection let-params>
+<ng-template #comparisonActionSection let-params>
 	<add-remove-concepts-icons *ngIf="allowedToEdit" [concept]="params?.data" [isParentConcept]="false" [refsetType]="activeRefset.type" (processSelection)="addRemoveConcept($event)">
 	</add-remove-concepts-icons>
+</ng-template>
+
+<ng-template #comparisonCodeSection let-params>
 	{{ params?.value }}
 </ng-template>
 

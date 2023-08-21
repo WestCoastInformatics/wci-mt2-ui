@@ -90,7 +90,7 @@
 }
 
 .refsetDetailsPage {
-	padding: 0px;
+	padding: 0;
 
 	.rt2-directory-column-information {
 		justify-content: center;
@@ -98,7 +98,7 @@
 	}
 
 	.rt2-directory-column-information .rt2-table-action-icon {
-		left: 0px;
+		left: 0;
 	}
 }
 
@@ -126,12 +126,12 @@
 .refsetDetailsPage {
 	.refset-member-title {
 		font-weight: $standard_font_weight_bold;
-		padding-left: 0px;
+		padding-left: 0;
 	}
 }
 
 .refsetDetailsPage .rt2-refset-metadata-column {
-	margin-top: 0px !important;
+	margin-top: 0 !important;
 	display: flex;
 	flex-direction: column;
 	flex: 1;
@@ -150,7 +150,7 @@
 
 .refsetDetailsPage .refset-title {
 	background: white;
-	padding-right: 0px;
+	padding-right: 0;
 	z-index: 1000;
 	padding-top: 20px;
 }
@@ -158,28 +158,33 @@
 .detailsMemberSection {
 	background-color: #f5f5f5;
 	border-radius: 3px;
-	margin-left: 0px;
-	margin-right: 0px;
+	margin-left: 0;
+	margin-right: 0;
 	width: auto;
 }
 
 .detailsMemberSection .rt2-details-members-column,
 .detailsMemberSection .rt2-details-members-column .container-fluid {
-	padding-left: 0px;
+	padding-left: 0;
 }
 
 .detailsMetadataSection {
-	padding-top: 0px;
+	padding-top: 0;
 	padding-right: 15px;
 }
 
 .rt2-details-search-field {
-	width: 85%;
+	width: 70%;
 	padding-bottom: 0.4em;
 
 	// set this to 20px less than the field to leave room for the cancel 'X'
 	.mat-form-field-flex {
 		width: calc(100% - 20px);
+	}
+
+	.mdc-floating-label,
+	.mat-mdc-floating-label {
+		width: 85%;
 	}
 }
 
@@ -191,13 +196,8 @@
 	height: 400px;
 }
 
-.rt2-concept-details-concept-info-column-title table {
-	@extend .p-0;
-	@extend .m-none;
-}
-
-.rt2-concept-details-concept-info-column-title td {
-	@extend .p-2;
+.ecl-button {
+	margin-top: -0.7em;
 }
 
 .details-row {
@@ -223,8 +223,8 @@
 
 .rt2-concept-details-concept-roles-column {
 	margin-left: 10px;
-	padding-left: 0px;
-	padding-right: 0px;
+	padding-left: 0;
+	padding-right: 0;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	background-color: $concept_details_color;
@@ -234,27 +234,39 @@
 
 .rt2-concept-details-concept-roles-column-no-attributes {
 	margin-left: 10px;
-	padding-left: 0px;
-	padding-right: 0px;
+	padding-left: 0;
+	padding-right: 0;
 	background-color: rgba(30, 144, 255, 0.17);
 	border-color: $concept_details_color;
 	@extend .rt2-rounded-borders;
 }
 
-app-refset-discussion-list {
-	margin-top: -1em;
-	margin-left: 0.5em;
+.library-app-refset-download {
+	margin-top: 1em;
 }
+
+.library-app-refset-discussion-list {
+	margin-left: 0.5em;
+	margin-top: 0;
+}
+
+.library-app-refset-discussion-list-alt {
+	margin-left: 0.5em;
+	margin-top: 1.75em;
+}
+
 .rt2-refset-metadata-header {
 	padding-left: 0 !important;
 	margin-left: 0.5em;
 }
+
 .rt2-refset-members-header {
 	margin-left: 0.5em;
 }
 
 .header-app-refset-discussion-list {
-	margin-top: 0;
+	margin-top: -0.25em;
+	margin-left: 0.5em;
 }
 
 .no-attributes {
@@ -436,7 +448,7 @@ app-refset-discussion-list {
 	display: flex;
 	padding-bottom: 20px;
 	align-items: baseline;
-	padding-left: 0px;
+	padding-left: 0;
 }
 
 .refsetDetailsPage > .refset-title-container > .metadata-container > .refset-metadata-container {
@@ -446,7 +458,7 @@ app-refset-discussion-list {
 	display: flex;
 	justify-content: space-between;
 	align-items: self-end;
-	padding-left: 0px;
+	padding-left: 0;
 	padding-right: 0px;
 }
 

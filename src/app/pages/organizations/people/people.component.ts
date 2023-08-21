@@ -60,7 +60,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('users')) {
+			if (this.router.url.includes('organizations') && this.router.url.includes('users')) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
@@ -172,7 +172,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		const selectedRows = this.gridApi.getSelectedRows();
 		const router = this.router;
 		selectedRows.forEach(function (selectedRow, index) {
-			router.navigate(['/personal/' + selectedRow.id + '/landing']);
+			router.navigate(['/personal/' + selectedRow.id + '/landing'], { replaceUrl: false, skipLocationChange: false });
 			return;
 		});
 	};
@@ -185,21 +185,19 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 		if (this.organizationId != this.previouslyLoadedId) {
 			this.previouslyLoadedId = this.organizationId;
 
-			this.showLoadingSpinner = false;
-
 			this.organizationsService.getOrgUsers(this.organizationId, true).subscribe((results) => {
 				this.data = results.items;
-				this.showLoadingSpinner = false;
 			});
 		}
 	}
 
 	getOrganizations(): void {
+		const organization_id = this.organizationId;
 		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
 			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
+				if (organization_id === organization.id) {
 					this.selectedOrganization = organization;
 					this.selectOrganization();
 					return;

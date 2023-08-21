@@ -4,9 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
 	providedIn: 'root',
 })
-export class OrganizationsComponentService {
+export class TeamsComponentService {
 	public organizationList = new BehaviorSubject<Array<any>>([]);
-	public editionList = new BehaviorSubject<Array<any>>([]);
+	public teamsList = new BehaviorSubject<Array<any>>([]);
 
 	public getOrganizations(): Observable<{ organizationList: [] }> {
 		return <any>this.organizationList;
@@ -16,11 +16,11 @@ export class OrganizationsComponentService {
 		this.organizationList.next(list);
 	}
 
-	public getEditions(): Observable<{ editionList: [] }> {
-		return <any>this.editionList;
+	public getTeams(): Observable<{ teamsList: [] }> {
+		return <any>this.teamsList;
 	}
 
-	public setEditions(list) {
-		this.editionList.next(list);
+	public setTeams(list) {
+		this.teamsList.next(list);
 	}
 }

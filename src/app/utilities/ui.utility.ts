@@ -215,7 +215,7 @@ export class UiUtility {
 	static openEclBuilder(fieldId, branch) {
 		const field = $('#' + fieldId);
 		let eclString: any = field.val();
-		const snowstormApiUrl = environment['snowstormApiUrl'];
+		const snowstormApiUrl = environment['restContextPath'] + 'snowstorm';
 		const regex = /^([\ a-zA-Z0-9\ \<\>\!\^]*(\|[^\|]*\|)?)*$/gm;
 
 		if (!regex.test(eclString)) {
@@ -700,7 +700,7 @@ export class UiUtility {
 		if (!versionDate) {
 			versionDate = Constants.IN_DEVELOPMENT;
 		}
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	static toggleLockedSections(lock: boolean) {

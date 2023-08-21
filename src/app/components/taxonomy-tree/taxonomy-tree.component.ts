@@ -3,6 +3,7 @@ import { TreeComponent, TreeNode } from '@circlon/angular-tree-component';
 import { lastValueFrom, Observable } from 'rxjs';
 import { TreeOptionDefaults, TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetService } from 'src/app/services/rest/refset.service';
+import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 
@@ -25,7 +26,6 @@ export class TaxonomyTreeComponent {
 	parentConcept: any;
 	loadNodeChildrenProcess = (event) => {};
 	refsetUtility = RefsetUtility;
-	isLoading = false;
 	noData = false;
 	showLoadingSpinner = false;
 	loadedChildren: any;
@@ -50,7 +50,7 @@ export class TaxonomyTreeComponent {
 
 	@ViewChild(TreeComponent) treeComponent: TreeComponent;
 
-	constructor(private changeDetectorRef: ChangeDetectorRef, private refsetService: RefsetService) {
+	constructor(private changeDetectorRef: ChangeDetectorRef, private refsetService: RefsetService, private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent) {
 		this.configOptions = {
 			...this.staticOptions,
 			...TreeOptionDefaults,
@@ -68,7 +68,6 @@ export class TaxonomyTreeComponent {
 					...this.options,
 					getChildren: this.getChildren.bind(this),
 				};
-
 				if (this.hasMultipleRootNodes) {
 					this.configOptions.expandFirstNode = false;
 				}
@@ -84,8 +83,6 @@ export class TaxonomyTreeComponent {
 				this.changeDetectorRef.detectChanges();
 			} else if (propertyName === 'rootNode' && CodeUtility.hasValue(this.rootNode)) {
 				if (!this.rootNode.active) {
-					this.isLoading = false;
-					this.showLoadingSpinner = false;
 					this.noData = true;
 					return;
 				}
@@ -96,21 +93,15 @@ export class TaxonomyTreeComponent {
 				if (!CodeUtility.hasValue(this.rootNode.children) || !CodeUtility.hasValue(this.rootNode.children[0].name)) {
 					this.getTreeData();
 				} else {
-					this.isLoading = true;
-					this.showLoadingSpinner = true;
 					this.prepareData(this.rootNode.children);
 				}
 			} else if (propertyName === 'manualStateRefresh') {
-				this.isLoading = true;
-				this.showLoadingSpinner = true;
 				this.nodes = [];
 			}
 		}
 	}
 
 	getTreeData() {
-		this.isLoading = true;
-		this.showLoadingSpinner = true;
 		const restParams = {
 			displayType: 'taxonomy',
 			depth: 1,
@@ -119,17 +110,12 @@ export class TaxonomyTreeComponent {
 			offset: 0,
 			limit: 1000,
 		};
-
 		this.refsetService.getConceptList(this.refset.id, restParams).subscribe({
 			next: (results) => {
 				this.prepareData(results.items);
 				this.sendnumOfChildrenTrigger(results?.items?.length);
 			},
-			error: (error) => {
-				this.isLoading = false;
-				this.showLoadingSpinner = false;
-				this.showLoadingSpinner = false;
-			},
+			error: (error) => {},
 		});
 	}
 
@@ -152,9 +138,6 @@ export class TaxonomyTreeComponent {
 		} else {
 			this.noData = true;
 		}
-
-		this.isLoading = false;
-		this.showLoadingSpinner = false;
 	}
 
 	onInitTree(event) {
@@ -405,6 +388,24 @@ export class TaxonomyTreeComponent {
 		this.isAdd = new Boolean(params.addConcept) as boolean;
 		this.conceptForAddRemove = params.concept;
 		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+		this.conceptForAddRemove = params.concept;
+		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+		this.addRemoveConceptsComponent.isAdd = this.isAdd;
+		this.addRemoveConceptsComponent.conceptCode = params.concept.code;
+		this.addRemoveConceptsComponent.conceptName = params.concept.name;
+		this.addRemoveConceptsComponent.conceptHasChildren = params.concept.children;
+		this.addRemoveConceptsComponent.definitionExceptionType = params.concept.definitionExceptionType;
+		this.addRemoveConceptsComponent.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.refset = this.refset;
+		this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberFunction;
+		this.addRemoveConceptsComponent.refsetInternalId = this.refset.id;
+		this.conceptForAddRemove.conceptCode = params.concept.code;
+		this.conceptForAddRemove.conceptName = params.concept.name;
+		this.conceptForAddRemove.conceptHasChildren = params.concept.conceptHasChildren;
+		this.conceptForAddRemove.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.addRemoveConcept();
 	}
 
 	selectNode(node, suppressChangeEvent) {

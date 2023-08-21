@@ -23,6 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
 import { take } from 'rxjs/operators';
 import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
 import { NotificationService } from '../services/notification.service';
@@ -37,7 +38,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 	templateUrl: 'refset-details.html',
 	styleUrls: ['./refset-details.scss'],
 })
-export class RefsetDetails implements OnInit {
+export class RefsetDetailsComponent implements OnInit {
 	id: string;
 	user: User;
 	refsetId = '';
@@ -128,7 +129,7 @@ export class RefsetDetails implements OnInit {
 	showFullNotesText = false;
 	editMode = false;
 	taxonomyGridParams: any;
-	showLoadingSpinner = false;
+	showLoadingSpinner = true;
 	selectedConcept: any;
 	editMetadataProperties: any;
 	directUrl: string;
@@ -210,7 +211,8 @@ export class RefsetDetails implements OnInit {
 		private routerExtentionService: RouterExtentionService,
 		readonly projectsRefsetComponent: ProjectsRefsetComponent,
 		private location: Location,
-		private authenticationService: AuthenticationService
+		private authenticationService: AuthenticationService,
+		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -248,7 +250,6 @@ export class RefsetDetails implements OnInit {
 		this.refsetLoaded$ = this.refsetLoaded.asObservable();
 		this.memberCacheLoaded = new Subject<boolean>();
 		this.memberCacheLoaded$ = this.memberCacheLoaded.asObservable();
-		this.showLoadingSpinner = true;
 		this.inEditButtonPrefix = '';
 		this.directUrl = window.location.protocol + '//' + window.location.host + this.router.url;
 		const prevUrl = this.routerExtentionService.getPreviousUrl();
@@ -321,7 +322,6 @@ export class RefsetDetails implements OnInit {
 				},
 			};
 
-			this.showLoadingSpinner = false;
 			this.showTable = true;
 			// If the member grid data is present manually reload the grid or it won't update
 			if (CodeUtility.hasValue(this.originalGridParams)) {
@@ -342,6 +342,7 @@ export class RefsetDetails implements OnInit {
 	loadRefset(): void {
 		this.refsetService.getRefset(this.refsetId, this.versionDate).subscribe({
 			next: (results) => {
+				this.changeLockedStatus(false);
 				this.refsetStatus = results?.workflowStatus;
 				this.id = results?.id;
 				this.isIntensional = results?.type == Constants.INTENSIONAL;
@@ -428,7 +429,7 @@ export class RefsetDetails implements OnInit {
 						this.selectedTaxonomyLanguage = languageValue;
 					}
 
-					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageCode });
+					languageRefsetOptions.push({ value: languageValue, display: language.qualifiedLanguageDialectCode + ' (' + type + ')' });
 				}
 
 				if (languageRefsetOptions.length > 0) {
@@ -460,11 +461,9 @@ export class RefsetDetails implements OnInit {
 				}
 
 				this.loadWorkflowHistoryData();
-
-				this.showLoadingSpinner = false;
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				this.changeLockedStatus(false);
 			},
 		});
 	}
@@ -565,9 +564,6 @@ export class RefsetDetails implements OnInit {
 		forkJoin(allObservables)
 			.pipe(take(1))
 			.subscribe(({ refsetLoaded, memberCacheLoaded }) => {
-				//console.log('refsetLoaded: ' + refsetLoaded);
-				//console.log('memberCacheLoaded: ' + memberCacheLoaded);
-
 				this.loadTaxonomyRoot();
 				this.taxonomySearchColumnDefs = [
 					{
@@ -646,7 +642,7 @@ export class RefsetDetails implements OnInit {
 				this.memberCacheLoaded.complete();
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -670,7 +666,7 @@ export class RefsetDetails implements OnInit {
 				this.showTaxonomySearchTable = true;
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -798,7 +794,6 @@ export class RefsetDetails implements OnInit {
 				this.taxonomySearchResults = [];
 				this.taxonomySearchGridApi?.showNoRowsOverlay();
 				this.taxonomySearchGridApi?.setRowData([]);
-				//this.toggleLoadingSpinner(false);
 			},
 		});
 	};
@@ -842,7 +837,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	onTaxonomySearchGridCellClick = (event) => {
-		//this.toggleLoadingSpinner(true);
 		this.taxonomySearchGridApi.showLoadingOverlay();
 		const selectedRows = this.taxonomySearchGridApi?.getSelectedRows();
 		let selectedConcept;
@@ -859,7 +853,6 @@ export class RefsetDetails implements OnInit {
 			});
 		} catch {
 			this.taxonomySearchGridApi.hideLoadingOverlay();
-			//this.toggleLoadingSpinner(false)
 		}
 	};
 
@@ -884,7 +877,6 @@ export class RefsetDetails implements OnInit {
 		};
 
 		this.taxonomyMembersComponent.findNodeInTree(selectedConcept, selectedPath, afterNodeFound, true, true);
-		this.toggleLoadingSpinner(false);
 	}
 
 	reloadTaxonomyTree() {
@@ -902,6 +894,7 @@ export class RefsetDetails implements OnInit {
 		this.membersGridColumnApi = gridReadyParams.columnApi;
 
 		this.membersGridApi.showLoadingOverlay();
+		this.showLoadingSpinner = false;
 
 		let pageNumber = this.membersGridApi.paginationGetCurrentPage() + 1;
 		let query = '';
@@ -969,8 +962,10 @@ export class RefsetDetails implements OnInit {
 					// This column is an exception to resizable, it's the +/- icon column
 					{
 						field: 'active',
-						headerName: '',
+						colId: 'active',
+						headerName: 'Active',
 						maxWidth: 40,
+						height: 0,
 						resizable: true,
 						sort: false,
 						cellClass: 'rt2-details-column-remove-icon',
@@ -1055,7 +1050,6 @@ export class RefsetDetails implements OnInit {
 			error: (error) => {
 				this.membersGridApi.showNoRowsOverlay();
 				this.membersGridApi.setRowData([]);
-				this.toggleLoadingSpinner(false);
 				this.membersReady = true;
 			},
 		});
@@ -1091,7 +1085,7 @@ export class RefsetDetails implements OnInit {
 	};
 
 	onMembersGridCellClick = (event) => {
-		if (event.column.colId !== 'actions') {
+		if (event.column.colId !== 'active') {
 			const selectedRows = this.membersGridApi.getSelectedRows();
 			let selectedId: string;
 
@@ -1122,10 +1116,10 @@ export class RefsetDetails implements OnInit {
 
 	// ***** General Functions *****/
 	setWorkflowStatusByAction(notes: string, action: string): void {
-		this.toggleLoadingSpinner(true);
-
+		this.changeLockedStatus(true);
 		this.workflowService.setWorkflowStatusByAction(this.refsetData.id, this.refsetData.modifiedBy, action, notes).subscribe({
 			next: (results) => {
+				this.changeLockedStatus(false);
 				if (results) {
 					if (action.includes('UNASSIGN')) {
 						this.loadRefset();
@@ -1144,7 +1138,7 @@ export class RefsetDetails implements OnInit {
 				}
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				this.changeLockedStatus(false);
 			},
 		});
 	}
@@ -1165,8 +1159,6 @@ export class RefsetDetails implements OnInit {
 			return;
 		}
 
-		this.toggleLoadingSpinner(true);
-
 		this.refsetService.publishLocalset(this.refsetData.id, versionDate).subscribe({
 			next: (results) => {
 				if (results) {
@@ -1174,7 +1166,7 @@ export class RefsetDetails implements OnInit {
 				}
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 
@@ -1202,8 +1194,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	deleteDevelopmentVersion() {
-		this.toggleLoadingSpinner(true);
-
 		this.refsetService.deleteDevelopmentVersion(this.refsetData.id).subscribe({
 			next: (results) => {
 				this.notificationService.show(
@@ -1220,7 +1210,7 @@ export class RefsetDetails implements OnInit {
 				this.router.navigate([link]);
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 	}
@@ -1245,9 +1235,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	loadWorkflowHistoryData(showLoading = false): void {
-		if (showLoading) {
-			this.toggleLoadingSpinner(true);
-		}
 		this.refsetService.getWorkflowHistory(this.id, '?sort=modified&sortAscending=false').subscribe((results) => {
 			this.workflowHistoryDataSource = new MatTableDataSource(results?.items);
 			this.workflowHistoryDataSource.sort = this.sort;
@@ -1256,9 +1243,6 @@ export class RefsetDetails implements OnInit {
 			const source = this.workflowHistoryDataSource?.data[0];
 			if (source?.workflowStatus === 'IN_REVIEW' && source?.notes) {
 				this.reviewNotesAdded = true;
-			}
-			if (showLoading) {
-				this.toggleLoadingSpinner(false);
 			}
 		});
 	}
@@ -1273,11 +1257,29 @@ export class RefsetDetails implements OnInit {
 
 		this.conceptForAddRemove = params.concept;
 		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+
+		this.addRemoveConceptsComponent.isAdd = this.isConceptBeingAdded;
+		this.addRemoveConceptsComponent.conceptCode = params.concept.code;
+		this.addRemoveConceptsComponent.conceptName = params.concept.name;
+		this.addRemoveConceptsComponent.conceptHasChildren = params.concept.children;
+		this.addRemoveConceptsComponent.definitionExceptionType = params.concept.definitionExceptionType;
+		this.addRemoveConceptsComponent.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.refset = this.refsetData;
+		this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+		this.addRemoveConceptsComponent.refsetInternalId = this.refsetData.id;
+		this.conceptForAddRemove.conceptCode = params.concept.code;
+		this.conceptForAddRemove.conceptName = params.concept.name;
+		this.conceptForAddRemove.conceptHasChildren = params.concept.conceptHasChildren;
+		this.conceptForAddRemove.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.addRemoveConcept();
+
+		if (this.isConceptBeingAdded == false) {
+			this.closeConceptDetails();
+		}
 	}
 
 	changeLockedStatus(lock: boolean) {
 		this.isLocked = lock;
-		this.toggleLoadingSpinner(false);
 		UiUtility.toggleLockedSections(lock);
 		console.timeEnd('reference set detail changeLockedStatus');
 	}
@@ -1369,7 +1371,6 @@ export class RefsetDetails implements OnInit {
 			},
 			error: (error) => {
 				this.isConceptDetailsLoading = false;
-				this.toggleLoadingSpinner(false);
 			},
 		});
 
@@ -1399,10 +1400,6 @@ export class RefsetDetails implements OnInit {
 		});
 	}
 
-	toggleLoadingSpinner = (showSpinner = true) => {
-		this.showLoadingSpinner = showSpinner;
-	};
-
 	closeConceptDetails() {
 		this.conceptDetail = null;
 		this.selectedConcept = null;
@@ -1423,15 +1420,13 @@ export class RefsetDetails implements OnInit {
 	}
 
 	changeRefsetStatus = () => {
-		this.toggleLoadingSpinner(true);
-
 		this.refsetService.changeRefsetStatus(this.refsetData.id, !this.refsetData.active).subscribe({
 			next: (results) => {
 				this.notificationService.show('The Reference Set has been ' + results.status + '.', null, 'success');
 				this.loadRefset();
 			},
 			error: (error) => {
-				this.toggleLoadingSpinner(false);
+				//
 			},
 		});
 
@@ -1486,7 +1481,6 @@ export class RefsetDetails implements OnInit {
 	}
 
 	openMemberHistory(conceptId) {
-		this.showLoadingSpinner = true;
 		const concept = this.getMemberRow(conceptId);
 		this.refsetService.getMemberHistory(this.refsetData?.id, conceptId, null).subscribe((results) => {
 			const historyData: any = {};
@@ -1530,8 +1524,6 @@ export class RefsetDetails implements OnInit {
 				template: this.memberHistoryDialog,
 				data: historyData,
 			};
-
-			this.showLoadingSpinner = false;
 
 			this.dialog = this.dialogFactoryService.open(dialogData);
 		});
@@ -1695,7 +1687,7 @@ export class RefsetDetails implements OnInit {
 					if (this.user.userName == this.authenticationService.GUEST_USER) {
 						return value.colId == 'code' || value.colId == 'modified';
 					} else {
-						return value.colId !== 'actions' && value.colId !== 'active';
+						return value.colId !== 'actions';
 					}
 				})
 				.map((value) => value.colId),

@@ -13,6 +13,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
+import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
 import { TemplateRenderer } from '../cellRenderers/template.renderer';
 
 @Component({
@@ -65,12 +66,19 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	@Output() changeLockedStatus = new EventEmitter<boolean>(true);
 	@Output() reloadData = new EventEmitter<boolean>(true);
 
+	@ViewChild('addRemoveConceptHierarchyModal') addRemoveConceptHierarchyModal: TemplateRef<any>;
 	@ViewChild('conceptSearchPaging') paginationComponent: PaginationComponent;
 	@ViewChild('conceptAddRemoveSection') conceptAddRemoveSection: TemplateRef<any>;
 	@ViewChild('conceptCodeSection') conceptCodeSection: TemplateRef<any>;
 	@ViewChild('conceptFsnSection') conceptFsnSection: TemplateRef<any>;
 
-	constructor(private readonly modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private router: Router) {}
+	constructor(
+		private readonly modalService: NgbModal,
+		private refsetService: RefsetService,
+		private notificationService: NotificationService,
+		private router: Router,
+		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent
+	) {}
 
 	ngOnInit(): void {}
 
@@ -89,18 +97,17 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 	filterActiveConcepts(): void {
 		const filters = this.gridApi.getFilterModel();
-
-		if (this.showActiveConceptsOnly) {
-			filters.active = { filterType: 'text', type: 'equals', filter: true };
-		} else {
-			delete filters.active;
+		if (filters != undefined) {
+			if (this.showActiveConceptsOnly) {
+				filters.active = { filterType: 'text', type: 'equals', filter: true };
+			} else {
+				delete filters.active;
+			}
+			this.gridApi.setFilterModel(filters);
 		}
-
-		this.gridApi.setFilterModel(filters);
 	}
 
 	addRemoveConcept(params: any): void {
-		//this.showLoadingSpinner = true;
 		this.isConceptBeingAdded = Boolean(params.addConcept);
 
 		// if this is coming from the parents section than the concept has children
@@ -110,20 +117,41 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 		this.conceptForAddRemove = params.concept;
 		this.addRemoveDefinitionExceptionType = params.definitionExceptionType;
+		this.addRemoveConceptsComponent.isAdd = this.isConceptBeingAdded;
+		this.addRemoveConceptsComponent.conceptCode = params.concept.code;
+		this.addRemoveConceptsComponent.conceptName = params.concept.name;
+		this.addRemoveConceptsComponent.conceptHasChildren = params.concept.children;
+		this.addRemoveConceptsComponent.definitionExceptionType = params.concept.definitionExceptionType;
+		this.addRemoveConceptsComponent.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.refset = this.refset;
+		this.addRemoveConceptsComponent.processChangedMemberFunction = this.processChangedMemberEffects;
+		this.addRemoveConceptsComponent.refsetInternalId = this.refset.id;
+		this.conceptForAddRemove.conceptCode = params.concept.code;
+		this.conceptForAddRemove.conceptName = params.concept.name;
+		this.conceptForAddRemove.conceptHasChildren = params.concept.conceptHasChildren;
+		this.conceptForAddRemove.definitionExceptionId = params.concept.definitionExceptionId;
+		this.addRemoveConceptsComponent.addRemoveConcept();
 	}
 
 	public processChangedMemberEffects = (conceptStatusArray) => {
-		this.showLoadingSpinner = false;
 		this.sendChangeLockedStatus(false);
-
-		// if this modal is closed and the same refset is still open then refsesh the page
 		if (!this.modalService.hasOpenModals() && this.router.url.includes('/' + this.refset.refsetId)) {
 			this.processChangedMemberFunction(conceptStatusArray);
 		}
 
-		// reload the search results if the window is still open
 		if (this.modalService.hasOpenModals()) {
 			this.onTableSearchChange();
+			if (this.conceptSelected) {
+				if (this.conceptForAddRemove.conceptCode.id != this.selectedConcept.id) {
+					this.loadConceptDetail(this.selectedConcept);
+				} else {
+					if (this.isConceptBeingAdded) {
+						this.loadConceptDetail(this.selectedConcept);
+					} else {
+						this.closeConceptDetails();
+					}
+				}
+			}
 		}
 	};
 
@@ -133,11 +161,11 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 		this.changeLockedStatus.emit(value);
 	};
 
-	openAddRemoveModal(addRemoveConceptHierarchyModal: NgbModal) {
+	openAddRemoveModal() {
 		this.showTable = false;
 		this.data = undefined;
 
-		this.openedModel = this.modalService.open(addRemoveConceptHierarchyModal, {
+		this.openedModel = this.modalService.open(this.addRemoveConceptHierarchyModal, {
 			windowClass: 'add-remove-concept-hierarchy-modal-size',
 			animation: true,
 			beforeDismiss: () => {
@@ -163,7 +191,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
+				'templateRenderer': TemplateRenderer,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {
@@ -245,9 +273,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			return;
 		}
 
-		// Enable spinner (turn of when search errors or completes)
-		this.loadingSpinner.emit(true);
-
 		this.refsetService.getConceptSearch(this.refsetInternalId, `limit=200&editing=true&offset=0&query=${encodeURI(this.searchInput)}`).subscribe({
 			next: (results) => {
 				this.data = results;
@@ -274,26 +299,27 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 				}
 
 				this.filterActiveConcepts();
-
-				this.loadingSpinner.emit(false);
 			},
 			error: (error) => {
-				this.loadingSpinner.emit(false);
+				//
 			},
 		});
 	};
 
 	onGridCellClick = (event) => {
-		this.conceptSelected = true;
-		const selectedRows = this.gridApi.getSelectedRows();
-		let selectedId: string;
+		if (event.column.colId !== 'active') {
+			this.conceptSelected = true;
+			const selectedRows = this.gridApi.getSelectedRows();
+			let selectedId: string;
 
-		selectedRows.forEach(function (selectedRow, index) {
-			selectedId = selectedRow.code;
-		});
+			selectedRows.forEach(function (selectedRow, index) {
+				selectedId = selectedRow.code;
+			});
 
-		const selectedConcept = this.getGridRow(selectedId);
-		this.loadConceptDetail(selectedConcept);
+			const selectedConcept = this.getGridRow(selectedId);
+			this.selectedConcept = this.getGridRow(selectedId);
+			this.loadConceptDetail(this.selectedConcept);
+		}
 	};
 
 	getGridRow(conceptId: string) {
@@ -326,7 +352,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	loadConceptDetail(concept) {
 		this.conceptDetail = null;
 		this.isConceptDetailsLoading = true;
-		this.showLoadingSpinner = true;
 		this.loadConceptDetailParents(concept);
 
 		this.refsetService
@@ -335,7 +360,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			})
 			.subscribe((results) => {
 				this.isConceptDetailsLoading = false;
-				this.showLoadingSpinner = false;
 				this.conceptDetail = results;
 				this.conceptDescriptions = this.conceptDetail.descriptions.filter(function (description) {
 					return description != null;
@@ -346,6 +370,10 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	}
 
 	loadConceptDetailParents(concept) {
+		if (concept == undefined) {
+			concept = this.selectedConcept;
+		}
+
 		this.conceptDetailParents = [];
 
 		if (!concept?.active) {
@@ -409,7 +437,6 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 
 	addRemoveAllMembers(type) {
 		this.sendChangeLockedStatus(true);
-		this.showLoadingSpinner = true;
 		this.conceptIdArray = [];
 
 		for (let i = 0; i < this.data.items.length; i++) {
@@ -420,7 +447,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 							this.conceptIdArray.push(this.data.items[i].code);
 						}
 					} else {
-						this.conceptIdArray.push(this.data.items[i].code);
+						if (this.data.items[i].memberOfRefset === false) {
+							this.conceptIdArray.push(this.data.items[i].code);
+						}
 					}
 				}
 			} else {
@@ -429,20 +458,31 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 						this.conceptIdArray.push(this.data.items[i].code);
 					}
 				} else {
-					this.conceptIdArray.push(this.data.items[i].code);
+					if (this.data.items[i].memberOfRefset === false) {
+						this.conceptIdArray.push(this.data.items[i].code);
+					}
 				}
 			}
 		}
-		RefsetUtility.addRemoveMembersByList(
-			this.refset.id,
-			this.refset.refsetId,
-			this.conceptIdArray.join(),
-			type,
-			this.processChangedMemberEffects,
-			this.notificationService,
-			this.refsetService,
-			this.router
-		);
+		if (this.conceptIdArray.length > 0) {
+			RefsetUtility.addRemoveMembersByList(
+				this.refset.id,
+				this.refset.refsetId,
+				this.conceptIdArray.join(),
+				type,
+				this.processChangedMemberEffects,
+				this.notificationService,
+				this.refsetService,
+				this.router
+			);
+		} else {
+			this.sendChangeLockedStatus(false);
+			let past = 'ed to';
+			if (type === 'remove') {
+				past = 'd from';
+			}
+			this.notificationService.show('No action to perform, already ' + type + past + ' Reference Set.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
+		}
 		//this.closeModal();
 	}
 
@@ -455,6 +495,9 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 	onTableSearchChange() {
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 			this.resultsDisplay = 'block';
+			if (this.gridApi) {
+				this.gridApi.showLoadingOverlay();
+			}
 			this.onGridReady(this.originalGridParams);
 		}
 	}

@@ -202,8 +202,7 @@
 						</button>
 
 						<upgrade-modal
-							(loadingSpinner)="toggleLoadingSpinner($event)"
-							*ngIf="((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0"
+							*ngIf="(this.showMembersSection && ((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0)"
 							[refsetData]="refsetData"
 							[membersOfRefset]="membersGridData"
 							[refsetId]="refsetData.refsetId"
@@ -211,10 +210,9 @@
 							[refsetVersionDate]="refsetData.versionDate"></upgrade-modal>
 
 						<button
-							(loadingSpinner)="toggleLoadingSpinner($event)"
 							type="button"
 							color="red"
-							*ngIf="(this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
+							*ngIf="(this.showMembersSection && (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')))"
 							(click)="openCancelUpgrade(cancelUpgradeDialog)"
 							aria-hidden="false"
 							class="rt2-btn rt2-action-btn"
@@ -506,7 +504,6 @@
 					class="ml-20"
 					*ngIf="allowedToEdit"
 					[refset]="refsetData"
-					(loadingSpinner)="toggleLoadingSpinner($event)"
 					(changeLockedStatus)="changeLockedStatus($event)"
 					[processChangedMemberFunction]="processChangedMemberEffects">
 				</add-remove-by-concept-modal>
@@ -520,87 +517,81 @@
 						<as-split-area [size]="isConceptDetailsLoading || conceptDetail ? 60 : 100" [minSize]="55">
 							<div class="rt2-details-members-column default-font">
 								<!-- Search Bar -->
-								<div class="d-flex jc-space-between">
-									<div class="rt2-flex-wrap rt2-custom-width">
-										<div class="d-flex col-md-4">
-											<div class="col-sm-6 filter-font" [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
-												<app-column-chooser
-													title="Select Columns to Display"
-													[gridColumnApi]="membersGridColumnApi"
-													[useDialog]="useDialog"
-													[disabled]="isLocked"
-													[manualStateRefresh]="membersGridChooserManualStateRefresh">
-												</app-column-chooser>
-												<mat-button-toggle-group
-													class="rt2-toggle-buttons tabs-font"
-													name="membersListMode"
-													aria-label="Members List Mode"
-													(change)="onChangeMembersListMode()"
-													[(ngModel)]="selectedMembersListMode">
-													<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
-													<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
-														{{taxonomyButtonLabel}}
-													</mat-button-toggle>
-												</mat-button-toggle-group>
-											</div>
+								<div class="rt2-flex-wrap rt2-custom-width">
+									<div class="col-md-auto m-r-20 filter-font" [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
+										<app-column-chooser
+											title="Select Columns to Display"
+											[gridColumnApi]="membersGridColumnApi"
+											[useDialog]="useDialog"
+											[disabled]="isLocked"
+											[manualStateRefresh]="membersGridChooserManualStateRefresh">
+										</app-column-chooser>
+									</div>
 
-											<div class="col-sm-6 filter-font" [style.display]="membersTaxonomyDisplay">
-												<mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down">
-													<mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
-														<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox"> {{option.display}} </mat-option>
-													</mat-select>
-												</mat-form-field>
-												<mat-button-toggle-group
-													class="rt2-toggle-buttons tabs-font"
-													name="membersListMode"
-													aria-label="Members List Mode"
-													(change)="onChangeMembersListMode()"
-													[(ngModel)]="selectedMembersListMode">
-													<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
-													<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
-														{{taxonomyButtonLabel}}
-													</mat-button-toggle>
-												</mat-button-toggle-group>
-											</div>
+									<div class="col-md-auto m-r-20 filter-font" [style.display]="membersTaxonomyDisplay">
+										<mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down">
+											<mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
+												<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox"> {{option.display}} </mat-option>
+											</mat-select>
+										</mat-form-field>
+									</div>
 
-											<div class="col-sm-6 filter-font rt2-custom-width-fields" [style.display]="membersTableDisplay">
-												<mat-form-field appearance="fill">
-													<mat-label>Show by Concept Status</mat-label>
-													<mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus" (selectionChange)="changeActiveInactiveStatus()">
-														<mat-option value="both" class="no-checkbox">Active and Inactive</mat-option>
-														<mat-option value="active" class="no-checkbox">Active Only</mat-option>
-														<mat-option value="inactive" class="no-checkbox">Inactive Only</mat-option>
-													</mat-select>
-												</mat-form-field>
-											</div>
-										</div>
+									<div class="col-md-auto m-r-20 filter-font rt2-custom-width-fields" [style.display]="membersTableDisplay">
+										<mat-form-field appearance="fill">
+											<mat-label>Show by Concept Status</mat-label>
+											<mat-select title="Select to show concepts by status" [(value)]="activeInactiveStatus" (selectionChange)="changeActiveInactiveStatus()">
+												<mat-option value="both" class="no-checkbox">Active and Inactive</mat-option>
+												<mat-option value="active" class="no-checkbox">Active Only</mat-option>
+												<mat-option value="inactive" class="no-checkbox">Inactive Only</mat-option>
+											</mat-select>
+										</mat-form-field>
+									</div>
 
-										<div class="d-flex rt2-custom-width-fields-btn">
-											<div class="rt2-flex-wrap w-100-pct detailsSearchInput" [style.display]="membersTableDisplay">
-												<mat-form-field floatLabel="never" class="rt2-details-search-field default-font">
-													<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
-													<input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
-												</mat-form-field>
-												<span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
-												<button color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn" unfocus (click)="openEclBuilder('detailsTableSearchInput')">
-													ECL Builder
-												</button>
-											</div>
+									<div class="rt2-flex-wrap w-100-pct" [style.display]="membersTableDisplay">
+										<mat-form-field floatLabel="never" class="rt2-details-search-field default-font mt-15">
+											<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
+											<input matInput id="detailsTableSearchInput" [(ngModel)]="tableSearchInput" (input)="onTableSearchChange()" />
+										</mat-form-field>
+										<span class="clear-search" (click)="clearSearch('table')">&#10005;</span>
+										<button color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn ecl-button" unfocus (click)="openEclBuilder('detailsTableSearchInput')">
+											ECL Builder
+										</button>
+									</div>
 
-											<div class="rt2-flex-wrap w-100-pct" [style.display]="membersTaxonomyDisplay">
-												<mat-form-field floatLabel="never" class="rt2-details-search-field" *ngIf="showMembersSearchBar()">
-													<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
-													<input
-														matInput
-														id="detailsTaxonomySearchInput"
-														[(ngModel)]="taxonomySearchInput"
-														(input)="onTaxonomySearchChange()"
-														[disabled]="!showMembersSearchBar()" />
-												</mat-form-field>
-												<span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
-												<button aria-hidden="false" class="rt2-btn rt2-action-btn" (click)="openEclBuilder('detailsTaxonomySearchInput')" unfocus>ECL Builder</button>
-											</div>
-										</div>
+									<div class="rt2-flex-wrap w-100-pct" [style.display]="membersTaxonomyDisplay">
+										<mat-form-field floatLabel="never" class="rt2-details-search-field mt-15" *ngIf="showMembersSearchBar()">
+											<mat-label>Search in reference set (Type at least 3 characters. Example: shou fra).</mat-label>
+											<input matInput id="detailsTaxonomySearchInput" [(ngModel)]="taxonomySearchInput" (input)="onTaxonomySearchChange()" [disabled]="!showMembersSearchBar()" />
+										</mat-form-field>
+										<span class="clear-search" (click)="clearSearch('taxonomy')" *ngIf="showMembersSearchBar()">&#10005;</span>
+										<button aria-hidden="false" class="rt2-btn rt2-action-btn ecl-button" (click)="openEclBuilder('detailsTaxonomySearchInput')" unfocus>ECL Builder</button>
+									</div>
+
+									<div class="col-md-auto filter-font mt-20" [style.display]="membersTaxonomyDisplay">
+										<mat-button-toggle-group
+											class="rt2-toggle-buttons tabs-font"
+											name="membersListMode"
+											aria-label="Members List Mode"
+											(change)="onChangeMembersListMode()"
+											[(ngModel)]="selectedMembersListMode">
+											<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
+											<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
+												{{taxonomyButtonLabel}}
+											</mat-button-toggle>
+										</mat-button-toggle-group>
+									</div>
+									<div class="col-md-auto filter-font mt-20" [style.display]="membersTableDisplay === 'inline-block' ? 'block' : membersTableDisplay">
+										<mat-button-toggle-group
+											class="rt2-toggle-buttons tabs-font"
+											name="membersListMode"
+											aria-label="Members List Mode"
+											(change)="onChangeMembersListMode()"
+											[(ngModel)]="selectedMembersListMode">
+											<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
+											<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
+												{{taxonomyButtonLabel}}
+											</mat-button-toggle>
+										</mat-button-toggle-group>
 									</div>
 								</div>
 
@@ -643,31 +634,37 @@
 									<ng-template #detailsActionSection let-params>
 										<div class="d-flex rt2-wrap">
 											<div class="col-6">
-												<button
-													mat-icon-button
-													*ngIf="params?.data?.historyVisible && params.data.released"
-													(click)="openMemberHistory(params.data.code)"
-													aria-hidden="false"
-													#detailsDownloadIcon
-													class="rt2-table-action-icon"
-													aria-label="Open History"
-													title="Open Membership History">
-													<mat-icon>history</mat-icon>
-												</button>
+												<div class="library-app-refset-download">
+													<button
+														mat-icon-button
+														*ngIf="params?.data?.historyVisible && params.data.released"
+														(click)="openMemberHistory(params.data.code)"
+														aria-hidden="false"
+														#detailsDownloadIcon
+														class="rt2-table-action-icon"
+														aria-label="Open History"
+														title="Open Membership History">
+														<mat-icon>history</mat-icon>
+													</button>
+												</div>
 											</div>
 
 											<div class="col-6">
-												<app-refset-discussion-list
-													*ngIf="refsetData && params && params.data"
-													type="REFSET_MEMBER"
-													[refsetInternalId]="id"
-													[refsetName]="refsetData.name"
-													[roles]="refsetData.roles"
-													[refsetId]="refsetId"
-													[conceptId]="params.data.code"
-													[conceptName]="params.data.name"
-													[(discussionCount)]="params.data.openDiscussionCount">
-												</app-refset-discussion-list>
+												<div
+													class="library-app-refset-discussion-list"
+													[ngClass]="{'library-app-refset-discussion-list-alt':params?.data?.historyVisible && params.data.released}">
+													<app-refset-discussion-list
+														*ngIf="refsetData && params && params.data"
+														type="REFSET_MEMBER"
+														[refsetInternalId]="id"
+														[refsetName]="refsetData.name"
+														[roles]="refsetData.roles"
+														[refsetId]="refsetId"
+														[conceptId]="params.data.code"
+														[conceptName]="params.data.name"
+														[(discussionCount)]="params.data.openDiscussionCount">
+													</app-refset-discussion-list>
+												</div>
 											</div>
 										</div>
 									</ng-template>
@@ -787,7 +784,11 @@
 												<img *ngIf="!parent.defined" title="Primitive" aria-label="Primitive" class="rt2-logo mr-2 p-0" src="/assets/unlinedTaxonomyIcon.png" />
 											</span>
 
-											<span [class.bold-if-member]="parent?.memberOfRefset" [class.greyed-if-not-member]="!parent?.memberOfRefset" (click)="loadConceptDetail(parent)">
+											<span
+												class="pointer"
+												[class.bold-if-member]="parent?.memberOfRefset"
+												[class.greyed-if-not-member]="!parent?.memberOfRefset"
+												(click)="loadConceptDetail(parent)">
 												<span
 													*ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
 													title="{{parent.fsn}}"
@@ -815,43 +816,42 @@
 												<div>
 													<!-- Name -->
 													<div class="row details-row">
-														<table class="rt2-concept-details-concept-info-column-title">
-															<tr>
-																<td class="text-left">
-																	<div class="rt2-concept-details-taxonomy-icon status-icon-container">
-																		<img [hidden]="!conceptDetail.defined" title="Fully Defined" aria-label="Fully Defined" src="/assets/linedTaxonomyIcon.png" />
-																		<img *ngIf="!conceptDetail.defined" title="Primitive" aria-label="Primitive" src="/assets/unlinedTaxonomyIcon.png" />
-																	</div>
-																</td>
-																<td class="text-center">
-																	<div
-																		class="rt2-concept-details-concept-name default-font"
-																		title="{{conceptDescriptionTerm}}"
-																		aria-label="{{conceptDescriptionTerm}}">
-																		{{getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptionTerm}}
-																	</div>
-																</td>
-																<td class="text-right">
-																	<div class="open-container">
-																		<button
-																			mat-icon-button
-																			(click)="openInNewWindow(conceptDetail.code)"
-																			aria-hidden="false"
-																			class="rt2-concept-details-action-icon"
-																			aria-label="Open Concept in New SNOMED Browser Window"
-																			title="Open Concept in SNOMED Browser Window">
-																			<mat-icon>open_in_new </mat-icon>
-																		</button>
-																	</div>
-																</td>
-															</tr>
-														</table>
+														<div class="col status-icon-container">
+															<div class="rt2-concept-details-taxonomy-icon rt2-concept-details-panel-taxonomy-icon">
+																<img
+																	class="rt2-logo mr-2 p-0 ml-0"
+																	[hidden]="!conceptDetail.defined"
+																	title="Fully Defined"
+																	aria-label="Fully Defined"
+																	src="/assets/linedTaxonomyIcon.png" />
+																<img
+																	class="rt2-logo mr-2 p-0 ml-0"
+																	*ngIf="!conceptDetail.defined"
+																	title="Primitive"
+																	aria-label="Primitive"
+																	src="/assets/unlinedTaxonomyIcon.png" />
+															</div>
+														</div>
+														<div class="col-md-8 rt2-concept-details-concept-name default-font" title="{{conceptDescriptionTerm}}" aria-label="{{conceptDescriptionTerm}}">
+															{{getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptionTerm}}
+														</div>
+														<div class="col open-container no-p-l">
+															<button
+																mat-icon-button
+																(click)="openInNewWindow(conceptDetail.code)"
+																aria-hidden="false"
+																class="rt2-concept-details-action-icon"
+																aria-label="Open Concept in New SNOMED Browser Window"
+																title="Open Concept in SNOMED Browser Window">
+																<mat-icon>open_in_new </mat-icon>
+															</button>
+														</div>
 													</div>
 													<br />
 
 													<!-- ID -->
 													<div class="row rt2-concept-details-concept-row">
-														<div class="rt2-concept-details-concept-id-label">SCTID</div>
+														<div class="col-md-auto rt2-concept-details-concept-id-label">SCTID</div>
 
 														<div class="col rt2-concept-details-concept-id-text" title="{{conceptDetail.code}}" aria-label="{{conceptDetail.code}}">
 															{{conceptDetail.code}}
@@ -1015,7 +1015,7 @@
 				<label
 					>Version Date:
 
-					<mat-form-field floatLabel="never" title="Enter Search Critera">
+					<mat-form-field floatLabel="never" title="Enter Search Criteria">
 						<mat-label class="search-label">mm/dd/yyyy</mat-label>
 						<input type="date" matInput #publishVersionDate id="publishVersionDate" min="2000-01-01" />
 					</mat-form-field>

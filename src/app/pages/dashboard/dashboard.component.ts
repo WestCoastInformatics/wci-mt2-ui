@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	refsetGridOptions: any;
 	refsetGridLastFilter = '';
 	refsetGridLastSort = '';
-	numOfResults: any;
+	numOfResults = 0;
 	numOfMembers: any;
 	showLoadingSpinner = false;
 
@@ -250,11 +250,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	};
 
 	navigateToPage(path) {
-		this.router.navigate([path]);
+		this.router.navigate([path], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	goToDetailsPage(refsetId, versionDate) {
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getOrganizations(): void {
@@ -304,8 +304,4 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-
-	toggleLoadingSpinner = (showSpinner = true) => {
-		this.showLoadingSpinner = showSpinner;
-	};
 }

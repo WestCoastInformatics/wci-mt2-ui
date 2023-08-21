@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
@@ -18,7 +18,12 @@ export class CreateNewOrganizationModalComponent {
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(false);
 
-	constructor(private modalService: NgbModal, private organizationsService: OrganizationsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
+	constructor(
+		private modalService: NgbModal,
+		private organizationsService: OrganizationsService,
+		private notificationService: NotificationService,
+		private readonly refsetDetails: RefsetDetailsComponent
+	) {}
 
 	ngOnInit() {}
 
@@ -36,7 +41,6 @@ export class CreateNewOrganizationModalComponent {
 	}
 
 	processOperationReturn = (data) => {
-		this.loadingSpinner.emit(false);
 		this.refsetDetails.ngOnInit();
 		this.description = '';
 	};
@@ -57,8 +61,6 @@ export class CreateNewOrganizationModalComponent {
 	}
 
 	createOrganizationObject(): void {
-		this.loadingSpinner.emit(true);
-
 		const params: any = {
 			active: true,
 			name: this.name,
@@ -71,11 +73,9 @@ export class CreateNewOrganizationModalComponent {
 			(data) => {
 				this.notificationService.show('The Organization is created.', null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 				this.modalService.dismissAll();
-				this.loadingSpinner.emit(false);
 				window.location.reload();
 			},
 			(err) => {
-				this.loadingSpinner.emit(false);
 				console.error(err);
 			}
 		);

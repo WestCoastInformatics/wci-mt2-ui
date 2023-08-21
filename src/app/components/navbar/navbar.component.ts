@@ -76,7 +76,7 @@ export class NavbarComponent implements OnInit {
 		const breadcrumb = this.breadcrumbs[breadcrumbId];
 
 		if (breadcrumb.selectable) {
-			this.router.navigate([breadcrumb.path]);
+			this.router.navigate([breadcrumb.path], { replaceUrl: false, skipLocationChange: false });
 		}
 	}
 
@@ -85,19 +85,18 @@ export class NavbarComponent implements OnInit {
 	}
 
 	landing() {
-
 		const breadcrumbs = [];
 		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
-		this.router.navigate(['']);
+		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	resources() {
-		this.router.navigate(['']);
+		this.router.navigate([''], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	login() {
 		localStorage.removeItem('loginReferralUrl');
-		this.router.navigate(['/login']);
+		this.router.navigate(['/login'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	assignedUser(): string {
@@ -115,10 +114,32 @@ export class NavbarComponent implements OnInit {
 	}
 
 	navigateToRoute(route: string): void {
-		if (this.router.url.includes(route) || (this.router.url.includes('projects') && route.includes('projects'))) {
-			window.location.reload();
+		if (!this.router.url.includes(route)) {
+			if (this.router.url.includes('projects') && route.includes('refsets')) {
+				const parts = this.router.url.split('/');
+				let organizationId = '';
+				let editionId = '';
+				for (let p = 0; p < parts.length; p++) {
+					if (parts[p].includes('organization')) {
+						if (parts[p + 1] != undefined) {
+							organizationId = parts[p + 1];
+						}
+					}
+					if (parts[p].includes('edition')) {
+						if (parts[p + 1] != undefined) {
+							editionId = parts[p + 1];
+						}
+					}
+				}
+				if (organizationId != '' && editionId != '') {
+					route = '/organization/' + organizationId + '/edition/' + editionId + '/projects/0/refsets';
+					this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
+				}
+			} else {
+				this.router.navigate([route], { replaceUrl: false, skipLocationChange: false });
+			}
 		} else {
-			this.router.navigate([route]);
+			window.location.reload();
 		}
 	}
 }

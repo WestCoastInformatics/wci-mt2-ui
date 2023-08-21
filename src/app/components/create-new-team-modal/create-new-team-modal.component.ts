@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TeamsService } from 'src/app/services/rest/teams.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 
 @Component({
@@ -26,7 +26,7 @@ export class CreateNewTeamModalComponent {
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 	firstLoad = true;
 
-	constructor(private modalService: NgbModal, private teamsService: TeamsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
+	constructor(private modalService: NgbModal, private teamsService: TeamsService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetailsComponent) {}
 
 	ngOnInit() {
 		this.roleOptions = [

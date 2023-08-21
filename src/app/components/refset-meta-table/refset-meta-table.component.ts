@@ -10,7 +10,6 @@ import { AuthenticationService } from '../../services/authentication/authenticat
 	styleUrls: ['refset-meta-table.component.scss'],
 })
 export class RefsetMetaTableComponent implements OnInit {
-	showFlag = true;
 	@Input() refset: any;
 	loggedIn = false;
 
@@ -38,8 +37,8 @@ export class RefsetMetaTableComponent implements OnInit {
 		return refsetData?.descriptions;
 	}
 
-	showFlagIcon(showFlag: boolean) {
-		this.showFlag = showFlag;
+	showFlagIcon(event: Event) {
+		(event.target as HTMLImageElement).style.display = 'none';
 	}
 
 	capitalizeFirstLetterOfString(stringValue: string): string {

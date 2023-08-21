@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { UsersService } from 'src/app/services/rest/users.service';
+import { PersonalComponentService } from 'src/app/pages/personal/personal-component.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { Location } from '@angular/common';
 
 @Component({
 	selector: 'personal-landing',
 	templateUrl: './landing.component.html',
 	styleUrls: ['landing.component.scss'],
 })
-export class PersonalLandingComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class PersonalLandingComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	selectedTeam: any;
 	userId: any;
 	user: any;
@@ -21,49 +21,72 @@ export class PersonalLandingComponent implements OnInit {
 	organizationList = [];
 	teamList = [];
 	uiUtility = UiUtility;
-	loggedUserId: any;
+	loggedUserId: string;
+	currentURL: string;
+	currentUser: string;
+	personalSubscription: Subscription;
 
 	constructor(
 		private readonly authService: AuthenticationService,
-		private readonly userService: UsersService,
 		private readonly refsetService: RefsetService,
+		private readonly personalComponentService: PersonalComponentService,
 		private readonly route: ActivatedRoute,
-		private readonly router: Router,
-		private location: Location
+		private readonly router: Router
 	) {}
 
 	ngOnInit(): void {
 		this.loggedUserId = this.authService.getUser().id;
 
-		this.route.params.subscribe((params) => {
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			if (params['userId']) {
 				this.userId = params['userId'];
 			} else {
 				this.userId = this.authService.getUser().id;
 			}
-
-			this.setNavigation();
 		});
 
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('personal') && this.router.url.includes('landing')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
+		});
 		this.getUser();
 	}
 
-	setNavigation() {
-		this.menu = [{ name: 'About', link: '/personal/' + this.userId + '/landing', icon: 'fa fa-user', isActive: true }];
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			const parts = url.split('/');
+			for (let p = 0; p < parts.length; p++) {
+				if (parts[p].includes('personal')) {
+					if (parts[p + 1] != undefined) {
+						this.userId = parts[p + 1];
+					}
+				}
+			}
 
-		if (this.userId === this.loggedUserId) {
-			this.menu.push({ name: 'Configuration', link: '/personal/' + this.userId + '/configuration', icon: 'fa fa-cogs' });
+			if (this.userId) {
+				this.user = '';
+				this.organizationList = [];
+				this.teamList = [];
+				this.getUser();
+			}
 		}
-
-		this.location.replaceState('personal/' + this.userId + '/landing');
 	}
 
 	getUser(): void {
-		this.userService.getUser(this.userId).subscribe((x) => {
-			this.user = x;
-			this.getTeams();
-			this.getOrganizations();
-		});
+		if (this.currentUser != this.userId) {
+			this.currentUser = this.userId;
+			this.personalSubscription = this.personalComponentService.getUser().subscribe({
+				next: (results) => {
+					this.user = results;
+					this.getTeams();
+					this.getOrganizations();
+				},
+			});
+		}
 	}
 
 	getOrganizations(): void {
@@ -81,10 +104,22 @@ export class PersonalLandingComponent implements OnInit {
 	}
 
 	goToTeam(teamId: string, organizationId: string): void {
-		this.router.navigate([`/organization/${organizationId}/teams/${teamId}/people`]);
+		this.router.navigate([`/organization/${organizationId}/teams/${teamId}/users`], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	navigateToPage(path) {
-		this.router.navigate([path]);
+		this.router.navigate([path], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.personalSubscription) {
+			this.personalSubscription.unsubscribe();
+		}
 	}
 }

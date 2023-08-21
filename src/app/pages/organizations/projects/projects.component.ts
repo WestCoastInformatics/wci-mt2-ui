@@ -1,12 +1,9 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lastValueFrom, Subscription } from 'rxjs';
+import { lastValueFrom, Subscription, concatMap } from 'rxjs';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { TeamsService } from 'src/app/services/rest/teams.service';
-
 import { ProjectsService } from 'src/app/services/rest/projects.service';
-
 import { NotificationService } from 'src/app/services/notification.service';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
@@ -44,7 +41,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		private readonly refsetService: RefsetService,
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
-		private readonly teamService: TeamsService,
 		private readonly projectsService: ProjectsService,
 		private readonly notificationService: NotificationService,
 		private readonly organizationsComponentService: OrganizationsComponentService
@@ -144,13 +140,13 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					}
 				}
 			}
-
 			if (this.organizationId) {
 				if (this.api) {
 					this.api.showLoadingOverlay();
 					this.data = [];
 					this.editionList = [];
 					this.projectList = [];
+					this.getOrganizations();
 				}
 			}
 		}
@@ -172,9 +168,9 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	onGridCellClick = (event) => {
 		// If clicking on teams, go to teams page
 		if (event.column.colId === 'teams') {
-			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams']);
+			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'teams'], { replaceUrl: false, skipLocationChange: false });
 		} else {
-			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets']);
+			this.router.navigate(['organization', this.organizationId, 'edition', this.editionId, 'projects', event.data.id, 'refsets'], { replaceUrl: false, skipLocationChange: false });
 		}
 	};
 
@@ -185,7 +181,6 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	getProjects(): void {
 		if (this.editionId != this.previouslyLoadedId) {
 			this.previouslyLoadedId = this.editionId;
-			this.showLoadingSpinner = false;
 
 			if (this.api) {
 				this.api.showLoadingOverlay();
@@ -195,35 +190,39 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 					timeOut: 1500,
 					extendedTimeOut: 0,
 				});
+				this.showLoadingSpinner = false;
 				this.api.setRowData([]);
 				this.api.redrawRows();
 				return;
 			}
 
-			this.showLoadingSpinner = false;
-			this.refsetService.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true').subscribe({
-				next: async (results) => {
-					this.data = [];
-					this.projectList = results.items;
+			this.showLoadingSpinner = true;
+			this.refsetService
+				.getProjects('query=editionId:' + this.editionId + '&sort=name&sortAscending=true')
+				.pipe(
+					concatMap(async (results) => {
+						this.data = [];
+						const loadData = [];
+						this.projectList = results.items;
 
-					for (const project of this.projectList) {
-						this.data.push({
-							name: `${project?.name}`,
-							locked: project?.privateProject,
-							description: `${project?.description}`,
-							teamlist: `${await this.getTeams(project?.id)}`,
-							id: project.id,
-						});
+						for (const project of this.projectList) {
+							loadData.push({
+								name: `${project?.name}`,
+								locked: project?.privateProject,
+								description: `${project?.description}`,
+								teamlist: `${await this.getTeams(project?.id)}`,
+								id: project.id,
+							});
+						}
+						this.data = loadData;
 						this.api.setRowData(this.data);
 						this.api.redrawRows();
-					}
-
+						this.showLoadingSpinner = false;
+					})
+				)
+				.subscribe((error) => {
 					this.showLoadingSpinner = false;
-				},
-				error: (error) => {
-					this.showLoadingSpinner = false;
-				},
-			});
+				});
 		}
 	}
 
@@ -260,11 +259,12 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	}
 
 	getOrganizations(): void {
+		const organization_id = this.organizationId;
 		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
 			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
+				if (organization_id === organization.id) {
 					this.selectedOrganization = organization;
 					this.selectOrganization();
 					return;
@@ -274,9 +274,8 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 	}
 
 	selectOrganization(): void {
-
 		this.organizationId = this.selectedOrganization.id;
-
+		this.setOrganizationData(this.selectedOrganization);
 		this.selectedEdition = null;
 		this.editionList = [];
 		this.getEditions();
@@ -305,18 +304,18 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 		}
 	}
 	getEditions(): void {
+		const edition_id = this.editionId;
 		this.editionSubscription = this.organizationsComponentService.getEditions().subscribe({
 			next: (results) => {
 				this.editionList = <any>results;
 
 				for (const edition of this.editionList) {
-					if (this.editionId == edition.id) {
+					if (edition_id == edition.id) {
 						this.selectedEdition = edition;
 						this.selectEdition();
 						return;
 					}
 				}
-
 				if (!this.selectedEdition) {
 					// Pick the first one if nothing is working out
 					if (this.editionList[0] != undefined) {

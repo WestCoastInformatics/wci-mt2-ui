@@ -58,12 +58,13 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	showFullNotesText = false;
 	showLoadingSpinner = false;
 	toggleDropdown = false;
-	numOfResults: any;
+	numOfResults = 0;
 	directUrl: string;
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
 	searchCallArray = [];
+	showLoadingSearch = true;
 	uiUtility = UiUtility;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(false);
@@ -101,7 +102,12 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		forkJoin(this.refsetService.getVersionStatuses(), this.refsetService.getVersions(), this.refsetService.getEditions('sort=name'), this.refsetService.getOrganizationsKeyValue()).subscribe({
+		forkJoin(
+			this.refsetService.getVersionStatuses(),
+			this.refsetService.getVersions(),
+			this.refsetService.getEditions('sort=name&query=maintainerType:Managed Service'),
+			this.refsetService.getOrganizationsKeyValue()
+		).subscribe({
 			next: ([results, versionResults, editionResults, organizationResults]) => {
 				this.versionStatuses = results;
 				const versionStatusArray = this.versionStatuses?.items;
@@ -266,7 +272,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 				this.changeDetectorRef.detectChanges();
 			},
 			error: (error) => {
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}
@@ -283,6 +289,8 @@ export class LandingComponent implements OnInit, AfterViewInit {
 		this.onResize(undefined);
 
 		this.refsetGridApi.showLoadingOverlay();
+		this.showLoadingSearch = true;
+
 		let query = '';
 
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
@@ -309,6 +317,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 
 		this.refsetService.getRefsets({ ...restParams }).subscribe({
 			next: (results) => {
+				this.showLoadingSearch = false;
 				// if this is not the latest search call then do not apply the results
 				if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
 					return;
@@ -328,17 +337,15 @@ export class LandingComponent implements OnInit, AfterViewInit {
 						this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
 						this.refsetGridPaging.totalKnown = true;
 						this.paginationComponent.goToPage(pageNumber - 1);
-						this.showLoadingSpinner = false;
 					}
 
 					return;
 				}
 
 				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
-
-				this.showLoadingSpinner = false;
 			},
 			error: (error) => {
+				this.showLoadingSearch = false;
 				this.refsetGridApi.showNoRowsOverlay();
 				this.refsetGridApi.setRowData([]);
 			},
@@ -416,7 +423,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
-		this.router.navigate(['/details', refsetId, versionDate]);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
@@ -433,13 +440,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 	}
 
 	openInformation(refsetId: string) {
-		if (this.showLoadingSpinner == false) {
-			this.showLoadingSpinner = false;
-			this.loadingSpinner.emit(false);
-		} else {
-			return;
-		}
-
 		const refsetDirectoryData = this.getRefsetRow(refsetId);
 
 		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
@@ -484,11 +484,6 @@ export class LandingComponent implements OnInit, AfterViewInit {
 				width: '1000px',
 				disableClose: false,
 			};
-
-			if (this.showLoadingSpinner) {
-				this.showLoadingSpinner = false;
-				this.loadingSpinner.emit(false);
-			}
 
 			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
 

@@ -1,59 +1,50 @@
-<div class="content-header">
-	<div class="row header-title">
-		<span class="title-label heading-label">{{ this.user?.name }}</span>
-	</div>
-</div>
-
-<div class="content-wrapper">
-	<app-sidebar [menuItems]="menu"></app-sidebar>
-	<div class="rt2-container">
-		<div class="row">
-			<div class="col-md-4 col-12">
-				<section>
-					<heading-with-count title="About" showcount="false"></heading-with-count>
-					<div class="dashboard-section pr-2 pl-2">
-						<div class="about-section">
-							<div><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
-							<div class="about-name-section">{{ this.user?.name }}</div>
-							<div class="about-data-section">
-								<div class="about-data-text">{{ this.user?.company }}</div>
-								<div class="about-data-text">{{ this.user?.email }}</div>
-								<div class="about-data-text">{{ todayDate | date : 'longTime' }}</div>
+<div class="rt2-container">
+	<div class="row">
+		<div class="col-md-4 col-12">
+			<section>
+				<heading-with-count title="About" showcount="false"></heading-with-count>
+				<div class="dashboard-section pr-2 pl-2">
+					<div class="about-section">
+						<div><img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="large-icon-image" /></div>
+						<div class="about-name-section">{{ this.user?.name }}</div>
+						<div class="about-data-section">
+							<div class="about-data-text">{{ this.user?.company }}</div>
+							<div class="about-data-text">{{ this.user?.email }}</div>
+							<div class="about-data-text">{{ todayDate | date : 'longTime' }}</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<div class="col-md-8 col-12">
+			<section>
+				<heading-with-count title="Organizations" showcount="false"></heading-with-count>
+				<div class="dashboard-section">
+					<div class="dashboard-section-mid">
+						<ng-container *ngFor="let organization of organizationList">
+							<div class="section-list" *ngIf="organization.name">
+								<img [src]="organization.iconUri" *ngIf="organization.iconUri" />
+								<a [routerLink]="" (click)="navigateToPage('/organizations/' + organization.id + '/edition/0/projects')" class="section-list pointer" routerLinkActive="active">{{
+									organization.name
+								}}</a>
 							</div>
-						</div>
+						</ng-container>
 					</div>
-				</section>
-			</div>
-			<div class="col-md-8 col-12">
-				<section>
-					<heading-with-count title="Organizations" showcount="false"></heading-with-count>
-					<div class="dashboard-section">
-						<div class="dashboard-section-mid">
-							<ng-container *ngFor="let organization of organizationList">
-								<div class="section-list" *ngIf="organization.name">
-									<img [src]="organization.iconUri" *ngIf="organization.iconUri" />
-									<a [routerLink]="" (click)="navigateToPage('/organizations/' + organization.id + '/edition/0/projects')" class="section-list pointer" routerLinkActive="active">{{
-										organization.name
-									}}</a>
-								</div>
-							</ng-container>
-						</div>
-					</div>
-				</section>
+				</div>
+			</section>
 
-				<section>
-					<heading-with-count title="Teams" showcount="false"></heading-with-count>
-					<div class="dashboard-section">
-						<div class="dashboard-section-mid">
-							<ng-container *ngFor="let team of teamList">
-								<div class="section-list" *ngIf="team.name">
-									<a (click)="goToTeam(team.id, team.organizationId)" class="section-list pointer">{{ team.name }}</a>
-								</div>
-							</ng-container>
-						</div>
+			<section>
+				<heading-with-count title="Teams" showcount="false"></heading-with-count>
+				<div class="dashboard-section">
+					<div class="dashboard-section-mid">
+						<ng-container *ngFor="let team of teamList">
+							<div class="section-list" *ngIf="team.name">
+								<a (click)="goToTeam(team.id, team.organizationId)" class="section-list pointer">{{ team.name }}</a>
+							</div>
+						</ng-container>
 					</div>
-				</section>
-			</div>
+				</div>
+			</section>
 		</div>
 	</div>
 </div>

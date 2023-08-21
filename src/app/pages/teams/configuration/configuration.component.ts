@@ -1,55 +1,51 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, forkJoin } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RefsetService } from 'src/app/services/rest/refset.service';
 import { TeamsService } from 'src/app/services/rest/teams.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { forkJoin } from 'rxjs';
+import { TeamsComponentService } from 'src/app/pages/teams/teams-component.service';
 
 @Component({
 	selector: 'teams-configuration',
 	templateUrl: './configuration.component.html',
 	styleUrls: ['configuration.component.scss'],
 })
-export class TeamsConfigurationComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class TeamsConfigurationComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	profileNameValue = '';
 	profileEmailValue = '';
 	profileDescriptionValue = '';
 	selectedTeam: any;
-	organizationList = [];
 	organizationId: string;
-	selectedOrganization: any;
 	teamId: string;
 	teamList = [];
+	teamsSubscription: Subscription;
 	currentUser: any;
 	roleOptions: any;
 	selectedRoles: any;
 	selectedForRemove = [];
 	selectedForAdd = [];
 	emailError = '';
-	showLoadingSpinner = true;
+	showLoadingSpinner = false;
+	currentURL: string;
 
 	constructor(
-		private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
-		private readonly refsetService: RefsetService,
 		private readonly route: ActivatedRoute,
+		private readonly router: Router,
 		private readonly authService: AuthenticationService,
 		private readonly teamsService: TeamsService,
-		private readonly notificationService: NotificationService,
-		private location: Location
+		private readonly teamsComponentService: TeamsComponentService,
+		private readonly notificationService: NotificationService
 	) {
 		document.body.scrollTop = 0;
 	}
 
 	ngOnInit(): void {
-		this.titleService.setTitle('Reference Set Tool - Teams');
+		this.titleService.setTitle('Reference Set Tool - Teams - Configuration');
 
 		this.roleOptions = [
 			{ value: 'AUTHOR', display: 'Author' },
@@ -58,85 +54,50 @@ export class TeamsConfigurationComponent implements OnInit {
 			{ value: 'VIEWER', display: 'Viewer' },
 		];
 
-		this.route.params.subscribe((params) => {
+		this.currentUser = this.authService.getUser();
+
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			this.organizationId = params['organizationId'];
 			this.teamId = params['teamId'];
-			this.setNavigation();
+			this.getTeams();
 		});
 
-		this.currentUser = this.authService.getUser();
-		this.getOrganizations();
-	}
-
-	setNavigation() {
-		const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
-
-		if (CodeUtility.hasValue(this.organizationId, true, true)) {
-			breadcrumbs.push({ path: 'organizations/' + this.organizationId + '/teams', label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Teams' : '' });
-		}
-
-		breadcrumbs.push({ label: 'Configuration' });
-		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
-
-		this.menu = [
-			{ name: 'Users', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/people', icon: 'fa fa-user' },
-			{ name: 'Configuration', link: '/organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration', icon: 'fa fa-cogs', isActive: true },
-		];
-
-		this.location.replaceState('organization/' + this.organizationId + '/teams/' + this.teamId + '/configuration');
-	}
-
-	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe((results) => {
-			this.organizationList = results.items;
-
-			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
-					this.selectedOrganization = organization;
-					this.getTeams();
-					return;
-				}
-			}
-
-			this.getStoredOrganizationId();
-
-			if (!this.selectedOrganization) {
-				this.showLoadingSpinner = false;
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('organization') && this.router.url.includes('teams') && this.router.url.includes('configuration')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
 			}
 		});
 	}
 
-	selectOrganization(): void {
-		this.showLoadingSpinner = true;
-		this.organizationId = this.selectedOrganization.id;
-		this.location.replaceState('organization/' + this.organizationId + '/teams/configuration/');
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			const parts = url.split('/');
 
-		this.clearTeamData();
-		this.setNavigation();
-		this.getTeams();
-	}
-
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
+			for (let p = 0; p < parts.length; p++) {
+				if (parts[p].includes('organization')) {
+					if (parts[p + 1] != undefined) {
+						this.organizationId = parts[p + 1];
+					}
+				}
+				if (parts[p].includes('teams')) {
+					if (parts[p + 1] != undefined) {
+						this.teamId = parts[p + 1];
+					}
 				}
 			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
+			if (this.organizationId) {
+				this.clearTeamData();
+				this.getTeams();
+			}
 		}
 	}
 
 	getTeams(): void {
-		this.refsetService.getTeams('query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe((results) => {
-			this.showLoadingSpinner = false;
-			this.teamList = results.items;
+		this.teamsSubscription = this.teamsComponentService.getTeams().subscribe((results) => {
+			this.teamList = <any>results;
 
 			for (const team of this.teamList) {
 				if (this.teamId == team.id) {
@@ -158,24 +119,15 @@ export class TeamsConfigurationComponent implements OnInit {
 		this.profileNameValue = this.selectedTeam.name;
 		this.profileEmailValue = this.selectedTeam.primaryContactEmail;
 		this.profileDescriptionValue = this.selectedTeam.description;
-
-		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-
-		this.setNavigation();
 	}
 
 	clearTeamData() {
 		this.teamList = [];
-		this.teamId = null;
 		this.selectedTeam = null;
 		this.selectedRoles = [];
 		this.profileNameValue = null;
 		this.profileEmailValue = null;
 		this.profileDescriptionValue = null;
-	}
-
-	selectTeam(_$event: any): void {
-		this.setTeamData(this.selectedTeam);
 	}
 
 	isValidEmail(): boolean {
@@ -256,5 +208,17 @@ export class TeamsConfigurationComponent implements OnInit {
 
 	getSelectedTeamTypeEnabled(): boolean {
 		return this.selectedTeam?.type === 'O' ? false : true;
+	}
+
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.teamsSubscription) {
+			this.teamsSubscription.unsubscribe();
+		}
 	}
 }

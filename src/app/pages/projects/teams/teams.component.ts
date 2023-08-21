@@ -1,38 +1,32 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
-import { OrganizationsService } from 'src/app/services/rest/organizations.service';
+import { ProjectsComponentService } from 'src/app/pages/projects/projects-component.service';
 import { User } from 'src/app/models/user';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
 
 @Component({
 	selector: 'projects-teams',
 	templateUrl: './teams.component.html',
 	styleUrls: ['./teams.component.scss'],
 })
-export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
-	menu: SidebarMenuItem[] = [];
+export class ProjectsTeamsComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	user: User;
-	projectList: any[] = [];
-	selectedProject: any;
 	projectId: any;
-	organizationId: any;
-	selectedOrganization: any;
+	selectedProject: any;
+	editionId: string;
+	organizationId: string;
 	organizationList: any[] = [];
-	userList: any[] = [];
-	editionId: any;
-	selectedEdition: any;
-	editionList: any[] = [];
+	selectedOrganization: any;
+	organizationSubscription: Subscription;
 	gridApi: any;
 	gridColumnApi: any;
 	gridColumnDefs = [];
@@ -44,9 +38,9 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 		totalRows: null,
 		manualStateRefresh: new Boolean(true),
 	};
-	showTable = false;
 	teamData: any;
 	showLoadingSpinner = false;
+	currentURL: string;
 	originalGridParams: any;
 	numberOfTeams = 0;
 	uiUtility = UiUtility;
@@ -55,16 +49,13 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 	@ViewChild('peopleSection') peopleSection: TemplateRef<any>;
 
 	constructor(
-		protected router: Router,
-		protected titleService: Title,
-		protected refsetService: RefsetService,
-		private breadcrumbService: BreadcrumbService,
-		protected authService: AuthenticationService,
-		protected route: ActivatedRoute,
-		protected readonly projectsService: ProjectsService,
-		private notificationService: NotificationService,
-		private location: Location,
-		private organizationsService: OrganizationsService
+		protected readonly router: Router,
+		protected readonly titleService: Title,
+		protected readonly refsetService: RefsetService,
+		protected readonly authService: AuthenticationService,
+		protected readonly projectsComponentService: ProjectsComponentService,
+		protected readonly route: ActivatedRoute,
+		protected readonly projectsService: ProjectsService
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -73,58 +64,22 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 	// ***** Framework Functions *****/
 	ngOnInit() {
 		this.titleService.setTitle('Reference Set Tool - Projects - Teams');
+		this.user = this.authService.getUser();
 
-		this.route.params.subscribe((params) => {
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
 			this.organizationId = params['organizationId'];
 			this.editionId = params['editionId'];
 			this.projectId = params['projectId'];
-			this.setNavigation();
 		});
 
-		//this.showLoadingSpinner = true;
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('organization') && this.router.url.includes('edition') && this.router.url.includes('projects') && this.router.url.includes('teams')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
+		});
 
-		this.getUser();
-		this.getOrganizations();
-		this.getOrganizationUsers(this.organizationId);
-	}
-
-	setNavigation() {
-		const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
-
-		if (CodeUtility.hasValue(this.organizationId, true, true)) {
-			breadcrumbs.push({
-				path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects',
-				label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '',
-			});
-		}
-
-		breadcrumbs.push({ label: 'Teams' });
-		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
-
-		this.menu = [
-			{ name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
-			{ name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users', isActive: true },
-			{ name: 'Users', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
-		];
-
-		const configShowing = this.menu[this.menu.length - 1].name == 'Configuration';
-
-		if (!configShowing && this.selectedProject && this.selectedProject.roles.includes('ADMIN')) {
-			this.menu.push({
-				name: 'Configuration',
-				link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration',
-				icon: 'fa fa-cogs',
-			});
-		}
-
-		this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams');
-	}
-
-	getUser(): void {
-		this.user = this.authService.getUser();
-	}
-
-	ngAfterViewInit() {
 		this.gridColumnDefs = [
 			{ field: 'id', hide: true },
 			{ field: 'name', tooltipField: 'name', headerName: 'Team Name', flex: 2, minWidth: 65, maxWidth: 500, unSortIcon: true, resizable: true },
@@ -248,6 +203,34 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 		};
 
 		this.teamData = [];
+		this.getOrganizations();
+	}
+
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			const parts = url.split('/');
+			for (let p = 0; p < parts.length; p++) {
+				if (parts[p].includes('organization')) {
+					if (parts[p + 1] != undefined) {
+						this.organizationId = parts[p + 1];
+					}
+				}
+				if (parts[p].includes('edition')) {
+					if (parts[p + 1] != undefined) {
+						this.editionId = parts[p + 1];
+					}
+				}
+				if (parts[p].includes('projects')) {
+					if (parts[p + 1] != undefined) {
+						this.projectId = parts[p + 1];
+					}
+				}
+			}
+			if (this.organizationId) {
+				this.getOrganizations();
+			}
+		}
 	}
 
 	onGridCellClick = (event) => {
@@ -258,229 +241,32 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 			selectedId = selectedRow.id;
 		});
 
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], { replaceUrl: false, skipLocationChange: false });
 	};
 
-	getOrganizationUsers(organizationId: string): void {
-		this.organizationsService.getOrgUsers(organizationId, false).subscribe({
-			next: (results) => {
-				this.userList = results?.items;
-			},
-		});
-	}
-
 	getOrganizations(): void {
-		this.refsetService.getOrganizations().subscribe({
-			next: (results) => {
-				this.organizationList = results?.items;
-
-				// If no organizations, back to landing page
-				if (!this.organizationList || this.organizationList.length == 0) {
-					this.notificationService.show('No organizations, you are likely logged out', null, 'error', {
-						timeOut: 500,
-						extendedTimeOut: 0,
-					});
-					this.authService.notAuthenticated();
-					//this.router.navigate(['/']);
-					return;
-				}
-
-				for (const organization of this.organizationList) {
-					if (this.organizationId == organization.id) {
-						this.selectedOrganization = organization;
-						this.getEditions();
-						return;
-					}
-				}
-
-				this.getStoredOrganizationId();
-
-				if (!this.selectedOrganization) {
-					this.selectedOrganization = this.organizationList[0];
-				}
-
-				this.getEditions();
-			},
-			error: (error) => {
-				this.showLoadingSpinner = false;
-			},
-		});
-	}
-
-	selectOrganization(): void {
-		if (this.gridApi) {
-			this.gridApi.showLoadingOverlay();
-		}
-		this.organizationId = this.selectedOrganization.id;
-		this.selectedEdition = null;
-		this.editionList = [];
-		this.selectedProject = null;
-		this.projectList = [];
-		this.setNavigation();
-		this.getEditions();
-	}
-
-	getEditions(): void {
-		this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
-			next: (results) => {
-				this.editionList = results?.items;
-
-				if (!this.editionList || this.editionList.length == 0) {
-					this.notificationService.show('No editions', null, 'error', {
-						timeOut: 500,
-						extendedTimeOut: 0,
-					});
-					this.showLoadingSpinner = false;
-					return;
-				}
-
-				for (const edition of this.editionList) {
-					if (this.editionId == edition.id) {
-						this.selectedEdition = edition;
-						this.getProjects();
-						return;
-					}
-				}
-
-				this.getStoredEditionId();
-
-				if (!this.selectedEdition) {
-					this.showLoadingSpinner = false;
-				}
-			},
-			error: (error) => {
-				this.showLoadingSpinner = false;
-			},
-		});
-	}
-
-	selectEdition(): void {
-		if (this.gridApi) {
-			this.gridApi.showLoadingOverlay();
-		}
-		this.editionId = this.selectedEdition.id;
-		this.selectedProject = null;
-		this.projectList = [];
-		this.setNavigation();
-		this.getProjects();
-	}
-
-	getProjects(): void {
-		this.refsetService.getProjects('includeMembers=true&query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
-			next: (results) => {
-				this.projectList = results.items;
-
-				for (const project of this.projectList) {
-					if (this.projectId == project.id) {
-						this.selectedProject = project;
-						this.showTeamData();
-						return;
-					}
-				}
-
-				this.getStoredProjectId();
-
-				if (!this.selectedProject) {
-					this.showLoadingSpinner = false;
-				}
-			},
-			error: (error) => {
-				this.showLoadingSpinner = false;
-			},
-		});
-	}
-
-	selectProject(): void {
-		if (this.gridApi) {
-			this.gridApi.showLoadingOverlay();
-		}
-		this.projectId = this.selectedProject.id;
-		this.showTeamData();
-	}
-
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
+		const organization_id = this.organizationId;
+		this.organizationSubscription = this.projectsComponentService.getOrganizations().subscribe((results) => {
+			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
+				if (organization_id == organization.id) {
 					this.selectedOrganization = organization;
-					this.selectOrganization();
+					this.showTeamsData();
 					return;
 				}
 			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
-		}
+		});
 	}
 
-	getStoredEditionId(): void {
-		if (localStorage.getItem('selectedEditionId')) {
-			const storedEditionId = JSON.parse(localStorage.getItem('selectedEditionId'));
-
-			for (const edition of this.editionList) {
-				if (edition.id == storedEditionId) {
-					this.selectedEdition = edition;
-					this.selectEdition();
-					return;
-				}
-			}
-
-			// if the stored edition ID doesn't match anything remove it
-			localStorage.removeItem('selectedEditionId');
-
-			if (this.editionList && this.editionList.length > 0) {
-				this.selectedEdition = this.editionList[0];
-				this.selectEdition();
-			}
-		} else if (this.editionList && this.editionList.length > 0) {
-			this.selectedEdition = this.editionList[0];
-			this.selectEdition();
-		}
-	}
-
-	getStoredProjectId(): void {
-		if (localStorage.getItem('selectedProjectId')) {
-			const storedProjectId = JSON.parse(localStorage.getItem('selectedProjectId'));
-
-			for (const project of this.projectList) {
-				if (project.id == storedProjectId) {
-					this.selectedProject = project;
-					this.selectProject();
-					return;
-				}
-			}
-
-			// if the stored project ID doesn't match anything remove it
-			localStorage.removeItem('selectedProjectId');
-
-			if (this.projectList && this.projectList.length > 0) {
-				this.selectedProject = this.projectList[0];
-				this.selectProject();
-			}
-		} else if (this.projectList && this.projectList.length > 0) {
-			this.selectedProject = this.projectList[0];
-			this.selectProject();
-		}
-	}
-
-	showTeamData() {
+	showTeamsData() {
 		if (this.originalGridParams) {
 			this.onGridReady(this.originalGridParams);
-		} else {
-			this.showTable = true;
 		}
-
-		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-		localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
-		localStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
-
-		this.setNavigation();
 	}
 
 	onGridReady = (gridReadyParams) => {
-		if (!this.selectedProject) {
+		if (!this.projectId || this.projectId == '0') {
 			return;
 		}
 
@@ -488,25 +274,45 @@ export class ProjectsTeamsComponent implements OnInit, AfterViewInit {
 		this.gridApi = gridReadyParams.api;
 		this.gridColumnApi = gridReadyParams.columnApi;
 
-		this.projectsService.getProjectTeams(this.selectedProject.id).subscribe((results) => {
-			this.teamData = [];
-			this.numberOfTeams = 0;
+		this.projectsService.getProjectTeams(this.projectId).subscribe(
+			(results) => {
+				this.teamData = [];
+				this.numberOfTeams = 0;
 
-			for (const team of results.items) {
-				this.teamData.push({
-					id: team.id,
-					name: team.name,
-					description: team.description,
-					role: team.roles.sort().join(', ').toLowerCase(),
-					email: team.primaryContactEmail,
-					members: team.members ? team.members.length : '0',
-					memberList: team.memberList,
-				});
+				for (const team of results.items) {
+					this.teamData.push({
+						id: team.id,
+						name: team.name,
+						description: team.description,
+						role: team.roles.sort().join(', ').toLowerCase(),
+						email: team.primaryContactEmail,
+						members: team.members ? team.members.length : '0',
+						memberList: team.memberList,
+					});
+				}
+
+				this.numberOfTeams = this.teamData.length;
+				this.gridApi.setRowData(this.teamData);
+			},
+			(err) => {
+				console.error(err);
+				this.teamData = [];
+				this.numberOfTeams = 0;
+				this.gridApi.setRowData(this.teamData);
 			}
+		);
 
-			this.numberOfTeams = this.teamData.length;
-			this.gridApi.setRowData(this.teamData);
-			this.showLoadingSpinner = false;
-		});
+		this.gridColumnDefs[2].cellRendererParams = { template: this.descriptionSection };
+		this.gridColumnDefs[5].cellRendererParams = { template: this.peopleSection };
+		this.gridApi.setColumnDefs(this.gridColumnDefs);
 	};
+
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+	}
 }

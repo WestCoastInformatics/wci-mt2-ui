@@ -156,7 +156,6 @@ export class ArtifactsListComponent implements OnInit, AfterViewInit {
 			rowCount: null,
 			getRows: (rowParams) => {
 				this.gridApi.showLoadingOverlay();
-				// this.showLoadingSpinner = true;
 
 				let pageNumber = rowParams.endRow / this.gridApi.paginationGetPageSize();
 				let query = UiUtility.formatFilterData(rowParams.filterModel);

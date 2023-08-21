@@ -52,7 +52,7 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('teams')) {
+			if (this.router.url.includes('organizations') && this.router.url.includes('teams') && !this.router.url.includes('users')) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
@@ -229,8 +229,6 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			this.previouslyLoadedId = this.organizationId;
 			let roles = [];
 			if (this.organizationId) {
-				this.showLoadingSpinner = false;
-
 				let queryString = 'sort=name&sortAscending=true&includeMembers=true';
 				if (this.selectedOrganization?.id) {
 					queryString = queryString + '&query=organizationId:' + this.selectedOrganization.id;
@@ -254,12 +252,10 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 
 					roles = [...new Set(roles)].sort();
 					this.gridApi.setRowData(this.data);
-					this.showLoadingSpinner = false;
 				});
 			} else {
 				this.data = [];
 				this.gridApi.setRowData(this.data);
-				this.showLoadingSpinner = false;
 			}
 		}
 	}
@@ -272,15 +268,16 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			selectedId = selectedRow.id;
 		});
 
-		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/people']);
+		this.router.navigate(['/organization/' + this.organizationId + '/teams/' + selectedId + '/users'], { replaceUrl: false, skipLocationChange: false });
 	};
 
 	getOrganizations(): void {
+		const organization_id = this.organizationId;
 		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
 			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
+				if (organization_id === organization.id) {
 					this.selectedOrganization = organization;
 					this.selectOrganization();
 					return;
@@ -316,6 +313,23 @@ export class OrganizationTeamsComponent implements OnInit, OnDestroy {
 			} else {
 				return 'No User Teams';
 			}
+		}
+	}
+
+	getStoredOrganizationId(): void {
+		if (localStorage.getItem('selectedOrganizationId')) {
+			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
+
+			for (const organization of this.organizationList) {
+				if (organization.id == storedOrganizationId) {
+					this.selectedOrganization = organization;
+					this.selectOrganization();
+					return;
+				}
+			}
+
+			// if the stored organization ID doesn't match anything remove it
+			localStorage.removeItem('selectedOrganizationId');
 		}
 	}
 

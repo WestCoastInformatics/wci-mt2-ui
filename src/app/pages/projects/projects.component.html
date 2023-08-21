@@ -1,0 +1,63 @@
+<div *ngIf="showLoadingSpinner" class="loading"></div>
+
+<div class="content-header">
+	<div class="row header-title">
+		<div class="d-flex jc-space-between w-100-pct projects-dropdown-block-title">
+			<div>
+				<div class="title-label">Projects</div>
+			</div>
+
+			<div class="row d-flex rt2-select-group">
+				<div class="col-4 projects-dropdown-block">
+					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
+						<mat-select
+							[disableOptionCentering]="true"
+							[placeholder]="selectedOrganization?.name ? selectedOrganization?.name : 'Select Organization'"
+							[(value)]="selectedOrganization"
+							(selectionChange)="changeOrganization()">
+							<mat-option *ngFor="let organization of organizationList" [value]="organization" class="z-index-3 no-checkbox">
+								{{ organization.name }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="col-4 projects-dropdown-block">
+					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
+						<mat-select
+							[disableOptionCentering]="true"
+							[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Select Edition'"
+							[(value)]="selectedEdition"
+							(selectionChange)="changeEdition()">
+							<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
+								{{ edition.name }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="col-4 projects-dropdown-block">
+					<mat-form-field floatLabel="never" appearance="fill" class="projects-drop-down">
+						<mat-select
+							[disabled]="organizationId === '0'"
+							[placeholder]="selectedProject?.name ? selectedProject?.name : 'Select Project'"
+							[disableOptionCentering]="true"
+							[(value)]="selectedProject"
+							(selectionChange)="changeProject()">
+							<mat-option *ngFor="let project of projectList" [value]="project" class="z-index-3 no-checkbox">
+								{{ project.name }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="content-wrapper">
+		<app-sidebar [menuItems]="menu" [id]="organizationId"></app-sidebar>
+		<page-container>
+			<section>
+				<router-outlet></router-outlet></section
+		></page-container>
+	</div>
+</div>

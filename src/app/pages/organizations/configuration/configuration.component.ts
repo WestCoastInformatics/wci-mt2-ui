@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { UiUtility } from 'src/app/utilities/ui.utility';
 	templateUrl: './configuration.component.html',
 	styleUrls: ['configuration.component.scss'],
 })
-export class OrganizationConfigurationComponent implements OnInit, OnDestroy {
+export class OrganizationConfigurationComponent implements OnInit, AfterViewInit, OnDestroy {
 	routerParamsSubscription: Subscription;
 	routerEventSubscription: Subscription;
 	organization: any = {};
@@ -48,7 +48,7 @@ export class OrganizationConfigurationComponent implements OnInit, OnDestroy {
 		});
 
 		this.routerEventSubscription = this.router.events.subscribe((event) => {
-			if (this.router.url.includes('configuration')) {
+			if (this.router.url.includes('organizations') && this.router.url.includes('configuration')) {
 				this.checkLocationPath(this.router.url);
 			} else {
 				this.ngOnDestroy();
@@ -92,11 +92,12 @@ export class OrganizationConfigurationComponent implements OnInit, OnDestroy {
 	}
 
 	getOrganizations(): void {
+		const organization_id = this.organizationId;
 		this.organizationSubscription = this.organizationsComponentService.getOrganizations().subscribe((results) => {
 			this.organizationList = <any>results;
 
 			for (const organization of this.organizationList) {
-				if (this.organizationId === organization.id) {
+				if (organization_id === organization.id) {
 					this.selectedOrganization = organization;
 					this.selectOrganization();
 					return;

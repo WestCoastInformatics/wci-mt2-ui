@@ -1,6 +1,5 @@
 <div class="content-header">
 	<div class="row header-title">
-
 		<div class="col-md-auto"><div class="title-label heading-label">Organizations</div></div>
 
 		<mat-form-field floatLabel="never" appearance="fill" class="project-drop-down">
@@ -24,7 +23,6 @@
 				[(value)]="selectedEdition"
 				[placeholder]="selectedEdition?.name ? selectedEdition?.name : 'Choose Edition'"
 				(selectionChange)="changeEdition()">
-
 				<mat-option *ngFor="let edition of editionList" [value]="edition" class="z-index-3 no-checkbox">
 					{{ edition.name }}
 				</mat-option>

@@ -4,7 +4,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Router } from '@angular/router';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
@@ -73,7 +73,7 @@ export class CreateRefsetComponent implements OnInit {
 	conceptError = '';
 	dialog: DialogService;
 	selectedCombinationRefsetsForm = new FormControl();
-	isAffiliate: boolean = false;
+	isAffiliate = false;
 
 	@Input() existingBranchVersions: any;
 	@Input() isDetailsPage = false;
@@ -111,7 +111,7 @@ export class CreateRefsetComponent implements OnInit {
 		private detectChanges: ChangeDetectorRef,
 		private router: Router,
 		private refsetService: RefsetService,
-		private readonly refsetDetails: RefsetDetails,
+		private readonly refsetDetails: RefsetDetailsComponent,
 		private dialogFactoryService: DialogFactoryService,
 		private readonly notificationService: NotificationService,
 		private readonly projectsRefsetComponent: ProjectsRefsetComponent
@@ -164,6 +164,7 @@ export class CreateRefsetComponent implements OnInit {
 
 		if (this.isAffiliate) {
 			this.localSet = true;
+			this.isSelected = 2;
 		}
 
 		if (this.editMode) {
@@ -280,7 +281,6 @@ export class CreateRefsetComponent implements OnInit {
 
 	createRefsetObject(): void {
 		this.showLoadingSpinner = true;
-
 		if (this.selectedReferenceType === Constants.COPY) {
 			const existingCpt = this.existingMetadataConcepts[this.selectedMetaDataConcept]?.code;
 			this.refsetService
@@ -300,11 +300,12 @@ export class CreateRefsetComponent implements OnInit {
 					(results) => {
 						this.showLoadingSpinner = false;
 						this.modalService.dismissAll();
-						this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT]);
+						this.router.navigate(['/details', results.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 						return;
 					},
 					(error) => {
 						this.showLoadingSpinner = false;
+						this.modalService.dismissAll();
 					}
 				);
 		} else {
@@ -312,7 +313,7 @@ export class CreateRefsetComponent implements OnInit {
 			let refsetId = null;
 			let parentConceptId = null;
 
-			if (this.selectedReferenceType !== Constants.EXTERNAL && this.isSelected == 1) {
+			if (this.selectedReferenceType !== Constants.EXTERNAL && this.isSelected === 1) {
 				name = this.existingMetadataConcepts[this.selectedMetaDataConcept].name;
 				refsetId = this.existingMetadataConcepts[this.selectedMetaDataConcept].code;
 			} else {
@@ -348,8 +349,6 @@ export class CreateRefsetComponent implements OnInit {
 			}
 			this.refsetService.createRefset(params).subscribe(
 				(status) => {
-					this.showLoadingSpinner = false;
-
 					if (status.error) {
 						this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 							timeOut: 0,
@@ -357,13 +356,13 @@ export class CreateRefsetComponent implements OnInit {
 						});
 						return;
 					}
-
+					this.showLoadingSpinner = false;
 					this.modalService.dismissAll();
-					this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT]);
+					this.router.navigate(['/details', status.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				},
 				(error) => {
-					this.modalService.dismissAll();
 					this.showLoadingSpinner = false;
+					this.modalService.dismissAll();
 				}
 			);
 		}
@@ -388,7 +387,6 @@ export class CreateRefsetComponent implements OnInit {
 	}
 
 	editRefsetObject(): void {
-		this.showLoadingSpinner = true;
 		let tagsToPersist: string[];
 
 		if (this.tags) {
@@ -411,8 +409,6 @@ export class CreateRefsetComponent implements OnInit {
 
 		this.refsetService.updateRefsetMetadata(this.refsetInternalId, params).subscribe(
 			(status) => {
-				this.showLoadingSpinner = false;
-
 				if (status.error) {
 					this.notificationService.show('There was a problem with the request, please try again! Error: ' + status.error, null, 'error', {
 						timeOut: 0,
@@ -422,11 +418,11 @@ export class CreateRefsetComponent implements OnInit {
 				}
 
 				this.modalService.dismissAll();
-				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT]);
+				this.router.navigate(['/details', this.refsetId, Constants.IN_DEVELOPMENT], { replaceUrl: false, skipLocationChange: false });
 				this.refsetDetails.initializeDetailsPage();
 			},
 			(error) => {
-				this.showLoadingSpinner = false;
+				//
 			}
 		);
 	}
@@ -447,9 +443,9 @@ export class CreateRefsetComponent implements OnInit {
 			typeCheck = true;
 		}
 
-		if (this.isSelected == 1 && CodeUtility.hasValue(this.selectedMetaDataConcept)) {
+		if (this.isSelected === 1 && CodeUtility.hasValue(this.selectedMetaDataConcept)) {
 			conceptCheck = true;
-		} else if (this.isSelected == 2 && CodeUtility.hasValue(this.createdMetaDataConcept) && CodeUtility.hasValue(this.selectedParentConcept) && this.isValidConceptName()) {
+		} else if (this.isSelected === 2 && CodeUtility.hasValue(this.createdMetaDataConcept) && CodeUtility.hasValue(this.selectedParentConcept) && this.isValidConceptName()) {
 			conceptCheck = true;
 		}
 
@@ -479,7 +475,7 @@ export class CreateRefsetComponent implements OnInit {
 	}
 
 	checkRadioButtonValue(event: any): void {
-		this.isSelected = event.value;
+		this.isSelected = Number(event.value);
 		this.detectChanges.detectChanges();
 	}
 
@@ -614,11 +610,10 @@ export class CreateRefsetComponent implements OnInit {
 			searchConcepts: false,
 			showInDevelopment: false,
 			countComments: false,
-			query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND ${queryField}`,
+			query: `editionShortName:${this.inputProperties.project.edition.shortName} AND versionStatus:PUBLISHED AND localSet:false AND ${queryField}`,
 		};
 
 		if (query.length > 2) {
-			this.showLoadingSpinner = true;
 			this.refsetService.getRefsets({ ...restParams }).subscribe({
 				next: (results) => {
 					this.refsetOptions = this.sortRefsets(results.items);
@@ -627,12 +622,10 @@ export class CreateRefsetComponent implements OnInit {
 						option.flagIcon = RefsetUtility.getEditionFlagIcon(option.edition?.branch);
 					}
 
-					this.showLoadingSpinner = false;
-
 					this.refsetOptionsLoading = false;
 				},
 				error: (error) => {
-					this.showLoadingSpinner = false;
+					//
 				},
 			});
 		} else {

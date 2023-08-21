@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
 	}
 
 	goToLink(link) {
-		this.router.navigate([link]);
+		this.router.navigate([link], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	onMouseEnter(e: any) {

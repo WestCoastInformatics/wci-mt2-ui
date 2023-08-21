@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 
 @Component({
 	selector: 'email-refset-modal',
@@ -18,7 +18,7 @@ export class EmailRefsetModalComponent {
 	@Input() refsetInternalId: string;
 	@Output() changeLockedStatus = new EventEmitter<any>(true);
 
-	constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetails) {}
+	constructor(private modalService: NgbModal, private refsetService: RefsetService, private notificationService: NotificationService, private readonly refsetDetails: RefsetDetailsComponent) {}
 
 	ngOnInit() {}
 

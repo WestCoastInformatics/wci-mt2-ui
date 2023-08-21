@@ -126,7 +126,7 @@
 
 						<mat-radio-button value="2" (change)="checkRadioButtonValue($event)"> Create a new concept </mat-radio-button>
 
-						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected == 2 || isSelected == 0">
+						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected === 2 || isSelected === 0">
 							<mat-label>Choose existing metadata concept</mat-label>
 							<select matNativeControl [(ngModel)]="selectedMetaDataConcept">
 								<option *ngFor="let existingMetadataConcept of existingMetadataConcepts; let i = index" [value]="i">
@@ -135,7 +135,7 @@
 							</select>
 						</mat-form-field>
 
-						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
+						<mat-form-field floatLabel="never" appearance="fill" [hidden]="isSelected === 1 || isSelected === 0">
 							<mat-label>Choose parent concept</mat-label>
 							<select matNativeControl [(ngModel)]="selectedParentConcept">
 								<option *ngFor="let parentConcept of parentConcepts" [value]="parentConcept?.code">
@@ -144,7 +144,7 @@
 							</select>
 						</mat-form-field>
 
-						<mat-form-field floatLabel="never" class="example-form-field" appearance="fill" [hidden]="isSelected == 1 || isSelected == 0">
+						<mat-form-field floatLabel="never" class="example-form-field" appearance="fill" [hidden]="isSelected === 1 || isSelected === 0">
 							<input matInput type="text" placeholder="Enter the name of the new concept" [(ngModel)]="createdMetaDataConcept" (keyup)="this.isValidConceptName()" />
 							<button *ngIf="value2a" matSuffix mat-icon-button aria-label="Clear" (click)="value2a = ''">
 								<mat-icon>close</mat-icon>
@@ -284,7 +284,7 @@
 
 				<div class="col create-new-refset-field create-new-refset-flex-weight">
 					<div *ngFor="let clause of definitionClauses; index as i">
-						<span *ngIf="i == 0">
+						<span *ngIf="i === 0">
 							<mat-form-field floatLabel="never" class="refset_tool_ecl_definition_field">
 								<input
 									class="default-cursor"
@@ -334,7 +334,7 @@
 				</div>
 			</div>
 
-			<div *ngIf="selectedReferenceType != 'EXTERNAL'" class="create-new-refset-form-field">
+			<div *ngIf="selectedReferenceType !== 'EXTERNAL'" class="create-new-refset-form-field">
 				<div class="col create-new-refset-label create-new-refset-flex-weight">
 					<label>Publishing:</label>
 				</div>

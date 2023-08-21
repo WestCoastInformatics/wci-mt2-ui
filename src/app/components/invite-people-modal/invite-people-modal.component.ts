@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from '../../services/rest/refset.service';
 import { NotificationService } from '../../services/notification.service';
-import { RefsetDetails } from '../../pages/refset-details';
+import { RefsetDetailsComponent } from '../../pages/refset-details';
 import { OrganizationsService } from '../../services/rest/organizations.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class InvitePeopleModalComponent implements OnInit {
 		private refsetService: RefsetService,
 		private organizationService: OrganizationsService,
 		private notificationService: NotificationService,
-		private readonly refsetDetails: RefsetDetails
+		private readonly refsetDetails: RefsetDetailsComponent
 	) {}
 
 	get modalTitle(): string {

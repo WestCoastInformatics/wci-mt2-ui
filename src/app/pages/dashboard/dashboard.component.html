@@ -20,9 +20,11 @@
 							</div>
 						</ng-container>
 					</div>
+					<!--
 					<div>
-						<create-new-organization-modal (loadingSpinner)="toggleLoadingSpinner($event)"></create-new-organization-modal>
+						<create-new-organization-modal></create-new-organization-modal>
 					</div>
+					-->
 				</div>
 			</section>
 
@@ -50,7 +52,7 @@
 					<div class="dashboard-section-mid">
 						<ng-container *ngFor="let team of teamList">
 							<div class="section-list" *ngIf="team.name">
-								<span [routerLink]="" (click)="navigateToPage('/organization/' + team.organizationId + '/teams/' + team.id + '/people')"
+								<span [routerLink]="" (click)="navigateToPage('/organization/' + team.organizationId + '/teams/' + team.id + '/users')"
 									><a>{{ team.organization?.name }}/{{ team?.name }}</a></span
 								>
 							</div>
@@ -63,7 +65,7 @@
 			<section>
 				<heading-with-count title="Recent Reference Sets" [count]="data.length"></heading-with-count>
 				<div class="ag-theme-alpine">
-					<ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100-pct"> </ag-grid-angular>
+					<ag-grid-angular [columnDefs]="columnDefs" [gridOptions]="refsetGridOptions" class="w-100-pct h-638"> </ag-grid-angular>
 
 					<!-- Workflow Status Templates -->
 					<ng-template #dashboardWorkflowStatusSection let-params>

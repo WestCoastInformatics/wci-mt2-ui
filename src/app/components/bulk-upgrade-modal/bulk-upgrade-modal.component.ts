@@ -27,7 +27,7 @@ export class BulkUpgradeModalComponent {
 
 	@Input() project: any;
 	@Output() processComplete = new EventEmitter<any>(true);
-	@Output() loadingSpinner = new EventEmitter<boolean>(true);
+	@Output() loadingSpinner = new EventEmitter<boolean>(false);
 
 	@ViewChild('refsetBulkUpgradePaging') paginationComponent: PaginationComponent;
 	@ViewChild('refsetIDSection') refsetIDSection: TemplateRef<any>;
@@ -135,9 +135,6 @@ export class BulkUpgradeModalComponent {
 		this.gridApi = gridReadyParams.api;
 		this.refsetsForUpgrade = [];
 
-		// Enable spinner (turn of when search errors or completes)
-		this.loadingSpinner.emit(true);
-
 		this.refsetService.getRefsets({ ...this.restParams }).subscribe({
 			next: (results) => {
 				const pageNumber = 1;
@@ -160,11 +157,9 @@ export class BulkUpgradeModalComponent {
 				UiUtility.applyGridPlaceholders('.ag-floating-filter-input .ag-input-field-input');
 
 				this.changeModalSize();
-
-				this.loadingSpinner.emit(false);
 			},
 			error: (error) => {
-				this.loadingSpinner.emit(false);
+				//
 			},
 		});
 	};

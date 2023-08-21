@@ -1,38 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SidebarMenuItem } from 'src/app/models/sidebar.menu-item.model';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
-import { CodeUtility } from 'src/app/utilities/code.utility';
-import { Location } from '@angular/common';
+import { ProjectsComponentService } from 'src/app/pages/projects/projects-component.service';
 
 @Component({
 	selector: 'projects-configuration',
 	templateUrl: './configuration.component.html',
 	styleUrls: ['configuration.component.scss'],
 })
-export class ProjectsConfigurationComponent implements OnInit {
-	menu: SidebarMenuItem[] = [];
+export class ProjectsConfigurationComponent implements OnInit, OnDestroy {
+	routerParamsSubscription: Subscription;
+	routerEventSubscription: Subscription;
 	profileNameValue = '';
-	organizationList: any[] = [];
-	selectedOrganization: any;
-	editionId: any;
-	selectedEdition: any;
-	editionList: any[] = [];
 	profileEmailValue = '';
 	profileDescriptionValue = '';
 	isPrivate = false;
 	selectedProject: any;
 	projectId: any;
 	projectList: any[] = [];
+	projectSubscription: Subscription;
 	selectedTeamIds = [];
 	selectedTeams = [];
 	teamList = [];
 	currentUser: any;
+	currentURL: string;
 	containsRole = false;
 	emailError = '';
 	organizationId: any;
@@ -44,232 +40,74 @@ export class ProjectsConfigurationComponent implements OnInit {
 	};
 
 	constructor(
-		private readonly breadcrumbService: BreadcrumbService,
 		private readonly titleService: Title,
 		private readonly refsetService: RefsetService,
 		private readonly projectsService: ProjectsService,
+		private readonly projectsComponentService: ProjectsComponentService,
 		private readonly route: ActivatedRoute,
+		private readonly router: Router,
 		private readonly authService: AuthenticationService,
-		private readonly notificationService: NotificationService,
-		private location: Location
+		private readonly notificationService: NotificationService
 	) {
 		document.body.scrollTop = 0;
 	}
 
 	ngOnInit(): void {
-		this.titleService.setTitle('Reference Set Tool - Projects');
-
-		this.route.params.subscribe((params) => {
-			this.organizationId = params['organizationId'];
-			this.editionId = params['editionId'];
-			this.projectId = params['projectId'];
-			this.setNavigation();
-		});
-
-		this.showLoadingSpinner = true;
-
+		this.titleService.setTitle('Reference Set Tool - Projects - Configuration');
 		this.currentUser = this.authService.getUser();
-		this.getOrganizations();
+
+		this.routerParamsSubscription = this.route.params.subscribe((params) => {
+			this.organizationId = params['organizationId'];
+			this.projectId = params['projectId'];
+		});
+
+		this.routerEventSubscription = this.router.events.subscribe((event) => {
+			if (this.router.url.includes('organization') && this.router.url.includes('edition') && this.router.url.includes('projects') && this.router.url.includes('configuration')) {
+				this.checkLocationPath(this.router.url);
+			} else {
+				this.ngOnDestroy();
+			}
+		});
 	}
 
-	setNavigation() {
-		const breadcrumbs: any = [{ path: '/dashboard', label: 'Dashboard' }];
-
-		if (CodeUtility.hasValue(this.organizationId, true, true)) {
-			breadcrumbs.push({
-				path: 'organizations/' + this.organizationId + '/edition/' + this.editionId + '/projects',
-				label: this.selectedOrganization?.name ? this.selectedOrganization?.name + ' / Projects' : '',
-			});
+	checkLocationPath(url) {
+		if (this.currentURL != url) {
+			this.currentURL = url;
+			const parts = url.split('/');
+			for (let p = 0; p < parts.length; p++) {
+				if (parts[p].includes('organization')) {
+					if (parts[p + 1] != undefined) {
+						this.organizationId = parts[p + 1];
+					}
+				}
+				if (parts[p].includes('projects')) {
+					if (parts[p + 1] != undefined) {
+						this.projectId = parts[p + 1];
+					}
+				}
+			}
+			if (this.organizationId) {
+				this.clearProjectData();
+				this.getProjects();
+			}
 		}
-
-		breadcrumbs.push({ label: 'Configuration' });
-		this.breadcrumbService.setBreadcrumbs(breadcrumbs);
-
-		this.menu = [
-			{ name: 'Reference Sets', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/refsets', icon: 'fa fa-copy' },
-			{ name: 'Teams', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/teams/', icon: 'fa fa-users' },
-			{ name: 'Users', link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/people/', icon: 'fa fa-user' },
-			{
-				name: 'Configuration',
-				link: '/organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration',
-				icon: 'fa fa-cogs',
-				isActive: true,
-			},
-		];
-
-		this.location.replaceState('organization/' + this.organizationId + '/edition/' + this.editionId + '/projects/' + this.projectId + '/configuration');
-	}
-
-	getOrganizations(): void {
-		// get list of organizations
-		this.refsetService.getOrganizations().subscribe({
-			next: (results) => {
-				this.organizationList = results?.items;
-
-				for (const organization of this.organizationList) {
-					if (this.organizationId == organization.id) {
-						this.selectedOrganization = organization;
-						this.getEditions();
-						this.getTeams();
-						return;
-					}
-				}
-
-				this.getStoredOrganizationId();
-
-				if (!this.selectedOrganization) {
-					this.showLoadingSpinner = false;
-				}
-			},
-			error: (error) => {
-				this.showLoadingSpinner = false;
-			},
-		});
-	}
-
-	selectOrganization(): void {
-		this.showLoadingSpinner = true;
-		this.organizationId = this.selectedOrganization.id;
-		this.selectedEdition = null;
-		this.editionList = [];
-		this.clearProjectData();
-		this.getEditions();
-		this.getTeams();
-	}
-
-	getEditions(): void {
-		this.refsetService.getEditions('&query=organizationId:' + this.selectedOrganization.id + '&sort=name&sortAscending=true').subscribe({
-			next: (results) => {
-				this.editionList = results?.items;
-
-				for (const edition of this.editionList) {
-					if (this.editionId == edition.id) {
-						this.selectedEdition = edition;
-						this.getProjects();
-						return;
-					}
-				}
-
-				this.getStoredEditionId();
-
-				if (!this.selectedEdition) {
-					this.showLoadingSpinner = false;
-				}
-			},
-			error: (error) => {
-				this.showLoadingSpinner = false;
-			},
-		});
-	}
-
-	selectEdition(): void {
-		this.showLoadingSpinner = true;
-		this.editionId = this.selectedEdition.id;
-		this.clearProjectData();
-		this.setNavigation();
-		this.getProjects();
 	}
 
 	getProjects(): void {
-		this.refsetService.getProjects('query=editionId:' + this.selectedEdition.id + '&sort=name&sortAscending=true').subscribe({
-			next: (results) => {
-				this.projectList = results.items;
-
-				for (const project of this.projectList) {
-					if (this.projectId == project.id) {
-						this.selectedProject = project;
-						this.showProjectData();
-						return;
-					}
+		const project_id = this.projectId;
+		this.projectSubscription = this.projectsComponentService.getProjects().subscribe((results) => {
+			this.projectList = <any>results;
+			for (const project of this.projectList) {
+				if (project_id == project.id) {
+					this.selectedProject = project;
+					this.showProjectData();
+					return;
 				}
-
-				this.getStoredProjectId();
-
-				if (!this.selectedProject) {
-					this.showLoadingSpinner = false;
-				}
-			},
-			error: (error) => {
-				this.showLoadingSpinner = false;
-			},
+			}
 		});
 	}
 
-	selectProject(): void {
-		this.showLoadingSpinner = true;
-		this.projectId = this.selectedProject.id;
-		this.showProjectData();
-	}
-
-	getStoredOrganizationId(): void {
-		if (localStorage.getItem('selectedOrganizationId')) {
-			const storedOrganizationId = JSON.parse(localStorage.getItem('selectedOrganizationId'));
-
-			for (const organization of this.organizationList) {
-				if (organization.id == storedOrganizationId) {
-					this.selectedOrganization = organization;
-					this.selectOrganization();
-					return;
-				}
-			}
-
-			// if the stored organization ID doesn't match anything remove it
-			localStorage.removeItem('selectedOrganizationId');
-		}
-	}
-
-	getStoredEditionId(): void {
-		if (localStorage.getItem('selectedEditionId')) {
-			const storedEditionId = JSON.parse(localStorage.getItem('selectedEditionId'));
-
-			for (const edition of this.editionList) {
-				if (edition.id == storedEditionId) {
-					this.selectedEdition = edition;
-					this.selectEdition();
-					return;
-				}
-			}
-
-			// if the stored edition ID doesn't match anything remove it
-			localStorage.removeItem('selectedEditionId');
-
-			if (this.editionList && this.editionList.length > 0) {
-				this.selectedEdition = this.editionList[0];
-				this.selectEdition();
-			}
-		} else if (this.editionList && this.editionList.length > 0) {
-			this.selectedEdition = this.editionList[0];
-			this.selectEdition();
-		}
-	}
-
-	getStoredProjectId(): void {
-		if (localStorage.getItem('selectedProjectId')) {
-			const storedProjectId = JSON.parse(localStorage.getItem('selectedProjectId'));
-
-			for (const project of this.projectList) {
-				if (project.id == storedProjectId) {
-					this.selectedProject = project;
-					this.selectProject();
-					return;
-				}
-			}
-
-			// if the stored project ID doesn't match anything remove it
-			localStorage.removeItem('selectedProjectId');
-
-			if (this.projectList && this.projectList.length > 0) {
-				this.selectedProject = this.projectList[0];
-				this.selectProject();
-			}
-		} else if (this.projectList && this.projectList.length > 0) {
-			this.selectedProject = this.projectList[0];
-			this.selectProject();
-		}
-	}
-
 	showProjectData(): void {
-		this.setNavigation();
 		this.profileNameValue = this.selectedProject.name;
 		// this.profileEmailValue = this.selectedProject.primaryContactEmail;
 		this.profileDescriptionValue = this.selectedProject.description;
@@ -282,14 +120,7 @@ export class ProjectsConfigurationComponent implements OnInit {
 				this.selectedTeams.push(team);
 			}
 		}
-
-		this.showLoadingSpinner = false;
-
-		localStorage.setItem('selectedOrganizationId', JSON.stringify(this.selectedOrganization.id));
-		localStorage.setItem('selectedEditionId', JSON.stringify(this.selectedEdition.id));
-		localStorage.setItem('selectedProjectId', JSON.stringify(this.selectedProject.id));
-
-		this.setNavigation();
+		this.getTeams();
 	}
 
 	clearProjectData(): void {
@@ -339,18 +170,15 @@ export class ProjectsConfigurationComponent implements OnInit {
 	}
 
 	saveProject() {
-		this.showLoadingSpinner = true;
-
 		this.projectsService.updateProject(this.projectId, this.selectedProject).subscribe({
 			next: (results) => {
-				this.showLoadingSpinner = false;
 				this.teamList.map(function (team) {
 					return Object.assign(team, { saved: true });
 				});
 				this.notificationService.show(this.userMessages.updateProjectSuccess, null, 'success', { timeOut: 0, extendedTimeOut: 0 });
 			},
 			error: (error) => {
-				this.showLoadingSpinner = false;
+				//
 			},
 		});
 	}
@@ -458,5 +286,17 @@ export class ProjectsConfigurationComponent implements OnInit {
 
 	getSelectedProjectId(): string {
 		return this.selectedProject?.id;
+	}
+
+	ngOnDestroy() {
+		if (this.routerParamsSubscription) {
+			this.routerParamsSubscription.unsubscribe();
+		}
+		if (this.routerEventSubscription) {
+			this.routerEventSubscription.unsubscribe();
+		}
+		if (this.projectSubscription) {
+			this.projectSubscription.unsubscribe();
+		}
 	}
 }

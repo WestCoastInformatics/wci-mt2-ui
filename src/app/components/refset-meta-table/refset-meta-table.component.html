@@ -7,10 +7,22 @@
 					<td class="rt2-refset-metadata-label" aria-label="Reference ID:">Reference ID:</td>
 					<td class="rt2-refset-metadata-value">
 						{{ refset?.refsetId }}
-						<mat-icon *ngIf="refset?.privateRefset" aria-hidden="false" class="rt2-table-action-icon text-muted default-cursor" aria-label="Private Refset" title="Private Refset">
+						<mat-icon
+							*ngIf="refset?.privateRefset"
+							aria-hidden="false"
+							class="rt2-table-action-icon rt2-table-action-form-icon text-muted default-cursor"
+							aria-label="Private Refset"
+							title="Private Refset">
 							lock
 						</mat-icon>
-						<mat-icon *ngIf="refset?.localSet" aria-hidden="false" class="rt2-table-action-icon text-muted default-cursor" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
+						<mat-icon
+							*ngIf="refset?.localSet"
+							aria-hidden="false"
+							class="rt2-table-action-icon rt2-table-action-form-icon text-muted default-cursor"
+							aria-label="Local Set"
+							title="Local Set">
+							my_location
+						</mat-icon>
 					</td>
 				</tr>
 				<tr>
@@ -27,8 +39,8 @@
 						<a *ngIf="loggedIn" href="{{ getEditionUrl() }}">{{ refset?.editionName }}</a
 						>&nbsp;
 						<img
-							*ngIf="refset?.flagIcon !== null && showFlag"
-							(error)="showFlagIcon(false)"
+							*ngIf="refset?.flagIcon !== null"
+							(error)="showFlagIcon($event)"
 							src="{{ refset?.flagIcon }}"
 							class="rt2-edition-flag"
 							title="{{ refset?.editionName }} Flag"
@@ -85,7 +97,7 @@
 							{{ description?.term }} {{ description?.languageName }}
 							<img
 								*ngIf="description?.flagIcon !== null"
-								(error)="showFlagIcon(false)"
+								(error)="showFlagIcon($event)"
 								src="{{ description?.flagIcon }}"
 								class="rt2-edition-flag"
 								title="{{ description?.editionName }} Flag"
@@ -122,8 +134,8 @@
 					<td class="rt2-refset-metadata-value">
 						{{ refset?.organizationName }}
 						<img
-							*ngIf="refset?.flagIcon !== null && showFlag"
-							(error)="showFlagIcon(false)"
+							*ngIf="refset?.flagIcon !== null"
+							(error)="showFlagIcon($event)"
 							src="{{ refset?.flagIcon }}"
 							class="rt2-edition-flag"
 							title="{{ refset?.editionName }} Flag"

@@ -69,8 +69,8 @@ import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // PAGE IMPORTS
-import { RefsetDirectory } from 'src/app/pages/refset-directory';
-import { RefsetDetails } from 'src/app/pages/refset-details';
+import { RefsetDirectoryComponent } from 'src/app/pages/refset-directory';
+import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
@@ -78,11 +78,14 @@ import { OrganizationProjectsComponent } from './pages/organizations/projects/pr
 import { OrganizationTeamsComponent } from './pages/organizations/teams/teams.component';
 import { OrganizationPeopleComponent } from './pages/organizations/people/people.component';
 import { OrganizationConfigurationComponent } from './pages/organizations/configuration/configuration.component';
+import { ProjectsComponent } from './pages/projects/projects.component';
 import { ProjectsPeopleComponent } from './pages/projects/people/people.component';
 import { ProjectsTeamsComponent } from './pages/projects/teams/teams.component';
 import { ProjectsConfigurationComponent } from './pages/projects/configuration/configuration.component';
+import { TeamsComponent } from './pages/teams/teams.component';
 import { TeamsPeopleComponent } from './pages/teams/people/people.component';
 import { TeamsConfigurationComponent } from './pages/teams/configuration/configuration.component';
+import { PersonalComponent } from './pages/personal/personal.component';
 import { PersonalLandingComponent } from './pages/personal/landing/landing.component';
 import { PersonalConfigurationComponent } from './pages/personal/configuration/configuration.component';
 
@@ -97,6 +100,9 @@ import { RouterExtentionService } from 'src/app/services/routerExtention.service
 import { NotificationService } from 'src/app/services/notification.service';
 import { ErrorHandlingService } from 'src/app/services/error-handling.service';
 import { OrganizationsComponentService } from './pages/organizations/organizations-component.service';
+import { ProjectsComponentService } from './pages/projects/projects-component.service';
+import { TeamsComponentService } from './pages/teams/teams-component.service';
+import { PersonalComponentService } from './pages/personal/personal-component.service';
 
 // PROVIDER IMPORTS
 import { EnvServiceProvider } from 'src/app/providers/env.service.provider';
@@ -135,15 +141,10 @@ const appRoutes: Routes = [
 	{ path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
-	{ path: 'library', component: RefsetDirectory, data: { breadcrumbLabel: 'Reference Set Library' } },
-	{ path: 'details/:refsetId/:versionDate', component: RefsetDetails, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
+	{ path: 'library', component: RefsetDirectoryComponent, data: { breadcrumbLabel: 'Reference Set Library' } },
+	{ path: 'details/:refsetId/:versionDate', component: RefsetDetailsComponent, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
-	/*
-	{ path: 'organizations/:organizationId/edition/:editionId/projects', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-	{ path: 'organizations/:organizationId/teams', loadChildren: './users/users.module#UsersModule' },
-	{ path: 'organizations/:organizationId/people', loadChildren: './account-settings/account-settings.module#AccountSettingsModule' },
-	{ path: 'organizations/:organizationId/configuration', loadChildren: './account-settings/account-settings.module#AccountSettingsModule' },
-	*/
+
 	{
 		path: 'organizations',
 		component: OrganizationsComponent,
@@ -175,54 +176,70 @@ const appRoutes: Routes = [
 		],
 	},
 	{
-		path: 'organization/:organizationId/edition/:editionId/projects/:projectId/refsets',
-		component: ProjectsRefsetComponent,
-		data: { breadcrumbLabel: 'Reference Sets' },
-		canActivate: [AuthGuardGuard],
+		path: 'organization',
+		component: ProjectsComponent,
+		children: [
+			{
+				path: ':organizationId/edition/:editionId/projects/:projectId/refsets',
+				component: ProjectsRefsetComponent,
+				data: { breadcrumbLabel: 'Reference Sets' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/edition/:editionId/projects/:projectId/users',
+				component: ProjectsPeopleComponent,
+				data: { breadcrumbLabel: 'Users' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/edition/:editionId/projects/:projectId/teams',
+				component: ProjectsTeamsComponent,
+				data: { breadcrumbLabel: 'Teams' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/edition/:editionId/projects/:projectId/configuration',
+				component: ProjectsConfigurationComponent,
+				data: { breadcrumbLabel: 'Configuration' },
+				canActivate: [AuthGuardGuard],
+			},
+		],
 	},
 	{
-		path: 'organization/:organizationId/edition/:editionId/projects/:projectId/people',
-		component: ProjectsPeopleComponent,
-		data: { breadcrumbLabel: 'Users' },
-		canActivate: [AuthGuardGuard],
+		path: 'organization',
+		component: TeamsComponent,
+		children: [
+			{
+				path: ':organizationId/teams/:teamId/users',
+				component: TeamsPeopleComponent,
+				data: { breadcrumbLabel: 'Users' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':organizationId/teams/:teamId/configuration',
+				component: TeamsConfigurationComponent,
+				data: { breadcrumbLabel: 'Configuration' },
+				canActivate: [AuthGuardGuard],
+			},
+		],
 	},
 	{
-		path: 'organization/:organizationId/edition/:editionId/projects/:projectId/teams',
-		component: ProjectsTeamsComponent,
-		data: { breadcrumbLabel: 'Teams' },
-		canActivate: [AuthGuardGuard],
-	},
-	{
-		path: 'organization/:organizationId/edition/:editionId/projects/:projectId/configuration',
-		component: ProjectsConfigurationComponent,
-		data: { breadcrumbLabel: 'Configuration' },
-		canActivate: [AuthGuardGuard],
-	},
-
-	{
-		path: 'organization/:organizationId/teams/:teamId/people',
-		component: TeamsPeopleComponent,
-		data: { breadcrumbLabel: 'Users' },
-		canActivate: [AuthGuardGuard],
-	},
-	{
-		path: 'organization/:organizationId/teams/:teamId/configuration',
-		component: TeamsConfigurationComponent,
-		data: { breadcrumbLabel: 'Configuration' },
-		canActivate: [AuthGuardGuard],
-	},
-
-	{
-		path: 'personal/:userId/landing',
-		component: PersonalLandingComponent,
-		data: { breadcrumbLabel: 'About' },
-		canActivate: [AuthGuardGuard],
-	},
-	{
-		path: 'personal/:userId/configuration',
-		component: PersonalConfigurationComponent,
-		data: { breadcrumbLabel: 'Account Configuration' },
-		canActivate: [AuthGuardGuard],
+		path: 'personal',
+		component: PersonalComponent,
+		children: [
+			{
+				path: ':userId/landing',
+				component: PersonalLandingComponent,
+				data: { breadcrumbLabel: 'About' },
+				canActivate: [AuthGuardGuard],
+			},
+			{
+				path: ':userId/configuration',
+				component: PersonalConfigurationComponent,
+				data: { breadcrumbLabel: 'Account Configuration' },
+				canActivate: [AuthGuardGuard],
+			},
+		],
 	},
 	// Redirect blanks to the landing page
 	{
@@ -253,8 +270,8 @@ const appRoutes: Routes = [
 		FinishUpgradeModalComponent,
 		AdjudicateUpgradeModalComponent,
 		SafeUrlPipe,
-		RefsetDirectory,
-		RefsetDetails,
+		RefsetDirectoryComponent,
+		RefsetDetailsComponent,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
@@ -288,15 +305,18 @@ const appRoutes: Routes = [
 		OrganizationTeamsComponent,
 		OrganizationPeopleComponent,
 		OrganizationConfigurationComponent,
+		ProjectsComponent,
 		ProjectsPeopleComponent,
 		ProjectsTeamsComponent,
 		ProjectsConfigurationComponent,
 		RefsetFeedbackListComponent,
+		TeamsComponent,
 		TeamsConfigurationComponent,
 		TeamsPeopleComponent,
 		BulkUpgradeModalComponent,
 		HeadingWithCountComponent,
 		PageContainerComponent,
+		PersonalComponent,
 		PersonalLandingComponent,
 		PersonalConfigurationComponent,
 		LaunchComparisonModalComponent,
@@ -314,6 +334,7 @@ const appRoutes: Routes = [
 			{
 				onSameUrlNavigation: 'reload',
 				scrollPositionRestoration: 'top',
+				canceledNavigationResolution: 'computed',
 			}
 			//{ enableTracing: true } // <-- debugging purposes only
 		),
@@ -366,7 +387,7 @@ const appRoutes: Routes = [
 		RestService,
 		ConceptsService,
 		RefsetService,
-		RefsetDetails,
+		RefsetDetailsComponent,
 		PaginationService,
 		BreadcrumbService,
 		RouterExtentionService,
@@ -376,6 +397,9 @@ const appRoutes: Routes = [
 		NotificationService,
 		ErrorHandlingService,
 		OrganizationsComponentService,
+		ProjectsComponentService,
+		TeamsComponentService,
+		PersonalComponentService,
 		DomService,
 		{ provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
 		{
