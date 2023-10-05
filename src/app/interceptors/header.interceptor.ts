@@ -11,9 +11,12 @@ export class HeaderInterceptor implements HttpInterceptor {
 	constructor(private authService: AuthenticationService, private errorHandlingService: ErrorHandlingService) {}
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+		const user = this.authService.getUser();
+
 		if (!request.headers.has('Content-Type') && !request.headers.has('enctype')) {
 			request = request.clone({
-				headers: request.headers.set('Content-Type', 'application/json'),
+				headers: request.headers.set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + user?.authToken),
 				withCredentials: true,
 			});
 		} else {

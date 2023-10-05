@@ -219,16 +219,20 @@ export class RefsetDownloadComponent {
 
 						this.refsetService.downloadRefset(this.refset.id, params).subscribe((results) => {
 							console.log('Export Call Results: ', results);
+							const downloadUrl = results?.url;
 
-							if (results?.url) {
-								this.notificationService.close(notification);
-
-								if (results.redirect) {
-									window.open(results.url);
-								} else {
-									this.notificationService.close(notification);
-									window.open(this.refsetService.restUrl + this.refsetService.contextPath + results.url);
-								}
+							if (downloadUrl) {
+								const authToken = this.authenticationService.getUser().authToken;
+								fetch("refsetservice/" + downloadUrl, { headers: {"Authorization": "Bearer " + authToken } } )
+									.then((response) => response.blob())
+									.then((blob) => {
+										const link = document.createElement('a');
+										link.href = window.URL.createObjectURL(blob);
+										link.download = /[^/]*$/.exec(downloadUrl)[0];
+										link.click();
+									}).catch((err) => {
+										console.log(err);
+									});
 							}
 						});
 					}

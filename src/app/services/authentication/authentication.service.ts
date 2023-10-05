@@ -111,16 +111,15 @@ export class AuthenticationService {
 	}
 
 	logoutUser() {
-		const loggedInUser = sessionStorage.getItem('auth_token');
-		this.notAuthenticated(true);
 
-		//localStorage.clear();
-		sessionStorage.clear();
-		this.deleteAllCookies();
-
-		this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + loggedInUser, {}).subscribe((data) => {
+		const user = this.getUser();
+		this.http.post<any>(environment.restUrl + environment.restContextPath + 'logout/' + user.userName, {}).subscribe((data) => {
 			console.log('Back end logged out');
 		});
+
+		this.notAuthenticated(true);
+		sessionStorage.clear();
+		this.deleteAllCookies();
 
 		this.http.post<any>('/ims-api/account/logout', {}).subscribe((data) => {
 			console.log('IMS logout');
