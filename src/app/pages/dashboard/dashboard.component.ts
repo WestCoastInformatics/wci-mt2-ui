@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit(): void {
-		this.titleService.setTitle('Reference Set Tool - Dashboard');
+		this.titleService.setTitle('Mapping Tool - Dashboard');
 		this.breadcrumbService.setBreadcrumbs([{ path: '/dashboard', label: 'Dashboard' }]);
 
 		this.currentUser = this.authService.getUser();

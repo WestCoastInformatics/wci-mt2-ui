@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -85,7 +85,7 @@ export class LaunchComparisonModalComponent {
 		private readonly router: Router,
 		private readonly notificationService: NotificationService,
 		private readonly authService: AuthenticationService,
-		readonly refsetDetails: RefsetDetailsComponent,
+		readonly refsetDetails: MapsetDetailsComponent,
 		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent
 	) {}
 

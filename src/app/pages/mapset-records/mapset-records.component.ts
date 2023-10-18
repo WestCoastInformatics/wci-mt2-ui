@@ -1,0 +1,605 @@
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { ICellRendererComp, ICellRendererParams, RowSpanParams } from 'ag-grid-community';
+import { DialogService } from 'src/app/dialog/services/dialog.service';
+import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
+import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
+import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { RefsetService } from 'src/app/services/rest/refset.service';
+import { CodeUtility } from 'src/app/utilities/code.utility';
+import { UiUtility } from 'src/app/utilities/ui.utility';
+import { RefsetUtility } from 'src/app/utilities/refset.utility';
+import { Constants } from 'src/app/utilities/constants.utility';
+import { BreadcrumbService } from 'src/app/services/breadcrumb.service';
+import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
+import { Debounce } from 'src/app/decorators/debounce.decorator';
+import { User } from 'src/app/models/user';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+
+/**
+ * @title Tree with nested nodes
+ */
+@Component({
+	selector: 'app-mapset-records',
+	templateUrl: './mapset-records.component.html',
+	styleUrls: ['./mapset-records.component.scss'],
+})
+export class MapsetRecordsComponent implements OnInit, AfterViewInit {
+	user: User;
+	searchInput: string;
+	viewOptions = [
+		{ value: 'all', display: 'All' },
+		{ value: 'public', display: 'Public' },
+		{ value: 'private', display: 'Private' },
+	];
+	selectedView = 'all';
+	refsetGridApi: any;
+	refsetGridColumnApi: any;
+	columnDefs = [];
+	refsetGridColumns = [
+		{ name: 'information', show: true },
+		{ name: 'refsetId', show: true },
+	];
+	rowSelection = 'multiple';
+	refsetGridOptions: any;
+	refsetGridPaging = {
+		pageSize: 10,
+		pageSizeOptions: [10, 25, 50, 100],
+		totalKnown: false,
+		totalRows: null,
+		manualStateRefresh: Boolean(true),
+	};
+	refsetGridLastFilter = '';
+	refsetGridLastSort = '';
+	showTable = false;
+	refsetData: any;
+	dialog: DialogService;
+	versionStatuses: any;
+	versions: any;
+	organizations: any;
+	initialGridWidth: number;
+	showFullNarrativeText = false;
+	showFullNotesText = false;
+	showLoadingSpinner = false;
+	toggleDropdown = false;
+	numOfResults = 0;
+	directUrl: string;
+	numOfMembers: any;
+	disableChannel = new BroadcastChannel('disable-button-channel');
+	originalGridParams: any;
+	searchCallArray = [];
+	uiUtility = UiUtility;
+	showLoadingSearch = true;
+	mapsetName = 'Mapset Name';
+	mapsetCode: string;
+	routeParamsSubscription$: Subscription;
+
+	@Output() loadingSpinner = new EventEmitter<boolean>(true);
+
+	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
+	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
+	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
+	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
+	@ViewChild('directoryAdviceSection') adviceSection: TemplateRef<any>;
+	@ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
+	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
+	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
+	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
+	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
+
+	constructor(
+		private route: ActivatedRoute,
+		private router: Router,
+		private titleService: Title,
+		private dialogFactoryService: DialogFactoryService,
+		private refsetService: RefsetService,
+		private changeDetectorRef: ChangeDetectorRef,
+		private breadcrumbService: BreadcrumbService,
+		private authenticationService: AuthenticationService
+	) {
+		document.body.scrollTop = 0;
+		refsetService.getTaxonomyRoot();
+	}
+
+	//***** Framework Functions *****/
+	ngOnInit() {
+		this.user = this.authenticationService.getUser();
+		this.titleService.setTitle('Mapping Tool - Map Records');
+		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Records' }]);
+
+		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
+			this.mapsetCode = routeParams.code;
+			this.getMapsetInfo();
+		});
+
+		this.disableChannel.postMessage(false);
+	}
+
+	getMapsetInfo() {
+		this.refsetService.getMapsets().subscribe({
+			next: (results) => {
+				const thisResult = results.filter((res) => {
+					return res.refSetCode === this.mapsetCode;
+				});
+				this.mapsetName = thisResult[0].refSetName;
+			},
+		});
+	}
+
+	ngAfterViewInit() {
+		this.refsetService.getMapsets().subscribe((results) => {
+			// = results;
+
+			let editionsArray;
+			let organizationsArray;
+			let versionStatusArray;
+			let versionsArray;
+
+			this.columnDefs = [
+				// This is an exception to resizeable field because it is an info icon field
+				{
+					field: 'spanned',
+					colId: 'information',
+					minWidth: 50,
+					width: 50,
+					headerCheckboxSelection: true,
+					checkboxSelection: true,
+					showDisabledCheckboxes: true,
+					filter: false,
+					resizable: false,
+					sortable: false,
+					rowSpan: rowSpan,
+					cellClassRules: {
+						'cell-spanner': 'value===true',
+					},
+				},
+
+				{
+					field: 'code',
+					tooltipField: 'code',
+					headerName: 'Source',
+					flex: 1,
+					minWidth: 125,
+					resizable: true,
+					unSortIcon: true,
+					cellClass: 'blue-link',
+				},
+				{
+					field: 'name',
+					tooltipField: 'name',
+					headerName: 'Source PT',
+					cellClass: 'blue-link',
+					flex: 2,
+					resizable: true,
+					minWidth: 165,
+					cellRenderer: 'templateRenderer',
+					cellRendererParams: { template: this.nameSection },
+					sort: 'asc',
+					unSortIcon: true,
+				},
+				{ field: 'toCode', tooltipField: 'toCode', headerName: 'Target', flex: 1, minWidth: 125, cellClass: 'blue-link', resizable: true, unSortIcon: true },
+				{ field: 'toName', tooltipField: 'toName', headerName: 'Target PT', cellClass: 'blue-link', resizable: true, unSortIcon: true },
+
+				{ field: 'relation', tooltipField: 'relation', headerName: 'Relationship', cellClass: 'rt2-directory-column-id', resizable: true, unSortIcon: true },
+				{ field: 'rule', tooltipField: 'rule', headerName: 'Rule', cellClass: 'rt2-directory-column-id', flex: 1, minWidth: 85, resizable: true, unSortIcon: true },
+
+				{
+					field: 'advices',
+					tooltipValueGetter: '',
+					headerName: 'Advices',
+					cellClass: 'rt2-directory-column-version-date',
+					minWidth: 65,
+					width: 170,
+					resizable: true,
+					cellRenderer: 'templateRenderer',
+					cellRendererParams: { template: this.adviceSection },
+					unSortIcon: true,
+				},
+				{
+					field: 'modified',
+					tooltipValueGetter: UiUtility.gridDateValueGetter,
+					headerName: 'Last Modified',
+					cellClass: 'rt2-directory-column-modified-date',
+					minWidth: 65,
+					width: 170,
+					resizable: true,
+					valueGetter: UiUtility.gridDateValueGetter,
+					floatingFilterComponent: 'dateTextFilterComponent',
+					floatingFilterComponentParams: { suppressFilterButton: true },
+					unSortIcon: true,
+				},
+				// This is an exception to a resizeable field because it is an action field
+				{
+					field: 'downloadable',
+					colId: 'actions',
+					headerName: '',
+					width: 120,
+					cellClass: 'rt2-directory-column-actions',
+					cellRenderer: 'templateRenderer',
+					cellRendererParams: { template: this.actionSection },
+					sortable: false,
+					filter: false,
+					resizable: false,
+				},
+			];
+			this.refsetGridOptions = {
+				context: { componentParent: this },
+				pagination: false,
+				suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+				//suppressPaginationPanel: true,
+				//paginationPageSize: this.refsetGridPaging.pageSize,
+				rowSelection: 'single',
+				enableCellTextSelection: true,
+				onCellClicked: this.onGridCellClick,
+				onGridReady: this.onGridReady,
+				frameworkComponents: {
+					'templateRenderer': TemplateRenderer,
+					'categoryFilterComponent': CategoryFilterComponent,
+					'dateTextFilterComponent': DateTextFilterComponent,
+				},
+				defaultColDef: {
+					sortable: true,
+					filter: true,
+					sortingOrder: ['asc', 'desc'],
+					floatingFilter: true,
+					floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
+					suppressMenu: true,
+					resizable: true,
+				},
+				enableBrowserTooltips: true,
+				rowClassRules: {
+					'refset_tool_grid_inactive_row': function (params) {
+						let inactivatedRow = false;
+
+						if (params.data) {
+							inactivatedRow = params.data.active == false;
+						}
+
+						return inactivatedRow;
+					},
+				},
+			};
+
+			this.showTable = true;
+			this.changeDetectorRef.detectChanges();
+		});
+	}
+
+	showDropdown(): void {
+		this.toggleDropdown = !this.toggleDropdown;
+	}
+
+	//***** AG Grid Functions *****/
+	onGridReady = (gridReadyParams) => {
+		const searchTime = Date.now();
+		this.searchCallArray.push(searchTime);
+
+		this.originalGridParams = gridReadyParams;
+		this.refsetGridApi = gridReadyParams.api;
+		this.refsetGridApi.setFilterModel(null);
+		this.refsetGridColumnApi = gridReadyParams.columnApi;
+		this.onResize(undefined);
+
+		this.refsetGridApi.showLoadingOverlay();
+		let query = '';
+
+		if (this.selectedView === 'public') {
+			query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
+		} else if (this.selectedView === 'private') {
+			query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
+		}
+
+		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
+			query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+		}
+
+		const pageNumber = 1;
+		this.refsetGridPaging.totalRows = null;
+		this.refsetGridPaging.totalKnown = false;
+		this.refsetGridApi?.api?.paginationGoToPage(0);
+
+		const restParams: any = {
+			displayType: 'list',
+			offset: pageNumber - 1,
+			searchConcepts: true,
+			showInDevelopment: true,
+			countComments: true,
+		};
+
+		if (CodeUtility.hasValue(query)) {
+			query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+			restParams.query = query;
+		}
+
+		this.refsetService.getMappingByCode(this.mapsetCode).subscribe({
+			next: (results) => {
+				this.showLoadingSearch = false;
+				// if this is not the latest search call then do not apply the results
+				if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
+					return;
+				}
+				const data = [];
+				for (let a = 0; a < results.length; a++) {
+					for (let b = 0; b < results[a].mapEntries.length; b++) {
+						let spanned = false;
+						if (results[a].mapEntries.length > 1 && b >= 1) {
+							spanned = true;
+						}
+						data.push({
+							'spanned': spanned,
+							'entries': results[a].mapEntries.length,
+							'code': results[a].code,
+							'name': results[a].name,
+							'toName': results[a].mapEntries[b].toName,
+							'toCode': results[a].mapEntries[b].toCode,
+							'rule': results[a].mapEntries[b].rule,
+							'relation': results[a].mapEntries[b].relation,
+							'modified': results[a].mapEntries[b].modified,
+							'advices': results[a].mapEntries[b].advices,
+						});
+					}
+				}
+				console.log(data);
+				this.refsetData = data;
+				this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.length;
+				this.numOfResults = data.length;
+
+				if (data.length == 0) {
+					this.refsetGridPaging.totalKnown = true;
+					this.refsetGridApi.showNoRowsOverlay();
+					this.refsetGridApi.setRowData([]);
+
+					if (pageNumber > 1) {
+						this.refsetGridPaging.totalRows = data.length;
+						this.refsetGridPaging.totalKnown = true;
+						this.paginationComponent.goToPage(pageNumber - 1);
+					}
+
+					return;
+				}
+
+				//UiUtility.applyServerPagedGridResults(data, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+				this.refsetGridApi.setRowData(data);
+			},
+			error: (error) => {
+				this.refsetGridApi.showNoRowsOverlay();
+				this.refsetGridApi.setRowData([]);
+			},
+		});
+
+		// set placeholders on the grid floating filter fields
+		Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+			if (obj.attributes['disabled']) {
+				// skip columns with disabled filter
+				return;
+			}
+
+			const label = obj.getAttribute('aria-label');
+			const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+			obj.setAttribute('placeholder', value);
+		});
+	};
+
+	editionValueGetter = function (params) {
+		if (!CodeUtility.hasValue(params?.data)) {
+			return '';
+		}
+
+		//params.data.flagIcon = RefsetUtility.getEditionFlagIcon(params?.data?.edition?.branch);
+		return ''; //params?.data?.edition?.name;
+	};
+
+	versionStatusValueGetter = function (params) {
+		if (!CodeUtility.hasValue(params?.data)) {
+			return '';
+		}
+
+		return ''; //params.data.versionStatus.toLowerCase();
+	};
+
+	onGridCellClick = (event) => {
+		if (event.column.colId === 'information' || event.column.colId === 'actions') {
+			//
+		} else {
+			const selectedRows = this.refsetGridApi.getSelectedRows();
+			let selectedId: string;
+			let selectedVersionDate: string;
+
+			selectedRows.forEach(function (selectedRow, index) {
+				selectedId = selectedRow.refsetId;
+				selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
+			});
+
+			this.goToDetailsPage(selectedId, selectedVersionDate);
+		}
+	};
+
+	@Debounce()
+	changedViewFilter() {
+		this.showLoadingSearch = true;
+		this.onGridReady(this.originalGridParams);
+	}
+
+	clearSearch() {
+		this.showLoadingSearch = false;
+		if (this.searchInput) {
+			this.searchInput = '';
+			this.onSearchChange();
+		}
+	}
+
+	@Debounce()
+	onSearchChange() {
+		this.searchInput = this.searchInput.trim();
+
+		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
+			this.showLoadingSearch = true;
+			this.onGridReady(this.originalGridParams);
+		}
+	}
+
+	//***** General Functions *****/
+
+	openEclBuilder(fieldId) {
+		UiUtility.openEclBuilder(fieldId, 'MAIN');
+	}
+
+	goToDetailsPage(refsetId, versionDate) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('reload', 'true');
+		window.history.pushState({}, '', url.href);
+		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	getRefsetRow(refsetId: string) {
+		let refset;
+
+		for (let i = 0; i < this.refsetData.length; i++) {
+			if (this.refsetData[i].refsetId == refsetId) {
+				refset = this.refsetData[i];
+				break;
+			}
+		}
+
+		return refset;
+	}
+
+	openInformation(refsetId: string) {
+		const refsetDirectoryData = this.getRefsetRow(refsetId);
+
+		this.refsetService.getRefset(refsetDirectoryData.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refsetDirectoryData)).subscribe((results) => {
+			const refset = results;
+			const dialogId = 'directoryInfoDialog';
+			this.directUrl = (window.location.protocol + '//' + window.location.host + this.router.url).replace(
+				'library',
+				'details/' + refset.refsetId + '/' + RefsetUtility.getVersionDateForRefsetApiCall(refset)
+			);
+
+			if (CodeUtility.hasValue(refset)) {
+				refset.status = RefsetUtility.getStatus(refset.active);
+				if (CodeUtility.hasValue(refset.narrative)) {
+					refset.narrativeShortText = refset.narrative;
+				}
+
+				if (CodeUtility.hasValue(refset.versionNotes)) {
+					refset.versionNotesShortText = refset.versionNotes;
+				}
+
+				refset.versionDate = CodeUtility.formatJsonDate(refset.versionDate);
+				refset.flagIcon = RefsetUtility.getEditionFlagIcon(refset.edition.branch);
+			}
+
+			refset.versionList = results.versionList;
+
+			const dialogData = {
+				dialogId: dialogId,
+				showCancel: false,
+				cancelText: 'Close',
+				actionText: 'View Complete Reference Set',
+				showConfirm: false,
+				template: this.infoDialog,
+				headerText: 'Reference Set Metadata',
+				data: refset,
+				showAction: true,
+				showCloseIcon: true,
+			};
+
+			const dialogOptions = {
+				id: dialogId,
+				width: '1000px',
+				disableClose: false,
+			};
+
+			this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+
+			this.dialog.confirmed().subscribe((data) => {
+				if (data) {
+					this.goToDetailsPage(refset.refsetId, RefsetUtility.getVersionDateForRefsetApiCall(refset));
+				}
+			});
+		});
+	}
+
+	openFeedback(refsetId: string) {
+		const refset = this.getRefsetRow(refsetId);
+		const dialogId = 'directoryFeedbackDialog';
+
+		const dialogData = {
+			headerText: `Reference Set Feedback for ${refset.name} (${refset.refsetId})`,
+			template: this.feedbackDialog,
+			data: refset,
+		};
+
+		const dialogOptions = {
+			id: dialogId,
+			disableClose: false,
+		};
+
+		this.dialog = this.dialogFactoryService.open(dialogData, dialogOptions);
+
+		this.dialog.confirmed().subscribe((data) => {
+			if (data) {
+				refset.feedback = data.feedback;
+			}
+		});
+	}
+
+	getAdviceDisplayLink(value): string {
+		let adviceLink = '--';
+		if (value.length) {
+			adviceLink = 'Advices (' + value.length + ')';
+		}
+		return adviceLink;
+	}
+
+	setFullNarrativeText(show: boolean): void {
+		this.showFullNarrativeText = show;
+	}
+
+	setFullNotesText(show: boolean): void {
+		this.showFullNotesText = show;
+	}
+
+	capitalizeFirstLetterOfString(stringValue: string): string {
+		if (stringValue) {
+			return stringValue.toLowerCase().replace(/(?:^|\s|[-"'([{])+\S/g, (c) => c.toUpperCase());
+		}
+
+		return stringValue;
+	}
+
+	onResize(event) {
+		const gridWidth = document.getElementsByClassName('rt2-ag-grid')[0]?.clientWidth;
+		document.getElementsByClassName('ag-header')[0]?.setAttribute('style', `width: ${gridWidth}px;`);
+	}
+
+	setDescriptions(refsetData: any): Array<string> {
+		return refsetData?.descriptions;
+	}
+
+	showFlagIcon(event, show) {
+		if (show) {
+			event.target.style.display = 'inline';
+		} else {
+			event.target.style.display = 'none';
+		}
+	}
+
+	latestDate(refset, versionList: any[]): string {
+		if (refset.versionStatus === Constants.IN_DEVELOPMENT) {
+			return 'Latest';
+		}
+		return versionList && versionList[0] ? `${versionList[0].date}` : '';
+	}
+}
+
+function rowSpan(params: RowSpanParams) {
+	if (params.data.entries) {
+		return params.data.entries;
+	} else {
+		return 1;
+	}
+}

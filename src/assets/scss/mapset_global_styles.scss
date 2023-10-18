@@ -21,6 +21,9 @@ body.refset-tool.modal-open {
 	letter-spacing: 0.5px;
 	overflow-x: hidden;
 }
+.refset-tool {
+	overflow-y: hidden;
+}
 
 label {
 	margin-bottom: 0;
@@ -196,11 +199,11 @@ tr.refset_tool_inactive_row {
 }
 
 .ag-theme-alpine .ag-row-odd {
-	background-color: #efefef;
+	background-color: #f2f2f2;
 }
 
 .ag-theme-alpine .ag-root-wrapper {
-	border-color: #eeeeee;
+	border-color: #f0f0f0;
 }
 
 .ag-theme-alpine .ag-ltr input[class^='ag-'][type='text'] {
@@ -232,11 +235,11 @@ tr.refset_tool_inactive_row {
 	}
 
 	.ag-row:hover {
-		background-color: #f0fcff; //icy blue hover
+		background-color: #e6e6e6; //icy blue hover
 	}
 
 	.ag-row-selected {
-		background-color: #a4dbfd; //slightly darker selected
+		background-color: #e6e6e6;
 		color: #000000;
 	}
 
@@ -312,7 +315,7 @@ tr.refset_tool_inactive_row {
 }
 
 .bg-dark {
-	background-color: #434955 !important;
+	background-color: #281d2d !important;
 }
 
 .rt2-config-spacing {
@@ -369,6 +372,7 @@ tr.refset_tool_inactive_row {
 	.rt2-directory-column-information .rt2-table-action-icon {
 		left: 0;
 		top: -0.5em;
+		color: #2269e8;
 	}
 }
 
@@ -575,7 +579,7 @@ tr.refset_tool_inactive_row {
 .rt2-new-refset-info-icon {
 	width: 25px !important;
 	height: 25px !important;
-	color: #00a9e0;
+	color: #2269e8;
 	font-size: 1.5em;
 	margin-left: 0.15em;
 }
@@ -1380,6 +1384,21 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	height: 100px;
 }
 
+.ag-checkbox-input-wrapper {
+	font-size: 20px !important;
+	line-height: 20px !important;
+	background-color: none !important;
+	background: none !important;
+	width: 20px !important;
+	height: 20px !important;
+}
+
+.ag-checked {
+	border-radius: 18px !important;
+	background-color: #fff !important;
+	color: #2269e8 !important;
+}
+
 .rt2-search-ecl-button {
 	margin-left: 5px;
 }
@@ -1399,6 +1418,13 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	.details-edit-refset-modal {
 		height: 31px;
 	}
+}
+.cell-spanner {
+	display: none;
+}
+
+.blue-link {
+	color: #2269e8;
 }
 
 .rt2-refset-details-title-name > .set-of-buttons-non-edit-mode {
@@ -1932,6 +1958,7 @@ img.rt2-edition-flag {
 .medium-icon-image {
 	width: 40px;
 	height: 40px;
+	border-radius: 50%;
 }
 
 .discussion-list {

@@ -69,8 +69,9 @@ import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // PAGE IMPORTS
-import { RefsetDirectoryComponent } from 'src/app/pages/refset-directory';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
+import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
+import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
@@ -141,8 +142,9 @@ const appRoutes: Routes = [
 	{ path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
-	{ path: 'library', component: RefsetDirectoryComponent, data: { breadcrumbLabel: 'Reference Set Library' } },
-	{ path: 'details/:refsetId/:versionDate', component: RefsetDetailsComponent, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
+	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
+	{ path: 'mapset/:code', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Map Records' } },
+	{ path: 'details/:mapsetId/:versionDate', component: MapsetDetailsComponent, data: { breadcrumbLabel: 'Map Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
 	{
@@ -270,8 +272,6 @@ const appRoutes: Routes = [
 		FinishUpgradeModalComponent,
 		AdjudicateUpgradeModalComponent,
 		SafeUrlPipe,
-		RefsetDirectoryComponent,
-		RefsetDetailsComponent,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
@@ -300,6 +300,9 @@ const appRoutes: Routes = [
 		LandingComponent,
 		DashboardComponent,
 		SidebarComponent,
+		MapsetLibraryComponent,
+		MapsetRecordsComponent,
+		MapsetDetailsComponent,
 		OrganizationsComponent,
 		OrganizationProjectsComponent,
 		OrganizationTeamsComponent,
@@ -387,7 +390,6 @@ const appRoutes: Routes = [
 		RestService,
 		ConceptsService,
 		RefsetService,
-		RefsetDetailsComponent,
 		PaginationService,
 		BreadcrumbService,
 		RouterExtentionService,

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/services/notification.service';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class CreateNewOrganizationModalComponent {
 		private modalService: NgbModal,
 		private organizationsService: OrganizationsService,
 		private notificationService: NotificationService,
-		private readonly refsetDetails: RefsetDetailsComponent
+		private readonly refsetDetails: MapsetDetailsComponent
 	) {}
 
 	ngOnInit() {}

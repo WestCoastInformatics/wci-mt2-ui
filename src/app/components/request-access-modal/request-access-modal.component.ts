@@ -3,7 +3,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from '../../services/rest/refset.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { RefsetDetailsComponent } from '../../pages/refset-details';
+import { MapsetDetailsComponent } from '../../pages/mapset-details/mapset-details.component';
 
 @Component({
 	selector: 'request-access-modal',
@@ -21,7 +21,7 @@ export class RequestAccessModalComponent {
 		private modalService: NgbModal,
 		private refsetService: RefsetService,
 		private notificationService: NotificationService,
-		private readonly refsetDetails: RefsetDetailsComponent,
+		private readonly refsetDetails: MapsetDetailsComponent,
 		private authService: AuthenticationService
 	) {}
 

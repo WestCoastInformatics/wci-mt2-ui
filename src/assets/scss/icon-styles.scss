@@ -1,9 +1,15 @@
-/****** Styles brought over from refset_global_styles.css related to icons ****/
+/****** Styles brought over from refset_global_styles.css related to icons, includes general classes use variables scss vars ****/
 
 .rt2-logo {
 	width: 40px;
 	height: 40px;
 	margin: 5px;
+}
+
+.mt2-logo {
+	width: 74px;
+	height: 45px;
+	margin: 2.5px;
 }
 
 // Action Button / Icon Styles

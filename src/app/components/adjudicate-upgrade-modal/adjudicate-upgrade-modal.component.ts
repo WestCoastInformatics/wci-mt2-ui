@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
@@ -98,7 +98,7 @@ export class AdjudicateUpgradeModalComponent {
 	constructor(
 		private readonly modalService: NgbModal,
 		private readonly refsetService: RefsetService,
-		readonly refsetDetails: RefsetDetailsComponent,
+		readonly refsetDetails: MapsetDetailsComponent,
 		private readonly changeDetection: ChangeDetectorRef,
 		readonly upgradeModalComponent: UpgradeModalComponent,
 		private dialogFactoryService: DialogFactoryService,

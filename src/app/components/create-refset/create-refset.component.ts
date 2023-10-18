@@ -4,7 +4,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Router } from '@angular/router';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
@@ -111,7 +111,7 @@ export class CreateRefsetComponent implements OnInit {
 		private detectChanges: ChangeDetectorRef,
 		private router: Router,
 		private refsetService: RefsetService,
-		private readonly refsetDetails: RefsetDetailsComponent,
+		private readonly refsetDetails: MapsetDetailsComponent,
 		private dialogFactoryService: DialogFactoryService,
 		private readonly notificationService: NotificationService,
 		private readonly projectsRefsetComponent: ProjectsRefsetComponent

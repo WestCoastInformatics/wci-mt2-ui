@@ -22,11 +22,11 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
  * @title Tree with nested nodes
  */
 @Component({
-	selector: 'app-refset-directory',
-	templateUrl: 'refset-directory.html',
-	styleUrls: ['refset-directory.scss'],
+	selector: 'app-mapset-library',
+	templateUrl: './mapset-library.component.html',
+	styleUrls: ['./mapset-library.component.scss'],
 })
-export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
+export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	user: User;
 	searchInput: string;
 	viewOptions = [
@@ -77,6 +77,7 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryInfoDialog') infoDialog: TemplateRef<any>;
 	@ViewChild('directoryFeedbackDialog') feedbackDialog: TemplateRef<any>;
 	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
+	@ViewChild('directoryVersionDate') versionDate: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
 	@ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
@@ -100,33 +101,17 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 	//***** Framework Functions *****/
 	ngOnInit() {
 		this.user = this.authenticationService.getUser();
-		this.titleService.setTitle('Reference Set Tool - Reference Set Library');
-		this.breadcrumbService.setBreadcrumbs([{ label: 'Reference Set Library' }]);
+		this.titleService.setTitle('Mapping Tool - Map Set Library');
+		this.breadcrumbService.setBreadcrumbs([{ label: 'Map Set Library' }]);
 
 		this.disableChannel.postMessage(false);
 	}
 
 	ngAfterViewInit() {
-		forkJoin(
-			this.refsetService.getVersionStatuses(),
-			this.refsetService.getVersions(),
-			this.refsetService.getEditions('sort=name&query=maintainerType:Managed Service'),
-			this.refsetService.getOrganizationsKeyValue()
-		).subscribe({
-			next: ([results, versionResults, editionResults, organizationResults]) => {
-				this.versionStatuses = results;
-				const versionStatusArray = this.versionStatuses?.items;
-				this.versions = versionResults;
-				const versionsArray = this.versions?.items;
-				const editionsArray = editionResults.items;
-				this.organizations = organizationResults;
-				const organizationsArray = this.organizations?.items;
-
-				for (let i = 0; i < versionStatusArray.length; i++) {
-					versionStatusArray[i].key = versionStatusArray[i].key.toLowerCase();
-					versionStatusArray[i].value = versionStatusArray[i].value.toLowerCase();
-				}
-
+		this.refsetService.getMapsets().subscribe({
+			next: ([results]) => {
+				this.versionStatuses;
+				let versionStatusArray;
 				this.columnDefs = [
 					// This is an exception to resizeable field because it is an info icon field
 					{
@@ -142,45 +127,16 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 						resizable: false,
 						sortable: false,
 					},
-					{ field: 'refsetId', tooltipField: 'refsetId', headerName: 'Reference ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+					{ field: 'refSetCode', tooltipField: 'refSetCode', headerName: 'Mapset ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
 					{
-						field: 'name',
-						tooltipField: 'name',
-						headerName: 'Reference Name',
+						field: 'refSetName',
+						tooltipField: 'refSetName',
+						headerName: 'Map Set Name',
 						cellClass: 'rt2-directory-column-name',
 						flex: 2,
 						resizable: true,
 						minWidth: 65,
-						cellRenderer: 'templateRenderer',
-						cellRendererParams: { template: this.nameSection },
 						sort: 'asc',
-						unSortIcon: true,
-					},
-					{
-						field: 'editionName',
-						tooltipField: 'editionName',
-						headerName: 'Edition/Extension',
-						cellClass: 'rt2-directory-column-edition',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						valueGetter: this.editionValueGetter,
-						cellRenderer: 'templateRenderer',
-						cellRendererParams: { template: this.editionSection },
-						floatingFilterComponent: 'categoryFilterComponent',
-						floatingFilterComponentParams: { suppressFilterButton: true, names: editionsArray },
-						unSortIcon: true,
-					},
-					{
-						field: 'organizationName',
-						tooltipField: 'organizationName',
-						headerName: 'Organization/Owner',
-						cellClass: 'rt2-directory-column-organization',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						floatingFilterComponent: 'categoryFilterComponent',
-						floatingFilterComponentParams: { suppressFilterButton: true, names: organizationsArray },
 						unSortIcon: true,
 					},
 					{
@@ -197,22 +153,21 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 						unSortIcon: true,
 					},
 					{
-						field: 'versionDate',
+						field: 'version',
 						tooltipValueGetter: UiUtility.gridDateValueGetter,
 						headerName: 'Version Date',
 						cellClass: 'rt2-directory-column-version-date',
 						minWidth: 65,
 						width: 170,
 						resizable: true,
-						valueGetter: UiUtility.gridDateValueGetter,
-						floatingFilterComponent: 'categoryFilterComponent',
-						floatingFilterComponentParams: { suppressFilterButton: true, names: versionsArray },
+						cellRenderer: 'templateRenderer',
+						cellRendererParams: { template: this.versionDate },
 						unSortIcon: true,
 					},
 					{
 						field: 'modified',
 						tooltipValueGetter: UiUtility.gridDateValueGetter,
-						headerName: 'Last Modified Date',
+						headerName: 'Last Modified',
 						cellClass: 'rt2-directory-column-modified-date',
 						minWidth: 65,
 						width: 170,
@@ -329,20 +284,19 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 			restParams.query = query;
 		}
 
-		this.refsetService.getRefsets({ ...restParams }).subscribe({
+		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
 				// if this is not the latest search call then do not apply the results
 				if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
 					return;
 				}
-
-				const data = results.items;
+				const data = results;
 				this.refsetData = data;
 				this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
 				this.numOfResults = results.total;
 
-				if (results.items.length == 0) {
+				if (results.length == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
 					this.refsetGridApi.setRowData([]);
@@ -401,13 +355,16 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 			const selectedRows = this.refsetGridApi.getSelectedRows();
 			let selectedId: string;
 			let selectedVersionDate: string;
+			let selectedCode: string;
 
 			selectedRows.forEach(function (selectedRow, index) {
 				selectedId = selectedRow.refsetId;
+				selectedCode = selectedRow.refSetCode;
 				selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
 			});
 
-			this.goToDetailsPage(selectedId, selectedVersionDate);
+			//this.goToDetailsPage(selectedId, selectedVersionDate);
+			this.goToMapRecordsPage(selectedCode);
 		}
 	};
 
@@ -446,6 +403,15 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	goToMapRecordsPage(code) {
+		console.log('gotTomaprecords');
+		console.log(code);
+		const url = new URL(window.location.href);
+		url.searchParams.set('reload', 'true');
+		window.history.pushState({}, '', url.href);
+		this.router.navigate(['/mapset', code], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
@@ -515,6 +481,10 @@ export class RefsetDirectoryComponent implements OnInit, AfterViewInit {
 				}
 			});
 		});
+	}
+
+	formatVersionDate(date): string {
+		return date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8);
 	}
 
 	openFeedback(refsetId: string) {

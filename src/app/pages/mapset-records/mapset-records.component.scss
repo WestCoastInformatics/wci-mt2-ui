@@ -31,7 +31,7 @@
 
 	.page-title {
 		padding-left: 3rem;
-		color: #000;
+		color: #666666;
 		margin-top: 0.25em;
 		margin-left: -0.5em;
 		font-size: 1.8rem !important;
@@ -66,7 +66,7 @@
 }
 
 .library-app-refset-download {
-	margin-top: 1em;
+	margin-top: 0;
 }
 
 .library-app-refset-discussion-list {
@@ -81,4 +81,49 @@
 	border-radius: 0;
 	margin-left: 45%;
 	margin-top: 10%;
+}
+
+.rt2-action-btn {
+	width: 13em;
+	padding: 0.5em;
+	margin-right: 1em;
+	margin-top: 1em;
+	border-radius: 5px;
+	border: 2px solid #2269e8;
+	background-color: #ffffff;
+	box-sizing: border-box;
+	color: #2269e8;
+	box-shadow: none;
+	font-weight: 900;
+}
+
+.rt2-btn:hover {
+	background-color: #2269e8 !important;
+	color: #ffffff !important;
+	filter: none;
+}
+
+.blue-link {
+	color: #2269e8;
+}
+
+.end-btn {
+	margin-right: 2em;
+}
+
+.mapset-notes-icon {
+	color: #2269e8;
+	font-size: 1.25em;
+}
+
+.mapset-name {
+	padding-left: 0.5em !important;
+}
+
+.discussion-icon {
+	margin-top: -1em;
+	width: 24px;
+	height: 24px;
+	//color: #2269e8;
+	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }

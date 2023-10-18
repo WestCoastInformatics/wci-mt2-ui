@@ -86,7 +86,7 @@ export class AuthenticationService {
 				if (CodeUtility.hasValue(referralUrl)) {
 					this.router.navigateByUrl(referralUrl, { replaceUrl: true, skipLocationChange: false });
 				} else {
-					this.router.navigate(['/dashboard'], { replaceUrl: false, skipLocationChange: false });
+					this.router.navigate(['/library'], { replaceUrl: false, skipLocationChange: false }); //dashboard
 				}
 			},
 			(err) => {
