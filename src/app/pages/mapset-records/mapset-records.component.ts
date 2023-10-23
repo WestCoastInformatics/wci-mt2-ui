@@ -76,6 +76,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 	mapsetName = 'Mapset Name';
 	mapsetCode: string;
 	routeParamsSubscription$: Subscription;
+	rowStyle: any;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -164,7 +165,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 					flex: 1,
 					minWidth: 125,
 					resizable: true,
-					unSortIcon: true,
+					sortable: false,
 					cellClass: 'blue-link',
 				},
 				{
@@ -177,8 +178,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 					minWidth: 165,
 					cellRenderer: 'templateRenderer',
 					cellRendererParams: { template: this.nameSection },
-					sort: 'asc',
-					unSortIcon: true,
+					sortable: false,
 				},
 				{ field: 'toCode', tooltipField: 'toCode', headerName: 'Target', flex: 1, minWidth: 125, cellClass: 'blue-link', resizable: true, unSortIcon: true },
 				{ field: 'toName', tooltipField: 'toName', headerName: 'Target PT', cellClass: 'blue-link', resizable: true, unSortIcon: true },
@@ -262,7 +262,14 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 					},
 				},
 			};
-
+			this.rowStyle = function (params) {
+				return { background: 'red' };
+			};
+			this.refsetGridOptions.getRowStyle = (params) => {
+				if (this.refsetData[params.node.rowIndex].spanned || this.refsetData[params.node.rowIndex + 1].spanned) {
+					return { background: '#e9e9e9' };
+				}
+			};
 			this.showTable = true;
 			this.changeDetectorRef.detectChanges();
 		});
@@ -331,8 +338,8 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 						data.push({
 							'spanned': spanned,
 							'entries': results[a].mapEntries.length,
-							'code': results[a].code,
-							'name': results[a].name,
+							'code': b > 0 && spanned ? '' : results[a].code,
+							'name': b > 0 && spanned ? '' : results[a].name,
 							'toName': results[a].mapEntries[b].toName,
 							'toCode': results[a].mapEntries[b].toCode,
 							'rule': results[a].mapEntries[b].rule,
@@ -597,7 +604,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 }
 
 function rowSpan(params: RowSpanParams) {
-	if (params.data.entries) {
+	if (params.data.entries >= 1) {
 		return params.data.entries;
 	} else {
 		return 1;

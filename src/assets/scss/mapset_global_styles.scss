@@ -206,6 +206,9 @@ tr.refset_tool_inactive_row {
 	border-color: #f0f0f0;
 }
 
+.ag-theme-alpine .ag-row {
+	border: none !important;
+}
 .ag-theme-alpine .ag-ltr input[class^='ag-'][type='text'] {
 	padding-top: 24px;
 }
@@ -1420,7 +1423,9 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 	}
 }
 .cell-spanner {
-	display: none;
+	/**/
+	margin-top: -3.55em;
+	background-color: #e9e9e9;
 }
 
 .blue-link {
@@ -2092,7 +2097,7 @@ app-date-text-floating-filter {
 }
 
 .ag-theme-alpine.rt2-ag-grid .ag-body-viewport div.ag-row.alternate-row-color-odd {
-	background-color: #efefef;
+	background-color: white;
 }
 
 app-grid-header-floating-filter {
