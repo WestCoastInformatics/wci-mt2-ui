@@ -2,9 +2,10 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Outp
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -71,6 +72,8 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	searchCallArray = [];
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
+	toBeDevelopedModalRef: NgbModalRef;
+	isModalOpen = false;
 
 	@Output() loadingSpinner = new EventEmitter<boolean>(true);
 
@@ -92,7 +95,8 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		private refsetService: RefsetService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private breadcrumbService: BreadcrumbService,
-		private authenticationService: AuthenticationService
+		private authenticationService: AuthenticationService,
+		private modalService: NgbModal
 	) {
 		document.body.scrollTop = 0;
 		refsetService.getTaxonomyRoot();
@@ -119,9 +123,9 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						colId: 'information',
 						headerName: '',
 						minWidth: 50,
-						width: 90,
+						width: 70,
 						cellClass: 'rt2-directory-column-information',
-						cellRenderer: 'templateRenderer',
+						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.infoSection },
 						filter: false,
 						resizable: false,
@@ -148,8 +152,6 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						width: 170,
 						resizable: true,
 						valueGetter: this.versionStatusValueGetter,
-						floatingFilterComponent: 'categoryFilterComponent',
-						floatingFilterComponentParams: { suppressFilterButton: true, names: versionStatusArray },
 						unSortIcon: true,
 					},
 					{
@@ -160,7 +162,9 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						minWidth: 65,
 						width: 170,
 						resizable: true,
-						cellRenderer: 'templateRenderer',
+						floatingFilterComponent: DateTextFilterComponent,
+						floatingFilterComponentParams: { suppressFilterButton: true },
+						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.versionDate },
 						unSortIcon: true,
 					},
@@ -173,7 +177,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						width: 170,
 						resizable: true,
 						valueGetter: UiUtility.gridDateValueGetter,
-						floatingFilterComponent: 'dateTextFilterComponent',
+						floatingFilterComponent: DateTextFilterComponent,
 						floatingFilterComponentParams: { suppressFilterButton: true },
 						unSortIcon: true,
 					},
@@ -182,9 +186,9 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						field: 'downloadable',
 						colId: 'actions',
 						headerName: '',
-						width: 120,
+						width: 90,
 						cellClass: 'rt2-directory-column-actions',
-						cellRenderer: 'templateRenderer',
+						cellRenderer: TemplateRendererComponent,
 						cellRendererParams: { template: this.actionSection },
 						sortable: false,
 						filter: false,
@@ -202,7 +206,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 					onCellClicked: this.onGridCellClick,
 					onGridReady: this.onGridReady,
 					frameworkComponents: {
-						'templateRenderer': TemplateRenderer,
+						'templateRenderer': TemplateRendererComponent,
 						'categoryFilterComponent': CategoryFilterComponent,
 						'dateTextFilterComponent': DateTextFilterComponent,
 					},
@@ -396,6 +400,16 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 
 	openEclBuilder(fieldId) {
 		UiUtility.openEclBuilder(fieldId, 'MAIN');
+	}
+
+	openToBeDevelopedModal(content) {
+		this.toBeDevelopedModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeToBeDevelopedModal() {
+		this.toBeDevelopedModalRef.close();
+		this.isModalOpen = false;
 	}
 
 	goToDetailsPage(refsetId, versionDate) {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, AfterViewInit, TemplateRef, ViewChild } f
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { OrganizationsService } from 'src/app/services/rest/organizations.service';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
@@ -78,7 +78,7 @@ export class OrganizationPeopleComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {

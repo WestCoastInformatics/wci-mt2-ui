@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Constants } from 'src/app/utilities/constants.utility';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
-import { TemplateRenderer } from '../cellRenderers/template.renderer';
+import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 
 @Component({
 	selector: 'bulk-upgrade-modal',
@@ -62,7 +62,7 @@ export class BulkUpgradeModalComponent {
 			onSelectionChanged: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
+				templateRenderer: TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {

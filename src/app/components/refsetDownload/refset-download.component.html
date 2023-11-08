@@ -1,15 +1,15 @@
 <button
-	*ngIf="isDetailPage && refset != null && project == null && !disableDownload"
+	*ngIf="isDetailPage && refset !== null && project === null && !disableDownload"
 	class="rt2-link-btn"
 	title="Download Map Set"
 	aria-label="Download Map Set"
 	(click)="openDownload(refset.refsetId)">
 	Download
 </button>
-<button *ngIf="isDetailPage && refset != null && project == null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">Download</button>
+<button *ngIf="isDetailPage && refset !== null && project === null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">Download</button>
 
 <button
-	*ngIf="!isDetailPage && refset != null && project == null && !disableDownload"
+	*ngIf="!isDetailPage && refset !== null && project === null && !disableDownload"
 	mat-icon-button
 	aria-hidden="false"
 	(click)="openDownload(refset.refsetId)"
@@ -26,7 +26,7 @@
 </button>
 
 <button
-	*ngIf="!isDetailPage && refset != null && project == null && disableDownload"
+	*ngIf="!isDetailPage && refset !== null && project === null && disableDownload"
 	mat-icon-button
 	aria-hidden="false"
 	[aria-label]="disableTitle"
@@ -42,7 +42,7 @@
 </button>
 
 <button
-	*ngIf="project != null && refsets != null"
+	*ngIf="project !== null && refsets !== null"
 	aria-hidden="false"
 	class="rt2-btn rt2-action-btn"
 	title="Download Latest Published Map Sets for Project"

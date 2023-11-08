@@ -23,7 +23,7 @@
 
 .top-search-bar {
 	background-color: white;
-	box-shadow: 0 4px 2px -2px grey;
+	box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.35);
 	z-index: 1000 !important;
 	min-height: 60px;
 	padding: 12px 0;
@@ -70,7 +70,6 @@
 }
 
 .library-app-refset-discussion-list {
-	margin-top: 1.5em;
 }
 
 .loading-details {
@@ -84,17 +83,21 @@
 }
 
 .rt2-action-btn {
-	width: 13em;
-	padding: 0.5em;
+	width: 146px;
+	padding-left: 0;
+	padding-right: 0;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 	margin-right: 1em;
 	margin-top: 1em;
 	border-radius: 5px;
-	border: 2px solid #2269e8;
+	border: 1px solid #2269e8;
 	background-color: #ffffff;
 	box-sizing: border-box;
 	color: #2269e8;
 	box-shadow: none;
 	font-weight: 900;
+	letter-spacing: normal;
 }
 
 .rt2-btn:hover {
@@ -112,6 +115,7 @@
 }
 
 .mapset-notes-icon {
+	cursor: pointer;
 	color: #2269e8;
 	font-size: 1.25em;
 }
@@ -121,9 +125,9 @@
 }
 
 .discussion-icon {
-	margin-top: -1em;
-	width: 24px;
-	height: 24px;
+	cursor: pointer;
+	width: 22px;
+	height: 22px;
 	//color: #2269e8;
 	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }

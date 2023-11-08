@@ -4,7 +4,7 @@
 <div class="top-search-bar content-header">
 	<div class="row justify-content-end align-items-baseline">
 		<div class="col-md-auto page-title">
-			Map Records <span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span> <span [hidden]="numOfMembers">{{ '(0)' }}</span>
+			Mappings <span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span> <span [hidden]="numOfMembers">{{ '(0)' }}</span>
 		</div>
 		<div class="col mapset-name page-title rt2-wrap">
 			<span>{{ mapsetName }} </span>
@@ -19,7 +19,7 @@
 				<div class="dropdown directoryInput">
 					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
 						<mat-label class="search-label">Search</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" disabled />
 					</mat-form-field>
 					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
 				</div>
@@ -36,9 +36,9 @@
 	</div>
 </div>
 <div class="col row justify-content-end">
-	<button [aria-label]="'Download Maps'" [title]="'Download Maps'" class="rt2-btn rt2-action-btn">Download Maps</button>
-	<button [aria-label]="'Advanced Search'" [title]="'Advanced Search'" class="rt2-btn rt2-action-btn">Advanced Search</button>
-	<button [aria-label]="'Send to QA'" [title]="'Send to QA'" class="rt2-btn rt2-action-btn end-btn">Send to QA</button>
+	<button (click)="gridEvent('download')" [title]="'Download Maps'" class="rt2-btn rt2-action-btn">Download Maps</button>
+	<button (click)="gridEvent('search')" [title]="'Advanced Search'" class="rt2-btn rt2-action-btn">Advanced Search</button>
+	<button (click)="gridEvent('qa')" [title]="'Send to QA'" class="rt2-btn rt2-action-btn end-btn">Send to QA</button>
 </div>
 <div class="rt2-container" (window:resize)="onResize($event)">
 	<!-- Page Title -->
@@ -48,12 +48,24 @@
 	<ag-grid-angular
 		#directoryTable
 		*ngIf="showTable"
-		class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-638"
+		class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter w-100-pct h-500"
 		[columnDefs]="columnDefs"
 		[suppressRowTransform]="true"
 		[gridOptions]="refsetGridOptions"
-		[rowSelection]="rowSelection">
+		[rowSelection]="rowSelection"
+		[quickFilterText]="searchInput"
+		[quickFilterMatcher]="quickFilterMatcher">
 	</ag-grid-angular>
+
+	<app-pagination
+		#directoryPaging
+		*ngIf="showTable"
+		[pageSize]="refsetGridPaging.pageSize"
+		[gridOptions]="refsetGridOptions"
+		[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+		[totalKnown]="refsetGridPaging.totalKnown"
+		[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+	</app-pagination>
 
 	<!-- Information Templates -->
 	<ng-template #directoryInfoSection let-params>
@@ -94,6 +106,11 @@
 		<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
 	</ng-template>
 
+	<!-- Check Templates -->
+	<ng-template #directoryCheckSection let-params>
+		<input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />
+	</ng-template>
+
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
 		<span class="blue-link">{{ params?.value }}</span>
@@ -124,21 +141,17 @@
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex rt2-wrap">
+		<div class="d-flex" *ngIf="params?.value">
 			<div class="col-6">
-				<div class="library-app-refset-download">
-					<button mat-icon-button aria-hidden="false" aria-label="Notes" title="Notes" class="rt2-table-action-icon {{ buttonClasses }}">
-						<div class="mat-button-wrapper mapset-notes-icon">
-							<i class="fa-regular fa-note-sticky fa-lg"></i>
-						</div>
-						<span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"></span>
-						<span class="mat-button-focus-overlay"></span>
-					</button>
+				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<div class="mat-button-wrapper mapset-notes-icon">
+						<i class="fa-regular fa-note-sticky fa-lg"></i>
+					</div>
 				</div>
 			</div>
 
 			<div class="col-6">
-				<div class="library-app-refset-discussion-list">
+				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 					<img src="/assets/comment-dots-regular.svg" title="Start a new discussion" aria-label="Start a new discussion or review any of the existing discussions" class="discussion-icon" />
 				</div>
 			</div>
@@ -150,12 +163,46 @@
 		<span class="blue-link">{{ getAdviceDisplayLink(params?.value) }}</span>
 	</ng-template>
 
+	<ng-template #directoryCodeSection let-params>
+		<span *ngIf="params?.value === 'No map entries available.'">
+			{{ params?.value }}
+		</span>
+		<span *ngIf="params?.value !== 'No map entries available.'">
+			{{ params?.value.split('/')[0] }}
+			<span class="blue-link">{{ params?.value.split('/')[1] }}</span></span
+		>
+	</ng-template>
+
+	<ng-template #directoryToNameSection let-params>
+		<span *ngIf="params?.value === '---'">
+			{{ params?.value }}
+		</span>
+		<span *ngIf="params?.value !== '---'">
+			<span class="blue-link">{{ params?.value }}</span></span
+		>
+	</ng-template>
+
 	<ng-template #directoryFeedbackDialog let-data>
 		This functionality will be implemented in subsequent phases.
 		<mat-form-field floatLabel="never" *ngIf="false">
 			<mat-label>Feedback</mat-label>
 			<input matInput [(ngModel)]="data.feedback" />
 		</mat-form-field>
+	</ng-template>
+
+	<ng-template #toBeDevelopedModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<h4 class="modal-title">To be developed</h4>
+			<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="closeToBeDevelopedModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>This feature is not yet available. Please check back later.</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-close-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
 	</ng-template>
 </div>
 <scroll-top></scroll-top>

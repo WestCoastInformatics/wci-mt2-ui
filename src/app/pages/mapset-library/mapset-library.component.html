@@ -17,7 +17,7 @@
 				<div class="dropdown directoryInput">
 					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
 						<mat-label class="search-label">Search</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" disabled />
 					</mat-form-field>
 					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
 				</div>
@@ -66,7 +66,7 @@
 					class="rt2-table-action-icon w-30 h-30"
 					aria-label="View All Reference Set Metadata"
 					title="View Map Set Metadata"
-					(click)="openInformation(params.data.refsetId)">
+					(click)="openToBeDevelopedModal(toBeDevelopedModal)">
 					<mat-icon class="scale-85-pct">information</mat-icon>
 				</button>
 			</div>
@@ -126,15 +126,17 @@
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex rt2-wrap">
+		<div class="d-flex">
 			<div class="col-6">
-				<div class="library-app-refset-download">
-					<app-refset-download [isDetailPage]="false" [refset]="params.data"> </app-refset-download>
+				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<div class="mat-button-wrapper mapset-notes-icon">
+						<i class="fa fa-download fa-lg"></i>
+					</div>
 				</div>
 			</div>
 
 			<div class="col-6">
-				<div class="library-app-refset-discussion-list">
+				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
 					<img src="/assets/comment-dots-regular.svg" title="Start a new discussion" aria-label="Start a new discussion or review any of the existing discussions" class="discussion-icon" />
 				</div>
 			</div>
@@ -147,6 +149,21 @@
 			<mat-label>Feedback</mat-label>
 			<input matInput [(ngModel)]="data.feedback" />
 		</mat-form-field>
+	</ng-template>
+
+	<ng-template #toBeDevelopedModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<h4 class="modal-title">To be developed</h4>
+			<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="closeToBeDevelopedModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>This feature is not yet available. Please check back later.</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-close-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
 	</ng-template>
 </div>
 <scroll-top></scroll-top>

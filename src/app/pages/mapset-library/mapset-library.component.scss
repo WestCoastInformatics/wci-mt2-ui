@@ -66,11 +66,12 @@
 }
 
 .library-app-refset-download {
-	margin-top: 1em;
+	cursor: pointer;
+	margin-top: 0;
 }
 
 .library-app-refset-discussion-list {
-	margin-top: 1.5em;
+	cursor: pointer;
 }
 
 .loading-details {
@@ -83,8 +84,17 @@
 	margin-top: 10%;
 }
 
+.mapset-notes-icon {
+	cursor: pointer;
+	width: 24px;
+	height: 24px;
+	//color: #2269e8;
+	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
+}
+
 .discussion-icon {
-	margin-top: -1em;
+	cursor: pointer;
+	margin-top: -0.2em;
 	width: 24px;
 	height: 24px;
 	//color: #2269e8;

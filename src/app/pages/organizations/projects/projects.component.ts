@@ -5,7 +5,7 @@ import { lastValueFrom, Subscription, concatMap } from 'rxjs';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { ProjectsService } from 'src/app/services/rest/projects.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { OrganizationsComponentService } from 'src/app/pages/organizations/organizations-component.service';
 
 @Component({
@@ -106,7 +106,7 @@ export class OrganizationProjectsComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 			},
 			defaultColDef: {
 				filter: true,

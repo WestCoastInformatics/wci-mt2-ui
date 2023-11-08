@@ -5,7 +5,7 @@ import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-deta
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
-import { TemplateRenderer } from '../cellRenderers/template.renderer';
+import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
 import { Constants } from 'src/app/utilities/constants.utility';
@@ -312,7 +312,7 @@ export class AdjudicateUpgradeModalComponent {
 			onSortChanged: this.checkSortFilter,
 			postSort: this.replacementSort,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 			},
 			suppressScrollOnNewData: true,
 			defaultColDef: {

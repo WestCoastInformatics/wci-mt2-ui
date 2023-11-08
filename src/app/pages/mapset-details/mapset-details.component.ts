@@ -8,7 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
@@ -296,7 +296,7 @@ export class MapsetDetailsComponent implements OnInit {
 				onGridReady: this.onMembersGridReady,
 				onNewColumnsLoaded: this.onMembersColumnsLoaded.bind(this),
 				frameworkComponents: {
-					templateRenderer: TemplateRenderer,
+					templateRenderer: TemplateRendererComponent,
 					'dateTextFilterComponent': DateTextFilterComponent,
 				},
 				defaultColDef: {
@@ -604,7 +604,7 @@ export class MapsetDetailsComponent implements OnInit {
 					onCellClicked: this.onTaxonomySearchGridCellClick,
 					onGridReady: this.onTaxonomySearchGridReady,
 					frameworkComponents: {
-						templateRenderer: TemplateRenderer,
+						templateRenderer: TemplateRendererComponent,
 					},
 					defaultColDef: {
 						sortable: false,

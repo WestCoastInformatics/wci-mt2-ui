@@ -8,7 +8,7 @@ import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
@@ -229,7 +229,7 @@ export class LaunchComparisonModalComponent {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
+				templateRenderer: TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {

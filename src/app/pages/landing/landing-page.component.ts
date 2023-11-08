@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Outp
 import { Router } from '@angular/router';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
@@ -241,7 +241,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 					onCellClicked: this.onGridCellClick,
 					onGridReady: this.onGridReady,
 					frameworkComponents: {
-						'templateRenderer': TemplateRenderer,
+						'templateRenderer': TemplateRendererComponent,
 						'categoryFilterComponent': CategoryFilterComponent,
 						'dateTextFilterComponent': DateTextFilterComponent,
 					},

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Context } from 'ag-grid-community';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
@@ -129,7 +129,7 @@ export class ProjectsRefsetComponent implements OnInit, AfterViewInit, OnDestroy
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 				'dateTextFilterComponent': DateTextFilterComponent,
 			},

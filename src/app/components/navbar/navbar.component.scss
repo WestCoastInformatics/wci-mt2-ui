@@ -205,6 +205,15 @@ nav {
 	padding: 0 0.5em 0 0.5em;
 }
 
+.rt2-nav-header-title {
+	font-size: $standard_font_size_h2;
+	color: #eee;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	padding: 0 0.5em 0 0.5em;
+}
+
 .rt2-nav-title:hover {
 	color: #00a9e0;
 }
@@ -270,7 +279,7 @@ nav {
 .navbar-icon-label {
 	text-align: center;
 	color: #ffffff;
-	margin-top: 1em;
+	margin-top: 0.25em;
 }
 
 .navbar-fa-icon {

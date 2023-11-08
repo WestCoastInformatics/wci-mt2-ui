@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, Output, OnInit, TemplateRef, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { UiUtility } from '../../../utilities/ui.utility';
 import { CodeUtility } from '../../../utilities/code.utility';
 import { PaginationComponent } from '../../pagination/pagination.component';
@@ -82,7 +82,7 @@ export class AuditTrailListComponent implements OnInit, AfterViewInit {
 				}
 			},
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 				dateTextFilterComponent: DateTextFilterComponent,
 			},
 			defaultColDef: {

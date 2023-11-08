@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { ProjectsComponentService } from 'src/app/pages/projects/projects-component.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 
@@ -81,7 +81,7 @@ export class ProjectsPeopleComponent implements OnInit, OnDestroy {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {
