@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
 import { UiUtility } from 'src/app/utilities/ui.utility';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { PaginationComponent } from 'src/app/components/pagination/pagination.component';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { TreeOptions } from 'src/app/models/tree-options.model';
@@ -85,7 +85,7 @@ export class LaunchComparisonModalComponent {
 		private readonly router: Router,
 		private readonly notificationService: NotificationService,
 		private readonly authService: AuthenticationService,
-		readonly refsetDetails: RefsetDetailsComponent,
+		readonly refsetDetails: MapsetDetailsComponent,
 		private readonly addRemoveConceptsComponent: AddRemoveConceptsComponent
 	) {}
 
@@ -229,7 +229,7 @@ export class LaunchComparisonModalComponent {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				templateRenderer: TemplateRenderer,
+				templateRenderer: TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {

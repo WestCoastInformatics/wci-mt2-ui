@@ -4,21 +4,21 @@
 $white: #ffffff;
 
 .text-white {
-    color: $white;
+	color: $white;
 }
 
 .bg-white {
-    background-color: $white;
+	background-color: $white;
 }
 
 $alto-white: #e0e0e0;
 
 .text-alto-white {
-    color: $alto-white;
+	color: $alto-white;
 }
 
 .bg-alto-white {
-    background-color: $alto-white;
+	background-color: $alto-white;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -27,41 +27,41 @@ $alto-white: #e0e0e0;
 $ghost-grey: #c8cfd6;
 
 .text-ghost-grey {
-    color: $ghost-grey;
+	color: $ghost-grey;
 }
 
 .bg-ghost-grey {
-    background-color: $ghost-grey;
+	background-color: $ghost-grey;
 }
 
 $grey: #808080;
 
 .text-grey {
-    color: $grey;
+	color: $grey;
 }
 
 .bg-grey {
-    background-color: $grey;
+	background-color: $grey;
 }
 
 $slate-grey: #708090;
 
 .text-slate-grey {
-    color: $slate-grey;
+	color: $slate-grey;
 }
 
 .bg-slate-grey {
-    background-color: $slate-grey;
+	background-color: $slate-grey;
 }
 
 $river-bed: #434a55;
 
 .text-river-bed {
-    color: $river-bed;
+	color: $river-bed;
 }
 
 .bg-river-bed {
-    background-color: $river-bed;
+	background-color: $river-bed;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -70,21 +70,21 @@ $river-bed: #434a55;
 $black: #000000;
 
 .text-black {
-    color: $black;
+	color: $black;
 }
 
 .bg-black {
-    background-color: $black;
+	background-color: $black;
 }
 
 $bootstrap-black: #343a40;
 
 .text-bootstrap-black {
-    color: $bootstrap-black;
+	color: $bootstrap-black;
 }
 
 .bg-bootstrap-black {
-    background-color: $bootstrap-black;
+	background-color: $bootstrap-black;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -93,11 +93,11 @@ $bootstrap-black: #343a40;
 $wisteria: #a060ae;
 
 .text-wisteria {
-    color: $wisteria;
+	color: $wisteria;
 }
 
 .bg-wisteria {
-    background-color: $wisteria;
+	background-color: $wisteria;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -106,11 +106,11 @@ $wisteria: #a060ae;
 $mandy: #eb4c59;
 
 .text-mandy {
-    color: $mandy;
+	color: $mandy;
 }
 
 .bg-mandy {
-    background-color: $mandy;
+	background-color: $mandy;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -119,11 +119,11 @@ $mandy: #eb4c59;
 $fruit-salad: #4ea24e;
 
 .text-fruit-salad {
-    color: $fruit-salad;
+	color: $fruit-salad;
 }
 
 .bg-fruit-salad {
-    background-color: $fruit-salad;
+	background-color: $fruit-salad;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -132,31 +132,31 @@ $fruit-salad: #4ea24e;
 $anakiwa: #c3e7fe;
 
 .text-anakiwa {
-    color: $anakiwa;
+	color: $anakiwa;
 }
 
 .bg-anakiwa {
-    background-color: $anakiwa;
+	background-color: $anakiwa;
 }
 
 $cerulean: #00a9e0;
 
 .text-cerulean {
-    color: $cerulean;
+	color: $cerulean;
 }
 
 .bg-cerulean {
-    background-color: $cerulean;
+	background-color: $cerulean;
 }
 
 $blumine: #124f6b;
 
 .text-blumine {
-    color: $blumine;
+	color: $blumine;
 }
 
 .bg-blumine {
-    background-color: $blumine;
+	background-color: $blumine;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -165,11 +165,11 @@ $blumine: #124f6b;
 $sea-buckthorn: #f8a73d;
 
 .text-sea-buckthorn {
-    color: $sea-buckthorn;
+	color: $sea-buckthorn;
 }
 
 .bg-sea-buckthorn {
-    background-color: $sea-buckthorn;
+	background-color: $sea-buckthorn;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -178,22 +178,22 @@ $sea-buckthorn: #f8a73d;
 $candlelight: #fbdb13;
 
 .text-candlelight {
-    color: $candlelight;
+	color: $candlelight;
 }
 
 .bg-candlelight {
-    background-color: $candlelight;
+	background-color: $candlelight;
 }
 
-$main-color: #00A4E4;
+$main-color: #00a4e4;
 
 $standard_font_size: 1.2rem;
 /*replaced 14px*/
-$standard_font_size_largest: 3.0rem;
+$standard_font_size_largest: 3rem;
 /*30*/
 $standard_font_size_h1: 2.4rem;
 /*24*/
-$standard_font_size_h2: 1.8rem;
+$standard_font_size_h2: 1.9rem;
 /*18px*/
 $standard_font_size_h3: 1.6rem;
 /*16px*/
@@ -212,7 +212,8 @@ $standard_font_size_text: 1.4rem;
 $standard_font_size_select: 1.4rem;
 $standard_font_size_form_control: 1.4rem;
 /*$standard_font_family: Roboto, Helvetica, Arial, sans-serif;*/
-$standard_font_family: 'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
+$standard_font_family: 'ArialMT', 'Arial', sans-serif; //'Poppins', 'Helvetica Neue', 'Arial', sans-serif;
+
 $standard_font_color: black;
 $standard_font_weight: 300;
 $standard_font_weight_title: 400;
@@ -237,55 +238,55 @@ $inactive_row_color: rgb(241 222 222);
 $concept_details_color: rgba(0, 169, 224, 1);
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-Thin.ttf');
-    font-weight: 100;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Thin.ttf');
+	font-weight: 100;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-ExtraLight.ttf');
-    font-weight: 200;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-ExtraLight.ttf');
+	font-weight: 200;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-Light.ttf');
-    font-weight: 300;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Light.ttf');
+	font-weight: 300;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-Regular.ttf');
-    font-weight: 400;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Regular.ttf');
+	font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-Medium.ttf');
-    font-weight: 500;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Medium.ttf');
+	font-weight: 500;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-SemiBold.ttf');
-    font-weight: 600;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-SemiBold.ttf');
+	font-weight: 600;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-Bold.ttf');
-    font-weight: 700;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Bold.ttf');
+	font-weight: 700;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-ExtraBold.ttf');
-    font-weight: 800;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-ExtraBold.ttf');
+	font-weight: 800;
 }
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/Poppins-Black.ttf');
-    font-weight: 900;
+	font-family: 'Poppins';
+	src: url('../fonts/Poppins-Black.ttf');
+	font-weight: 900;
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AgGridModule } from 'ag-grid-angular';
-import { TemplateRenderer } from '../cellRenderers/template.renderer';
+import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 import { MatButtonModule } from '@angular/material/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,7 +14,7 @@ import { PaginationModule } from '../pagination/pagination.module';
 
 @NgModule({
 	declarations: [AuditTrailModalComponent, AuditTrailListComponent],
-	imports: [CommonModule, AgGridModule.withComponents([TemplateRenderer]), MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule, NgbModule, PaginationModule],
+	imports: [CommonModule, AgGridModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatMenuModule, NgbModule, PaginationModule],
 	exports: [AuditTrailModalComponent],
 })
 export class AuditTrailModule {}

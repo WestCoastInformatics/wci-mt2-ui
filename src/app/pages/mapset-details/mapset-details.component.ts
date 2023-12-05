@@ -1,12 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { forkJoin, Subject, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DialogService } from 'src/app/dialog/services/dialog.service';
 import { DialogFactoryService } from 'src/app/dialog/services/dialog-factory.service';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { RouterExtentionService } from 'src/app/services/routerExtention.service';
-import { Title } from '@angular/platform-browser';
 import { CodeUtility } from 'src/app/utilities/code.utility';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
 import { UiUtility } from 'src/app/utilities/ui.utility';
@@ -15,30 +19,26 @@ import { PaginationComponent } from 'src/app/components/pagination/pagination.co
 import { TreeOptions } from 'src/app/models/tree-options.model';
 import { RefsetUtility } from 'src/app/utilities/refset.utility';
 import { Constants } from 'src/app/utilities/constants.utility';
-import { forkJoin, Subject, Subscription } from 'rxjs';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
 import { environment } from 'src/environments/environment';
-import { WorkflowService } from '../services/workflow/workflow.service';
+import { WorkflowService } from 'src/app/services/workflow/workflow.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { AddRemoveConceptsComponent } from 'src/app/components/add-remove-concepts/add-remove-concepts.component';
-import { take } from 'rxjs/operators';
-import { ProjectsRefsetComponent } from './projects/refsets/projects-refset.component';
-import { NotificationService } from '../services/notification.service';
-import { User } from '../models/user';
-import { AuthenticationService } from '../services/authentication/authentication.service';
+import { ProjectsRefsetComponent } from 'src/app/pages/projects/refsets/projects-refset.component';
+import { NotificationService } from 'src/app/services/notification.service';
+import { User } from 'src/app/models/user';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 /**
  * @title Tree with nested nodes
  */
 @Component({
-	selector: 'app-refset-details',
-	templateUrl: 'refset-details.html',
-	styleUrls: ['./refset-details.scss'],
+	selector: 'app-mapset-details',
+	templateUrl: './mapset-details.component.html',
+	styleUrls: ['./mapset-details.component.scss'],
 })
-export class RefsetDetailsComponent implements OnInit {
+export class MapsetDetailsComponent implements OnInit {
 	id: string;
 	user: User;
 	refsetId = '';
@@ -281,7 +281,7 @@ export class RefsetDetailsComponent implements OnInit {
 					{ label: 'Reference Set Details' },
 				]);
 			} else {
-				this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Reference Set Library' }, { label: 'Reference Set Details' }]);
+				this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Map Set Library' }, { label: 'Map Record Details' }]);
 			}
 
 			this.membersGridOptions = {
@@ -296,7 +296,7 @@ export class RefsetDetailsComponent implements OnInit {
 				onGridReady: this.onMembersGridReady,
 				onNewColumnsLoaded: this.onMembersColumnsLoaded.bind(this),
 				frameworkComponents: {
-					templateRenderer: TemplateRenderer,
+					templateRenderer: TemplateRendererComponent,
 					'dateTextFilterComponent': DateTextFilterComponent,
 				},
 				defaultColDef: {
@@ -604,7 +604,7 @@ export class RefsetDetailsComponent implements OnInit {
 					onCellClicked: this.onTaxonomySearchGridCellClick,
 					onGridReady: this.onTaxonomySearchGridReady,
 					frameworkComponents: {
-						templateRenderer: TemplateRenderer,
+						templateRenderer: TemplateRendererComponent,
 					},
 					defaultColDef: {
 						sortable: false,

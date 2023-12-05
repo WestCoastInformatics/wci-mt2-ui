@@ -61,8 +61,8 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
 
 	private setBreadcrumbs(route: ActivatedRouteSnapshot): void {
 		if (route.url[0]) {
-			if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Reference Set Library')) {
-				this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Reference Set Library' }, { label: 'Reference Set Details' }]);
+			if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Map Set Library')) {
+				this.breadcrumbService.setBreadcrumbs([{ path: '/library', label: 'Map Set Library' }, { label: 'Reference Set Details' }]);
 			} else if (this.previousBreadcrumbLabel != null && route.url[0].path === 'details' && this.previousBreadcrumbLabel.includes('Projects')) {
 				this.breadcrumbService.setBreadcrumbs([{ path: '/projects', label: 'Projects' }, { label: 'Reference Set Details' }]);
 			} else {

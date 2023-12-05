@@ -5,7 +5,7 @@ nav {
 	padding: 5px;
 	position: fixed;
 	width: 100%;
-	background-color: #434955 !important;
+	background-color: #2269e8 !important;
 
 	a.logo {
 		height: 40px;
@@ -133,7 +133,7 @@ nav {
 		}
 
 		.dropdown-menu {
-			background-color: #434955;
+			background-color: #2269e8;
 			right: -7px;
 			top: calc(100% - 1px);
 			left: -175px;
@@ -174,7 +174,7 @@ nav {
 	width: -webkit-fill-available;
 	/* Mozilla-based browsers will ignore this. */
 	width: stretch;
-	min-height: 50px;
+	min-height: 78px;
 	height: fit-content;
 	position: sticky;
 }
@@ -202,6 +202,15 @@ nav {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	font-size: $standard_font_size_h3;
+	padding: 0 0.5em 0 0.5em;
+}
+
+.rt2-nav-header-title {
+	font-size: $standard_font_size_h2;
+	color: #eee;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 	padding: 0 0.5em 0 0.5em;
 }
 
@@ -236,32 +245,53 @@ nav {
 }
 
 .navbar-div {
-	width: 60px;
-	border-left: 1px solid #797979;
-	border-right: 1px solid #797979;
-	height: 40px;
+	width: 65px;
+	margin: 0;
+	height: 78px;
 	cursor: pointer;
 }
 
+.navbar-divider {
+	height: 78px;
+	border-left: 1px solid #ffffff;
+}
+
 .navbar-icon {
-	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 2px;
-	margin-top: 2px;
+	margin-top: 1.5em;
 	text-align: center;
-	height: 25px;
-	width: 25px;
+	font-size: 0.8em;
+	img {
+		width: 3em;
+		height: 2.5em;
+	}
+}
+
+.navbar-icon-menu {
+	margin-top: 0.75em;
+}
+
+.navbar-menu-link {
+	margin-top: 1.75em;
 }
 
 .navbar-icon-label {
 	text-align: center;
 	color: #ffffff;
+	margin-top: 0.25em;
+}
+
+.navbar-fa-icon {
+	font-size: 2.5em;
+	margin-top: 0.5em;
+	margin-left: 0.15em;
 }
 
 .nav-item {
 	width: 75px;
-	border-right: 1px solid #797979;
 	height: 50px;
+
 	cursor: pointer;
 	padding-top: 6px;
 	text-align: center;

@@ -38,9 +38,12 @@
 }
 
 .discussion-icon {
+	cursor: pointer;
+	margin-top: -1em;
 	width: 24px;
 	height: 24px;
-	filter: invert(49%) sepia(23%) saturate(4194%) hue-rotate(165deg) brightness(95%) contrast(102%); // to get text-main color
+	//color: #2269e8;
+	filter: invert(30%) sepia(90%) saturate(2440%) hue-rotate(211deg) brightness(95%) contrast(91%);
 }
 
 .text-main {

@@ -1,6 +1,7 @@
 // FRAMEWORK IMPORTS
 import { BrowserModule } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -42,7 +43,7 @@ import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
 import { TaxonomyTreeComponent } from 'src/app/components/taxonomy-tree/taxonomy-tree.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { RefsetDownloadComponent } from 'src/app/components/refsetDownload/refset-download.component';
 import { ColumnChooserComponent } from 'src/app/components/column-chooser/column-chooser.component';
 import { LaunchComparisonModalComponent } from 'src/app/components/comparison/launch-comparison-modal.component';
@@ -69,8 +70,9 @@ import { ArtifactsModule } from './components/artifacts/artifacts.module';
 import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 
 // PAGE IMPORTS
-import { RefsetDirectoryComponent } from 'src/app/pages/refset-directory';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
+import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
+import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
@@ -122,7 +124,6 @@ import { AdjudicateUpgradeModalComponent } from './components/adjudicate-upgrade
 import { UsersService } from './services/rest/users.service';
 import { RemoveDashboardComponentModalComponent } from './components/remove-dashboard-component-modal/remove-dashboard-component-modal.component';
 import { RefsetFeedbackListComponent } from './components/refset-feedback-list/refset-feedback-list.component';
-import { CommonModule } from '@angular/common';
 import { DomService } from './services/dom.service';
 import { PaginationModule } from './components/pagination/pagination.module';
 import { ArtifactsService } from './services/rest/artifacts.service';
@@ -141,8 +142,9 @@ const appRoutes: Routes = [
 	{ path: 'invite/response', component: InviteComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
-	{ path: 'library', component: RefsetDirectoryComponent, data: { breadcrumbLabel: 'Reference Set Library' } },
-	{ path: 'details/:refsetId/:versionDate', component: RefsetDetailsComponent, data: { breadcrumbLabel: 'Reference Set Details', editMode: false } },
+	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
+	{ path: 'mapset/:code', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
+	{ path: 'details/:mapsetId/:versionDate', component: MapsetDetailsComponent, data: { breadcrumbLabel: 'Map Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
 
 	{
@@ -262,7 +264,7 @@ const appRoutes: Routes = [
 		NavbarComponent,
 		FooterComponent,
 		TaxonomyTreeComponent,
-		TemplateRenderer,
+		TemplateRendererComponent,
 		RefsetDownloadComponent,
 		ColumnChooserComponent,
 		NotificationComponent,
@@ -270,8 +272,6 @@ const appRoutes: Routes = [
 		FinishUpgradeModalComponent,
 		AdjudicateUpgradeModalComponent,
 		SafeUrlPipe,
-		RefsetDirectoryComponent,
-		RefsetDetailsComponent,
 		CategoryFilterComponent,
 		DateTextFilterComponent,
 		GridHeaderFilterComponent,
@@ -300,6 +300,9 @@ const appRoutes: Routes = [
 		LandingComponent,
 		DashboardComponent,
 		SidebarComponent,
+		MapsetLibraryComponent,
+		MapsetRecordsComponent,
+		MapsetDetailsComponent,
 		OrganizationsComponent,
 		OrganizationProjectsComponent,
 		OrganizationTeamsComponent,
@@ -366,7 +369,7 @@ const appRoutes: Routes = [
 		}),
 		DialogModule,
 		TreeModule,
-		AgGridModule.withComponents([TemplateRenderer]),
+		AgGridModule,
 		EditorModule,
 		AngularSplitModule,
 		NgbModule,
@@ -387,7 +390,6 @@ const appRoutes: Routes = [
 		RestService,
 		ConceptsService,
 		RefsetService,
-		RefsetDetailsComponent,
 		PaginationService,
 		BreadcrumbService,
 		RouterExtentionService,

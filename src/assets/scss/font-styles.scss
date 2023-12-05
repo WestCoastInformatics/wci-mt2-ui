@@ -1,4 +1,4 @@
-/****** Styles brought over from refset_global_styles.css related to fonts ****/
+/****** Styles brought over from refset_global_styles.css related to fonts, includes general classes use variables scss vars ****/
 
 // Font styles
 
@@ -196,7 +196,7 @@ p,
 .header-icon-font,
 .carret-up-down-icon-font,
 .loading-icon-font {
-	font-size: 9px;
+	font-size: 11px;
 	@extend .default-font-family;
 }
 
@@ -253,7 +253,7 @@ p,
 }
 
 .col-header-font {
-	font-size: $standard_font_size;
+	font-size: $standard_font_size_h3;
 	font-weight: $standard_font_weight_bold;
 	@extend .default-font-family;
 }

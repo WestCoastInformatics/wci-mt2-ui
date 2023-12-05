@@ -1,5 +1,5 @@
 <div *ngIf="showLoadingSpinner" class="loading"></div>
-
+<!--
 <div class="landing-page-container">
 	<div class="container landing-page-info-section">
 		<p class="intro-title-font">Welcome to SNOMED International's New Reference Set Management Tool!</p>
@@ -23,9 +23,9 @@
 <div class="nav-bar page-section">
 	<div class="container">
 		<ul class="main-nav heading">
-			<!--<li><a href="#learnSection">Learn</a></li>
+			<!-<li><a href="#learnSection">Learn</a></li>
             <li><a href="#readSection">Read</a></li>
-            <li><a href="#watchSection">Watch</a></li>-->
+            <li><a href="#watchSection">Watch</a></li>--
 			<li class="search">
 				<div class="search-form">
 					<input type="text" placeholder="Search for reference sets by name, concept or tags" [(ngModel)]="searchInput" (input)="onSearchChange()" />
@@ -57,8 +57,8 @@
 	</div>
 </div>
 
-<!-- START GRID TEMPLATES -->
-<!-- Information Templates -->
+<!- START GRID TEMPLATES -->
+<!-- Information Templates --
 <ng-template #directoryInfoSection let-params>
 	<div class="d-flex rt2-wrap">
 		<div class="col-6">
@@ -93,12 +93,12 @@
 	</div>
 </ng-template>
 
-<!-- Workflow Status Templates -->
+<!- Workflow Status Templates --
 <ng-template #directoryWorkflowStatusSection let-params>
 	<object [src]="uiUtility.toTitleCase(params?.data?.workflowStatus)">{{ params?.value }}</object>
 </ng-template>
 
-<!-- Name Templates -->
+<!- Name Templates --
 <ng-template #directoryNameSection let-params>
 	{{ params?.value }}
 
@@ -108,7 +108,7 @@
 	<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
 </ng-template>
 
-<!-- Edition Templates -->
+<!- Edition Templates --
 <ng-template #directoryEditionSection let-params>
 	<img
 		(load)="showFlagIcon($event, true)"
@@ -120,7 +120,7 @@
 	{{ params?.data?.edition?.name }}
 </ng-template>
 
-<!-- Action Templates -->
+<!- Action Templates --
 <ng-template #directoryActionSection let-params>
 	<div class="d-flex rt2-wrap">
 		<div class="col-2">
@@ -144,7 +144,7 @@
 		</div>
 	</div>
 </ng-template>
-<!-- END GRID TEMPLATES -->
+<!- END GRID TEMPLATES --
 
 <ng-template #directoryFeedbackDialog let-data>
 	This functionality will be implemented in subsequent phases.
@@ -219,4 +219,4 @@
 			</div>
 		</div>
 	</div>
-</ng-container>
+</ng-container>-->

@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Debounce } from 'src/app/decorators/debounce.decorator';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { UiUtility } from 'src/app/utilities/ui.utility';
 import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
-import { TemplateRenderer } from '../cellRenderers/template.renderer';
+import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { UpgradeModalComponent } from '../upgrade-modal/upgrade-modal.component';
 import { Constants } from 'src/app/utilities/constants.utility';
@@ -98,7 +98,7 @@ export class AdjudicateUpgradeModalComponent {
 	constructor(
 		private readonly modalService: NgbModal,
 		private readonly refsetService: RefsetService,
-		readonly refsetDetails: RefsetDetailsComponent,
+		readonly refsetDetails: MapsetDetailsComponent,
 		private readonly changeDetection: ChangeDetectorRef,
 		readonly upgradeModalComponent: UpgradeModalComponent,
 		private dialogFactoryService: DialogFactoryService,
@@ -312,7 +312,7 @@ export class AdjudicateUpgradeModalComponent {
 			onSortChanged: this.checkSortFilter,
 			postSort: this.replacementSort,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 			},
 			suppressScrollOnNewData: true,
 			defaultColDef: {

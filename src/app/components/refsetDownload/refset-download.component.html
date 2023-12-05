@@ -1,32 +1,32 @@
 <button
-	*ngIf="isDetailPage && refset != null && project == null && !disableDownload"
+	*ngIf="isDetailPage && refset !== null && project === null && !disableDownload"
 	class="rt2-link-btn"
-	title="Download Reference Set"
-	aria-label="Download Reference Set"
+	title="Download Map Set"
+	aria-label="Download Map Set"
 	(click)="openDownload(refset.refsetId)">
 	Download
 </button>
-<button *ngIf="isDetailPage && refset != null && project == null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">Download</button>
+<button *ngIf="isDetailPage && refset !== null && project === null && disableDownload" [aria-label]="disableTitle" [title]="disableTitle" class="rt2-link-btn disable-menu-btn">Download</button>
 
 <button
-	*ngIf="!isDetailPage && refset != null && project == null && !disableDownload"
+	*ngIf="!isDetailPage && refset !== null && project === null && !disableDownload"
 	mat-icon-button
 	aria-hidden="false"
 	(click)="openDownload(refset.refsetId)"
-	aria-label="Download Reference Set"
-	title="Download Reference Set"
+	aria-label="Download Map Set"
+	title="Download Map Set"
 	class="rt2-table-action-icon {{ buttonClasses }}"
 	[ngClass]="{ inactive: disabled }"
 	[disabled]="disabled">
-	<span class="mat-button-wrapper">
-		<mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download</mat-icon>
-	</span>
+	<div class="mat-button-wrapper">
+		<i class="fa fa-download fa-lg"></i>
+	</div>
 	<span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"></span>
 	<span class="mat-button-focus-overlay"></span>
 </button>
 
 <button
-	*ngIf="!isDetailPage && refset != null && project == null && disableDownload"
+	*ngIf="!isDetailPage && refset !== null && project === null && disableDownload"
 	mat-icon-button
 	aria-hidden="false"
 	[aria-label]="disableTitle"
@@ -34,19 +34,19 @@
 	class="rt2-table-action-icon {{ buttonClasses }} disable-menu-btn"
 	[ngClass]="{ inactive: disabled }"
 	[disabled]="disabled">
-	<span class="mat-button-wrapper">
-		<mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">download</mat-icon>
-	</span>
+	<div class="mat-button-wrapper">
+		<i class="fa fa-download fa-lg"></i>
+	</div>
 	<span matripple="" class="mat-ripple mat-button-ripple mat-button-ripple-round"></span>
 	<span class="mat-button-focus-overlay"></span>
 </button>
 
 <button
-	*ngIf="project != null && refsets != null"
+	*ngIf="project !== null && refsets !== null"
 	aria-hidden="false"
 	class="rt2-btn rt2-action-btn"
-	title="Download Latest Published Reference Sets for Project"
-	aria-label="Download Latest Published Reference Sets for Project"
+	title="Download Latest Published Map Sets for Project"
+	aria-label="Download Latest Published Map Sets for Project"
 	(click)="openProjectRefsetDownload(project, refsets)">
 	Bulk Download
 </button>
@@ -91,7 +91,7 @@
 
 		<div class="row" id="downloadLanguageRow" *ngIf="showLanguages">
 			<div class="col rt2-download-column-label">
-				<label>Language Reference Set:</label>
+				<label>Language Map Set:</label>
 			</div>
 			<div class="col rt2-download-column-field">
 				<mat-form-field floatLabel="never" appearance="fill">

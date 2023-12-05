@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { CategoryFilterComponent } from '../categoryFilter/category-filter.component';
 import { AddRemoveConceptsComponent } from '../add-remove-concepts/add-remove-concepts.component';
-import { TemplateRenderer } from '../cellRenderers/template.renderer';
+import { TemplateRendererComponent } from '../cellRenderers/template.renderer';
 
 @Component({
 	selector: 'add-remove-by-concept-modal',
@@ -191,7 +191,7 @@ export class AddRemoveByConceptModalComponent implements OnInit {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 			},
 			defaultColDef: {

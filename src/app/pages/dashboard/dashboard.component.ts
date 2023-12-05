@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewC
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { CategoryFilterComponent } from 'src/app/components/categoryFilter/category-filter.component';
-import { TemplateRenderer } from 'src/app/components/cellRenderers/template.renderer';
+import { TemplateRendererComponent } from 'src/app/components/cellRenderers/template.renderer';
 import { DateTextFilterComponent } from 'src/app/components/dateTextFilter/date-text-filter.component';
 import { GridHeaderFilterComponent } from 'src/app/components/grid-header-filter/grid-header-filter.component';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit(): void {
-		this.titleService.setTitle('Reference Set Tool - Dashboard');
+		this.titleService.setTitle('Mapping Tool - Dashboard');
 		this.breadcrumbService.setBreadcrumbs([{ path: '/dashboard', label: 'Dashboard' }]);
 
 		this.currentUser = this.authService.getUser();
@@ -66,7 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			onCellClicked: this.onGridCellClick,
 			onGridReady: this.onGridReady,
 			frameworkComponents: {
-				'templateRenderer': TemplateRenderer,
+				'templateRenderer': TemplateRendererComponent,
 				'categoryFilterComponent': CategoryFilterComponent,
 				'dateTextFilterComponent': DateTextFilterComponent,
 				'gridHeaderFilterComponent': GridHeaderFilterComponent,

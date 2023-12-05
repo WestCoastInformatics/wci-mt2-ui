@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { RefsetDetailsComponent } from 'src/app/pages/refset-details';
+import { MapsetDetailsComponent } from 'src/app/pages/mapset-details/mapset-details.component';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RefsetService } from 'src/app/services/rest/refset.service';
 import { Constants } from 'src/app/utilities/constants.utility';
@@ -35,7 +35,7 @@ export class UpgradeModalComponent implements OnInit {
 		readonly refsetService: RefsetService,
 		private readonly router: Router,
 		private readonly notificationService: NotificationService,
-		readonly refsetDetails: RefsetDetailsComponent
+		readonly refsetDetails: MapsetDetailsComponent
 	) {}
 
 	ngOnInit(): void {

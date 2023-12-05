@@ -10,7 +10,7 @@
             </div> -->
 
 			<div class="rt2-refset-details-title-name-section">
-				<div class="metadata-collapsible-container-title page-header-font">{{refsetData?.name}}</div>
+				<div class="metadata-collapsible-container-title page-header-font">{{ refsetData?.name }}</div>
 				<div class="header-app-refset-discussion-list">
 					<app-refset-discussion-list
 						*ngIf="refsetData"
@@ -202,7 +202,14 @@
 						</button>
 
 						<upgrade-modal
-							*ngIf="(this.showMembersSection && ((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') || this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) && getRoleString().includes('AUTHOR') && this.refsetData.memberCount > 0)"
+							*ngIf="
+								this.showMembersSection &&
+								((this.refsetData?.availableActions?.includes('EDIT') && this.refsetData?.workflowStatus !== 'REVIEW_COMPLETED') ||
+									this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') ||
+									this.refsetData?.availableActions?.includes('FINISH_UPGRADE')) &&
+								getRoleString().includes('AUTHOR') &&
+								this.refsetData.memberCount > 0
+							"
 							[refsetData]="refsetData"
 							[membersOfRefset]="membersGridData"
 							[refsetId]="refsetData.refsetId"
@@ -212,7 +219,7 @@
 						<button
 							type="button"
 							color="red"
-							*ngIf="(this.showMembersSection && (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE')))"
+							*ngIf="this.showMembersSection && (this.refsetData?.availableActions?.includes('CANCEL_UPGRADE') || this.refsetData?.availableActions?.includes('FINISH_UPGRADE'))"
 							(click)="openCancelUpgrade(cancelUpgradeDialog)"
 							aria-hidden="false"
 							class="rt2-btn rt2-action-btn"
@@ -250,9 +257,9 @@
 							color="primary"
 							aria-hidden="false"
 							class="rt2-btn rt2-action-btn"
-							attr.aria-label="{{inEditButtonPrefix}} Request Review"
-							title="{{inEditButtonPrefix}} Request Review">
-							{{inEditButtonPrefix}} Request Review
+							attr.aria-label="{{ inEditButtonPrefix }} Request Review"
+							title="{{ inEditButtonPrefix }} Request Review">
+							{{ inEditButtonPrefix }} Request Review
 						</button>
 
 						<button
@@ -369,16 +376,14 @@
 						<editor
 							[(ngModel)]="data.text"
 							[init]="{
-                        base_url: '/tinymce',
-                        suffix: '.min',
-                        height: 200,
-                        auto_focus: 'refsetDetailsRichTextEditor',
-                        menubar: false,
-                        plugins: [
-                        'lists advlist'
-                        ],
-                        toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
-                    }"
+								base_url: '/tinymce',
+								suffix: '.min',
+								height: 200,
+								auto_focus: 'refsetDetailsRichTextEditor',
+								menubar: false,
+								plugins: ['lists advlist'],
+								toolbar: 'undo redo | bold italic | bullist numlist outdent indent'
+							}"
 							id="refsetDetailsRichTextEditor"></editor>
 					</ng-template>
 				</div>
@@ -419,25 +424,25 @@
 							<!-- ID Column -->
 							<ng-container matColumnDef="modified">
 								<th mat-header-cell *matHeaderCellDef mat-sort-header>Time Stamp</th>
-								<td mat-cell *matCellDef="let row">{{ setTimeFormat(row.modified)}}</td>
+								<td mat-cell *matCellDef="let row">{{ setTimeFormat(row.modified) }}</td>
 							</ng-container>
 
 							<!-- Progress Column -->
 							<ng-container matColumnDef="userName">
 								<th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
-								<td mat-cell *matCellDef="let row">{{row.userName}}</td>
+								<td mat-cell *matCellDef="let row">{{ row.userName }}</td>
 							</ng-container>
 
 							<!-- Name Column -->
 							<ng-container matColumnDef="workflowStatus">
 								<th mat-header-cell *matHeaderCellDef mat-sort-header>Workflow Status</th>
-								<td mat-cell *matCellDef="let row">{{modifyStatusSyntax(row.workflowStatus)}}</td>
+								<td mat-cell *matCellDef="let row">{{ modifyStatusSyntax(row.workflowStatus) }}</td>
 							</ng-container>
 
 							<!-- Fruit Column -->
 							<ng-container matColumnDef="notes">
 								<th mat-header-cell *matHeaderCellDef mat-sort-header>Notes</th>
-								<td mat-cell *matCellDef="let row; let i = index;" class="pt-3">
+								<td mat-cell *matCellDef="let row; let i = index" class="pt-3">
 									<ng-container *ngIf="notesEditable(i, row)">
 										<workflow-history-notes-modal
 											[refsetInternalId]="id"
@@ -455,7 +460,7 @@
 							</ng-container>
 
 							<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
 							<!-- Row shown when there is no matching data. -->
 							<tr class="mat-row" *matNoDataRow>
@@ -474,8 +479,8 @@
 		<!-- Section Title -->
 		<div *ngIf="showMembersSection" class="rt2-refset-details-title-name refset-details-title refset-member-title head-title rt2-refset-members-header">
 			<!-- <heading-with-count title="Reference Set Members" [count]="refsetData?.memberCount || ''"></heading-with-count> -->
-			Reference Set Members&nbsp;<span class="default-cursor" title="Total member count" *ngIf="refsetData?.memberCount">({{refsetData?.memberCount}})</span>
-			<button *ngIf="showTable && membersReady && refsetData?.memberCount>0" color="primary" aria-hidden="false" class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
+			Reference Set Members&nbsp;<span class="default-cursor" title="Total member count" *ngIf="refsetData?.memberCount">({{ refsetData?.memberCount }})</span>
+			<button *ngIf="showTable && membersReady && refsetData?.memberCount > 0" color="primary" aria-hidden="false" class="rt2-btn rt2-download-btn ml-4" (click)="downloadMembersTable()">
 				Download Members Table
 				<mat-icon role="img" class="rt2-dialog-confirm-icon mat-icon notranslate material-icons mat-icon-no-color rt2-icon" aria-hidden="true" data-mat-icon-type="font"> download </mat-icon>
 			</button>
@@ -531,7 +536,7 @@
 									<div class="col-md-auto m-r-20 filter-font" [style.display]="membersTaxonomyDisplay">
 										<mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down">
 											<mat-select [(value)]="selectedTaxonomyLanguage" (selectionChange)="changeTaxonomyLanguage()" [disabled]="isLocked">
-												<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox"> {{option.display}} </mat-option>
+												<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
 											</mat-select>
 										</mat-form-field>
 									</div>
@@ -576,7 +581,7 @@
 											[(ngModel)]="selectedMembersListMode">
 											<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
 											<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
-												{{taxonomyButtonLabel}}
+												{{ taxonomyButtonLabel }}
 											</mat-button-toggle>
 										</mat-button-toggle-group>
 									</div>
@@ -589,7 +594,7 @@
 											[(ngModel)]="selectedMembersListMode">
 											<mat-button-toggle value="table" title="Display Members in a Table" aria-label="Table">Table</mat-button-toggle>
 											<mat-button-toggle value="taxonomy" title="Taxonomy" aria-label="Display Members in a Taxonomy" [disabled]="!showTaxonomySearchTable">
-												{{taxonomyButtonLabel}}
+												{{ taxonomyButtonLabel }}
 											</mat-button-toggle>
 										</mat-button-toggle-group>
 									</div>
@@ -652,7 +657,7 @@
 											<div class="col-6">
 												<div
 													class="library-app-refset-discussion-list"
-													[ngClass]="{'library-app-refset-discussion-list-alt':params?.data?.historyVisible && params.data.released}">
+													[ngClass]="{ 'library-app-refset-discussion-list-alt': params?.data?.historyVisible && params.data.released }">
 													<app-refset-discussion-list
 														*ngIf="refsetData && params && params.data"
 														type="REFSET_MEMBER"
@@ -671,7 +676,7 @@
 
 									<ng-template #memberHistoryDialog let-data>
 										<div class="container-fluid">
-											<div class="rt2-dialog-name">{{data.name}}</div>
+											<div class="rt2-dialog-name">{{ data.name }}</div>
 
 											<ag-grid-angular #memberHistoryTable class="ag-theme-alpine rt2-ag-grid memberHistoryGrid" [columnDefs]="data.columnDefs" [gridOptions]="data.gridOptions">
 											</ag-grid-angular>
@@ -703,10 +708,10 @@
 										</app-pagination>
 
 										<!-- Result Template -->
-										<ng-template #taxonomyResultSection let-params> {{params?.value}} </ng-template>
+										<ng-template #taxonomyResultSection let-params> {{ params?.value }} </ng-template>
 
 										<!-- Path Template -->
-										<ng-template #taxonomyPathSection let-params> {{params?.value}} </ng-template>
+										<ng-template #taxonomyPathSection let-params> {{ params?.value }} </ng-template>
 									</div>
 
 									<div class="details-section">
@@ -740,7 +745,7 @@
 										<div class="col rt2-details-chooser-column">
 											<mat-form-field floatLabel="never" appearance="fill" class="format-option-drop-down concept-details-header">
 												<mat-select [(value)]="selectedConceptDetailLanguage" (selectionChange)="changeConceptDetailsLanguage()" [disabled]="isLocked">
-													<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox"> {{option.display}} </mat-option>
+													<mat-option *ngFor="let option of languageOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
 												</mat-select>
 											</mat-form-field>
 										</div>
@@ -791,16 +796,16 @@
 												(click)="loadConceptDetail(parent)">
 												<span
 													*ngIf="(this.taxonomyOptions.useFsn && this.conceptDetailsOptions.useFsn) || this.conceptDetailsOptions.useFsn"
-													title="{{parent.fsn}}"
-													aria-label="{{parent.fsn}}"
-													>{{parent.fsn}}</span
+													title="{{ parent.fsn }}"
+													aria-label="{{ parent.fsn }}"
+													>{{ parent.fsn }}</span
 												>
 
 												<span
 													*ngIf="(!this.taxonomyOptions.useFsn && !this.conceptDetailsOptions.useFsn) || !this.conceptDetailsOptions.useFsn"
-													title="{{parent.name}}"
-													aria-label="{{parent.name}}"
-													>{{parent.name}}</span
+													title="{{ parent.name }}"
+													aria-label="{{ parent.name }}"
+													>{{ parent.name }}</span
 												>
 											</span>
 										</div>
@@ -832,8 +837,11 @@
 																	src="/assets/unlinedTaxonomyIcon.png" />
 															</div>
 														</div>
-														<div class="col-md-8 rt2-concept-details-concept-name default-font" title="{{conceptDescriptionTerm}}" aria-label="{{conceptDescriptionTerm}}">
-															{{getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptionTerm}}
+														<div
+															class="col-md-8 rt2-concept-details-concept-name default-font"
+															title="{{ conceptDescriptionTerm }}"
+															aria-label="{{ conceptDescriptionTerm }}">
+															{{ getFsn(conceptDescriptions) ? getFsn(conceptDescriptions) : conceptDescriptionTerm }}
 														</div>
 														<div class="col open-container no-p-l">
 															<button
@@ -853,25 +861,25 @@
 													<div class="row rt2-concept-details-concept-row">
 														<div class="col-md-auto rt2-concept-details-concept-id-label">SCTID</div>
 
-														<div class="col rt2-concept-details-concept-id-text" title="{{conceptDetail.code}}" aria-label="{{conceptDetail.code}}">
-															{{conceptDetail.code}}
+														<div class="col rt2-concept-details-concept-id-text" title="{{ conceptDetail.code }}" aria-label="{{ conceptDetail.code }}">
+															{{ conceptDetail.code }}
 														</div>
 													</div>
 													<br />
 													<!-- ECL -->
 													<div class="row rt2-concept-details-concept-row">
-														<div class="col rt2-concept-details-concept-ecl">{{conceptDetail.code}} | {{conceptDescriptionTerm}} |</div>
+														<div class="col rt2-concept-details-concept-ecl">{{ conceptDetail.code }} | {{ conceptDescriptionTerm }} |</div>
 													</div>
 													<br />
 
 													<!-- Descriptions -->
 													<!-- FSN -->
 													<div class="row rt2-concept-details-concept-row" *ngFor="let description of conceptDescriptions">
-														<div class="rt2-concept-details-concept-description" title="{{description.languageName}}" aria-label="{{description.languageName}}">
+														<div class="rt2-concept-details-concept-description" title="{{ description.languageName }}" aria-label="{{ description.languageName }}">
 															<span class="rt2-concept-details-concept-description-language"
-																>{{description.languageName.substr(0, description.languageName.indexOf('(')).toLowerCase()}}
+																>{{ description.languageName.substr(0, description.languageName.indexOf('(')).toLowerCase() }}
 															</span>
-															{{description.term}}
+															{{ description.term }}
 														</div>
 													</div>
 												</div>
@@ -884,7 +892,7 @@
 												<div *ngIf="true">
 													<span class="no-attributes" *ngIf="!conceptDetail.numRoleGroups">No attributes</span>
 													<div class="row rt2-concept-details-role-row default-font" *ngFor="let role of conceptDetail.roleGroups | keyvalue">
-														<div class="row rt2-concept-details-role-details" *ngFor="let detail of role.value">{{detail}}</div>
+														<div class="row rt2-concept-details-role-details" *ngFor="let detail of role.value">{{ detail }}</div>
 													</div>
 												</div>
 											</div>
@@ -896,7 +904,7 @@
 										<div class="row">
 											<div class="rt2-concept-details-section-title">
 												Children
-												<span [hidden]="!numOfChildren">{{'(' + numOfChildren + ')'}}</span>
+												<span [hidden]="!numOfChildren">{{ '(' + numOfChildren + ')' }}</span>
 											</div>
 										</div>
 
@@ -956,7 +964,7 @@
 	<div class="modal-footer ready-for-review-footer rt2-btn-group">
 		<button
 			type="button"
-			(click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click');"
+			(click)="setWorkflowStatusByAction('', 'CANCEL_EDIT'); modal.dismiss('Yes click')"
 			color="primary"
 			aria-hidden="false"
 			class="rt2-btn rt2-action-btn"
@@ -982,7 +990,7 @@
 	<div class="modal-footer ready-for-review-footer rt2-btn-group">
 		<button
 			type="button"
-			(click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click');"
+			(click)="setWorkflowStatusByAction('', 'CANCEL_UPGRADE'); modal.dismiss('Yes click')"
 			color="primary"
 			aria-hidden="false"
 			class="rt2-btn rt2-action-btn"
@@ -1028,7 +1036,7 @@
 		<button
 			[disabled]="!validatePublishDate(publishVersionDate.value)"
 			type="button"
-			(click)="publishLocalset(publishVersionDate.value);"
+			(click)="publishLocalset(publishVersionDate.value)"
 			aria-hidden="false"
 			class="rt2-btn rt2-action-btn mr-20"
 			aria-label="Publish">
@@ -1051,7 +1059,7 @@
 		<div>You are about to undo all edits performed on this refset. This action can not be undone. Are you sure you want to cancel all edits and remove this version of the refset?</div>
 	</div>
 	<div class="modal-footer ready-for-review-footer rt2-btn-group">
-		<button type="button" (click)="deleteDevelopmentVersion(); modal.dismiss('Yes click');" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes">
+		<button type="button" (click)="deleteDevelopmentVersion(); modal.dismiss('Yes click')" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn" aria-label="Yes" title="Yes">
 			Yes
 		</button>
 		<button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-remove-btn" aria-label="No" title="No">No</button>
@@ -1074,7 +1082,7 @@
 	</div>
 
 	<div class="modal-footer rt2-modal-footer rt2-btn-group">
-		<button type="button" (click)="changeRefsetStatus();" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn">{{ changeRefsetStatusButtonText }}</button>
+		<button type="button" (click)="changeRefsetStatus()" color="primary" aria-hidden="false" class="rt2-btn rt2-action-btn">{{ changeRefsetStatusButtonText }}</button>
 		<button type="button" (click)="modal.dismiss('No click')" color="red" aria-hidden="false" class="rt2-btn rt2-cancel-btn">Cancel</button>
 	</div>
 </ng-template>

@@ -3,7 +3,11 @@
 <!-- Search Bar -->
 <div class="top-search-bar content-header">
 	<div class="row justify-content-end align-items-baseline">
-		<div class="col page-title">Reference Set Library <span [hidden]="!numOfMembers">{{'(' + numOfMembers + ')'}}</span></div>
+		<div class="col page-title">
+			Map Set Library
+			<!-- : need map set name -->
+			<span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span>
+		</div>
 		<div class="col-md-auto dropdown-group">
 			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
 				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
@@ -12,17 +16,17 @@
 			<div class="col-md-auto">
 				<div class="dropdown directoryInput">
 					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label">Search by name, concept or tags</mat-label>
-						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
+						<mat-label class="search-label">Search</mat-label>
+						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" disabled />
 					</mat-form-field>
 					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
 				</div>
 			</div>
-			<div class="col-md-auto p-l-5">
+			<div class="col-md-auto p-l-5 hide">
 				<mat-form-field floatLabel="never" class="directoryViewFilterField" appearance="fill">
 					<mat-label></mat-label>
 					<mat-select title="Public/Private Refsets" #directoryViewSelect [(value)]="selectedView" (selectionChange)="changedViewFilter()">
-						<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{option.display}} </mat-option>
+						<mat-option *ngFor="let option of viewOptions" [value]="option.value" class="no-checkbox"> {{ option.display }} </mat-option>
 					</mat-select>
 				</mat-form-field>
 			</div>
@@ -61,8 +65,8 @@
 					#directoryInfoIcon
 					class="rt2-table-action-icon w-30 h-30"
 					aria-label="View All Reference Set Metadata"
-					title="View Reference Set Metadata"
-					(click)="openInformation(params.data.refsetId)">
+					title="View Map Set Metadata"
+					(click)="openToBeDevelopedModal(toBeDevelopedModal)">
 					<mat-icon class="scale-85-pct">information</mat-icon>
 				</button>
 			</div>
@@ -74,10 +78,11 @@
 
 	<ng-template #directoryInfoDialog let-data>
 		<div class="container-fluid w-min-350 rt2-refset-metadata-column" id="directoryInformationSection">
-			<div class="row rt2-refset-details-title-name d-block" title="{{data.name}}" aria-label="{{data.name}}">
-				<p class="fs-18 mb-0 ml-10">{{data.name}}</p>
+			<div class="row rt2-refset-details-title-name d-block" title="{{ data.name }}" aria-label="{{ data.name }}">
+				<p class="fs-18 mb-0 ml-10">{{ data.name }}</p>
 				<p class="fs-16 ml-10">
-					<span *ngIf="data?.versionStatus">{{capitalizeFirstLetterOfString(data?.versionStatus)}}</span><span *ngIf="data?.versionDate">{{', ' + data?.versionDate}}</span>
+					<span *ngIf="data?.versionStatus">{{ capitalizeFirstLetterOfString(data?.versionStatus) }}</span
+					><span *ngIf="data?.versionDate">{{ ', ' + data?.versionDate }}</span>
 				</p>
 			</div>
 			<refset-meta [refset]="data"></refset-meta>
@@ -105,38 +110,34 @@
 		<mat-icon *ngIf="params?.data?.localSet" aria-hidden="false" class="rt2-table-action-icon rt2-table-action-form-icon" aria-label="Local Set" title="Local Set"> my_location </mat-icon>
 	</ng-template>
 
+	<ng-template #directoryVersionDate let-params> {{ formatVersionDate(params?.value) }} </ng-template>
+
 	<!-- Edition Templates -->
 	<ng-template #directoryEditionSection let-params>
 		<img
 			(load)="showFlagIcon($event, true)"
 			(error)="showFlagIcon($event, false)"
-			src="{{params?.data?.flagIcon}}"
+			src="{{ params?.data?.flagIcon }}"
 			class="rt2-edition-flag"
-			title="{{params?.data?.editionName}} Flag"
-			aria-label="{{params?.data?.editionName}} Flag" />
-		{{params?.data?.edition?.name}}
+			title="{{ params?.data?.editionName }} Flag"
+			aria-label="{{ params?.data?.editionName }} Flag" />
+		{{ params?.data?.edition?.name }}
 	</ng-template>
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex rt2-wrap">
+		<div class="d-flex">
 			<div class="col-6">
-				<div class="library-app-refset-download">
-					<app-refset-download [isDetailPage]="false" *ngIf="params?.data?.downloadable" [disabled]="!params?.data?.downloadable" [refset]="params.data"> </app-refset-download>
+				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<div class="mat-button-wrapper mapset-notes-icon">
+						<i class="fa fa-download fa-lg"></i>
+					</div>
 				</div>
 			</div>
 
 			<div class="col-6">
-				<div class="library-app-refset-discussion-list">
-					<app-refset-discussion-list
-						*ngIf="params && params.data"
-						type="REFSET"
-						[refsetInternalId]="params.data.id"
-						[refsetId]="params.data.refsetId"
-						[refsetName]="params.data.name"
-						[roles]="params.data.roles"
-						[(discussionCount)]="params.data.openDiscussionCount">
-					</app-refset-discussion-list>
+				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<img src="/assets/comment-dots-regular.svg" title="Start a new discussion" aria-label="Start a new discussion or review any of the existing discussions" class="discussion-icon" />
 				</div>
 			</div>
 		</div>
@@ -148,6 +149,21 @@
 			<mat-label>Feedback</mat-label>
 			<input matInput [(ngModel)]="data.feedback" />
 		</mat-form-field>
+	</ng-template>
+
+	<ng-template #toBeDevelopedModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<h4 class="modal-title">To be developed</h4>
+			<button type="button" class="close dialog-close-x close-icon-font" aria-label="Close" (click)="closeToBeDevelopedModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>This feature is not yet available. Please check back later.</p>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" class="rt2-btn rt2-close-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
 	</ng-template>
 </div>
 <scroll-top></scroll-top>
