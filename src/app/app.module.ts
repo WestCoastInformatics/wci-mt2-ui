@@ -73,6 +73,7 @@ import { AuditTrailModule } from './components/audit-trail/audit-trail.module';
 import { MapsetRecordsComponent } from './pages/mapset-records/mapset-records.component';
 import { MapsetLibraryComponent } from './pages/mapset-library/mapset-library.component';
 import { MapsetDetailsComponent } from './pages/mapset-details/mapset-details.component';
+import { MapsetMappingComponent } from './pages/mapset-mapping/mapset-mapping.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProjectsRefsetComponent } from './pages/projects/refsets/projects-refset.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
@@ -144,9 +145,10 @@ const appRoutes: Routes = [
 	{ path: '', component: LandingComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
 	{ path: 'mapset/:code', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
+	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mappings' } },
 	{ path: 'details/:mapsetId/:versionDate', component: MapsetDetailsComponent, data: { breadcrumbLabel: 'Map Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },
-
+	//mapset/{mapSetCode}/mapping/{conceptCode}
 	{
 		path: 'organizations',
 		component: OrganizationsComponent,
@@ -303,6 +305,7 @@ const appRoutes: Routes = [
 		MapsetLibraryComponent,
 		MapsetRecordsComponent,
 		MapsetDetailsComponent,
+		MapsetMappingComponent,
 		OrganizationsComponent,
 		OrganizationProjectsComponent,
 		OrganizationTeamsComponent,

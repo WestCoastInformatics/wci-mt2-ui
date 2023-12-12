@@ -133,7 +133,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 				const thisResult = results.filter((res) => {
 					return res.refSetCode === this.mapsetCode;
 				});
-				this.mapsetName = thisResult[0].refSetName;
+				this.mapsetName = thisResult[0]?.refSetName;
 			},
 		});
 	}
@@ -538,7 +538,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 			restParams.query = query;
 		}
 
-		this.refsetService.getMappingByCode(this.mapsetCode).subscribe({
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
 				// if this is not the latest search call then do not apply the results
@@ -686,20 +686,10 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 	}
 
 	onGridCellClick = (event) => {
-		//	if (event.column.colId === 'information' || event.column.colId === 'actions') {
-		//
-		//} else {
-		const selectedRows = this.refsetGridApi.getSelectedRows();
-		let selectedId: string;
-		let selectedVersionDate: string;
-
-		selectedRows.forEach(function (selectedRow, index) {
-			selectedId = selectedRow.refsetId;
-			selectedVersionDate = RefsetUtility.getVersionDateForRefsetApiCall(selectedRow);
-		});
-		//console.log(selectedRows);
-		//this.goToDetailsPage(selectedId, selectedVersionDate);
-		//	}
+		if (event.column.colId === 'code') {
+			this.goToMappingPage(event.data.code);
+			return;
+		}
 	};
 
 	gridEvent(action): void {
@@ -754,6 +744,12 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
 		this.router.navigate(['/details', refsetId, versionDate], { replaceUrl: false, skipLocationChange: false });
+	}
+
+	goToMappingPage(code) {
+		const url = new URL(window.location.href);
+		window.history.pushState({}, '', url.href);
+		this.router.navigate(['/mapset/' + this.mapsetCode + '/mapping/' + code], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
