@@ -144,7 +144,7 @@ const appRoutes: Routes = [
 	{ path: 'login', component: LoginComponent },
 	{ path: '', component: LandingComponent },
 	{ path: 'library', component: MapsetLibraryComponent, data: { breadcrumbLabel: 'Map Set Library' } },
-	{ path: 'mapset/:code', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
+	{ path: 'mapset/:code/mappings', component: MapsetRecordsComponent, data: { breadcrumbLabel: 'Mappings' } },
 	{ path: 'mapset/:code/mapping/:concept', component: MapsetMappingComponent, data: { breadcrumbLabel: 'Mappings' } },
 	{ path: 'details/:mapsetId/:versionDate', component: MapsetDetailsComponent, data: { breadcrumbLabel: 'Map Set Details', editMode: false } },
 	{ path: 'dashboard', component: DashboardComponent, data: { breadcrumbLabel: 'Dashboard' }, canActivate: [AuthGuardGuard] },

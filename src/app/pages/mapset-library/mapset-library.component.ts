@@ -425,7 +425,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);
-		this.router.navigate(['/mapset', code], { replaceUrl: false, skipLocationChange: false });
+		this.router.navigate(['/mapset/' + code + '/mappings'], { replaceUrl: false, skipLocationChange: false });
 	}
 
 	getRefsetRow(refsetId: string) {
