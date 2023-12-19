@@ -36,9 +36,11 @@
 
 <div class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
 	<div class="box box-default">
-		<code>
-			<pre>{{mapping |json}}</pre>
-		</code>
+		<div style="max-height:600px; overflow:scroll;">
+			<code>
+				<pre>{{mapping |json}}</pre>
+			</code>
+		</div>
 	</div>
 </div>
 <scroll-top></scroll-top>
