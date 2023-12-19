@@ -538,7 +538,7 @@ export class MapsetRecordsComponent implements OnInit, AfterViewInit {
 			restParams.query = query;
 		}
 
-		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe({
+		this.refsetService.getMappingsByMapset(this.mapsetCode).subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
 				// if this is not the latest search call then do not apply the results

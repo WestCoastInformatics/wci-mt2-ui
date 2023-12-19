@@ -75,7 +75,8 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	mapsetCode: string;
-	mapsetConcept: string;
+	conceptCode: string;
+	mapping: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 
@@ -120,7 +121,7 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 
 		this.routeParamsSubscription$ = this.route.params.subscribe((routeParams) => {
 			this.mapsetCode = routeParams.code;
-			this.mapsetConcept = routeParams.concept;
+			this.conceptCode = routeParams.concept;
 			this.getMapsetInfo();
 		});
 
@@ -128,144 +129,145 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	getMapsetInfo() {
-		//?? do you need this
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				const thisResult = results.filter((res) => {
 					return res.refSetCode === this.mapsetCode;
 				});
-				this.mapsetName = thisResult[0].refSetName;
+				this.mapsetName = thisResult[0]?.refSetName;
 			},
 		});
 	}
 
 	ngAfterViewInit() {
 		console.log('mapsetCode', this.mapsetCode);
-		console.log('mapsetConcept', this.mapsetConcept);
-		//?? change to the new service call here
-		this.refsetService.getMapsets().subscribe({
-			next: ([results]) => {
-				this.versionStatuses;
-				let versionStatusArray;
-				this.columnDefs = [
-					// This is an exception to resizeable field because it is an info icon field
-					{
-						field: 'id',
-						colId: 'information',
-						headerName: '',
-						minWidth: 50,
-						width: 70,
-						cellClass: 'rt2-directory-column-information',
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.infoSection },
-						filter: false,
-						resizable: false,
-						sortable: false,
-					},
-					{ field: 'refSetCode', tooltipField: 'refSetCode', headerName: 'Mapset ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
-					{
-						field: 'refSetName',
-						tooltipField: 'refSetName',
-						headerName: 'Map Set Name',
-						cellClass: 'rt2-directory-column-name',
-						flex: 2,
-						resizable: true,
-						minWidth: 65,
-						sort: 'asc',
-						unSortIcon: true,
-					},
-					{
-						field: 'versionStatus',
-						tooltipField: 'versionStatus',
-						headerName: 'Version Status',
-						cellClass: 'rt2-directory-column-version-status',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						valueGetter: this.versionStatusValueGetter,
-						unSortIcon: true,
-					},
-					{
-						field: 'version',
-						tooltipValueGetter: UiUtility.gridDateValueGetter,
-						headerName: 'Version Date',
-						cellClass: 'rt2-directory-column-version-date',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						floatingFilterComponent: DateTextFilterComponent,
-						floatingFilterComponentParams: { suppressFilterButton: true },
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.versionDate },
-						unSortIcon: true,
-					},
-					{
-						field: 'modified',
-						tooltipValueGetter: UiUtility.gridDateValueGetter,
-						headerName: 'Last Modified',
-						cellClass: 'rt2-directory-column-modified-date',
-						minWidth: 65,
-						width: 170,
-						resizable: true,
-						valueGetter: UiUtility.gridDateValueGetter,
-						floatingFilterComponent: DateTextFilterComponent,
-						floatingFilterComponentParams: { suppressFilterButton: true },
-						unSortIcon: true,
-					},
-					// This is an exception to a resizeable field because it is an action field
-					{
-						field: 'downloadable',
-						colId: 'actions',
-						headerName: '',
-						width: 90,
-						cellClass: 'rt2-directory-column-actions',
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.actionSection },
-						sortable: false,
-						filter: false,
-						resizable: false,
-					},
-				];
-				this.refsetGridOptions = {
-					context: { componentParent: this },
-					pagination: true,
-					suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
-					suppressPaginationPanel: true,
-					paginationPageSize: this.refsetGridPaging.pageSize,
-					rowSelection: 'single',
-					enableCellTextSelection: true,
-					onCellClicked: this.onGridCellClick,
-					onGridReady: this.onGridReady,
-					frameworkComponents: {
-						'templateRenderer': TemplateRendererComponent,
-						'categoryFilterComponent': CategoryFilterComponent,
-						'dateTextFilterComponent': DateTextFilterComponent,
-					},
-					defaultColDef: {
-						sortable: true,
-						filter: true,
-						sortingOrder: ['asc', 'desc'],
-						floatingFilter: true,
-						floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
-						suppressMenu: true,
-						resizable: true,
-					},
-					enableBrowserTooltips: true,
-					rowClassRules: {
-						'refset_tool_grid_inactive_row': function (params) {
-							let inactivatedRow = false;
+		console.log('mapsetConcept', this.conceptCode);
 
-							if (params.data) {
-								inactivatedRow = params.data.active == false;
-							}
+		this.refsetService.getMappingByMapsetAndConcept(this.mapsetCode, this.conceptCode).subscribe({
+			next: (results) => {
+				const data = results;
+				this.mapping = data;
+				// this.versionStatuses;
+				// let versionStatusArray;
+				// this.columnDefs = [
+				// 	// This is an exception to resizeable field because it is an info icon field
+				// 	{
+				// 		field: 'id',
+				// 		colId: 'information',
+				// 		headerName: '',
+				// 		minWidth: 50,
+				// 		width: 70,
+				// 		cellClass: 'rt2-directory-column-information',
+				// 		cellRenderer: TemplateRendererComponent,
+				// 		cellRendererParams: { template: this.infoSection },
+				// 		filter: false,
+				// 		resizable: false,
+				// 		sortable: false,
+				// 	},
+				// 	{ field: 'refSetCode', tooltipField: 'refSetCode', headerName: 'Mapset ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
+				// 	{
+				// 		field: 'refSetName',
+				// 		tooltipField: 'refSetName',
+				// 		headerName: 'Map Set Name',
+				// 		cellClass: 'rt2-directory-column-name',
+				// 		flex: 2,
+				// 		resizable: true,
+				// 		minWidth: 65,
+				// 		sort: 'asc',
+				// 		unSortIcon: true,
+				// 	},
+				// 	{
+				// 		field: 'versionStatus',
+				// 		tooltipField: 'versionStatus',
+				// 		headerName: 'Version Status',
+				// 		cellClass: 'rt2-directory-column-version-status',
+				// 		minWidth: 65,
+				// 		width: 170,
+				// 		resizable: true,
+				// 		valueGetter: this.versionStatusValueGetter,
+				// 		unSortIcon: true,
+				// 	},
+				// 	{
+				// 		field: 'version',
+				// 		tooltipValueGetter: UiUtility.gridDateValueGetter,
+				// 		headerName: 'Version Date',
+				// 		cellClass: 'rt2-directory-column-version-date',
+				// 		minWidth: 65,
+				// 		width: 170,
+				// 		resizable: true,
+				// 		floatingFilterComponent: DateTextFilterComponent,
+				// 		floatingFilterComponentParams: { suppressFilterButton: true },
+				// 		cellRenderer: TemplateRendererComponent,
+				// 		cellRendererParams: { template: this.versionDate },
+				// 		unSortIcon: true,
+				// 	},
+				// 	{
+				// 		field: 'modified',
+				// 		tooltipValueGetter: UiUtility.gridDateValueGetter,
+				// 		headerName: 'Last Modified',
+				// 		cellClass: 'rt2-directory-column-modified-date',
+				// 		minWidth: 65,
+				// 		width: 170,
+				// 		resizable: true,
+				// 		valueGetter: UiUtility.gridDateValueGetter,
+				// 		floatingFilterComponent: DateTextFilterComponent,
+				// 		floatingFilterComponentParams: { suppressFilterButton: true },
+				// 		unSortIcon: true,
+				// 	},
+				// 	// This is an exception to a resizeable field because it is an action field
+				// 	{
+				// 		field: 'downloadable',
+				// 		colId: 'actions',
+				// 		headerName: '',
+				// 		width: 90,
+				// 		cellClass: 'rt2-directory-column-actions',
+				// 		cellRenderer: TemplateRendererComponent,
+				// 		cellRendererParams: { template: this.actionSection },
+				// 		sortable: false,
+				// 		filter: false,
+				// 		resizable: false,
+				// 	},
+				// ];
+				// this.refsetGridOptions = {
+				// 	context: { componentParent: this },
+				// 	pagination: true,
+				// 	suppressColumnVirtualisation: true, // need this so you can access rows and cells that might not be currently visible, including if the grid is hidden
+				// 	suppressPaginationPanel: true,
+				// 	paginationPageSize: this.refsetGridPaging.pageSize,
+				// 	rowSelection: 'single',
+				// 	enableCellTextSelection: true,
+				// 	onCellClicked: this.onGridCellClick,
+				// 	onGridReady: this.onGridReady,
+				// 	frameworkComponents: {
+				// 		'templateRenderer': TemplateRendererComponent,
+				// 		'categoryFilterComponent': CategoryFilterComponent,
+				// 		'dateTextFilterComponent': DateTextFilterComponent,
+				// 	},
+				// 	defaultColDef: {
+				// 		sortable: true,
+				// 		filter: true,
+				// 		sortingOrder: ['asc', 'desc'],
+				// 		floatingFilter: true,
+				// 		floatingFilterComponentParams: { placeholder: '', suppressFilterButton: false },
+				// 		suppressMenu: true,
+				// 		resizable: true,
+				// 	},
+				// 	enableBrowserTooltips: true,
+				// 	rowClassRules: {
+				// 		'refset_tool_grid_inactive_row': function (params) {
+				// 			let inactivatedRow = false;
 
-							return inactivatedRow;
-						},
-					},
-				};
+				// 			if (params.data) {
+				// 				inactivatedRow = params.data.active == false;
+				// 			}
 
-				this.showTable = true;
-				this.changeDetectorRef.detectChanges();
+				// 			return inactivatedRow;
+				// 		},
+				// 	},
+				// };
+
+				// this.showTable = true;
+				// this.changeDetectorRef.detectChanges();
 			},
 			error: (error) => {
 				//
