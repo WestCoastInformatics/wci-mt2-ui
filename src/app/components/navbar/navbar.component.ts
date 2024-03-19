@@ -31,8 +31,8 @@ export class NavbarComponent implements OnInit {
 		readonly refsetService: RefsetService
 	) {
 		this.guestUser = authenticationService.GUEST_USER;
-		this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
-
+		//this.environment = window.location.host.split(/[.]/)[0].split(/[-]/)[0];
+		this.environment = window.location.hostname;
 		this.userSubscription = this.authenticationService.userSubject.subscribe((data) => {
 			this.setUserInfo();
 		});
@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
 
 	setUserInfo() {
 		this.user = this.authenticationService.getUser();
-		this.isUserLoggedIn = this.user && this.user.userName != this.guestUser;
+		this.isUserLoggedIn = true; //this.user && this.user.userName != this.guestUser;
 	}
 
 	showProjectRoleAndAssignee(): boolean {

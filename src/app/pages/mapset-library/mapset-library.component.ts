@@ -69,7 +69,6 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	numOfMembers: any;
 	disableChannel = new BroadcastChannel('disable-button-channel');
 	originalGridParams: any;
-	searchCallArray = [];
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
@@ -82,7 +81,6 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 	@ViewChild('directoryInfoSection') infoSection: TemplateRef<any>;
 	@ViewChild('directoryVersionDate') versionDate: TemplateRef<any>;
 	@ViewChild('directoryNameSection') nameSection: TemplateRef<any>;
-	@ViewChild('directoryEditionSection') editionSection: TemplateRef<any>;
 	@ViewChild('directoryActionSection') actionSection: TemplateRef<any>;
 	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
@@ -130,6 +128,9 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						filter: false,
 						resizable: false,
 						sortable: false,
+						getQuickFilterText: (params) => {
+							return '';
+						},
 					},
 					{ field: 'refSetCode', tooltipField: 'refSetCode', headerName: 'Mapset ID', cellClass: 'rt2-directory-column-id', minWidth: 65, resizable: true, unSortIcon: true },
 					{
@@ -193,6 +194,9 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						sortable: false,
 						filter: false,
 						resizable: false,
+						getQuickFilterText: (params) => {
+							return '';
+						},
 					},
 				];
 				this.refsetGridOptions = {
@@ -248,9 +252,6 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 
 	//***** AG Grid Functions *****/
 	onGridReady = (gridReadyParams) => {
-		const searchTime = Date.now();
-		this.searchCallArray.push(searchTime);
-
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
@@ -259,12 +260,6 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 
 		this.refsetGridApi.showLoadingOverlay();
 		let query = '';
-
-		if (this.selectedView === 'public') {
-			query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: false';
-		} else if (this.selectedView === 'private') {
-			query = CodeUtility.addIfNotEmpty(query, ' AND ') + 'privateRefset: true';
-		}
 
 		if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 			query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
@@ -291,13 +286,11 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		this.refsetService.getMapsets().subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
-				// if this is not the latest search call then do not apply the results
-				if (searchTime - this.searchCallArray[this.searchCallArray.length - 1] < 0) {
-					return;
-				}
+
 				const data = results;
+
 				this.refsetData = data;
-				this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.total;
+				this.numOfMembers = results.length;
 				this.numOfResults = results.total;
 
 				if (results.length == 0) {
@@ -391,8 +384,7 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 		this.searchInput = this.searchInput.trim();
 
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.showLoadingSearch = true;
-			this.onGridReady(this.originalGridParams);
+			this.refsetGridApi.setQuickFilter(this.searchInput);
 		}
 	}
 
@@ -472,10 +464,10 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 				dialogId: dialogId,
 				showCancel: false,
 				cancelText: 'Close',
-				actionText: 'View Complete Reference Set',
+				actionText: 'View Complete Map Set',
 				showConfirm: false,
 				template: this.infoDialog,
-				headerText: 'Reference Set Metadata',
+				headerText: 'Map Set Metadata',
 				data: refset,
 				showAction: true,
 				showCloseIcon: true,

@@ -179,7 +179,7 @@
 .rt2-close-btn,
 .rt2-cancel-btn {
 	background-color: #d3d3d3;
-	color: #2269e8;
+	color: $mapset-blue;
 }
 
 /***** Next, Back, Green btn *****/
@@ -196,7 +196,7 @@
 }
 
 .mat-mdc-raised-button.mat-primary {
-	background-color: #2269e8 !important;
+	background-color: $mapset-blue !important;
 	color: #ffffff !important;
 }
 

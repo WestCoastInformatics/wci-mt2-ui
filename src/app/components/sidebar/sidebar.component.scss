@@ -10,7 +10,7 @@ $sidebar-width: 294px;
 
 	.wrapper {
 		min-height: 100%;
-		background-color: #2269e8;
+		background-color: $mapset-blue;
 		width: 72px;
 		overflow: hidden;
 		transition: width 0.2s;

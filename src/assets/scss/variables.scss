@@ -159,6 +159,7 @@ $blumine: #124f6b;
 	background-color: $blumine;
 }
 
+$mapset-blue: #2269e8;
 ////////////////////////////////////////////////////////////////////////
 // ORANGE //////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -191,6 +192,8 @@ $standard_font_size: 1.2rem;
 /*replaced 14px*/
 $standard_font_size_largest: 3rem;
 /*30*/
+$standard_font_size_title: 2em;
+/*20px*/
 $standard_font_size_h1: 2.4rem;
 /*24*/
 $standard_font_size_h2: 1.9rem;
@@ -221,7 +224,7 @@ $standard_font_weight_heavy: 500;
 $standard_font_weight_bold: 600;
 $standard_table_data_color: #666;
 $standard_link_color: $cerulean;
-$standard_primary_button_color: $cerulean;
+$standard_primary_button_color: #2269e8;
 $standard_default_button_color: #fdfdfd;
 $standard_green_button_color: #4ea24e;
 $standard_red_button_color: red;

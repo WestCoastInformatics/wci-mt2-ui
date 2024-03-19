@@ -5,7 +5,7 @@ nav {
 	padding: 5px;
 	position: fixed;
 	width: 100%;
-	background-color: #2269e8 !important;
+	background-color: $mapset-blue !important;
 
 	a.logo {
 		height: 40px;
@@ -26,7 +26,7 @@ nav {
 
 	div.banner {
 		position: absolute;
-		top: 0.6rem;
+		top: 1rem;
 		left: -3rem;
 		transform: rotate(-45deg);
 		line-height: 1rem;
@@ -133,7 +133,7 @@ nav {
 		}
 
 		.dropdown-menu {
-			background-color: #2269e8;
+			background-color: $mapset-blue;
 			right: -7px;
 			top: calc(100% - 1px);
 			left: -175px;
@@ -154,7 +154,7 @@ nav {
 
 			.profile-block {
 				flex-grow: 1;
-				padding: 0 10px;
+				padding: 10px;
 				display: inline-block;
 				font-size: $standard_font_size_h3;
 			}
@@ -192,7 +192,7 @@ nav {
 .rt2-nav-logo-section {
 	display: flex;
 	align-items: center;
-	width: 360px;
+	width: 270px;
 	text-decoration: none;
 }
 
@@ -233,9 +233,10 @@ nav {
 	align-items: center;
 
 	.rt2-breadcrumb {
-		color: #c8cfd6;
+		color: $white;
 		font-family: $standard_font_family;
 		font-weight: $standard_font_weight;
+		font-size: $standard_font_size_h3;
 
 		&.rt2-breadcrumb-selectable {
 			cursor: pointer;
@@ -245,7 +246,7 @@ nav {
 }
 
 .navbar-div {
-	width: 65px;
+	width: 75px;
 	margin: 0;
 	height: 78px;
 	cursor: pointer;
@@ -274,6 +275,9 @@ nav {
 
 .navbar-menu-link {
 	margin-top: 1.75em;
+	.btn {
+		border: none;
+	}
 }
 
 .navbar-icon-label {
