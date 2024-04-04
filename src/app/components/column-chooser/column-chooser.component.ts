@@ -25,7 +25,7 @@ export class ColumnChooserComponent {
 	constructor(private dialogFactoryService: DialogFactoryService) {}
 
 	ngOnChanges() {
-		if (this.gridColumnApi?.columnController?.columnDefs) {
+		if (this.gridColumnApi?.columnModel?.columnDefs) {
 			// make sure not to lose previous column selections
 			const previousColumns = this.columns;
 			this.columns = [];
@@ -36,7 +36,7 @@ export class ColumnChooserComponent {
 
 			const detectChanges = false;
 
-			for (const column of this.gridColumnApi?.columnController?.columnDefs) {
+			for (const column of this.gridColumnApi.columnModel.columnDefs) {
 				// Avoid these coluns (they are icon columns without titles)
 				if (column.headerName == '' || !column.headerName) {
 					continue;

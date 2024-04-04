@@ -14,7 +14,7 @@
 		</div>
 
 		<ng-container [ngSwitch]="environment">
-			<div *ngSwitchCase="'local'" class="banner text-white local page-h1-font"></div>
+			<div *ngSwitchCase="'localhost'" class="banner text-white local page-h1-font"></div>
 			<div *ngSwitchCase="'dev'" class="banner text-white dev page-h1-font"></div>
 			<div *ngSwitchCase="'uat'" class="banner text-white uat page-h1-font"></div>
 			<div *ngSwitchCase="'training'" class="banner text-white training page-h1-font"></div>
@@ -45,8 +45,8 @@
 		</div>
 
 		<div *ngIf="isUserLoggedIn" class="navbar-div navbar-divider" (click)="navigateToRoute('/library')">
-			<div class="navbar-icon"><i class="fa fa-comment-dots fa-lg navbar-icon-label navbar-fa-icon"></i></div>
-			<div class="navbar-icon-label header-icon-font">Feedback</div>
+			<div class="navbar-icon"><i class="fa fa-inbox fa-lg navbar-icon-label navbar-fa-icon"></i></div>
+			<div class="navbar-icon-label header-icon-font">Inbox</div>
 		</div>
 
 		<div *ngIf="isUserLoggedIn" class="navbar-div navbar-divider" (click)="navigateToRoute('/library')">

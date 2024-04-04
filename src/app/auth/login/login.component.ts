@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
 
 	login(): any {
 		// IMS login
-		this.authService.imsLogin();
+		//this.authService.imsLogin();
 	}
 
 	logout(): any {
