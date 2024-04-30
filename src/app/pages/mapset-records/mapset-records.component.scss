@@ -1,6 +1,31 @@
 @import 'src/assets/scss/variables.scss';
 @import 'src/assets/scss/core-styles.scss';
 
+.advice-popover {
+	position: absolute;
+	z-index: 15;
+	margin-left: 25px;
+	padding: 2px 2px 2px 2px;
+	border-radius: 5px;
+	border: 1px solid #aaaaaa;
+	background-color: #ffffff;
+	box-sizing: border-box;
+	box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.35);
+	line-height: 16px;
+	font-size: 13px;
+	min-width: 300px;
+	max-width: 300px;
+	padding-bottom: 10px;
+}
+
+.advice-popover li {
+	white-space: normal;
+	float: left;
+	width: 100%;
+	height: auto;
+	word-wrap: break-word;
+}
+
 #directorySearchInputField {
 	width: 340px;
 	margin-top: 0.25em;
@@ -62,6 +87,10 @@
 
 .dropdown-actions {
 	width: 250px;
+}
+
+.grey-close-icon {
+	float: right;
 }
 
 .top-search-bar {

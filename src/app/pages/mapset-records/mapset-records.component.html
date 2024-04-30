@@ -213,7 +213,14 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<span class="blue-link">{{ getAdviceDisplayLink(params?.value) }}</span>
+		<div class="advice-popover" *ngIf="params?.data?.advices_open">
+			<img src="assets/grey-close-icon.svg" (click)="closePopover(params)" width="14px" height="14px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+			<ul>
+				<li *ngFor="let item of params?.value">{{ item }}</li>
+			</ul>
+		</div>
+		<span class="blue-link" *ngIf="!params.value || params?.value.length === 0">--</span>
+		<span class="blue-link" (click)="openPopover(params)" *ngIf="params.value">Advices ({{ (params?.value).length }})</span>
 	</ng-template>
 
 	<ng-template #directoryCodeSection let-params>
@@ -222,11 +229,11 @@
 		</span>
 		<span *ngIf="params?.value !== 'No map entries available.'">
 			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '/1'">
-				<mat-chip class="mapset-chip">
+				<mat-chip class="mapset-chip" title="{{ 'Group ' + params?.value.split('#')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('/')[1] }}">
 					{{ params?.value.split('#')[0] }}
 				</mat-chip>
 			</mat-chip-list>
-			<span class="blue-link">{{ params?.value.split('#')[1] }}</span></span
+			<span class="blue-link" title="{{ params?.value.split('#')[1] }}">{{ params?.value.split('#')[1] }}</span></span
 		>
 	</ng-template>
 

@@ -494,10 +494,29 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
+	openPopover(params: any) {
+		this.refsetGridApi.forEachNode((node) => {
+			if (node.data.advices_open) {
+				node.data.advices_open = false;
+			}
+		});
+		params.data.advices_open = true;
+	}
+	closePopover(params: any) {
+		params.data.advices_open = false;
+	}
+
 	onGridCellClick = (event) => {
 		if (event.column.colId === 'code') {
 			this.goToMappingPage(event.data.code);
 			return;
+		}
+		if (event.column.colId !== 'advices') {
+			this.refsetGridApi.forEachNode((node) => {
+				if (node.data.advices_open) {
+					node.data.advices_open = false;
+				}
+			});
 		}
 	};
 
@@ -577,16 +596,6 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 
 		return refset;
-	}
-
-	getAdviceDisplayLink(value): string {
-		let adviceLink = '--';
-		if (value) {
-			if (value.length > 0) {
-				adviceLink = 'Advices (' + value.length + ')';
-			}
-		}
-		return adviceLink;
 	}
 
 	openInformation(refsetId: string) {
