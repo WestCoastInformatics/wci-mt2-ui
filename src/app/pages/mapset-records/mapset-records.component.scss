@@ -4,7 +4,8 @@
 .advice-popover {
 	position: absolute;
 	z-index: 15;
-	margin-left: 25px;
+	top: 0;
+	margin-left: -90%;
 	padding: 2px 2px 2px 2px;
 	border-radius: 5px;
 	border: 1px solid #aaaaaa;
@@ -15,7 +16,22 @@
 	font-size: 13px;
 	min-width: 300px;
 	max-width: 300px;
-	padding-bottom: 10px;
+}
+
+.show {
+	display: inline-block;
+}
+
+.hide {
+	display: none;
+}
+
+.advice-popover ul {
+	display: flex;
+	flex-direction: column;
+	gap: 17px;
+	margin: 17px;
+	margin-top: 25px;
 }
 
 .advice-popover li {
@@ -24,6 +40,28 @@
 	width: 100%;
 	height: auto;
 	word-wrap: break-word;
+}
+
+.popup-handle {
+	z-index: 25;
+	height: 16px;
+	width: 16px;
+	position: absolute;
+	margin-left: 43%;
+	rotate: 45deg;
+	background-color: #fff;
+}
+
+.popup-handle-top {
+	top: -9px;
+	border-left: 1px solid #aaa;
+	border-top: 1px solid #aaa;
+}
+
+.popup-handle-bottom {
+	bottom: -9px;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
 }
 
 #directorySearchInputField {
@@ -91,6 +129,7 @@
 
 .grey-close-icon {
 	float: right;
+	margin: 7px;
 }
 
 .top-search-bar {

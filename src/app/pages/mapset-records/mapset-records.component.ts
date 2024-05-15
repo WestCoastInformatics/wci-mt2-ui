@@ -76,6 +76,7 @@ export class MapsetRecordsComponent implements OnInit {
 	mapsetCode: string;
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
+	advicePopoverLocation = '45px';
 
 	selectedAction = '';
 	showMappingsSection = true;
@@ -501,7 +502,25 @@ export class MapsetRecordsComponent implements OnInit {
 			}
 		});
 		params.data.advices_open = true;
+		let popHeight = 0;
+		const showInterval = setInterval(() => {
+			params.data.advice_top = true;
+			params.data.advice_bottom = false;
+			popHeight = document.getElementById('popover_' + params.data.code).offsetHeight;
+			this.advicePopoverLocation = '45px';
+			let offsetRows = 2;
+			if (popHeight > 100) {
+				offsetRows = 3;
+			}
+			if (params.node.rowIndex > 0 && params.node.rowIndex + offsetRows >= this.refsetGridApi.paginationGetPageSize()) {
+				params.data.advice_bottom = true;
+				params.data.advice_top = false;
+				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
+			}
+			clearInterval(showInterval);
+		}, 5);
 	}
+
 	closePopover(params: any) {
 		params.data.advices_open = false;
 	}

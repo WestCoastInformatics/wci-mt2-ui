@@ -213,11 +213,13 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<div class="advice-popover" *ngIf="params?.data?.advices_open">
-			<img src="assets/grey-close-icon.svg" (click)="closePopover(params)" width="14px" height="14px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
+		<div id="{{ 'popover_' + params?.data?.code }}" class="advice-popover" [ngStyle]="{ top: advicePopoverLocation }" [ngClass]="params?.data?.advices_open ? 'show' : 'hide'">
+			<div *ngIf="params?.data?.advice_top === true" class="popup-handle popup-handle-top"></div>
+			<img src="assets/grey-close-icon.svg" (click)="closePopover(params)" width="12px" height="12px" title="Close" aria-label="Close" class="grey-close-icon" alt="Close" />
 			<ul>
 				<li *ngFor="let item of params?.value">{{ item }}</li>
 			</ul>
+			<div *ngIf="params?.data?.advice_bottom === true" class="popup-handle popup-handle-bottom"></div>
 		</div>
 		<span class="blue-link" *ngIf="!params.value || params?.value.length === 0">--</span>
 		<span class="blue-link" (click)="openPopover(params)" *ngIf="params.value">Advices ({{ (params?.value).length }})</span>
