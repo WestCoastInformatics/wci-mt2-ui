@@ -18,11 +18,11 @@
 		</div>
 		<div class="col-md-auto d-flex p-r-40">
 			<div class="col-6">
-				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion">
 					<div class="mat-button-wrapper mapset-notes-icon">
 						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
 					</div>
-				</div>
+				</button>
 			</div>
 			<div class="col-6 p-l-10">
 				<div class="library-app-refset-discussion-list" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
@@ -249,7 +249,7 @@
 
 	<ng-template #toBeDevelopedModal let-modal>
 		<div class="modal-header rt2-modal-header">
-			<h4 class="modal-title">To be developed</h4>
+			<div class="modal-title">To be developed</div>
 			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeToBeDevelopedModal()">
 				<span aria-hidden="true">&times;</span>
 			</button>
@@ -258,7 +258,37 @@
 			<p>This feature is not yet available. Please check back later.</p>
 		</div>
 		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
-			<button type="button" class="rt2-btn rt2-close-btn" (click)="closeToBeDevelopedModal()">Close</button>
+			<button type="button" class="rt2-btn rt2-action-btn" (click)="closeToBeDevelopedModal()">Close</button>
+		</div>
+	</ng-template>
+
+	<ng-template #downloadModal let-modal>
+		<div class="modal-header rt2-modal-header">
+			<div class="modal-title">Download Map Set</div>
+			<button type="button" class="close dialog-close-x close-icon-font" title="Close" aria-label="Close" (click)="closeDownloadModal()">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>Download {{ mapsetName }} {{ selectedVersion }}</p>
+			<div class="modal-select">
+				<label class="modal-label">Format: </label>
+				<mat-form-field floatLabel="never" appearance="fill" class="form-field-header">
+					<mat-select placeholder="Select a format" [ngModel]="formats" [(value)]="selectedFormat" class="rt2-column-chooser-select">
+						<mat-select-trigger class="trigger"
+							><span *ngIf="!selectedFormat"> Select a format </span><span *ngIf="selectedFormat">{{ selectedFormat.display }}</span></mat-select-trigger
+						>
+
+						<mat-option *ngFor="let format of formats" [value]="format" class="no-checkbox">
+							{{ format.display }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+		<div class="modal-footer rt2-modal-footer rt2-lockable rt2-btn-group">
+			<button type="button" title="Cancel" class="rt2-btn rt2-action-btn" (click)="closeDownloadModal()">Cancel</button>
+			<button type="button" title="Download" class="rt2-btn rt2-action-btn" (click)="startDownload()">Download</button>
 		</div>
 	</ng-template>
 

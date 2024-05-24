@@ -106,12 +106,6 @@
 	font-size: 2em;
 }
 
-.rt2-modal-footer {
-	border-top: 1px solid #dee2e6;
-	background-color: white !important;
-	align-self: right;
-}
-
 .modal-section {
 	margin-bottom: 30px;
 }
@@ -242,10 +236,26 @@
 	}
 }
 
-.modal-body {
-	padding: 1rem;
-	background-color: white;
+.modal-title {
+	font-size: 24px !important;
+	padding: 18px;
+}
 
+.close-icon-font {
+	font-size: 34px !important;
+	font-weight: 900 !important;
+}
+
+.modal-body {
+	margin: 24px;
+	padding: 24px !important;
+	background-color: #f5f5f5;
+
+	p,
+	label {
+		color: #666;
+		font-size: 16px !important;
+	}
 	button {
 		font-size: 1em !important;
 	}
@@ -256,18 +266,24 @@
 	}
 }
 
+.rt2-modal-footer {
+	border: none !important;
+	background-color: white !important;
+	align-self: right;
+	padding: 0 24px 24px 0 !important;
+}
+
 .modal-footer {
 	display: flex;
 	flex-wrap: wrap;
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: flex-end;
-	padding: 0.75rem;
 	border-top: 1px solid #dee2e6;
 
 	button {
 		font-size: 1em !important;
-		margin: 0.5em !important;
+		margin: 0 0 0 16px !important;
 		padding: 0 16px !important;
 	}
 }

@@ -71,6 +71,7 @@ export class MapsetRecordsComponent implements OnInit {
 	uiUtility = UiUtility;
 	showLoadingSearch = true;
 	toBeDevelopedModalRef: NgbModalRef;
+	downloadModalRef: NgbModalRef;
 	isModalOpen = false;
 	mapsetName = 'Mapset Name';
 	mapsetCode: string;
@@ -81,6 +82,8 @@ export class MapsetRecordsComponent implements OnInit {
 	showMappingsSection = true;
 	showMetadataSection = false;
 	showHistorySection = false;
+	selectedFormat = {};
+	formats = [];
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -101,6 +104,7 @@ export class MapsetRecordsComponent implements OnInit {
 	@ViewChild('directoryPaging') paginationComponent: PaginationComponent;
 	@ViewChild('directoryCategoryFilter') categoryFilter: TemplateRef<any>;
 	@ViewChild('directoryWorkflowStatusSection') versionStatus: TemplateRef<any>;
+	@ViewChild('downloadModal') downloadModal: TemplateRef<any>;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -128,6 +132,19 @@ export class MapsetRecordsComponent implements OnInit {
 			this.getMapsetInfo();
 		});
 
+		this.formats = [
+			{ value: 'rf2', display: 'RF2' },
+			{ value: 'sctids', display: 'List Of SCTIDs' },
+		];
+
+		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+			this.formats.splice(1, 0, { value: 'rf2_with_names', display: 'RF2 With Names' });
+		}
+
+		if (this.authenticationService.getUser().userName != this.authenticationService.GUEST_USER) {
+			this.formats.splice(-1, 0, { value: 'freeset', display: 'Free Set' });
+		}
+
 		this.disableChannel.postMessage(false);
 	}
 
@@ -139,6 +156,9 @@ export class MapsetRecordsComponent implements OnInit {
 			this.mapsetName = thisResult[0]?.refSetName;
 
 			this.versionStatuses.push(formatDate(thisResult[0]?.modified, 'MM-dd-yyyy', 'en-US') + ' (' + thisResult[0]?.versionStatus + ') ');
+			if (this.versionStatuses.length == 1) {
+				this.selectedVersion = this.versionStatuses[0];
+			}
 
 			this.columnDefs = [
 				{
@@ -511,13 +531,17 @@ export class MapsetRecordsComponent implements OnInit {
 	@Debounce()
 	changedVersionStatus() {
 		this.showLoadingSearch = true;
-		console.log('selected version ', this.selectedVersion);
 		//this.onGridReady(this.originalGridParams);
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
 	downloadMapsets() {
-		console.log('download ', this.selectedAction);
+		this.openDownloadModal(this.downloadModal);
+	}
+
+	startDownload() {
+		this.closeDownloadModal();
+		console.log('selected download format', this.selectedFormat['value']);
 		this.openToBeDevelopedModal(this.tbdModal);
 	}
 
@@ -550,6 +574,16 @@ export class MapsetRecordsComponent implements OnInit {
 
 	closeToBeDevelopedModal() {
 		this.toBeDevelopedModalRef.close();
+		this.isModalOpen = false;
+	}
+
+	openDownloadModal(content) {
+		this.downloadModalRef = this.modalService.open(content, { centered: true });
+		this.isModalOpen = true;
+	}
+
+	closeDownloadModal() {
+		this.downloadModalRef.close();
 		this.isModalOpen = false;
 	}
 
