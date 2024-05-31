@@ -67,8 +67,8 @@
 							<img #iconImg [src]="uiUtility.prepareIconImage(iconImg, user?.iconUri)" class="medium-icon-image mr-2" />
 
 							<div class="profile-block">
-								<strong>{{ user.userName }}</strong>
-								<div class="text-sm-left">{{ user.company }}</div>
+								<strong>{{ user?.userName }}</strong>
+								<div class="text-sm-left">{{ user?.company }}</div>
 							</div>
 						</div>
 					</div>

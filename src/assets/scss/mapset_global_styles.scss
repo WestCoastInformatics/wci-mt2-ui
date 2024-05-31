@@ -223,6 +223,11 @@ tr.refset_tool_inactive_row {
 	height: max-content !important;
 }
 
+.ag-root-wrapper,
+.ag-cell-wrapper {
+	overflow-y: auto !important;
+}
+
 .ag-overlay-no-rows-wrapper {
 	align-items: normal !important;
 }
@@ -1053,7 +1058,6 @@ rt2-directory-chooser-colum .mat-form-field-appearance-fill .mat-form-field-flex
 .mat-mdc-standard-chip {
 	height: 1.25em !important;
 	font-size: 0.95em !important;
-	margin-left: 0.25em;
 	margin-bottom: 5px;
 	border-radius: 8px;
 
