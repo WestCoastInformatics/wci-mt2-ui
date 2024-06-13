@@ -163,11 +163,11 @@ export class MapsetLibraryComponent implements OnInit, AfterViewInit {
 						minWidth: 65,
 						width: 170,
 						resizable: true,
+						valueGetter: UiUtility.gridDateValueGetter,
 						floatingFilterComponent: DateTextFilterComponent,
 						floatingFilterComponentParams: { suppressFilterButton: true },
-						cellRenderer: TemplateRendererComponent,
-						cellRendererParams: { template: this.versionDate },
 						unSortIcon: true,
+						filter: 'agTextColumnFilter',
 					},
 					{
 						field: 'modified',

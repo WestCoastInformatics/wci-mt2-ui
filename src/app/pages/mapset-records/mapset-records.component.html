@@ -101,8 +101,9 @@
 
 								<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
 									<div class="col-4 row mb-3">
-										<div class="record-num col">{{ entry.group || '1' }}/{{ record.mapEntries.length }}</div>
-										<div class="record-name col">{{ entry.toName }}</div>
+										<div class="record-num col-1">{{ entry.group || '1' }}/{{ record.mapEntries.length }}</div>
+										<div class="record-code col-2">{{ entry.toCode }}</div>
+										<div class="record-name col-8">{{ entry.toName }}</div>
 									</div>
 									<div class="col-8 row mb-3">
 										<div class="info-box">
