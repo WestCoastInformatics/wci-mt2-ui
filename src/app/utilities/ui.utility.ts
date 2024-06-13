@@ -39,6 +39,11 @@ export class UiUtility {
 		}
 	}
 
+	static dateFormatter(params) {
+		const format = CodeUtility.DATE_FORMAT_REVERSE;
+		return CodeUtility.formatJsonDate(params, format);
+	}
+
 	/*
 	 * getByElementOrSelector - return a element object having been passed either a element object or element selector string
 	 * @param [object or string] elementOrSelector - Either a element object or the class or id selector (including the "#" or "." prefix).

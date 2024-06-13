@@ -119,7 +119,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 	}
 
 	getUser(): void {
-		console.log('get user ' + this.userId);
 		if (this.userId != this.previouslyLoadedUserId) {
 			this.previouslyLoadedUserId = this.userId;
 			this.userService.getUser(this.userId).subscribe((x) => {

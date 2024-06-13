@@ -27,7 +27,7 @@ import { formatDate } from '@angular/common';
 })
 export class MapsetRecordsComponent implements OnInit {
 	user: User;
-	searchInput: string;
+	searchInput = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
 		{ value: 'public', display: 'Public' },
@@ -78,6 +78,7 @@ export class MapsetRecordsComponent implements OnInit {
 	routeParamsSubscription$: Subscription;
 	gridSelectAll = false;
 	advicePopoverLocation = '45px';
+	showMapTable = 'table';
 
 	selectedAction = '';
 	showMappingsSection = true;
@@ -85,6 +86,7 @@ export class MapsetRecordsComponent implements OnInit {
 	showHistorySection = false;
 	selectedFormat = {};
 	formats = [];
+	loaded = false;
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -356,6 +358,10 @@ export class MapsetRecordsComponent implements OnInit {
 		});
 	}
 
+	dateFormatter(val): any {
+		return UiUtility.dateFormatter(val);
+	}
+
 	getSameRowStyle(): object {
 		const rowStyle = this.rowColors[this.currentRowColor];
 		return rowStyle;
@@ -373,6 +379,10 @@ export class MapsetRecordsComponent implements OnInit {
 
 	showDropdown(): void {
 		this.toggleDropdown = !this.toggleDropdown;
+	}
+
+	changeMappingsView(value: string): void {
+		this.showMapTable = value;
 	}
 
 	//***** AG Grid Functions *****/
@@ -422,7 +432,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.refsetService.getMappingsByMapset(this.mapsetCode).subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
-
+				results = results.items;
 				const data = [];
 				let count = 0;
 				for (let a = 0; a < results.length; a++) {
@@ -439,6 +449,7 @@ export class MapsetRecordsComponent implements OnInit {
 							'index': count,
 							'spanned': spanned,
 							'downloadable': true,
+							'mapEntries': results[a].mapEntries,
 							'entries': results[a].mapEntries.length,
 							'code': results[a].code,
 							'name': results[a].name,
@@ -459,6 +470,7 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 				results = data;
 				this.mapsetData = data;
+				this.loaded = true;
 				this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.length; //total;
 				this.numOfResults = results.length; //total;
 
@@ -497,21 +509,31 @@ export class MapsetRecordsComponent implements OnInit {
 		});
 	};
 
+	getRowData() {
+		const rows = [];
+		this.refsetGridApi.getModel().rowsToDisplay.map((node) => {
+			rows.push(node.data);
+		});
+		return rows;
+	}
+
 	checkboxRowSelect(event, index) {
-		this.mapsetData[index].checked == undefined || !this.mapsetData[index].checked ? (this.mapsetData[index].checked = true) : (this.mapsetData[index].checked = false);
-		const selectedIndexes = [index];
-		if (this.mapsetData[index].entries > 1) {
-			for (let d = 1; d < this.mapsetData[index].entries; d++) {
-				selectedIndexes.push(index + d);
-				this.mapsetData[index + d].checked = this.mapsetData[index].checked;
-			}
-		}
-		for (let c = 0; c < selectedIndexes.length; c++) {
-			this.refsetGridApi.forEachNode((node) => {
-				if (node.rowIndex == selectedIndexes[c]) {
-					node.setSelected(this.mapsetData[selectedIndexes[c]].checked);
+		if (index) {
+			this.mapsetData[index].checked == undefined || !this.mapsetData[index].checked ? (this.mapsetData[index].checked = true) : (this.mapsetData[index].checked = false);
+			const selectedIndexes = [index];
+			if (this.mapsetData[index].entries > 1) {
+				for (let d = 1; d < this.mapsetData[index].entries; d++) {
+					selectedIndexes.push(index + d);
+					this.mapsetData[index + d].checked = this.mapsetData[index].checked;
 				}
-			});
+			}
+			for (let c = 0; c < selectedIndexes.length; c++) {
+				this.refsetGridApi.forEachNode((node) => {
+					if (node.rowIndex == selectedIndexes[c]) {
+						node.setSelected(this.mapsetData[selectedIndexes[c]].checked);
+					}
+				});
+			}
 		}
 	}
 
@@ -532,7 +554,13 @@ export class MapsetRecordsComponent implements OnInit {
 			if (popHeight > 100) {
 				offsetRows = 3;
 			}
-			if (params.node.rowIndex > 0 && params.node.rowIndex + offsetRows >= this.refsetGridApi.paginationGetPageSize()) {
+			const currentPageIndex = this.paginationComponent.getCurrentPage() * this.refsetGridApi.paginationGetPageSize() - this.refsetGridApi.paginationGetPageSize();
+			if (params.node.rowIndex > 0 && params.node.rowIndex - currentPageIndex + offsetRows >= this.refsetGridApi.paginationGetPageSize()) {
+				params.data.advice_bottom = true;
+				params.data.advice_top = false;
+				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
+			}
+			if (params.node.rowIndex + offsetRows >= this.mapsetData.length) {
 				params.data.advice_bottom = true;
 				params.data.advice_top = false;
 				this.advicePopoverLocation = Number(-popHeight + 5) + 'px';
@@ -649,6 +677,22 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 
 		return refset;
+	}
+
+	getInfoIcon(type: string): string {
+		let icon = '';
+		switch (type) {
+			case 'relation':
+				icon = '';
+				break;
+			case 'advice':
+				icon = 'star-of-life';
+				break;
+			case 'other':
+				icon = 'flag';
+				break;
+		}
+		return icon;
 	}
 
 	openInformation(refsetId: string) {
@@ -792,14 +836,15 @@ export class MapsetRecordsComponent implements OnInit {
 		let sectionsMaxHeight = 0;
 
 		sectionsMinHeight = 85;
+		const sectionsSectionHeight = 140; //242;
 		if (this.showMappingsSection) {
-			sectionsMaxHeight = sectionHeight - 242;
+			sectionsMaxHeight = sectionHeight - sectionsSectionHeight;
 		}
 		if (this.showMetadataSection && this.showHistorySection) {
-			sectionsMaxHeight = sectionHeight - 242 - sectionsMinHeight * 2;
+			sectionsMaxHeight = sectionHeight - sectionsSectionHeight - sectionsMinHeight * 2;
 		} else {
 			if (this.showMetadataSection || this.showHistorySection) {
-				sectionsMaxHeight = sectionHeight - 242 - sectionsMinHeight;
+				sectionsMaxHeight = sectionHeight - sectionsSectionHeight - sectionsMinHeight;
 			}
 		}
 

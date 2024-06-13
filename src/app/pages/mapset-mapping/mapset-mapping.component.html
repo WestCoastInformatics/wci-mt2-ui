@@ -16,7 +16,7 @@
 			<div class="col-md-auto">
 				<div class="dropdown directoryInput">
 					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label">Search</mat-label>
+						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
 						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" disabled />
 					</mat-form-field>
 					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
@@ -36,9 +36,9 @@
 
 <div class="container-fluid refsetDirectoryPage" (window:resize)="onResize($event)">
 	<div class="box box-default">
-		<div style="max-height:600px; overflow:scroll;">
+		<div style="max-height: 600px; overflow: scroll">
 			<code>
-				<pre>{{mapping |json}}</pre>
+				<pre>{{ mapping | json }}</pre>
 			</code>
 		</div>
 	</div>

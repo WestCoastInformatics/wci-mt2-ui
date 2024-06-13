@@ -27,7 +27,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	user: User;
-	searchInput: string;
+	searchInput = '';
 	viewOptions = [
 		{ value: 'all', display: 'All' },
 		{ value: 'public', display: 'Public' },
@@ -140,9 +140,6 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		console.log('mapsetCode', this.mapsetCode);
-		console.log('mapsetConcept', this.conceptCode);
-
 		this.refsetService.getMappingByMapsetAndConcept(this.mapsetCode, this.conceptCode).subscribe({
 			next: (results) => {
 				const data = results;
@@ -453,8 +450,6 @@ export class MapsetMappingComponent implements OnInit, AfterViewInit {
 	}
 
 	goToMapRecordsPage(code) {
-		console.log('gotTomaprecords');
-		console.log(code);
 		const url = new URL(window.location.href);
 		url.searchParams.set('reload', 'true');
 		window.history.pushState({}, '', url.href);

@@ -21,7 +21,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 	templateUrl: './landing-page.component.html',
 	styleUrls: ['./landing-page.component.scss'],
 })
-export class LandingComponent implements OnInit, AfterViewInit {
+export class LandingComponent implements OnInit {
 	year: number = new Date().getFullYear();
 	user: User;
 	searchInput: string;
@@ -101,7 +101,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
 		this.authenticationService.imsLogin();
 	}
 
-	ngAfterViewInit() {
+	afterViewInit() {
 		forkJoin(
 			this.refsetService.getVersionStatuses(),
 			this.refsetService.getVersions(),
