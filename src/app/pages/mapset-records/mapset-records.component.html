@@ -18,8 +18,8 @@
 		</div>
 		<div class="col-md-auto d-flex p-r-40">
 			<div class="col-6">
-				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion">
-					<div class="mat-button-wrapper mapset-notes-icon">
+				<button class="library-app-refset-download" (click)="openDownloadModal(downloadModal)" [disabled]="!selectedVersion || numOfMembers === 0">
+					<div class="mat-button-wrapper mapset-download-icon">
 						<i class="fa fa-download fa-lg" title="Download Map Set" aria-label="Download Map Set"></i>
 					</div>
 				</button>
@@ -35,41 +35,50 @@
 
 <div class="rt2-container" (window:resize)="onResize($event)">
 	<div class="metadata-collapsible-container m-t-20">
+		<div class="switch-view" *ngIf="showMappingsSection" [hidden]="!loaded || numOfMembers === 0">
+			<mat-label class="switch-label">view by</mat-label>
+			<mat-button-toggle-group #group="matButtonToggleGroup" [value]="showMapTable" (change)="changeMappingsView(group.value)">
+				<mat-button-toggle value="table"> table </mat-button-toggle>
+				<mat-button-toggle value="record"> record </mat-button-toggle>
+			</mat-button-toggle-group>
+		</div>
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMappingsSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
 				<span>Mappings&nbsp; </span><span [hidden]="!numOfMembers">{{ '(' + numOfMembers + ')' }}</span> <span [hidden]="numOfMembers">{{ '(0)' }}</span>
 			</div>
-			<img src="assets/caret-up-solid.svg" *ngIf="!showMappingsSection" alt="Collapse Button" title="Collapse Workflow History" aria-label="Collapse Button" class="caret-up-solid" />
-			<img src="assets/caret-down-solid.svg" *ngIf="showMappingsSection" alt="Expand Button" title="Expand Workflow History" aria-label="Expand Button" class="caret-down-solid" />
+			<img src="assets/caret-up-solid.svg" *ngIf="!showMappingsSection" alt="Collapse Button" title="Collapse Mappings" aria-label="Collapse Button" class="caret-up-solid" />
+			<img src="assets/caret-down-solid.svg" *ngIf="showMappingsSection" alt="Expand Button" title="Expand Mappings" aria-label="Expand Button" class="caret-down-solid" />
 		</div>
-		<div [hidden]="!showMappingsSection" class="section-background mappings-section">
-			<div class="d-flex dropdown-group">
-				<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable">
-					<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
-				</div>
+		<div class="d-flex dropdown-group" [hidden]="!loaded" *ngIf="showMappingsSection && numOfMembers > 0">
+			<div class="col-md-auto rt2-directory-chooser-column" *ngIf="showTable && showMapTable === 'table'">
+				<app-column-chooser title="Select Columns to Display" [gridColumnApi]="refsetGridColumnApi" [useDialog]="useDialog"> </app-column-chooser>
+			</div>
 
-				<div class="col-md-auto">
-					<div class="dropdown directoryInput">
-						<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-							<mat-label class="search-label">Search</mat-label>
-							<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
-						</mat-form-field>
-						<span class="clear-search" (click)="clearSearch()">&#10005;</span>
-					</div>
-				</div>
-				<div class="col-md-auto p-l-10">
-					<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
-						<mat-label>Actions</mat-label>
-						<mat-select title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="downloadMapsets()">
-							<mat-option value="selected" class="no-checkbox">Download Selected Mappings</mat-option>
-							<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
-						</mat-select>
+			<div class="col-md-auto">
+				<div class="dropdown directoryInput">
+					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
+						<mat-label *ngIf="searchInput === ''" class="search-label">Search</mat-label>
+						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
 					</mat-form-field>
+					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
 				</div>
 			</div>
+			<div class="col-md-auto p-l-10">
+				<mat-form-field appearance="fill" floatLabel="never" class="dropdown-actions">
+					<mat-select title="Actions" placeholder="Actions" [(value)]="selectedAction" (selectionChange)="downloadMapsets()">
+						<mat-option value="selected" class="no-checkbox">Download Selected Mappings</mat-option>
+						<mat-option value="all" class="no-checkbox">Download Entire Map Set</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+		<div [hidden]="!showMappingsSection" class="section-background mappings-section">
+			<div [hidden]="loaded" class="section-loading">Loading...</div>
+			<div [hidden]="!loaded" *ngIf="numOfMembers === 0" class="status-no-results">No Results to Show</div>
 			<ag-grid-angular
 				#directoryTable
 				*ngIf="showTable"
+				[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
 				class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter"
 				[columnDefs]="columnDefs"
 				[suppressRowTransform]="true"
@@ -80,18 +89,53 @@
 				(firstDataRendered)="onResize(500)">
 			</ag-grid-angular>
 
-			<app-pagination
-				#directoryPaging
-				*ngIf="showTable"
-				[pageSize]="refsetGridPaging.pageSize"
-				[gridOptions]="refsetGridOptions"
-				[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
-				[totalKnown]="refsetGridPaging.totalKnown"
-				[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
-			</app-pagination>
-		</div>
-	</div>
+			<div *ngIf="showMapTable !== 'table'">
+				<div *ngFor="let record of getRowData(); index as i">
+					<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
+						<div class="col-12 row">
+							<div class="d-flex col-10 row">
+								<div class="checkbox-column"><template [ngTemplateOutlet]="checkboxCustom" [ngOutletContext]="{ $implicit: record }"></template></div>
+								<div class="col-11 code-name">
+									{{ record.name }}, <span class="code-link">{{ record.code }}</span>
+								</div>
 
+								<div *ngFor="let entry of record.mapEntries; index as x" class="row col-12 second-row">
+									<div class="col-4 row mb-3">
+										<div class="record-num col">{{ entry.group || '1' }}/{{ record.mapEntries.length }}</div>
+										<div class="record-name col">{{ entry.toName }}</div>
+									</div>
+									<div class="col-8 row mb-3">
+										<div class="info-box">
+											<i class="fa-regular fa-handshake relation-icon"></i><span class="info-message">{{ entry.relation }}</span>
+										</div>
+										<div *ngFor="let advice of entry.advices; index as i" class="info-box">
+											<i class="fa-solid fa-star-of-life advice-icon"></i><span class="info-message">{{ advice }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="action-column col-2">
+								<div class="action-btns">
+									<template [ngTemplateOutlet]="directoryActionSection" [ngOutletContext]="{ $implicit: record }"></template>
+								</div>
+								<span class="date-column second-row">Last Updated: {{ dateFormatter(record.modified) }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<app-pagination
+			#directoryPaging
+			*ngIf="showTable && showMappingsSection"
+			[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
+			[pageSize]="refsetGridPaging.pageSize"
+			[gridOptions]="refsetGridOptions"
+			[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
+			[totalKnown]="refsetGridPaging.totalKnown"
+			[manualStateRefresh]="refsetGridPaging.manualStateRefresh">
+		</app-pagination>
+	</div>
 	<div class="metadata-collapsible-container">
 		<div class="metadata-collapsible-container-group-header pointer" (click)="toggleSectionView('showMetadataSection')">
 			<div class="metadata-collapsible-container-title page-header-font">
@@ -163,6 +207,11 @@
 			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" />' + ' <span class="checkbox-container"></span
 		></label>
 	</ng-template>
+	<ng-template #checkboxCustom let-params>
+		<label class="checkbox-override"
+			><input type="checkbox" (change)="checkboxRowSelect($event, params?.data?.index)" [checked]="params?.data?.checked" /><span class="checkbox-container"></span
+		></label>
+	</ng-template>
 
 	<!-- Name Templates -->
 	<ng-template #directoryNameSection let-params>
@@ -194,12 +243,10 @@
 
 	<!-- Action Templates -->
 	<ng-template #directoryActionSection let-params>
-		<div class="d-flex" *ngIf="params?.value">
+		<div class="d-flex">
 			<div class="col-6">
-				<div class="library-app-refset-download" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
-					<div class="mat-button-wrapper mapset-notes-icon">
-						<i class="fa-regular fa-note-sticky fa-lg"></i>
-					</div>
+				<div class="library-app-refset-notes" (click)="openToBeDevelopedModal(toBeDevelopedModal)">
+					<img src="/assets/sticky-note.svg" title="View Notes" aria-label="View Notes" class="mapset-notes-icon" />
 				</div>
 			</div>
 

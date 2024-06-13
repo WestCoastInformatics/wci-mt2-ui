@@ -20,7 +20,7 @@
 			<div class="col-md-auto">
 				<div class="dropdown directoryInput">
 					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label class="search-label">Search</mat-label>
+						<mat-label class="search-label" *ngIf="searchInput === ''">Search</mat-label>
 						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
 					</mat-form-field>
 					<span class="clear-search" (click)="clearSearch()">&#10005;</span>

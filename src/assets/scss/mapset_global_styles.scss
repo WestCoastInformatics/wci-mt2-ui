@@ -212,6 +212,11 @@ tr.refset_tool_inactive_row {
 	border-color: #f0f0f0;
 }
 
+.mdc-text-field .mdc-floating-label {
+	top: 50% !important;
+	transform: translateY(-30%) !important;
+}
+
 .ag-theme-alpine .ag-row {
 	border: none !important;
 }
@@ -2416,8 +2421,19 @@ ngb-typeahead-window.dropdown-menu button {
 	}
 }
 
+.mat-button-toggle-label-content {
+	color: #666 !important;
+}
+.mat-button-toggle-group {
+	border-color: #999 !important;
+}
+.mat-button-toggle-checked .mat-button-toggle-label-content {
+	font-weight: 600 !important;
+}
+
 .rt2-wrap {
 	width: 80% !important;
+	max-width: 1100px;
 	word-wrap: break-word;
 	overflow: hidden;
 	white-space: nowrap;

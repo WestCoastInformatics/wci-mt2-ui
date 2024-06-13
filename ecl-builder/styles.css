@@ -1,4 +1,4 @@
-.dropdown-item {
+.dropdown-item, .dropdown-item:hover, .dropdown-item:focus  {
     display: block;
     width: 100%;
     padding: 0.25rem 1.5rem;
@@ -12,15 +12,15 @@
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-    color: #16181b;
+   /* color: #16181b;
     text-decoration: none;
-    background-color: #e9ecef;
+    background-color: #e9ecef;*/
 }
 
 .dropdown-item.active, .dropdown-item:active {
-    color: #fff;
+  /*  color: #fff;
     text-decoration: none;
-    background-color: #007bff;
+    background-color: #007bff;*/
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
