@@ -152,15 +152,12 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	getMapsetInfo() {
-		this.refsetService.getMapsets().subscribe((results) => {
-			const thisResult = results.filter((res) => {
-				return res.refSetCode === this.mapsetCode;
-			});
-			this.mapsetName = thisResult[0]?.refSetName;
-
-			this.versionStatuses.push(formatDate(thisResult[0]?.modified, 'MM-dd-yyyy', 'en-US') + ' (' + thisResult[0]?.versionStatus + ') ');
+		this.refsetService.getMapsetByCode(this.mapsetCode).subscribe((results) => {
+			const thisResult = results;
+			this.mapsetName = thisResult.refSetName;
+			this.versionStatuses.push(formatDate(thisResult.modified, 'MM-dd-yyyy', 'en-US') + ' (' + thisResult.versionStatus + ') ');
 			if (this.versionStatuses.length == 1) {
-				this.selectedVersion = this.versionStatuses[0];
+				this.selectedVersion = this.versionStatuses;
 			}
 
 			this.columnDefs = [
@@ -392,7 +389,7 @@ export class MapsetRecordsComponent implements OnInit {
 		this.refsetGridApi.setFilterModel(null);
 		this.refsetGridColumnApi = gridReadyParams.columnApi;
 		this.onResize(undefined);
-
+		this.loaded = false;
 		const _window = window;
 		_window['checkboxHandleClick'] = (event) => {
 			this.gridSelectAll == undefined || this.gridSelectAll ? (this.gridSelectAll = false) : (this.gridSelectAll = true);
@@ -411,30 +408,33 @@ export class MapsetRecordsComponent implements OnInit {
 			query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 		}
 
-		const pageNumber = 1;
+		const pageNumber = 1; //this.refsetGridApi.paginationGetPageSize();
+
 		this.refsetGridPaging.totalRows = null;
 		this.refsetGridPaging.totalKnown = false;
 		this.refsetGridApi?.api?.paginationGoToPage(0);
 
 		const restParams: any = {
-			displayType: 'list',
 			offset: pageNumber - 1,
-			searchConcepts: true,
-			showInDevelopment: true,
-			countComments: true,
+			limit: this.refsetGridApi.paginationGetPageSize(),
 		};
 
 		if (CodeUtility.hasValue(query)) {
 			query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
-			restParams.query = query;
+			restParams.filter = query;
+		} else {
+			restParams.filter = '';
 		}
 
-		this.refsetService.getMappingsByMapset(this.mapsetCode).subscribe({
+		this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
 			next: (results) => {
 				this.showLoadingSearch = false;
+				const mapsetResults = results;
 				results = results.items;
+
 				const data = [];
 				let count = 0;
+
 				for (let a = 0; a < results.length; a++) {
 					for (let b = 0; b < results[a].mapEntries.length; b++) {
 						let spanned = false;
@@ -468,13 +468,13 @@ export class MapsetRecordsComponent implements OnInit {
 						count++;
 					}
 				}
-				results = data;
-				this.mapsetData = data;
-				this.loaded = true;
-				this.numOfMembers = this.numOfMembers ? this.numOfMembers : results.length; //total;
-				this.numOfResults = results.length; //total;
 
-				if (results.length == 0) {
+				this.mapsetData = data;
+				mapsetResults.items = this.mapsetData;
+				this.numOfMembers = mapsetResults.total; //total;
+				this.numOfResults = mapsetResults.total; //total;
+
+				if (mapsetResults.items.length == 0) {
 					this.refsetGridPaging.totalKnown = true;
 					this.refsetGridApi.showNoRowsOverlay();
 					this.refsetGridApi.setRowData([]);
@@ -488,7 +488,9 @@ export class MapsetRecordsComponent implements OnInit {
 					return;
 				}
 
-				UiUtility.applyServerPagedGridResults(results, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+				UiUtility.applyServerPagedGridResults(mapsetResults, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
+
+				this.loaded = true;
 			},
 			error: (error) => {
 				this.refsetGridApi.showNoRowsOverlay();
@@ -620,10 +622,17 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	@Debounce()
+	changedViewFilter() {
+		this.showLoadingSearch = true;
+		this.onGridReady(this.originalGridParams);
+	}
+
+	@Debounce()
 	onSearchChange() {
 		this.searchInput = this.searchInput.trim();
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
-			this.refsetGridApi.setQuickFilter(this.searchInput);
+			//this.refsetGridApi.setQuickFilter(this.searchInput);
+			this.onGridReady(this.originalGridParams);
 		}
 	}
 
