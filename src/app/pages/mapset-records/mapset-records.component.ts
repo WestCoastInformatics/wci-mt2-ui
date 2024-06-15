@@ -87,6 +87,8 @@ export class MapsetRecordsComponent implements OnInit {
 	selectedFormat = {};
 	formats = [];
 	loaded = false;
+	showPaging = false;
+	datasource: any;
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -320,6 +322,9 @@ export class MapsetRecordsComponent implements OnInit {
 				suppressRowClickSelection: true,
 				paginationPageSize: this.refsetGridPaging.pageSize,
 				rowSelection: 'single',
+				cacheBlockSize: this.refsetGridPaging.pageSize,
+				maxBlocksInCache: 1,
+				rowModelType: 'infinite',
 				enableCellTextSelection: true,
 				onCellClicked: this.onGridCellClick,
 				onGridReady: this.onGridReady,
@@ -383,7 +388,7 @@ export class MapsetRecordsComponent implements OnInit {
 	}
 
 	//***** AG Grid Functions *****/
-	onGridReady = (gridReadyParams) => {
+	/*onGridReady = (gridReadyParams) => {
 		this.originalGridParams = gridReadyParams;
 		this.refsetGridApi = gridReadyParams.api;
 		this.refsetGridApi.setFilterModel(null);
@@ -487,7 +492,7 @@ export class MapsetRecordsComponent implements OnInit {
 
 					return;
 				}
-
+				
 				UiUtility.applyServerPagedGridResults(mapsetResults, this.refsetGridApi, this.refsetGridPaging, pageNumber, null, false);
 
 				this.loaded = true;
@@ -509,6 +514,167 @@ export class MapsetRecordsComponent implements OnInit {
 			const value = label.substring(0, label.indexOf('Filter Input')) + '...';
 			obj.setAttribute('placeholder', value);
 		});
+	};*/
+	onGridReady = (gridReadyParams) => {
+		this.refsetGridApi = gridReadyParams.api;
+		//this.columnDefs[4].cellRendererParams = { template: this.descriptionSection };
+		//this.columnDefs[5].cellRendererParams = { template: this.actionsSection };
+		this.refsetGridApi.setColumnDefs(this.columnDefs);
+
+		this.onResize(undefined);
+		this.datasource = {
+			rowCount: null,
+			getRows: (rowParams) => {
+				this.refsetGridApi.showLoadingOverlay();
+
+				let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+				//let query = UiUtility.formatFilterData(rowParams.filterModel);
+				const sort = UiUtility.formatSortData(rowParams.sortModel);
+				let query = '';
+
+				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
+					query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
+				}
+				const newFilterString = query;
+				const newSortString = JSON.stringify(sort);
+
+				// if the filters or sort have changed then move to the first page
+				if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+					pageNumber = 1;
+					this.refsetGridApi?.api?.paginationGoToPage(0);
+				}
+
+				// if the filters have changed then reset the total row variables
+				if (newFilterString !== this.refsetGridLastFilter) {
+					this.refsetGridPaging.totalRows = null;
+					this.refsetGridPaging.totalKnown = false;
+				}
+
+				this.refsetGridLastFilter = newFilterString;
+				this.refsetGridLastSort = newSortString;
+
+				const restParams: any = {
+					offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(), //pageNumber - 1,
+					limit: this.refsetGridApi.paginationGetPageSize(),
+				};
+
+				if (CodeUtility.hasValue(query)) {
+					query = query.replace(/\//g, '%2F').replace(/%/g, '%25');
+					restParams.filter = query;
+				} else {
+					restParams.filter = '';
+				}
+
+				this.refsetService.getMappingsByMapset(this.mapsetCode, restParams).subscribe({
+					next: (results) => {
+						this.showLoadingSearch = false;
+						const mapsetResults = results;
+						results = results.items;
+
+						const data = [];
+						let count = 0;
+
+						for (let a = 0; a < results.length; a++) {
+							for (let b = 0; b < results[a].mapEntries.length; b++) {
+								let spanned = false;
+								if (results[a].mapEntries.length > 1) {
+									if (b >= 1) {
+										spanned = true;
+									}
+								} else {
+									results[a].mapEntries[b].group = '';
+								}
+								data.push({
+									'index': count,
+									'spanned': spanned,
+									'downloadable': true,
+									'mapEntries': results[a].mapEntries,
+									'entries': results[a].mapEntries.length,
+									'code': results[a].code,
+									'name': results[a].name,
+									'toName': results[a].mapEntries[b].toName.length > 0 && results[a].mapEntries[b].toName !== ' DOES NOT EXIST' ? results[a].mapEntries[b].toName : '---',
+									'toCode':
+										results[a].mapEntries[b].toCode.length > 0
+											? results[a].mapEntries[b].group + '/' + results[a].mapEntries.length + '#' + results[a].mapEntries[b].toCode
+											: 'No map entries available.',
+									'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
+									'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
+									'modified': results[a].mapEntries[b].modified,
+									'advices': results[a].mapEntries[b].advices,
+									'group': results[a].mapEntries[b].group,
+									'priority': results[a].mapEntries[b].priority,
+								});
+								count++;
+							}
+						}
+
+						this.mapsetData = data;
+						mapsetResults.items = this.mapsetData;
+						this.numOfMembers = mapsetResults.total; //total;
+						this.numOfResults = mapsetResults.total; //total;
+
+						this.showPaging = results.total > 0;
+						if (mapsetResults.items.length === 0 && pageNumber > 1) {
+							this.refsetGridPaging.totalRows = this.refsetGridApi.paginationGetPageSize() * (pageNumber - 1);
+							this.refsetGridPaging.totalKnown = true;
+							this.paginationComponent.goToPage(pageNumber - 1);
+							return;
+						}
+
+						//const data = results.items;
+						//this.data = data;
+						if (mapsetResults.total) {
+							mapsetResults.totalKnown = true;
+						}
+						if (data?.length > 0) {
+							this.refsetGridApi.hideOverlay();
+							let currentRowCount = null;
+							let lastRow = -1;
+
+							if (mapsetResults.totalKnown || data.length < this.refsetGridApi.paginationGetPageSize() || this.refsetGridPaging.totalKnown) {
+								if (mapsetResults.totalKnown) {
+									lastRow = mapsetResults.total;
+								} else if (this.refsetGridPaging.totalKnown) {
+									lastRow = this.refsetGridPaging.totalRows;
+								} else {
+									currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
+									lastRow = currentRowCount;
+								}
+
+								this.refsetGridPaging.totalRows = lastRow;
+								this.refsetGridPaging.totalKnown = true;
+							} else {
+								currentRowCount = data.length + (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize();
+							}
+							this.loaded = true;
+							rowParams.successCallback(data, lastRow);
+						} else {
+							this.refsetGridApi.showNoRowsOverlay();
+							rowParams.successCallback([], 0);
+						}
+
+						this.refsetGridPaging.manualStateRefresh = Boolean(true);
+						// set placeholders on the grid floating filter fields
+						Array.from(document.querySelectorAll('.ag-floating-filter-body .ag-input-field-input')).forEach((obj: any) => {
+							if (obj.attributes['disabled']) {
+								// skip columns with disabled filter
+								return;
+							}
+
+							const label = obj.getAttribute('aria-label');
+							const value = label.substring(0, label.indexOf('Filter Input')) + '...';
+							obj.setAttribute('placeholder', value);
+						});
+					},
+					error: (error) => {
+						this.refsetGridApi.showNoRowsOverlay();
+						rowParams.successCallback([], 0);
+					},
+				});
+			},
+		};
+
+		gridReadyParams.api.setDatasource(this.datasource);
 	};
 
 	getRowData() {
@@ -621,10 +787,15 @@ export class MapsetRecordsComponent implements OnInit {
 		}
 	}
 
-	@Debounce()
+	/*	@Debounce()
 	changedViewFilter() {
 		this.showLoadingSearch = true;
 		this.onGridReady(this.originalGridParams);
+	}*/
+	@Debounce()
+	changedViewFilter() {
+		this.showLoadingSearch = true;
+		this.refsetGridApi.purgeInfiniteCache();
 	}
 
 	@Debounce()
@@ -632,7 +803,10 @@ export class MapsetRecordsComponent implements OnInit {
 		this.searchInput = this.searchInput.trim();
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			//this.refsetGridApi.setQuickFilter(this.searchInput);
-			this.onGridReady(this.originalGridParams);
+			//this.onGridReady(this.originalGridParams);
+
+			this.showLoadingSearch = true;
+			this.refsetGridApi.purgeInfiniteCache();
 		}
 	}
 
