@@ -89,6 +89,7 @@ export class MapsetRecordsComponent implements OnInit {
 	loaded = false;
 	showPaging = false;
 	datasource: any;
+	recordRows = [];
 
 	rowColors = [{ 'background': 'white' }, { 'background': '#f2f2f2' }];
 	currentRowColor = 0;
@@ -527,19 +528,20 @@ export class MapsetRecordsComponent implements OnInit {
 			getRows: (rowParams) => {
 				this.refsetGridApi.showLoadingOverlay();
 
-				let pageNumber = rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
+				let pageNumber = this.refsetGridApi.paginationGetCurrentPage() + 1; // rowParams.endRow / this.refsetGridApi.paginationGetPageSize();
 				//let query = UiUtility.formatFilterData(rowParams.filterModel);
-				const sort = UiUtility.formatSortData(rowParams.sortModel);
+				//const sort = UiUtility.formatSortData(rowParams.sortModel);
 				let query = '';
 
 				if (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2) {
 					query = CodeUtility.addIfNotEmpty(query, ' AND ') + this.searchInput;
 				}
 				const newFilterString = query;
-				const newSortString = JSON.stringify(sort);
+				//const newSortString = JSON.stringify(sort);
 
 				// if the filters or sort have changed then move to the first page
-				if (newFilterString !== this.refsetGridLastFilter || newSortString !== this.refsetGridLastSort) {
+				if (newFilterString !== this.refsetGridLastFilter) {
+					//|| newSortString !== this.refsetGridLastSort) {
 					pageNumber = 1;
 					this.refsetGridApi?.api?.paginationGoToPage(0);
 				}
@@ -551,7 +553,7 @@ export class MapsetRecordsComponent implements OnInit {
 				}
 
 				this.refsetGridLastFilter = newFilterString;
-				this.refsetGridLastSort = newSortString;
+				//this.refsetGridLastSort = newSortString;
 
 				const restParams: any = {
 					offset: (pageNumber - 1) * this.refsetGridApi.paginationGetPageSize(), //pageNumber - 1,
@@ -609,6 +611,7 @@ export class MapsetRecordsComponent implements OnInit {
 						}
 
 						this.mapsetData = data;
+						this.mapsetData = this.mapsetData.sort((a, b) => (a.name > b.name ? 1 : -1));
 						mapsetResults.items = this.mapsetData;
 						this.numOfMembers = mapsetResults.total; //total;
 						this.numOfResults = mapsetResults.total; //total;
@@ -621,8 +624,6 @@ export class MapsetRecordsComponent implements OnInit {
 							return;
 						}
 
-						//const data = results.items;
-						//this.data = data;
 						if (mapsetResults.total) {
 							mapsetResults.totalKnown = true;
 						}
@@ -676,14 +677,6 @@ export class MapsetRecordsComponent implements OnInit {
 
 		gridReadyParams.api.setDatasource(this.datasource);
 	};
-
-	getRowData() {
-		const rows = [];
-		this.refsetGridApi.getModel().rowsToDisplay.map((node) => {
-			rows.push(node.data);
-		});
-		return rows;
-	}
 
 	checkboxRowSelect(event, index) {
 		if (index) {
@@ -794,8 +787,8 @@ export class MapsetRecordsComponent implements OnInit {
 	}*/
 	@Debounce()
 	changedViewFilter() {
-		this.showLoadingSearch = true;
-		this.refsetGridApi.purgeInfiniteCache();
+		//this.showLoadingSearch = true;
+		//this.refsetGridApi.purgeInfiniteCache();
 	}
 
 	@Debounce()
@@ -804,7 +797,6 @@ export class MapsetRecordsComponent implements OnInit {
 		if (!CodeUtility.hasValue(this.searchInput) || (CodeUtility.hasValue(this.searchInput) && this.searchInput.length > 2)) {
 			//this.refsetGridApi.setQuickFilter(this.searchInput);
 			//this.onGridReady(this.originalGridParams);
-
 			this.showLoadingSearch = true;
 			this.refsetGridApi.purgeInfiniteCache();
 		}
