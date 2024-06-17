@@ -796,7 +796,7 @@ export class UiUtility {
 			results.totalKnown = results.length;
 			results.total = results.length;
 		}
-		console.log('results', results);
+
 		if (results.items.length > 0) {
 			gridApi.hideOverlay();
 			let lastRow = -1;

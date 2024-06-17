@@ -586,6 +586,10 @@ export class MapsetRecordsComponent implements OnInit {
 								} else {
 									results[a].mapEntries[b].group = '';
 								}
+								const adviceArray = [];
+								for (let i = 0; i < results[a].mapEntries[b].advices.length; i++) {
+									adviceArray.push(results[a].mapEntries[b].advices[i]);
+								}
 								data.push({
 									'index': count,
 									'spanned': spanned,
@@ -602,7 +606,7 @@ export class MapsetRecordsComponent implements OnInit {
 									'rule': results[a].mapEntries[b].rule.length > 0 ? results[a].mapEntries[b].rule : '---',
 									'relation': results[a].mapEntries[b].relation.length > 0 ? results[a].mapEntries[b].relation : '---',
 									'modified': results[a].mapEntries[b].modified,
-									'advices': results[a].mapEntries[b].advices,
+									'advices': { 'number': adviceArray.length, 'list': adviceArray },
 									'group': results[a].mapEntries[b].group,
 									'priority': results[a].mapEntries[b].priority,
 								});
@@ -696,6 +700,24 @@ export class MapsetRecordsComponent implements OnInit {
 				});
 			}
 		}
+	}
+
+	getValueLength(params): number {
+		let number = 0;
+		const value = params.getValue();
+		if (value !== undefined) {
+			number = value.number;
+		}
+		return number;
+	}
+
+	getValueList(params): Array<any> {
+		let list = [];
+		const value = params.getValue();
+		if (value !== undefined) {
+			list = value.list;
+		}
+		return list;
 	}
 
 	openPopover(params: any) {
