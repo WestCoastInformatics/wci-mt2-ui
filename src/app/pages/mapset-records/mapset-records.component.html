@@ -259,8 +259,8 @@
 
 	<!-- Advice Templates -->
 	<ng-template #directoryAdviceSection let-params>
-		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / params?.value.length > 10 ? 50 / params?.value.length + 'px' : 10 + 'px' }">
-			<div *ngFor="let item of params?.value">{{ item }}</div>
+		<div class="advice-column" [ngStyle]="{ 'line-height': 50 / getValueLength(params) > 10 ? 50 / getValueLength(params) + 'px' : 10 + 'px' }">
+			<div *ngFor="let item of getValueList(params)">{{ item }}</div>
 		</div>
 	</ng-template>
 
