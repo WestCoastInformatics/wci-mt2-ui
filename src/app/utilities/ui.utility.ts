@@ -791,9 +791,12 @@ export class UiUtility {
 
 	//***** AG Grid Function to apply data and paging to table *****/
 	static applyServerPagedGridResults(results, gridApi, pagingParams, pageNumber, rowParams, serverPaging = true) {
-		results.items = results;
-		results.totalKnown = results.length;
-		results.total = results.length;
+		if (results.totalKnown === undefined) {
+			results.items = results;
+			results.totalKnown = results.length;
+			results.total = results.length;
+		}
+		console.log('results', results);
 		if (results.items.length > 0) {
 			gridApi.hideOverlay();
 			let lastRow = -1;

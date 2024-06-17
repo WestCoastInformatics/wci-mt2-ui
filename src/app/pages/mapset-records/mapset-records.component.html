@@ -84,13 +84,11 @@
 				[suppressRowTransform]="true"
 				[gridOptions]="refsetGridOptions"
 				[rowSelection]="rowSelection"
-				[quickFilterText]="searchInput"
-				[quickFilterMatcher]="quickFilterMatcher"
 				(firstDataRendered)="onResize(500)">
 			</ag-grid-angular>
 
 			<div *ngIf="showMapTable !== 'table'">
-				<div *ngFor="let record of getRowData(); index as i">
+				<div *ngFor="let record of mapsetData; index as i">
 					<div class="record-row" [ngClass]="{ 'odd-row': 0 === i % 2 }" *ngIf="!record.spanned">
 						<div class="col-12 row">
 							<div class="d-flex col-10 row">
@@ -128,8 +126,8 @@
 		</div>
 		<app-pagination
 			#directoryPaging
-			*ngIf="showTable && showMappingsSection"
-			[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
+			*ngIf="showMappingsSection && showTable && loaded"
+			[hidden]="numOfMembers === 0"
 			[pageSize]="refsetGridPaging.pageSize"
 			[gridOptions]="refsetGridOptions"
 			[pageSizeOptions]="refsetGridPaging.pageSizeOptions"
@@ -270,7 +268,7 @@
 		<span *ngIf="params?.value === 'No map entries available.'">
 			{{ params?.value }}
 		</span>
-		<span *ngIf="params?.value !== 'No map entries available.'">
+		<span *ngIf="params?.value !== 'No map entries available.' && params?.value !== undefined">
 			<mat-chip-list *ngIf="params?.value.split('#')[0] !== '/1'">
 				<mat-chip class="mapset-chip" title="{{ 'Group ' + params?.value.split('#')[0].split('/')[0] + ', Entry ' + params?.value.split('#')[0].split('/')[1] }}">
 					{{ params?.value.split('#')[0] }}
