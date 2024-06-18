@@ -57,7 +57,7 @@
 			<div class="col-md-auto">
 				<div class="dropdown directoryInput">
 					<mat-form-field floatLabel="never" id="directorySearchInputField" title="Enter Search Criteria">
-						<mat-label *ngIf="searchInput === ''" class="search-label">Search</mat-label>
+						<mat-label *ngIf="searchInput === ''" class="search-label">Search by Source PT</mat-label>
 						<input matInput #directorySearchInput id="directorySearchInput" [(ngModel)]="searchInput" (input)="onSearchChange()" />
 					</mat-form-field>
 					<span class="clear-search" (click)="clearSearch()">&#10005;</span>
@@ -79,7 +79,7 @@
 				#directoryTable
 				*ngIf="showTable"
 				[hidden]="!loaded || numOfMembers === 0 || showMapTable !== 'table'"
-				class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-filter"
+				class="ag-theme-alpine rt2-ag-grid rt2-ag-grid-no-filter"
 				[columnDefs]="columnDefs"
 				[suppressRowTransform]="true"
 				[gridOptions]="refsetGridOptions"
